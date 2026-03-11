@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Oppilaanohjauksen digioppikirja</title>
+    <title>DigiOpo</title>
 
     <link
       rel="stylesheet"
@@ -16,69 +16,65 @@
   </head>
 
   <body>
-    <header>
-      <h1>Oppilaanohjauksen digioppikirja</h1>
+    <header class="topbar">
+      <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i>
+        DigiOpo
+      </div>
+
+      <div class="search">
+        <input
+          id="searchInput"
+          onkeyup="searchTasks()"
+          placeholder="Etsi tehtävä tai aihe"
+        />
+      </div>
     </header>
 
-    <div class="layout">
-      <aside class="sidebar">
-        <h3>Sisällys</h3>
+    <main class="container">
+      <h1>Oppilaanohjauksen digioppikirja</h1>
 
-        <a class="nav7" href="sivut/7luokka.html">7. luokka</a>
-        <a class="nav8" href="sivut/8luokka.html">8. luokka</a>
-        <a class="nav9" href="sivut/9luokka.html">9. luokka</a>
-        <a class="navteacher" href="sivut/opolle.html">Opolle</a>
-      </aside>
+      <p>Valitse luokka tai selaa tehtäviä.</p>
 
-      <main class="content">
-        <h2>Tervetuloa digioppikirjaan</h2>
+      <section class="categories">
+        <a class="category blue" href="sivut/7luokka.html"> 7. luokka </a>
 
-        <p>
-          Tämä oppikirja auttaa sinua pohtimaan vahvuuksia, koulutusvalintoja ja
-          tulevaisuutta.
-        </p>
+        <a class="category green" href="sivut/8luokka.html"> 8. luokka </a>
 
-        <div class="card-grid">
-          <a class="class-card class7" href="sivut/7luokka.html"> 7. luokka </a>
+        <a class="category red" href="sivut/9luokka.html"> 9. luokka </a>
 
-          <a class="class-card class8" href="sivut/8luokka.html"> 8. luokka </a>
+        <a class="category purple" href="sivut/opolle.html"> Opolle </a>
+      </section>
 
-          <a class="class-card class9" href="sivut/9luokka.html"> 9. luokka </a>
+      <section class="course-grid">
+        <a class="course-card" href="tehtavasivut/vahvuudet.html">
+          <h3>
+            <i class="fa-solid fa-star"></i>
+            Omat vahvuudet
+          </h3>
 
-          <a class="class-card teacher" href="sivut/opolle.html"> Opolle </a>
+          <p>Pohdi missä olet hyvä ja mistä pidät.</p>
+
+          <span class="tag"> Vahvuudet </span>
+        </a>
+
+        <div class="course-card" data-category="tet">
+          <h3>
+            <i class="fa-solid fa-briefcase"></i>
+            TET-päiväkirja
+          </h3>
+
+          <p>Kirjaa kokemuksesi TET-jaksosta.</p>
+
+          <span class="tag tag-tet"> TET </span>
+
+          <a class="btn" href="tehtavat/tet.pdf" download>
+            <i class="fa-solid fa-download"></i>
+            Lataa tehtävä
+          </a>
         </div>
-
-        <h2>Esimerkkitehtävä</h2>
-
-        <div class="search">
-          <input
-            id="searchInput"
-            onkeyup="searchTasks()"
-            placeholder="Hae tehtävää tai aihetta"
-          />
-        </div>
-
-        <div class="card-grid">
-          <div class="task-card" data-category="vahvuudet">
-            <h3>
-              <i class="fa-solid fa-star"></i>
-              Omat vahvuudet
-            </h3>
-
-            <p>Pohdi missä olet hyvä ja mistä pidät.</p>
-
-            <span class="tag tag-vahvuudet"> Vahvuudet </span>
-
-            <br />
-
-            <a class="download-btn" href="tehtavat/vahvuudet.pdf" download>
-              <i class="fa-solid fa-download"></i>
-              Lataa tehtävä
-            </a>
-          </div>
-        </div>
-      </main>
-    </div>
+      </section>
+    </main>
 
     <script src="js/search.js"></script>
   </body>
