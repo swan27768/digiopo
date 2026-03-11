@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="fi">
   <head>
     <meta charset="UTF-8" />
@@ -10,6 +11,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+
     <link rel="stylesheet" href="../css/style.css" />
 
     <style>
@@ -108,6 +110,7 @@
       }
     </style>
   </head>
+
   <body>
     <header class="topbar">
       <a href="../index.html" class="logo">
@@ -125,6 +128,7 @@
       <p>Pohdi missä asioissa olet hyvä ja mistä pidät.</p>
 
       <h2>Tehtävä</h2>
+
       <ul>
         <li>Kirjoita kolme asiaa, joissa olet hyvä.</li>
         <li>Mistä asioista pidät koulussa?</li>
@@ -135,15 +139,15 @@
 
       <div class="editor-wrap">
         <div class="toolbar">
-          <button type="button" id="btnBold" aria-label="Lihavoi">
+          <button type="button" id="btnBold">
             <i class="fa-solid fa-bold"></i>
           </button>
 
-          <button type="button" id="btnItalic" aria-label="Kursivoi">
+          <button type="button" id="btnItalic">
             <i class="fa-solid fa-italic"></i>
           </button>
 
-          <button type="button" id="btnList" aria-label="Luettelomerkinnät">
+          <button type="button" id="btnList">
             <i class="fa-solid fa-list"></i>
           </button>
         </div>
@@ -170,6 +174,7 @@
       </div>
 
       <h2>Lataa tehtävä PDF</h2>
+
       <a class="btn" href="../tehtavat/vahvuudet.pdf" download>
         <i class="fa-solid fa-file-pdf"></i>
         Lataa tehtävä
@@ -178,56 +183,51 @@
 
     <script>
       const STORAGE_KEY = "vahvuudet_notes";
+
       const editor = document.getElementById("editor");
       const statusText = document.getElementById("statusText");
+
       const btnBold = document.getElementById("btnBold");
       const btnItalic = document.getElementById("btnItalic");
       const btnList = document.getElementById("btnList");
+
       const downloadWordBtn = document.getElementById("downloadWordBtn");
 
-      function updatePlaceholderState() {
-        const text = editor.textContent.trim();
-        editor.classList.toggle("is-empty", text.length === 0);
-      }
+      function showStatus(msg) {
+        statusText.textContent = msg;
 
-      function showStatus(message) {
-        statusText.textContent = message;
-        clearTimeout(showStatus._timer);
-        showStatus._timer = setTimeout(() => {
+        setTimeout(() => {
           statusText.textContent = "";
         }, 2000);
       }
 
       function saveNotes() {
         localStorage.setItem(STORAGE_KEY, editor.innerHTML);
-        updatePlaceholderState();
+
         showStatus("Tallennettu automaattisesti");
       }
 
       function loadNotes() {
         const saved = localStorage.getItem(STORAGE_KEY);
+
         if (saved) {
           editor.innerHTML = saved;
         }
-        updatePlaceholderState();
       }
 
       function formatText(command) {
         editor.focus();
+
         document.execCommand(command, false, null);
+
         saveNotes();
       }
 
       function downloadWord() {
-        const content = editor.innerHTML.trim() || "<p></p>";
+        const content = editor.innerHTML;
 
         const html =
-          "<!DOCTYPE html>" +
-          "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-          "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-          "xmlns='http://www.w3.org/TR/REC-html40'>" +
-          "<head><meta charset='utf-8'><title>Omat vahvuudet</title></head>" +
-          "<body>" +
+          "<html><head><meta charset='utf-8'></head><body>" +
           "<h1>Omat vahvuudet</h1>" +
           content +
           "</body></html>";
@@ -237,26 +237,34 @@
         });
 
         const url = URL.createObjectURL(blob);
+
         const link = document.createElement("a");
+
         link.href = url;
         link.download = "omat_vahvuudet.doc";
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
         URL.revokeObjectURL(url);
 
         showStatus("Word-tiedosto ladattu");
       }
+
+      /* nappien tapahtumat */
 
       btnBold.addEventListener("click", () => formatText("bold"));
       btnItalic.addEventListener("click", () => formatText("italic"));
       btnList.addEventListener("click", () =>
         formatText("insertUnorderedList"),
       );
+
       downloadWordBtn.addEventListener("click", downloadWord);
 
       editor.addEventListener("input", saveNotes);
-      editor.addEventListener("blur", saveNotes);
+
+      /* sivun lataus */
 
       loadNotes();
     </script>

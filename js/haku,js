@@ -1,0 +1,51 @@
+const searchInput = document.getElementById("taskSearch");
+const resultsBox = document.getElementById("searchResults");
+const buttons = document.querySelectorAll(".category-filter button");
+
+let currentCategory = "all";
+
+/* kategoria */
+
+buttons.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    currentCategory = this.dataset.cat;
+
+    performSearch();
+  });
+});
+
+/* haku */
+
+searchInput.addEventListener("input", performSearch);
+
+function performSearch() {
+  const query = searchInput.value.toLowerCase();
+
+  resultsBox.innerHTML = "";
+
+  Object.keys(tehtavat).forEach(function (id) {
+    const task = tehtavat[id];
+
+    const text =
+      task.title.toLowerCase() + task.instructions.join(" ").toLowerCase();
+
+    const matchesSearch = text.includes(query);
+
+    const matchesCategory =
+      currentCategory === "all" || task.category === currentCategory;
+
+    if (matchesSearch && matchesCategory) {
+      const div = document.createElement("div");
+
+      div.className = "result-item";
+
+      div.textContent = task.title;
+
+      div.onclick = function () {
+        window.location.href = "tehtava.html?id=" + id;
+      };
+
+      resultsBox.appendChild(div);
+    }
+  });
+}

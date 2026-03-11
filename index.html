@@ -21,20 +21,34 @@
         <i class="fa-solid fa-graduation-cap"></i>
         DigiOpo
       </div>
-
-      <div class="search">
-        <input
-          id="searchInput"
-          onkeyup="searchTasks()"
-          placeholder="Etsi tehtävä tai aihe"
-        />
-      </div>
     </header>
 
     <main class="container">
       <h1>Oppilaanohjauksen digioppikirja</h1>
 
       <p>Valitse luokka tai selaa tehtäviä.</p>
+
+      <!-- HAKU -->
+
+      <div class="search-box">
+        <input
+          id="taskSearch"
+          placeholder="Hae tehtävää..."
+          autocomplete="off"
+        />
+
+        <div id="searchResults"></div>
+      </div>
+
+      <!-- KATEGORIAT -->
+
+      <div class="category-filter">
+        <button data-cat="all">Kaikki</button>
+        <button data-cat="vahvuudet">Vahvuudet</button>
+        <button data-cat="tet">TET</button>
+      </div>
+
+      <!-- LUOKAT -->
 
       <section class="categories">
         <a class="category blue" href="sivut/7luokka.html"> 7. luokka </a>
@@ -46,8 +60,10 @@
         <a class="category purple" href="sivut/opolle.html"> Opolle </a>
       </section>
 
-      <section class="course-grid">
-        <a class="course-card" href="tehtavasivut/vahvuudet.html">
+      <!-- TEHTÄVÄKORTIT -->
+
+      <section id="taskCards" class="course-grid">
+        <a class="course-card" href="tehtava.html?id=vahvuudet">
           <h3>
             <i class="fa-solid fa-star"></i>
             Omat vahvuudet
@@ -55,10 +71,10 @@
 
           <p>Pohdi missä olet hyvä ja mistä pidät.</p>
 
-          <span class="tag"> Vahvuudet </span>
+          <span class="tag">Vahvuudet</span>
         </a>
 
-        <div class="course-card" data-category="tet">
+        <a class="course-card" href="tehtava.html?id=tet">
           <h3>
             <i class="fa-solid fa-briefcase"></i>
             TET-päiväkirja
@@ -66,16 +82,15 @@
 
           <p>Kirjaa kokemuksesi TET-jaksosta.</p>
 
-          <span class="tag tag-tet"> TET </span>
-
-          <a class="btn" href="tehtavat/tet.pdf" download>
-            <i class="fa-solid fa-download"></i>
-            Lataa tehtävä
-          </a>
-        </div>
+          <span class="tag tag-tet">TET</span>
+        </a>
       </section>
     </main>
 
-    <script src="js/search.js"></script>
+    <script src="js/tehtavat.js"></script>
+    <script src="js/haku.js"></script>
+    <script src="js/tehtavat.js"></script>
+    <script src="js/kortit.js"></script>
+    <script src="js/haku.js"></script>
   </body>
 </html>
