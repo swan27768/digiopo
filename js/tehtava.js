@@ -113,3 +113,27 @@ if (index < tehtavaJarjestys.length - 1) {
 } else {
   nextBtn.style.visibility = "hidden";
 }
+/* -------- SIVUNAVIGAATIO -------- */
+
+const prevBtn = document.getElementById("prevPage");
+const nextBtn = document.getElementById("nextPage");
+
+const currentIndex = tehtavaJarjestys.indexOf(id);
+
+if (currentIndex > 0) {
+  const prevId = tehtavaJarjestys[currentIndex - 1];
+
+  prevBtn.href = "tehtava.html?id=" + prevId;
+  prevBtn.textContent = "← " + tehtavat[prevId].title;
+} else {
+  prevBtn.style.visibility = "hidden";
+}
+
+if (currentIndex < tehtavaJarjestys.length - 1) {
+  const nextId = tehtavaJarjestys[currentIndex + 1];
+
+  nextBtn.href = "tehtava.html?id=" + nextId;
+  nextBtn.textContent = tehtavat[nextId].title + " →";
+} else {
+  nextBtn.style.visibility = "hidden";
+}

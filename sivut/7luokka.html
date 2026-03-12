@@ -1,54 +1,86 @@
 <!doctype html>
+
 <html lang="fi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. luokka</title>
+    <title>7. luokan oppilaanohjaus</title>
 
     <link rel="stylesheet" href="../css/style.css" />
-    <script src="../js/search.js"></script>
   </head>
 
   <body>
-    <header>
+    <header class="topbar">
+      <a href="../index.html" class="logo"> ← DigiOpo </a>
+
       <h1>7. luokan oppilaanohjaus</h1>
     </header>
 
-    <div class="content">
-      <div class="search">
-        <input
-          id="searchInput"
-          onkeyup="searchTasks()"
-          placeholder="Hae tehtävää"
-        />
-      </div>
+    <div class="book-layout">
+      <!-- SISÄLLYSLUETTELO -->
 
-      <div class="card-grid">
-        <div class="task-card">
-          <h3>Omat vahvuudet</h3>
+      <aside class="book-sidebar">
+        <h3>Sisällysluettelo</h3>
 
-          <p>Pohdi missä olet hyvä ja mistä pidät.</p>
+        <div id="classTasks"></div>
+      </aside>
 
-          <a class="download-btn" href="../tehtavat/vahvuudet.pdf" download>
-            Lataa tehtävä
-          </a>
+      <!-- SISÄLTÖ -->
+
+      <main class="book-content">
+        <h2>Tervetuloa 7. luokan oppilaanohjaukseen</h2>
+
+        <p>
+          7. luokalla opit tuntemaan omia vahvuuksiasi, opiskelutaitojasi ja
+          kiinnostuksen kohteitasi.
+        </p>
+
+        <!-- HAKU -->
+
+        <div class="search">
+          <input
+            id="searchInput"
+            onkeyup="searchTasks()"
+            placeholder="Hae tehtävää"
+          />
         </div>
 
-        <div class="task-card">
-          <h3>Opiskelutaidot</h3>
+        <!-- TEHTÄVÄT -->
 
-          <p>Harjoittele suunnittelemaan opiskelua.</p>
+        <div id="classCards" class="card-grid">
+          <div class="task-card">
+            <h3>⭐ Omat vahvuudet</h3>
 
-          <a
-            class="download-btn"
-            href="../tehtavat/opiskelutaidot.pdf"
-            download
-          >
-            Lataa tehtävä
+            <p>Pohdi missä olet hyvä ja mistä pidät.</p>
+
+            <a class="download-btn" href="../tehtava.html?id=vahvuudet">
+              Avaa tehtävä →
+            </a>
+          </div>
+
+          <div class="task-card">
+            <h3>📚 Opiskelutaidot</h3>
+
+            <p>Harjoittele suunnittelemaan opiskelua.</p>
+
+            <a class="download-btn" href="../tehtava.html?id=opiskelutaidot">
+              Avaa tehtävä →
+            </a>
+          </div>
+        </div>
+        <div class="page-navigation">
+          <a class="nav-prev" href="../index.html"> ← Etusivu </a>
+
+          <a class="nav-next" href="../tehtava.html?id=vahvuudet">
+            Seuraava: Omat vahvuudet →
           </a>
         </div>
-      </div>
+      </main>
     </div>
+
+    <script src="../js/search.js"></script>
+    <script src="../js/tehtavat.js"></script>
+    <script src="../js/luokka.js"></script>
   </body>
 </html>
