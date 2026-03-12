@@ -1,20 +1,43 @@
-const container = document.getElementById("taskCards");
+const taskCardsContainer = document.getElementById("taskCards");
 
-Object.keys(tehtavat).forEach(function (id) {
-  const task = tehtavat[id];
+function getCategoryClass(category) {
+  if (category === "opiskelu") return "tag-opiskelu";
+  if (category === "tet") return "tag-tet";
+  return "";
+}
 
-  const card = document.createElement("a");
+function renderTaskCards(filterCategory = "all") {
+  if (!taskCardsContainer) return;
 
-  card.className = "course-card";
-  card.href = "tehtava.html?id=" + id;
+  taskCardsContainer.innerHTML = "";
 
-  card.dataset.category = task.category;
+  Object.keys(tehtavat).forEach(function (id) {
+    const task = tehtavat[id];
 
-  card.innerHTML = `
-<h3>${task.title}</h3>
-<p>${task.instructions[0]}</p>
-<span class="tag">${task.category}</span>
-`;
+    if (filterCategory !== "all" && task.category !== filterCategory) {
+      return;
+    }
 
-  container.appendChild(card);
-});
+    const card = document.createElement("a");
+    card.className = "course-card";
+    card.href = "tehtava.html?id=" + id;
+    card.dataset.category = task.category;
+
+    card.innerHTML =
+      "<h3>" +
+      task.title +
+      "</h3>" +
+      "<p>" +
+      task.instructions[0] +
+      "</p>" +
+      "<span class='tag " +
+      getCategoryClass(task.category) +
+      "'>" +
+      task.category +
+      "</span>";
+
+    taskCardsContainer.appendChild(card);
+  });
+}
+
+renderTaskCards();

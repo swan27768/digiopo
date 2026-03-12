@@ -4,8 +4,9 @@ const tehtavat = {
     category: "vahvuudet",
     class: "7",
     instructions: [
-      "Kirjoita kolme asiaa joissa olet hyvä",
+      "Kirjoita kolme asiaa, joissa olet hyvä.",
       "Mistä asioista pidät koulussa?",
+      "Mitä haluaisit oppia lisää?",
     ],
     pdf: "tehtavat/vahvuudet.pdf",
   },
@@ -14,7 +15,11 @@ const tehtavat = {
     title: "Opiskelutaidot",
     category: "opiskelu",
     class: "7",
-    instructions: ["Suunnittele oma opiskelupäivä", "Miten pidät taukoja?"],
+    instructions: [
+      "Suunnittele oma opiskelupäiväsi.",
+      "Milloin opiskelet parhaiten?",
+      "Miten pidät taukoja?",
+    ],
     pdf: "tehtavat/opiskelutaidot.pdf",
   },
 
@@ -22,7 +27,13 @@ const tehtavat = {
     title: "TET-päiväkirja",
     category: "tet",
     class: "8",
-    instructions: ["Missä olit TET-jaksolla?", "Mitä työtehtäviä teit?"],
+    instructions: [
+      "Missä olit TET-jaksolla?",
+      "Mitä työtehtäviä teit?",
+      "Mitä opit työelämästä?",
+    ],
     pdf: "tehtavat/tet.pdf",
   },
 };
+
+const tehtavaJarjestys = ["vahvuudet", "opiskelutaidot", "tet"];
