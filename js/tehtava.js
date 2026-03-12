@@ -1,11 +1,6 @@
-console.log("tehtava.js käynnistyi");
-
 window.addEventListener("load", function () {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-
-  console.log("ID:", id);
-  console.log("tehtavat:", tehtavat);
 
   if (!id || !tehtavat || !tehtavat[id]) {
     console.error("Tehtävää ei löytynyt:", id);
