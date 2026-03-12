@@ -1,139 +1,169 @@
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+console.log("tehtava.js käynnistyi");
 
-const task = tehtavat[id];
+window.addEventListener("load", function () {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-const title = document.getElementById("taskTitle");
-const instructions = document.getElementById("taskInstructions");
-const pdfLink = document.getElementById("pdfLink");
-const downloadBtn = document.getElementById("downloadBtn");
-const notes = document.getElementById("notes");
-const clearBtn = document.getElementById("clearBtn");
+  console.log("ID:", id);
+  console.log("tehtavat:", tehtavat);
 
-/* otsikko */
+  if (!id || !tehtavat || !tehtavat[id]) {
+    console.error("Tehtävää ei löytynyt:", id);
+    return;
+  }
 
-title.textContent = task.title;
+  const task = tehtavat[id];
 
-/* ohjeet */
+  /* HAE HTML ELEMENTIT */
 
-task.instructions.forEach(function (text) {
-  const li = document.createElement("li");
-  li.textContent = text;
+  const title = document.getElementById("taskTitle");
+  const instructions = document.getElementById("taskInstructions");
+  const notes = document.getElementById("notes");
 
-  instructions.appendChild(li);
-});
+  const downloadBtn = document.getElementById("downloadBtn");
+  const clearBtn = document.getElementById("clearBtn");
 
-/* pdf */
+  const prevBtn = document.getElementById("prevPage");
+  const nextBtn = document.getElementById("nextPage");
 
-pdfLink.href = task.pdf;
+  const breadcrumb = document.getElementById("breadcrumb");
+  const saveStatus = document.getElementById("saveStatus");
 
-/* -------- AUTOMAATTINEN TALLENNUS -------- */
+  const taskCategoryTag = document.getElementById("taskCategoryTag");
+  const taskClassLabel = document.getElementById("taskClassLabel");
 
-const storageKey = "digiopo_notes_" + id;
+  const pdfLink = document.getElementById("pdfLink");
 
-/* lataa tallennettu teksti */
+  /* TEHTÄVÄN TIEDOT */
 
-const savedText = localStorage.getItem(storageKey);
+  if (title) title.textContent = task.title;
 
-if (savedText) {
-  notes.value = savedText;
-}
+  if (pdfLink) pdfLink.href = task.pdf;
 
-/* tallenna kun oppilas kirjoittaa */
+  if (taskCategoryTag) {
+    taskCategoryTag.textContent = task.category;
 
-notes.addEventListener("input", function () {
-  localStorage.setItem(storageKey, notes.value);
-});
+    if (task.category === "opiskelu")
+      taskCategoryTag.classList.add("tag-opiskelu");
 
-/* -------- WORD LATAUS -------- */
+    if (task.category === "tet") taskCategoryTag.classList.add("tag-tet");
+  }
 
-function downloadWord() {
-  var text = notes.value;
+  if (taskClassLabel) taskClassLabel.textContent = task.class + ". luokka";
 
-  var html =
-    "<html>" +
-    "<head><meta charset='utf-8'></head>" +
-    "<body>" +
-    "<h1>" +
-    task.title +
-    "</h1>" +
-    "<p>" +
-    text +
-    "</p>" +
-    "</body>" +
-    "</html>";
+  if (breadcrumb)
+    breadcrumb.textContent =
+      "Etusivu → " + task.class + ". luokka → " + task.title;
 
-  var blob = new Blob(["\ufeff", html], { type: "application/msword" });
+  /* OHJEET */
 
-  var url = URL.createObjectURL(blob);
+  if (instructions) {
+    instructions.innerHTML = "";
 
-  var link = document.createElement("a");
+    task.instructions.forEach(function (text) {
+      const li = document.createElement("li");
+      li.textContent = text;
+      instructions.appendChild(li);
+    });
+  }
 
-  link.href = url;
-  link.download = task.title + ".doc";
+  /* AUTOMAATTINEN TALLENNUS */
 
-  document.body.appendChild(link);
+  const storageKey = "digiopo_notes_" + id;
 
-  link.click();
+  if (notes) {
+    const saved = localStorage.getItem(storageKey);
 
-  document.body.removeChild(link);
+    if (saved) {
+      notes.value = saved;
+    }
 
-  URL.revokeObjectURL(url);
-}
+    let saveTimer;
 
-/* nappi */
+    notes.addEventListener("input", function () {
+      localStorage.setItem(storageKey, notes.value);
 
-downloadBtn.addEventListener("click", downloadWord);
-/* TYHJENNÄ VASTAUS */
+      if (saveStatus) {
+        saveStatus.textContent = "Tallennettu automaattisesti";
+      }
 
-clearBtn.addEventListener("click", function () {
-  const confirmClear = confirm("Haluatko varmasti tyhjentää vastauksesi?");
+      clearTimeout(saveTimer);
 
-  if (confirmClear) {
-    notes.value = "";
+      saveTimer = setTimeout(function () {
+        if (saveStatus) saveStatus.textContent = "";
+      }, 1500);
+    });
+  }
 
-    localStorage.removeItem(storageKey);
+  /* TYHJENNÄ */
+
+  if (clearBtn && notes) {
+    clearBtn.addEventListener("click", function () {
+      if (confirm("Tyhjennetäänkö vastaus?")) {
+        notes.value = "";
+        localStorage.removeItem(storageKey);
+
+        if (saveStatus) saveStatus.textContent = "Vastaus tyhjennetty";
+      }
+    });
+  }
+
+  /* WORD LATAUS */
+
+  if (downloadBtn && notes) {
+    downloadBtn.addEventListener("click", function () {
+      const text = notes.value || "";
+
+      const html =
+        "<html><head><meta charset='utf-8'></head><body>" +
+        "<h1>" +
+        task.title +
+        "</h1>" +
+        "<p>" +
+        text.replace(/\n/g, "<br>") +
+        "</p>" +
+        "</body></html>";
+
+      const blob = new Blob(["\ufeff", html], {
+        type: "application/msword",
+      });
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = task.title + ".doc";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  /* SIVUNAVIGAATIO */
+
+  if (prevBtn && nextBtn && window.tehtavaJarjestys) {
+    const index = tehtavaJarjestys.indexOf(id);
+
+    if (index > 0) {
+      const prevId = tehtavaJarjestys[index - 1];
+
+      prevBtn.href = "tehtava.html?id=" + prevId;
+      prevBtn.textContent = "← " + tehtavat[prevId].title;
+    } else {
+      prevBtn.style.visibility = "hidden";
+    }
+
+    if (index < tehtavaJarjestys.length - 1) {
+      const nextId = tehtavaJarjestys[index + 1];
+
+      nextBtn.href = "tehtava.html?id=" + nextId;
+      nextBtn.textContent = tehtavat[nextId].title + " →";
+    } else {
+      nextBtn.style.visibility = "hidden";
+    }
   }
 });
-/* -------- TEHTÄVIEN NAVIGAATIO -------- */
-
-const prevBtn = document.getElementById("prevTask");
-const nextBtn = document.getElementById("nextTask");
-
-const index = tehtavaJarjestys.indexOf(id);
-
-if (index > 0) {
-  prevBtn.href = "tehtava.html?id=" + tehtavaJarjestys[index - 1];
-} else {
-  prevBtn.style.visibility = "hidden";
-}
-
-if (index < tehtavaJarjestys.length - 1) {
-  nextBtn.href = "tehtava.html?id=" + tehtavaJarjestys[index + 1];
-} else {
-  nextBtn.style.visibility = "hidden";
-}
-/* -------- SIVUNAVIGAATIO -------- */
-
-const prevBtn = document.getElementById("prevPage");
-const nextBtn = document.getElementById("nextPage");
-
-const currentIndex = tehtavaJarjestys.indexOf(id);
-
-if (currentIndex > 0) {
-  const prevId = tehtavaJarjestys[currentIndex - 1];
-
-  prevBtn.href = "tehtava.html?id=" + prevId;
-  prevBtn.textContent = "← " + tehtavat[prevId].title;
-} else {
-  prevBtn.style.visibility = "hidden";
-}
-
-if (currentIndex < tehtavaJarjestys.length - 1) {
-  const nextId = tehtavaJarjestys[currentIndex + 1];
-
-  nextBtn.href = "tehtava.html?id=" + nextId;
-  nextBtn.textContent = tehtavat[nextId].title + " →";
-} else {
-  nextBtn.style.visibility = "hidden";
-}
