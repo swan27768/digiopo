@@ -1,0 +1,183 @@
+<!doctype html>
+
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Interaktiivinen tehtävä</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <style>
+      /* Game Mode */
+
+      .game-mode {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .game-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: #f4f4f4;
+      }
+
+      .game-wrapper {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 80px);
+      }
+
+      #gameFrame {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* Game mode button */
+
+      .game-mode-btn {
+        margin-left: auto;
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        background: #2b6ef2;
+        color: white;
+        cursor: pointer;
+      }
+
+      .game-mode-btn:hover {
+        background: #1f55c9;
+      }
+
+      /* Fullscreen game */
+
+      .game-fullscreen .game-header {
+        display: none;
+      }
+
+      .game-fullscreen #gameFrame {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+      }
+      .game-loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        z-index: 5;
+        font-size: 18px;
+        color: #333;
+      }
+
+      .loader {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ddd;
+        border-top: 4px solid #2b6ef2;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="topbar">
+      <a href="index.html" class="logo"> ← DigiOpo </a>
+    </header>
+
+    <main class="game-mode">
+      <div class="game-header">
+        <a href="index.html">← Takaisin</a>
+
+        <h1 id="gameTitle"></h1>
+
+        <button id="gameModeBtn" class="game-mode-btn">Täysruutu</button>
+      </div>
+
+      <div class="game-wrapper">
+        <div id="gameLoading" class="game-loading">
+          <div class="loader"></div>
+          <p>Peli latautuu...</p>
+        </div>
+
+        <iframe id="gameFrame"></iframe>
+      </div>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+
+      const games = {
+        vahvuus_tarina: {
+          title: "Vahvuus-seikkailu",
+          src: "pelit/vahvuus_tarina.html",
+        },
+
+        ammattipeli: {
+          title: "Ammattipeli",
+          src: "https://www.canva.com/design/XXXXX/view?embed",
+        },
+        lukion_sanastopeli: {
+          title: "9.lk_Lukion sanastopeli",
+          src: "https://digiopo.my.canva.site/untitled-app",
+        },
+      };
+
+      const game = games[id];
+
+      if (game) {
+        document.getElementById("gameTitle").textContent = game.title;
+        document.getElementById("gameFrame").src = game.src;
+      }
+
+      /* GAME MODE BUTTON */
+
+      const btn = document.getElementById("gameModeBtn");
+
+      btn.addEventListener("click", function () {
+        document.body.classList.toggle("game-fullscreen");
+
+        if (document.body.classList.contains("game-fullscreen")) {
+          btn.textContent = "Poistu pelitilasta";
+        } else {
+          btn.textContent = "Täysruutu";
+        }
+      });
+      /* LOADING SCREEN */
+
+      const frame = document.getElementById("gameFrame");
+      const loading = document.getElementById("gameLoading");
+
+      frame.onload = function () {
+        loading.style.display = "none";
+      };
+    </script>
+  </body>
+</html>
