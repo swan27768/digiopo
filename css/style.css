@@ -1,489 +1,90 @@
-* {
-  box-sizing: border-box;
+/* -----------------------------
+DIGIOPO MODERN THEME
+------------------------------*/
+
+:root {
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+
+  --navbar: #312e81;
+
+  --bg: #eef2ff;
+  --card: #ffffff;
+  --border: #cbd5f5;
+
+  --text: #0f172a;
+  --text-light: #475569;
+
+  /* kategoriavärit */
+
+  --tag-vahvuudet: #f59e0b;
+  --tag-opiskelu: #2563eb;
+  --tag-tet: #16a34a;
+  --tag-urat: #7c3aed;
+  --tag-interactive: #db2777;
 }
+
+/* -----------------------------
+BASE
+------------------------------*/
 
 body {
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6fb;
-  color: #1f2937;
-  line-height: 1.5;
+  padding: 0 16px;
+  background: var(--bg);
+  color: var(--text);
 }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #1f2a44;
-  color: white;
-  padding: 16px 24px;
+h1,
+h2,
+h3 {
+  margin-top: 0;
 }
 
-.topbar a {
-  color: white;
-  text-decoration: none;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 20px 48px;
-}
-
-.search-box {
-  margin: 24px 0 16px;
-}
-
-#taskSearch {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #cfd7e6;
-  font-size: 16px;
-}
-
-#searchResults {
-  margin-top: 10px;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-.result-item {
-  padding: 12px 14px;
-  border-bottom: 1px solid #edf1f7;
-  cursor: pointer;
-}
-
-.result-item:last-child {
-  border-bottom: none;
-}
-
-.result-item:hover {
-  background: #f8fafc;
-}
-
-.category-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.category-filter button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 14px;
-  background: #2b6ef2;
-  color: white;
-  cursor: pointer;
-}
-
-.category-filter button.active {
-  background: #1f55c9;
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.category {
-  text-decoration: none;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: 700;
-}
-
-.blue {
-  background: #2b6ef2;
-}
-.green {
-  background: #2ea043;
-}
-.red {
-  background: #d73a49;
-}
-.purple {
-  background: #6f42c1;
-}
-
-.course-grid,
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-}
-
-.course-card,
-.task-card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+a {
   text-decoration: none;
   color: inherit;
 }
 
-.course-card:hover,
-.task-card:hover {
-  transform: translateY(-2px);
-}
+/* -----------------------------
+NAVBAR
+------------------------------*/
 
-.tag {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: #2b6ef2;
-  color: white;
-  font-size: 12px;
-}
-
-.tag-opiskelu {
-  background: #2ea043;
-}
-.tag-tet {
-  background: #d73a49;
-}
-
-.book-layout {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 20px 48px;
-}
-
-.book-sidebar {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  height: fit-content;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-}
-
-.book-sidebar a {
-  display: block;
-  text-decoration: none;
-  color: #1f2937;
-  padding: 10px 0;
-  border-bottom: 1px solid #edf1f7;
-}
-
-.book-sidebar a:last-child {
-  border-bottom: none;
-}
-
-.book-content {
-  min-width: 0;
-}
-
-.breadcrumb {
-  color: #64748b;
-  margin-bottom: 12px;
-  font-size: 14px;
-}
-
-.task-page {
-  max-width: 900px;
-}
-
-.task-meta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.task-class {
-  color: #475569;
-  font-size: 14px;
-}
-
-.notes-area {
-  width: 100%;
-  min-height: 240px;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #cfd7e6;
-  font-size: 16px;
-  resize: vertical;
-}
-
-.helper-text {
-  color: #64748b;
-  font-size: 14px;
-}
-
-.button-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
-  margin-bottom: 12px;
-}
-
-.btn-primary,
-.btn-secondary,
-.btn-link,
-.download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 16px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 15px;
-}
-
-.btn-primary,
-.download-btn,
-.btn-link,
-.nav-link {
-  background: #2b6ef2;
-  color: white;
-}
-
-.btn-secondary {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-.save-status {
-  min-height: 24px;
-  color: #2ea043;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-.page-navigation {
-  margin-top: 36px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.nav-link {
-  text-decoration: none;
-  padding: 12px 16px;
-  border-radius: 10px;
-}
-
-@media (max-width: 800px) {
-  .book-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .page-navigation {
-    flex-direction: column;
-  }
-
-  .nav-link,
-  .btn-primary,
-  .btn-secondary,
-  .btn-link {
-    justify-content: center;
-  }
-}
-.page-navigation {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.nav-link {
-  background: #2b6ef2;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
-}
-
-.nav-link:hover {
-  background: #1f55c9;
-}
-.header-search {
-  position: relative;
-}
-
-.header-search input {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  width: 220px;
-}
-
-#searchResults {
-  position: absolute;
-  top: 38px;
-  right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  width: 260px;
-  z-index: 1000;
-}
-
-.result-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-}
-
-.result-item:hover {
-  background: #f2f2f2;
-}
-.header-search {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.header-search input {
-  padding: 10px 36px 10px 12px;
-  border-radius: 6px;
-  border: none;
-  width: 240px;
-  font-size: 14px;
-}
-
-.search-icon {
-  position: absolute;
-  right: 10px;
-  color: #666;
-  pointer-events: none;
-}
-
-#searchResults {
-  position: absolute;
-  top: 40px;
-  right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  width: 260px;
-  z-index: 1000;
-}
-
-.result-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
-}
-
-.result-item:hover {
-  background: #f5f5f5;
-}
-
-@media (max-width: 700px) {
-  .header-search {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .header-search input {
-    width: 100%;
-  }
-
-  #searchResults {
-    width: 100%;
-    left: 0;
-    right: auto;
-  }
-}
-.result-item.selected {
-  background: #e8f0ff;
-}
-.game-container {
-  margin-top: 20px;
-}
-
-#gameFrame {
-  width: 100%;
-  height: 650px;
-  border: none;
-  border-radius: 10px;
-}
-.section-title {
-  margin-top: 40px;
-}
-
-.interactive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 15px;
-}
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 28px;
+
+  background: var(--navbar);
+  color: white;
+
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-/* logo */
-
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: #111;
-  font-size: 18px;
-}
-
-.logo-main {
-  font-weight: 700;
-}
-
-.logo-sub {
-  font-weight: 400;
-  opacity: 0.7;
-}
-
-/* menu */
-
-.nav-menu {
-  display: flex;
-  gap: 20px;
+  color: white;
 }
 
 .nav-menu a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
+  color: white;
   padding: 6px 10px;
   border-radius: 6px;
 }
 
 .nav-menu a:hover {
-  background: #f2f4f7;
+  background: rgba(255, 255, 255, 0.15);
 }
-
-/* search */
+/* -----------------------------
+SEARCH
+------------------------------*/
 
 .header-search {
   position: relative;
@@ -492,7 +93,7 @@ body {
 .header-search input {
   padding: 8px 36px 8px 12px;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   width: 220px;
 }
 
@@ -501,10 +102,262 @@ body {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: #888;
   pointer-events: none;
 }
+
+#searchResults {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.result-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-item:hover {
+  background: #f1f5f9;
+}
+
+.result-item.selected {
+  background: #e0e7ff;
+}
+
+/* -----------------------------
+BOOK LAYOUT
+------------------------------*/
+
+.book-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 30px;
+  padding: 40px 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.book-sidebar {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  height: fit-content;
+}
+
+.book-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+/* -----------------------------
+CLASS CARDS
+------------------------------*/
+
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.class-card {
+  padding: 28px 28px 28px 40px;
+  border-radius: 14px;
+  color: white;
+  display: block;
+  transition: all 0.25s;
+}
+
+.class-card h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+.class-card h3,
+.class-card p {
+  margin-left: 4px;
+}
+
+.class-card p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* luokkavärit */
+
+.class-7 {
+  background: #2563eb;
+}
+
+.class-8 {
+  background: #7c3aed;
+}
+
+.class-9 {
+  background: #16a34a;
+}
+
+/* hover */
+
+.class-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* -----------------------------
+CARDS
+------------------------------*/
+
+.card-grid,
+.interactive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.course-card {
+  background: var(--card);
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  display: block;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.course-card h3 {
+  margin-bottom: 8px;
+}
+
+.course-card p {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* -----------------------------
+TAGS
+------------------------------*/
+
+.tag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+}
+
+.tag-vahvuudet {
+  background: var(--tag-vahvuudet);
+}
+.tag-opiskelu {
+  background: var(--tag-opiskelu);
+}
+.tag-tet {
+  background: var(--tag-tet);
+}
+.tag-urat {
+  background: var(--tag-urat);
+}
+.tag-interactive {
+  background: var(--tag-interactive);
+}
+
+/* -----------------------------
+NAVIGATION BUTTONS
+------------------------------*/
+
+.page-navigation {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-link {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.nav-link:hover {
+  background: var(--primary-hover);
+}
+
+/* -----------------------------
+INTERACTIVE GAME
+------------------------------*/
+
+.game-wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px);
+}
+
+#gameFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+}
+
+/* loading screen */
+
+.game-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 5;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ddd;
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* -----------------------------
+MOBILE
+------------------------------*/
+
 @media (max-width: 800px) {
+  .book-layout {
+    grid-template-columns: 1fr;
+  }
+
   .nav-menu {
     display: none;
   }
@@ -513,45 +366,139 @@ body {
     width: 140px;
   }
 }
-/* hamburger button */
+/* -------------------------
+   BOOK SPREAD LAYOUT
+--------------------------*/
 
-.menu-toggle {
-  display: none;
-  background: none;
+.book-spread {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 0;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* vasen sivu */
+
+.book-page-left {
+  padding: 30px;
+  border-right: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+/* oikea sivu */
+
+.book-page-right {
+  padding: 40px;
+}
+
+/* sisällysluettelo */
+
+.book-page-left a {
+  display: block;
+  padding: 8px 0;
+  color: #374151;
+}
+
+.book-page-left a:hover {
+  color: #4f46e5;
+}
+
+/* breadcrumb */
+
+.breadcrumb {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+@media (max-width: 900px) {
+  .book-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .book-page-left {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+/* -----------------------
+   TASK SPREAD LAYOUT
+-----------------------*/
+
+.task-spread {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* vasen sivu */
+
+.task-left {
+  padding: 40px;
+  border-right: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+/* oikea sivu */
+
+.task-right {
+  padding: 40px;
+}
+
+/* textarea */
+
+.notes-area {
+  width: 100%;
+  min-height: 250px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 16px;
+}
+
+/* napit */
+
+.button-row {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: white;
   border: none;
-  font-size: 22px;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-/* mobile */
+.btn-secondary {
+  background: #e5e7eb;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-@media (max-width: 800px) {
-  .menu-toggle {
-    display: block;
+/* mobiili */
+
+@media (max-width: 900px) {
+  .task-spread {
+    grid-template-columns: 1fr;
   }
 
-  .nav-menu {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: white;
-    flex-direction: column;
-    gap: 0;
-    display: none;
-    border-bottom: 1px solid #eee;
-  }
-
-  .nav-menu a {
-    padding: 14px 20px;
-    border-top: 1px solid #eee;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-
-  .header-search {
-    display: none;
+  .task-left {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
   }
 }
