@@ -6,7 +6,7 @@ Projektin tavoitteena on tehdä oppilaanohjauksesta visuaalisempi, helpommin kä
 
 ## Sisältö
 
-- Seitsemään luokan oppilaanohjauksen tehtävät
+- Seitsemännen luokan oppilaanohjauksen tehtävät
 - Kahdeksannen luokan oppilaanohjauksen tehtävät
 - Yhdeksännen luokan oppilaanohjauksen tehtävät
 - interaktiiviset tehtävät ja pelit
