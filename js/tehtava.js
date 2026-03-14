@@ -17,9 +17,7 @@ window.addEventListener("load", function () {
 
   const downloadBtn = document.getElementById("downloadBtn");
   const clearBtn = document.getElementById("clearBtn");
-
-  const prevBtn = document.getElementById("prevPage");
-  const nextBtn = document.getElementById("nextPage");
+  const backToClass = document.getElementById("backToClass");
 
   const breadcrumb = document.getElementById("breadcrumb");
   const saveStatus = document.getElementById("saveStatus");
@@ -38,17 +36,26 @@ window.addEventListener("load", function () {
   if (taskCategoryTag) {
     taskCategoryTag.textContent = task.category;
 
-    if (task.category === "opiskelu")
+    if (task.category === "opiskelu") {
       taskCategoryTag.classList.add("tag-opiskelu");
+    }
 
-    if (task.category === "tet") taskCategoryTag.classList.add("tag-tet");
+    if (task.category === "tet") {
+      taskCategoryTag.classList.add("tag-tet");
+    }
   }
 
   if (taskClassLabel) taskClassLabel.textContent = task.class + ". luokka";
 
-  if (breadcrumb)
+  if (breadcrumb) {
     breadcrumb.textContent =
       "Etusivu → " + task.class + ". luokka → " + task.title;
+  }
+
+  if (backToClass) {
+    backToClass.href = "sivut/" + task.class + "luokka.html";
+    backToClass.textContent = "← Takaisin " + task.class + ". luokan sivulle";
+  }
 
   /* OHJEET */
 
@@ -124,7 +131,6 @@ window.addEventListener("load", function () {
       });
 
       const url = URL.createObjectURL(blob);
-
       const link = document.createElement("a");
 
       link.href = url;
@@ -136,29 +142,5 @@ window.addEventListener("load", function () {
 
       URL.revokeObjectURL(url);
     });
-  }
-
-  /* SIVUNAVIGAATIO */
-
-  if (prevBtn && nextBtn && window.tehtavaJarjestys) {
-    const index = tehtavaJarjestys.indexOf(id);
-
-    if (index > 0) {
-      const prevId = tehtavaJarjestys[index - 1];
-
-      prevBtn.href = "tehtava.html?id=" + prevId;
-      prevBtn.textContent = "← " + tehtavat[prevId].title;
-    } else {
-      prevBtn.style.visibility = "hidden";
-    }
-
-    if (index < tehtavaJarjestys.length - 1) {
-      const nextId = tehtavaJarjestys[index + 1];
-
-      nextBtn.href = "tehtava.html?id=" + nextId;
-      nextBtn.textContent = tehtavat[nextId].title + " →";
-    } else {
-      nextBtn.style.visibility = "hidden";
-    }
   }
 });
