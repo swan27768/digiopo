@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DigiOpo – Sanastopeli</title>
+    <meta
+      name="description"
+      content="DigiOpon sanastopeli: yhdistä termit ja määritelmät."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="sanastopeli-page">
+    <header class="site-header">
+      <nav class="navbar">
+        <a href="index.html" class="logo">DigiOpo – Minun polkuni</a>
+
+        <button
+          class="menu-toggle"
+          aria-label="Avaa valikko"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+
+        <div class="nav-links">
+          <a href="index.html">Etusivu</a>
+          <a href="sivut/7luokka.html">7. luokka</a>
+          <a href="sivut/8luokka.html">8. luokka</a>
+          <a href="sivut/9luokka.html">9. luokka</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="sanastopeli-main">
+      <section class="sanastopeli-hero">
+        <div class="sanastopeli-back-row">
+          <a href="index.html" class="sanastopeli-back-link"
+            >← Takaisin etusivulle</a
+          >
+        </div>
+
+        <div class="sanastopeli-heading">
+          <p class="sanastopeli-kicker">Interaktiivinen tehtävä</p>
+          <h1 id="game-title">Lukion sanastopeli</h1>
+          <p id="instruction-text">
+            Yhdistä termi oikeaan määritelmään klikkaamalla ensin termiä ja
+            sitten määritelmää.
+          </p>
+        </div>
+      </section>
+
+      <section class="sanastopeli-stats" aria-label="Pelin tilastot">
+        <div class="sanastopeli-stats-grid">
+          <article class="sanastopeli-stat-card is-score">
+            <span class="sanastopeli-stat-label">Nykyiset pisteet</span>
+            <strong id="current-score">0</strong>
+          </article>
+
+          <article class="sanastopeli-stat-card is-total">
+            <span class="sanastopeli-stat-label">Yhteensä</span>
+            <strong id="total-score">0</strong>
+          </article>
+
+          <article class="sanastopeli-stat-card is-matches">
+            <span class="sanastopeli-stat-label">Parit</span>
+            <strong id="matches">0/6</strong>
+          </article>
+
+          <article class="sanastopeli-stat-card is-hints">
+            <span class="sanastopeli-stat-label">Vinkit</span>
+            <strong id="hints-left">3</strong>
+          </article>
+        </div>
+
+        <div class="sanastopeli-progress-wrap" aria-hidden="true">
+          <div class="sanastopeli-progress-track">
+            <div id="progress-bar" class="sanastopeli-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="sanastopeli-actions">
+          <button
+            id="hint-btn"
+            class="sanastopeli-btn sanastopeli-btn-hint"
+            type="button"
+          >
+            Vinkki
+          </button>
+          <button
+            id="shuffle-btn"
+            class="sanastopeli-btn sanastopeli-btn-shuffle"
+            type="button"
+          >
+            Sekoita
+          </button>
+        </div>
+      </section>
+
+      <section class="sanastopeli-board" aria-label="Sanastopeli">
+        <div class="sanastopeli-column">
+          <h2>Termit</h2>
+          <div id="terms-container" class="sanastopeli-cards"></div>
+        </div>
+
+        <div class="sanastopeli-column">
+          <h2>Määritelmät</h2>
+          <div id="definitions-container" class="sanastopeli-cards"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="feedback" class="sanastopeli-feedback" aria-live="polite"></div>
+
+    <div id="victory-modal" class="sanastopeli-modal" aria-hidden="true">
+      <div class="sanastopeli-modal-card">
+        <div class="sanastopeli-modal-inner">
+          <h2>Loistavaa!</h2>
+          <p>Löysit kaikki parit.</p>
+
+          <div class="sanastopeli-modal-stats">
+            <div class="sanastopeli-modal-stat">
+              <strong id="final-score">0</strong>
+              <span>Pisteet</span>
+            </div>
+
+            <div class="sanastopeli-modal-stat">
+              <strong id="final-accuracy">0%</strong>
+              <span>Tarkkuus</span>
+            </div>
+          </div>
+
+          <button
+            id="play-again-btn"
+            class="sanastopeli-btn sanastopeli-btn-next"
+            type="button"
+          >
+            Seuraava peli
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const menuToggle = document.querySelector(".menu-toggle");
+      const navLinks = document.querySelector(".nav-links");
+
+      if (menuToggle && navLinks) {
+        menuToggle.addEventListener("click", () => {
+          navLinks.classList.toggle("show");
+          const isExpanded = navLinks.classList.contains("show");
+          menuToggle.setAttribute(
+            "aria-expanded",
+            isExpanded ? "true" : "false",
+          );
+        });
+      }
+    </script>
+    <script src="js/sanastopeli.js"></script>
+  </body>
+</html>

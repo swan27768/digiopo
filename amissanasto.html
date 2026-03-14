@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DigiOpo – Ammatillisen koulutuksen sanasto</title>
+    <meta
+      name="description"
+      content="DigiOpon ammatillisen koulutuksen sanastopeli."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="amissanasto-page">
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="index.html" class="home-btn">← DigiOpo</a>
+      </div>
+
+      <div class="nav-right">
+        <div class="header-search">
+          <input
+            id="taskSearch"
+            placeholder="Hae tehtävää..."
+            autocomplete="off"
+          />
+          <div id="searchResults"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="amissanasto-main">
+      <section class="amissanasto-hero">
+        <div class="amissanasto-back-row">
+          <a href="index.html" class="amissanasto-back-link"
+            >← Takaisin etusivulle</a
+          >
+        </div>
+
+        <div class="amissanasto-start-screen" id="start-screen">
+          <div class="amissanasto-start-card">
+            <div class="amissanasto-emoji" aria-hidden="true">👨‍🔧</div>
+            <p class="amissanasto-kicker">Interaktiivinen tehtävä</p>
+            <h1 id="main-title">Ammatillisen koulutuksen sanasto</h1>
+            <p class="amissanasto-intro">
+              Testaa tietosi ammatillisen koulutuksen termeistä. Valitse oikea
+              termi annetulle selitykselle.
+            </p>
+
+            <div class="amissanasto-stats-grid">
+              <article class="amissanasto-stat-card">
+                <span>Pelejä pelattu</span>
+                <strong id="stats-games">0</strong>
+              </article>
+
+              <article class="amissanasto-stat-card">
+                <span>Yhteensä pisteitä</span>
+                <strong id="stats-total">0</strong>
+              </article>
+
+              <article class="amissanasto-stat-card">
+                <span>Tavoite</span>
+                <strong id="stats-goal">10</strong>
+              </article>
+            </div>
+
+            <button
+              id="start-btn"
+              class="amissanasto-btn amissanasto-btn-primary"
+              type="button"
+            >
+              🚀 Aloita peli
+            </button>
+
+            <div class="amissanasto-meta">
+              <span>📚 30 termiä</span>
+              <span>⏱️ 10 kysymystä</span>
+              <span>🏆 Kerää pisteitä</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="amissanasto-game-screen is-hidden" id="game-screen">
+          <div class="amissanasto-topbar">
+            <div class="amissanasto-pill">
+              <span>Kysymys</span>
+              <strong id="question-counter">1/10</strong>
+            </div>
+
+            <div class="amissanasto-pill">
+              <span>Pisteet</span>
+              <strong id="score">0</strong>
+            </div>
+          </div>
+
+          <div class="amissanasto-progress-track" aria-hidden="true">
+            <div id="progress-bar" class="amissanasto-progress-bar"></div>
+          </div>
+
+          <div class="amissanasto-question-wrap">
+            <div class="amissanasto-question-card">
+              <p class="amissanasto-question-label">
+                Mikä termi sopii tähän selitykseen?
+              </p>
+              <p id="definition" class="amissanasto-definition">
+                Koulutus, jossa opiskellaan ammatti.
+              </p>
+            </div>
+
+            <div id="options" class="amissanasto-options"></div>
+
+            <div
+              id="feedback"
+              class="amissanasto-feedback is-hidden"
+              aria-live="polite"
+            >
+              <div
+                id="feedback-content"
+                class="amissanasto-feedback-content"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="amissanasto-result-screen is-hidden" id="result-screen">
+          <div class="amissanasto-result-card">
+            <div id="result-emoji" class="amissanasto-result-emoji">🎉</div>
+            <h2>Peli päättyi!</h2>
+
+            <div class="amissanasto-result-scorebox">
+              <p>Pisteesi</p>
+              <strong id="final-score">0/10</strong>
+              <div id="result-message"></div>
+            </div>
+
+            <div class="amissanasto-result-stats">
+              <p>Pelejä pelattu</p>
+              <strong id="result-games-count">1</strong>
+            </div>
+
+            <div class="amissanasto-result-actions">
+              <button
+                id="play-again-btn"
+                class="amissanasto-btn amissanasto-btn-primary"
+                type="button"
+              >
+                🔄 Seuraava peli
+              </button>
+              <button
+                id="back-to-start-btn"
+                class="amissanasto-btn amissanasto-btn-secondary"
+                type="button"
+              >
+                🏠 Alkuun
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/tehtavat.js"></script>
+    <script src="js/haku.js"></script>
+    <script src="js/amissanasto.js"></script>
+  </body>
+</html>
