@@ -6,9 +6,9 @@ Projektin tavoitteena on tehdä oppilaanohjauksesta visuaalisempi, helpommin kä
 
 ## Sisältö
 
-- 7. luokan oppilaanohjauksen tehtävät
-- 8. luokan oppilaanohjauksen tehtävät
-- 9. luokan oppilaanohjauksen tehtävät
+- Seitsemään luokan oppilaanohjauksen tehtävät
+- Kahdeksannen luokan oppilaanohjauksen tehtävät
+- Yhdeksännen luokan oppilaanohjauksen tehtävät
 - interaktiiviset tehtävät ja pelit
 - oppilaan omien vastausten kirjoittaminen
 - automaattinen tallennus selaimen localStorageen
