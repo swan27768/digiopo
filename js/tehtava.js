@@ -8,30 +8,26 @@ window.addEventListener("load", function () {
   }
 
   const task = tehtavat[id];
+  const storageKey = "digiopo_notes_" + id;
 
-  /* HAE HTML ELEMENTIT */
+  /* HTML-ELEMENTIT */
 
   const title = document.getElementById("taskTitle");
   const instructions = document.getElementById("taskInstructions");
   const notes = document.getElementById("notes");
-
   const downloadBtn = document.getElementById("downloadBtn");
   const clearBtn = document.getElementById("clearBtn");
   const backToClass = document.getElementById("backToClass");
-
   const breadcrumb = document.getElementById("breadcrumb");
   const saveStatus = document.getElementById("saveStatus");
-
   const taskCategoryTag = document.getElementById("taskCategoryTag");
   const taskClassLabel = document.getElementById("taskClassLabel");
 
-  const pdfLink = document.getElementById("pdfLink");
-
   /* TEHTÄVÄN TIEDOT */
 
-  if (title) title.textContent = task.title;
-
-  if (pdfLink) pdfLink.href = task.pdf;
+  if (title) {
+    title.textContent = task.title;
+  }
 
   if (taskCategoryTag) {
     taskCategoryTag.textContent = task.category;
@@ -45,7 +41,9 @@ window.addEventListener("load", function () {
     }
   }
 
-  if (taskClassLabel) taskClassLabel.textContent = task.class + ". luokka";
+  if (taskClassLabel) {
+    taskClassLabel.textContent = task.class + ". luokka";
+  }
 
   if (breadcrumb) {
     breadcrumb.textContent =
@@ -69,9 +67,7 @@ window.addEventListener("load", function () {
     });
   }
 
-  /* AUTOMAATTINEN TALLENNUS */
-
-  const storageKey = "digiopo_notes_" + id;
+  /* LADATAAN AIEMPI VASTAUS */
 
   if (notes) {
     const saved = localStorage.getItem(storageKey);
@@ -79,7 +75,11 @@ window.addEventListener("load", function () {
     if (saved) {
       notes.value = saved;
     }
+  }
 
+  /* AUTOMAATTINEN TALLENNUS */
+
+  if (notes) {
     let saveTimer;
 
     notes.addEventListener("input", function () {
@@ -92,12 +92,14 @@ window.addEventListener("load", function () {
       clearTimeout(saveTimer);
 
       saveTimer = setTimeout(function () {
-        if (saveStatus) saveStatus.textContent = "";
+        if (saveStatus) {
+          saveStatus.textContent = "";
+        }
       }, 1500);
     });
   }
 
-  /* TYHJENNÄ */
+  /* TYHJENNÄ VASTAUS */
 
   if (clearBtn && notes) {
     clearBtn.addEventListener("click", function () {
@@ -105,42 +107,47 @@ window.addEventListener("load", function () {
         notes.value = "";
         localStorage.removeItem(storageKey);
 
-        if (saveStatus) saveStatus.textContent = "Vastaus tyhjennetty";
+        if (saveStatus) {
+          saveStatus.textContent = "Vastaus tyhjennetty";
+        }
       }
     });
   }
 
-  /* WORD LATAUS */
+  /* WORD-LATAUS */
+
+  function lataaWordTiedosto(filename, heading, content) {
+    const html =
+      "<html><head><meta charset='utf-8'></head><body>" +
+      "<h1>" +
+      heading +
+      "</h1>" +
+      "<p>" +
+      content.replace(/\n/g, "<br>") +
+      "</p>" +
+      "</body></html>";
+
+    const blob = new Blob(["\ufeff", html], {
+      type: "application/msword",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  }
 
   if (downloadBtn && notes) {
     downloadBtn.addEventListener("click", function () {
       const text = notes.value || "";
-
-      const html =
-        "<html><head><meta charset='utf-8'></head><body>" +
-        "<h1>" +
-        task.title +
-        "</h1>" +
-        "<p>" +
-        text.replace(/\n/g, "<br>") +
-        "</p>" +
-        "</body></html>";
-
-      const blob = new Blob(["\ufeff", html], {
-        type: "application/msword",
-      });
-
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download = task.title + ".doc";
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      URL.revokeObjectURL(url);
+      lataaWordTiedosto(task.title + ".doc", task.title, text);
     });
   }
 });

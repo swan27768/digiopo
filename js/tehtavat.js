@@ -34,6 +34,17 @@ const tehtavat = {
     ],
     pdf: "tehtavat/tet.pdf",
   },
+  tet: {
+    title: "TET-päiväkirja",
+    category: "tet",
+    class: "9",
+    instructions: [
+      "Missä olit TET-jaksolla?",
+      "Mitä työtehtäviä teit?",
+      "Mitä opit työelämästä?",
+    ],
+    pdf: "tehtavat/tet.pdf",
+  },
 };
 
 const tehtavaJarjestys = ["vahvuudet", "opiskelutaidot", "tet"];
