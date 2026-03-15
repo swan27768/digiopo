@@ -3,14 +3,13 @@ window.addEventListener("load", function () {
   const id = params.get("id");
 
   if (!id || !tehtavat || !tehtavat[id]) {
+    document.body.innerHTML = "<p>Tehtävää ei löytynyt.</p>";
     console.error("Tehtävää ei löytynyt:", id);
     return;
   }
 
   const task = tehtavat[id];
   const storageKey = "digiopo_notes_" + id;
-
-  /* HTML-ELEMENTIT */
 
   const title = document.getElementById("taskTitle");
   const instructions = document.getElementById("taskInstructions");
@@ -23,14 +22,16 @@ window.addEventListener("load", function () {
   const taskCategoryTag = document.getElementById("taskCategoryTag");
   const taskClassLabel = document.getElementById("taskClassLabel");
 
-  /* TEHTÄVÄN TIEDOT */
-
   if (title) {
     title.textContent = task.title;
   }
 
   if (taskCategoryTag) {
     taskCategoryTag.textContent = task.category;
+
+    if (task.category === "vahvuudet") {
+      taskCategoryTag.classList.add("tag-vahvuudet");
+    }
 
     if (task.category === "opiskelu") {
       taskCategoryTag.classList.add("tag-opiskelu");
@@ -44,6 +45,9 @@ window.addEventListener("load", function () {
   if (taskClassLabel) {
     taskClassLabel.textContent = task.class + ". luokka";
   }
+  if (task.category === "oppiminen") {
+    taskCategoryTag.classList.add("tag-oppiminen");
+  }
 
   if (breadcrumb) {
     breadcrumb.textContent =
@@ -55,8 +59,6 @@ window.addEventListener("load", function () {
     backToClass.textContent = "← Takaisin " + task.class + ". luokan sivulle";
   }
 
-  /* OHJEET */
-
   if (instructions) {
     instructions.innerHTML = "";
 
@@ -67,17 +69,12 @@ window.addEventListener("load", function () {
     });
   }
 
-  /* LADATAAN AIEMPI VASTAUS */
-
   if (notes) {
     const saved = localStorage.getItem(storageKey);
-
     if (saved) {
       notes.value = saved;
     }
   }
-
-  /* AUTOMAATTINEN TALLENNUS */
 
   if (notes) {
     let saveTimer;
@@ -99,8 +96,6 @@ window.addEventListener("load", function () {
     });
   }
 
-  /* TYHJENNÄ VASTAUS */
-
   if (clearBtn && notes) {
     clearBtn.addEventListener("click", function () {
       if (confirm("Tyhjennetäänkö vastaus?")) {
@@ -113,8 +108,6 @@ window.addEventListener("load", function () {
       }
     });
   }
-
-  /* WORD-LATAUS */
 
   function lataaWordTiedosto(filename, heading, content) {
     const html =
@@ -147,7 +140,8 @@ window.addEventListener("load", function () {
   if (downloadBtn && notes) {
     downloadBtn.addEventListener("click", function () {
       const text = notes.value || "";
-      lataaWordTiedosto(task.title + ".doc", task.title, text);
+      const safeFileName = task.title.replace(/[^\wäöåÄÖÅ\- ]/g, "").trim();
+      lataaWordTiedosto(safeFileName + ".doc", task.title, text);
     });
   }
 });

@@ -1,4 +1,80 @@
 const tehtavat = {
+  7: [
+    {
+      aiheId: "tasks-omat-vahvuudet",
+      title: "Robo saapuu kouluun",
+      description:
+        "Interaktiivinen tarina, jossa teet valintoja ja etenet tarinassa.",
+      href: "../robotarina.html",
+      tag: "Interaktiivinen",
+      tagClass: "tag-interactive",
+      icon: "fa-book-open",
+    },
+    {
+      aiheId: "tasks-omat-vahvuudet",
+      title: "Minun vahvuuteni",
+      description: "Pohdi omia vahvuuksiasi ja kirjoita ne ylös tehtävään.",
+      href: "../tehtava.html?id=vahvuudet",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+    {
+      aiheId: "tasks-opiskelutaidot",
+      title: "Minun opiskelutaitoni",
+      description:
+        "Arvioi omia opiskelutaitojasi ja mieti, mitä haluat kehittää.",
+      href: "../tehtava.html?id=opiskelutaidot",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+    {
+      aiheId: "tasks-opiskelutaidot",
+      title: "Ajankäytön harjoitus",
+      description:
+        "Kokeile interaktiivista tehtävää ja mieti, miten käytät aikaasi.",
+      href: "../tehtavat/ajankaytto-peli.html",
+      tag: "Interaktiivinen",
+      tagClass: "tag-interactive",
+      icon: "fa-gamepad",
+    },
+    {
+      aiheId: "tasks-mina-oppijana",
+      title: "Minä oppijana",
+      description:
+        "Tutki omia oppimistapojasi ja kirjaa huomioita itsestäsi oppijana.",
+      href: "../tehtava.html?id=mina-oppijana",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+  ],
+
+  8: [
+    {
+      aiheId: "tasks-tet",
+      title: "TET-päiväkirja",
+      description: "Kirjoita TET-jakson kokemuksista ja oppimisesta.",
+      href: "../tehtava.html?id=tet8",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+  ],
+
+  9: [
+    {
+      aiheId: "tasks-tet",
+      title: "TET-päiväkirja",
+      description: "Kirjoita TET-jakson kokemuksista ja oppimisesta.",
+      href: "../tehtava.html?id=tet9",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+  ],
+
   vahvuudet: {
     title: "Omat vahvuudet",
     category: "vahvuudet",
@@ -23,7 +99,19 @@ const tehtavat = {
     pdf: "tehtavat/opiskelutaidot.pdf",
   },
 
-  tet: {
+  "mina-oppijana": {
+    title: "Minä oppijana",
+    category: "oppiminen",
+    class: "7",
+    instructions: [
+      "Millä tavalla opit parhaiten?",
+      "Mikä auttaa sinua keskittymään?",
+      "Missä haluaisit kehittyä oppijana?",
+    ],
+    pdf: "tehtavat/mina-oppijana.pdf",
+  },
+
+  tet8: {
     title: "TET-päiväkirja",
     category: "tet",
     class: "8",
@@ -34,7 +122,8 @@ const tehtavat = {
     ],
     pdf: "tehtavat/tet.pdf",
   },
-  tet: {
+
+  tet9: {
     title: "TET-päiväkirja",
     category: "tet",
     class: "9",
@@ -47,4 +136,8 @@ const tehtavat = {
   },
 };
 
-const tehtavaJarjestys = ["vahvuudet", "opiskelutaidot", "tet"];
+const tehtavaJarjestys = {
+  7: ["vahvuudet", "opiskelutaidot", "mina-oppijana"],
+  8: ["tet8"],
+  9: ["tet9"],
+};
