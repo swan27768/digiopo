@@ -1,27 +1,65 @@
-const classNumber = window.currentClassNumber || "7";
+function luoTehtavaKortti(tehtava) {
+  return `
+    <a class="course-card" href="${tehtava.href}">
+      <h3>
+        ${tehtava.title}
+        <i class="fa-solid ${tehtava.icon}"></i>
+      </h3>
+      <p>${tehtava.description}</p>
+      <span class="tag ${tehtava.tagClass || ""}">${tehtava.tag}</span>
+    </a>
+  `;
+}
 
-const cards = document.getElementById("classCards");
+function naytaLuokanTehtavat() {
+  const classNumber = window.currentClassNumber || "7";
+  const luokanTehtavat = tehtavat[classNumber] || [];
 
-Object.keys(tehtavat).forEach(function (id) {
-  const task = tehtavat[id];
+  const kasitellyt = new Set();
 
-  if (task.class !== classNumber) return;
+  luokanTehtavat.forEach((tehtava) => {
+    const container = document.getElementById(tehtava.aiheId);
+    if (!container) return;
 
-  const card = document.createElement("a");
+    if (!kasitellyt.has(tehtava.aiheId)) {
+      container.innerHTML = "";
+      kasitellyt.add(tehtava.aiheId);
+    }
 
-  card.className = "course-card";
-  card.href = "../tehtava.html?id=" + id;
+    container.innerHTML += luoTehtavaKortti(tehtava);
+  });
+}
 
-  card.innerHTML =
-    "<h3>" +
-    task.title +
-    "</h3>" +
-    "<p>" +
-    task.instructions[0] +
-    "</p>" +
-    "<span class='tag'>" +
-    task.category +
-    "</span>";
+function aktivoiSisallysluettelo() {
+  const sections = document.querySelectorAll(".aihe-osio");
+  const navLinks = document.querySelectorAll(".aihelista a");
 
-  cards.appendChild(card);
+  function setActiveLink() {
+    let currentId = "";
+
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+
+      if (window.scrollY >= sectionTop - 140) {
+        currentId = section.getAttribute("id");
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove("active");
+
+      if (link.getAttribute("href") === `#${currentId}`) {
+        link.classList.add("active");
+      }
+    });
+  }
+
+  window.addEventListener("scroll", setActiveLink);
+  window.addEventListener("load", setActiveLink);
+  setActiveLink();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  naytaLuokanTehtavat();
+  aktivoiSisallysluettelo();
 });
