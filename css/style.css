@@ -1444,22 +1444,42 @@ MOBILE
   bottom: 20px;
 }
 
+.maskotti-laatikko {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  left: auto !important;
+  top: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+}
+
 .maskotti {
-  width: 120px;
-  max-width: 20vw;
-  height: auto;
-  display: block;
+  width: 120px !important;
+  max-width: 20vw !important;
+  height: auto !important;
+  display: block !important;
 }
 
 .puhekupla {
-  margin-bottom: 10px;
-  background: white;
-  color: #222;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 10px !important;
+  background: white !important;
+  color: #222 !important;
+  padding: 10px 14px !important;
+  border-radius: 16px !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  position: relative !important;
+  pointer-events: auto;
 }
 
 .puhekupla::after {
@@ -1548,4 +1568,164 @@ MOBILE
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(4px);
   border-radius: 20px;
+}
+
+/* =========================
+   AIHE-OSIOT
+========================= */
+html {
+  scroll-behavior: smooth;
+}
+
+.aihelista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.aihelista a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #374151;
+  text-decoration: none;
+  transition: 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.aihelista a:hover {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.aihelista a.active {
+  background: #eef2ff;
+  color: #312e81;
+  font-weight: 700;
+  border-left: 4px solid #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+}
+
+.aihe-osio {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  scroll-margin-top: 100px;
+}
+
+.aihe-otsikko {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid #4f46e5;
+}
+
+.aihe-otsikko h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  color: #111827;
+}
+
+.aihe-otsikko p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.theory-card {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 22px;
+}
+
+.theory-text h3,
+.tasks-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.theory-text p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.theory-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.tasks-section {
+  padding-top: 8px;
+}
+
+.task-list {
+  display: grid;
+  gap: 16px;
+}
+
+.maskotti-laatikko {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 9999;
+}
+
+.maskotti {
+  width: 120px;
+  max-width: 20vw;
+  height: auto;
+  display: block;
+}
+
+.puhekupla {
+  margin-bottom: 10px;
+  background: white;
+  color: #222;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .theory-card {
+    grid-template-columns: 1fr;
+  }
+
+  .aihelista {
+    position: static;
+  }
+
+  .maskotti-laatikko {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .maskotti {
+    width: 90px;
+  }
+
+  .puhekupla {
+    font-size: 15px;
+    padding: 8px 12px;
+  }
 }
