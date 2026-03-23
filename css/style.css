@@ -1429,39 +1429,6 @@ MOBILE
     width: 100%;
   }
 }
-.maskotti-laatikko {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 2000;
-}
-.book-page-right .maskotti-laatikko {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-}
-
-.maskotti-laatikko {
-  position: fixed !important;
-  right: 20px !important;
-  bottom: 20px !important;
-  left: auto !important;
-  top: auto !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  width: auto !important;
-  height: auto !important;
-  margin: 0 !important;
-  transform: none !important;
-  z-index: 9999 !important;
-  pointer-events: none;
-}
-
 .maskotti {
   width: 120px !important;
   max-width: 20vw !important;
@@ -1677,35 +1644,64 @@ html {
   display: grid;
   gap: 16px;
 }
-
 .maskotti-laatikko {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  top: 80px;
+  left: -220px; /* vähän enemmän ulos -> ei vilku reunasta */
+  z-index: 9999;
+  transition: left 0.6s ease;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  z-index: 9999;
+  align-items: flex-start; /* tärkeä */
 }
 
+.maskotti-laatikko.nakyvissa {
+  left: 20px;
+}
+
+/* MASKOTTI */
 .maskotti {
   width: 120px;
   max-width: 20vw;
   height: auto;
   display: block;
+  transition: transform 0.3s ease;
 }
 
+.maskotti.lahempana {
+  transform: scale(1.05);
+}
+
+/* PUHEKUPLA */
 .puhekupla {
   margin-bottom: 10px;
   background: white;
   color: #222;
   padding: 10px 14px;
   border-radius: 16px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px; /* pienempi = parempi mobiilissa */
+  font-weight: 600;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 220px;
+
+  /* ✨ tärkeä lisä */
+  position: relative;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
+/* PUHEKUPLAN "NUOLI" */
+.puhekupla::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
 @media (max-width: 768px) {
   .theory-card {
     grid-template-columns: 1fr;
@@ -1715,9 +1711,20 @@ html {
     position: static;
   }
 
+  /* 🔥 MASKOTTI – mobiilissa alas oikealle */
   .maskotti-laatikko {
-    right: 10px;
+    top: auto;
+    left: auto;
     bottom: 10px;
+    right: 10px;
+
+    /* poistetaan sisäänliuku mobiilissa */
+    transform: none;
+    transition: none;
+  }
+
+  .maskotti-laatikko.nakyvissa {
+    left: auto;
   }
 
   .maskotti {
@@ -1725,13 +1732,22 @@ html {
   }
 
   .puhekupla {
-    font-size: 15px;
+    font-size: 14px;
     padding: 8px 12px;
+    max-width: 180px;
   }
-}
-.tag-oppiminen {
-  background: #ede9fe;
-  color: #6d28d9;
+
+  /* puhekupla maskotin yläpuolelle mobiilissa */
+  .puhekupla::after {
+    left: auto;
+    right: 20px;
+  }
+  .maskotti-laatikko.piilossa {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+  }
 }
 /* Etusivun intro */
 
