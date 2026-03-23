@@ -1,7 +1,7 @@
 const tehtavat = {
   7: [
     {
-      aiheId: "tasks-omat-vahvuudet",
+      aiheId: "tasks-tervetuloa",
       title: "Robo saapuu kouluun",
       description:
         "Interaktiivinen tarina, jossa teet valintoja ja etenet tarinassa.",
