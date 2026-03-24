@@ -175,7 +175,9 @@
     <!-- MASKOTTI LOGIIKKA -->
     <script>
       function setupMaskotti() {
-        if (window.innerWidth <= 768) return; // ei mobiiliin
+        if (window.innerWidth <= 768) return;
+        let lukittu = false;
+        let lukitusAjastin = null;
 
         const maskottiLaatikko = document.querySelector(".maskotti-laatikko");
         const maskotti = document.querySelector(".maskotti");
@@ -190,9 +192,14 @@
           "mina-oppijana": "Motivaatio hukassa? Et ole ainoa 👀",
           tulevaisuus: "Mikä vois olla sun juttu tulevaisuudessa? 👀",
 
-          tehtavat: "👉 Kokeile näitä tehtäviä!",
+          // 🔥 TÄHÄN KOHTAAN
+          tehtavat: [
+            "👀 Tässä kohtaa kannattaa pysähtyä",
+            "💡 Tee nämä – opit eniten tässä",
+            "✍️ Nyt on sun vuoro",
+            "🔥 Testaa itse – miten ajattelet?",
+          ],
         };
-
         function paivitaMaskotti() {
           let aktiivinenOsio = null;
 
@@ -207,40 +214,52 @@
           if (!aktiivinenOsio) return;
 
           const rect = aktiivinenOsio.getBoundingClientRect();
+          let uusiTop = rect.top + 40;
 
-          // 📍 perussijainti (osion kohdalle)
-          let uusiTop = window.scrollY + rect.top + 40;
-
-          // 🎯 tarkista näkyykö tehtävät
           const tehtavat = aktiivinenOsio.querySelector(".tasks-section");
 
           if (tehtavat) {
             const tehtavaRect = tehtavat.getBoundingClientRect();
 
-            if (
-              tehtavaRect.top < window.innerHeight &&
-              tehtavaRect.bottom > 0
-            ) {
-              // 👉 siirry tehtävien kohdalle
-              uusiTop = window.scrollY + tehtavaRect.top - 20;
+            const tehtavatNakyy =
+              tehtavaRect.top < window.innerHeight && tehtavaRect.bottom > 0;
 
-              // ✨ visuaalinen reaktio
+            if (tehtavatNakyy) {
+              uusiTop = tehtavaRect.top - 20;
+
               maskotti.classList.add("osoittaa");
 
-              // 💬 teksti
-              puhekupla.textContent = puhetekstit.tehtavat;
+              // 🔒 LUKITUS LOGIIKKA
+              if (!lukittu) {
+                lukittu = true;
+
+                // 🎲 valitaan satunnainen kannustava teksti
+                const tekstit = puhetekstit.tehtavat;
+                const satunnainen =
+                  tekstit[Math.floor(Math.random() * tekstit.length)];
+
+                puhekupla.style.opacity = 0;
+
+                setTimeout(() => {
+                  puhekupla.textContent = satunnainen;
+                  puhekupla.style.opacity = 1;
+                }, 150);
+
+                // ⏱ lukitus 2.5 sekuntia
+                lukitusAjastin = setTimeout(() => {
+                  lukittu = false;
+                }, 2500);
+              }
             } else {
               maskotti.classList.remove("osoittaa");
 
-              if (puhetekstit[aktiivinenOsio.id]) {
+              if (!lukittu && puhetekstit[aktiivinenOsio.id]) {
                 puhekupla.textContent = puhetekstit[aktiivinenOsio.id];
               }
             }
           }
 
-          // 🔒 estä liukuminen liian alas
-          const maxTop = document.body.scrollHeight - 300;
-          uusiTop = Math.min(uusiTop, maxTop);
+          uusiTop = Math.max(80, Math.min(uusiTop, window.innerHeight - 200));
 
           maskottiLaatikko.style.top = `${uusiTop}px`;
         }
