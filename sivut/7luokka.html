@@ -81,8 +81,25 @@
               <img src="../images/ylakoulu.png" alt="Yläkouluun siirtyminen" />
             </div>
           </div>
-          <div class="tasks-section">
-            <div class="task-list" id="tasks-tervetuloa"></div>
+          <div class="interactive-hero hero-7lk">
+            <div class="hero-content">
+              <div class="hero-badge">🤖 Interaktiivinen tarina</div>
+
+              <h3>Robo saapuu yläkouluun</h3>
+
+              <p>
+                Tee valintoja ja etene tarinassa. Mitä Robo tekee – ja mitä sinä
+                tekisit?
+              </p>
+
+              <a href="../robotarina.html" class="btn-hero">
+                🚀 Aloita tarina
+              </a>
+            </div>
+
+            <div class="hero-visual">
+              <i class="fa-solid fa-robot"></i>
+            </div>
           </div>
         </section>
 
@@ -176,99 +193,71 @@
     <script>
       function setupMaskotti() {
         if (window.innerWidth <= 768) return;
-        let lukittu = false;
-        let lukitusAjastin = null;
 
-        const maskottiLaatikko = document.querySelector(".maskotti-laatikko");
-        const maskotti = document.querySelector(".maskotti");
+        const maskotti = document.querySelector(".maskotti-laatikko");
         const puhekupla = document.querySelector(".puhekupla");
-
         const osiot = document.querySelectorAll(".aihe-osio");
 
+        if (!maskotti || !puhekupla || !osiot.length) return;
+
+        let viimeisin = null;
+        let piilotusAjastin = null;
+
         const puhetekstit = {
-          tervetuloa: "Tervetuloa! Aloita tästä 👇",
-          "omat-vahvuudet": "Mieti missä oot hyvä 💪",
-          opiskelutaidot: "Näitä taitoja oikeasti tarvitaan 🚀",
-          "mina-oppijana": "Motivaatio hukassa? Et ole ainoa 👀",
-          tulevaisuus: "Mikä vois olla sun juttu tulevaisuudessa? 👀",
-
-          // 🔥 TÄHÄN KOHTAAN
-          tehtavat: [
-            "👀 Tässä kohtaa kannattaa pysähtyä",
-            "💡 Tee nämä – opit eniten tässä",
-            "✍️ Nyt on sun vuoro",
-            "🔥 Testaa itse – miten ajattelet?",
-          ],
+          tervetuloa: "Tää on sun startti – rauhassa liikkeelle 🙂",
+          "omat-vahvuudet": "Missä jutussa sä oot hyvä – ihan oikeesti?",
+          opiskelutaidot: "Kokeile eri tapoja – löydä mikä toimii sulle",
+          "mina-oppijana": "Ei aina jaksa – ja se on ihan ok",
+          tulevaisuus: "Ei tarvii tietää vielä – riittää että mietit 👀",
         };
-        function paivitaMaskotti() {
-          let aktiivinenOsio = null;
 
-          osiot.forEach((osio) => {
-            const rect = osio.getBoundingClientRect();
-
-            if (rect.top < window.innerHeight * 0.4 && rect.bottom > 100) {
-              aktiivinenOsio = osio;
-            }
-          });
-
-          if (!aktiivinenOsio) return;
-
-          const rect = aktiivinenOsio.getBoundingClientRect();
-          let uusiTop = rect.top + 40;
-
-          const tehtavat = aktiivinenOsio.querySelector(".tasks-section");
-
-          if (tehtavat) {
-            const tehtavaRect = tehtavat.getBoundingClientRect();
-
-            const tehtavatNakyy =
-              tehtavaRect.top < window.innerHeight && tehtavaRect.bottom > 0;
-
-            if (tehtavatNakyy) {
-              uusiTop = tehtavaRect.top - 20;
-
-              maskotti.classList.add("osoittaa");
-
-              // 🔒 LUKITUS LOGIIKKA
-              if (!lukittu) {
-                lukittu = true;
-
-                // 🎲 valitaan satunnainen kannustava teksti
-                const tekstit = puhetekstit.tehtavat;
-                const satunnainen =
-                  tekstit[Math.floor(Math.random() * tekstit.length)];
-
-                puhekupla.style.opacity = 0;
-
-                setTimeout(() => {
-                  puhekupla.textContent = satunnainen;
-                  puhekupla.style.opacity = 1;
-                }, 150);
-
-                // ⏱ lukitus 2.5 sekuntia
-                lukitusAjastin = setTimeout(() => {
-                  lukittu = false;
-                }, 2500);
-              }
-            } else {
-              maskotti.classList.remove("osoittaa");
-
-              if (!lukittu && puhetekstit[aktiivinenOsio.id]) {
-                puhekupla.textContent = puhetekstit[aktiivinenOsio.id];
-              }
-            }
-          }
-
-          uusiTop = Math.max(80, Math.min(uusiTop, window.innerHeight - 200));
-
-          maskottiLaatikko.style.top = `${uusiTop}px`;
+        function maskotinAani(teksti) {
+          const prefixit = ["🙂", "👀", "💭", "✨"];
+          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
+          return `${prefix} ${teksti}`;
         }
 
-        window.addEventListener("scroll", paivitaMaskotti);
-        paivitaMaskotti();
+        function naytaMaskotti(teksti) {
+          puhekupla.textContent = maskotinAani(teksti);
+
+          maskotti.classList.remove("piilossa");
+          maskotti.classList.add("nakyvissa");
+
+          clearTimeout(piilotusAjastin);
+          piilotusAjastin = setTimeout(() => {
+            maskotti.classList.remove("nakyvissa");
+            maskotti.classList.add("piilossa");
+          }, 3500);
+        }
+
+        function paivitaAktiivinenOsio() {
+          for (const osio of osiot) {
+            const rect = osio.getBoundingClientRect();
+
+            if (rect.top < window.innerHeight * 0.4 && rect.bottom > 0) {
+              if (viimeisin !== osio.id) {
+                viimeisin = osio.id;
+
+                if (puhetekstit[osio.id]) {
+                  naytaMaskotti(puhetekstit[osio.id]);
+                }
+              }
+              break;
+            }
+          }
+        }
+
+        setTimeout(() => {
+          naytaMaskotti("Moi! Lähdetään liikkeelle tästä 👇");
+        }, 800);
+
+        window.addEventListener("scroll", paivitaAktiivinenOsio);
       }
 
       window.addEventListener("load", setupMaskotti);
     </script>
+    <button id="scrollTopBtn" aria-label="Takaisin ylös">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
   </body>
 </html>
