@@ -53,6 +53,33 @@ const tehtavat = {
 
   8: [
     {
+      aiheId: "tasks-koulutus",
+      title: "Koulutusalat – oma suunta",
+      description: "Tutustu eri koulutusaloihin Twine-pelissä.",
+      href: "../pelit/koulutusalat.html",
+      tag: "Interaktiivinen",
+      tagClass: "tag-interactive",
+      icon: "fa-gamepad",
+    },
+    {
+      aiheId: "tasks-koulutus",
+      title: "Mitkä alat kiinnostaa?",
+      description: "Valitse 2–3 alaa ja perustele, miksi ne kiinnostavat.",
+      href: "../tehtava.html?id=kiinnostavat-alat",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+    {
+      aiheId: "tasks-koulutus",
+      title: "Yllättikö jokin ala?",
+      description: "Pohdi, oliko joku ala erilainen kuin ajattelit.",
+      href: "../tehtava.html?id=yllattava-ala",
+      tag: "Tehtävä",
+      tagClass: "",
+      icon: "fa-pencil",
+    },
+    {
       aiheId: "tasks-tet",
       title: "TET-päiväkirja",
       description: "Kirjoita TET-jakson kokemuksista ja oppimisesta.",
@@ -111,6 +138,30 @@ const tehtavat = {
     pdf: "tehtavat/mina-oppijana.pdf",
   },
 
+  "kiinnostavat-alat": {
+    title: "Mitkä alat kiinnostaa?",
+    category: "urat",
+    class: "8",
+    instructions: [
+      "Valitse 2–3 koulutusalaa, jotka kiinnostavat sinua eniten.",
+      "Kirjoita, mikä niissä tuntuu kiinnostavalta.",
+      "Mieti, sopisiko joku niistä sinulle tulevaisuudessa.",
+    ],
+    pdf: "tehtavat/kiinnostavat-alat.pdf",
+  },
+
+  "yllattava-ala": {
+    title: "Yllättikö jokin ala?",
+    category: "urat",
+    class: "8",
+    instructions: [
+      "Oliko joku koulutusala erilainen kuin ajattelit?",
+      "Mikä siinä yllätti?",
+      "Voisitko kiinnostua siitä enemmän myöhemmin?",
+    ],
+    pdf: "tehtavat/yllattava-ala.pdf",
+  },
+
   tet8: {
     title: "TET-päiväkirja",
     category: "tet",
@@ -138,6 +189,6 @@ const tehtavat = {
 
 const tehtavaJarjestys = {
   7: ["vahvuudet", "opiskelutaidot", "mina-oppijana"],
-  8: ["tet8"],
+  8: ["kiinnostavat-alat", "yllattava-ala", "tet8"],
   9: ["tet9"],
 };
