@@ -63,3 +63,27 @@ document.addEventListener("DOMContentLoaded", function () {
   naytaLuokanTehtavat();
   aktivoiSisallysluettelo();
 });
+
+function setupScrollTop() {
+  const btn = document.getElementById("scrollTopBtn");
+  if (!btn) return;
+
+  // näytä kun scrollataan alas
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      btn.classList.add("nakyvissa");
+    } else {
+      btn.classList.remove("nakyvissa");
+    }
+  });
+
+  // scroll ylös
+  btn.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+}
+
+window.addEventListener("load", setupScrollTop);
