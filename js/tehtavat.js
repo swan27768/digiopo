@@ -29,16 +29,7 @@ const tehtavat = {
       tagClass: "",
       icon: "fa-pencil",
     },
-    {
-      aiheId: "tasks-opiskelutaidot",
-      title: "Ajankäytön harjoitus",
-      description:
-        "Kokeile interaktiivista tehtävää ja mieti, miten käytät aikaasi.",
-      href: "../tehtavat/ajankaytto-peli.html",
-      tag: "Interaktiivinen",
-      tagClass: "tag-interactive",
-      icon: "fa-gamepad",
-    },
+
     {
       aiheId: "tasks-mina-oppijana",
       title: "Minä oppijana",
