@@ -27,9 +27,7 @@
             placeholder="Hae tehtävää..."
             autocomplete="off"
           />
-
           <i class="fa-solid fa-search search-icon"></i>
-
           <div id="searchResults"></div>
         </div>
       </div>
@@ -63,62 +61,54 @@
         <h1>DigiOpo – Minun polkuni</h1>
 
         <div class="intro-text">
-          <!-- HERO (kirjoitus + maskotti) -->
-          <div class="hero-writing">
+          <div class="hero">
             <div class="hero-bubble">
-              <svg
-                class="handwriting-svg"
-                viewBox="0 0 900 140"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-label="Haluatko onnistua elämässä?"
-                role="img"
-              >
-                <text x="20" y="95" class="handwriting-text">
-                  Haluatko onnistua elämässä?
-                </text>
-              </svg>
+              <p class="intro-step intro-cta delay-2">
+                Tässä digikirjassa pysähdyt pohtimaan itseäsi ja omaa suuntaasi:
+              </p>
+
+              <ul class="intro-step intro-list delay-3">
+                <li>opit tekemään omia valintoja</li>
+                <li>tunnistat omat vahvuutesi</li>
+                <li>uskallat kokeilla ja löytää omat juttusi</li>
+              </ul>
+
+              <p class="intro-step intro-cta delay-4">
+                Kaikkea et voi ennustaa – mutta voit vaikuttaa siihen, mihin
+                suuntaan lähdet.
+              </p>
+
+              <p class="intro-step intro-cta delay-5">
+                Aloita nyt ja ota ensimmäinen askel kohti omaa tulevaisuuttasi.
+              </p>
             </div>
 
-            <div class="hero-maskot">
-              <img
-                src="images/robo_maskotti.png"
-                alt="DigiOpon maskotti"
-                class="hero-maskot-img"
-              />
-            </div>
+            <!-- MASKOTTI -->
+            <img
+              src="images/robo_maskotti.png"
+              alt="DigiOpon maskotti"
+              class="hero-mascot"
+            />
           </div>
-
-          <!-- STEPIT -->
-        <div class="intro-text animated-intro">
-          <p class="intro-step intro-cta" style="animation-delay:0.2s">
-  Tuuria et voi päättää – mutta valintoja voit.
-</p>
-
-          <p class="intro-step intro-cta" style="animation-delay:0.6s">
-            Tässä digikirjassa pysähdyt pohtimaan itseäsi ja omaa suuntaasi:
-          </p>
-
-          <ul class="intro-step intro-list" style="animation-delay:1s">
-            <li>opit tekemään omia valintoja</li>
-            <li>tunnistat omat vahvuutesi</li>
-            <li>uskallat kokeilla ja löytää omat juttusi</li>
-          </ul>
-
-          <p class="intro-step intro-cta" style="animation-delay:1.4s">
-            Kaikkea et voi ennustaa – mutta voit vaikuttaa siihen, mihin suuntaan lähdet.
-          </p>
-
-          <p class="intro-step intro-cta" style="animation-delay:1.8s">
-            Aloita nyt ja ota ensimmäinen askel kohti omaa tulevaisuuttasi.
-          </p>
         </div>
+
         <div id="taskCards" class="card-grid"></div>
       </main>
     </div>
 
     <script src="js/tehtavat.js"></script>
-
     <script src="js/kortit.js"></script>
     <script src="js/haku.js"></script>
+    <script>
+      document.getElementById("startGameBtn")?.addEventListener("click", () => {
+        // pieni “pelifiilis” efekti
+        document.body.classList.add("game-started");
+
+        // scroll luokkiin
+        document.querySelector(".class-grid")?.scrollIntoView({
+          behavior: "smooth",
+        });
+      });
+    </script>
   </body>
 </html>
