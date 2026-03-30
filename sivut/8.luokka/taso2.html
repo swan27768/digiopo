@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DigiOpo – Taso 2</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #eef2ff, #ffffff);
+      }
+
+      .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+      }
+
+      .ylapalkki {
+        display: flex;
+        justify-content: space-between;
+        background: #222;
+        color: white;
+        padding: 10px 15px;
+      }
+
+      .progress {
+        height: 8px;
+        background: #ddd;
+      }
+
+      .progress-bar {
+        height: 8px;
+        width: 33%;
+        background: #4caf50;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .maskotti {
+        background: #e0f7ff;
+        border-left: 5px solid #00aaff;
+      }
+
+      .valinta {
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 8px 0;
+        cursor: pointer;
+      }
+
+      .valinta:hover {
+        background: #f0f8ff;
+      }
+
+      .valittu {
+        border-color: #4caf50;
+        background: #e8ffe8;
+      }
+
+      button {
+        margin-top: 15px;
+        padding: 12px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background: #4caf50;
+        color: white;
+        font-size: 16px;
+      }
+
+      .lopetus {
+        display: none;
+        background: #e8ffe8;
+      }
+
+      .tulos {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ylapalkki">
+      ⭐ Pisteet: <span id="pisteet">0</span>
+      🧭 Taso 2 / 6
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar"></div>
+    </div>
+
+    <div class="container">
+      <h2>🧭 Mikä työ sopii minulle?</h2>
+
+      <div class="card maskotti">
+        👀 "Hyvä alku! Nyt katsotaan, millainen työ voisi tuntua sinulle
+        sopivalta."
+      </div>
+
+      <div class="card">
+        <h3>🎯 Valitse sinua kuvaavat työtyylit</h3>
+
+        <div class="valinta" onclick="toggle(this, 'ihmiset')">
+          👥 Tykkään työskennellä ihmisten kanssa
+        </div>
+        <div class="valinta" onclick="toggle(this, 'tekniikka')">
+          💻 Kiinnostun teknologiasta
+        </div>
+        <div class="valinta" onclick="toggle(this, 'luovuus')">
+          🎨 Haluan käyttää luovuutta
+        </div>
+        <div class="valinta" onclick="toggle(this, 'kasilla')">
+          🔧 Tykkään tehdä käsillä
+        </div>
+        <div class="valinta" onclick="toggle(this, 'ratkaisu')">
+          🧠 Tykkään ratkaista ongelmia
+        </div>
+
+        <button onclick="suorita()">Valmis</button>
+      </div>
+
+      <div class="card lopetus" id="lopetus">
+        <h3>🎉 Hyvä!</h3>
+        <p>Sait 10 pistettä.</p>
+        <p>🏅 Sait merkin: Työsuunnan tutkija</p>
+
+        <div class="tulos" id="tulos"></div>
+
+        <p>➡️ Seuraavaksi: Mitä taitoja tarvitaan?</p>
+      </div>
+
+      <a href="../8lk.html">⬅ Takaisin</a>
+    </div>
+
+    <script>
+      // alustus
+      if (!localStorage.getItem("pisteet")) {
+        localStorage.setItem("pisteet", 0);
+      }
+      paivitaPisteet();
+
+      let valinnat = [];
+
+      function toggle(el, arvo) {
+        if (valinnat.includes(arvo)) {
+          valinnat = valinnat.filter((v) => v !== arvo);
+          el.classList.remove("valittu");
+        } else {
+          valinnat.push(arvo);
+          el.classList.add("valittu");
+        }
+      }
+
+      function paivitaPisteet() {
+        document.getElementById("pisteet").innerText =
+          localStorage.getItem("pisteet");
+      }
+
+      function suorita() {
+        if (localStorage.getItem("taso2_tehty")) {
+          alert("Olet jo tehnyt tämän tason");
+          return;
+        }
+
+        // pisteet
+        let pisteet = parseInt(localStorage.getItem("pisteet"));
+        pisteet += 10;
+        localStorage.setItem("pisteet", pisteet);
+
+        // merkki
+        let merkit = JSON.parse(localStorage.getItem("merkit")) || [];
+        merkit.push("Työsuunnan tutkija");
+        localStorage.setItem("merkit", JSON.stringify(merkit));
+
+        // haetaan taso1 data
+        let suunta = JSON.parse(localStorage.getItem("suunta")) || {};
+
+        suunta.tyyli = valinnat;
+
+        localStorage.setItem("suunta", JSON.stringify(suunta));
+
+        // muodostetaan palaute
+        let palaute = "";
+
+        if (valinnat.includes("ihmiset") && valinnat.includes("luovuus")) {
+          palaute =
+            "Sinulle voisi sopia luova työ ihmisten parissa (esim. media, opetus).";
+        } else if (valinnat.includes("tekniikka")) {
+          palaute = "Sinua voisi kiinnostaa teknologiaan liittyvät alat.";
+        } else if (valinnat.includes("kasilla")) {
+          palaute = "Käytännön tekeminen voisi olla sinulle hyvä suunta.";
+        } else {
+          palaute = "Sinulla on monipuolinen profiili – hyvä lähtökohta!";
+        }
+
+        document.getElementById("tulos").innerText = palaute;
+
+        localStorage.setItem("taso2_tehty", true);
+
+        paivitaPisteet();
+
+        document.getElementById("lopetus").style.display = "block";
+      }
+    </script>
+  </body>
+</html>

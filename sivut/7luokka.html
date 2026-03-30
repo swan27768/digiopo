@@ -108,21 +108,27 @@
 
               <p>
                 Tee valintoja ja etene tarinassa. Mitä Robo tekee – ja mitä sinä
-                tekisit?
+                tekisit? <br />
+                Tehtävä: kirjoita kirje tulevaisuuteen.
               </p>
 
-              <a href="../robotarina.html" class="btn-hero">
-                🚀 Aloita tarina
-              </a>
+              <button class="btn-hero" onclick="avaaPeli()">Aloita</button>
             </div>
 
             <div class="hero-visual">
               <i class="fa-solid fa-robot"></i>
             </div>
           </div>
-          <div id="tervetuloa-mission" class="mission-section">
-            <div class="section-label mission-label">🎯 Mission</div>
 
+          <!-- 🔥 TÄHÄN IFRAME -->
+          <div
+            id="peliContainer"
+            class="interactive-wrapper"
+            style="display: none"
+          >
+            <iframe src="../robotarina.html"></iframe>
+          </div>
+          <div id="tervetuloa-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Yläkoulu-bingo</h4>
@@ -162,8 +168,6 @@
             <div class="task-list" id="tasks-omat-vahvuudet"></div>
           </div>
           <div id="omat-vahvuudet-mission" class="mission-section">
-            <div class="section-label mission-label">Toiminta</div>
-
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Vahvuusetsivä</h4>
@@ -200,8 +204,6 @@
             <div class="task-list" id="tasks-opiskelutaidot"></div>
           </div>
           <div id="opiskelutaidot-mission" class="mission-section">
-            <div class="section-label mission-label">Toiminta</div>
-
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Oppimistapapeli</h4>
@@ -236,8 +238,6 @@
             <div class="task-list" id="tasks-mina-oppijana"></div>
           </div>
           <div id="mina-oppijana-mission" class="mission-section">
-            <div class="section-label mission-label">Toiminta</div>
-
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Mikä auttaa jaksamaan?</h4>
@@ -275,8 +275,6 @@
             <div class="task-list" id="tasks-tulevaisuus"></div>
           </div>
           <div id="tulevaisuus-mission" class="mission-section">
-            <div class="section-label mission-label">Toiminta</div>
-
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Tulevaisuus-haaste</h4>
@@ -307,6 +305,13 @@
 
     <!-- MASKOTTI LOGIIKKA -->
     <script>
+      function avaaPeli() {
+        const peli = document.getElementById("peliContainer");
+        peli.style.display = "block";
+
+        // scrollaa peliin
+        peli.scrollIntoView({ behavior: "smooth" });
+      }
       function setupMaskotti() {
         if (window.innerWidth <= 768) return;
 

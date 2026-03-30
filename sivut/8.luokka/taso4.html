@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DigiOpo – Taso 4</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #fff7f0, #ffffff);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+      }
+
+      .ylapalkki {
+        display: flex;
+        justify-content: space-between;
+        background: #222;
+        color: white;
+        padding: 10px 15px;
+      }
+
+      .progress-bar {
+        height: 8px;
+        width: 66%;
+        background: #4caf50;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .maskotti {
+        background: #f0f8ff;
+        border-left: 5px solid #00aaff;
+      }
+
+      .ala {
+        border: 2px solid #ddd;
+        padding: 12px;
+        border-radius: 10px;
+        margin: 10px 0;
+        cursor: pointer;
+      }
+
+      .ala:hover {
+        background: #f9f9f9;
+      }
+
+      .valittu {
+        border-color: #4caf50;
+        background: #e8ffe8;
+      }
+
+      button {
+        margin-top: 15px;
+        padding: 12px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background: #4caf50;
+        color: white;
+        font-size: 16px;
+      }
+
+      .lopetus {
+        display: none;
+        background: #e8ffe8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ylapalkki">
+      ⭐ Pisteet: <span id="pisteet">0</span>
+      🧭 Taso 4 / 6
+    </div>
+
+    <div class="progress-bar"></div>
+
+    <div class="container">
+      <h2>🌍 Ammattien maailma</h2>
+
+      <div class="card maskotti">
+        🚀 "Nyt käytetään kaikkea, mitä olet valinnut. Tässä on aloja, jotka
+        voisivat sopia sinulle."
+      </div>
+
+      <div class="card" id="suositukset">
+        <h3>🎯 Sinulle ehdotetut alat</h3>
+      </div>
+
+      <div class="card">
+        <h3>🧭 Valitse sinua kiinnostavat alat</h3>
+
+        <div id="alat"></div>
+
+        <button onclick="suorita()">Valmis</button>
+      </div>
+
+      <div class="card lopetus" id="lopetus">
+        <h3>🎉 Hyvä valinta!</h3>
+        <p>Sait 10 pistettä.</p>
+        <p>🏅 Sait merkin: Ammattien tutkija</p>
+
+        <p id="valitutAlat"></p>
+
+        <p>➡️ Seuraavaksi: Miten sinne pääsee?</p>
+      </div>
+
+      <a href="../8lk.html">⬅ Takaisin</a>
+    </div>
+
+    <script>
+      // alustus
+      if (!localStorage.getItem("pisteet")) {
+        localStorage.setItem("pisteet", 0);
+      }
+      paivitaPisteet();
+
+      let valinnat = [];
+
+      function paivitaPisteet() {
+        document.getElementById("pisteet").innerText =
+          localStorage.getItem("pisteet");
+      }
+
+      // haetaan profiili
+      let suunta = JSON.parse(localStorage.getItem("suunta")) || {};
+
+      let ehdotukset = [];
+
+      // SUOSITUSLOGIIKKA
+      if (suunta.tyyli?.includes("ihmiset")) {
+        ehdotukset.push("Sosiaali- ja terveysala");
+        ehdotukset.push("Opetus ja kasvatus");
+      }
+
+      if (suunta.tyyli?.includes("tekniikka")) {
+        ehdotukset.push("Teknologia-ala");
+        ehdotukset.push("IT-ala");
+      }
+
+      if (suunta.taidot?.includes("luovuus")) {
+        ehdotukset.push("Media-ala");
+        ehdotukset.push("Luovat alat");
+      }
+
+      if (suunta.taidot?.includes("kasilla")) {
+        ehdotukset.push("Rakennusala");
+        ehdotukset.push("Käsityöammatit");
+      }
+
+      // fallback
+      if (ehdotukset.length === 0) {
+        ehdotukset = ["Palveluala", "Kaupan ala", "Yrittäjyys"];
+      }
+
+      // poistetaan duplikaatit
+      ehdotukset = [...new Set(ehdotukset)];
+
+      // NÄYTETÄÄN SUOSITUKSET
+      let suositusDiv = document.getElementById("suositukset");
+
+      ehdotukset.forEach((ala) => {
+        let el = document.createElement("div");
+        el.innerText = "⭐ " + ala;
+        suositusDiv.appendChild(el);
+      });
+
+      // VALINTA
+      let alatDiv = document.getElementById("alat");
+
+      ehdotukset.forEach((ala) => {
+        let el = document.createElement("div");
+        el.className = "ala";
+        el.innerText = ala;
+
+        el.onclick = () => {
+          if (valinnat.includes(ala)) {
+            valinnat = valinnat.filter((a) => a !== ala);
+            el.classList.remove("valittu");
+          } else {
+            valinnat.push(ala);
+            el.classList.add("valittu");
+          }
+        };
+
+        alatDiv.appendChild(el);
+      });
+
+      function suorita() {
+        if (localStorage.getItem("taso4_tehty")) {
+          alert("Olet jo tehnyt tämän tason");
+          return;
+        }
+
+        // pisteet
+        let pisteet = parseInt(localStorage.getItem("pisteet"));
+        pisteet += 10;
+        localStorage.setItem("pisteet", pisteet);
+
+        // tallennus
+        suunta.alat = valinnat;
+        localStorage.setItem("suunta", JSON.stringify(suunta));
+
+        // merkki
+        let merkit = JSON.parse(localStorage.getItem("merkit")) || [];
+        merkit.push("Ammattien tutkija");
+        localStorage.setItem("merkit", JSON.stringify(merkit));
+
+        document.getElementById("valitutAlat").innerText =
+          "Valitsit: " + valinnat.join(", ");
+
+        document.getElementById("lopetus").style.display = "block";
+
+        localStorage.setItem("taso4_tehty", true);
+
+        paivitaPisteet();
+      }
+    </script>
+  </body>
+</html>
