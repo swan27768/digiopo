@@ -14159,8 +14159,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         id="twine-user-stylesheet"
         type="text/twine-css"
       >
+        :root {
+          --color-primary: #003366;
+          --color-accent: #ff8c00;
+
+          --color-bg: #eef1f4;
+
+          --color-card: #ffffff;
+          --color-soft: #fff8e6;
+
+          --color-border: #000;
+          --space-xs: 6px;
+          --space-sm: 10px;
+          --space-md: 16px;
+          --space-lg: 24px;
+          --space-xl: 32px;
+        }
         /* ==========================================================
-   POISTA SUGARCUBEN UI
+   RESET + PERUS
    ========================================================== */
 
         #sidebar,
@@ -14171,228 +14187,322 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
 
         body {
-          line-height: 1.6;
-          background-color: #eef1f4;
-          color: #000;
-          background-color: #eef1f4;
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: clamp(16px, 1.8vw, 18px);
-          line-height: 1.65;
           margin: 0;
-          overflow-x: hidden;
+          padding: 20px;
+          font-family: Arial, Helvetica, sans-serif;
+          background: #eef1f4;
+          color: #000;
+          line-height: 1.6;
         }
 
-        /* ==========================================================
-   RAKENNE (tasapainotettu)
-   ========================================================== */
+        .tw-story {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
 
         .passage {
-          max-width: 680px;
+          max-width: 800px;
           margin: 0 auto;
-          padding: 0 14px;
         }
+
+        /* Teksti */
 
         p,
         li {
-          hyphens: auto;
+          overflow-wrap: normal;
           word-break: normal;
-          overflow-wrap: break-word;
+          hyphens: auto;
         }
+
         p {
-          text-wrap: balance;
-          line-height: 1.6;
           margin: 6px 0;
           max-width: 65ch;
         }
 
-        h3 {
-          font-size: 1.15em;
-          line-height: 1.3;
-          margin-bottom: 6px;
+        ul {
+          margin: 6px 0 6px 18px;
+        }
+        p {
+          margin: 0 0 var(--space-sm);
+          max-width: 65ch;
         }
 
-        /* ==========================================================
-   LUKUOTSIKKO
-   ========================================================== */
+        ul {
+          margin: 0 0 var(--space-md) 18px;
+        }
+
+        li {
+          margin-bottom: var(--space-xs);
+        }
+
+        h3 {
+          margin-bottom: var(--space-sm);
+        }
+
+        /* Kortit */
+
+        .card {
+          padding: var(--space-md);
+          margin: var(--space-lg) 0;
+        }
 
         .chapter {
-          background: #ffffff;
-          border: 1px solid #cfcfcf;
-          padding: 10px 14px;
-          margin-bottom: 6px;
-        }
-
-        .chapter .kicker {
-          font-weight: 700;
-          font-size: 0.8em;
+          background: #fff;
+          border: 2px solid #000;
+          border-radius: 12px;
+          padding: var(--space-sm) var(--space-md);
+          margin-bottom: var(--space-md);
         }
 
         .chapter .title {
           font-weight: 700;
-          font-size: 1.15em;
-          margin-top: 2px;
           color: #003366;
         }
+        /* ==========================================
+   PERUS (iframe-yhteensopiva)
+   ========================================== */
 
-        /* ==========================================================
-   KORTIT
-   ========================================================== */
-
-        .card {
-          background: #ffffff;
-          border: 1px solid #cfcfcf;
-          padding: 10px 14px;
-          margin-bottom: 6px;
+        body {
+          margin: 0;
+          padding: 16px;
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          background: #eef1f4;
         }
 
-        /* ==========================================================
-   ROBO
-   ========================================================== */
+        .passage {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 0 var(--space-sm);
+        }
+
+        /* ==========================================
+   TEKSTI (estää rumat rivikatkot)
+   ========================================== */
+
+        p,
+        li {
+          overflow-wrap: normal;
+          word-break: normal;
+          hyphens: auto;
+        }
+
+        p {
+          max-width: 65ch;
+          margin-bottom: 10px;
+        }
+
+        /* ==========================================
+   ROBO LAYOUT (vakaa)
+   ========================================== */
 
         .robo-intro {
           display: flex;
+          margin-bottom: 18px;
+          gap: var(--space-md);
           align-items: flex-start;
-          gap: 10px; /* hieman tiiviimpi */
-          flex-wrap: wrap;
+          margin-bottom: var(--space-lg);
         }
 
         .robo-intro img {
-          width: 140px; /* tasapainoinen koko */
-          height: auto;
+          width: 110px;
+          flex-shrink: 0;
         }
 
-        .robo-bubble {
-          position: relative;
+        .robo-bubble-safe {
+          flex: 1;
+          min-width: 0; /* 🔥 kriittinen */
+          max-width: 620px;
+
           background: #ffffff;
-          border: 3px solid #000;
-          border-radius: 22px;
-          padding: 10px 14px;
-          max-width: 500px;
-          box-shadow: 2px 2px 0px #000;
+          border: 3px solid var(--color-border);
+          border-radius: 18px;
+          padding: var(--space-md);
+          box-shadow: 2px 2px 0 #000;
         }
-
-        /* Häntä hieman pienempi */
-
-        .robo-bubble::after {
-          left: -16px;
-          top: 42px;
-          width: 16px;
-          height: 16px;
-        }
-
-        .robo-bubble::before {
-          left: -30px;
-          top: 56px;
-          width: 10px;
-          height: 10px;
-        }
-
-        /* ==========================================================
-   PROFIILI
-   ========================================================== */
-
-        .profile-card {
-          border: 3px solid #000;
-          border-radius: 12px;
-          padding: 8px 12px;
-          margin-bottom: 6px;
+        .robo-bubble-safe.emphasis {
           background: #fff8e6;
+          border-color: var(--color-accent);
+        }
+        /* ==========================================
+   KORTIT
+   ========================================== */
+
+        .card {
+          background: var(--color-card);
+          border: 1px solid #cfcfcf;
+          border-radius: 12px;
+          padding: var(--space-md);
+          margin: var(--space-lg) 0;
+        }
+        .card-think {
+          background: #eef5ff;
+          border-left: 6px solid #3b82f6;
+          border-radius: 12px;
+          padding: var(--space-xs);
+          margin: var(--space-lg) 0;
+        }
+        .card-success {
+          background: #e6f9f0;
+          border-left: 6px solid #10b981;
+        }
+        .card-warning {
+          background: #ffecec;
+          border-left: 6px solid #ef4444;
         }
 
-        .profile-card h3 {
-          font-size: 1em;
-          margin: 0 0 2px 0;
+        /* ==========================================
+   TAITOLISTA (FIXED – EI TÄRINÄÄ)
+   ========================================== */
+
+        .skill-grid {
+          justify-content: center;
+          margin-top: 14px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-md);
+          margin-top: var(--space-md);
         }
 
-        /* ==========================================================
-   NAPIT
-   ========================================================== */
+        .skill-item {
+          background: var(--color-soft);
+          border: 2px solid var(--color-border);
+          border-radius: 16px;
+          font-weight: 700;
+          position: relative;
+          width: 200px;
+          min-height: 80px;
+          padding: var(--space-sm);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        /* otsikko */
+
+        .skill-title {
+          pointer-events: none;
+        }
+
+        /* selitys */
+
+        .skill-desc {
+          position: absolute;
+          inset: 0;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          padding: 12px;
+
+          background: #fff8e6;
+          font-weight: normal;
+          font-size: 0.9em;
+          line-height: 1.4;
+
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+
+        /* hover */
+
+        .skill-item:hover .skill-desc {
+          opacity: 1;
+        }
+
+        .skill-item:hover .skill-title {
+          opacity: 0;
+        }
+
+        /* ==========================================
+   NAPIT (säilytetään tyyli)
+   ========================================== */
 
         button,
         .macro-button {
-          background: #ff8c00;
-          color: #000;
-          border: 3px solid #000;
           border-radius: 24px 20px 26px 18px;
-          padding: 6px 14px;
-          font-size: 0.9em;
+          padding: 10px 18px;
           font-weight: 800;
           cursor: pointer;
-          box-shadow: 3px 3px 0px #000;
-          margin: 6px 6px 0 0; /* 🔥 hieman enemmän tilaa → helpompi klikata */
-          transition:
-            transform 0.08s ease,
-            box-shadow 0.08s ease;
-        }
-
-        button:hover {
-          background: #ffa733;
+          box-shadow: 3px 3px 0 #000;
+          margin: 6px;
+          background: var(--color-accent);
+          border: 3px solid #000;
         }
 
         button:active {
           transform: translate(2px, 2px);
-          box-shadow: 1px 1px 0px #000;
+          box-shadow: 1px 1px 0 #000;
         }
 
-        button:focus {
-          outline: 3px solid #003366;
-          outline-offset: 3px;
+        /* sekundääri nappi */
+
+        .btn-secondary {
+          background: #ddd;
         }
-
-        /* ==========================================================
-   TEKSTIKENTÄT
-   ========================================================== */
-
-        input[type="text"],
-        textarea {
-          background-color: #ffffff;
+        .next-button-container a {
+          display: inline-block;
+          background: #ff8c00;
           color: #000;
-          border: 2px solid #333;
-          border-radius: 8px;
-          padding: 8px 10px;
-          font-size: 1em;
-          width: 100%;
-          max-width: 480px;
-          margin-top: 4px;
+          border: 3px solid #000;
+          border-radius: 24px 20px 26px 18px;
+          padding: 10px 18px;
+          font-weight: 800;
+          text-decoration: none;
+          box-shadow: 3px 3px 0 #000;
+          margin: 6px;
         }
 
-        textarea.auto-grow {
-          min-height: 100px;
-          resize: none;
-          overflow: hidden;
+        .next-button-container a:hover {
+          background: #ffa733;
         }
 
-        /* Fokus */
-
-        textarea.auto-grow,
-        textarea.auto-grow:hover,
-        textarea.auto-grow:focus,
-        textarea.auto-grow:active {
-          background-color: #ffffff !important;
-          color: #000 !important;
-          border: 3px solid #000 !important;
-          outline: none !important;
-          box-shadow: none !important;
+        .next-button-container a:active {
+          transform: translate(2px, 2px);
+          box-shadow: 1px 1px 0 #000;
         }
 
-        textarea.auto-grow:focus {
-          border-color: #003366 !important;
+        /* ==========================================
+   NAPPIRIVI
+   ========================================== */
+
+        .next-button-container {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: var(--space-sm);
+          margin-top: var(--space-lg);
         }
 
-        /* ==========================================================
-   TEKSTI
-   ========================================================== */
+        /* ==========================================
+   MOBIILI
+   ========================================== */
 
-        p {
-          margin: 4px 0;
-        }
+        @media (max-width: 700px) {
+          .robo-intro {
+            flex-direction: column;
+            align-items: center;
+          }
 
-        ul {
-          margin: 4px 0 4px 16px;
-        }
+          .robo-intro img {
+            width: 90px;
+          }
 
-        li {
-          margin-bottom: 2px;
+          .skill-item {
+            width: 100%;
+          }
+
+          .skill-desc {
+            opacity: 1;
+          }
+
+          .skill-title {
+            display: none;
+          }
         }
 
         /* ==========================================================
@@ -14404,46 +14514,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           align-items: center;
           justify-content: center;
           width: 100%;
-          min-height: 100vh;
-          margin: 0;
-          padding: 0;
+          height: 100vh;
           background-color: #eef1f4;
           text-decoration: none;
           color: inherit;
+          cursor: pointer;
         }
 
         .cover-inner {
           text-align: center;
-          max-width: 520px;
-          margin: 0 auto;
         }
 
         .cover-robo {
-          width: 150px;
-          margin-bottom: 8px;
+          width: 200px;
+          max-width: 80%;
+          margin-bottom: 16px;
         }
 
         .cover-title {
-          font-size: clamp(1.8em, 2.6vw, 2.2em);
-          font-weight: 900;
+          font-size: 2em;
+          font-weight: 800;
           color: #003366;
-          white-space: nowrap;
-          margin-bottom: 4px;
-          letter-spacing: 0.02em;
         }
 
         .cover-subtitle {
-          margin-top: 4px;
-          font-size: 0.95em;
-          font-weight: 700;
-          color: #003366;
+          margin-top: 6px;
+          opacity: 0.7;
         }
 
         /* ==========================================================
    MOBIILI
    ========================================================== */
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
           .robo-intro {
             flex-direction: column;
             align-items: center;
@@ -14451,23 +14554,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           .robo-intro img {
-            width: 120px;
+            width: 130px;
           }
 
           .robo-bubble {
             max-width: 100%;
-          }
-
-          body {
-            font-size: 16px;
-          }
-
-          .passage {
-            padding: 0 10px;
-          }
-
-          p {
-            max-width: 100%;
+            text-align: left;
           }
         }
 
@@ -14491,245 +14583,224 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           text-decoration: none !important;
         }
         /* ==========================================
-   FINAALIN TEKSTILAATIKKO – PYSYY VAALEANA
+   ROBO-KUVA (intro pienemmäksi)
    ========================================== */
 
-        textarea.auto-grow,
-        textarea.auto-grow:hover,
-        textarea.auto-grow:focus,
-        textarea.auto-grow:active {
-          background-color: #ffffff !important;
-          color: #000000 !important;
-
-          border: 3px solid #000000 !important;
-          border-radius: 12px;
-
-          outline: none !important;
-          box-shadow: none !important;
+        .robo-intro img {
+          width: 100px; /* pienempi kuin ennen */
+          max-width: 25vw; /* skaalautuu mobiilissa */
+          height: auto;
         }
 
-        /* Estetään mahdollinen SugarCuben tumma teema */
-
-        textarea.auto-grow:focus {
-          border-color: #003366 !important;
-        }
-
-        /* Kansi tiiviimmäksi */
-        .cover-robo {
-          width: 150px;
-          margin-bottom: 8px;
-        }
-
-        .cover-title {
-          margin-bottom: 4px;
-        }
-
-        .cover-subtitle {
-          margin-top: 4px;
-        }
-
-        /* Varmistetaan ettei body lisää tilaa */
-        body {
-          margin-top: 0;
-        }
         /* ==========================================
-   TURVALLINEN PUHEKUPLA (ILMAN PSEUDOJA)
-   ========================================== */
-
-        .robo-bubble-safe {
-          background: #ffffff;
-          border: 3px solid #000000;
-          border-radius: 18px;
-          padding: 10px 14px;
-          max-width: 480px;
-
-          /* kevyt sarjakuvafiilis */
-          box-shadow: 2px 2px 0px #000000;
-        }
-
-        /* pieni "kuplahäntä" ilman pseudo-elementtejä */
-
-        .robo-bubble-safe::after {
-          content: "";
-          display: block;
-          width: 12px;
-          height: 12px;
-          background: #ffffff;
-          border-left: 3px solid #000;
-          border-bottom: 3px solid #000;
-
-          transform: rotate(45deg);
-          margin-left: -8px;
-          margin-top: 4px;
-        }
-        /* ==========================================
-   KUVAGALLERIA (UPOTUSVARMA)
+   KUVAGALLERIA (tasapainoinen koko)
    ========================================== */
 
         .image-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
           gap: 12px;
-          justify-items: center;
-          margin-top: 6px;
+          margin-top: 10px;
         }
 
         .image-item {
+          width: 120px; /* 🔥 tämä ratkaisee ongelman */
           text-align: center;
-          max-width: 180px;
         }
 
         .image-item img {
           width: 100%;
-          border: 3px solid #000;
+          height: auto;
+
+          border: 2px solid #000;
           border-radius: 10px;
-        }
-        .image-item img:hover {
-          transform: scale(1.03);
+
           transition: transform 0.2s ease;
         }
+
+        /* pieni hover-efekti */
+
+        .image-item img:hover {
+          transform: scale(1.05);
+        }
+
+        /* kuvateksti */
+
+        .image-item p {
+          font-size: 0.85em;
+          margin-top: 4px;
+        }
+
         /* ==========================================
-   PUHEKUPLA (UPOTUSVARMA + TOIMIVA HÄNTÄ)
+   TEKSTIKENTTÄ – VALEA + VENYVÄ
    ========================================== */
 
-        .robo-bubble-safe {
-          position: relative;
-          background: #ffffff;
+        textarea {
+          width: 100%;
+          max-width: 600px;
+
+          min-height: 120px;
+          resize: none; /* estää manuaalisen venytyksen */
+
+          padding: 12px;
+          font-size: 1em;
+          line-height: 1.5;
+
+          background: #ffffff !important;
+          color: #000000 !important;
+
           border: 3px solid #000;
-          border-radius: 18px;
-          padding: 10px 14px;
-          box-shadow: 2px 2px 0px #000;
-          max-width: 520px; /* estää liian pitkät rivit */
-          line-height: 1.6;
-        }
-        /* Häntä (vakaa versio) */
+          border-radius: 12px;
 
-        .robo-bubble-safe::after {
-          content: "";
-          position: absolute;
-          left: -10px;
-          top: 22px;
-
-          width: 16px;
-          height: 16px;
-
-          background: #ffffff;
-          border-left: 3px solid #000;
-          border-bottom: 3px solid #000;
-
-          transform: rotate(45deg);
+          box-shadow: none;
+          outline: none;
         }
 
-        /* Korostettu loppuviesti */
+        /* fokus */
 
-        .robo-bubble-safe.emphasis {
-          background: #fff8e6;
+        textarea:focus {
+          border-color: #003366;
         }
-        /* Taitoruudukko – vakaa */
 
+        /* wrapper keskelle */
+
+        .textarea-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 10px;
+        }
+        /* ==========================================
+   TAITOKORTIT (HOVER + CLICK)
+   ========================================== */
         .skill-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-          gap: 8px;
-          margin-top: 8px;
-          justify-items: center;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: center;
         }
 
         .skill-item {
-          background: #ffffff;
+          position: relative;
+          width: 180px;
+          min-height: 60px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
           border: 2px solid #000;
-          border-radius: 12px;
-          padding: 6px 10px;
+          border-radius: 14px;
+          background: #fff8e6;
           font-weight: 700;
           text-align: center;
-        }
-        @media (max-width: 600px) {
-          body {
-            font-size: 16px;
-          }
+          cursor: pointer;
 
-          .passage {
-            padding: 0 10px;
-          }
-
-          p {
-            max-width: 100%;
-          }
-        }
-        /* ==========================================
-   ROBO-LOHKO – ESTÄÄ PÄÄLLEKKÄISYYDEN
-   ========================================== */
-
-        .robo-block {
-          margin-bottom: 8px;
+          overflow: hidden; /* 🔥 estää hyppimisen */
         }
 
-        /* Varmistaa että flex ei riko layoutia */
+        /* Otsikko */
 
-        .robo-intro {
+        .skill-title {
+          pointer-events: none;
+        }
+
+        /* Selitys */
+
+        .skill-desc {
+          position: absolute;
+          inset: 0;
+
           display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-
-        /* 🔥 TÄMÄ ON KRITIIKKINEN */
-
-        .robo-bubble-safe {
-          flex: 1;
-          min-width: 220px; /* estää liian kapean kuplan */
-        }
-
-        /* ==========================================
-   MOBIILI KORJAUS
-   ========================================== */
-
-        @media (max-width: 650px) {
-          .robo-intro {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .robo-bubble-safe {
-            width: 100%;
-          }
-        }
-        /* ==========================================
-   TAITOGRID – VAKAA UPOTUKSESSA
-   ========================================== */
-
-        .skill-grid {
-          display: flex; /* 🔥 varmempi kuin grid */
-          flex-wrap: wrap;
+          align-items: center;
           justify-content: center;
-          gap: 6px;
-          margin-top: 6px;
-        }
+          padding: 8px;
 
-        .skill-item {
-          border: 2px solid #000;
-          border-radius: 16px;
-          padding: 6px 10px;
           background: #fff8e6;
-
-          font-weight: 700;
+          font-weight: normal;
           font-size: 0.9em;
+          text-align: center;
 
-          white-space: nowrap; /* estää rumat rivinvaihdot */
+          opacity: 0;
+          transition: opacity 0.25s ease;
         }
 
+        /* Hover */
+
+        .skill-item:hover .skill-desc {
+          opacity: 1;
+        }
+
+        .skill-item:hover .skill-title {
+          opacity: 0;
+        }
+        @media (hover: none) {
+          .skill-desc {
+            opacity: 1;
+          }
+
+          .skill-title {
+            display: none;
+          }
+        }
         /* ==========================================
-   MOBIILI
+   ROBO KURKISTAA PUHEKUPLAN TAKAA
    ========================================== */
 
-        @media (max-width: 650px) {
-          .skill-grid {
-            justify-content: center;
+        .robo-intro.peek {
+          display: flex;
+          align-items: center;
+          gap: 0; /* tärkeä */
+          position: relative;
+        }
+
+        .robo-intro.peek img {
+          transform: rotate(12deg);
+          transform-origin: bottom center;
+        }
+
+        /* puhekupla päälle */
+
+        .robo-intro.peek .robo-bubble-safe {
+          position: relative;
+          z-index: 2;
+        }
+
+        /* robotti hieman kuplan alle */
+
+        .robo-intro.peek img {
+          width: 110px;
+          height: auto;
+
+          margin-left: -45px; /* 🔥 vetää robotin kuplan taakse */
+
+          z-index: 1;
+        }
+
+        /* mobiili */
+
+        @media (max-width: 600px) {
+          .robo-intro.peek {
+            flex-direction: column;
           }
 
-          .skill-item {
-            font-size: 0.85em;
+          .robo-intro.peek img {
+            margin-left: -50px;
+            margin-top: -10px;
           }
+        }
+        /* ==========================================
+   ROBO KALLISTUU OIKEALLE
+   ========================================== */
+
+        .robo-intro img {
+          transform: rotate(8deg); /* kallistus oikealle */
+          transform-origin: bottom center;
+        }
+        .next-button-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
         }
       </style>
       <script role="script" id="twine-user-script" type="text/twine-javascript">
@@ -14802,91 +14873,84 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           URL.revokeObjectURL(link.href);
         };
 
-
-
         /* =====================================================
            AUTOMAATTISESTI KASVAVA TEKSTIALUE
            ===================================================== */
 
-        $(document).on(':passagerender', function () {
-
-          const area = document.querySelector('.auto-grow');
-          if (!area) return;
-
-          area.value = State.variables.finaaliTeksti || "";
-
-          function autoResize() {
-            area.style.height = 'auto';
-            area.style.height = area.scrollHeight + 'px';
-          }
-
-          area.addEventListener('input', function () {
-            State.variables.finaaliTeksti = area.value;
-            autoResize();
-          });
-
-          autoResize();
+        $(document).on("input", "textarea", function () {
+          this.style.height = "auto";
+          this.style.height = this.scrollHeight + "px";
         });
 
 
-        /* =====================================================
-           TYHJENNYS
-           ===================================================== */
+        /* ==========================================
+           LATAA VASTAUS (.txt)
+           ========================================== */
 
-        window.tyhjennaTeksti = function () {
+        window.lataaVastaus = function () {
+          const textarea = document.getElementById("vastausKentta");
+          if (!textarea) return;
 
-          const area = document.querySelector('.auto-grow');
-          if (!area) return;
+          const teksti = textarea.value || "";
 
-          area.value = "";
-          State.variables.finaaliTeksti = "";
-          area.style.height = 'auto';
+          if (teksti.trim() === "") {
+            alert("Kirjoita ensin vastaus.");
+            return;
+          }
+
+          const blob = new Blob([teksti], { type: "text/plain;charset=utf-8;" });
+          const link = document.createElement("a");
+
+          link.href = URL.createObjectURL(blob);
+          link.download = "tulevaisuuden_suunnitelma.txt";
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         };
 
-        Macro.add('roboButton', {
+        /* ==========================================
+           TYHJENNÄ TEKSTI
+           ========================================== */
+
+        window.tyhjennaTeksti = function () {
+          const textarea = document.getElementById("vastausKentta");
+          if (!textarea) return;
+
+          if (confirm("Haluatko varmasti tyhjentää vastauksen?")) {
+            textarea.value = "";
+
+            /* resetoi korkeus jos käytössä auto-grow */
+            textarea.style.height = "auto";
+          }
+        };
+        Macro.add("roboButton", {
           tags: null,
-          handler() {
+          handler: function () {
             const target = this.args[0];
-
-            if (!target) {
-              return this.error("roboButton tarvitsee kohdesivun");
-            }
-
-            const label = this.payload[0]?.contents?.trim();
-
-            if (!label) {
-              return this.error("roboButton tarvitsee nappitekstin sisällöksi");
-            }
+            const text = this.payload[0].contents;
 
             const button = document.createElement("button");
-            button.textContent = label;
+            button.className = "macro-button";
+            button.textContent = text;
 
-            button.addEventListener("click", () => {
-              SugarCube.Engine.play(target);
-            });
+            button.onclick = () => {
+              Engine.play(target);
+            };
 
-            this.output.appendChild(button);
+            const wrapper = document.createElement("div");
+            wrapper.className = "next-button-container";
+            wrapper.appendChild(button);
+
+            this.output.appendChild(wrapper);
           }
         });
+        /* ==========================================
+           TAITOKLIKKAUS (MOBIILI)
+           ========================================== */
 
-        $(document).on(':passagerender', function () {
-
-          const elements = document.querySelectorAll('.passage p, .passage li');
-
-          elements.forEach(el => {
-
-            let text = el.innerHTML;
-
-            // 1. Estetään yksittäiset lyhyet sanat (1–4 merkkiä) rivin lopussa
-            text = text.replace(/\s([a-zA-ZåäöÅÄÖ]{1,3})\s/g, ' $1&nbsp;');
-
-            // 2. Estetään viimeinen sana jäämästä yksin riville
-            text = text.replace(/\s+([^\s]+)\s*$/, '&nbsp;$1');
-
-            el.innerHTML = text;
-
-          });
-
+        $(document).on("click", ".skill-item", function () {
+          $(this).toggleClass("active");
         });
       </script>
       <tw-passagedata
@@ -14899,38 +14963,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti heiluttaa kättään&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Hei! Minä olen Robo.
-        &lt;br&gt;En&amp;nbsp; ole ihminen. En&amp;nbsp; tunne kuten te.
-        En&amp;nbsp; osaa haistaa vastaleikattua nurmikkoa. En&amp;nbsp; tiedä,
-        miltä jännitys tuntuu vatsassa ennen koetta. Mutta&amp;nbsp; minä osaan
-        käsitellä valtavan määrän tietoa nopeasti. Osaan auttaa etsimään
-        vastauksia. Osaan laskea, vertailla ja ehdottaa.&lt;br&gt;
-        Minä&amp;nbsp; olen robotti. Ja&amp;nbsp; sisälläni toimii tekoäly.
-        &lt;/div&gt; &lt;/div&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;MitaOnTekoaly&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt;</tw-passagedata
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; Hei! Minä olen Robo.
+        &lt;br&gt;En ole ihminen. En tunne kuten te. En&amp;nbsp; osaa haistaa
+        vastaleikattua nurmikkoa. En tiedä, miltä jännitys tuntuu vatsassa ennen
+        koetta. Mutta minä osaan käsitellä valtavan määrän tietoa nopeasti.
+        Osaan auttaa etsimään vastauksia. Osaan laskea, vertailla ja
+        ehdottaa.&lt;br&gt; Minä olen robotti. Ja sisälläni toimii tekoäly.
+        &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto &quot;MitaOnTekoaly&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt; </tw-passagedata
       ><tw-passagedata
         pid="2"
         name="MitaOnTekoaly"
         tags=""
         position="600,375"
         size="100,100"
-        >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        >&lt;!-- ROBO (ohjaus) --&gt; &lt;div class=&quot;robo-intro&quot;&gt;
+        &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Minä autan sinua
-        ymmärtämään tekoälyä.&lt;br&gt; Tekoäly voi olla hyödyllinen, mutta se
-        voi myös erehtyä. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
-        class=&quot;card&quot;&gt; &lt;h3&gt;Kysymys:&lt;br&gt;Mitä&amp;nbsp;
-        luulet&amp;nbsp; tekoälyn olevan?&lt;/h3&gt; &lt;div
-        style=&quot;text-align:center; margin-top:8px;&quot;&gt;
-        &lt;&lt;roboButton &quot;Vaarinkasitys&quot;&gt;&gt;Ajattelee kuten
-        ihminen&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;Oikein&quot;&gt;&gt;Käsittelee dataa ja etsii
-        malleja&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;Vaarinkasitys&quot;&gt;&gt;Tietää kaiken
-        maailmasta&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt;
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Minä autan
+        sinua ymmärtämään tekoälyä.&lt;br&gt; Tekoäly voi olla hyödyllinen,
+        mutta se voi myös erehtyä. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;!--
+        TEHTÄVÄ --&gt; &lt;div class=&quot;card-task&quot;&gt; &lt;h3&gt; Mitä
+        luulet tekoälyn olevan?&lt;/h3&gt; &lt;p&gt;Valitse paras
+        vastaus:&lt;/p&gt; &lt;div class=&quot;next-button-container&quot;&gt;
+        &lt;&lt;button &quot;Ajattelee kuten ihminen&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Vaarinkasitys&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
+        &quot;Käsittelee dataa ja etsii malleja&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Oikein&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
+        &quot;Tietää kaiken maailmasta&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Vaarinkasitys&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;/div&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="3"
@@ -14942,11 +15006,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Hyvä arvaus. Mutta tekoäly ei
-        ajattele eikä tiedä kaikkea. Se&amp;nbsp; käsittelee dataa. &lt;/div&gt;
-        &lt;/div&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;Tekoaly&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt; </tw-passagedata
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; Hyvä arvaus. Mutta
+        tekoäly ei ajattele eikä tiedä kaikkea. Se&amp;nbsp; käsittelee dataa.
+        &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto &quot;Tekoaly&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="4"
         name="Oikein"
@@ -14957,43 +15022,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti hymyilee&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Aivan oikein! Tekoäly
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; Aivan oikein! Tekoäly
         ei&amp;nbsp; ajattele kuten ihminen. Se&amp;nbsp; analysoi dataa ja
         etsii malleja. &lt;/div&gt; &lt;/div&gt; &lt;div
-        style=&quot;text-align:center; margin-top:10px;&quot;&gt;
-        &lt;&lt;roboButton
-        &quot;Tekoaly&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt; </tw-passagedata
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto &quot;Tekoaly&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="5"
         name="RobonRajat"
         tags=""
         position="675,625"
         size="100,100"
-        >&lt;div class=&quot;robo-block&quot;&gt; &lt;div
+        >&lt;!-- 🤖 ROBO (selitys) --&gt; &lt;div
         class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti pohtii&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Minä olen nopea. Osaan
-        käsitellä valtavia määriä tietoa. Osaan vertailla vaihtoehtoja ja
-        ehdottaa ratkaisuja. &lt;/p&gt; &lt;p&gt; Mutta minä en ymmärrä maailmaa
-        kuten sinä. En tunne. En koe. En tiedä, mikä on oikein tai väärin ilman
-        ihmisen ohjausta. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;
+        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Minä olen
+        nopea.&lt;br&gt; Osaan käsitellä valtavia määriä tietoa.&lt;br&gt; Osaan
+        vertailla vaihtoehtoja ja ehdottaa ratkaisuja. &lt;/p&gt; &lt;p&gt;
+        Mutta minä en ymmärrä maailmaa kuten sinä.&lt;br&gt; En tunne.&lt;br&gt;
+        En koe.&lt;br&gt; En tiedä, mikä on oikein tai väärin ilman ihmisen
+        ohjausta. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- 📘 TIETO --&gt;
         &lt;div class=&quot;card&quot;&gt; &lt;h3&gt;Mitä tämä
         tarkoittaa?&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Tekoäly toimii datan
         perusteella&lt;/li&gt; &lt;li&gt;Jos data on puutteellista tai
         vinoutunutta, myös vastaus voi olla väärä&lt;/li&gt; &lt;li&gt;Tekoäly
         ei ole vastuussa – ihminen on&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt;
-        &lt;div class=&quot;robo-block&quot;&gt; &lt;div
-        class=&quot;robo-intro&quot;&gt; &lt;img
+        &lt;!-- 🤖 VISUAALINEN KOHTA (peek-maskotti) --&gt; &lt;div
+        class=&quot;robo-intro peek&quot;&gt; &lt;div
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; Mieti hetki ennen kuin
+        jatkat 👇 &lt;/div&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
-        alt=&quot;Ystävällinen robotti pohtii&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;h3&gt;Pohdi hetki&lt;/h3&gt;
-        &lt;p&gt; Missä tilanteessa tekoäly voisi auttaa sinua?&lt;br&gt; Missä
-        tilanteessa ihmisen pitää tehdä lopullinen päätös? &lt;/p&gt;
-        &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- 🔥 NAPPI TÄYSIN ERILLEEN
-        --&gt; &lt;div class=&quot;next-button-container&quot;&gt;
-        &lt;&lt;roboButton
-        &quot;RobotinTyot&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
+        alt=&quot;Robotti kurkistaa&quot;&gt; &lt;/div&gt; &lt;!-- 💭 POHDINTA
+        --&gt; &lt;div class=&quot;card-think&quot;&gt; &lt;p&gt; Missä
+        tilanteessa tekoäly voisi auttaa sinua?&lt;br&gt; Missä tilanteessa
+        ihmisen pitää tehdä lopullinen päätös? &lt;/p&gt; &lt;/div&gt; &lt;!--
+        👉 NAPPI --&gt; &lt;div class=&quot;next-button-container&quot;&gt;
+        &lt;&lt;button &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;RobotinTyot&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="6"
@@ -15001,45 +15068,57 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         tags=""
         position="625,1000"
         size="100,100"
-        >&lt;!-- Robo aloittaa --&gt; &lt;div class=&quot;robo-intro&quot;&gt;
-        &lt;img
+        >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robotti_taidot.png&quot;
-        alt=&quot;Robotti rullaa lähemmäs innostuneena&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tiedättekö, mikä on
-        teidän supervoimanne?&lt;br&gt;
+        alt=&quot;Robotti rullaa lahemmaksi innostuneena&quot;&gt; &lt;div
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Tiedatteko,
+        mika on teidan supervoimanne?&lt;br&gt;
         &lt;strong&gt;Inhimillisyys.&lt;/strong&gt; &lt;/p&gt; &lt;/div&gt;
-        &lt;/div&gt; &lt;!-- Taitolista --&gt; &lt;div
-        class=&quot;card&quot;&gt; &lt;h3&gt;Tulevaisuudessa tarvittavia
-        taitoja&lt;/h3&gt; &lt;p&gt; Nämä taidot auttavat sinua maailmassa,
-        jossa teknologia kehittyy nopeasti: &lt;/p&gt; &lt;div
-        class=&quot;skill-grid&quot;&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Luovuus&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Yhteistyö&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Kriittinen ajattelu&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Tunneäly&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Ongelmanratkaisu&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Eettinen ajattelu&lt;/div&gt; &lt;div
-        class=&quot;skill-item&quot;&gt;Oppimaan oppiminen&lt;/div&gt;
-        &lt;/div&gt; &lt;/div&gt; &lt;!-- Robo tiivistää --&gt; &lt;div
-        class=&quot;robo-intro&quot; style=&quot;margin-top:6px;&quot;&gt;
-        &lt;img
+        &lt;/div&gt; &lt;div class=&quot;skill-grid&quot;&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Luovuus&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Keksit uusia ideoita ja
+        ratkaisuja.&lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Yhteistyo&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Osaat toimia muiden kanssa ja
+        kuunnella.&lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Kriittinen ajattelu&lt;/span&gt;
+        &lt;div class=&quot;skill-desc&quot;&gt;Osaat kysya: onko tama
+        totta?&lt;/div&gt; &lt;/div&gt; &lt;div class=&quot;skill-item&quot;&gt;
+        &lt;span class=&quot;skill-title&quot;&gt;Tunnealy&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Ymmarrat omia ja muiden
+        tunteita.&lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Ongelmanratkaisu&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Keksit ratkaisuja vaikeisiin
+        tilanteisiin.&lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Eettinen ajattelu&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Pohdit, mika on oikein ja
+        vaarin.&lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;skill-item&quot;&gt; &lt;span
+        class=&quot;skill-title&quot;&gt;Oppimaan oppiminen&lt;/span&gt; &lt;div
+        class=&quot;skill-desc&quot;&gt;Osaat kehittaa itseasi ja oppia
+        uutta.&lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti katsoo oppilaita rohkaisevasti&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tekoäly voi
-        auttaa.&lt;br&gt; Mutta se ei korvaa näitä taitoja.&lt;br&gt;
-        &lt;strong&gt;Ne ovat teidän vahvuutenne.&lt;/strong&gt; &lt;/p&gt;
-        &lt;/div&gt; &lt;/div&gt; &lt;!-- Henkilökohtainen valinta --&gt;
-        &lt;div class=&quot;card&quot;&gt; &lt;h3&gt;Mitkä asiat kiinnostavat
-        sinua eniten?&lt;/h3&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;Luova&quot;&gt;&gt;Piirtäminen ja
-        ideointi&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;Yhteistyo&quot;&gt;&gt;Keskustelu ja
-        tiimityö&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;Tekniikka&quot;&gt;&gt;Koodaus ja
-        teknologia&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;Kriittinen&quot;&gt;&gt;Väittely ja faktojen
-        tarkistus&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt;
+        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tekoaly voi
+        auttaa.&lt;br&gt; Mutta se ei korvaa naita taitoja.&lt;br&gt;
+        &lt;strong&gt;Ne ovat teidan vahvuutenne.&lt;/strong&gt; &lt;/p&gt;
+        &lt;/div&gt; &lt;/div&gt; &lt;div class=&quot;card&quot;&gt;
+        &lt;h3&gt;Mitka asiat kiinnostavat sinua eniten?&lt;/h3&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Piirtäminen ja ideointi&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Luova&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
+        &quot;Keskustelu ja tiimityö&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Yhteistyo&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
+        &quot;Koodaus ja teknologia&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Tekniikka&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
+        &quot;Väittely ja faktojen tarkistus&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Kriittinen&quot;&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;/div&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="7"
@@ -15048,24 +15127,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         position="425,1100"
         size="100,100"
         >&lt;&lt;set $luovuus += 2&gt;&gt; &lt;&lt;set $vahvuus =
-        &quot;Luovuus&quot;&gt;&gt; &lt;div class=&quot;chapter&quot;&gt;
-        &lt;div class=&quot;title&quot;&gt; Sinun vahvuutesi on: &lt;&lt;=
-        $vahvuus &gt;&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        &quot;Luovuus&quot;&gt;&gt; &lt;!-- 🏆 OTSIKKO --&gt; &lt;div
+        class=&quot;chapter&quot;&gt; &lt;div class=&quot;title&quot;&gt; 🏆
+        Sinun vahvuutesi on: &lt;&lt;= $vahvuus &gt;&gt; &lt;/div&gt;
+        &lt;/div&gt; &lt;!-- 🤖 ROBO (palkinto + selitys) --&gt; &lt;div
         class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti näyttää innostuneelta&quot;&gt; &lt;div
-        class=&quot;robo-bubble&quot;&gt; &lt;strong&gt;Luovuus&lt;/strong&gt;
-        on tulevaisuuden supervoima. Se tarkoittaa kykyä keksiä uutta, nähdä
-        mahdollisuuksia siellä missä muut näkevät ongelmia ja yhdistää asioita
-        yllättävillä tavoilla. &lt;/div&gt; &lt;/div&gt; &lt;div
-        class=&quot;card&quot;&gt; &lt;p&gt; Tekoäly voi auttaa sinua työkaluna.
-        Mutta ideat, mielikuvitus ja oivallukset – ne syntyvät ihmisessä.
-        &lt;/p&gt; &lt;p&gt; Luovaa ajattelua tarvitaan tulevaisuudessa
-        taiteessa, pelisuunnittelussa, yrittäjyydessä, teknologiassa,
-        viestinnässä ja monilla muilla aloilla. &lt;/p&gt; &lt;/div&gt; &lt;div
-        class=&quot;next-button-container&quot;&gt; &lt;&lt;roboButton
-        &quot;Finaali&quot;&gt;&gt;Siirry tehtävään&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt;</tw-passagedata
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt;
+        &lt;strong&gt;Luovuus&lt;/strong&gt; on tulevaisuuden
+        supervoima.&lt;br&gt; Sinä osaat keksiä uutta ja nähdä mahdollisuuksia
+        siellä, missä muut näkevät ongelmia. &lt;/p&gt; &lt;/div&gt;
+        &lt;/div&gt; &lt;!-- 📘 TIETO --&gt; &lt;div class=&quot;card&quot;&gt;
+        &lt;p&gt; Tekoäly voi auttaa sinua työkaluna.&lt;br&gt; Mutta ideat,
+        mielikuvitus ja oivallukset syntyvät ihmisessä. &lt;/p&gt; &lt;p&gt;
+        Luovaa ajattelua tarvitaan tulevaisuudessa esimerkiksi: &lt;/p&gt;
+        &lt;ul&gt; &lt;li&gt;taiteessa ja pelisuunnittelussa&lt;/li&gt;
+        &lt;li&gt;yrittäjyydessä&lt;/li&gt; &lt;li&gt;teknologiassa&lt;/li&gt;
+        &lt;li&gt;viestinnässä&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;!-- 🎉
+        LOPPUPOHJINTA --&gt; &lt;div class=&quot;card-think&quot;&gt; &lt;h3&gt;
+        Mieti hetki&lt;/h3&gt; &lt;p&gt; Missä tilanteessa voisit käyttää
+        luovuuttasi arjessa? &lt;/p&gt; &lt;/div&gt; &lt;!-- 👉 NAPPI --&gt;
+        &lt;div class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto &quot;Finaali&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="8"
         name="Yhteistyo"
@@ -15073,25 +15158,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         position="550,1100"
         size="100,100"
         >&lt;&lt;set $yhteistyo += 2&gt;&gt; &lt;&lt;set $vahvuus =
-        &quot;Yhteistyö&quot;&gt;&gt; &lt;div class=&quot;chapter&quot;&gt;
-        &lt;div class=&quot;title&quot;&gt; Sinun vahvuutesi: &lt;&lt;= $vahvuus
-        &gt;&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        &quot;Yhteistyö&quot;&gt;&gt; &lt;!-- 🏆 OTSIKKO --&gt; &lt;div
+        class=&quot;chapter&quot;&gt; &lt;div class=&quot;title&quot;&gt; 🏆
+        Sinun vahvuutesi on: &lt;&lt;= $vahvuus &gt;&gt; &lt;/div&gt;
+        &lt;/div&gt; &lt;!-- 🤖 ROBO (palkinto + selitys) --&gt; &lt;div
         class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti näyttää kannustavalta&quot;&gt; &lt;div
-        class=&quot;robo-bubble&quot;&gt; &lt;strong&gt;Yhteistyö&lt;/strong&gt;
-        tekee ihmisistä vahvempia kuin robotit. &lt;br&gt;&lt;br&gt; Kun ihmiset
-        kuuntelevat toisiaan, jakavat ideoita ja ratkaisevat ongelmia yhdessä,
-        syntyy jotain, mihin yksittäinen kone ei pysty. &lt;/div&gt;
-        &lt;/div&gt; &lt;!-- 🔥 TÄMÄ PUUTTUI --&gt; &lt;div
-        class=&quot;card&quot;&gt; &lt;p&gt; Tekoäly voi auttaa laskemaan,
-        vertailemaan ja etsimään tietoa. &lt;/p&gt; &lt;p&gt; Mutta tiimityö,
-        luottamus, keskustelu ja yhteinen päätöksenteko – ne ovat inhimillisiä
-        taitoja. &lt;/p&gt; &lt;p&gt; Tulevaisuudessa tarvitaan ihmisiä, jotka
-        osaavat toimia ryhmässä ja rakentaa ratkaisuja yhdessä. &lt;/p&gt;
-        &lt;/div&gt; &lt;div class=&quot;next-button-container&quot;&gt;
-        &lt;&lt;roboButton &quot;Finaali&quot;&gt;&gt;Siirry
-        tehtävään&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt;</tw-passagedata
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt;
+        &lt;strong&gt;Yhteistyö&lt;/strong&gt; tekee ihmisistä vahvempia kuin
+        robotit.&lt;br&gt; Sinä osaat kuunnella, jakaa ideoita ja ratkaista
+        ongelmia yhdessä muiden kanssa. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt;
+        &lt;!-- 📘 TIETO --&gt; &lt;div class=&quot;card&quot;&gt; &lt;p&gt;
+        Tekoäly voi auttaa laskemaan, vertailemaan ja etsimään tietoa.
+        &lt;/p&gt; &lt;p&gt; Mutta tiimityö, luottamus, keskustelu ja yhteinen
+        päätöksenteko ovat inhimillisiä taitoja. &lt;/p&gt; &lt;p&gt;
+        Tulevaisuudessa tarvitaan ihmisiä, jotka osaavat toimia ryhmässä ja
+        rakentaa ratkaisuja yhdessä. &lt;/p&gt; &lt;/div&gt; &lt;!-- 💭 POHDINTA
+        --&gt; &lt;div class=&quot;card-think&quot;&gt; &lt;h3&gt; Mieti
+        hetki&lt;/h3&gt; &lt;p&gt; Milloin viimeksi teit jotain onnistuneesti
+        yhdessä muiden kanssa? &lt;/p&gt; &lt;/div&gt; &lt;!-- 👉 NAPPI --&gt;
+        &lt;div class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &#39;Jatka&#39;&gt;&gt; &lt;&lt;goto &quot;Finaali&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="9"
         name="Tekniikka"
@@ -15100,12 +15189,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         size="100,100"
         >&lt;&lt;set $teknologia += 2&gt;&gt; &lt;&lt;set $vahvuus =
         &quot;Teknologia&quot;&gt;&gt; &lt;div class=&quot;chapter&quot;&gt;
-        &lt;div class=&quot;title&quot;&gt; Sinun vahvuutesi: &lt;&lt;= $vahvuus
-        &gt;&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        &lt;div class=&quot;title&quot;&gt; 🏆 Sinun vahvuutesi on&lt;&lt;=
+        $vahvuus &gt;&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
         class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti näyttää keskittyneeltä ja innostuneelta&quot;&gt;
-        &lt;div class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt;
+        &lt;div class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt;
         &lt;strong&gt;Teknologian&lt;/strong&gt; ymmärtäminen auttaa sinua
         ohjaamaan tekoälyä. Se tarkoittaa, että et vain käytä laitteita, vaan
         ymmärrät, miten ne toimivat. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt;
@@ -15116,8 +15205,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         säännöt ja päättävät, mihin sitä käytetään. &lt;/p&gt; &lt;p&gt;
         Teknologian osaajat eivät vain seuraa tulevaisuutta – he rakentavat
         sitä. &lt;/p&gt; &lt;/div&gt; &lt;div
-        class=&quot;next-button-container&quot;&gt; &lt;&lt;roboButton
-        &quot;Finaali&quot;&gt;&gt;Siirry tehtävään&lt;&lt;/roboButton&gt;&gt;
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button Jatka&gt;&gt;
+        &lt;&lt;goto &quot;Finaali&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="10"
@@ -15126,24 +15215,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         position="800,1100"
         size="100,100"
         >&lt;&lt;set $kriittisyys += 2&gt;&gt; &lt;&lt;set $vahvuus =
-        &quot;Kriittinen ajattelu&quot;&gt;&gt; &lt;div
-        class=&quot;chapter&quot;&gt; &lt;div class=&quot;title&quot;&gt; Sinun
-        vahvuutesi: &lt;&lt;= $vahvuus &gt;&gt; &lt;/div&gt; &lt;/div&gt;
-        &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        &quot;Kriittinen ajattelu&quot;&gt;&gt; &lt;!-- 🏆 OTSIKKO --&gt;
+        &lt;div class=&quot;chapter&quot;&gt; &lt;div
+        class=&quot;title&quot;&gt; 🏆 Sinun vahvuutesi on: &lt;&lt;= $vahvuus
+        &gt;&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- 🤖 ROBO --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti näyttää mietteliäältä&quot;&gt; &lt;div
-        class=&quot;robo-bubble&quot;&gt; &lt;strong&gt;Kriittinen
-        ajattelu&lt;/strong&gt; suojaa sinua virheiltä ja harhalta. Se
-        tarkoittaa, että kysyt:&lt;br&gt; Onko tämä totta?&lt;br&gt; Mihin tieto
-        perustuu?&lt;br&gt; Voiko tässä olla virhe? &lt;/div&gt; &lt;/div&gt;
-        &lt;!-- 🔥 tärkeä sulku --&gt; &lt;div class=&quot;card&quot;&gt;
-        &lt;p&gt; Tekoäly voi antaa vastauksen nopeasti. Mutta nopeus ei
-        tarkoita oikeellisuutta. &lt;/p&gt; &lt;p&gt; Kriittinen ajattelija
-        tarkistaa lähteet, pohtii vaihtoehtoja ja tunnistaa epävarmuuden.
-        &lt;/p&gt; &lt;p&gt; Tulevaisuudessa tärkeää ei ole vain tiedon määrä –
-        vaan kyky arvioida sitä. &lt;/p&gt; &lt;/div&gt; &lt;div
-        class=&quot;next-button-container&quot;&gt; &lt;&lt;roboButton
-        &quot;Finaali&quot;&gt;&gt;Siirry tehtävään&lt;&lt;/roboButton&gt;&gt;
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt;
+        &lt;strong&gt;Kriittinen ajattelu&lt;/strong&gt; on
+        supertaito.&lt;br&gt; Sinä osaat pysähtyä ja kysyä: &lt;/p&gt; &lt;p&gt;
+        Onko tämä totta?&lt;br&gt; Mihin tieto perustuu?&lt;br&gt; Voiko tässä
+        olla virhe? &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- 📘 TIETO --&gt;
+        &lt;div class=&quot;card&quot;&gt; &lt;p&gt; Tekoäly voi antaa
+        vastauksen nopeasti. Mutta nopeus ei tarkoita oikeellisuutta. &lt;/p&gt;
+        &lt;p&gt; Kriittinen ajattelija tarkistaa lähteet, vertaa tietoa ja
+        tunnistaa epävarmuuden. &lt;/p&gt; &lt;p&gt; Tulevaisuudessa tärkeää ei
+        ole vain tiedon määrä – vaan kyky arvioida sitä. &lt;/p&gt; &lt;/div&gt;
+        &lt;!-- 💭 POHDINTA --&gt; &lt;div class=&quot;card-think&quot;&gt;
+        &lt;h3&gt; Mieti hetki&lt;/h3&gt; &lt;p&gt; Milloin viimeksi tarkistit
+        jonkin tiedon ennen kuin uskoit siihen? &lt;/p&gt; &lt;/div&gt; &lt;!--
+        👉 NAPPI --&gt; &lt;div class=&quot;next-button-container&quot;&gt;
+        &lt;&lt;button &#39;Jatka&#39;&gt;&gt; &lt;&lt;goto
+        &quot;Finaali&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="11"
@@ -15151,76 +15245,78 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         tags=""
         position="625,1225"
         size="100,100"
-      >
-        &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
-        src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
-        alt=&quot;Robotti näyttää rohkaisevalta&quot;&gt; &lt;div
-        class=&quot;robo-bubble&quot;&gt; Sinä rakennat
-        tulevaisuuden.&lt;br&gt;Minä voin auttaa. &lt;/div&gt; &lt;/div&gt;
-        &lt;!-- Finaalitehtävä --&gt; &lt;div class=&quot;card&quot;&gt;
-        &lt;h3&gt;TEHTÄVÄ&lt;/h3&gt; &lt;p&gt;Kirjoita oma
-        tulevaisuussuunnitelmasi:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Mitä
-        vahvuuksiasi haluat kehittää?&lt;/li&gt; &lt;li&gt;Mistä
-        unelmoit?&lt;/li&gt; &lt;li&gt;Mitä haluat tehdäi isona?&lt;/li&gt;
-        &lt;/ul&gt; &lt;textarea
-        class=&quot;auto-grow&quot;&gt;&lt;/textarea&gt; &lt;&lt;button
-        &quot;Lataa vastaukseni (.txt)&quot;&gt;&gt; &lt;&lt;run
-        lataaVastaus()&gt;&gt; &lt;&lt;/button&gt;&gt; &lt;&lt;button
-        &quot;Tyhjennä teksti&quot;&gt;&gt; &lt;&lt;run tyhjennaTeksti()&gt;&gt;
-        &lt;&lt;/button&gt;&gt; &lt;&lt;button &quot;Poistu&quot;&gt;&gt;
-        &lt;&lt;goto &quot;Kansi&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
-        &lt;/div&gt; </tw-passagedata
+        >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;&gt;
+        &lt;div class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Sinä
+        rakennat tulevaisuuden.&lt;br&gt; Nyt on sinun vuorosi. &lt;/p&gt;
+        &lt;/div&gt; &lt;/div&gt; &lt;div class=&quot;card&quot;&gt;
+        &lt;h3&gt;Tehtava&lt;/h3&gt; &lt;p&gt;Kirjoita oma
+        suunnitelma:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Mita haluat
+        oppia?&lt;/li&gt; &lt;li&gt;Mista unelmoit?&lt;/li&gt; &lt;li&gt;Mita
+        haluat tehda?&lt;/li&gt; &lt;/ul&gt; &lt;textarea
+        id=&quot;vastausKentta&quot;&gt;&lt;/textarea&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Lataa&quot;&gt;&gt; &lt;&lt;run lataaVastaus()&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;&lt;button &quot;Tyhjenna&quot;&gt;&gt;
+        &lt;&lt;run tyhjennaTeksti()&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;&lt;button &quot;Poistu&quot;&gt;&gt; &lt;&lt;goto
+        &quot;Kansi&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="12"
         name="Tekoaly"
         tags=""
         position="575,625"
         size="100,100"
-        >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        >&lt;!-- 🤖 ROBO (ohjaus) --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_tekoaly.png&quot;
         alt=&quot;Robotti näyttää esimerkkejä tekoälystä näytöllään&quot;&gt;
-        &lt;div class=&quot;robo-bubble-safe&quot;&gt; Katso ympärillesi.
-        Tekoälyä on jo monessa paikassa. &lt;/div&gt; &lt;/div&gt; &lt;div
+        &lt;div class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Katso
+        ympärillesi.&lt;br&gt; Tekoälyä on jo monessa paikassa. &lt;/p&gt;
+        &lt;/div&gt; &lt;/div&gt; &lt;!-- 📘 TIETO --&gt; &lt;div
         class=&quot;card&quot;&gt; &lt;h3&gt;Missä tekoälyä
         käytetään?&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Karttasovellus, joka ehdottaa
         nopeinta reittiä&lt;/li&gt; &lt;li&gt;Suoratoistopalvelun
         suosituslista&lt;/li&gt; &lt;li&gt;Pelikonsolin vastustaja&lt;/li&gt;
         &lt;li&gt;Puhelimen ääniohjaus&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt;
-        &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        &lt;!-- 🤖 ROBO (selitys) --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robotti_opettaa.png&quot;
         alt=&quot;Robotti selittää tekoälyn toimintaa&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Tekoäly on ohjelma, joka oppii
-        datasta. Se&amp;nbsp; ei ajattele kuten ihminen. Se&amp;nbsp; ei
-        unelmoi. Se&amp;nbsp; ei keksi omia tavoitteita. Se&amp;nbsp; analysoi
-        tietoa ja etsii malleja. &lt;/div&gt; &lt;/div&gt; &lt;div
-        class=&quot;card&quot;&gt; &lt;h3&gt;Tärkeä asia:&lt;/h3&gt; &lt;p&gt;
-        Tekoäly ei ole kaikkitietävä.&lt;br&gt; Se voi erehtyä.&lt;br&gt; Se voi
-        antaa väärää tietoa.&lt;br&gt;&lt;br&gt; Se ei ymmärrä maailmaa – se
-        tunnistaa kaavoja. &lt;/p&gt; &lt;/div&gt; &lt;!-- ✅ NAPPI OMAAN
-        KONTTIIN --&gt; &lt;div class=&quot;next-button-container&quot;&gt;
-        &lt;&lt;roboButton
-        &quot;RobonRajat&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt;</tw-passagedata
+        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tekoäly on ohjelma,
+        joka oppii datasta.&lt;br&gt; Se ei ajattele kuten ihminen.&lt;br&gt; Se
+        ei unelmoi.&lt;br&gt; Se ei keksi omia tavoitteita.&lt;br&gt; Se
+        analysoi tietoa ja etsii malleja. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt;
+        &lt;!-- ⚠️ TÄRKEÄ ASIA --&gt; &lt;div class=&quot;card-think&quot;&gt;
+        &lt;h3&gt;⚠️ Tärkeä asia&lt;/h3&gt; &lt;p&gt; Tekoäly ei ole
+        kaikkitietävä.&lt;br&gt; Se voi erehtyä.&lt;br&gt; Se voi antaa väärää
+        tietoa.&lt;br&gt;&lt;br&gt; Se ei ymmärrä maailmaa – se tunnistaa
+        kaavoja. &lt;/p&gt; &lt;/div&gt; &lt;!-- 👉 NAPPI --&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto &quot;RobonRajat&quot;&gt;&gt;
+        &lt;&lt;/button&gt;&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="13"
         name="RobotinTyot"
         tags=""
         position="625,750"
         size="100,100"
-      >
-        &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        >&lt;!-- 🤖 ROBO (selitys) --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti esittelee taitojaan&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Minä olen kone. &lt;br&gt; Jaksan
-        toistaa samaa liikettä tuhansia kertoja. En väsy, enkä pelkää
-        vaarallisia paikkoja. &lt;/div&gt; &lt;/div&gt; &lt;!-- Lista --&gt;
-        &lt;div class=&quot;card&quot;&gt; &lt;h3&gt;Robotti pystyy:&lt;/h3&gt;
-        &lt;ul&gt; &lt;li&gt;Toistamaan tarkkoja liikkeitä (esimerkiksi
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Minä olen
+        kone.&lt;br&gt; Jaksan toistaa samaa liikettä tuhansia
+        kertoja.&lt;br&gt; En väsy, enkä pelkää vaarallisia paikkoja. &lt;/p&gt;
+        &lt;/div&gt; &lt;/div&gt; &lt;!-- 📘 TIETO --&gt; &lt;div
+        class=&quot;card&quot;&gt; &lt;h3&gt;Robotti pystyy:&lt;/h3&gt;
+        &lt;ul&gt; &lt;li&gt;Toistamaan tarkkoja liikkeitä (esim.
         tehtaissa)&lt;/li&gt; &lt;li&gt;Mittaamaan ja keräämään dataa&lt;/li&gt;
         &lt;li&gt;Toimimaan vaarallisissa ympäristöissä&lt;/li&gt;
         &lt;li&gt;Auttamaan lääketieteessä, tutkimuksessa ja
-        avaruudessa&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;!-- Kuvapaikat
-        --&gt; &lt;div class=&quot;card&quot;&gt;
+        avaruudessa&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;!-- 🧠 ESIMERKIT
+        --&gt; &lt;div class=&quot;card-think&quot;&gt;
         &lt;h3&gt;Esimerkkejä&lt;/h3&gt; &lt;div
         class=&quot;image-grid&quot;&gt; &lt;div
         class=&quot;image-item&quot;&gt; &lt;img
@@ -15236,10 +15332,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         alt=&quot;Robotti työskentelee vaarallisessa ympäristössä&quot;&gt;
         &lt;p&gt;&lt;strong&gt;Vaarallisissa
         ympäristöissä&lt;/strong&gt;&lt;/p&gt; &lt;/div&gt; &lt;/div&gt;
-        &lt;/div&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;TekoalynArviointi&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt; </tw-passagedata
+        &lt;/div&gt; &lt;!-- 👉 NAPPI --&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;TekoalynArviointi&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="14"
         name="MihinRobottiEiPysty"
@@ -15255,16 +15352,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         oikein tai väärin&lt;/li&gt; &lt;li&gt;tuntea empatiaa&lt;/li&gt;
         &lt;li&gt;ymmärtää ihmisen elämää&lt;/li&gt; &lt;li&gt;kantaa vastuuta
         teoistani&lt;/li&gt; &lt;/ul&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
-        class=&quot;robo-intro&quot; style=&quot;margin-top:6px;&quot;&gt;
-        &lt;img
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Robotti katsoo rauhallisesti&quot;&gt; &lt;div
         class=&quot;robo-bubble-safe emphasis&quot;&gt;
         &lt;p&gt;&lt;strong&gt;Vastuu on aina
-        ihmisellä.&lt;/strong&gt;&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;!--
-        Nappi --&gt; &lt;div style=&quot;text-align:center;
-        margin-top:8px;&quot;&gt; &lt;&lt;roboButton
-        &quot;EettinenValinta&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
+        ihmisellä.&lt;/strong&gt;&lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;EettinenValinta&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
         &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="15"
@@ -15282,24 +15378,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         sisään&lt;/div&gt; &lt;/div&gt; &lt;/a&gt;</tw-passagedata
       ><tw-passagedata
         pid="16"
-        name="EettinenValinta"
-        tags=""
-        position="775,925"
-        size="100,100"
-        >&lt;div class=&quot;chapter&quot;&gt; &lt;div
-        class=&quot;kicker&quot;&gt;KYSYMYS:&lt;/div&gt; &lt;div
-        class=&quot;title&quot;&gt;Kuka on vastuussa?&lt;/div&gt; &lt;/div&gt;
-        &lt;div class=&quot;card&quot;&gt; &lt;p&gt; Tekoäly antaa virheellisen
-        lääkeohjeen. Potilas kärsii haitan. &lt;/p&gt; &lt;p&gt; Kuka on
-        vastuussa? &lt;/p&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;VaarinEettinen&quot;&gt;&gt;Tekoäly itse
-        &lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;OikeinEettinen&quot;&gt;&gt;Ohjelmoija ja
-        organisaatio&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt;
-        &lt;/div&gt;</tw-passagedata
-      ><tw-passagedata
-        pid="17"
         name="OikeinEettinen"
         tags=""
         position="875,850"
@@ -15307,13 +15385,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robo_maskotti.png&quot;
         alt=&quot;Ystävällinen robotti&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt;
-        &lt;p&gt;&lt;strong&gt;Oikein.&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;
-        Teknologia ei kanna vastuuta. Ihmiset suunnittelevat ja käyttävät sitä.
-        &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;&lt;roboButton
-        &quot;TulevaisuudenTaidot&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt; </tw-passagedata
+        class=&quot;robo-bubble-safe emphasis&quot;&gt;
+        &lt;p&gt;&lt;strong&gt;Oikein!&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;
+        Teknologia ei kanna vastuuta.&lt;br&gt; Ihmiset suunnittelevat ja
+        käyttävät sitä. &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;TulevaisuudenTaidot&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
-        pid="18"
+        pid="17"
         name="VaarinEettinen"
         tags=""
         position="875,975"
@@ -15324,30 +15405,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tekoäly ei ole
         moraalinen toimija. Vastuu on aina ihmisellä. &lt;/p&gt; &lt;/div&gt;
         &lt;/div&gt; &lt;div class=&quot;next-button-container&quot;&gt;
-        &lt;&lt;roboButton
-        &quot;TulevaisuudenTaidot&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt; </tw-passagedata
+        &lt;&lt;button &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;TulevaisuudenTaidot&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
-        pid="19"
+        pid="18"
         name="TekoalynArviointi"
         tags=""
         position="800,675"
         size="100,100"
-      >
-        &lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        >&lt;!-- 🤖 ROBO (tilanne) --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robotti_miettii.png&quot;
-        alt=&quot;Ystävällinen robotti&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; &lt;p&gt; Tekoäly
-        väittää:&lt;br&gt; &lt;strong&gt;Tämä tieto on varmasti
-        totta.&lt;/strong&gt;&lt;br&gt; Mitä teet? &lt;/p&gt; &lt;/div&gt;
-        &lt;/div&gt; &lt;div style=&quot;text-align:center;
-        margin-top:8px;&quot;&gt; &lt;&lt;roboButton
-        &quot;ArviointiVaarin&quot;&gt;&gt;Hyväksyn sen
-        heti&lt;&lt;/roboButton&gt;&gt; &lt;&lt;roboButton
-        &quot;ArviointiOikein&quot;&gt;&gt;Tarkistan lähteet ja vertaan
-        tietoa&lt;&lt;/roboButton&gt;&gt; &lt;/div&gt;</tw-passagedata
+        alt=&quot;Ystävällinen robotti miettii&quot;&gt; &lt;div
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Tekoäly
+        väittää:&lt;br&gt; &lt;strong&gt;“Tämä tieto on varmasti
+        totta.”&lt;/strong&gt; &lt;/p&gt; &lt;/div&gt; &lt;/div&gt; &lt;!-- 🎯
+        TEHTÄVÄ --&gt; &lt;div class=&quot;card-task&quot;&gt; &lt;h3&gt; Mitä
+        teet?&lt;/h3&gt; &lt;p&gt;Valitse, miten toimit tässä
+        tilanteessa:&lt;/p&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Hyväksyn sen heti&quot;&gt;&gt; &lt;&lt;goto
+        &quot;ArviointiVaarin&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;&lt;button &quot;Tarkistan lähteet ja vertaan tietoa&quot;&gt;&gt;
+        &lt;&lt;goto &quot;ArviointiOikein&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt; &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
-        pid="20"
+        pid="19"
         name="ArviointiVaarin"
         tags=""
         position="900,725"
@@ -15358,25 +15442,49 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         alt=&quot;Ystävällinen robotti&quot;&gt; &lt;div
         class=&quot;robo-bubble-safe&quot;&gt; Tekoäly voi kuulostaa varmalta.
         Mutta se voi erehtyä. Siksi lähteiden tarkistaminen on tärkeää.
-        &lt;/div&gt; &lt;/div&gt; &lt;div style=&quot;text-align:center;
-        margin-top:10px;&quot;&gt; &lt;&lt;roboButton
-        &quot;MihinRobottiEiPysty&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
-        &lt;/div&gt; </tw-passagedata
+        &lt;/div&gt; &lt;/div&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;MihinRobottiEiPysty&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
-        pid="21"
+        pid="20"
         name="ArviointiOikein"
         tags=""
         position="900,625"
         size="100,100"
-        >&lt;div class=&quot;robo-intro&quot;&gt; &lt;img
+        >&lt;!-- 🟢 OIKEA VASTAUS --&gt; &lt;div
+        class=&quot;card-success&quot;&gt; &lt;h3&gt;✅ Erinomaista!&lt;/h3&gt;
+        &lt;p&gt; Tekoäly voi olla nopea, mutta nopeus ei tarkoita
+        totuutta.&lt;br&gt; Lähteiden tarkistaminen on kriittistä ajattelua.
+        &lt;/p&gt; &lt;/div&gt; &lt;!-- 🤖 ROBO VAHVISTAA --&gt; &lt;div
+        class=&quot;robo-intro&quot;&gt; &lt;img
         src=&quot;https://raw.githubusercontent.com/swan27768/Robo--saapuu-kouluun/main/images/robotti_opettaa.png&quot;
         alt=&quot;Robotti selittää tekoälyn toimintaa&quot;&gt; &lt;div
-        class=&quot;robo-bubble-safe&quot;&gt; Erinomaista! &lt;br&gt;Tekoäly
-        voi olla nopea, mutta nopeus ei tarkoita totuutta. Lähteiden
-        tarkistaminen on kriittistä ajattelua. &lt;/div&gt; &lt;/div&gt; &lt;div
-        style=&quot;text-align:center; margin-top:10px;&quot;&gt;
-        &lt;&lt;roboButton
-        &quot;MihinRobottiEiPysty&quot;&gt;&gt;Jatka&lt;&lt;/roboButton&gt;&gt;
+        class=&quot;robo-bubble-safe emphasis&quot;&gt; &lt;p&gt; Juuri
+        näin!&lt;br&gt; Sinä ajattelet kuten tulevaisuuden osaaja. &lt;/p&gt;
+        &lt;/div&gt; &lt;/div&gt; &lt;!-- 👉 NAPPI --&gt; &lt;div
+        class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Jatka&quot;&gt;&gt; &lt;&lt;goto
+        &quot;MihinRobottiEiPysty&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;/div&gt;</tw-passagedata
+      ><tw-passagedata
+        pid="21"
+        name="EettinenValinta"
+        tags=""
+        position="775,950"
+        size="100,100"
+        >&lt;div class=&quot;chapter&quot;&gt; &lt;div
+        class=&quot;kicker&quot;&gt;KYSYMYS&lt;/div&gt; &lt;div
+        class=&quot;title&quot;&gt;Kuka on vastuussa?&lt;/div&gt; &lt;/div&gt;
+        &lt;div class=&quot;card&quot;&gt; &lt;p&gt; Tekoaly antaa virheellisen
+        laakeohjeen.&lt;br&gt; Potilas karsii haitan. &lt;/p&gt; &lt;p&gt;
+        &lt;strong&gt;Kuka on vastuussa?&lt;/strong&gt; &lt;/p&gt; &lt;/div&gt;
+        &lt;div class=&quot;next-button-container&quot;&gt; &lt;&lt;button
+        &quot;Tekoaly itse&quot;&gt;&gt; &lt;&lt;goto
+        &quot;VaarinEettinen&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
+        &lt;&lt;button &quot;Ohjelmoija ja organisaatio&quot;&gt;&gt;
+        &lt;&lt;goto &quot;OikeinEettinen&quot;&gt;&gt; &lt;&lt;/button&gt;&gt;
         &lt;/div&gt;</tw-passagedata
       ></tw-storydata
     >
