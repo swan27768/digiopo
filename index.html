@@ -3,41 +3,181 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="DigiOpo – Minun polkuni. Oppilaanohjauksen digikirja yläkoulun 7–9 luokkalaisille."
+    />
     <title>DigiOpo</title>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- DigiOpo CSS -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/maskotti.css" />
+
+    <style>
+      /* Teema D — pehmeä pastelinen violetti/pinkki */
+
+      /* Sivupohja */
+      body {
+        background: var(--bg);
+      }
+
+      /* Kirjalevitys */
+      .book-spread {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08);
+      }
+
+      .book-page-left {
+        background: #faf5ff;
+        border-right: 1px solid var(--border);
+      }
+
+      /* Luokkakortit */
+      .class-7 {
+        background: var(--class-7);
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.25);
+      }
+
+      .class-8 {
+        background: var(--class-8);
+        box-shadow: 0 4px 20px rgba(219, 39, 119, 0.25);
+      }
+
+      .class-9 {
+        background: var(--class-9);
+        box-shadow: 0 4px 20px rgba(13, 148, 136, 0.25);
+      }
+
+      /* Hero-kupla */
+      .hero-bubble {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(4px);
+      }
+
+      /* Navigaatiolinkit sivupalkissa — tummennettu kontrasti */
+      .book-page-left a {
+        color: #3b0764;
+        font-weight: 500;
+      }
+      .book-page-left a:hover {
+        color: #6d28d9;
+        background: #ede9fe;
+      }
+
+      .book-page-left h2,
+      .book-page-left h3 {
+        color: #3b0764;
+      }
+
+      /* Tehtäväkortit */
+      .course-card {
+        border-color: var(--border);
+      }
+
+      .course-card:hover {
+        border-color: #c4b5fd;
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.1);
+      }
+
+      /* Hakukenttä */
+      .header-search input {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: #ddd6fe;
+        color: var(--text);
+      }
+
+      .header-search input:focus {
+        border-color: #a78bfa;
+        outline: 2px solid #ddd6fe;
+      }
+
+      #searchResults {
+        background: #ffffff;
+        border-color: var(--border);
+      }
+      .result-item {
+        border-color: var(--border);
+      }
+      .result-item:hover {
+        background: #faf5ff;
+      }
+      .result-item.selected {
+        background: #ede9fe;
+      }
+
+      /* Fallback jos JS ei lataudu */
+      .card-grid-fallback {
+        display: none;
+        padding: 20px;
+        border-radius: 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-light);
+        font-size: 14px;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      #taskCards:empty + .card-grid-fallback {
+        display: block;
+      }
+    </style>
   </head>
-  <body class="etusivu-tausta">
+
+  <body>
+    <!-- Navigaatio -->
     <header class="navbar">
       <div class="nav-left">
-        <a href="index.html" class="logo">
-          <i class="fa-solid fa-graduation-cap"></i>
+        <a href="index.html" class="logo" aria-label="DigiOpo — etusivu">
+          <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
           <span class="logo-main">DigiOpo</span>
         </a>
       </div>
 
       <div class="nav-right">
-        <div class="header-search">
+        <div class="header-search" role="search">
+          <label for="taskSearch" class="sr-only">Hae tehtävää</label>
           <input
             id="taskSearch"
+            type="search"
             placeholder="Hae tehtävää..."
             autocomplete="off"
+            aria-label="Hae tehtävää"
+            aria-controls="searchResults"
+            aria-autocomplete="list"
           />
-          <i class="fa-solid fa-search search-icon"></i>
-          <div id="searchResults"></div>
+          <i class="fa-solid fa-search search-icon" aria-hidden="true"></i>
+          <div
+            id="searchResults"
+            role="listbox"
+            aria-label="Hakutulokset"
+          ></div>
         </div>
       </div>
     </header>
 
+    <!-- Ruudunlukijat: ohita navigaatio -->
+    <a href="#main-content" class="sr-only sr-only-focusable"
+      >Siirry pääsisältöön</a
+    >
+
+    <!-- Kirjalevitys -->
     <div class="book-spread">
-      <aside class="book-page-left">
+      <!-- Vasen sivu: luokkanavigaatio -->
+      <aside class="book-page-left" aria-label="Luokkavalinta">
         <h2 class="section-title">Aloita tästä:</h2>
 
-        <div class="class-grid">
+        <nav class="class-grid" aria-label="Luokat">
           <a class="class-card class-7" href="sivut/7luokka.html">
             <h3>7. luokka</h3>
             <p>Tutustu omiin vahvuuksiisi ja opi opiskelutaitoja.</p>
@@ -52,16 +192,17 @@
             <h3>9. luokka</h3>
             <p>Valmistaudu yhteishakuun ja suunnittele tulevaisuutta.</p>
           </a>
-        </div>
+        </nav>
       </aside>
 
-      <main class="book-page-right">
-        <div class="breadcrumb">Etusivu</div>
+      <!-- Oikea sivu: pääsisältö -->
+      <main class="book-page-right" id="main-content">
+        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">Etusivu</div>
 
         <h1>DigiOpo – Minun polkuni</h1>
 
         <div class="intro-text">
-          <div class="hero">
+          <div class="hero animated-intro">
             <div class="hero-bubble">
               <p class="intro-step intro-cta delay-2">
                 Tässä opokirjassa pysähdyt pohtimaan itseäsi ja omaa suuntaasi:
@@ -83,32 +224,45 @@
               </p>
             </div>
 
-            <!-- MASKOTTI -->
             <img
               src="images/robo_maskotti.png"
-              alt="DigiOpon maskotti"
+              alt="DigiOpon robottimaskotti kurkistaa oikeasta reunasta"
               class="hero-mascot"
             />
           </div>
         </div>
-
-        <div id="taskCards" class="card-grid"></div>
       </main>
     </div>
+
+    <!-- Ruudunlukijaa varten: piilotettu teksti -->
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .sr-only-focusable:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        clip: auto;
+        white-space: normal;
+        background: var(--primary);
+        color: #0f172a;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+    </style>
 
     <script src="js/tehtavat.js"></script>
     <script src="js/kortit.js"></script>
     <script src="js/haku.js"></script>
-    <script>
-      document.getElementById("startGameBtn")?.addEventListener("click", () => {
-        // pieni “pelifiilis” efekti
-        document.body.classList.add("game-started");
-
-        // scroll luokkiin
-        document.querySelector(".class-grid")?.scrollIntoView({
-          behavior: "smooth",
-        });
-      });
-    </script>
   </body>
 </html>

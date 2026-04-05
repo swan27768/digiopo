@@ -1,0 +1,252 @@
+/* ============================================================
+   MASKOTTI.CSS — DigiOpo
+   Maskotti, puhekupla, hero, intro-animaatiot
+   ============================================================ */
+
+/* --- Maskotti-laatikko (fixed, desktop) -------------------- */
+
+.maskotti-laatikko {
+  position: fixed;
+  top: 100px;
+  left: var(--sidebar-width);
+  z-index: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.maskotti-laatikko.nakyvissa {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.maskotti-laatikko.piilossa {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+/* --- Maskotti-kuva ----------------------------------------- */
+
+.maskotti {
+  width: 120px;
+  max-width: 20vw;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.maskotti.osoittaa {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.maskotti.lahempana {
+  transform: scale(1.05);
+}
+
+/* --- Puhekupla --------------------------------------------- */
+
+.puhekupla {
+  margin-bottom: 10px;
+  background: white;
+  color: #222;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 220px;
+  position: relative;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.puhekupla::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 20px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
+
+/* --- Hero (etusivu) ---------------------------------------- */
+
+.hero {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-bubble {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 24px 26px;
+  max-width: 720px;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.hero-mascot {
+  position: absolute;
+  right: -50px;
+  bottom: -5px;
+  width: 90px;
+  z-index: 1;
+  transform: rotate(18deg) translateX(-10px);
+  transform-origin: bottom left;
+  animation: peek 3s ease-in-out infinite;
+}
+
+@keyframes peek {
+  0%,
+  100% {
+    transform: rotate(18deg) translateX(-10px);
+  }
+  50% {
+    transform: rotate(18deg) translateX(-14px);
+  }
+}
+
+.hero-maskot {
+  align-self: flex-end;
+}
+
+.hero-mission {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.hero-title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* --- Intro-animaatio --------------------------------------- */
+
+.intro-list {
+  padding-left: 20px;
+  margin: 10px 0 20px;
+}
+
+.intro-list li {
+  margin-bottom: 6px;
+}
+
+/* Animoitu intro (.animated-intro -luokan kanssa) */
+
+.animated-intro .intro-step {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: introFade 0.5s ease forwards;
+}
+
+.animated-intro .intro-step.delay-1 {
+  animation-delay: 0.2s;
+}
+.animated-intro .intro-step.delay-2 {
+  animation-delay: 0.6s;
+}
+.animated-intro .intro-step.delay-3 {
+  animation-delay: 1s;
+}
+.animated-intro .intro-step.delay-4 {
+  animation-delay: 1.4s;
+}
+.animated-intro .intro-step.delay-5 {
+  animation-delay: 1.8s;
+}
+
+/* Perusversio ilman .animated-intro (nth-of-type) */
+
+.intro-step {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeStep 0.6s ease forwards;
+}
+
+.intro-step:nth-of-type(1) {
+  animation-delay: 0.3s;
+}
+.intro-step:nth-of-type(2) {
+  animation-delay: 0.9s;
+}
+.intro-step:nth-of-type(3) {
+  animation-delay: 1.5s;
+}
+.intro-step:nth-of-type(4) {
+  animation-delay: 2.1s;
+}
+.intro-step:nth-of-type(5) {
+  animation-delay: 2.7s;
+}
+
+@keyframes introFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeStep {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Mobiili ---------------------------------------------- */
+
+@media (max-width: 768px) {
+  .maskotti-laatikko {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    top: auto;
+    left: auto;
+    z-index: 400;
+  }
+
+  .maskotti-laatikko.piilossa,
+  .maskotti-laatikko.piilossa-scrollissa {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
+
+  .maskotti {
+    width: 70px;
+    max-width: none;
+  }
+
+  .puhekupla {
+    display: none;
+  }
+
+  .hero-mascot {
+    width: 65px;
+    right: -5px;
+    bottom: -4px;
+    transform: rotate(15deg) translateX(-6px);
+  }
+
+  .hero-bubble {
+    transform: translateY(0);
+  }
+
+  .hero-maskot {
+    align-self: center;
+  }
+
+  .hero-writing {
+    align-items: center;
+  }
+}

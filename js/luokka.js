@@ -37,53 +37,49 @@ function aktivoiSisallysluettelo() {
   function setActiveLink() {
     let currentId = "";
 
+    // getBoundingClientRect päivittyy aina — ei vanhene dynaamisella sisällöllä
     sections.forEach((section) => {
-      const sectionTop = section.offsetTop;
-
-      if (window.scrollY >= sectionTop - 140) {
-        currentId = section.getAttribute("id");
+      const rect = section.getBoundingClientRect();
+      // Osio on "aktiivinen" kun sen yläreuna on näkyvissä tai ohi
+      if (rect.top <= 160) {
+        currentId = section.id;
       }
     });
 
     navLinks.forEach((link) => {
       link.classList.remove("active");
-
-      if (link.getAttribute("href") === `#${currentId}`) {
+      const href = link.getAttribute("href");
+      // Täsmää vain päälinkit (#id), ei sub-linkkejä (#id-mission)
+      if (href === `#${currentId}`) {
         link.classList.add("active");
       }
     });
   }
 
-  window.addEventListener("scroll", setActiveLink);
-  window.addEventListener("load", setActiveLink);
+  window.addEventListener("scroll", setActiveLink, { passive: true });
   setActiveLink();
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  naytaLuokanTehtavat();
-  aktivoiSisallysluettelo();
-});
 
 function setupScrollTop() {
   const btn = document.getElementById("scrollTopBtn");
   if (!btn) return;
 
-  // näytä kun scrollataan alas
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-      btn.classList.add("nakyvissa");
-    } else {
-      btn.classList.remove("nakyvissa");
-    }
-  });
+  window.addEventListener(
+    "scroll",
+    () => {
+      btn.classList.toggle("nakyvissa", window.scrollY > 300);
+    },
+    { passive: true },
+  );
 
-  // scroll ylös
   btn.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  naytaLuokanTehtavat();
+  aktivoiSisallysluettelo();
+});
 
 window.addEventListener("load", setupScrollTop);

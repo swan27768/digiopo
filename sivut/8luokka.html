@@ -3,55 +3,273 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>8. luokan oppilaanohjaus</title>
+    <meta
+      name="description"
+      content="DigiOpo – 8. luokan oppilaanohjaus. Tutustu koulutusvaihtoehtoihin, työelämään ja omiin mahdollisuuksiisi."
+    />
+    <title>8. luokka – DigiOpo</title>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- DigiOpo CSS -->
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/aihe.css" />
+    <link rel="stylesheet" href="../css/maskotti.css" />
+    <link rel="stylesheet" href="../css/utils.css" />
+
+    <style>
+      /* 8. luokka — pinkki aksentti, teema D pohja */
+      :root {
+        --lk8-pink: #db2777;
+        --lk8-pink-lt: #be185d;
+        --lk8-pink-xs: #fce7f3;
+      }
+
+      .book-spread {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid #f9a8d4;
+        box-shadow: 0 8px 32px rgba(219, 39, 119, 0.08);
+      }
+
+      .book-page-left {
+        background: #fff0f9;
+        border-right: 1px solid #f9a8d4;
+      }
+
+      .book-page-left h3 {
+        color: #831843;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+
+      .aihelista a {
+        color: #831843;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+      }
+      .aihelista a:hover {
+        color: var(--lk8-pink);
+        background: #fce7f3;
+      }
+      .aihelista a.active {
+        color: #9d174d;
+        background: #fce7f3;
+        border-left: 3px solid var(--lk8-pink);
+        font-weight: 700;
+        box-shadow: none;
+      }
+      .sub-link {
+        color: var(--lk8-pink);
+        opacity: 0.8;
+      }
+      .sub-link:hover {
+        opacity: 1;
+      }
+
+      .breadcrumb a {
+        color: var(--lk8-pink);
+      }
+      .breadcrumb a:hover {
+        color: var(--lk8-pink-lt);
+      }
+
+      .aihe-osio {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #f9a8d4;
+        box-shadow: 0 4px 16px rgba(219, 39, 119, 0.06);
+      }
+
+      .aihe-otsikko {
+        border-bottom: 2px solid var(--lk8-pink);
+      }
+      .aihe-otsikko h2 {
+        color: #9d174d;
+      }
+      .aihe-otsikko p {
+        color: #be185d;
+      }
+
+      .theory-card {
+        background: #fff0f9;
+        border: 1px solid #f9a8d4;
+        border-radius: 14px;
+      }
+      .theory-text h3 {
+        color: #9d174d;
+      }
+
+      .tasks-section {
+        background: #fdf2f8;
+        border: 1px solid #f9a8d4;
+        border-radius: 14px;
+      }
+
+      .task-card:hover {
+        border-color: #f9a8d4;
+        box-shadow: 0 4px 16px rgba(219, 39, 119, 0.1);
+      }
+
+      .mission-card {
+        background: linear-gradient(135deg, #fff0f9, #fdf2f8);
+        border: 2px solid #f9a8d4;
+        box-shadow: 0 6px 20px rgba(219, 39, 119, 0.12);
+      }
+      .mission-card::before {
+        display: none;
+      }
+      .mission-header h4 {
+        color: #831843;
+      }
+      .mission-badge {
+        background: #fce7f3;
+        color: #9d174d;
+      }
+      .mission-card p {
+        color: #475569;
+      }
+      .mission-list li {
+        color: #1e1b4b;
+      }
+      .mission-card:hover {
+        box-shadow: 0 10px 28px rgba(219, 39, 119, 0.2);
+      }
+      .mission-card:focus-within {
+        outline: 3px solid var(--lk8-pink);
+        outline-offset: 3px;
+      }
+
+      .interactive-hero {
+        background: linear-gradient(135deg, var(--lk8-pink), #9d174d);
+        box-shadow: 0 8px 28px rgba(219, 39, 119, 0.25);
+        border: none;
+      }
+
+      .header-search input {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: #f9a8d4;
+        color: var(--text);
+      }
+      .header-search input:focus {
+        border-color: var(--lk8-pink);
+        outline: 2px solid #fce7f3;
+      }
+      #searchResults {
+        background: #fff;
+        border-color: #f9a8d4;
+      }
+      .result-item {
+        border-color: #f9a8d4;
+      }
+      .result-item:hover {
+        background: #fff0f9;
+      }
+
+      #scrollTopBtn {
+        background: var(--lk8-pink);
+      }
+      #scrollTopBtn:hover {
+        background: var(--lk8-pink-lt);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .sr-only-focusable:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        clip: auto;
+        white-space: normal;
+        background: var(--lk8-pink);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Navigaatio -->
     <header class="navbar">
       <div class="nav-left">
-        <a href="../index.html" class="home-btn">← DigiOpo</a>
+        <a
+          href="../index.html"
+          class="home-btn"
+          aria-label="Takaisin DigiOpon etusivulle"
+        >
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          DigiOpo
+        </a>
       </div>
-
       <div class="nav-right">
-        <div class="header-search">
+        <div class="header-search" role="search">
+          <label for="taskSearch" class="sr-only">Hae tehtävää</label>
           <input
             id="taskSearch"
+            type="search"
             placeholder="Hae tehtävää..."
             autocomplete="off"
+            aria-label="Hae tehtävää"
+            aria-controls="searchResults"
+            aria-autocomplete="list"
           />
-          <i class="fa-solid fa-search search-icon"></i>
-          <div id="searchResults"></div>
+          <i class="fa-solid fa-search search-icon" aria-hidden="true"></i>
+          <div
+            id="searchResults"
+            role="listbox"
+            aria-label="Hakutulokset"
+          ></div>
         </div>
       </div>
     </header>
 
+    <a href="#main-content" class="sr-only sr-only-focusable"
+      >Siirry pääsisältöön</a
+    >
+
     <div class="book-spread">
-      <aside class="book-page-left">
+      <!-- Vasen sivu: navigaatio -->
+      <aside class="book-page-left" aria-label="Aiheet">
         <h3>Sun polku</h3>
 
-        <nav class="aihelista">
+        <nav class="aihelista" aria-label="Sivun aiheet">
           <a href="#koulutus">Miten Suomi kouluttaa?</a>
-          <a href="#koulutus-mission" class="sub-link">Toiminta</a>
+          <a href="#koulutus-mission" class="sub-link mission-link">Toiminta</a>
 
           <a href="#tet">Kurkistus työelämään</a>
-          <a href="#tet-mission" class="sub-link">Toiminta</a>
+          <a href="#tet-mission" class="sub-link mission-link">Toiminta</a>
 
-          <a href="#raha">Oma raha & duunit</a>
-          <a href="#raha-mission" class="sub-link">Toiminta</a>
+          <a href="#raha">Oma raha &amp; duunit</a>
+          <a href="#raha-mission" class="sub-link mission-link">Toiminta</a>
 
           <a href="#ammatti">Mikä työ sopii mulle?</a>
-          <a href="#ammatti-mission" class="sub-link">Toiminta</a>
+          <a href="#ammatti-mission" class="sub-link mission-link">Toiminta</a>
         </nav>
       </aside>
 
-      <main class="book-page-right">
-        <div class="breadcrumb">Etusivu → 8. luokka</div>
+      <!-- Oikea sivu: sisältö -->
+      <main class="book-page-right" id="main-content">
+        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">
+          <a href="../index.html">Etusivu</a> → 8. luokka
+        </div>
 
         <h1>8. luokka – suunta löytyy</h1>
 
@@ -60,10 +278,14 @@
           mikä voisi olla sun juttu.
         </p>
 
-        <!-- 1 -->
-        <section id="koulutus" class="aihe-osio">
+        <!-- 1. Koulutus -->
+        <section
+          id="koulutus"
+          class="aihe-osio"
+          aria-labelledby="otsikko-koulutus"
+        >
           <div class="aihe-otsikko">
-            <h2>Miten Suomi kouluttaa?</h2>
+            <h2 id="otsikko-koulutus">Miten Suomi kouluttaa?</h2>
             <p>Mitä vaihtoehtoja sulla on peruskoulun jälkeen?</p>
           </div>
 
@@ -74,11 +296,8 @@
                 Lukio, ammatillinen koulutus ja muut vaihtoehdot tarjoavat eri
                 tapoja oppia ja kehittyä.
               </p>
-              <p>
-                <strong>Ei ole vain yhtä oikeaa reittiä.</strong>
-              </p>
+              <p><strong>Ei ole vain yhtä oikeaa reittiä.</strong></p>
             </div>
-
             <div class="theory-image">
               <img
                 src="../images/koulutus.png"
@@ -87,67 +306,55 @@
             </div>
           </div>
 
-          <div class="aihe-aliosio">
-            <h3>🧩 Koulutusalat – mitä vaihtoehtoja on?</h3>
-
-            <p>Tärkeintä ei ole valita “oikein” vaan löytää mikä kiinnostaa.</p>
-
-            <div class="interactive-hero">
-              <div class="hero-content">
-                <div class="hero-badge">🎮 Interaktiivinen tehtävä</div>
-
-                <h3>Mikä koulutusala voisi olla sun juttu?</h3>
-
-                <p>
-                  Tee valintoja, tutustu eri aloihin ja löydä vaihtoehtoja,
-                  jotka voisivat sopia sulle.
-                </p>
-
-                <a href="../pelit/koulutusalat.html" class="btn-hero">
-                  Aloita peli
-                </a>
-                <p class="hero-hint">
-                  💡 Vinkki: kokeile eri valintoja uudestaan
-                </p>
+          <div class="interactive-hero">
+            <div class="hero-content">
+              <div class="hero-badge">
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                Interaktiivinen tehtävä
               </div>
-
-              <div class="hero-visual">
-                <i class="fa-solid fa-compass"></i>
-              </div>
+              <h3>Mikä koulutusala voisi olla sun juttu?</h3>
+              <p>
+                Tee valintoja, tutustu eri aloihin ja löydä vaihtoehtoja, jotka
+                voisivat sopia sulle.
+              </p>
+              <a href="../pelit/koulutusalat.html" class="btn-hero"
+                >Aloita peli</a
+              >
+              <p class="hero-hint">Vinkki: kokeile eri valintoja uudestaan</p>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <i class="fa-solid fa-compass"></i>
             </div>
           </div>
-          <div id="koulutus-mission" class="mission-section">
-            <div class="section-label mission-label">Mission</div>
 
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-koulutus" aria-live="polite"></div>
+          </div>
+
+          <div id="koulutus-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Koulutusalan metsästys</h4>
                 <span class="mission-badge">Tiimipeli</span>
               </div>
-
               <p>
                 Muodostakaa 2–3 hengen ryhmät ja etsikää yhdessä sopivia aloja.
               </p>
-
               <ul class="mission-list">
                 <li>Valitkaa 2 koulutusalaa, jotka kiinnostavat ryhmää</li>
                 <li>Keskustelkaa: miksi juuri nämä?</li>
-                <li>Valitkaa yksi “yhteinen suosikki”</li>
+                <li>Valitkaa yksi yhteinen suosikki</li>
                 <li>Esitelkää valinta toiselle ryhmälle</li>
               </ul>
-
-              <p class="mission-hint">
-                💬 Tärkeintä: kuuntele muiden ajatuksia
-              </p>
               <p class="mission-hint">⏱ Aika: 10 min</p>
             </div>
           </div>
         </section>
 
-        <!-- 2 -->
-        <section id="tet" class="aihe-osio">
+        <!-- 2. TET -->
+        <section id="tet" class="aihe-osio" aria-labelledby="otsikko-tet">
           <div class="aihe-otsikko">
-            <h2>Kurkistus työelämään</h2>
+            <h2 id="otsikko-tet">Kurkistus työelämään</h2>
             <p>Millaista työ oikeasti on?</p>
           </div>
 
@@ -157,48 +364,39 @@
                 TET-jakso on mahdollisuus nähdä työelämää oikeasti. Saat
                 kokemusta, opit uutta ja huomaat, mikä kiinnostaa – tai ei.
               </p>
-              <p>
-                <strong>Kokemus auttaa valinnoissa.</strong>
-              </p>
+              <p><strong>Kokemus auttaa valinnoissa.</strong></p>
             </div>
-
             <div class="theory-image">
-              <img src="../images/tet.png" alt="" />
+              <img src="../images/tet.png" alt="TET-jakso työpaikalla" />
             </div>
           </div>
-          <div id="tet-mission" class="mission-section">
-            <div class="section-label mission-label">Mission</div>
 
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-tet" aria-live="polite"></div>
+          </div>
+
+          <div id="tet-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>TET-roolipeli</h4>
                 <span class="mission-badge">Paritehtävä</span>
               </div>
-
               <p>Toinen on työntekijä, toinen työnantaja.</p>
-
               <ul class="mission-list">
                 <li>Työnantaja kysyy 3 kysymystä</li>
                 <li>Työntekijä vastaa realistisesti</li>
                 <li>Keksikää yhdessä 1 työtilanne</li>
                 <li>Vaihtakaa roolit</li>
               </ul>
-
-              <p class="mission-hint">🎭 Heittäytykää – saa olla hauskaa</p>
               <p class="mission-hint">⏱ Aika: 10 min</p>
             </div>
           </div>
-
-          <div class="tasks-section">
-            <div class="section-label task-label">✍️ Tehtävät</div>
-            <div class="task-list" id="tasks-tet"></div>
-          </div>
         </section>
 
-        <!-- 3 -->
-        <section id="raha" class="aihe-osio">
+        <!-- 3. Raha -->
+        <section id="raha" class="aihe-osio" aria-labelledby="otsikko-raha">
           <div class="aihe-otsikko">
-            <h2>Oma raha & duunit</h2>
+            <h2 id="otsikko-raha">Oma raha &amp; duunit</h2>
             <p>Miten voit tienata ja kokeilla työelämää?</p>
           </div>
 
@@ -208,48 +406,43 @@
                 Kesätyöt ja kevytyrittäjyys ovat tapoja ansaita rahaa ja saada
                 kokemusta.
               </p>
-              <p>
-                <strong>Pienikin kokemus on arvokas.</strong>
-              </p>
+              <p><strong>Pienikin kokemus on arvokas.</strong></p>
             </div>
-
             <div class="theory-image">
-              <img src="../images/kesatyo.png" alt="" />
+              <img src="../images/kesatyo.png" alt="Kesätyö ja ansaitseminen" />
             </div>
           </div>
-          <div id="raha-mission" class="mission-section">
-            <div class="section-label mission-label">Mission</div>
 
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-raha" aria-live="polite"></div>
+          </div>
+
+          <div id="raha-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Rahatiimi-haaste</h4>
                 <span class="mission-badge">Ideointipeli</span>
               </div>
-
               <p>Keksikää ryhmässä tapoja tienata rahaa.</p>
-
               <ul class="mission-list">
                 <li>Kirjatkaa 5 ideaa yhdessä</li>
                 <li>Valitkaa paras idea</li>
                 <li>Pohtikaa: miten sen voisi oikeasti toteuttaa?</li>
                 <li>Esitelkää idea luokalle</li>
               </ul>
-
-              <p class="mission-hint">💡 Hullutkin ideat sallittuja</p>
               <p class="mission-hint">⏱ Aika: 15 min</p>
             </div>
           </div>
-
-          <div class="tasks-section">
-            <div class="section-label task-label">✍️ Tehtävät</div>
-            <div class="task-list" id="tasks-raha"></div>
-          </div>
         </section>
 
-        <!-- 4 -->
-        <section id="ammatti" class="aihe-osio">
+        <!-- 4. Ammatti -->
+        <section
+          id="ammatti"
+          class="aihe-osio"
+          aria-labelledby="otsikko-ammatti"
+        >
           <div class="aihe-otsikko">
-            <h2>Mikä työ sopii mulle?</h2>
+            <h2 id="otsikko-ammatti">Mikä työ sopii mulle?</h2>
             <p>Mitä vaihtoehtoja sulla voisi olla?</p>
           </div>
 
@@ -259,141 +452,132 @@
                 Ammatin valinta ei ole yksi päätös, vaan prosessi. Tutustumalla
                 eri vaihtoehtoihin löydät paremmin oman suuntasi.
               </p>
-              <p>
-                <strong>Saat kokeilla ja muuttaa mieltä.</strong>
-              </p>
+              <p><strong>Saat kokeilla ja muuttaa mieltä.</strong></p>
             </div>
-
             <div class="theory-image">
-              <img src="../images/ammatti.png" alt="" />
+              <img
+                src="../images/ammatti.png"
+                alt="Eri ammatit ja mahdollisuudet"
+              />
             </div>
           </div>
-          <div id="ammatti-mission" class="mission-section">
-            <div class="section-label mission-label">Mission</div>
 
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-ammatti" aria-live="polite"></div>
+          </div>
+
+          <div id="ammatti-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Ammatti-arvaus</h4>
                 <span class="mission-badge">Ryhmäpeli</span>
               </div>
-
               <p>Yksi miettii ammatin – muut arvaavat.</p>
-
               <ul class="mission-list">
                 <li>Saa kysyä vain kyllä/ei-kysymyksiä</li>
                 <li>Maksimi 10 kysymystä</li>
                 <li>Seuraava vuoro vaihtuu arvaajalle</li>
-                <li>Pelin lopuksi keskustelkaa: mikä yllätti?</li>
+                <li>Lopuksi: mikä yllätti?</li>
               </ul>
-
-              <p class="mission-hint">👀 Opit samalla uusista ammateista</p>
               <p class="mission-hint">⏱ Aika: 10 min</p>
             </div>
-          </div>
-
-          <div class="tasks-section">
-            <div class="section-label task-label">✍️ Tehtävät</div>
-            <div class="task-list" id="tasks-ammatti"></div>
           </div>
         </section>
       </main>
     </div>
 
-    <!-- MASKOTTI -->
-    <div class="maskotti-laatikko piilossa">
-      <div class="puhekupla">Moi! Aloita tästä 👇</div>
-      <img src="../images/robo_maskotti.png" class="maskotti" />
+    <!-- Maskotti -->
+    <div
+      class="maskotti-laatikko piilossa"
+      aria-live="polite"
+      aria-label="Maskotti-vihje"
+    >
+      <div class="puhekupla" role="status">Moi! Aloita tästä 👇</div>
+      <img
+        src="../images/robo_maskotti.png"
+        class="maskotti"
+        alt="DigiOpon robottimaskotti"
+      />
     </div>
+
+    <!-- Scroll to top -->
+    <button id="scrollTopBtn" aria-label="Takaisin sivun alkuun">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
 
     <script src="../js/tehtavat.js"></script>
     <script src="../js/luokka.js"></script>
 
-    <!-- MASKOTTI LOGIIKKA -->
     <script>
+      window.currentClassNumber = "8";
+
+      /* Maskotti */
       function setupMaskotti() {
         if (window.innerWidth <= 768) return;
 
         const maskotti = document.querySelector(".maskotti-laatikko");
         const puhekupla = document.querySelector(".puhekupla");
-        const osiot = document.querySelectorAll(".mission-section");
+        const osiot = document.querySelectorAll(".aihe-osio");
 
         if (!maskotti || !puhekupla || !osiot.length) return;
 
-        let viimeisinId = null;
-        let piilotusAjastin = null;
-        let cooldown = false;
-        let ticking = false;
-
         const puhetekstit = {
-          "koulutus-mission": "🎯 Valitse mikä ala kiinnostaa – ei yhtä oikeaa",
-          "tet-mission": "🎭 Heittäydy rooliin – kokeile työelämää",
-          "raha-mission": "💡 Keksi rohkeasti – kaikki ideat sallittuja",
-          "ammatti-mission": "👀 Arvaa ja oivalla – mitä työ oikeasti on",
+          koulutus: "Ei ole yhtä oikeaa reittiä – kokeile ja katso 🙂",
+          tet: "TET on mahdollisuus – ota siitä kaikki irti!",
+          raha: "Pienikin idea voi kasvaa isoksi 💡",
+          ammatti: "Saat kokeilla ja muuttaa mieltä – se on ok 👀",
         };
 
-        function maskotinAani(teksti) {
-          const prefixit = ["👀", "💭", "👉", "✨"];
-          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
-          return `${prefix} ${teksti}`;
-        }
+        const prefixit = ["🙂", "👀", "💭", "✨"];
+        let viimeisin = null;
+        let piilotusAjastin = null;
 
         function naytaMaskotti(teksti) {
-          if (cooldown) return;
-
-          cooldown = true;
-
-          puhekupla.textContent = maskotinAani(teksti);
-
+          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
+          puhekupla.textContent = `${prefix} ${teksti}`;
           maskotti.classList.remove("piilossa");
           maskotti.classList.add("nakyvissa");
-
           clearTimeout(piilotusAjastin);
           piilotusAjastin = setTimeout(() => {
             maskotti.classList.remove("nakyvissa");
             maskotti.classList.add("piilossa");
-            cooldown = false;
-          }, 4500);
+          }, 4000);
         }
 
-        function haeAktiivinenMission() {
+        function paivitaOsio() {
           for (const osio of osiot) {
             const rect = osio.getBoundingClientRect();
-
-            if (rect.top < window.innerHeight * 0.5 && rect.bottom > 0) {
-              return osio;
+            if (rect.top <= 160 && rect.bottom > 0) {
+              if (viimeisin !== osio.id && puhetekstit[osio.id]) {
+                viimeisin = osio.id;
+                naytaMaskotti(puhetekstit[osio.id]);
+              }
+              break;
             }
           }
-          return null;
         }
 
-        function paivita() {
-          const aktiivinen = haeAktiivinenMission();
-
-          if (!aktiivinen) return;
-
-          if (aktiivinen.id !== viimeisinId && puhetekstit[aktiivinen.id]) {
-            viimeisinId = aktiivinen.id;
-            naytaMaskotti(puhetekstit[aktiivinen.id]);
-          }
-        }
-
-        window.addEventListener("scroll", () => {
-          if (!ticking) {
-            requestAnimationFrame(() => {
-              paivita();
-              ticking = false;
-            });
-            ticking = true;
-          }
-        });
-
-        paivita();
+        setTimeout(
+          () => naytaMaskotti("Hei! Valintoja on monia – katsotaan yhdessä 👇"),
+          800,
+        );
+        window.addEventListener("scroll", paivitaOsio, { passive: true });
       }
 
       window.addEventListener("load", setupMaskotti);
+
+      /* Scroll to top */
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      window.addEventListener(
+        "scroll",
+        () => {
+          scrollBtn.classList.toggle("nakyvissa", window.scrollY > 300);
+        },
+        { passive: true },
+      );
+      scrollBtn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
     </script>
-    <button id="scrollTopBtn" aria-label="Takaisin ylös">
-      <i class="fa-solid fa-arrow-up"></i>
-    </button>
   </body>
 </html>

@@ -1,0 +1,506 @@
+/* ============================================================
+   AIHE.CSS — DigiOpo
+   Aihe-osiot, teoria, tehtävät, interaktiivinen, mission,
+   toiminta, aihelista, teoria-kortti
+   ============================================================ */
+
+/* --- Aihelista (sivupalkki, sticky) ------------------------ */
+
+.aihelista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  position: sticky;
+  top: 80px;
+}
+
+.aihelista a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #374151;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.aihelista a:hover {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.aihelista a.active {
+  background: #eef2ff;
+  color: #312e81;
+  font-weight: 700;
+  border-left: 4px solid #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+}
+
+/* --- Aihe-osio (pääsäiliö) --------------------------------- */
+
+.aihe-osio {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  scroll-margin-top: 100px;
+}
+
+.aihe-otsikko {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid #4f46e5;
+}
+
+.aihe-otsikko h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  color: #111827;
+}
+
+.aihe-otsikko p {
+  margin: 0;
+  color: #4b5563;
+}
+
+/* --- Teoria-kortti ----------------------------------------- */
+
+.theory-card {
+  background: var(--color-teoria);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 16px;
+  border: 1px solid var(--color-teoria-border);
+  opacity: 0.9;
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 20px;
+  align-items: center;
+}
+
+.theory-label {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.theory-text h3,
+.tasks-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.theory-text p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.theory-image {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.theory-image img {
+  width: 160px;
+  height: 200px;
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* --- Teoria-kortti (kuvan kanssa) -------------------------- */
+
+.teoria-kortti {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  margin: 24px 0 32px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.teoria-sisalto {
+  flex: 2;
+}
+
+.teoria-otsikko {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+  color: #1f3c88;
+}
+
+.teoria-sisalto p {
+  margin: 0 0 12px;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.teoria-sisalto p:last-child {
+  margin-bottom: 0;
+}
+
+.teoria-kuva {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.teoria-kuva img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 14px;
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+}
+
+/* --- Tehtäväosio ------------------------------------------- */
+
+.tasks-section {
+  background: var(--color-tehtava);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 24px;
+  border: 1px solid var(--color-tehtava-border);
+  opacity: 0.85;
+}
+
+.task-label {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+.task-list {
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #e5e7eb;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Interaktiivinen osio ---------------------------------- */
+
+.interactive-card,
+.task-card.interactive {
+  background: var(--color-interactive);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid var(--color-interactive-border);
+}
+
+.interactive-label {
+  background: #c7d2fe;
+  color: #1e1b4b;
+}
+
+.interactive-wrapper iframe {
+  width: 100%;
+  height: 80vh;
+  min-height: 600px;
+  border: none;
+  border-radius: 14px;
+  margin-top: 20px;
+}
+
+/* --- Toiminta-tehtävät ------------------------------------- */
+
+.toiminta-section {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--color-toiminta);
+  border: 1px solid var(--color-toiminta-border);
+}
+
+.toiminta-label {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0e7490;
+  margin-bottom: 10px;
+}
+
+.toiminta-card {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+/* --- Mission / pelimäinen tehtävä -------------------------- */
+
+.mission-section {
+  margin-top: 20px;
+  position: relative;
+}
+
+.mission-section::before {
+  position: absolute;
+  left: -30px;
+  top: 10px;
+  font-size: 20px;
+  opacity: 0.6;
+}
+
+.mission-label {
+  background: #fde68a;
+  color: #78350f;
+}
+
+.mission-card {
+  position: relative;
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.18);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mission-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.18) 100%
+  );
+  pointer-events: none;
+}
+
+.mission-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(245, 158, 11, 0.22);
+}
+
+.mission-card:focus-within {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+.mission-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.mission-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #451a03;
+}
+
+.mission-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(120, 53, 15, 0.12);
+  color: #78350f;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.mission-card p {
+  margin: 0 0 12px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.mission-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.mission-list li {
+  margin-bottom: 6px;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* --- Interactive Hero -------------------------------------- */
+
+.interactive-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: white;
+  padding: 22px;
+  border-radius: 18px;
+  margin-top: 16px;
+  box-shadow: 0 10px 25px rgba(67, 56, 202, 0.25);
+}
+
+.hero-7lk {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hero-7lk:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.interactive-hero h3 {
+  margin: 6px 0 8px;
+  font-size: 1.4rem;
+}
+
+.interactive-hero p {
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.hero-hint {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.hero-visual {
+  font-size: 48px;
+  opacity: 0.9;
+}
+
+.btn-hero {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: white;
+  color: #4338ca;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.btn-hero:hover {
+  transform: translateY(-2px);
+  background: #e0e7ff;
+}
+
+.tasks-section {
+  padding-top: 8px;
+}
+
+/* --- Mobiili ---------------------------------------------- */
+
+@media (max-width: 768px) {
+  .teoria-kortti {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .teoria-kuva {
+    width: 100%;
+  }
+
+  .teoria-kuva img {
+    max-width: 100%;
+  }
+
+  .theory-card {
+    grid-template-columns: 1fr;
+  }
+
+  .theory-image,
+  .theory-image img {
+    width: 100%;
+    height: 160px;
+  }
+
+  .theory-card,
+  .tasks-section,
+  .interactive-card {
+    padding: 14px;
+  }
+
+  .task-card {
+    padding: 12px;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+  }
+
+  .interactive-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-visual {
+    align-self: flex-end;
+    font-size: 36px;
+  }
+
+  .interactive-hero h3 {
+    font-size: 1.2rem;
+  }
+
+  .mission-card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .mission-header h4 {
+    font-size: 1rem;
+  }
+
+  .mission-badge {
+    font-size: 0.75rem;
+  }
+
+  .aihelista {
+    position: static;
+  }
+}
