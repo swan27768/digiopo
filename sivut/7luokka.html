@@ -24,25 +24,201 @@
     <link rel="stylesheet" href="../css/utils.css" />
 
     <style>
-      /* 7. luokka — sininen aksentti, vaalea pohja */
-      :root {
-        --lk7-blue: #2563eb;
-        --lk7-blue-lt: #1d4ed8;
-        --lk7-blue-xs: #dbeafe;
+      /* 7. luokka — teema D: pehmeä violetti/pinkki */
+
+      .book-spread {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid #e9d5ff;
+        box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08);
       }
 
-      .aihe-otsikko {
-        border-bottom-color: var(--lk7-blue);
+      .book-page-left {
+        background: #faf5ff;
+        border-right: 1px solid #e9d5ff;
       }
-      .aihe-otsikko h2 {
-        color: var(--lk7-blue-lt);
+
+      .book-page-left h3 {
+        color: #3b0764;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
       }
-      .aihelista a.active {
-        border-left-color: var(--lk7-blue);
-        color: var(--lk7-blue-lt);
+
+      .aihelista a {
+        color: #3b0764;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        background: transparent;
       }
       .aihelista a:hover {
-        color: var(--lk7-blue);
+        color: #6d28d9;
+        background: #ede9fe;
+      }
+      .aihelista a.active {
+        color: #4c1d95;
+        background: #ede9fe;
+        border-left: 3px solid #7c3aed;
+        font-weight: 700;
+        box-shadow: none;
+      }
+      .sub-link {
+        color: #7c3aed;
+        font-weight: 400;
+        opacity: 0.85;
+      }
+      .sub-link:hover {
+        opacity: 1;
+        color: #6d28d9;
+      }
+
+      .aihe-osio {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid #e9d5ff;
+        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.06);
+      }
+      .aihe-otsikko {
+        border-bottom: 2px solid #a855f7;
+      }
+      .aihe-otsikko h2 {
+        color: #4c1d95;
+      }
+      .aihe-otsikko p {
+        color: #6b21a8;
+      }
+
+      .theory-card {
+        background: #faf5ff;
+        border: 1px solid #e9d5ff;
+        border-radius: 14px;
+      }
+      .theory-text h3 {
+        color: #4c1d95;
+      }
+
+      .tasks-section {
+        background: #fdf2f8;
+        border: 1px solid #f9a8d4;
+        border-radius: 14px;
+      }
+      .task-card:hover {
+        border-color: #d8b4fe;
+        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+      }
+
+      .mission-card {
+        background: linear-gradient(135deg, #faf5ff, #fdf4ff);
+        border: 2px solid #c4b5fd;
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.12);
+      }
+      .mission-card::before {
+        display: none;
+      }
+      .mission-header h4 {
+        color: #3b0764;
+      }
+      .mission-badge {
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .mission-card p {
+        color: #475569;
+      }
+      .mission-list li {
+        color: #1e1b4b;
+      }
+      .mission-card:hover {
+        box-shadow: 0 10px 28px rgba(124, 58, 237, 0.18);
+      }
+
+      .interactive-hero.hero-7lk {
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        box-shadow: 0 8px 28px rgba(124, 58, 237, 0.25);
+        border: none;
+      }
+
+      .breadcrumb a {
+        color: #7c3aed;
+      }
+      .breadcrumb a:hover {
+        color: #4c1d95;
+      }
+
+      .header-search input {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: #ddd6fe;
+        color: #1e1b4b;
+      }
+      .header-search input:focus {
+        border-color: #a78bfa;
+        outline: 2px solid #ddd6fe;
+      }
+      #searchResults {
+        background: #ffffff;
+        border-color: #e9d5ff;
+      }
+      .result-item {
+        border-color: #e9d5ff;
+      }
+      .result-item:hover {
+        background: #faf5ff;
+      }
+
+      #scrollTopBtn {
+        background: #7c3aed;
+      }
+      #scrollTopBtn:hover {
+        background: #6d28d9;
+      }
+
+      /* Sulje-nappi pelin yläpuolella */
+      .peli-sulje-rivi {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        margin-bottom: 8px;
+      }
+      .peli-sulje-btn {
+        background: #7c3aed;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s;
+      }
+      .peli-sulje-btn:hover {
+        background: #6d28d9;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .sr-only-focusable:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        clip: auto;
+        white-space: normal;
+        background: #7c3aed;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 700;
       }
     </style>
   </head>
@@ -140,13 +316,13 @@
           aria-labelledby="otsikko-tervetuloa"
         >
           <div class="aihe-otsikko">
-            <h2 id="otsikko-tervetuloa">Tervetuloa yläkouluun</h2>
+            <h2 id="otsikko-tervetuloa">Yläkoulun selviytymisopas</h2>
             <p>Uusi vaihe alkaa – mitä kaikkea on edessä?</p>
           </div>
 
           <div class="theory-card">
             <div class="theory-text">
-              <h3>Yläkoulun selviytymisopas</h3>
+              <h3>Hmm...</h3>
               <p>
                 Yläkoulu on uusi vaihe. Kaikki on alussa vähän uutta – ja se
                 kuuluu asiaan.
@@ -190,26 +366,37 @@
             </div>
           </div>
 
-          <!-- Pelioverlays -->
+          <!-- Peli — yksinkertainen show/hide, toimii SugarCuben kanssa -->
           <div
             id="peliContainer"
-            class="peli-overlay"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Robo saapuu yläkouluun -tarina"
+            class="interactive-wrapper"
+            style="display: none"
           >
+            <div class="peli-sulje-rivi">
+              <button class="peli-sulje-btn" onclick="suljePeli()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje peli
+              </button>
+            </div>
             <iframe
               src="../robotarina.html"
-              class="peli-frame"
+              style="
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                border: none;
+                border-radius: 14px;
+              "
               title="Robo saapuu yläkouluun -tarina"
             ></iframe>
-            <button
-              class="peli-close"
-              onclick="suljePeli()"
-              aria-label="Sulje tarina"
-            >
-              <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje
-            </button>
+          </div>
+
+          <!-- Tehtäväkortit (JS lataa) -->
+          <div class="tasks-section">
+            <div
+              class="task-list"
+              id="tasks-tervetuloa"
+              aria-live="polite"
+            ></div>
           </div>
 
           <div id="tervetuloa-mission" class="mission-section">
@@ -294,7 +481,7 @@
               <p><strong>Oppiminen ei ole lahja – se on taito.</strong></p>
             </div>
             <div class="theory-image">
-              <img src="../images/tavoite.png" alt="Opiskelutaidot" />
+              <img src="../images/opiskelutaidot.png" alt="Opiskelutaidot" />
             </div>
           </div>
           <div class="tasks-section">
@@ -334,7 +521,7 @@
               <p>Motivaatio voi vaihdella – ja se on normaalia.</p>
             </div>
             <div class="theory-image">
-              <img src="../images/oppia.png" alt="Motivaatio" />
+              <img src="../images/oppiminen.png" alt="Motivaatio" />
             </div>
           </div>
           <div class="tasks-section">
@@ -427,49 +614,24 @@
       <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <style>
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-      .sr-only-focusable:focus {
-        position: static;
-        width: auto;
-        height: auto;
-        clip: auto;
-        white-space: normal;
-        background: var(--lk7-blue);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-weight: 700;
-      }
-    </style>
-
     <script src="../js/tehtavat.js"></script>
     <script src="../js/luokka.js"></script>
 
     <script>
-      /* Peli */
+      /* Peli — yksinkertainen show/hide, toimii SugarCuben kanssa */
       function avaaPeli() {
-        document.getElementById("peliContainer").classList.add("active");
-        document.getElementById("peliContainer").focus();
+        const peli = document.getElementById("peliContainer");
+        peli.style.display = "block";
+        peli.scrollIntoView({ behavior: "smooth" });
       }
 
       function suljePeli() {
-        document.getElementById("peliContainer").classList.remove("active");
+        const peli = document.getElementById("peliContainer");
+        peli.style.display = "none";
+        document
+          .getElementById("tervetuloa")
+          .scrollIntoView({ behavior: "smooth" });
       }
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") suljePeli();
-      });
 
       /* Maskotti */
       function setupMaskotti() {
