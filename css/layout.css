@@ -1,0 +1,150 @@
+/* ============================================================
+   LAYOUT.CSS — DigiOpo
+   Sivurakenteet: book-spread, task-spread, book-layout
+   ============================================================ */
+
+/* --- Etusivu-tausta ---------------------------------------- */
+
+.etusivu-tausta {
+  background: #f8fafc;
+}
+
+.etusivu-tausta .book-spread {
+  background: white;
+  backdrop-filter: none;
+}
+
+/* --- Book Spread (etusivu + luokkasivut) ------------------- */
+
+.book-spread {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  gap: 0;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+
+.book-page-left {
+  padding: 30px;
+  border-right: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.book-page-right {
+  padding: 40px;
+}
+
+/* Sivupalkkilinkit */
+
+.book-page-left a {
+  display: block;
+  padding: 8px 0;
+  color: #374151;
+}
+
+.book-page-left a:hover {
+  color: #4f46e5;
+}
+
+/* Breadcrumb */
+
+.breadcrumb {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* Mobiili */
+
+@media (max-width: 900px) {
+  .book-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .book-page-left {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+/* --- Task Spread (tehtäväpohja) ---------------------------- */
+
+.task-spread {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.task-left {
+  padding: 40px;
+  border-right: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.task-right {
+  padding: 40px;
+}
+
+.notes-area {
+  width: 100%;
+  min-height: 250px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+/* Mobiili */
+
+@media (max-width: 900px) {
+  .task-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .task-left {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+/* --- Book Layout (vanha/vaihtoehtoinen rakenne) ------------ */
+
+.book-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 30px;
+  padding: 40px 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.book-sidebar {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  height: fit-content;
+}
+
+.book-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .book-layout {
+    grid-template-columns: 1fr;
+  }
+}
