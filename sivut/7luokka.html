@@ -3,39 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>7. luokan oppilaanohjaus</title>
+    <meta
+      name="description"
+      content="DigiOpo – 7. luokan oppilaanohjaus. Tutustu omiin vahvuuksiisi ja opi opiskelutaitoja."
+    />
+    <title>7. luokka – DigiOpo</title>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- DigiOpo CSS -->
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/aihe.css" />
+    <link rel="stylesheet" href="../css/maskotti.css" />
+    <link rel="stylesheet" href="../css/utils.css" />
+
+    <style>
+      /* 7. luokka — sininen aksentti, vaalea pohja */
+      :root {
+        --lk7-blue: #2563eb;
+        --lk7-blue-lt: #1d4ed8;
+        --lk7-blue-xs: #dbeafe;
+      }
+
+      .aihe-otsikko {
+        border-bottom-color: var(--lk7-blue);
+      }
+      .aihe-otsikko h2 {
+        color: var(--lk7-blue-lt);
+      }
+      .aihelista a.active {
+        border-left-color: var(--lk7-blue);
+        color: var(--lk7-blue-lt);
+      }
+      .aihelista a:hover {
+        color: var(--lk7-blue);
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Navigaatio -->
     <header class="navbar">
       <div class="nav-left">
-        <a href="../index.html" class="home-btn">← DigiOpo</a>
+        <a
+          href="../index.html"
+          class="home-btn"
+          aria-label="Takaisin DigiOpon etusivulle"
+        >
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          DigiOpo
+        </a>
       </div>
 
       <div class="nav-right">
-        <div class="header-search">
+        <div class="header-search" role="search">
+          <label for="taskSearch" class="sr-only">Hae tehtävää</label>
           <input
             id="taskSearch"
+            type="search"
             placeholder="Hae tehtävää..."
             autocomplete="off"
+            aria-label="Hae tehtävää"
+            aria-controls="searchResults"
+            aria-autocomplete="list"
           />
-          <i class="fa-solid fa-search search-icon"></i>
-          <div id="searchResults"></div>
+          <i class="fa-solid fa-search search-icon" aria-hidden="true"></i>
+          <div
+            id="searchResults"
+            role="listbox"
+            aria-label="Hakutulokset"
+          ></div>
         </div>
       </div>
     </header>
 
+    <a href="#main-content" class="sr-only sr-only-focusable"
+      >Siirry pääsisältöön</a
+    >
+
     <div class="book-spread">
-      <aside class="book-page-left">
+      <!-- Vasen sivu: aihenavigointi -->
+      <aside class="book-page-left" aria-label="Aiheet">
         <h3>Sun polku</h3>
 
-        <nav class="aihelista">
+        <nav class="aihelista" aria-label="Sivun aiheet">
           <a href="#tervetuloa">Tervetuloa yläkouluun</a>
           <a class="sub-link mission-link" href="#tervetuloa-mission"
             >Toiminnallinen tehtävä</a
@@ -63,8 +120,11 @@
         </nav>
       </aside>
 
-      <main class="book-page-right">
-        <div class="breadcrumb">Etusivu → 7. luokka</div>
+      <!-- Oikea sivu: pääsisältö -->
+      <main class="book-page-right" id="main-content">
+        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">
+          <a href="../index.html">Etusivu</a> → 7. luokka
+        </div>
 
         <h1>7. luokka alkaa</h1>
 
@@ -73,12 +133,17 @@
           opiskelutaitoja ja löydät omat vahvuutesi.
         </p>
 
-        <!-- 1 -->
-        <section id="tervetuloa" class="aihe-osio">
+        <!-- 1. Tervetuloa -->
+        <section
+          id="tervetuloa"
+          class="aihe-osio"
+          aria-labelledby="otsikko-tervetuloa"
+        >
           <div class="aihe-otsikko">
-            <h2>Tervetuloa yläkouluun</h2>
+            <h2 id="otsikko-tervetuloa">Tervetuloa yläkouluun</h2>
             <p>Uusi vaihe alkaa – mitä kaikkea on edessä?</p>
           </div>
+
           <div class="theory-card">
             <div class="theory-text">
               <h3>Yläkoulun selviytymisopas</h3>
@@ -94,46 +159,66 @@
               </p>
             </div>
             <div class="theory-image">
-              <img src="../images/ylakoulu.png" alt="Yläkouluun siirtyminen" />
+              <img
+                src="../images/koululuokka.png"
+                alt="Oppilaita yläkouluun siirtymässä"
+              />
             </div>
           </div>
+
           <div class="interactive-hero hero-7lk">
             <div class="hero-content">
-              <div class="hero-badge">🤖 Interaktiivinen tarina</div>
-
+              <div class="hero-badge">
+                <i class="fa-solid fa-robot" aria-hidden="true"></i>
+                Interaktiivinen tarina
+              </div>
               <h3>Robo saapuu yläkouluun</h3>
-
               <p>
                 Tee valintoja ja etene tarinassa. Mitä Robo tekee – ja mitä sinä
-                tekisit? <br />
-                Tehtävä: kirjoita kirje tulevaisuuteen.
+                tekisit? Tehtävä: kirjoita kirje tulevaisuuteen.
               </p>
-
-              <button class="btn-hero" onclick="avaaPeli()">Aloita</button>
+              <button
+                class="btn-hero"
+                onclick="avaaPeli()"
+                aria-haspopup="dialog"
+              >
+                Aloita tarina
+              </button>
             </div>
-
-            <div class="hero-visual">
+            <div class="hero-visual" aria-hidden="true">
               <i class="fa-solid fa-robot"></i>
             </div>
           </div>
 
-          <!-- 🔥 TÄHÄN IFRAME -->
+          <!-- Pelioverlays -->
           <div
             id="peliContainer"
-            class="interactive-wrapper"
-            style="display: none"
+            class="peli-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Robo saapuu yläkouluun -tarina"
           >
-            <iframe src="../robotarina.html"></iframe>
+            <iframe
+              src="../robotarina.html"
+              class="peli-frame"
+              title="Robo saapuu yläkouluun -tarina"
+            ></iframe>
+            <button
+              class="peli-close"
+              onclick="suljePeli()"
+              aria-label="Sulje tarina"
+            >
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje
+            </button>
           </div>
+
           <div id="tervetuloa-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
                 <h4>Yläkoulu-bingo</h4>
                 <span class="mission-badge">Liiku ja löydä</span>
               </div>
-
               <p>Etsi luokasta henkilöitä, joihin väitteet sopivat.</p>
-
               <ul class="mission-list">
                 <li>Löydä joku, joka odottaa yläkoulua</li>
                 <li>Löydä joku, joka jännittää</li>
@@ -145,10 +230,14 @@
           </div>
         </section>
 
-        <!-- 2 -->
-        <section id="omat-vahvuudet" class="aihe-osio">
+        <!-- 2. Omat vahvuudet -->
+        <section
+          id="omat-vahvuudet"
+          class="aihe-osio"
+          aria-labelledby="otsikko-vahvuudet"
+        >
           <div class="aihe-otsikko">
-            <h2>Kuka mä oon?</h2>
+            <h2 id="otsikko-vahvuudet">Kuka mä oon?</h2>
           </div>
           <div class="theory-card">
             <div class="theory-text">
@@ -158,11 +247,15 @@
               </p>
             </div>
             <div class="theory-image">
-              <img src="../images/vahvuudet.png" alt="" />
+              <img src="../images/vahvuudet.png" alt="Omat vahvuudet" />
             </div>
           </div>
           <div class="tasks-section">
-            <div class="task-list" id="tasks-omat-vahvuudet"></div>
+            <div
+              class="task-list"
+              id="tasks-omat-vahvuudet"
+              aria-live="polite"
+            ></div>
           </div>
           <div id="omat-vahvuudet-mission" class="mission-section">
             <div class="mission-card">
@@ -170,11 +263,9 @@
                 <h4>Vahvuusetsivä</h4>
                 <span class="mission-badge">Ryhmähaaste</span>
               </div>
-
               <p>
                 Keskustele 3 eri oppilaan kanssa ja selvitä heidän vahvuuksiaan.
               </p>
-
               <ul class="mission-list">
                 <li>Kysy: missä olet hyvä?</li>
                 <li>Keksi yksi uusi vahvuus toiselle</li>
@@ -184,25 +275,34 @@
           </div>
         </section>
 
-        <!-- 3 -->
-        <section id="opiskelutaidot" class="aihe-osio">
+        <!-- 3. Opiskelutaidot -->
+        <section
+          id="opiskelutaidot"
+          class="aihe-osio"
+          aria-labelledby="otsikko-opiskelu"
+        >
           <div class="aihe-otsikko">
-            <h2>Näin susta tulee hyvä oppija</h2>
+            <h2 id="otsikko-opiskelu">Näin susta tulee hyvä oppija</h2>
           </div>
           <div class="theory-card">
             <div class="theory-text">
               <p>
                 Kaikki oppii eri tavalla. Toinen oppii kuuntelemalla, toinen
-                tekemällä. Hyvä oppija: kokeilee eri tapoja ei luovuta heti
-                pyytää apua 👉 Oppiminen ei ole lahja – se on taito.
+                tekemällä. Hyvä oppija kokeilee eri tapoja, ei luovuta heti ja
+                pyytää apua.
               </p>
+              <p><strong>Oppiminen ei ole lahja – se on taito.</strong></p>
             </div>
             <div class="theory-image">
-              <img src="../images/opiskelutaidot.png" alt="" />
+              <img src="../images/tavoite.png" alt="Opiskelutaidot" />
             </div>
           </div>
           <div class="tasks-section">
-            <div class="task-list" id="tasks-opiskelutaidot"></div>
+            <div
+              class="task-list"
+              id="tasks-opiskelutaidot"
+              aria-live="polite"
+            ></div>
           </div>
           <div id="opiskelutaidot-mission" class="mission-section">
             <div class="mission-card">
@@ -210,9 +310,7 @@
                 <h4>Oppimistapapeli</h4>
                 <span class="mission-badge">Pikapeli</span>
               </div>
-
               <p>Kokeilkaa eri oppimistapoja nopeasti pienryhmissä.</p>
-
               <ul class="mission-list">
                 <li>Selittäkää asia toisillenne</li>
                 <li>Piirtäkää asia kuvaksi</li>
@@ -222,21 +320,29 @@
           </div>
         </section>
 
-        <!-- 4 -->
-        <section id="mina-oppijana" class="aihe-osio">
+        <!-- 4. Motivaatio -->
+        <section
+          id="mina-oppijana"
+          class="aihe-osio"
+          aria-labelledby="otsikko-motivaatio"
+        >
           <div class="aihe-otsikko">
-            <h2>Motivaatio hukassa?</h2>
+            <h2 id="otsikko-motivaatio">Motivaatio hukassa?</h2>
           </div>
           <div class="theory-card">
             <div class="theory-text">
               <p>Motivaatio voi vaihdella – ja se on normaalia.</p>
             </div>
             <div class="theory-image">
-              <img src="../images/oppiminen.png" alt="" />
+              <img src="../images/oppia.png" alt="Motivaatio" />
             </div>
           </div>
           <div class="tasks-section">
-            <div class="task-list" id="tasks-mina-oppijana"></div>
+            <div
+              class="task-list"
+              id="tasks-mina-oppijana"
+              aria-live="polite"
+            ></div>
           </div>
           <div id="mina-oppijana-mission" class="mission-section">
             <div class="mission-card">
@@ -244,12 +350,10 @@
                 <h4>Mikä auttaa jaksamaan?</h4>
                 <span class="mission-badge">Tiimitehtävä</span>
               </div>
-
               <p>
-                Keksikää yhdessä ratkaisuja tilanteeseen: “ei jaksa tehdä
-                tehtäviä”.
+                Keksikää yhdessä ratkaisuja tilanteeseen: "ei jaksa tehdä
+                tehtäviä".
               </p>
-
               <ul class="mission-list">
                 <li>Keksi 2 keinoa aloittaa</li>
                 <li>Keksi 1 palkinto itselle</li>
@@ -259,21 +363,32 @@
           </div>
         </section>
 
-        <!-- 5 -->
-        <section id="tulevaisuus" class="aihe-osio">
+        <!-- 5. Tulevaisuus -->
+        <section
+          id="tulevaisuus"
+          class="aihe-osio"
+          aria-labelledby="otsikko-tulevaisuus"
+        >
           <div class="aihe-otsikko">
-            <h2>Mikä juttu vois olla sun?</h2>
+            <h2 id="otsikko-tulevaisuus">Mikä juttu vois olla sun?</h2>
           </div>
           <div class="theory-card">
             <div class="theory-text">
               <p>Ei tarvitse tietää vielä – riittää että alat miettiä.</p>
             </div>
             <div class="theory-image">
-              <img src="../images/tulevaisuus.png" alt="" />
+              <img
+                src="../images/tulevaisuus.png"
+                alt="Tulevaisuuden suunnittelu"
+              />
             </div>
           </div>
           <div class="tasks-section">
-            <div class="task-list" id="tasks-tulevaisuus"></div>
+            <div
+              class="task-list"
+              id="tasks-tulevaisuus"
+              aria-live="polite"
+            ></div>
           </div>
           <div id="tulevaisuus-mission" class="mission-section">
             <div class="mission-card">
@@ -281,9 +396,7 @@
                 <h4>Tulevaisuus-haaste</h4>
                 <span class="mission-badge">Amazing Race</span>
               </div>
-
               <p>Kierrä luokassa ja kerää ideoita tulevaisuudesta.</p>
-
               <ul class="mission-list">
                 <li>Kysy 2 ihmiseltä: unelma-ammatti</li>
                 <li>Keksi 1 uusi ammatti</li>
@@ -295,24 +408,70 @@
       </main>
     </div>
 
-    <!-- MASKOTTI -->
-    <div class="maskotti-laatikko">
-      <div class="puhekupla">Moi! Aloita tästä 👇</div>
-      <img src="../images/robo_maskotti.png" class="maskotti" />
+    <!-- Maskotti -->
+    <div
+      class="maskotti-laatikko"
+      aria-live="polite"
+      aria-label="Maskotti-vihje"
+    >
+      <div class="puhekupla" role="status">Moi! Aloita tästä 👇</div>
+      <img
+        src="../images/robo_maskotti.png"
+        class="maskotti"
+        alt="DigiOpon robottimaskotti"
+      />
     </div>
+
+    <!-- Scroll to top -->
+    <button id="scrollTopBtn" aria-label="Takaisin sivun alkuun">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .sr-only-focusable:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        clip: auto;
+        white-space: normal;
+        background: var(--lk7-blue);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+    </style>
 
     <script src="../js/tehtavat.js"></script>
     <script src="../js/luokka.js"></script>
 
-    <!-- MASKOTTI LOGIIKKA -->
     <script>
+      /* Peli */
       function avaaPeli() {
-        const peli = document.getElementById("peliContainer");
-        peli.style.display = "block";
-
-        // scrollaa peliin
-        peli.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("peliContainer").classList.add("active");
+        document.getElementById("peliContainer").focus();
       }
+
+      function suljePeli() {
+        document.getElementById("peliContainer").classList.remove("active");
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") suljePeli();
+      });
+
+      /* Maskotti */
       function setupMaskotti() {
         if (window.innerWidth <= 768) return;
 
@@ -322,9 +481,6 @@
 
         if (!maskotti || !puhekupla || !osiot.length) return;
 
-        let viimeisin = null;
-        let piilotusAjastin = null;
-
         const puhetekstit = {
           tervetuloa: "Tää on sun startti – rauhassa liikkeelle 🙂",
           "omat-vahvuudet": "Missä jutussa sä oot hyvä – ihan oikeesti?",
@@ -333,18 +489,15 @@
           tulevaisuus: "Ei tarvii tietää vielä – riittää että mietit 👀",
         };
 
-        function maskotinAani(teksti) {
-          const prefixit = ["🙂", "👀", "💭", "✨"];
-          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
-          return `${prefix} ${teksti}`;
-        }
+        const prefixit = ["🙂", "👀", "💭", "✨"];
+        let viimeisin = null;
+        let piilotusAjastin = null;
 
         function naytaMaskotti(teksti) {
-          puhekupla.textContent = maskotinAani(teksti);
-
+          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
+          puhekupla.textContent = `${prefix} ${teksti}`;
           maskotti.classList.remove("piilossa");
           maskotti.classList.add("nakyvissa");
-
           clearTimeout(piilotusAjastin);
           piilotusAjastin = setTimeout(() => {
             maskotti.classList.remove("nakyvissa");
@@ -352,34 +505,40 @@
           }, 3500);
         }
 
-        function paivitaAktiivinenOsio() {
+        function paivitaOsio() {
           for (const osio of osiot) {
             const rect = osio.getBoundingClientRect();
-
             if (rect.top < window.innerHeight * 0.4 && rect.bottom > 0) {
-              if (viimeisin !== osio.id) {
+              if (viimeisin !== osio.id && puhetekstit[osio.id]) {
                 viimeisin = osio.id;
-
-                if (puhetekstit[osio.id]) {
-                  naytaMaskotti(puhetekstit[osio.id]);
-                }
+                naytaMaskotti(puhetekstit[osio.id]);
               }
               break;
             }
           }
         }
 
-        setTimeout(() => {
-          naytaMaskotti("Moi! Lähdetään liikkeelle tästä 👇");
-        }, 800);
-
-        window.addEventListener("scroll", paivitaAktiivinenOsio);
+        setTimeout(
+          () => naytaMaskotti("Moi! Lähdetään liikkeelle tästä 👇"),
+          800,
+        );
+        window.addEventListener("scroll", paivitaOsio, { passive: true });
       }
 
       window.addEventListener("load", setupMaskotti);
+
+      /* Scroll to top */
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      window.addEventListener(
+        "scroll",
+        () => {
+          scrollBtn.classList.toggle("nakyvissa", window.scrollY > 400);
+        },
+        { passive: true },
+      );
+      scrollBtn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
     </script>
-    <button id="scrollTopBtn" aria-label="Takaisin ylös">
-      <i class="fa-solid fa-arrow-up"></i>
-    </button>
   </body>
 </html>
