@@ -104,7 +104,8 @@ const tehtavat = {
     {
       aiheId: "tasks-koulutus",
       title: "Koulutusalat – oma suunta",
-      description: "Tutustu eri koulutusaloihin Twine-pelissä.",
+      description:
+        "Tutustu eri koulutusaloihin ja tee ammattitutkimus-tehtävä.",
       href: "../pelit/koulutusalat.html",
       tag: "Interaktiivinen",
       tagClass: "tag-interactive",
