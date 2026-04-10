@@ -172,7 +172,6 @@
         background: #6d28d9;
       }
 
-      /* Sulje-nappi pelin yläpuolella */
       .peli-sulje-rivi {
         display: flex;
         justify-content: flex-end;
@@ -195,6 +194,20 @@
       }
       .peli-sulje-btn:hover {
         background: #6d28d9;
+      }
+
+      /* Selviytymiskeino-numero-pilli */
+      .selviytymis-numero {
+        display: inline-block;
+        background: #7c3aed;
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 3px 12px;
+        border-radius: 999px;
+        margin-bottom: 8px;
       }
 
       .sr-only {
@@ -266,30 +279,32 @@
     <div class="book-spread">
       <!-- Vasen sivu: aihenavigointi -->
       <aside class="book-page-left" aria-label="Aiheet">
-        <h3>Sun polku</h3>
+        <h3>Sinun polku</h3>
 
         <nav class="aihelista" aria-label="Sivun aiheet">
-          <a href="#tervetuloa">Tervetuloa yläkouluun</a>
+          <a href="#tervetuloa">Yläkoulun selviytymisopas</a>
           <a class="sub-link mission-link" href="#tervetuloa-mission"
             >Toiminnallinen tehtävä</a
           >
 
-          <a href="#omat-vahvuudet">Kuka minä olen?</a>
-          <a class="sub-link mission-link" href="#omat-vahvuudet-mission"
-            >Toiminta</a
-          >
-
-          <a href="#opiskelutaidot">Näin sinusta tulee hyvä oppija</a>
+          <a href="#opiskelutaidot">Selviytymiskeino 1: Opi oppimaan</a>
           <a class="sub-link mission-link" href="#opiskelutaidot-mission"
             >Toiminta</a
           >
 
-          <a href="#mina-oppijana">Motivaatio hukassa?</a>
+          <a href="#mina-oppijana">Selviytymiskeino 2: Löydä motivaatiosi</a>
           <a class="sub-link mission-link" href="#mina-oppijana-mission"
             >Toiminta</a
           >
 
-          <a href="#tulevaisuus">Mikä juttu vois olla sun?</a>
+          <a href="#omat-vahvuudet">Selviytymiskeino 3: Opi tuntemaan itsesi</a>
+          <a class="sub-link mission-link" href="#omat-vahvuudet-mission"
+            >Toiminta</a
+          >
+
+          <a href="#tulevaisuus"
+            >Selviytymiskeino 4: Haaveile tulevaisuudesta</a
+          >
           <a class="sub-link mission-link" href="#tulevaisuus-mission"
             >Toiminta</a
           >
@@ -302,14 +317,14 @@
           <a href="../index.html">Etusivu</a> → 7. luokka
         </div>
 
-        <h1>7. luokka alkaa</h1>
+        <h1>Yläkoulun selviytymisopas</h1>
 
         <p>
           Yläkoulu on uusi vaihe. Täällä opit tuntemaan itseäsi, kehität
           opiskelutaitoja ja löydät omat vahvuutesi.
         </p>
 
-        <!-- 1. Tervetuloa -->
+        <!-- 1. Tervetuloa / Johdanto -->
         <section
           id="tervetuloa"
           class="aihe-osio"
@@ -366,7 +381,6 @@
             </div>
           </div>
 
-          <!-- Peli — yksinkertainen show/hide, toimii SugarCuben kanssa -->
           <div
             id="peliContainer"
             class="interactive-wrapper"
@@ -390,7 +404,6 @@
             ></iframe>
           </div>
 
-          <!-- Tehtäväkortit (JS lataa) -->
           <div class="tasks-section">
             <div
               class="task-list"
@@ -417,14 +430,156 @@
           </div>
         </section>
 
-        <!-- 2. Omat vahvuudet -->
+        <!-- 2. Opiskelutaidot -->
+        <section
+          id="opiskelutaidot"
+          class="aihe-osio"
+          aria-labelledby="otsikko-opiskelu"
+        >
+          <div class="aihe-otsikko">
+            <span class="selviytymis-numero">Selviytymiskeino 1</span>
+            <h2 id="otsikko-opiskelu">Opi oppimaan</h2>
+            <p>Löydä oma tapasi oppia ja kehity oppijana.</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                Kaikki oppii eri tavalla. Toinen oppii kuuntelemalla, toinen
+                tekemällä. Hyvä oppija kokeilee eri tapoja, ei luovuta heti ja
+                pyytää apua.
+              </p>
+              <p><strong>Oppiminen ei ole lahja – se on taito.</strong></p>
+            </div>
+            <div class="theory-image">
+              <img src="../images/opiskelutaidot.png" alt="Opiskelutaidot" />
+            </div>
+          </div>
+          <div class="interactive-hero hero-7lk">
+            <div class="hero-content">
+              <div class="hero-badge">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                Interaktiivinen tehtävä
+              </div>
+              <h3>Yläkoulun pakopeli: opi oppimaan!</h3>
+              <p>
+                Pääsetkö pakoon? Ratkaise tehtävät ja löydä omat oppimistapasi
+                pelaamalla.
+              </p>
+              <button
+                class="btn-hero"
+                onclick="avaaPakopeli()"
+                aria-haspopup="dialog"
+              >
+                Aloita pakopeli
+              </button>
+              <p class="hero-hint">Vinkki: kokeile eri vaihtoehtoja</p>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+          </div>
+
+          <div
+            id="pakopelijContainer"
+            class="interactive-wrapper"
+            style="display: none"
+          >
+            <div class="peli-sulje-rivi">
+              <button class="peli-sulje-btn" onclick="suljePakopeli()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje peli
+              </button>
+            </div>
+            <iframe
+              src="../oppimisen-pakopeli.html"
+              style="
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                border: none;
+                border-radius: 14px;
+              "
+              title="Yläkoulun pakopeli: opi oppimaan!"
+            ></iframe>
+          </div>
+
+          <div class="tasks-section">
+            <div
+              class="task-list"
+              id="tasks-opiskelutaidot"
+              aria-live="polite"
+            ></div>
+          </div>
+          <div id="opiskelutaidot-mission" class="mission-section">
+            <div class="mission-card">
+              <div class="mission-header">
+                <h4>Oppimistapapeli</h4>
+                <span class="mission-badge">Pikapeli</span>
+              </div>
+              <p>Kokeilkaa eri oppimistapoja nopeasti pienryhmissä.</p>
+              <ul class="mission-list">
+                <li>Selittäkää asia toisillenne</li>
+                <li>Piirtäkää asia kuvaksi</li>
+                <li>Keksikää esimerkki arjesta</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Motivaatio -->
+        <section
+          id="mina-oppijana"
+          class="aihe-osio"
+          aria-labelledby="otsikko-motivaatio"
+        >
+          <div class="aihe-otsikko">
+            <span class="selviytymis-numero">Selviytymiskeino 2</span>
+            <h2 id="otsikko-motivaatio">Löydä motivaatiosi</h2>
+            <p>Motivaatio voi vaihdella – ja se on normaalia.</p>
+          </div>
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>Motivaatio voi vaihdella – ja se on normaalia.</p>
+            </div>
+            <div class="theory-image">
+              <img src="../images/motivaatio.png" alt="Motivaatio" />
+            </div>
+          </div>
+          <div class="tasks-section">
+            <div
+              class="task-list"
+              id="tasks-mina-oppijana"
+              aria-live="polite"
+            ></div>
+          </div>
+          <div id="mina-oppijana-mission" class="mission-section">
+            <div class="mission-card">
+              <div class="mission-header">
+                <h4>Mikä auttaa jaksamaan?</h4>
+                <span class="mission-badge">Tiimitehtävä</span>
+              </div>
+              <p>
+                Keksikää yhdessä ratkaisuja tilanteeseen: "ei jaksa tehdä
+                tehtäviä".
+              </p>
+              <ul class="mission-list">
+                <li>Keksi 2 keinoa aloittaa</li>
+                <li>Keksi 1 palkinto itselle</li>
+                <li>Jaa ideat muille</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Omat vahvuudet -->
         <section
           id="omat-vahvuudet"
           class="aihe-osio"
           aria-labelledby="otsikko-vahvuudet"
         >
           <div class="aihe-otsikko">
-            <h2 id="otsikko-vahvuudet">Kuka minä olen?</h2>
+            <span class="selviytymis-numero">Selviytymiskeino 3</span>
+            <h2 id="otsikko-vahvuudet">Opi tuntemaan itsesi</h2>
+            <p>Kaikilla on vahvuuksia – löydä omasi.</p>
           </div>
           <div class="theory-card">
             <div class="theory-text">
@@ -462,94 +617,6 @@
           </div>
         </section>
 
-        <!-- 3. Opiskelutaidot -->
-        <section
-          id="opiskelutaidot"
-          class="aihe-osio"
-          aria-labelledby="otsikko-opiskelu"
-        >
-          <div class="aihe-otsikko">
-            <h2 id="otsikko-opiskelu">Näin sinusta tulee hyvä oppija</h2>
-          </div>
-          <div class="theory-card">
-            <div class="theory-text">
-              <p>
-                Kaikki oppii eri tavalla. Toinen oppii kuuntelemalla, toinen
-                tekemällä. Hyvä oppija kokeilee eri tapoja, ei luovuta heti ja
-                pyytää apua.
-              </p>
-              <p><strong>Oppiminen ei ole lahja – se on taito.</strong></p>
-            </div>
-            <div class="theory-image">
-              <img src="../images/opiskelutaidot.png" alt="Opiskelutaidot" />
-            </div>
-          </div>
-          <div class="tasks-section">
-            <div
-              class="task-list"
-              id="tasks-opiskelutaidot"
-              aria-live="polite"
-            ></div>
-          </div>
-          <div id="opiskelutaidot-mission" class="mission-section">
-            <div class="mission-card">
-              <div class="mission-header">
-                <h4>Oppimistapapeli</h4>
-                <span class="mission-badge">Pikapeli</span>
-              </div>
-              <p>Kokeilkaa eri oppimistapoja nopeasti pienryhmissä.</p>
-              <ul class="mission-list">
-                <li>Selittäkää asia toisillenne</li>
-                <li>Piirtäkää asia kuvaksi</li>
-                <li>Keksikää esimerkki arjesta</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- 4. Motivaatio -->
-        <section
-          id="mina-oppijana"
-          class="aihe-osio"
-          aria-labelledby="otsikko-motivaatio"
-        >
-          <div class="aihe-otsikko">
-            <h2 id="otsikko-motivaatio">Motivaatio hukassa?</h2>
-          </div>
-          <div class="theory-card">
-            <div class="theory-text">
-              <p>Motivaatio voi vaihdella – ja se on normaalia.</p>
-            </div>
-            <div class="theory-image">
-              <img src="../images/motivaatio.png" alt="Motivaatio" />
-            </div>
-          </div>
-          <div class="tasks-section">
-            <div
-              class="task-list"
-              id="tasks-mina-oppijana"
-              aria-live="polite"
-            ></div>
-          </div>
-          <div id="mina-oppijana-mission" class="mission-section">
-            <div class="mission-card">
-              <div class="mission-header">
-                <h4>Mikä auttaa jaksamaan?</h4>
-                <span class="mission-badge">Tiimitehtävä</span>
-              </div>
-              <p>
-                Keksikää yhdessä ratkaisuja tilanteeseen: "ei jaksa tehdä
-                tehtäviä".
-              </p>
-              <ul class="mission-list">
-                <li>Keksi 2 keinoa aloittaa</li>
-                <li>Keksi 1 palkinto itselle</li>
-                <li>Jaa ideat muille</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
         <!-- 5. Tulevaisuus -->
         <section
           id="tulevaisuus"
@@ -557,7 +624,9 @@
           aria-labelledby="otsikko-tulevaisuus"
         >
           <div class="aihe-otsikko">
-            <h2 id="otsikko-tulevaisuus">Mikä juttu vois olla sun?</h2>
+            <span class="selviytymis-numero">Selviytymiskeino 4</span>
+            <h2 id="otsikko-tulevaisuus">Haaveile tulevaisuudesta</h2>
+            <p>Ei tarvitse tietää vielä – riittää että alat miettiä.</p>
           </div>
           <div class="theory-card">
             <div class="theory-text">
@@ -618,11 +687,24 @@
     <script src="../js/luokka.js"></script>
 
     <script>
-      /* Peli — yksinkertainen show/hide, toimii SugarCuben kanssa */
       function avaaPeli() {
         const peli = document.getElementById("peliContainer");
         peli.style.display = "block";
         peli.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function avaaPakopeli() {
+        const peli = document.getElementById("pakopelijContainer");
+        peli.style.display = "block";
+        peli.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function suljePakopeli() {
+        const peli = document.getElementById("pakopelijContainer");
+        peli.style.display = "none";
+        document
+          .getElementById("opiskelutaidot")
+          .scrollIntoView({ behavior: "smooth" });
       }
 
       function suljePeli() {
@@ -633,7 +715,6 @@
           .scrollIntoView({ behavior: "smooth" });
       }
 
-      /* Maskotti */
       function setupMaskotti() {
         if (window.innerWidth <= 768) return;
 
@@ -645,9 +726,9 @@
 
         const puhetekstit = {
           tervetuloa: "Tää on sun startti – rauhassa liikkeelle 🙂",
-          "omat-vahvuudet": "Missä jutussa sä oot hyvä – ihan oikeesti?",
           opiskelutaidot: "Kokeile eri tapoja – löydä mikä toimii sulle",
           "mina-oppijana": "Ei aina jaksa – ja se on ihan ok",
+          "omat-vahvuudet": "Missä jutussa sä oot hyvä – ihan oikeesti?",
           tulevaisuus: "Ei tarvii tietää vielä – riittää että mietit 👀",
         };
 
@@ -689,7 +770,6 @@
 
       window.addEventListener("load", setupMaskotti);
 
-      /* Scroll to top */
       const scrollBtn = document.getElementById("scrollTopBtn");
       window.addEventListener(
         "scroll",
