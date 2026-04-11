@@ -2,6 +2,16 @@ const tehtavat = {
   7: [
     {
       aiheId: "tasks-tervetuloa",
+      title: "Robo saapuu kouluun",
+      description:
+        "Interaktiivinen tarina, jossa teet valintoja ja etenet tarinassa.",
+      href: "../robotarina.html",
+      tag: "Interaktiivinen",
+      tagClass: "tag-interactive",
+      icon: "fa-book-open",
+    },
+    {
+      aiheId: "tasks-tervetuloa",
       title: "Päivän aihe: Ensimmäinen viikko",
       description:
         "Mitä tunnet juuri nyt? Keskustellaan yhdessä yläkoulun alusta.",
@@ -100,30 +110,22 @@ const tehtavat = {
       tagClass: "tag-interactive",
       icon: "fa-gamepad",
     },
-    {
-      aiheId: "tasks-koulutus",
-      title: "Mitkä alat kiinnostaa?",
-      description: "Valitse 2–3 alaa ja perustele, miksi ne kiinnostavat.",
-      href: "../tehtava.html?id=kiinnostavat-alat",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
-    {
-      aiheId: "tasks-koulutus",
-      title: "Yllättikö jokin ala?",
-      description: "Pohdi, oliko joku ala erilainen kuin ajattelit.",
-      href: "../tehtava.html?id=yllattava-ala",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+
     {
       aiheId: "tasks-koulutus",
       title: "Päivän aihe: Lukio vai ammattiin?",
       description:
         "Mitä eroa on lukiolla ja ammatillisella? Kumpi tuntuu omalta?",
       href: "../tehtava.html?id=keskustelu-koulutus",
+      tag: "Keskustelu",
+      tagClass: "tag-keskustelu",
+      icon: "fa-comments",
+    },
+    {
+      aiheId: "tasks-vahvuudet",
+      title: "Vaikuttaja ammattina – Haave vai painajainen?",
+      description: "Onko somesisällön tuottaminen oikeaa työtä? Väittele!",
+      href: "../tehtava.html?id=keskustelu-vaikuttaja",
       tag: "Keskustelu",
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
@@ -244,7 +246,15 @@ const tehtavat = {
       tagClass: "",
       icon: "fa-pencil",
     },
-
+    {
+      aiheId: "tasks-tet",
+      title: "Päivän aihe: Mitä TET opetti?",
+      description: "Miten TET vaikutti ajatuksiisi tulevaisuudesta?",
+      href: "../tehtava.html?id=keskustelu-tet9",
+      tag: "Keskustelu",
+      tagClass: "tag-keskustelu",
+      icon: "fa-comments",
+    },
     {
       aiheId: "tasks-tet",
       title: "Harrastuksesta ammatti?",
@@ -271,6 +281,15 @@ const tehtavat = {
       description:
         "Valitsisitko huipputienestit vai työn, joka tuntuu tärkeältä? Väittele!",
       href: "../tehtava.html?id=keskustelu-palkka-vai-merkitys",
+      tag: "Keskustelu",
+      tagClass: "tag-keskustelu",
+      icon: "fa-comments",
+    },
+    {
+      aiheId: "tasks-valinnat",
+      title: "Päivän aihe: Mitä seuraavaksi?",
+      description: "Käydään läpi yhdessä: miltä tuntuu tehdä iso päätös?",
+      href: "../tehtava.html?id=keskustelu-valinnat",
       tag: "Keskustelu",
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
@@ -311,30 +330,6 @@ const tehtavat = {
       "Missä haluaisit kehittyä oppijana?",
     ],
     pdf: "tehtavat/mina-oppijana.pdf",
-  },
-
-  "kiinnostavat-alat": {
-    title: "Mitkä alat kiinnostaa?",
-    category: "urat",
-    class: "8",
-    instructions: [
-      "Valitse 2–3 koulutusalaa, jotka kiinnostavat sinua eniten.",
-      "Kirjoita, mikä niissä tuntuu kiinnostavalta.",
-      "Mieti, sopisiko joku niistä sinulle tulevaisuudessa.",
-    ],
-    pdf: "tehtavat/kiinnostavat-alat.pdf",
-  },
-
-  "yllattava-ala": {
-    title: "Yllättikö jokin ala?",
-    category: "urat",
-    class: "8",
-    instructions: [
-      "Oliko joku koulutusala erilainen kuin ajattelit?",
-      "Mikä siinä yllätti?",
-      "Voisitko kiinnostua siitä enemmän myöhemmin?",
-    ],
-    pdf: "tehtavat/yllattava-ala.pdf",
   },
 
   tet8: {
@@ -699,6 +694,52 @@ const tehtavat = {
     ],
   },
 
+  "keskustelu-tet9": {
+    title: "Päivän aihe: Mitä TET opetti?",
+    category: "keskustelu",
+    class: "9",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    kysymykset: [
+      "Muuttiko TET-jakso ajatuksiasi tulevaisuudesta – miten?",
+      "Oliko jotain, mitä et osannut odottaa?",
+      "Jos voisit tehdä TET:n uudelleen, mitä tekisit toisin tai samoin?",
+    ],
+    vinkit: [
+      "TET on 9. luokalla erityisen tärkeä – se voi vahvistaa tai muuttaa suunnitelmia.",
+      "Anna tilaa myös pettymyksille – ne ovat yhtä arvokkaita oppimiskokemuksia.",
+      "Kysy myös: mitä tämä kertoo sinulle itsestäsi?",
+    ],
+    instructions: [
+      "Keskustelukysymys 1: Muuttiko TET ajatuksiasi tulevaisuudesta?",
+      "Keskustelukysymys 2: Oliko jotain, mitä et osannut odottaa?",
+      "Keskustelukysymys 3: Mitä tekisit toisin tai samoin?",
+    ],
+  },
+
+  "keskustelu-valinnat": {
+    title: "Päivän aihe: Mitä seuraavaksi?",
+    category: "keskustelu",
+    class: "9",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    kysymykset: [
+      "Miltä tuntuu, kun iso päätös on edessä – jännittääkö, innostaako, pelottaako?",
+      "Mikä auttaisi sinua tuntemaan olosi varmemmaksi valinnastasi?",
+      "Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+    ],
+    vinkit: [
+      "Tämä on tunnekuormainen aihe – anna tilaa kaikille tunteille.",
+      "Vältä painostamista – tarkoitus on tukea, ei ohjata tiettyyn valintaan.",
+      "Lopeta positiivisesti: jokainen on valmistautunut paremmin kuin luulee.",
+    ],
+    instructions: [
+      "Keskustelukysymys 1: Miltä tuntuu, kun iso päätös on edessä?",
+      "Keskustelukysymys 2: Mikä auttaisi sinua tuntemaan olosi varmemmaksi?",
+      "Keskustelukysymys 3: Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+    ],
+  },
+
   "keskustelu-harrastus-ammatti": {
     title: "Harrastuksesta ammatti?",
     category: "keskustelu",
@@ -750,6 +791,33 @@ const tehtavat = {
       "Keskustelukysymys 1: 7 000 € tylsästä vai 2 500 € kivasta – kumpi ja miksi?",
       "Keskustelukysymys 2: Voiko työ tuntua merkitykselliseltä pienellä palkalla?",
       "Keskustelukysymys 3: Muuttuuko vastauksesi 10 vuoden päästä?",
+    ],
+  },
+
+  "keskustelu-vaikuttaja": {
+    title: "Vaikuttaja ammattina – Haave vai painajainen?",
+    category: "keskustelu",
+    class: "8",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    taustaOtsikko: "Sometyö ja julkisuus",
+    taustateksti:
+      'Suomessa on maaliskuussa 2026 käyty laajaa keskustelua ammattivaikuttajien eläketurvasta ja jaksamisesta. Moni nuori haaveilee tubettajan tai striimaajan urasta, mutta ala on osoittautunut henkisesti raskaaksi jatkuvan arvostelun vuoksi.\n\nVäite: "Vaikuttajana oleminen ei ole oikeaa työtä. Se on vain huomionhakua, joka loppuu heti, kun algoritmi muuttuu."',
+    taustaLahde: "Helsingin Sanomat / Talous & Työ (15.3.2026)",
+    kysymykset: [
+      "Onko somesisällön tuottaminen mielestäsi yhtä arvokasta työtä kuin esimerkiksi lääkärin tai opettajan työ?",
+      "Mitä tekisit, jos videosi saisivat yhtäkkiä vain vihaisia kommentteja?",
+      "Haluaisitko itse olla vaikuttaja – miksi tai miksi et?",
+    ],
+    vinkit: [
+      'Valitse puolesi: onko vaikuttajan työ "oikeaa työtä" vai ei – ja keksi kolme syytä kannallesi.',
+      'Haasta kaverin argumentti: "Entä jos se olisi sinun ainoa tulonlähteesi – muuttaisiko se vastaustasi?"',
+      "Muista: paras väittelijä ei huuda kovimpaa – hän esittää selkeimmän perustelun.",
+    ],
+    instructions: [
+      "Keskustelukysymys 1: Onko sometyö yhtä arvokasta kuin lääkärin tai opettajan työ?",
+      "Keskustelukysymys 2: Mitä tekisit jos saisit vain vihaisia kommentteja?",
+      "Keskustelukysymys 3: Haluaisitko itse olla vaikuttaja?",
     ],
   },
 };

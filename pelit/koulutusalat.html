@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="../css/utils.css" />
 
     <style>
-      /* ── Teemavärit (8. luokka pinkki) ────────────────────────── */
       :root {
         --pink: #db2777;
         --pink-dk: #9d174d;
@@ -29,7 +28,6 @@
         --text-mid: #475569;
       }
 
-      /* ── Layout: sama book-spread kuin muilla sivuilla ─────────── */
       body {
         background: var(--bg, #f8fafc);
         margin: 0;
@@ -67,7 +65,6 @@
         line-height: 1.6;
       }
 
-      /* ── Ohje-pilli ─────────────────────────────────────────────── */
       .ohje-pilli {
         display: inline-flex;
         align-items: center;
@@ -81,10 +78,10 @@
         margin-bottom: 24px;
       }
 
-      /* ── Ala-kortit grid ────────────────────────────────────────── */
+      /* ── Ala-kortit grid ── */
       .ala-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 14px;
         margin-bottom: 32px;
       }
@@ -93,26 +90,25 @@
         background: #fff;
         border: 2px solid var(--border);
         border-radius: 16px;
-        padding: 18px 14px 14px;
+        padding: 0;
         cursor: pointer;
         transition: all 0.18s ease;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
         text-align: center;
         position: relative;
         user-select: none;
+        overflow: hidden;
       }
       .ala-kortti:hover {
         border-color: var(--pink);
-        box-shadow: 0 4px 18px rgba(219, 39, 119, 0.15);
-        transform: translateY(-2px);
+        box-shadow: 0 4px 18px rgba(219, 39, 119, 0.2);
+        transform: translateY(-3px);
       }
       .ala-kortti.aktiivinen {
         border-color: var(--pink);
-        background: var(--pink-lt);
-        box-shadow: 0 6px 22px rgba(219, 39, 119, 0.22);
+        box-shadow: 0 6px 22px rgba(219, 39, 119, 0.28);
       }
       .ala-kortti.pelattu::after {
         content: "✓";
@@ -121,8 +117,8 @@
         right: 10px;
         font-size: 13px;
         font-weight: 700;
-        color: var(--pink);
-        background: var(--pink-xs);
+        color: #fff;
+        background: var(--pink);
         width: 22px;
         height: 22px;
         border-radius: 50%;
@@ -130,74 +126,69 @@
         align-items: center;
         justify-content: center;
         line-height: 22px;
+        z-index: 2;
       }
 
-      .ala-ikoni {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
+      /* Kuva-alue kortin yläosa */
+      .ala-kuva-wrap {
+        width: 100%;
+        height: 110px;
+        overflow: hidden;
+        position: relative;
         flex-shrink: 0;
+      }
+      .ala-kuva-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.3s ease;
+      }
+      .ala-kortti:hover .ala-kuva-wrap img {
+        transform: scale(1.05);
+      }
+      /* Tumma overlay kuvan päällä */
+      .ala-kuva-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 40%,
+          rgba(0, 0, 0, 0.35) 100%
+        );
+      }
+
+      /* Teksti-alue kortin alaosa */
+      .ala-teksti {
+        padding: 12px 12px 14px;
+        width: 100%;
+        box-sizing: border-box;
       }
       .ala-nimi {
         font-size: 14px;
         font-weight: 700;
         color: var(--text-dark);
         line-height: 1.3;
+        margin-bottom: 4px;
+        display: block;
       }
       .ala-kuvaus {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--text-mid);
         line-height: 1.4;
+        display: block;
       }
 
-      /* Ikonien värit per ala */
-      .ika-tekniikka {
-        background: #dbeafe;
-        color: #1d4ed8;
-      }
-      .ika-it {
-        background: #d1fae5;
-        color: #065f46;
-      }
-      .ika-sote {
-        background: #fce7f3;
-        color: #9d174d;
-      }
-      .ika-palvelu {
-        background: #fef3c7;
-        color: #92400e;
-      }
-      .ika-elint {
-        background: #dcfce7;
-        color: #166534;
-      }
-      .ika-luonto {
-        background: #d1fae5;
-        color: #064e3b;
-      }
-      .ika-taide {
-        background: #ede9fe;
-        color: #4c1d95;
-      }
-      .ika-kauppa {
-        background: #ffedd5;
-        color: #9a3412;
-      }
-
-      /* ── Peliruutu-alue ─────────────────────────────────────────── */
+      /* ── Peliruutu ── */
       .peliruutu-alue {
         background: rgba(255, 255, 255, 0.9);
         border: 2px solid var(--border);
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 8px 32px rgba(219, 39, 119, 0.08);
-        transition: all 0.3s ease;
       }
-
       .peliruutu-header {
         background: linear-gradient(135deg, var(--pink), var(--pink-dk));
         color: #fff;
@@ -220,8 +211,6 @@
         font-size: 12px;
         font-weight: 600;
       }
-
-      /* Tyhjä tila ennen valintaa */
       .valitse-ohje {
         display: flex;
         flex-direction: column;
@@ -244,7 +233,6 @@
         line-height: 1.6;
       }
 
-      /* iframe */
       #peliFrame {
         width: 100%;
         height: 600px;
@@ -253,7 +241,7 @@
         background: #fff;
       }
 
-      /* ── Edistymispalkki ─────────────────────────────────────────── */
+      /* ── Edistymispalkki ── */
       .edistyminen {
         background: var(--pink-lt);
         border: 1px solid var(--border);
@@ -287,24 +275,6 @@
         width: 0%;
       }
 
-      /* ── Takaisin-nappi ─────────────────────────────────────────── */
-      .takaisin-nappi {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--pink);
-        font-weight: 600;
-        font-size: 14px;
-        text-decoration: none;
-        margin-bottom: 20px;
-        padding: 6px 0;
-      }
-      .takaisin-nappi:hover {
-        color: var(--pink-dk);
-        text-decoration: underline;
-      }
-
-      /* ── Responsiivisuus ────────────────────────────────────────── */
       @media (max-width: 600px) {
         .ala-grid {
           grid-template-columns: repeat(2, 1fr);
@@ -313,14 +283,14 @@
         #peliFrame {
           height: 480px;
         }
+        .ala-kuva-wrap {
+          height: 80px;
+        }
       }
 
-      /* Piilotettu ennen valintaa */
       .piilossa {
         display: none !important;
       }
-
-      /* sr-only */
       .sr-only {
         position: absolute;
         width: 1px;
@@ -336,7 +306,6 @@
   </head>
 
   <body>
-    <!-- Navigaatio -->
     <header class="navbar">
       <div class="nav-left">
         <a
@@ -359,7 +328,7 @@
       <h1>🧭 Koulutusalat – oma suunta</h1>
       <p class="intro-text">
         Tutustu eri koulutusaloihin ja niiden ammatteihin. Valitse ala alta ja
-        tutustua alaan ja alan ammatteihin – voit kokeilla kaikkia aloja samalla
+        tutustuu alaan ja alan ammatteihin – voit kokeilla kaikkia aloja samalla
         käyntikerralla.
       </p>
 
@@ -388,11 +357,13 @@
           data-nimi="Tekniikka-ala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-tekniikka" aria-hidden="true">
-            <i class="fa-solid fa-wrench"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/tekniikanala.png" alt="Tekniikka-ala" />
           </div>
-          <span class="ala-nimi">Tekniikka-ala</span>
-          <span class="ala-kuvaus">Rakentaminen, koneet ja insinöörityö</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Tekniikka-ala</span>
+            <span class="ala-kuvaus">Rakentaminen, koneet ja insinöörityö</span>
+          </div>
         </button>
 
         <button
@@ -403,13 +374,15 @@
           data-nimi="IT-ala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-it" aria-hidden="true">
-            <i class="fa-solid fa-laptop-code"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/it-ala.png" alt="IT-ala" />
           </div>
-          <span class="ala-nimi">IT-ala</span>
-          <span class="ala-kuvaus"
-            >Ohjelmointi, verkot ja digitaaliset ratkaisut</span
-          >
+          <div class="ala-teksti">
+            <span class="ala-nimi">IT-ala</span>
+            <span class="ala-kuvaus"
+              >Ohjelmointi, verkot ja digitaaliset ratkaisut</span
+            >
+          </div>
         </button>
 
         <button
@@ -420,11 +393,13 @@
           data-nimi="Sote-ala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-sote" aria-hidden="true">
-            <i class="fa-solid fa-heart-pulse"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/soteala.png" alt="Sote-ala" />
           </div>
-          <span class="ala-nimi">Sote-ala</span>
-          <span class="ala-kuvaus">Hoiva, terveys ja hyvinvointi</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Sote-ala</span>
+            <span class="ala-kuvaus">Hoiva, terveys ja hyvinvointi</span>
+          </div>
         </button>
 
         <button
@@ -435,11 +410,15 @@
           data-nimi="Palveluala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-palvelu" aria-hidden="true">
-            <i class="fa-solid fa-concierge-bell"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/palveluala.png" alt="Palveluala" />
           </div>
-          <span class="ala-nimi">Palveluala</span>
-          <span class="ala-kuvaus">Matkailu, ravintola ja asiakaspalvelu</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Palveluala</span>
+            <span class="ala-kuvaus"
+              >Matkailu, ravintola ja asiakaspalvelu</span
+            >
+          </div>
         </button>
 
         <button
@@ -450,11 +429,13 @@
           data-nimi="Elintarvikeala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-elint" aria-hidden="true">
-            <i class="fa-solid fa-wheat-awn"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/elintarvikeala.png" alt="Elintarvikeala" />
           </div>
-          <span class="ala-nimi">Elintarvikeala</span>
-          <span class="ala-kuvaus">Ruoka, juoma ja elintarviketuotanto</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Elintarvikeala</span>
+            <span class="ala-kuvaus">Ruoka, juoma ja elintarviketuotanto</span>
+          </div>
         </button>
 
         <button
@@ -465,11 +446,13 @@
           data-nimi="Luontoala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-luonto" aria-hidden="true">
-            <i class="fa-solid fa-leaf"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/luontoala.png" alt="Luontoala" />
           </div>
-          <span class="ala-nimi">Luontoala</span>
-          <span class="ala-kuvaus">Metsä, ympäristö ja maatalous</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Luontoala</span>
+            <span class="ala-kuvaus">Metsä, ympäristö ja maatalous</span>
+          </div>
         </button>
 
         <button
@@ -480,11 +463,16 @@
           data-nimi="Taide- ja humanistinen ala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-taide" aria-hidden="true">
-            <i class="fa-solid fa-palette"></i>
+          <div class="ala-kuva-wrap">
+            <img
+              src="../images/taideala.png"
+              alt="Taide- ja humanistinen ala"
+            />
           </div>
-          <span class="ala-nimi">Taide- ja humanistinen ala</span>
-          <span class="ala-kuvaus">Kulttuuri, taide ja kielitaito</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Taide- ja humanistinen ala</span>
+            <span class="ala-kuvaus">Kulttuuri, taide ja kielitaito</span>
+          </div>
         </button>
 
         <button
@@ -495,17 +483,18 @@
           data-nimi="Kauppa-ala"
           aria-pressed="false"
         >
-          <div class="ala-ikoni ika-kauppa" aria-hidden="true">
-            <i class="fa-solid fa-chart-line"></i>
+          <div class="ala-kuva-wrap">
+            <img src="../images/kaupanala.png" alt="Kauppa-ala" />
           </div>
-          <span class="ala-nimi">Kauppa-ala</span>
-          <span class="ala-kuvaus">Myynti, markkinointi ja talous</span>
+          <div class="ala-teksti">
+            <span class="ala-nimi">Kauppa-ala</span>
+            <span class="ala-kuvaus">Myynti, markkinointi ja talous</span>
+          </div>
         </button>
       </div>
 
       <!-- Peliruutu -->
       <div class="peliruutu-alue">
-        <!-- Header näkyy kun ala valittu -->
         <div
           class="peliruutu-header piilossa"
           id="peliHeader"
@@ -514,8 +503,6 @@
           <h2 id="peliOtsikko">–</h2>
           <span class="ala-tag" id="peliTag">Interaktiivinen tarina</span>
         </div>
-
-        <!-- Ohje ennen valintaa -->
         <div
           class="valitse-ohje"
           id="valitseOhje"
@@ -530,18 +517,14 @@
             Voit kokeilla kaikkia kahdeksaa alaa samalla käyntikerralla.
           </p>
         </div>
-
-        <!-- iframe (piilossa ennen valintaa) -->
         <iframe
           id="peliFrame"
           class="piilossa"
           title="Koulutusalan interaktiivinen tarina"
           loading="lazy"
-        >
-        </iframe>
+        ></iframe>
       </div>
     </div>
-    <!-- /page-wrap -->
 
     <script>
       const kortit = document.querySelectorAll(".ala-kortti");
@@ -552,13 +535,11 @@
       const laskuri = document.getElementById("laskuri");
       const edistymisTayta = document.getElementById("edistymisTayta");
 
-      // Seuraa mitkä alat on pelattu (localStorage niin pysyy sessioiden yli)
       const STORAGE_KEY = "digiopo_koulutusalat_pelattu";
       let pelattu = new Set(
         JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
       );
 
-      // Merkitse jo pelatut kortit
       function paivitaKortit() {
         pelattu.forEach(function (ala) {
           const kortti = document.querySelector('[data-ala="' + ala + '"]');
@@ -578,44 +559,33 @@
           const tiedosto = kortti.dataset.tiedosto;
           const nimi = kortti.dataset.nimi;
 
-          // Poista aktiivinen-luokka kaikilta
           kortit.forEach(function (k) {
             k.classList.remove("aktiivinen");
             k.setAttribute("aria-pressed", "false");
           });
 
-          // Aseta tämä aktiiviseksi
           kortti.classList.add("aktiivinen");
           kortti.setAttribute("aria-pressed", "true");
 
-          // Merkitse pelatuksi
           if (!pelattu.has(ala)) {
             pelattu.add(ala);
             localStorage.setItem(STORAGE_KEY, JSON.stringify([...pelattu]));
             paivitaKortit();
           }
 
-          // Vaihda peli
           if (aktiivinenAla !== ala) {
             aktiivinenAla = ala;
             peliOtsikko.textContent = nimi;
-
-            // Näytä header, piilota ohje, näytä iframe
             peliHeader.classList.remove("piilossa");
             valitseOhje.classList.add("piilossa");
             peliFrame.classList.remove("piilossa");
-
-            // Lataa Twine-tarina (tiedostot ovat samassa kansiossa /pelit/)
             peliFrame.src = tiedosto;
-
-            // Vieritä peliruutuun sujuvasti
             setTimeout(function () {
               peliFrame.scrollIntoView({ behavior: "smooth", block: "start" });
             }, 150);
           }
         });
 
-        // Näppäimistötuki: Enter ja Space
         kortti.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
