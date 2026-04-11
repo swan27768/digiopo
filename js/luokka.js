@@ -14,11 +14,12 @@ function luoTehtavaKortti(tehtava) {
       ">
         <div style="display:flex; align-items:flex-start; gap:12px;">
           <div style="
-            font-size: 28px;
+            font-size: 26px;
             line-height: 1;
             flex-shrink: 0;
             margin-top: 2px;
-          ">💬</div>
+            color: #7c3aed;
+          "><i class="fa-solid fa-people-group"></i></div>
           <div style="flex:1;">
             <div style="
               display:inline-block;
