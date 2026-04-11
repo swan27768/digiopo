@@ -2,16 +2,6 @@ const tehtavat = {
   7: [
     {
       aiheId: "tasks-tervetuloa",
-      title: "Robo saapuu kouluun",
-      description:
-        "Interaktiivinen tarina, jossa teet valintoja ja etenet tarinassa.",
-      href: "../robotarina.html",
-      tag: "Interaktiivinen",
-      tagClass: "tag-interactive",
-      icon: "fa-book-open",
-    },
-    {
-      aiheId: "tasks-tervetuloa",
       title: "Päivän aihe: Ensimmäinen viikko",
       description:
         "Mitä tunnet juuri nyt? Keskustellaan yhdessä yläkoulun alusta.",
@@ -51,7 +41,7 @@ const tehtavat = {
     },
     {
       aiheId: "tasks-opiskelutaidot",
-      title: "Päivän aihe: Miten minä opin?",
+      title: "Kirja kiinni – mitä muistat?",
       description:
         "Keskustellaan erilaisista oppimistavoista ja siitä, mikä toimii kenellekin.",
       href: "../tehtava.html?id=keskustelu-opiskelutaidot",
@@ -104,8 +94,7 @@ const tehtavat = {
     {
       aiheId: "tasks-koulutus",
       title: "Koulutusalat – oma suunta",
-      description:
-        "Tutustu eri koulutusaloihin ja tee ammattitutkimus-tehtävä.",
+      description: "Tutustu eri koulutusaloihin Twine-pelissä.",
       href: "../pelit/koulutusalat.html",
       tag: "Interaktiivinen",
       tagClass: "tag-interactive",
@@ -255,11 +244,13 @@ const tehtavat = {
       tagClass: "",
       icon: "fa-pencil",
     },
+
     {
       aiheId: "tasks-tet",
-      title: "Päivän aihe: Mitä TET opetti?",
-      description: "Miten TET vaikutti ajatuksiisi tulevaisuudesta?",
-      href: "../tehtava.html?id=keskustelu-tet9",
+      title: "Harrastuksesta ammatti?",
+      description:
+        "Haluaisitko tehdä harrastuksestasi työsi – ja mitä riskejä siinä on?",
+      href: "../tehtava.html?id=keskustelu-harrastus-ammatti",
       tag: "Keskustelu",
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
@@ -276,9 +267,10 @@ const tehtavat = {
     },
     {
       aiheId: "tasks-valinnat",
-      title: "Päivän aihe: Mitä seuraavaksi?",
-      description: "Käydään läpi yhdessä: miltä tuntuu tehdä iso päätös?",
-      href: "../tehtava.html?id=keskustelu-valinnat",
+      title: "Palkka vai merkitys?",
+      description:
+        "Valitsisitko huipputienestit vai työn, joka tuntuu tärkeältä? Väittele!",
+      href: "../tehtava.html?id=keskustelu-palkka-vai-merkitys",
       tag: "Keskustelu",
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
@@ -428,25 +420,29 @@ const tehtavat = {
   },
 
   "keskustelu-opiskelutaidot": {
-    title: "Päivän aihe: Miten minä opin?",
+    title: "Kirja kiinni – mitä muistat?",
     category: "keskustelu",
     class: "7",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    taustaOtsikko: "Aktiivinen muisteleminen (Retrieval Practice)",
+    taustateksti:
+      'Passiivinen lukeminen ja alleviivaaminen on todettu tehottomaksi oppimisen kannalta.\n\nVuoden 2026 opiskeluvinkit korostavat "kirja kiinni" -menetelmää: lue kappale, laita kirja piiloon ja kirjoita tai sano ääneen kaikki, mitä muistat.',
+    taustaLahde: "Nuortennetti / Mannerheimin Lastensuojeluliitto (2026)",
     kysymykset: [
+      "Miksi lukeminen tuntuu usein helpommalta kuin asioiden palauttaminen mieleen?",
+      "Kumpaan luotat enemmän: siihen, että selaat kirjaa vai siihen, että osaat selittää asian kaverille?",
       "Milloin opiskelu tuntuu helpoimmalta – aamulla, illalla, hiljaisuudessa vai musiikin kanssa?",
-      "Mikä häiritsee oppimistasi eniten?",
-      "Onko sinulla jokin oma kikka, joka auttaa muistamaan asioita?",
     ],
     vinkit: [
-      "Voit teettää lyhyen 'oppimistyyli'-kyselyn ennen keskustelua.",
-      "Muistuta, ettei ole yhtä oikeaa tapaa oppia.",
-      "Kokoa lopuksi yhteinen lista ryhmän vinkeistä.",
+      "Kokeile heti: lue yksi kappale, sulje kirja ja kirjoita ylös kaikki mitä muistat – älä katso takaisin!",
+      "Vertaa kaverin kanssa: mitä sinä muistit, mitä hän muisti? Yhdessä muistatte enemmän.",
+      "Tee tästä tapa: kirja kiinni -tekniikka toimii parhaiten kun käytät sitä joka kerta, ei vain ennen koetta.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Milloin opiskelu tuntuu helpoimmalta?",
-      "Keskustelukysymys 2: Mikä häiritsee oppimistasi eniten?",
-      "Keskustelukysymys 3: Onko sinulla jokin oma kikka, joka auttaa muistamaan?",
+      "Keskustelukysymys 1: Miksi lukeminen tuntuu helpommalta kuin muistaminen?",
+      "Keskustelukysymys 2: Kirja kiinni vai selaaminen – kumpaan luotat?",
+      "Keskustelukysymys 3: Milloin opiskelu tuntuu helpoimmalta?",
     ],
   },
 
@@ -703,49 +699,57 @@ const tehtavat = {
     ],
   },
 
-  "keskustelu-tet9": {
-    title: "Päivän aihe: Mitä TET opetti?",
+  "keskustelu-harrastus-ammatti": {
+    title: "Harrastuksesta ammatti?",
     category: "keskustelu",
     class: "9",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    taustaOtsikko: "Urheilu ja tavoitteellisuus",
+    taustateksti:
+      "Väite: Harrastuksen muuttaminen ammatiksi (esim. urheilu tai pelaaminen) pilaa ilon koko harrastuksesta, koska siitä tulee pakonomaista suorittamista.",
+    taustaLahde: "HS Lasten uutiset / Urheiluyläkoulun arki (2026)",
     kysymykset: [
-      "Muuttiko TET-jakso ajatuksiasi tulevaisuudesta – miten?",
-      "Oliko jotain, mitä et osannut odottaa?",
-      "Jos voisit tehdä TET:n uudelleen, mitä tekisit toisin tai samoin?",
+      "Haluaisitko sinä tehdä harrastuksestasi työsi?",
+      'Mitä riskejä siinä on, jos kaikki "vapaa-aika" muuttuukin työksi?',
+      "Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin – miten se on sujunut?",
     ],
     vinkit: [
-      "TET on 9. luokalla erityisen tärkeä – se voi vahvistaa tai muuttaa suunnitelmia.",
-      "Anna tilaa myös pettymyksille – ne ovat yhtä arvokkaita oppimiskokemuksia.",
-      "Kysy myös: mitä tämä kertoo sinulle itsestäsi?",
+      "Valitse puolesi: oletko väitteen puolella vai vastaan – ja perustele se yhdellä konkreettisella esimerkillä.",
+      "Kuuntele ensin toisen argumentti loppuun ennen kuin vastaat – hyvä väittelijä ei keskeytä.",
+      'Käytä vastaväitettä: "Ymmärrän mitä sanot, mutta..." – se osoittaa että olet kuunnellut.',
     ],
     instructions: [
-      "Keskustelukysymys 1: Muuttiko TET ajatuksiasi tulevaisuudesta?",
-      "Keskustelukysymys 2: Oliko jotain, mitä et osannut odottaa?",
-      "Keskustelukysymys 3: Mitä tekisit toisin tai samoin?",
+      "Keskustelukysymys 1: Haluaisitko tehdä harrastuksestasi työsi?",
+      "Keskustelukysymys 2: Mitä riskejä on, jos vapaa-aika muuttuu työksi?",
+      "Keskustelukysymys 3: Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin?",
     ],
   },
 
-  "keskustelu-valinnat": {
-    title: "Päivän aihe: Mitä seuraavaksi?",
+  "keskustelu-palkka-vai-merkitys": {
+    title: "Palkka vai merkitys?",
     category: "keskustelu",
     class: "9",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    taustaOtsikko: "Työn arvot ja motivaatio",
+    taustateksti:
+      "Väite: On järkevämpää valita ammatti, jossa on varma työllisyys ja huippupalkka, vaikka työ itsessään tuntuisi tylsältä tai turhalta.",
+    taustaLahde: "Nuorten NYT – Nuorten tulevaisuusraportti (2026)",
     kysymykset: [
-      "Miltä tuntuu, kun iso päätös on edessä – jännittääkö, innostaako, pelottaako?",
-      "Mikä auttaisi sinua tuntemaan olosi varmemmaksi valinnastasi?",
-      "Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+      "Valitsisitko mieluummin 7 000 €/kk palkan työstä, josta et pidä, vai 2 500 €/kk palkan työstä, joka tuntuu todella tärkeältä ja kivalta? Miksi?",
+      "Voiko työ tuntua merkitykselliseltä, vaikka palkka olisi pieni – vai tarvitseeko rahan riittää ensin?",
+      "Muuttuuko vastauksesi, jos ajattelet tilannetta 10 vuoden päästä?",
     ],
     vinkit: [
-      "Tämä on tunnekuormainen aihe – anna tilaa kaikille tunteille.",
-      "Vältä painostamista – tarkoitus on tukea, ei ohjata tiettyyn valintaan.",
-      "Lopeta positiivisesti: jokainen on valmistautunut paremmin kuin luulee.",
+      "Valitse puolesi ennen keskustelua: palkka vai merkitys – ja perustele se yhdellä konkreettisella syyllä.",
+      'Haasta kaverin ajatus kysymällä: "Entä jos rahat loppuisivat – muuttaisitko mieltä?"',
+      "Muista: ei ole oikeaa vastausta – mutta sinulla pitää olla perustelu omalle valinnallesi.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Miltä tuntuu, kun iso päätös on edessä?",
-      "Keskustelukysymys 2: Mikä auttaisi sinua tuntemaan olosi varmemmaksi?",
-      "Keskustelukysymys 3: Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+      "Keskustelukysymys 1: 7 000 € tylsästä vai 2 500 € kivasta – kumpi ja miksi?",
+      "Keskustelukysymys 2: Voiko työ tuntua merkitykselliseltä pienellä palkalla?",
+      "Keskustelukysymys 3: Muuttuuko vastauksesi 10 vuoden päästä?",
     ],
   },
 };

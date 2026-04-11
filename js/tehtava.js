@@ -70,6 +70,56 @@ window.addEventListener("load", function () {
         instructions.appendChild(kesto);
       }
 
+      // Lukuohje ennen taustatietoa
+      if (task.taustateksti) {
+        const lukuOhje = document.createElement("p");
+        lukuOhje.textContent =
+          "📖 Lue ensin – sitten keskustele parin kanssa tai pienryhmässä.";
+        lukuOhje.style.cssText =
+          "font-size:15px;font-weight:600;color:#4c1d95;" +
+          "background:#ede9fe;border-radius:8px;padding:10px 14px;" +
+          "margin-bottom:12px;";
+        instructions.appendChild(lukuOhje);
+      }
+
+      // Taustateksti — otsikko + kappaleet erikseen
+      if (task.taustateksti) {
+        const tausta = document.createElement("div");
+        tausta.style.cssText =
+          "background:#f0fdf4;border-left:4px solid #16a34a;" +
+          "border-radius:12px;padding:18px 20px;margin-bottom:20px;";
+
+        // Otsikko taustatekstille
+        if (task.taustaOtsikko) {
+          const th = document.createElement("h3");
+          th.textContent = task.taustaOtsikko;
+          th.style.cssText =
+            "margin:0 0 12px;color:#14532d;font-size:18px;font-weight:700;";
+          tausta.appendChild(th);
+        }
+
+        // Teksti — pilkotaan kaksoisrivinvaihdolla kappaleisiin
+        const kappaleet = task.taustateksti.split("\n\n");
+        kappaleet.forEach(function (kappale) {
+          const tp = document.createElement("p");
+          tp.textContent = kappale.trim();
+          tp.style.cssText =
+            "margin:0 0 10px;font-size:16px;color:#166534;line-height:1.7;";
+          tausta.appendChild(tp);
+        });
+
+        // Lähde
+        if (task.taustaLahde) {
+          const lahde = document.createElement("p");
+          lahde.textContent = "Lähde: " + task.taustaLahde;
+          lahde.style.cssText =
+            "margin:10px 0 0;font-size:13px;color:#15803d;font-style:italic;";
+          tausta.appendChild(lahde);
+        }
+
+        instructions.appendChild(tausta);
+      }
+
       // Keskustelukysymykset
       if (task.kysymykset && task.kysymykset.length) {
         const h = document.createElement("h3");
@@ -103,7 +153,7 @@ window.addEventListener("load", function () {
           "border-radius:8px;padding:14px 16px;";
 
         const vh = document.createElement("h4");
-        vh.textContent = "💡 Ohjaajan vinkit";
+        vh.textContent = "💡 Opon vinkit";
         vh.style.cssText = "margin:0 0 10px;color:#78350f;font-size:14px;";
         vinkitDiv.appendChild(vh);
 
@@ -122,12 +172,131 @@ window.addEventListener("load", function () {
     }
 
     // Piilota kirjoituskenttä ja napit
-    if (notes)
-      notes.closest(".task-right") &&
-        (notes.closest("section, div").style.display = "none");
+    // Muistiinpanokenttä keskustelutehtävälle
+    const keskusteluStorageKey = "digiopo_notes_" + id;
+
+    const muistiOhje = document.createElement("div");
+    muistiOhje.style.cssText =
+      "margin-top:24px;background:#ede9fe;border-left:4px solid #7c3aed;" +
+      "border-radius:8px;padding:14px 16px;";
+    const muistiOhjeTeksti = document.createElement("p");
+    muistiOhjeTeksti.innerHTML =
+      "<strong>📝 Kirjaa ajatuksesi</strong><br>" +
+      "Kirjoita tähän omat muistiinpanosi keskustelusta. " +
+      "Lataa ne lopuksi ja palauta opollesi.";
+    muistiOhjeTeksti.style.cssText =
+      "margin:0 0 12px;font-size:14px;color:#3b0764;line-height:1.6;";
+    muistiOhje.appendChild(muistiOhjeTeksti);
+
+    const muistiKentta = document.createElement("textarea");
+    muistiKentta.placeholder = "Kirjoita tähän...";
+    muistiKentta.style.cssText =
+      "width:100%;min-height:140px;padding:12px;border:1px solid #c4b5fd;" +
+      "border-radius:8px;font-size:15px;line-height:1.6;resize:vertical;" +
+      "font-family:inherit;box-sizing:border-box;background:#fff;color:#1e1b4b;";
+
+    const savedKeskustelu = localStorage.getItem(keskusteluStorageKey);
+    if (savedKeskustelu) muistiKentta.value = savedKeskustelu;
+
+    muistiKentta.addEventListener("input", function () {
+      localStorage.setItem(keskusteluStorageKey, muistiKentta.value);
+    });
+    muistiOhje.appendChild(muistiKentta);
+
+    // Painikkeet
+    const nappiRivi = document.createElement("div");
+    nappiRivi.style.cssText =
+      "display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center;";
+
+    const lataaBtn = document.createElement("button");
+    lataaBtn.textContent = "⬇ Lataa muistiinpanot";
+    lataaBtn.style.cssText =
+      "background:#7c3aed;color:#fff;border:none;padding:9px 18px;" +
+      "border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;";
+    lataaBtn.addEventListener("click", function () {
+      const teksti = muistiKentta.value || "";
+      const otsikko = task.title;
+      const blob = new Blob(
+        [otsikko + "\n" + "=".repeat(otsikko.length) + "\n\n" + teksti],
+        { type: "text/plain;charset=utf-8" },
+      );
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = otsikko.replace(/[^\wäöåÄÖÅ\- ]/g, "").trim() + ".txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+    nappiRivi.appendChild(lataaBtn);
+
+    const tyhjennaBtn = document.createElement("button");
+    tyhjennaBtn.textContent = "🗑 Tyhjennä";
+    tyhjennaBtn.style.cssText =
+      "background:#fff;color:#7c3aed;border:2px solid #c4b5fd;padding:9px 18px;" +
+      "border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;";
+    tyhjennaBtn.addEventListener("click", function () {
+      if (confirm("Tyhjennetäänkö muistiinpanot?")) {
+        muistiKentta.value = "";
+        localStorage.removeItem(keskusteluStorageKey);
+      }
+    });
+    nappiRivi.appendChild(tyhjennaBtn);
+
+    const opoOhje = document.createElement("span");
+    opoOhje.textContent = "💡 Palauta ladattu tiedosto opollesi";
+    opoOhje.style.cssText = "font-size:13px;color:#6d28d9;font-style:italic;";
+    nappiRivi.appendChild(opoOhje);
+
+    muistiOhje.appendChild(nappiRivi);
+    instructions.appendChild(muistiOhje);
+
+    // Piilota tavallinen kirjoituskenttä ja kaikki sen vanhemmat joissa se on
+    if (notes) {
+      // Piilota notes itse
+      notes.style.display = "none";
+      // Piilota myös label ja kaikki sisarukset samassa containerissa
+      let el = notes.parentElement;
+      while (
+        el &&
+        el.tagName !== "MAIN" &&
+        el.tagName !== "ARTICLE" &&
+        !el.classList.contains("task-content")
+      ) {
+        // Jos tässä containerissa on vain notes-kenttä ja siihen liittyvät elementit, piilota koko container
+        const siblings = Array.from(el.children);
+        const onlyNotes = siblings.every(function (s) {
+          return (
+            s === notes ||
+            s.tagName === "LABEL" ||
+            s.tagName === "P" ||
+            s.id === "saveStatus"
+          );
+        });
+        if (onlyNotes) {
+          el.style.display = "none";
+          el = el.parentElement;
+        } else {
+          break;
+        }
+      }
+    }
     if (downloadBtn) downloadBtn.style.display = "none";
     if (clearBtn) clearBtn.style.display = "none";
     if (saveStatus) saveStatus.style.display = "none";
+
+    // Sulje-painike: takaisin edelliselle sivulle
+    const closeBtn2 = document.getElementById("closeBtn");
+    if (closeBtn2) {
+      closeBtn2.addEventListener("click", function () {
+        if (document.referrer) {
+          window.location.href = document.referrer;
+        } else {
+          window.history.back();
+        }
+      });
+    }
 
     return; // ei enää jatketa tavalliseen logiikkaan
   }
