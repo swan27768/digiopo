@@ -270,6 +270,103 @@
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
       }
 
+      /* ── Elämänvalintapeli hero ──────────────────────────────────── */
+      .elamapeli-hero {
+        position: relative;
+        border-radius: 18px;
+        overflow: hidden;
+        margin: 20px 0;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+      }
+      .elamapeli-hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("../images/valinnat_kansi.png");
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.45);
+      }
+      .elamapeli-hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 28px 32px;
+        color: #fff;
+        width: 100%;
+      }
+      .elamapeli-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        padding: 4px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .elamapeli-hero-content h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .elamapeli-hero-content p {
+        margin: 0 0 20px;
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 480px;
+        opacity: 0.92;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      }
+      .btn-elamapeli {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        color: #134e4a;
+        font-weight: 700;
+        font-size: 15px;
+        padding: 11px 24px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+      .btn-elamapeli:hover {
+        background: #f0fdfa;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .elamapeli-sulje-rivi {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      }
+      .elamapeli-sulje-btn {
+        background: #0d9488;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s;
+      }
+      .elamapeli-sulje-btn:hover {
+        background: #0f766e;
+      }
+
       .sr-only {
         position: absolute;
         width: 1px;
@@ -358,7 +455,7 @@
           <a href="../index.html">Etusivu</a> → 9. luokka
         </div>
 
-        <h1>9. luokka – nyt tehdään valintoja</h1>
+        <h1>9. luokka – valintojen aika</h1>
         <p>
           Tänä vuonna valmistaudut yhteishakuun ja teet päätöksiä, jotka vievät
           sinut eteenpäin. Ei tarvitse tietää kaikkea – riittää että otat
@@ -618,22 +715,46 @@
               />
             </div>
           </div>
-          <div class="interactive-hero">
-            <div class="hero-content">
-              <div class="hero-badge">
-                <i class="fa-solid fa-compass" aria-hidden="true"></i>
-                Interaktiivinen peli
+
+          <!-- Elämänvalintapeli hero -->
+          <div class="elamapeli-hero">
+            <div class="elamapeli-hero-bg" aria-hidden="true"></div>
+            <div class="elamapeli-hero-content">
+              <div class="elamapeli-badge">
+                <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
+                Elämänvalintapeli
               </div>
-              <h3>Valintapeli</h3>
-              <p>Tee valintoja ja katso, mihin ne johtavat.</p>
-              <a href="../pelit/valintapeli.html" class="btn-hero"
-                >Aloita peli</a
-              >
-            </div>
-            <div class="hero-visual" aria-hidden="true">
-              <i class="fa-solid fa-route"></i>
+              <h3>Oma elämä – pienet suuret valinnat</h3>
+              <p>
+                Tee valintoja koulussa, kaveripiirissä ja kotona. Katso lopussa
+                mitä ne kertovat sinusta – AI antaa henkilökohtaisen palautteen.
+              </p>
+              <button class="btn-elamapeli" onclick="avaaElamapeli()">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                Aloita peli
+              </button>
             </div>
           </div>
+
+          <!-- Elämänvalintapeli iframe (piilossa ennen klikkausta) -->
+          <div id="elamapeliContainer" style="display: none; margin-top: 12px">
+            <div class="elamapeli-sulje-rivi">
+              <button class="elamapeli-sulje-btn" onclick="suljeElamapeli()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                Sulje peli
+              </button>
+            </div>
+            <iframe
+              id="elamapeliFrame"
+              src=""
+              width="100%"
+              height="720px"
+              style="border: none; border-radius: 14px"
+              title="Oma elämä – elämänvalintapeli"
+              loading="lazy"
+            ></iframe>
+          </div>
+
           <div class="tasks-section">
             <div class="task-list" id="tasks-valinnat" aria-live="polite"></div>
           </div>
@@ -680,6 +801,24 @@
     <script>
       window.currentClassNumber = "9";
 
+      function avaaElamapeli() {
+        const container = document.getElementById("elamapeliContainer");
+        const frame = document.getElementById("elamapeliFrame");
+        if (!frame.getAttribute("src")) {
+          frame.src = "http://localhost:3001";
+        }
+        container.style.display = "block";
+        container.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function suljeElamapeli() {
+        const container = document.getElementById("elamapeliContainer");
+        container.style.display = "none";
+        document
+          .getElementById("valinnat")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
       function avaaduunimina() {
         const container = document.getElementById("duuniminaContainer");
         container.style.display = "block";
@@ -705,7 +844,6 @@
           testi: "Kumpi tuntui tutummalta? Se kertoo jotain 👀",
           valinnat: "Rohkeus valita on jo puolet matkasta ✨",
         };
-        const prefixit = ["🙂", "👀", "💭", "✨"];
         let viimeisin = null;
         let piilotusAjastin = null;
         function naytaMaskotti(teksti) {

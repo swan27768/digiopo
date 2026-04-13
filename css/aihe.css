@@ -47,16 +47,73 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-  padding: 28px;
-  margin-bottom: 32px;
+  padding: 0; /* padding siirretty sisälle border-top:n alle */
+  margin-bottom: 48px; /* ← enemmän tilaa osioiden väliin (oli 32px) */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   scroll-margin-top: 100px;
+  overflow: hidden; /* pitää border-radius + yläraita siistinä */
+
+  /* Värillinen yläraita — oletusväri, ylikirjoitetaan per luokka */
+  border-top: 5px solid #4f46e5;
+}
+
+/* ── Per-osio värit (yläraita + otsikkoviiva) ─────────────── */
+/* 7. luokka — violetti */
+#tervetuloa,
+#opiskelutaidot,
+#mina-oppijana,
+#omat-vahvuudet,
+#tulevaisuus {
+  border-top-color: #7c3aed;
+}
+
+/* 8. luokka — pinkki */
+#koulutus,
+#vahvuudet,
+#tet,
+#raha,
+#ammatti {
+  border-top-color: #db2777;
+}
+
+/* 9. luokka — teal */
+#jatko,
+#yhteishaku,
+#tet,
+#testi,
+#valinnat {
+  border-top-color: #0d9488;
+}
+
+/* ── Sisältöpadding yläraidan alle ───────────────────────── */
+.aihe-osio > * {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+.aihe-osio > *:first-child {
+  padding-top: 24px;
+}
+.aihe-osio > *:last-child {
+  padding-bottom: 28px;
+}
+
+/* Poikkeukset: elementit jotka saavat oman paddinginsa */
+.aihe-osio > .theory-card,
+.aihe-osio > .tasks-section,
+.aihe-osio > .mission-section,
+.aihe-osio > .interactive-hero,
+.aihe-osio > div[style] {
+  margin-left: 28px;
+  margin-right: 28px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .aihe-otsikko {
   margin-bottom: 20px;
   padding-bottom: 14px;
   border-bottom: 3px solid #4f46e5;
+  /* padding-top ja left/right tulee .aihe-osio > * säännöstä */
 }
 
 .aihe-otsikko h2 {
@@ -68,6 +125,30 @@
 .aihe-otsikko p {
   margin: 0;
   color: #4b5563;
+}
+
+/* Otsikkoviivan väri per osio */
+#tervetuloa .aihe-otsikko,
+#opiskelutaidot .aihe-otsikko,
+#mina-oppijana .aihe-otsikko,
+#omat-vahvuudet .aihe-otsikko,
+#tulevaisuus .aihe-otsikko {
+  border-bottom-color: #7c3aed;
+}
+
+#koulutus .aihe-otsikko,
+#vahvuudet .aihe-otsikko,
+#tet .aihe-otsikko,
+#raha .aihe-otsikko,
+#ammatti .aihe-otsikko {
+  border-bottom-color: #db2777;
+}
+
+#jatko .aihe-otsikko,
+#yhteishaku .aihe-otsikko,
+#testi .aihe-otsikko,
+#valinnat .aihe-otsikko {
+  border-bottom-color: #0d9488;
 }
 
 /* --- Teoria-kortti ----------------------------------------- */
@@ -118,9 +199,10 @@
   min-height: 120px;
   display: block;
   border-radius: 10px;
-  object-fit: contain; /* ← contain koska kuva on piirros läpinäkyvällä taustalla */
+  object-fit: contain;
   object-position: center;
 }
+
 /* --- Teoria-kortti (kuvan kanssa) -------------------------- */
 
 .teoria-kortti {
@@ -355,6 +437,13 @@
   font-weight: 500;
 }
 
+/* --- Mission hint ------------------------------------------ */
+.mission-hint {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
 /* --- Interactive Hero -------------------------------------- */
 
 .interactive-hero {
@@ -427,6 +516,8 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-hero:hover {
@@ -441,6 +532,24 @@
 /* --- Mobiili ---------------------------------------------- */
 
 @media (max-width: 768px) {
+  .aihe-osio {
+    margin-bottom: 32px;
+  }
+
+  .aihe-osio > * {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .aihe-osio > .theory-card,
+  .aihe-osio > .tasks-section,
+  .aihe-osio > .mission-section,
+  .aihe-osio > .interactive-hero,
+  .aihe-osio > div[style] {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
   .teoria-kortti {
     flex-direction: column;
     align-items: flex-start;
@@ -462,7 +571,7 @@
   }
   .theory-image img {
     width: 100%;
-    height: 160px; /* sopiva korkeus mobiilille */
+    height: 160px;
     display: block;
     border-radius: 10px;
     object-fit: cover;
