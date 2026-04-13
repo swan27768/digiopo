@@ -1,0 +1,2708 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oma elämä – elämänvalintapeli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #0d0d0f;
+        --bgc: #141417;
+        --bgs: #111113;
+        --t1: #f0ede8;
+        --t2: #9a968f;
+        --t3: #555250;
+        --b1: rgba(255, 255, 255, 0.07);
+        --b2: rgba(255, 255, 255, 0.15);
+        --acc: #e8ff47;
+        --accl: rgba(232, 255, 71, 0.08);
+        --accm: #cbdf2a;
+        --warn: #ff6b35;
+        --warnl: rgba(255, 107, 53, 0.12);
+        --dan: #ff3355;
+        --danl: rgba(255, 51, 85, 0.12);
+        --ca: #4fc3f7;
+        --cal: rgba(79, 195, 247, 0.1);
+        --cb: #ce93d8;
+        --cbl: rgba(206, 147, 216, 0.1);
+        --cc: #a5d6a7;
+        --ccl: rgba(165, 214, 167, 0.1);
+        --sh: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --shl: 0 16px 60px rgba(0, 0, 0, 0.6);
+        --r: 8px;
+        --rs: 4px;
+        --rl: 12px;
+        --fd: "Bebas Neue", Impact, sans-serif;
+        --fb: "Syne", system-ui, sans-serif;
+        --fm: "Space Mono", monospace;
+      }
+      html,
+      body {
+        height: 100%;
+        font-family: var(--fb);
+        background: var(--bg);
+        color: var(--t1);
+        font-size: 14px;
+        line-height: 1.5;
+        letter-spacing: 0.01em;
+      }
+      #g {
+        display: grid;
+        grid-template-rows: 52px 1fr;
+        grid-template-columns: 180px 1fr 200px;
+        grid-template-areas: "hd hd hd" "sl main sr";
+        height: 100vh;
+        overflow: hidden;
+      }
+      header {
+        grid-area: hd;
+        display: flex;
+        align-items: center;
+        padding: 0 1.25rem;
+        background: var(--bg);
+        border-bottom: 2px solid var(--acc);
+        gap: 10px;
+        position: relative;
+      }
+      .htitle {
+        font-family: var(--fd);
+        font-size: 24px;
+        color: var(--acc);
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+      .hsub {
+        font-size: 10px;
+        color: var(--t3);
+        border-left: 1px solid var(--b1);
+        padding-left: 10px;
+        white-space: nowrap;
+        font-family: var(--fm);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      #vturn {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--acc);
+        background: transparent;
+        padding: 3px 10px;
+        border-radius: 2px;
+        border: 1px solid var(--acc);
+        white-space: nowrap;
+        font-family: var(--fm);
+        letter-spacing: 0.08em;
+      }
+      #vrestart {
+        font-size: 10px;
+        padding: 4px 12px;
+        background: transparent;
+        border: 1px solid var(--b1);
+        border-radius: 2px;
+        color: var(--t3);
+        cursor: pointer;
+        font-family: var(--fm);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
+      }
+      #vrestart:hover {
+        border-color: var(--acc);
+        color: var(--acc);
+        background: transparent;
+      }
+      aside {
+        overflow-y: auto;
+        padding: 0.75rem;
+        background: var(--bgs);
+        border-color: var(--b1);
+      }
+      #sl {
+        grid-area: sl;
+        border-right: 1px solid var(--b1);
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+      }
+      .shead {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--acc);
+        margin-bottom: 0.5rem;
+        font-family: var(--fm);
+      }
+      .vi {
+        margin-bottom: 0.5rem;
+      }
+      .vr {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 3px;
+      }
+      .vn {
+        font-size: 10px;
+        color: var(--t2);
+        flex: 1;
+        font-family: var(--fm);
+        letter-spacing: 0.04em;
+      }
+      .vv {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--t1);
+        font-family: var(--fm);
+      }
+      .vt {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0;
+        overflow: hidden;
+      }
+      .vf {
+        height: 100%;
+        border-radius: 0;
+        transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .skr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.4rem;
+      }
+      .skn {
+        font-size: 10px;
+        color: var(--t2);
+        font-family: var(--fm);
+        letter-spacing: 0.03em;
+      }
+      .pips {
+        display: flex;
+        gap: 2px;
+      }
+      .pip {
+        width: 7px;
+        height: 7px;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .pip.on {
+        background: var(--acc);
+        border-color: var(--acc);
+      }
+      .gi {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 0.4rem;
+      }
+      .gc {
+        width: 12px;
+        height: 12px;
+        border-radius: 0;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 7px;
+        flex-shrink: 0;
+      }
+      .gc.done {
+        background: var(--acc);
+        border-color: var(--acc);
+        color: #000;
+      }
+      .gt {
+        font-size: 10px;
+        color: var(--t2);
+        font-family: var(--fm);
+        letter-spacing: 0.03em;
+      }
+      main {
+        grid-area: main;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      #bw {
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.75rem;
+      }
+      #board {
+        display: flex;
+        gap: 8px;
+        height: 100%;
+        min-width: max-content;
+      }
+      .col {
+        width: 145px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0;
+        overflow: hidden;
+        border: 1px solid var(--b1);
+        background: var(--bgc);
+        transition: border-color 0.2s;
+      }
+      .chd {
+        padding: 0.5rem 0.625rem 0.4rem;
+        border-bottom: 2px solid var(--b1);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: border-color 0.2s;
+      }
+      .cdot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .clbl {
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 1.3;
+        font-family: var(--fm);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .cz {
+        flex: 1;
+        padding: 0.4rem;
+        overflow-y: auto;
+        transition: background 0.15s;
+        min-height: 40px;
+      }
+      .cz.over {
+        background: rgba(232, 255, 71, 0.05);
+        outline: 2px dashed var(--acc);
+        outline-offset: -4px;
+      }
+      .cz.elig {
+        background: rgba(232, 255, 71, 0.02);
+      }
+      .dh {
+        font-size: 9px;
+        color: var(--t3);
+        text-align: center;
+        padding: 1.2rem 0.4rem;
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+        border-radius: 0;
+        font-family: var(--fm);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .pc {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--b1);
+        border-left: 2px solid var(--acc);
+        border-radius: 0;
+        padding: 0.35rem 0.45rem;
+        margin-bottom: 4px;
+        animation: settle 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      @keyframes settle {
+        from {
+          opacity: 0;
+          transform: translateY(-8px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .pt {
+        font-size: 10px;
+        font-weight: 500;
+      }
+      .pch {
+        font-size: 9px;
+        color: var(--t3);
+      }
+      #sr {
+        grid-area: sr;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid var(--b1);
+        background: var(--bgs);
+      }
+      .dhd {
+        padding: 0.625rem 0.75rem 0.4rem;
+        border-bottom: 2px solid var(--acc);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--acc);
+        font-family: var(--fm);
+      }
+      #deck {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .dc {
+        background: var(--bgc);
+        border: 1px solid var(--b1);
+        border-radius: 0;
+        cursor: grab;
+        transition:
+          transform 0.15s cubic-bezier(0.23, 1, 0.32, 1),
+          border-color 0.15s,
+          box-shadow 0.15s;
+        animation: sli 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+        user-select: none;
+        position: relative;
+      }
+      @keyframes sli {
+        from {
+          opacity: 0;
+          transform: translateX(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .dc:hover {
+        transform: translateY(-3px) scale(1.01);
+        border-color: var(--acc);
+        box-shadow: 0 8px 32px rgba(232, 255, 71, 0.15);
+      }
+      .dc.drag {
+        opacity: 0.3;
+        transform: rotate(2deg) scale(1.02);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .dc.lk {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .dci {
+        padding: 0.6rem;
+      }
+      .dct {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.3rem;
+      }
+      .dcc {
+        font-size: 9px;
+        color: var(--t3);
+      }
+      .dcs {
+        font-size: 8px;
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 0;
+        font-family: var(--fm);
+        letter-spacing: 0.06em;
+      }
+      .dtitle {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--t1);
+        margin-bottom: 0.2rem;
+        line-height: 1.2;
+        font-family: var(--fb);
+      }
+      .ddesc {
+        font-size: 10px;
+        color: var(--t2);
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
+      }
+      .dlk {
+        font-size: 9px;
+        color: #ba7517;
+        background: #faeeda;
+        padding: 2px 5px;
+        border-radius: 4px;
+        margin-bottom: 0.3rem;
+      }
+      .dpills {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+      }
+      .dpill {
+        font-size: 9px;
+        padding: 1px 6px;
+        border-radius: 0;
+        font-family: var(--fm);
+        letter-spacing: 0.03em;
+      }
+      .dpill.a {
+        background: rgba(79, 195, 247, 0.12);
+        color: var(--ca);
+        border-radius: 0;
+      }
+      .dpill.b {
+        background: rgba(206, 147, 216, 0.12);
+        color: var(--cb);
+        border-radius: 0;
+      }
+      .dpill.c {
+        background: rgba(165, 214, 167, 0.12);
+        color: var(--cc);
+        border-radius: 0;
+      }
+      .ts {
+        border-top: 1px solid var(--b1);
+        padding: 0.5rem 0.75rem;
+      }
+      .tsl {
+        font-size: 9px;
+        color: var(--acc);
+        margin-bottom: 0.35rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-family: var(--fm);
+      }
+      #ticons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        min-height: 24px;
+        margin-bottom: 0.4rem;
+      }
+      .tic {
+        font-size: 14px;
+        animation: pop 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: default;
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .tcnt {
+        font-size: 9px;
+        color: var(--t3);
+        margin-bottom: 0.4rem;
+      }
+      #aibtn {
+        width: 100%;
+        padding: 8px 10px;
+        background: var(--acc);
+        border: none;
+        border-radius: 0;
+        color: #000;
+        font-size: 10px;
+        font-weight: 700;
+        font-family: var(--fm);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      #aibtn:hover {
+        background: var(--accm);
+        transform: scale(1.01);
+      }
+      #aibtn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        background: rgba(232, 255, 71, 0.3);
+      }
+      .spin {
+        width: 10px;
+        height: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: sp 0.7s linear infinite;
+        display: none;
+      }
+      #aibtn.loading .spin {
+        display: block;
+      }
+      @keyframes sp {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #mov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s;
+        padding: 1rem;
+        backdrop-filter: blur(4px);
+      }
+      #mov.vis {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #mct {
+        background: var(--bgc);
+        border-radius: 0;
+        width: 100%;
+        max-width: 560px;
+        max-height: 88vh;
+        overflow-y: auto;
+        border: 1px solid var(--b2);
+        border-top: 3px solid var(--acc);
+        transform: translateY(20px) scale(0.96);
+        transition: transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7);
+      }
+      #mct.ent {
+        transform: translateY(0) scale(1);
+      }
+      .mhd {
+        padding: 1.25rem 1.5rem 1rem;
+        border-bottom: 1px solid var(--b1);
+      }
+      .mcat {
+        font-size: 9px;
+        color: var(--t3);
+        margin-bottom: 0.4rem;
+        font-family: var(--fm);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .mtit {
+        font-family: var(--fd);
+        font-size: 42px;
+        color: var(--t1);
+        margin-bottom: 0.35rem;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .mdesc {
+        font-size: 13px;
+        color: var(--t2);
+        line-height: 1.6;
+        font-style: italic;
+      }
+      .mchoices {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        padding: 1rem 1.5rem;
+      }
+      .mcard {
+        border: 1.5px solid var(--b1);
+        border-radius: 0;
+        padding: 0.875rem;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s,
+          transform 0.15s,
+          box-shadow 0.15s;
+        font-family: var(--fb);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .mcard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+      .mcard.ma:hover,
+      .mcard.ma.sel {
+        border-color: var(--ca);
+        background: var(--cal);
+        box-shadow: 0 0 20px rgba(79, 195, 247, 0.15);
+      }
+      .mcard.mb:hover,
+      .mcard.mb.sel {
+        border-color: var(--cb);
+        background: var(--cbl);
+        box-shadow: 0 0 20px rgba(206, 147, 216, 0.15);
+      }
+      .mcard.mc:hover,
+      .mcard.mc.sel {
+        border-color: var(--cc);
+        background: var(--ccl);
+        box-shadow: 0 0 20px rgba(165, 214, 167, 0.12);
+      }
+      .mc .mctag {
+        color: #5f5e5a;
+      }
+      .mcard.sel {
+        transform: scale(0.98);
+      }
+      .mctag {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.4rem;
+        font-family: var(--fm);
+      }
+      .ma .mctag {
+        color: var(--ca);
+      }
+      .mb .mctag {
+        color: var(--cb);
+      }
+      .mc .mctag {
+        color: var(--cc);
+      }
+      .mclbl {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--t1);
+        margin-bottom: 0.25rem;
+        font-family: var(--fb);
+      }
+      .mcdesc {
+        font-size: 11px;
+        color: var(--t2);
+        line-height: 1.5;
+        margin-bottom: 0.6rem;
+        font-style: italic;
+      }
+      .mfx {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+      }
+      .mfx span {
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 0;
+        font-family: var(--fm);
+        letter-spacing: 0.03em;
+      }
+      .fp {
+        background: rgba(165, 214, 167, 0.15);
+        color: #81c784;
+        border-radius: 0;
+      }
+      .fn {
+        background: rgba(255, 51, 85, 0.12);
+        color: #ff6b6b;
+        border-radius: 0;
+      }
+      .fz {
+        color: var(--t3);
+        font-style: italic;
+      }
+      .mcancel {
+        display: block;
+        margin: 0 1.5rem 0.875rem;
+        background: transparent;
+        border: none;
+        color: var(--t3);
+        font-size: 10px;
+        cursor: pointer;
+        font-family: var(--fm);
+        padding: 0;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 0.15s;
+      }
+      .achv {
+        position: fixed;
+        pointer-events: none;
+        font-size: 20px;
+        animation: fly 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        z-index: 999;
+      }
+      @keyframes fly {
+        0% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        60% {
+          opacity: 1;
+          transform: scale(1.4) translateY(-20px);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.8) translateY(-50px);
+        }
+      }
+      #aimov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        padding: 1rem;
+        backdrop-filter: blur(6px);
+      }
+      #aimov.vis {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #aict {
+        background: var(--bgc);
+        border-radius: 0;
+        width: 100%;
+        max-width: 540px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid var(--b2);
+        border-top: 3px solid var(--acc);
+        transform: translateY(20px) scale(0.96);
+        transition: transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7);
+      }
+      #aict.ent {
+        transform: translateY(0) scale(1);
+      }
+      .aihd {
+        padding: 1.25rem 1.5rem 0.75rem;
+        border-bottom: 1px solid var(--b1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .aitit {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--acc);
+        font-family: var(--fd);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .aibody {
+        padding: 1.25rem;
+      }
+      .dots {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        padding: 2rem 0;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.15);
+        animation: bounce 0.9s ease-in-out infinite;
+      }
+      .dot:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .dot:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+          background: #534ab7;
+        }
+      }
+      .aisec {
+        margin-bottom: 0.75rem;
+        padding: 0.875rem;
+        border-radius: 0;
+        border: 1px solid var(--b1);
+        border-left: 3px solid currentColor;
+      }
+      .aisecl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.5rem;
+        font-family: var(--fm);
+      }
+      .aisect {
+        font-size: 13px;
+        color: var(--t1);
+        line-height: 1.65;
+      }
+      .aiclose {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border-top: 1px solid var(--b1);
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        color: var(--t2);
+        font-size: 12px;
+        cursor: pointer;
+        font-family: var(--fb);
+      }
+      .aiclose:hover {
+        background: var(--bg);
+      }
+      #toast {
+        position: fixed;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--acc);
+        color: #000;
+        padding: 0.6rem 1.25rem;
+        border-radius: 0;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.8;
+        z-index: 150;
+        opacity: 0;
+        transition:
+          opacity 0.25s,
+          transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        text-align: center;
+        pointer-events: none;
+        white-space: nowrap;
+        font-family: var(--fm);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      #toast.vis {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      #endov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 300;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        backdrop-filter: blur(8px);
+      }
+      #endov.vis {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .ecard {
+        background: var(--bgc);
+        border-radius: 0;
+        padding: 2.5rem;
+        text-align: center;
+        max-width: 360px;
+        border: 1px solid var(--b2);
+        border-top: 4px solid var(--acc);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+      }
+      #etit {
+        font-size: 40px;
+        font-weight: 400;
+        color: var(--t1);
+        margin-bottom: 0.75rem;
+        font-family: var(--fd);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      #emsg {
+        font-size: 13px;
+        color: var(--t2);
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+      }
+      .ebtns {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      #eaibtn {
+        padding: 10px 24px;
+        background: var(--acc);
+        color: #000;
+        border: none;
+        border-radius: 0;
+        font-size: 10px;
+        font-weight: 700;
+        font-family: var(--fm);
+        cursor: pointer;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: background 0.15s;
+      }
+      #ebtn {
+        padding: 9px 24px;
+        background: transparent;
+        color: var(--t3);
+        border: 1px solid var(--b1);
+        border-radius: 0;
+        font-size: 10px;
+        font-family: var(--fm);
+        cursor: pointer;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
+      }
+      #ebtn:hover {
+        border-color: var(--b2);
+        color: var(--t2);
+        background: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 2px;
+        height: 2px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--acc);
+        border-radius: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="g">
+      <header>
+        <span class="htitle">Oma elämä</span>
+        <span class="hsub">Lukuvuosi – elämänvalintapeli</span>
+        <span id="vturn">Vuoro 0</span>
+        <button id="vrestart">↺ Uusi peli</button>
+      </header>
+      <aside id="sl">
+        <div>
+          <div class="shead">Fiilis-mittarit</div>
+          <div id="vp"></div>
+        </div>
+        <div>
+          <div class="shead">Taidot</div>
+          <div id="skp"></div>
+        </div>
+        <div>
+          <div class="shead">Tavoitteet</div>
+          <div id="gp"></div>
+        </div>
+      </aside>
+      <main>
+        <div id="bw"><div id="board"></div></div>
+      </main>
+      <aside id="sr">
+        <div class="dhd">Korttikäsi (5)</div>
+        <div id="deck"></div>
+        <div class="ts">
+          <div class="tsl">Oma tarina</div>
+          <div id="ticons"></div>
+          <div class="tcnt" id="tcnt"></div>
+          <button id="aibtn" disabled>
+            <div class="spin"></div>
+            <span>✨ Katso AI-palaute</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+    <div id="mov"><div id="mct"></div></div>
+    <div id="aimov">
+      <div id="aict">
+        <div class="aihd">
+          <span style="font-size: 20px">✨</span
+          ><span class="aitit">Sinun tarinasi</span>
+        </div>
+        <div class="aibody">
+          <div class="dots" id="ald">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div id="ar" style="display: none"></div>
+        </div>
+        <button class="aiclose" id="aicl">Sulje ×</button>
+      </div>
+    </div>
+    <div id="toast"></div>
+    <div id="endov">
+      <div class="ecard">
+        <div id="etit"></div>
+        <div id="emsg"></div>
+        <div class="ebtns">
+          <button id="eaibtn">✨ Katso AI-palaute ensin</button>
+          <button id="ebtn">↺ Pelaa uudelleen</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const VIBES = {
+        fiilis: { l: "Fiilis", e: "😊", c: "#1D9E75" },
+        stressi: { l: "Stressi", e: "😤", c: "#E24B4A" },
+        kaverisuhteet: { l: "Kaverit", e: "👥", c: "#7F77DD" },
+        energia: { l: "Energia", e: "⚡", c: "#EF9F27" },
+        unelmat: { l: "Unelmat", e: "⭐", c: "#D4537E" },
+      };
+      const SKILLS = {
+        rohkeus: { l: "Rohkeus" },
+        itseilmaisu: { l: "Itseilmaisu" },
+        empatia: { l: "Empatia" },
+        organisointi: { l: "Organisointi" },
+        sinnikkyys: { l: "Sinnikkyys" },
+      };
+      const COLS = [
+        { id: "koulu", l: "Koulu", c: "#534AB7", d: "#AFA9EC" },
+        { id: "kaverit", l: "Kaverit", c: "#0F6E56", d: "#5DCAA5" },
+        { id: "koti", l: "Koti", c: "#993556", d: "#ED93B1" },
+        { id: "some", l: "Some & media", c: "#854F0B", d: "#EF9F27" },
+        { id: "harrastus", l: "Harrastus", c: "#185FA5", d: "#85B7EB" },
+        { id: "raha", l: "Raha", c: "#3B6D11", d: "#97C459" },
+        { id: "ylatys", l: "Yllätys!", c: "#A32D2D", d: "#F09595" },
+      ];
+      const GOALS = [
+        {
+          id: "g1",
+          l: "Koulu sujuu",
+          ok: (s) => s.v.fiilis >= 5 && s.v.stressi <= 6,
+        },
+        { id: "g2", l: "Kaverit kunnossa", ok: (s) => s.v.kaverisuhteet >= 6 },
+        { id: "g3", l: "Unelma selkiytyy", ok: (s) => s.v.unelmat >= 6 },
+        { id: "g4", l: "Jaksat arjessa", ok: (s) => s.v.energia >= 5 },
+      ];
+      const CARDS = [
+        // ══════════════════════════════════════════════════════
+        {
+          id: "k1",
+          cat: "koulu",
+          stage: 1,
+          title: "Koe huomenna",
+          emoji: "📝",
+          desc: "Unohtamasi koe on aamulla. Kello on jo 22.",
+          cA: {
+            label: "Valvon ja pänttään kokeeseen",
+            desc: "Yö menee opiskeluun. Numero pelastuu ehkä, mutta olo on kurja.",
+          },
+          cB: {
+            label: "Nukun ja luotan",
+            desc: "Nukut ja otat riskin. Ehkä sujuu – ehkä ei.",
+          },
+          fxA: {
+            vibes: { fiilis: -1, stressi: 3, energia: -2 },
+            skills: { sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { fiilis: 1, stressi: -1, energia: 1 },
+            skills: { rohkeus: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "📚",
+        },
+        {
+          id: "k2",
+          cat: "koulu",
+          stage: 1,
+          title: "Huono numero",
+          emoji: "😞",
+          desc: "Sait 5- kokeesta jota odotit paljon. Vanhemmat kysyvät miten meni.",
+          cA: {
+            label: "Kerron rehellisesti",
+            desc: "Se on kiusallista mutta rehellistä. Vanhemmat voivat jopa auttaa.",
+          },
+          cB: {
+            label: "Vältän aiheen",
+            desc: 'Sanotaan "ihan ok". Numero jää vaivaamaan yksin.',
+          },
+          fxA: {
+            vibes: { stressi: -1, kaverisuhteet: 1 },
+            skills: { rohkeus: 1 },
+          },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "📊",
+        },
+        {
+          id: "k3",
+          cat: "koulu",
+          stage: 2,
+          title: "Ryhmätyö menee pieleen",
+          emoji: "🤯",
+          desc: "Ryhmäprojektissa kukaan ei tee omaa osuuttaan. Deadline on huomenna.",
+          cA: {
+            label: "Otan johtajan roolin",
+            desc: "Organisoit kaikki. Työ valmistuu – stressiä tulee.",
+          },
+          cB: {
+            label: "Teen vain omani",
+            desc: "Oma osuus on ok, mutta ryhmä floppaa. Se näkyy arvosanassa.",
+          },
+          fxA: {
+            vibes: { stressi: 2, kaverisuhteet: 1 },
+            skills: { organisointi: 2, empatia: 1 },
+          },
+          fxB: { vibes: { stressi: -1, fiilis: 1 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🏫",
+        },
+        {
+          id: "k4",
+          cat: "koulu",
+          stage: 2,
+          title: "Jatko-opiskelupaikka mietityttää",
+          emoji: "🎓",
+          desc: "Pitäisi jo tietää haluaako lukioon vai ammattikouluun. Kaikki odottavat vastausta.",
+          cA: {
+            label: "Kuuntelen omaa tunnetta",
+            desc: "Valitset sen mikä tuntuu omalta, vaikka se yllättää muut.",
+          },
+          cB: {
+            label: "Kuuntelen muiden neuvoja",
+            desc: "Menet vanhempien tai kavereiden suositukseen. Se helpottaa painetta.",
+          },
+          fxA: {
+            vibes: { unelmat: 3, stressi: 1 },
+            skills: { rohkeus: 2, itseilmaisu: 1 },
+          },
+          fxB: {
+            vibes: { stressi: -1, kaverisuhteet: 1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🎓",
+        },
+        {
+          id: "k5",
+          cat: "koulu",
+          stage: 3,
+          title: "Opettaja haluaa puhua",
+          emoji: "😬",
+          desc: "Opettaja pyytää sinut jälkeen tunnin. Pelottaa. Kehu vai ongelma?",
+          cA: {
+            label: "Menen suoraan",
+            desc: "Kohtaat sen rohkeasti. Osoittautuu kehuksi – yllätyt.",
+          },
+          cB: {
+            label: "Keksin tekosyyn",
+            desc: "Vältät tilanteen. Jännitys jää vaivaamaan pitkään.",
+          },
+          fxA: { vibes: { fiilis: 2, stressi: -2 }, skills: { rohkeus: 2 } },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💬",
+        },
+        {
+          id: "k6",
+          cat: "koulu",
+          stage: 3,
+          title: "Haaveena taidekoulu",
+          emoji: "🎨",
+          desc: 'Olet haaveillut taidekoulusta mutta lähipiiri pitää sitä "epärealistisena".',
+          cA: {
+            label: "Haen silti",
+            desc: "Teet hakemuksen. Se vaatii rohkeutta ja saatat kuulla kritiikkiä.",
+          },
+          cB: {
+            label: 'Haen "järkevämpään"',
+            desc: "Valitset turvallisemman vaihtoehdon. Unelma jää takaraivoon.",
+          },
+          fxA: {
+            vibes: { unelmat: 3, stressi: 2, fiilis: 1 },
+            skills: { rohkeus: 3, itseilmaisu: 1 },
+          },
+          fxB: {
+            vibes: { stressi: -1, unelmat: -2 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🎨",
+        },
+        {
+          id: "kiu1",
+          cat: "kaverit",
+          stage: 1,
+          title: "Kaveria kiusataan",
+          emoji: "😢",
+          desc: "Näet miten luokkakaveriasi nolaillaan jatkuvasti välitunnilla. Muut nauravat.",
+          cA: {
+            label: "Puutun tilanteeseen",
+            desc: "Menet sanomaan, että se ei ole ok. Ehkä saat kiusaajat vastaan.",
+          },
+          cB: {
+            label: "En puutu – liian riskialtista",
+            desc: "Tuntuu pahalta mutta jatkat matkaasi. Kaveri jää yksin.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 2, fiilis: 2, stressi: 2 },
+            skills: { rohkeus: 3, empatia: 2 },
+          },
+          fxB: { vibes: { fiilis: -2, stressi: 1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🦸",
+        },
+        {
+          id: "kiu2",
+          cat: "kaverit",
+          stage: 1,
+          title: "Sinua kiusataan",
+          emoji: "💔",
+          desc: "Joku levittää sinusta valheita sosiaalisessa mediassa. Luokassa alkaa kuiskutella.",
+          cA: {
+            label: "Ilmoitan opettajalle",
+            desc: "Kerrot aikuiselle. Se on vaikeaa mutta asia alkaa selvitä.",
+          },
+          cB: {
+            label: "Jätän huomiotta",
+            desc: "Toivot sen menevän ohi. Ehkä menee – ehkä ei.",
+          },
+          fxA: {
+            vibes: { stressi: -1, fiilis: 1 },
+            skills: { rohkeus: 2, sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { stressi: 3, fiilis: -2, energia: -1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🛡️",
+        },
+        {
+          id: "kiu3",
+          cat: "kaverit",
+          stage: 2,
+          title: "Oma porukka kiusaa",
+          emoji: "😰",
+          desc: "Oma kaveriporukkasi alkaa syrjiä yhtä jäsentä. He odottavat sinunkin osallistuvan.",
+          cA: {
+            label: "En lähde mukaan",
+            desc: "Kieltäydyt. Se voi maksaa paikkasi porukassa.",
+          },
+          cB: {
+            label: "Hiljaa hyväksyn",
+            desc: "Et puutu mutta et myöskään osallistu aktiivisesti. Kaveri kärsii.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: -1, fiilis: 2, stressi: 2 },
+            skills: { rohkeus: 3, empatia: 2 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: 1, fiilis: -2, stressi: 2 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "⚖️",
+        },
+        {
+          id: "kiu4",
+          cat: "some",
+          stage: 2,
+          title: "Nettikiusaaminen",
+          emoji: "😡",
+          desc: "Joku käy kommenteissasi solvaavasti. Julkisesti. Muut tykkäävät kommenteista.",
+          cA: {
+            label: "Vastaan takaisin",
+            desc: "Puolustat itseäsi julkisesti. Voi eskaloitua.",
+          },
+          cB: {
+            label: "Blokkaan ja ilmoitan",
+            desc: "Suljet sen ja ilmoitat alustalle. Viisaampaa pitkässä juoksussa.",
+          },
+          fxA: { vibes: { stressi: 3, fiilis: -1 }, skills: { rohkeus: 1 } },
+          fxB: { vibes: { stressi: -1, fiilis: 1 }, skills: { sinnikkyys: 2 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🛡️",
+        },
+        {
+          id: "p1",
+          cat: "kaverit",
+          stage: 2,
+          title: "Tupakkaa tarjotaan",
+          emoji: "🚬",
+          desc: 'Vanhempi tyyppi tarjoaa tupakkaa. Kaverit ovat ympärillä. "Kokeile vaan."',
+          cA: {
+            label: "Kieltäydyn suoraan",
+            desc: "Sanot ei. Ehkä nolottaa hetken – mutta asia on selvä.",
+          },
+          cB: {
+            label: "Kokeilen kerran",
+            desc: '"Kerran ei haittaa." Mutta miksi sen teki, mietityttää jälkeenpäin.',
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: 1 },
+            skills: { rohkeus: 2, sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: 1, fiilis: -1, stressi: 2 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🚧",
+        },
+        {
+          id: "p2",
+          cat: "kaverit",
+          stage: 2,
+          title: "Kaveri kokeilee päihteitä",
+          emoji: "⚠️",
+          desc: "Huomaat, että kaverisi on alkanut käyttää jotain. Hän pyytää sinua olemaan puhumatta.",
+          cA: {
+            label: "Kerron luotettavalle aikuiselle",
+            desc: "Rikot lupauksen mutta huolesi on aito. Kaveri voi aluksi vihata.",
+          },
+          cB: {
+            label: "Pidän lupauksen",
+            desc: "Olet lojaali mutta tilanne voi pahentua. Olo on painava.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: -1, fiilis: 1, stressi: 2 },
+            skills: { rohkeus: 2, empatia: 2 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: 1, stressi: 3, fiilis: -1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💪",
+        },
+        {
+          id: "p3",
+          cat: "ylatys",
+          stage: 2,
+          title: "Bileet ja alkoholi",
+          emoji: "🎉",
+          desc: "Olet ensimmäistä kertaa bileissä joissa on alkoholia. Kaikki juovat.",
+          cA: {
+            label: "En ota",
+            desc: "Pärjäät ilman. Hieman ulkopuolinen olo mutta pää on kirkas.",
+          },
+          cB: {
+            label: "Maistan mukana",
+            desc: "Yksi muuttuu useammaksi. Kotiin palatessa olo on sekava.",
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: 1 },
+            skills: { rohkeus: 1, sinnikkyys: 2 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: 1, energia: -2, fiilis: -1, stressi: 2 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🌙",
+        },
+        {
+          id: "r1",
+          cat: "kaverit",
+          stage: 1,
+          title: "Tykkäät jostakusta",
+          emoji: "💘",
+          desc: "Olet tajunnut tykästyneesi luokkalaiseesi. Se tuntuu hassulta ja hienolta yhtä aikaa.",
+          cA: {
+            label: "Kerron tunteistani",
+            desc: "Aloitat jutustelun ja jätät ovea raolleen. Saattaa johtaa johonkin.",
+          },
+          cB: {
+            label: "En uskalla sanoa mitään",
+            desc: "Pidät tunteet sisällä. Turvallista – mutta ei tapahdu mitään.",
+          },
+          fxA: {
+            vibes: { unelmat: 2, stressi: 2, fiilis: 1 },
+            skills: { rohkeus: 2, itseilmaisu: 1 },
+          },
+          fxB: { vibes: { stressi: 1, unelmat: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💌",
+        },
+        {
+          id: "r2",
+          cat: "kaverit",
+          stage: 2,
+          title: "Ensimmäinen treffipyyntö",
+          emoji: "🌹",
+          desc: "Sait treffikutsun. Haluaisit mennä mutta jännittää todella paljon.",
+          cA: {
+            label: "Menen rohkeasti",
+            desc: "Menot mennyt. Jännitys katoaa yllättävän nopeasti.",
+          },
+          cB: {
+            label: "Keksin tekosyyn",
+            desc: "Jätät väliin. Olo helpottuu hetkeksi – mutta harmittaa silti.",
+          },
+          fxA: {
+            vibes: { unelmat: 2, stressi: 1, fiilis: 2 },
+            skills: { rohkeus: 2, itseilmaisu: 1 },
+          },
+          fxB: { vibes: { stressi: -1, unelmat: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🌹",
+        },
+        {
+          id: "r3",
+          cat: "kaverit",
+          stage: 2,
+          title: "Suhde loppuu",
+          emoji: "💔",
+          desc: "Seurustelukumppanisi haluaa erota. Yllätys ja se sattuu oikeasti.",
+          cA: {
+            label: "Puhun jollekin",
+            desc: "Jaat olon kaverille tai vanhemmalle. Se helpottaa yllättävän paljon.",
+          },
+          cB: {
+            label: "Käsittelen yksin",
+            desc: "Sulkeudut. Olo on raskas ja yksinäinen pidempään.",
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: -2, kaverisuhteet: 1 },
+            skills: { empatia: 1, itseilmaisu: 1 },
+          },
+          fxB: {
+            vibes: { fiilis: -2, stressi: 2, energia: -1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🩹",
+        },
+        {
+          id: "r4g",
+          cat: "kaverit",
+          stage: 3,
+          title: "Paine seurustella",
+          emoji: "👥",
+          desc: 'Kaikki kaverit tuntuvat olevan parisuhteessa. Sinulta kysytään jatkuvasti "onko sulla ketään".',
+          cA: {
+            label: "Olen ok omana itsenäni",
+            desc: "Vastaat rehellisesti. Ei ketään, ei se haittaa. Omaan tahtiin.",
+          },
+          cB: {
+            label: "Esitän ettei kiinnosta",
+            desc: "Teeskentelet välittämättömyyttä. Sisällä asia kuitenkin jää pyörimään.",
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: -1 },
+            skills: { rohkeus: 1, itseilmaisu: 2 },
+          },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "⭐",
+        },
+        {
+          id: "rt1",
+          cat: "kaverit",
+          stage: 1,
+          title: "Riita parhaasta kaverista",
+          emoji: "😤",
+          desc: "Paras kaverisi ja sinä olette eri mieltä jostakin – tilanne kärjistyi tekstiviestissä.",
+          cA: {
+            label: "Otan puhelun ja puhun",
+            desc: "Soitat heti. Selvitätte asian nopeammin kasvokkain.",
+          },
+          cB: {
+            label: "Vihastun ja hiljenen",
+            desc: "Et vastaa viesteihin. Välit jäätyvät päiviksi.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 2, stressi: -1 },
+            skills: { empatia: 2, itseilmaisu: 1 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: -2, stressi: 2, fiilis: -1 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🤝",
+        },
+        {
+          id: "rt2",
+          cat: "kaverit",
+          stage: 2,
+          title: "Fyysinen konflikti uhkaa",
+          emoji: "👊",
+          desc: "Koulun pihalla toinen tyyppi provosoi sinua. Porukka ympärillä odottaa mitä tapahtuu. (Tilanne on tuttu monille pojille)",
+          cA: {
+            label: "Poistun tilanteesta",
+            desc: "Käännät selän ja lähdet. Muutama huutaa perään. Mutta kukaan ei loukkaannu.",
+          },
+          cB: {
+            label: "En peräänny",
+            desc: "Tilanne eskaloituu. Joku voi loukkaantua – kenties sinä.",
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: 1 },
+            skills: { rohkeus: 2, sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { stressi: 3, energia: -2, fiilis: -1 },
+            skills: { rohkeus: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🕊️",
+        },
+        {
+          id: "rt3",
+          cat: "kaverit",
+          stage: 2,
+          title: "Draamaa kaveriporukassa",
+          emoji: "💬",
+          desc: "Tyttöporukkasi sisällä on menossa iso riita. Molemmat osapuolet haluavat sinut omalle puolelleen. (Tilanne on tuttu monille tytöille)",
+          cA: {
+            label: "Pysyn neutraalina",
+            desc: "Kieltäydyt asettumasta kummankaan puolelle. Ehkä molemmat vihastuvat.",
+          },
+          cB: {
+            label: "Asettun toisen puolelle",
+            desc: "Valitset. Suhde toiseen kärsii pitkäksi aikaa.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: -1, stressi: 2, fiilis: 1 },
+            skills: { rohkeus: 2, empatia: 1 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: 1, stressi: 2, fiilis: -1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "⚖️",
+        },
+        {
+          id: "rt4",
+          cat: "koti",
+          stage: 2,
+          title: "Riita vanhempien kanssa",
+          emoji: "🏠",
+          desc: "Vanhempasi kieltävät jotain mitä pidät täysin ok:na. Tilanne räjähti sanariidaksi.",
+          cA: {
+            label: "Sanon mielipiteeni rauhallisesti",
+            desc: "Kerrot näkökulmasi ilman huutamista. Se on vaikeampaa kuin luulet.",
+          },
+          cB: {
+            label: "Pamautan oven ja vetäydyn",
+            desc: "Saat purettua raivon. Mutta asia ei ratkea ja ilmapiiri on kireä.",
+          },
+          fxA: {
+            vibes: { stressi: -1, kaverisuhteet: 1 },
+            skills: { itseilmaisu: 2, empatia: 1 },
+          },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🗣️",
+        },
+        {
+          id: "s1",
+          cat: "some",
+          stage: 1,
+          title: "Postaus räjähti",
+          emoji: "📱",
+          desc: "Videopätkäsi saa yhtäkkiä tuhansia katseluja. Mitä seuraavaksi?",
+          cA: {
+            label: "Tuplaan sisällön",
+            desc: "Panostat someen enemmän. Seuraajat kasvaa mutta aika loppuu.",
+          },
+          cB: {
+            label: "Pidän satunnaista",
+            desc: "Pitää tasapainon. Kasvu hidastuu – mutta elämä jatkuu normina.",
+          },
+          fxA: {
+            vibes: { unelmat: 2, energia: -2, stressi: 2 },
+            skills: { itseilmaisu: 2 },
+          },
+          fxB: { vibes: { fiilis: 1, energia: 1 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "📲",
+        },
+        {
+          id: "s2",
+          cat: "some",
+          stage: 2,
+          title: "Ulkonäköpaineet",
+          emoji: "🪞",
+          desc: 'Some on täynnä "täydellisiä" kuvia. Alat vertailla itseäsi niihin.',
+          cA: {
+            label: "Rajoitan some-aikaa",
+            desc: "Pidät tauon. Olo paranee hitaasti mutta selvästi.",
+          },
+          cB: {
+            label: "Jatkan selailua",
+            desc: "Et pysty lopettamaan. Olo käy raskaammaksi mutta uteliaisuus voittaa.",
+          },
+          fxA: {
+            vibes: { fiilis: 2, energia: 1, stressi: -2 },
+            skills: { sinnikkyys: 2 },
+          },
+          fxB: { vibes: { fiilis: -2, stressi: 2, energia: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🌟",
+        },
+        {
+          id: "s3",
+          cat: "some",
+          stage: 3,
+          title: "Julkaisetko totuuden?",
+          emoji: "✍️",
+          desc: "Olet kirjoittanut rehellisen tekstin omista tunteistasi. Uskaltaako julkaista?",
+          cA: {
+            label: "Julkaisen",
+            desc: "Olet haavoittuvainen. Saat yllättävän paljon positiivista vastausta.",
+          },
+          cB: {
+            label: "Jätän omaksi",
+            desc: "Teksti jää sinulle. Ehkä se oli terapiaa jo kirjoittaessa.",
+          },
+          fxA: {
+            vibes: { unelmat: 2, kaverisuhteet: 2, stressi: 1 },
+            skills: { itseilmaisu: 3, rohkeus: 1 },
+          },
+          fxB: { vibes: { fiilis: 1 }, skills: { itseilmaisu: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💬",
+        },
+        {
+          id: "h1",
+          cat: "harrastus",
+          stage: 1,
+          title: "Bändi kutsuu treenehin",
+          emoji: "🎸",
+          desc: "Kaveri pyytää mukaan bändiin. Et osaa soittaa. Aloitatko alusta?",
+          cA: {
+            label: "Hyppään mukaan",
+            desc: "Aloitat kitaran alusta nolosta. Se on hauskaa ja hankalaa yhtä aikaa.",
+          },
+          cB: {
+            label: "Kieltäydyn",
+            desc: "Tuttu ja turvallinen. Ei uutta harrastusta mutta ei epäonnistumisen riskiäkään.",
+          },
+          fxA: {
+            vibes: { unelmat: 2, stressi: 1, energia: -1 },
+            skills: { rohkeus: 2, itseilmaisu: 1 },
+          },
+          fxB: { vibes: { energia: 1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🎸",
+        },
+        {
+          id: "h2",
+          cat: "harrastus",
+          stage: 2,
+          title: "Kilpailu edessä",
+          emoji: "🏅",
+          desc: "Harrastuksessasi on iso kilpailu. Tunnet olevasi valmis – ehkä.",
+          cA: {
+            label: "Ilmoittaudun",
+            desc: "Paineita, valmistautumista, adrenaliinia. Tulos on tuntematon.",
+          },
+          cB: {
+            label: "Jätän väliin",
+            desc: "Säästät itsesi paineelta. Jää hieman harmittamaan.",
+          },
+          fxA: {
+            vibes: { unelmat: 3, stressi: 2, fiilis: 1 },
+            skills: { sinnikkyys: 2, rohkeus: 1 },
+          },
+          fxB: { vibes: { stressi: -2, energia: 1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🏅",
+        },
+        {
+          id: "h3",
+          cat: "harrastus",
+          stage: 2,
+          title: "Valmentaja on epäreilu",
+          emoji: "😠",
+          desc: "Valmentajasi suosii selvästi muita. Olet parhaimmistoa mutta et pääse edustusjoukkueeseen.",
+          cA: {
+            label: "Puhun valmentajalle",
+            desc: "Varastat rohkeuden ja pyydät selityksen. Se ei ole helppoa.",
+          },
+          cB: {
+            label: "Nielaisen sen ja jatkan",
+            desc: "Pidät pääsi alas. Olo on epäoikeudenmukainen mutta tilanne jatkuu.",
+          },
+          fxA: {
+            vibes: { fiilis: 2, stressi: 1 },
+            skills: { rohkeus: 2, itseilmaisu: 2 },
+          },
+          fxB: { vibes: { fiilis: -1, stressi: 2 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💪",
+        },
+        {
+          id: "h4",
+          cat: "harrastus",
+          stage: 3,
+          title: "Löydät uuden intohimon",
+          emoji: "✨",
+          desc: 'Törmäät asiaan joka tuntuu tosi omalta. Se ei ole "koulu-asia".',
+          cA: {
+            label: "Panostan täysillä",
+            desc: "Uhraat aikaa ja energiaa. Unelma alkaa selkiytyä.",
+          },
+          cB: {
+            label: "Kokeilen kevyesti",
+            desc: "Matala kynnys. Ei niin hullua energiaa – eikä niin hullua kasvuakaan.",
+          },
+          fxA: {
+            vibes: { unelmat: 3, energia: -2, stressi: 1 },
+            skills: { rohkeus: 1, itseilmaisu: 2 },
+          },
+          fxB: {
+            vibes: { unelmat: 1, energia: 1 },
+            skills: { itseilmaisu: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💫",
+        },
+        {
+          id: "ko1",
+          cat: "koti",
+          stage: 1,
+          title: "Vanhemmat riitelevät",
+          emoji: "🏠",
+          desc: "Kotona on jännittynut ilmapiiri. Jäät vai lähdet kaverille?",
+          cA: {
+            label: "Jään kotiin",
+            desc: "Olet paikalla. Ehkä se auttaa, ehkä ei. Olo on raskas.",
+          },
+          cB: {
+            label: "Lähden kaverille",
+            desc: "Pääset pois. Fiilis paranee mutta myöhemmin tulee syyllisyys.",
+          },
+          fxA: {
+            vibes: { fiilis: -1, stressi: 2, kaverisuhteet: 1 },
+            skills: { empatia: 1 },
+          },
+          fxB: {
+            vibes: { fiilis: 1, stressi: -1, kaverisuhteet: 1 },
+            skills: { rohkeus: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🏡",
+        },
+        {
+          id: "ko2",
+          cat: "koti",
+          stage: 2,
+          title: "Sisaruksen kanssa riitaa",
+          emoji: "👦",
+          desc: "Nuorempi sisaruksesi on taas ärsyttävä. Tilanne kärjistyi ja sait syyn päähän.",
+          cA: {
+            label: "Annan anteeksi ensin",
+            desc: "Tuntuu epäreilulta mutta tilanne laukeaa nopeasti.",
+          },
+          cB: {
+            label: "Pidän pintani",
+            desc: "Oikeudenmukaista kenties, mutta kotona on kireää pitkään.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 1, fiilis: 1, stressi: -1 },
+            skills: { empatia: 2 },
+          },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🤝",
+        },
+        {
+          id: "ko3",
+          cat: "koti",
+          stage: 2,
+          title: "Vanhempi on sairas",
+          emoji: "❤️",
+          desc: "Vanhempasi on sairaana pitkään. Kotityöt jäävät sinulle. Omat menot kärsivät.",
+          cA: {
+            label: "Otan vastuun",
+            desc: "Hoidat kotia. Se on raskasta mutta tärkeää. Perhe on kiitollinen.",
+          },
+          cB: {
+            label: "Pidän omista menoista kiinni",
+            desc: "Tarvitset omaa aikaa – se on ok. Mutta syyllisyys on painava.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 2, energia: -2, stressi: 2 },
+            skills: { empatia: 2, organisointi: 1 },
+          },
+          fxB: {
+            vibes: { fiilis: -1, stressi: 2, energia: 1 },
+            skills: { sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "❤️",
+        },
+        {
+          id: "ra1",
+          cat: "raha",
+          stage: 1,
+          title: "Kesätyö vai vapaa kesä",
+          emoji: "💰",
+          desc: "Saat tarjouksen kesätyöstä. Pitkää mutta rahaa tulee.",
+          cA: {
+            label: "Otan työn",
+            desc: "Rahaa tulee. Kesä menee pitkälti töissä. Opit jotain uutta.",
+          },
+          cB: {
+            label: "Vapaa kesä",
+            desc: "Elpymistä, kavereita, harrastuksia. Syksyllä tili on tyhjä.",
+          },
+          fxA: {
+            vibes: { unelmat: 1, energia: -1 },
+            skills: { organisointi: 1, sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { fiilis: 2, energia: 2, kaverisuhteet: 1 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💵",
+        },
+        {
+          id: "ra2",
+          cat: "raha",
+          stage: 2,
+          title: "Kaveri lainaa rahaa",
+          emoji: "💸",
+          desc: 'Kaveri pyytää lainaa "vähäksi aikaa". Tiedät ettei hän ole hyvä palauttamaan.',
+          cA: {
+            label: "Lainaan",
+            desc: "Autat. Mutta rahat ehkä jäävät tulematta ja kaverisuhteet voivat kärsiä.",
+          },
+          cB: {
+            label: "Kieltäydyn",
+            desc: "Sanot rehellisesti miksi. Kaveri voi olla pettynyt mutta raha pysyy.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 1, stressi: 2 },
+            skills: { empatia: 1 },
+          },
+          fxB: {
+            vibes: { stressi: -1, fiilis: 1 },
+            skills: { rohkeus: 1, sinnikkyys: 1 },
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "💰",
+        },
+        {
+          id: "y1",
+          cat: "ylatys",
+          stage: 1,
+          title: "Vanhempi tarvitsee apua",
+          emoji: "🚨",
+          desc: "Äiti tai isä tarvitsee apuasi tänä viikonloppuna. Omat suunnitelmat menevät.",
+          cA: {
+            label: "Perun omat menosi",
+            desc: "Peruut omat menosi. Perhe helpottuu.",
+          },
+          cB: {
+            label: "Selitän olevani kiireinen",
+            desc: "Menet omiin. Syyllisyys jää.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 2, fiilis: 1, energia: -1 },
+            skills: { empatia: 2 },
+          },
+          fxB: { vibes: { fiilis: 1, stressi: 2 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🆘",
+        },
+        {
+          id: "y2",
+          cat: "ylatys",
+          stage: 2,
+          title: "Uusi koulukaupunki edessä",
+          emoji: "🏙️",
+          desc: "Perhe muuttaa toiseen kaupunkiin. Kaikki kaverit jäävät taakse.",
+          cA: {
+            label: "Suhtaudun avoimesti",
+            desc: "Päätät yrittää. Uusia ihmisiä, uusia mahdollisuuksia. Silti itkettää.",
+          },
+          cB: {
+            label: "Sulkeudun",
+            desc: "Pidät vanhat kaverit some-yhteydellä. Uusiin ei synny yhteyttä.",
+          },
+          fxA: {
+            vibes: { unelmat: 1, stressi: 2, kaverisuhteet: 1 },
+            skills: { rohkeus: 2, sinnikkyys: 1 },
+          },
+          fxB: {
+            vibes: { kaverisuhteet: -1, stressi: 2, fiilis: -1 },
+            skills: {},
+          },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🌍",
+        },
+        {
+          id: "y3",
+          cat: "ylatys",
+          stage: 3,
+          title: "Joku paljastaa salaisuutesi",
+          emoji: "😳",
+          desc: "Joku on kertonut eteenpäin jotain mitä kerroit vain yhdelle ihmiselle.",
+          cA: {
+            label: "Menen sanomaan sille ihmiselle suoraan",
+            desc: "Otat puheeksi suoraan. Vaikeaa mutta vie asiaa eteenpäin.",
+          },
+          cB: {
+            label: "En puhu mitään",
+            desc: "Pidät tiedon sisälläsi. Luottamus on silti rikki.",
+          },
+          fxA: {
+            vibes: { kaverisuhteet: 1, stressi: 1, fiilis: 1 },
+            skills: { rohkeus: 2, itseilmaisu: 1 },
+          },
+          fxB: { vibes: { stressi: 2, fiilis: -1 }, skills: { sinnikkyys: 1 } },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🔓",
+        },
+        {
+          id: "y4",
+          cat: "ylatys",
+          stage: 2,
+          title: "Tarjous – hyvä vai huono?",
+          emoji: "🤔",
+          desc: 'Tuntematon vanhempi henkilö tarjoaa sinulle "mielenkiintoista mahdollisuutta" verkossa.',
+          cA: {
+            label: "En vastaa, kerron aikuiselle",
+            desc: "Otat asian puheeksi kotona. Selviää että kyseessä oli huijaus.",
+          },
+          cB: {
+            label: "Selvitän itse lisää",
+            desc: "Uteliaisuus vie. Tilanne mutkistuu ja alkaa tuntua oudolta.",
+          },
+          fxA: {
+            vibes: { fiilis: 1, stressi: -2 },
+            skills: { rohkeus: 1, sinnikkyys: 1 },
+          },
+          fxB: { vibes: { stressi: 3, fiilis: -1 }, skills: {} },
+          cC: {
+            label: "En osaa sanoa",
+            desc: "Jätät päätöksen auki. Helpottaa hetken – mutta tilanne odottaa vastaustasi.",
+          },
+          fxC: { vibes: { stressi: -1 }, skills: {} },
+          cond: null,
+          achv: "🛡️",
+        },
+      ];
+
+      const state = {
+        v: { fiilis: 5, stressi: 4, kaverisuhteet: 5, energia: 6, unelmat: 4 },
+        sk: {
+          rohkeus: 1,
+          itseilmaisu: 1,
+          empatia: 1,
+          organisointi: 1,
+          sinnikkyys: 1,
+        },
+        tarina: [],
+        turn: 0,
+        status: "playing",
+        clv(v) {
+          return Math.max(0, Math.min(10, v));
+        },
+        cls(v) {
+          return Math.max(0, Math.min(5, v));
+        },
+        applyFx(fx) {
+          const ch = { v: {}, sk: {} };
+          for (const [k, d] of Object.entries(fx.vibes || {})) {
+            const b = this.v[k];
+            this.v[k] = this.clv(b + d);
+            ch.v[k] = { b, a: this.v[k], d };
+          }
+          for (const [k, d] of Object.entries(fx.skills || {})) {
+            const b = this.sk[k];
+            this.sk[k] = this.cls(b + d);
+            ch.sk[k] = { b, a: this.sk[k], d };
+          }
+          return ch;
+        },
+        checkWL() {
+          if (Object.values(this.v).filter((v) => v === 0).length >= 2) {
+            this.status = "lost";
+            return "lost";
+          }
+          if (GOALS.every((g) => g.ok(this))) {
+            this.status = "won";
+            return "won";
+          }
+          return "playing";
+        },
+        play(card, col, choice, fx) {
+          if (!fx)
+            fx =
+              choice === "A" ? card.fxA : choice === "B" ? card.fxB : card.fxC;
+          const ch = this.applyFx(fx);
+          this.tarina.push({
+            e: card.achv,
+            t: card.title,
+            choice,
+            cl:
+              choice === "A"
+                ? card.cA.label
+                : choice === "B"
+                  ? card.cB.label
+                  : card.cC.label,
+            cat: card.cat,
+            ch,
+          });
+          this.turn++;
+          return { ch, st: this.checkWL() };
+        },
+        reset() {
+          Object.assign(this.v, {
+            fiilis: 5,
+            stressi: 4,
+            kaverisuhteet: 5,
+            energia: 6,
+            unelmat: 4,
+          });
+          Object.assign(this.sk, {
+            rohkeus: 1,
+            itseilmaisu: 1,
+            empatia: 1,
+            organisointi: 1,
+            sinnikkyys: 1,
+          });
+          this.tarina = [];
+          this.turn = 0;
+          this.status = "playing";
+        },
+      };
+
+      // Backend-osoite – vaihda tuotannossa omaan domainiin
+      const API_BASE =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:3001"
+          : ""; // Tyhjä = sama domain kuin peli (kun server tarjoaa myös pelin)
+
+      async function getAI() {
+        // Lähetä pelkästään tarvittava data backendille – ei API-avainta selaimessa
+        const payload = {
+          tarina: state.tarina.map((t) => ({
+            e: t.e,
+            cat: t.cat,
+            t: t.t,
+            choice: t.choice || "A",
+            cl: t.cl,
+          })),
+          vibes: state.v,
+          skills: state.sk,
+        };
+
+        const r = await fetch(API_BASE + "/api/feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          throw new Error(err.error || "Palvelinvirhe " + r.status);
+        }
+
+        const data = await r.json();
+        return data.feedback || "Palautteen lataaminen ei onnistunut.";
+      }
+      function parseAI(text) {
+        const secs = [
+          { k: "🌟 VAHVUUTESI", c: "#EAF2EC", bc: "#1D9E75" },
+          { k: "🤔 POHDITTAVAA", c: "#FAEEDA", bc: "#BA7517" },
+          { k: "💡 SINUSTA", c: "#EEEDFE", bc: "#534AB7" },
+          { k: "⭐ MUISTA TÄMÄ", c: "#FBEAF0", bc: "#D4537E" },
+        ];
+        let html = "";
+        secs.forEach((s, i) => {
+          const st = text.indexOf(s.k);
+          if (st === -1) return;
+          const nexts = secs
+            .slice(i + 1)
+            .map((ns) => text.indexOf(ns.k, st + 1))
+            .filter((p) => p > -1);
+          const en = nexts.length ? Math.min(...nexts) : text.length;
+          const content = text.slice(st + s.k.length, en).trim();
+          html += `<div class="aisec" style="background:${s.c};border-color:${s.bc}"><div class="aisecl" style="color:${s.bc}">${s.k}</div><div class="aisect">${content.replace(/\n/g, "<br>")}</div></div>`;
+        });
+        return (
+          html || `<div class="aisect">${text.replace(/\n/g, "<br>")}</div>`
+        );
+      }
+
+      async function showAI() {
+        const ov = document.getElementById("aimov"),
+          ct = document.getElementById("aict");
+        document.getElementById("ald").style.display = "flex";
+        document.getElementById("ar").style.display = "none";
+        ov.classList.add("vis");
+        setTimeout(() => ct.classList.add("ent"), 20);
+        const btn = document.getElementById("aibtn");
+        btn.disabled = true;
+        btn.classList.add("loading");
+        try {
+          const txt = await getAI();
+          document.getElementById("ald").style.display = "none";
+          const r = document.getElementById("ar");
+          r.innerHTML = parseAI(txt);
+          r.style.display = "block";
+        } catch (e) {
+          document.getElementById("ald").style.display = "none";
+          document.getElementById("ar").innerHTML =
+            '<div class="aisect" style="color:#888">Palautteen lataaminen ei onnistunut.</div>';
+          document.getElementById("ar").style.display = "block";
+        }
+        btn.disabled = false;
+        btn.classList.remove("loading");
+      }
+
+      const ui = {
+        init() {
+          this.cols();
+          this.vibes();
+          this.skills();
+          this.goals();
+          this.tarina();
+        },
+        cols() {
+          const b = document.getElementById("board");
+          b.innerHTML = "";
+          COLS.forEach((c) => {
+            const el = document.createElement("div");
+            el.className = "col";
+            el.innerHTML = `<div class="chd"><div class="cdot" style="background:${c.d}"></div><span class="clbl" style="color:${c.c}">${c.l}</span></div><div class="cz" data-cid="${c.id}"><div class="dh">Vedä tähän</div></div>`;
+            b.appendChild(el);
+          });
+        },
+        vibes() {
+          const p = document.getElementById("vp");
+          if (!p) return;
+          p.innerHTML = Object.entries(VIBES)
+            .map(
+              ([k, v]) =>
+                `<div class="vi"><div class="vr"><span style="font-size:12px">${v.e}</span><span class="vn">${v.l}</span><span class="vv">${state.v[k]}</span></div><div class="vt"><div class="vf" id="vf-${k}" style="width:0%;background:${v.c}"></div></div></div>`,
+            )
+            .join("");
+          requestAnimationFrame(() => {
+            Object.keys(VIBES).forEach((k) => {
+              const b = document.getElementById("vf-" + k);
+              if (b) b.style.width = state.v[k] * 10 + "%";
+            });
+          });
+        },
+        skills() {
+          const p = document.getElementById("skp");
+          if (!p) return;
+          p.innerHTML = Object.entries(SKILLS)
+            .map(([k, v]) => {
+              const val = state.sk[k];
+              return `<div class="skr"><span class="skn">${v.l}</span><div class="pips">${Array.from({ length: 5 }, (_, i) => `<div class="pip ${i < val ? "on" : ""}"></div>`).join("")}</div></div>`;
+            })
+            .join("");
+        },
+        goals() {
+          const p = document.getElementById("gp");
+          if (!p) return;
+          p.innerHTML = GOALS.map((g) => {
+            const d = g.ok(state);
+            return `<div class="gi"><div class="gc ${d ? "done" : ""}">${d ? "✓" : ""}</div><span class="gt">${g.l}</span></div>`;
+          }).join("");
+        },
+        tarina() {
+          const p = document.getElementById("ticons");
+          if (!p) return;
+          const c = document.getElementById("tcnt");
+          if (!state.tarina.length) {
+            p.innerHTML =
+              '<span style="font-size:10px;color:#9A9A9A">Tarina alkaa...</span>';
+            if (c) c.textContent = "";
+            document.getElementById("aibtn").disabled = true;
+            return;
+          }
+          p.innerHTML = state.tarina
+            .map(
+              (t) => `<span class="tic" title="${t.t}: ${t.cl}">${t.e}</span>`,
+            )
+            .join("");
+          if (c) c.textContent = `${state.tarina.length} valintaa`;
+          if (state.tarina.length >= 3)
+            document.getElementById("aibtn").disabled = false;
+        },
+        addToCol(cid, card, ch) {
+          const z = document.querySelector(`[data-cid="${cid}"]`);
+          if (!z) return;
+          z.querySelector(".dh")?.remove();
+          const el = document.createElement("div");
+          el.className = "pc";
+          const col = COLS.find((c) => c.id === cid);
+          el.innerHTML = `<div class="pt" style="color:${col?.c || "#333"}">${card.emoji} ${card.title}</div><div class="pch">${ch}: ${ch === "A" ? card.cA.label : card.cB.label}</div>`;
+          z.appendChild(el);
+        },
+        renderCard(card) {
+          const ctr = document.getElementById("deck");
+          if (!ctr) return;
+          const el = document.createElement("div");
+          el.className = "dc";
+          el.id = "dc-" + card.id;
+          const col = COLS.find((c) => c.id === card.cat);
+          el.innerHTML = `<div class="dci"><div class="dct"><span class="dcc" style="color:${col?.c || "#999"}">${card.emoji} ${col?.l || card.cat}</span><span class="dcs" style="background:${col?.d};color:${col?.c}">V${card.stage}</span></div><div class="dtitle">${card.title}</div><div class="ddesc">${card.desc}</div><div class="dpills"><span class="dpill a">A: ${card.cA.label}</span><span class="dpill b">B: ${card.cB.label}</span><span class="dpill c">C: ${card.cC.label}</span></div></div>`;
+          el.setAttribute("draggable", "true");
+          dnd.attach(el, card);
+          el.addEventListener("click", () => modal.show(card, null));
+          ctr.prepend(el);
+        },
+        rmCard(id) {
+          const el = document.getElementById("dc-" + id);
+          if (el) {
+            el.style.transition = "opacity .25s,transform .25s";
+            el.style.opacity = "0";
+            el.style.transform = "translateX(12px) scale(.95)";
+            setTimeout(() => el.remove(), 250);
+          }
+        },
+        flyAchv(e, rect) {
+          const b = document.createElement("div");
+          b.className = "achv";
+          b.textContent = e;
+          b.style.cssText = `left:${rect.left + rect.width / 2}px;top:${rect.top}px`;
+          document.body.appendChild(b);
+          setTimeout(() => b.remove(), 800);
+        },
+        toast(ch) {
+          const el = document.getElementById("toast");
+          const lines = [];
+          for (const [k, c] of Object.entries(ch.v || {})) {
+            if (!c.d) continue;
+            lines.push(
+              `${VIBES[k].e}${VIBES[k].l} ${c.d > 0 ? "+" : ""}${c.d}`,
+            );
+          }
+          for (const [k, c] of Object.entries(ch.sk || {})) {
+            if (!c.d) continue;
+            lines.push(`⭐${SKILLS[k].l} +${c.d}`);
+          }
+          if (!lines.length) return;
+          el.innerHTML = lines.join(" · ");
+          el.classList.add("vis");
+          clearTimeout(el._t);
+          el._t = setTimeout(() => el.classList.remove("vis"), 2500);
+        },
+        turn() {
+          const el = document.getElementById("vturn");
+          if (el) el.textContent = `Vuoro ${state.turn}`;
+        },
+        end(won) {
+          document.getElementById("etit").textContent = won
+            ? "🌟 Vuosi sujui!"
+            : "😔 Voimat loppui";
+          document.getElementById("emsg").textContent = won
+            ? `Tavoitteet saavutettu ${state.turn} vuorossa! Tarinasi: ${state.tarina.map((t) => t.e).join(" ")}`
+            : "Kaksi mittaria romahti. Jokainen vuosi opettaa.";
+          document.getElementById("endov").classList.add("vis");
+        },
+        update() {
+          this.vibes();
+          this.skills();
+          this.goals();
+          this.tarina();
+        },
+      };
+
+      const dnd = {
+        cur: null,
+        cc: null,
+        init() {
+          document.addEventListener("dragover", (e) => {
+            const z = e.target.closest(".cz");
+            if (!z) return;
+            e.preventDefault();
+            document
+              .querySelectorAll(".cz")
+              .forEach((z2) => z2.classList.remove("over"));
+            z.classList.add("over");
+          });
+          document.addEventListener("dragleave", (e) => {
+            const z = e.target.closest(".cz");
+            if (z && !z.contains(e.relatedTarget)) z.classList.remove("over");
+          });
+          document.addEventListener("drop", (e) => {
+            const z = e.target.closest(".cz");
+            if (!z || !this.cc) return;
+            e.preventDefault();
+            document
+              .querySelectorAll(".cz")
+              .forEach((z2) => z2.classList.remove("over", "elig"));
+            modal.show(this.cc, z.dataset.cid);
+          });
+        },
+        attach(el, card) {
+          el.addEventListener("dragstart", (e) => {
+            this.cur = el;
+            this.cc = card;
+            el.classList.add("drag");
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", card.id);
+            document
+              .querySelectorAll(".cz")
+              .forEach((z) => z.classList.add("elig"));
+          });
+          el.addEventListener("dragend", () => {
+            el.classList.remove("drag");
+            this.cur = null;
+            this.cc = null;
+            document
+              .querySelectorAll(".cz")
+              .forEach((z) => z.classList.remove("elig", "over"));
+          });
+        },
+      };
+
+      const modal = {
+        card: null,
+        col: null,
+        fx(fx) {
+          const items = [];
+          for (const [k, d] of Object.entries(fx.vibes || {})) {
+            if (!d) continue;
+            items.push(
+              `<span class="${d > 0 ? "fp" : "fn"}">${VIBES[k].e}${VIBES[k].l} ${d > 0 ? "+" : ""}${d}</span>`,
+            );
+          }
+          for (const [k, d] of Object.entries(fx.skills || {})) {
+            if (!d) continue;
+            items.push(`<span class="fp">⭐${SKILLS[k].l} +${d}</span>`);
+          }
+          return items.length
+            ? items.join("")
+            : '<span class="fz">Ei välitöntä vaikutusta</span>';
+        },
+        show(card, cid) {
+          this.card = card;
+          this.col = cid;
+          const ov = document.getElementById("mov"),
+            ct = document.getElementById("mct");
+          const col = cid
+            ? COLS.find((c) => c.id === cid)
+            : COLS.find((c) => c.id === card.cat);
+          ct.innerHTML = `<div class="mhd" style="border-left:3px solid ${col?.c || "#534AB7"}"><div class="mcat" style="color:${col?.c || "#999"}">${card.emoji} ${col?.l || card.cat} · Vaihe ${card.stage}</div><div class="mtit">${card.title}</div><div class="mdesc">${card.desc}</div></div><div class="mchoices"><button class="mcard ma" id="mbA"><div class="mctag">Vaihtoehto A</div><div class="mclbl">${card.cA.label}</div><div class="mcdesc">${card.cA.desc}</div><div class="mfx">${this.fx(card.fxA)}</div></button><button class="mcard mb" id="mbB"><div class="mctag">Vaihtoehto B</div><div class="mclbl">${card.cB.label}</div><div class="mcdesc">${card.cB.desc}</div><div class="mfx">${this.fx(card.fxB)}</div></button><button class="mcard mc" id="mbC"><div class="mctag">Vaihtoehto C</div><div class="mclbl">${card.cC.label}</div><div class="mcdesc">${card.cC.desc}</div><div class="mfx">${this.fx(card.fxC)}</div></button></div><button class="mcancel" id="mcancel">← Takaisin</button>`;
+          document
+            .getElementById("mbA")
+            .addEventListener("click", () => this.choose("A"));
+          document
+            .getElementById("mbB")
+            .addEventListener("click", () => this.choose("B"));
+          document
+            .getElementById("mbC")
+            .addEventListener("click", () => this.choose("C"));
+          document
+            .getElementById("mcancel")
+            .addEventListener("click", () => this.close());
+          ov.classList.add("vis");
+          setTimeout(() => ct.classList.add("ent"), 20);
+        },
+        choose(ch) {
+          if (!this.card) return;
+          const btn = document.getElementById("mb" + ch);
+          btn?.classList.add("sel");
+          const card = this.card;
+          const cid = this.col || card.cat;
+          const rect = btn?.getBoundingClientRect();
+          setTimeout(() => {
+            this.close();
+            const fx = ch === "A" ? card.fxA : ch === "B" ? card.fxB : card.fxC;
+            const { ch: changes, st } = state.play(card, cid, ch, fx);
+            ui.addToCol(cid, card, ch);
+            ui.rmCard(card.id);
+            ui.toast(changes);
+            ui.turn();
+            ui.update();
+            if (rect) ui.flyAchv(card.achv, rect);
+            if (st === "lost") setTimeout(() => ui.end(false), 400);
+            else if (st === "won") setTimeout(() => ui.end(true), 400);
+            else setTimeout(() => game.drawNext(), 350);
+          }, 180);
+        },
+        close() {
+          const ov = document.getElementById("mov"),
+            ct = document.getElementById("mct");
+          ct.classList.remove("ent");
+          setTimeout(() => ov.classList.remove("vis"), 180);
+          this.card = null;
+          this.col = null;
+        },
+      };
+
+      const game = {
+        deck: [],
+        hand: [],
+        hs: 5,
+        init() {
+          this.deck = this.shuf([...CARDS]);
+          ui.init();
+          dnd.init();
+          this.deal();
+          ui.turn();
+          document
+            .getElementById("vrestart")
+            .addEventListener("click", () => this.restart());
+          document
+            .getElementById("ebtn")
+            .addEventListener("click", () => this.restart());
+          document
+            .getElementById("aibtn")
+            .addEventListener("click", () => showAI());
+          document.getElementById("eaibtn").addEventListener("click", () => {
+            document.getElementById("endov").classList.remove("vis");
+            showAI();
+          });
+          document.getElementById("aicl").addEventListener("click", () => {
+            const ov = document.getElementById("aimov"),
+              ct = document.getElementById("aict");
+            ct.classList.remove("ent");
+            setTimeout(() => ov.classList.remove("vis"), 200);
+          });
+        },
+        shuf(arr) {
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        },
+        deal() {
+          document.getElementById("deck").innerHTML = "";
+          this.hand = [];
+          for (let i = 0; i < Math.min(this.hs, this.deck.length); i++)
+            this.drawNext(false);
+        },
+        drawNext(single = true) {
+          if (!this.deck.length) return;
+          const card = this.deck.shift();
+          this.hand.push(card);
+          ui.renderCard(card);
+          if (single && this.hand.length > this.hs) {
+            const old = this.hand.shift();
+            ui.rmCard(old.id);
+          }
+        },
+        restart() {
+          state.reset();
+          document.getElementById("endov").classList.remove("vis");
+          ui.cols();
+          ui.vibes();
+          ui.skills();
+          ui.goals();
+          ui.tarina();
+          ui.turn();
+          this.deck = this.shuf([...CARDS]);
+          this.deal();
+        },
+      };
+
+      document.addEventListener("DOMContentLoaded", () => game.init());
+    </script>
+  </body>
+</html>
