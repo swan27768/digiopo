@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kadonnut motivaatio – Opettajan ohje</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap");
+
+      :root {
+        --teal: #0d8a7a;
+        --teal2: #4ee1a0;
+        --violet: #5b2c6f;
+        --pastel: #c9a9e1;
+        --beige: #faf7f2;
+        --white: #ffffff;
+        --text: #2c2c2c;
+        --muted: #666;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Nunito Sans", sans-serif;
+        background: var(--beige);
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      /* ---- HEADER ---- */
+      header {
+        background: var(--teal);
+        color: #fff;
+        padding: 3rem 2rem 2.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: -5%;
+        width: 110%;
+        height: 60px;
+        background: var(--beige);
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      }
+      header .label {
+        display: inline-block;
+        background: var(--teal2);
+        color: var(--teal);
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.3rem 1rem;
+        border-radius: 2rem;
+        margin-bottom: 1rem;
+      }
+      header h1 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        letter-spacing: -0.01em;
+        margin-bottom: 0.5rem;
+      }
+      header p {
+        font-size: 1.05rem;
+        opacity: 0.88;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      /* ---- LAYOUT ---- */
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 4rem;
+      }
+
+      /* ---- SISÄLLYSLUETTELO ---- */
+      .toc {
+        background: var(--white);
+        border-radius: 1rem;
+        padding: 1.5rem 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 4px 20px rgba(91, 44, 111, 0.08);
+      }
+      .toc h2 {
+        font-family: "Nunito", sans-serif;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--violet);
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .toc ol {
+        padding-left: 1.3rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.2rem 1.5rem;
+      }
+      .toc a {
+        color: var(--teal);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      /* ---- OSIOT ---- */
+      section {
+        margin-bottom: 3rem;
+        scroll-margin-top: 1rem;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+      .section-num {
+        background: var(--teal);
+        color: #fff;
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 1rem;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .section-header h2 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--teal);
+      }
+
+      h3 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--violet);
+        margin: 1.5rem 0 0.6rem;
+      }
+
+      p {
+        margin-bottom: 0.75rem;
+      }
+
+      ul,
+      ol {
+        padding-left: 1.4rem;
+        margin-bottom: 0.75rem;
+      }
+      li {
+        margin-bottom: 0.35rem;
+      }
+
+      /* ---- HAHMOTAULUKKO ---- */
+      .hahmo-taulukko {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0 1.5rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(91, 44, 111, 0.09);
+      }
+      .hahmo-taulukko thead tr {
+        background: var(--teal);
+        color: #fff;
+      }
+      .hahmo-taulukko th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+      }
+      .hahmo-taulukko td {
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        border-bottom: 1px solid #f0e8fa;
+        vertical-align: top;
+      }
+      .hahmo-taulukko tbody tr:nth-child(odd) {
+        background: var(--white);
+      }
+      .hahmo-taulukko tbody tr:nth-child(even) {
+        background: #faf6ff;
+      }
+      .hahmo-taulukko .avainviesti {
+        font-style: italic;
+        color: var(--teal);
+        font-weight: 600;
+      }
+      .hahmo-taulukko .nimi {
+        font-weight: 700;
+        color: var(--violet);
+      }
+
+      /* ---- INFOBOX ---- */
+      .infobox {
+        background: rgba(78, 225, 160, 0.12);
+        border-left: 4px solid var(--teal2);
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+        font-style: italic;
+        color: var(--teal);
+        font-weight: 600;
+      }
+
+      .infobox.violet {
+        background: rgba(201, 169, 225, 0.15);
+        border-left-color: var(--pastel);
+        color: var(--violet);
+      }
+
+      /* ---- KORTIT ---- */
+      .card {
+        background: var(--white);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 16px rgba(91, 44, 111, 0.08);
+      }
+
+      /* ---- VAIHE-STEPPER ---- */
+      .stepper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin: 1rem 0;
+      }
+      .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        background: var(--white);
+        border-radius: 0.75rem;
+        padding: 0.9rem 1.1rem;
+        box-shadow: 0 2px 10px rgba(91, 44, 111, 0.07);
+      }
+      .step-num {
+        background: var(--teal2);
+        color: var(--teal);
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 0.9rem;
+        min-width: 1.8rem;
+        height: 1.8rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .step-text strong {
+        display: block;
+        font-weight: 700;
+        color: var(--violet);
+        margin-bottom: 0.2rem;
+      }
+      .step-text span {
+        font-size: 0.93rem;
+        color: var(--muted);
+      }
+
+      /* ---- PALLIAT ---- */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .mini-card {
+        background: var(--white);
+        border-radius: 0.75rem;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 2px 10px rgba(91, 44, 111, 0.07);
+      }
+      .mini-card h4 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--teal);
+        margin-bottom: 0.4rem;
+      }
+      .mini-card ul {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+
+      /* ---- TULKINTA-KORTIT ---- */
+      .tulkinta {
+        border-left: 4px solid var(--teal);
+        background: var(--white);
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0;
+        box-shadow: 0 2px 10px rgba(91, 44, 111, 0.06);
+      }
+      .tulkinta h4 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        color: var(--violet);
+        margin-bottom: 0.4rem;
+        font-size: 1rem;
+      }
+      .tulkinta ul {
+        font-size: 0.93rem;
+        margin: 0;
+      }
+
+      /* ---- FOOTER ---- */
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+        border-top: 1px solid #e8e0f0;
+      }
+
+      /* ---- MOBIILI ---- */
+      @media (max-width: 600px) {
+        .toc ol {
+          grid-template-columns: 1fr;
+        }
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .hahmo-taulukko th:last-child,
+        .hahmo-taulukko td:last-child {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="label">Opettajan ohje</div>
+      <h1>Kadonnut motivaatio</h1>
+      <p>Interaktiivinen motivaatiotarina 13-vuotiaille</p>
+    </header>
+
+    <div class="container">
+      <!-- SISÄLLYSLUETTELO -->
+      <nav class="toc">
+        <h2>Sisältö</h2>
+        <ol>
+          <li><a href="#s1">Mitä tarina opettaa?</a></li>
+          <li><a href="#s2">Tarinan rakenne</a></li>
+          <li><a href="#s3">Motivaatiokortti ja palautus</a></li>
+          <li><a href="#s4">Miten tulkita vastauksia?</a></li>
+          <li><a href="#s5">Käyttövinkit</a></li>
+          <li><a href="#s6">Tekniset tiedot</a></li>
+        </ol>
+      </nav>
+
+      <!-- OSA 1 -->
+      <section id="s1">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <h2>Mitä tarina opettaa?</h2>
+        </div>
+
+        <p>
+          Kadonnut motivaatio on interaktiivinen tarina, jossa oppilas tutustuu
+          neljään hahmoon ja auttaa heitä löytämään motivaationsa uudelleen.
+          Matkan varrella oppilas oppii konkreettisia opiskelutaitoja ja pohtii
+          omaa motivaatiotaan.
+        </p>
+
+        <h3>Neljä hahmoa ja heidän teemansa</h3>
+        <table class="hahmo-taulukko">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Hahmo</th>
+              <th>Teema</th>
+              <th>Avainviesti oppilaalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔧</td>
+              <td class="nimi">Touhu-Topi</td>
+              <td>Aloittamisen vaikeus</td>
+              <td class="avainviesti">
+                Motivaatio tulee tekemisen myötä — ei ennen sitä.
+              </td>
+            </tr>
+            <tr>
+              <td>📱</td>
+              <td class="nimi">Digi-Dani</td>
+              <td>Häiriötekijät ja some</td>
+              <td class="avainviesti">
+                Some on suunniteltu koukuttavaksi. Voit silti ohjata huomiotasi.
+              </td>
+            </tr>
+            <tr>
+              <td>💭</td>
+              <td class="nimi">Epäröivä-Eeli</td>
+              <td>Epäonnistumisen pelko</td>
+              <td class="avainviesti">
+                Rohkeus ei tarkoita että ei jännitä — se tarkoittaa että tekee
+                silti.
+              </td>
+            </tr>
+            <tr>
+              <td>🏆</td>
+              <td class="nimi">Tavoite-Taru</td>
+              <td>Sisäinen vs. ulkoinen motivaatio</td>
+              <td class="avainviesti">
+                Ulkoinen palkinto käynnistää — oma syy vie pidemmälle.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Oppimistavoitteet</h3>
+        <ul>
+          <li>Oppilas tunnistaa omia motivaatiohaasteita ja nimeää niitä</li>
+          <li>
+            Oppilas oppii konkreettisia opiskelutaitoja (ajastimet,
+            häiriötekijöiden hallinta, rohkeat teot)
+          </li>
+          <li>
+            Oppilas pohtii omaa sisäistä motivaatiotaan:
+            <em>miksi teen asioita?</em>
+          </li>
+          <li>
+            Oppilas asettaa itselleen yhden konkreettisen tavoitteen ja
+            palkinnon
+          </li>
+        </ul>
+      </section>
+
+      <!-- OSA 2 -->
+      <section id="s2">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <h2>Tarinan rakenne</h2>
+        </div>
+
+        <div class="infobox">
+          Kansi → Prologi (hahmot esitellään) → Alku (motivaatio katoaa) →
+          Oppilas valitsee 1–4 hahmoa → Lopputehtävä → Lataa motivaatiokortti
+        </div>
+
+        <h3>Jokaisen hahmon polku (3 vaihetta)</h3>
+        <div class="stepper">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <strong>Tilanne</strong>
+              <span
+                >Oppilas tunnistaa hahmon haasteen ja samaistuu. Kolme
+                vastausvaihtoehtoa johtavat erilaisiin intro-teksteihin.</span
+              >
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Keinot</strong>
+              <span
+                >Oppilas valitsee hahmolllle opiskelutavan viidestä
+                vaihtoehdosta. Valinta tallentuu.</span
+              >
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <strong>Oivallus</strong>
+              <span
+                >Teksti muuttuu oppilaan valitseman tavan mukaan — jokainen
+                oppilas saa personoidun oivalluksen. Sisältää oman tehtävän ja
+                palkinnon valinnan.</span
+              >
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-text">
+              <strong>Lopputehtävä</strong>
+              <span
+                >Oppilas kirjoittaa oman valintansa jatkoon + salainen tehtävä
+                kotiin (ei tallennu opettajalle).</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="infobox violet">
+          Oppilas voi valita 1–4 hahmoa haluamassaan järjestyksessä ennen kuin
+          siirtyy Loppu-sivulle. Suositellaan vähintään 2 hahmoa.
+        </div>
+      </section>
+
+      <!-- OSA 3 -->
+      <section id="s3">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <h2>Motivaatiokortti ja palautus</h2>
+        </div>
+
+        <p>
+          Tarinan lopussa oppilas lataa oman motivaatiokorttinsa
+          <strong>.txt-tiedostona</strong>. Tiedosto sisältää:
+        </p>
+        <ul>
+          <li>Valitut opiskelutavat (mitä hahmoa valitsi)</li>
+          <li>Omat tekstivastaukset (mitä itse kirjoitti)</li>
+          <li>Omat valinnat jatkoon</li>
+          <li>Valitun palkinnon</li>
+        </ul>
+
+        <div class="infobox">
+          🔐 Salainen tehtävä EI tallennu motivaatiokorttiin — se on
+          tarkoituksella vain oppilaan omaa tietoa.
+        </div>
+
+        <h3>Palautusohjeet (tarinan lopussa oppilaalle)</h3>
+        <ol>
+          <li>Klikkaa <strong>Lataa motivaatiokortti</strong> -nappia</li>
+          <li>
+            Tiedosto tallentuu nimellä <strong>motivaatiokortti.txt</strong>
+          </li>
+          <li>Avaa Google Classroom</li>
+          <li>Lisää tiedosto tehtävään liitteeksi ja palauta</li>
+        </ol>
+      </section>
+
+      <!-- OSA 4 -->
+      <section id="s4">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <h2>Miten tulkita vastauksia?</h2>
+        </div>
+
+        <p>
+          Motivaatiokortti antaa ikkunan oppilaan sisäiseen maailmaan. Tässä
+          tulkintavinkkejä hahmoittain:
+        </p>
+
+        <div class="tulkinta">
+          <h4>🔧 Topin polku — Aloittamisen vaikeus</h4>
+          <ul>
+            <li>
+              Konkreettinen teko → hyvä merkki, oppilas on oikeasti pohtinut
+            </li>
+            <li>"Yritän paremmin" → voi tarvita lisätukea konkretisoinnissa</li>
+            <li>
+              Topin valinta → oppilaalla saattaa olla prokrastinaatiotaipumusta
+              tai ylikuormitusta
+            </li>
+          </ul>
+        </div>
+        <div class="tulkinta">
+          <h4>📱 Danin polku — Häiriötekijät</h4>
+          <ul>
+            <li>
+              "Puhelinfree-alue" → tunnistaa ongelman ja on valmis muuttamaan
+            </li>
+            <li>"25+5 tekniikka" → realistinen lähestymistapa</li>
+            <li>
+              Lyhyt tai yleinen vastaus → ei koe somea ongelmaksi, tai ei
+              uskalla myöntää
+            </li>
+          </ul>
+        </div>
+        <div class="tulkinta">
+          <h4>💭 Eelin polku — Epäonnistumisen pelko</h4>
+          <ul>
+            <li>
+              Konkreettinen pelottava tilanne → hyvä itsetuntemus, rohkea
+              vastaus
+            </li>
+            <li>
+              Hyvin yleinen vastaus → pelko saattaa olla iso, vaikeaa nimetä
+            </li>
+            <li>
+              ⚠️ Jos vastaus viittaa suureen ahdistukseen → voi olla syytä
+              keskustella kahden kesken
+            </li>
+          </ul>
+        </div>
+        <div class="tulkinta">
+          <h4>🏆 Tarun polku — Sisäinen motivaatio</h4>
+          <ul>
+            <li>Oppilas löytää oman syynsä → pedagogisesti tärkein oivallus</li>
+            <li>
+              "En tiedä miksi" → rehellinen vastaus, hyvä lähtökohta
+              keskustelulle
+            </li>
+            <li>
+              Ulkoinen syy ("hyvät numerot") → normaalia, mutta voi haastaa
+              pohtimaan lisää
+            </li>
+          </ul>
+        </div>
+
+        <h3>Miten käyttää vastauksia opetuksessa?</h3>
+        <div class="grid-2">
+          <div class="mini-card">
+            <h4>Yksilökeskustelu</h4>
+            <ul>
+              <li>Mikä hahmo tuntui tutuimmalta?</li>
+              <li>Kokeiliko oppilasta apua?</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4>Ryhmäkeskustelu</h4>
+            <ul>
+              <li>Mitä opiskelutapoja valitsitte?</li>
+              <li>Kokeilitteko niitä kotona?</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4>Seuranta viikon päästä</h4>
+            <ul>
+              <li>Kokeilitteko salaista tehtävää?</li>
+              <li>Mitä tapahtui?</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4>Portfolio</h4>
+            <ul>
+              <li>Motivaatiokortti osaksi oppimispäiväkirjaa</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- OSA 5 -->
+      <section id="s5">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <h2>Käyttövinkit</h2>
+        </div>
+
+        <h3>Ennen tunnilla käyttöä</h3>
+        <ul>
+          <li>Testaa tarina itse läpi (noin 10–15 min per hahmo)</li>
+          <li>Varmista että Google Classroom -tehtävä on auki ennen käyttöä</li>
+          <li>
+            Kerro oppilaille etukäteen:
+            <em>"Tämä ei ole koe — kirjoita rehellisesti"</em>
+          </li>
+        </ul>
+
+        <h3>Tunnilla</h3>
+        <ul>
+          <li>
+            Anna aikaa: koko tarina kestää <strong>20–45 min</strong> riippuen
+            hahmomäärästä
+          </li>
+          <li>Oppilaat voivat tehdä yksin tai pareittain</li>
+          <li>Suosittele vähintään 2 hahmopolkua</li>
+        </ul>
+
+        <h3>Tunnin jälkeen</h3>
+        <ul>
+          <li>Pyydä lataamaan ja palauttamaan motivaatiokortti</li>
+          <li>
+            Viikko myöhemmin: lyhyt kierros
+            <em>"mitä kokeilit salaisen tehtävän?"</em>
+          </li>
+          <li>Haasteellisimpiin vastauksiin voi reagoida kahden kesken</li>
+        </ul>
+
+        <div class="infobox violet">
+          💜 Muistutus: Salainen tehtävä on oppilaan oma — älä kysy siitä
+          suoraan. Anna se olla heidän oma salaisuutensa.
+        </div>
+      </section>
+
+      <!-- OSA 6 -->
+      <section id="s6">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <h2>Tekniset tiedot</h2>
+        </div>
+
+        <div class="card">
+          <ul>
+            <li><strong>Toimii:</strong> Chrome, Firefox, Edge, Safari</li>
+            <li><strong>Ei vaadi:</strong> kirjautumista</li>
+            <li>
+              <strong>Palautus:</strong> .txt-tiedosto ladataan ja palautetaan
+              Google Classroomiin
+            </li>
+            <li>
+              <strong>Kesto:</strong> 20–45 minuuttia riippuen hahmomäärästä
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      Kadonnut motivaatio — Interaktiivinen oppimistarina &nbsp;|&nbsp;
+      Opettajan ohje
+    </footer>
+  </body>
+</html>
