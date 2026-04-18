@@ -648,6 +648,107 @@
               <img src="../images/motivaatio.png" alt="Motivaatio" />
             </div>
           </div>
+          <!-- ═══════════════════════════════════════════════════
+               KADONNUT MOTIVAATIO -PELI
+               ═══════════════════════════════════════════════════ -->
+          <div
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 20px 0;
+              min-height: 280px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(124, 58, 237, 0.25);
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background-image:
+                  linear-gradient(
+                    135deg,
+                    rgba(76, 29, 149, 0.78) 0%,
+                    rgba(109, 40, 217, 0.65) 100%
+                  ),
+                  url(&quot;../images/motivaatio_kadoksissa.png&quot;);
+                background-size: cover;
+                background-position: center 65%;
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: relative;
+                z-index: 1;
+                padding: 28px 32px;
+                color: #fff;
+                width: 100%;
+              "
+            >
+              <div class="hero-badge" style="margin-bottom: 12px">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                Interaktiivinen peli
+              </div>
+              <h3
+                style="
+                  margin: 0 0 8px;
+                  font-size: clamp(1.2rem, 3vw, 1.6rem);
+                  font-weight: 800;
+                  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+                "
+              >
+                Kadonnut motivaatio
+              </h3>
+              <p
+                style="
+                  margin: 0 0 20px;
+                  font-size: 15px;
+                  line-height: 1.6;
+                  opacity: 0.92;
+                  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                  max-width: 480px;
+                "
+              >
+                Motivaatio on kadonnut – löydätkö sen? Pelaa ja löydä omat
+                keinosi jaksamiseen.
+              </p>
+              <button
+                class="btn-hero"
+                onclick="avaaMotivaatiopeli()"
+                aria-haspopup="dialog"
+              >
+                Aloita peli
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="motivaatiopelijContainer"
+            class="interactive-wrapper"
+            style="display: none"
+          >
+            <div class="peli-sulje-rivi">
+              <button class="peli-sulje-btn" onclick="suljeMotivaatiopeli()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje peli
+              </button>
+            </div>
+            <iframe
+              src="../pelit/kadonnut_motivaatio/index.html"
+              style="
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                border: none;
+                border-radius: 14px;
+              "
+              title="Kadonnut motivaatio -peli"
+            ></iframe>
+          </div>
+          <!-- ═══════════════════════════════════════════════════ -->
+
           <div class="tasks-section">
             <div
               class="task-list"
@@ -808,6 +909,37 @@
         peli.style.display = "none";
         document
           .getElementById("opiskelutaidot")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      /* ── Kadonnut motivaatio -peli ── */
+      function avaaMotivaatiopeli() {
+        const container = document.getElementById("motivaatiopelijContainer");
+        container.style.display = "block";
+        container.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function suljeMotivaatiopeli() {
+        const container = document.getElementById("motivaatiopelijContainer");
+        const iframe = container.querySelector("iframe");
+        if (iframe) {
+          // 1) Lähetä postMessage pelille → peli tyhjentää oman localStoragen
+          try {
+            iframe.contentWindow.postMessage("resetPeli", "*");
+          } catch (e) {}
+          // 2) Pakota iframe-reload: tyhjä → alkuperäinen src
+          //    Tämä nollaa pelin tilan riippumatta originista
+          const pelisrc = iframe.getAttribute("src");
+          iframe.src = "about:blank";
+          setTimeout(function () {
+            iframe.src = pelisrc;
+            container.style.display = "none";
+          }, 120);
+        } else {
+          container.style.display = "none";
+        }
+        document
+          .getElementById("mina-oppijana")
           .scrollIntoView({ behavior: "smooth" });
       }
 
