@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuorten toimintaa – kevyt upotusversio</title>
+    <style>
+      :root {
+        --bg: #f7f9fc;
+        --surface: #ffffff;
+        --text: #17324d;
+        --muted: #5b7289;
+        --primary: #1565c0;
+        --primary-dark: #0d47a1;
+        --accent: #eef5ff;
+        --accent-red: #fff1f1;
+        --red: #c62828;
+        --red-dark: #8e1b1b;
+        --border: #d9e4ef;
+        --shadow: 0 6px 18px rgba(23, 50, 77, 0.08);
+        --radius: 16px;
+        --maxw: 1080px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+      }
+
+      a {
+        color: var(--primary-dark);
+        text-decoration: none;
+      }
+
+      a:hover,
+      a:focus {
+        text-decoration: underline;
+      }
+
+      .wrap {
+        width: min(100% - 1rem, var(--maxw));
+        margin: 0 auto;
+        padding: 1rem 0;
+      }
+
+      .intro {
+        margin-bottom: 1rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        margin-bottom: 0.4rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.4rem;
+      }
+
+      h3 {
+        font-size: 1.08rem;
+        margin-bottom: 0.35rem;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 0.9rem;
+        grid-template-columns: repeat(12, 1fr);
+      }
+
+      .card {
+        grid-column: span 6;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1rem;
+        height: 100%;
+      }
+
+      .tip-card {
+        grid-column: span 4;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-bottom: 0.6rem;
+        padding: 0.28rem 0.65rem;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--primary-dark);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+
+      .badge-red {
+        background: var(--accent-red);
+        color: var(--red-dark);
+      }
+
+      ul {
+        margin: 0.75rem 0 0;
+        padding-left: 1rem;
+      }
+
+      li + li {
+        margin-top: 0.35rem;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin-top: 0.9rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        font-weight: 700;
+        transition:
+          transform 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        transform: translateY(-1px);
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background: #0f58ad;
+      }
+
+      .btn-red {
+        background: var(--red);
+        color: #fff;
+      }
+
+      .btn-red:hover,
+      .btn-red:focus {
+        background: #ad2323;
+      }
+
+      .search-box {
+        background: #fff;
+        border: 1px dashed var(--border);
+        border-radius: 14px;
+        padding: 0.9rem;
+        margin-top: 0.8rem;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: #f2f6fb;
+        border-radius: 8px;
+        padding: 0.1rem 0.35rem;
+        color: #16324d;
+      }
+
+      .note {
+        margin-top: 1rem;
+        padding: 0.9rem 1rem;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .section {
+        margin-top: 1.2rem;
+      }
+
+      @media (max-width: 900px) {
+        .card,
+        .tip-card {
+          grid-column: span 12;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="intro">
+        <h1>Mistä löydän toimintaa?</h1>
+        <p>
+          Jos etsit 4H:n kaltaista toimintaa, nämä vaihtoehdot ovat hyvä alku
+          13–16-vuotiaalle nuorelle.
+        </p>
+      </section>
+
+      <section>
+        <div class="grid">
+          <article class="card">
+            <div class="badge">Kerhot, projektit ja nuorten toiminta</div>
+            <h3>4H</h3>
+            <p>
+              4H tarjoaa kerhoja, kursseja, leirejä, projekteja ja monilla
+              paikkakunnilla myös nuorten työelämä- ja yrittäjyystoimintaa.
+            </p>
+            <ul>
+              <li>Säännöllistä toimintaa</li>
+              <li>Paikallisyhdistyksiä eri puolilla Suomea</li>
+              <li>
+                Sopii nuorelle, joka haluaa ryhmän tai tekemistä vapaa-ajalle
+              </li>
+            </ul>
+            <div class="button-row">
+              <a
+                class="btn btn-primary"
+                href="https://www.4h.fi/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa 4H</a
+              >
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge">Retket, ryhmä ja tekemällä oppiminen</div>
+            <h3>Partio</h3>
+            <p>
+              Partio on selkeä vaihtoehto nuorelle, joka haluaa yhteisön,
+              tekemistä ja mahdollisuuden oppia uusia taitoja.
+            </p>
+            <ul>
+              <li>Ryhmätoimintaa, retkiä ja tapahtumia</li>
+              <li>Sopii nuorelle, joka haluaa kuulua porukkaan</li>
+              <li>Toimintaa eri ikäryhmille</li>
+            </ul>
+            <div class="button-row">
+              <a
+                class="btn btn-primary"
+                href="https://www.partio.fi/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa Partio</a
+              >
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge badge-red">Yhdessä tekemistä ja auttamista</div>
+            <h3>Punainen Risti</h3>
+            <p>
+              Punaisen Ristin nuorten toiminta sopii nuorelle, joka haluaa
+              tavata muita, oppia hyödyllisiä taitoja ja tehdä jotain
+              merkityksellistä.
+            </p>
+            <ul>
+              <li>Nuorten toimintaa ja vapaaehtoisuutta</li>
+              <li>Ystävätoimintaa ja yhdessäoloa</li>
+              <li>Ensiapu- ja turvallisuustaitoja</li>
+            </ul>
+            <div class="button-row">
+              <a
+                class="btn btn-red"
+                href="https://www.punainenristi.fi/vapaaehtoiseksi/toimintaa-ja-tekemista-nuorille/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Nuorten toiminta</a
+              >
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge">Tanssi, teatteri ja kulttuuri</div>
+            <h3>Nuorisoseurat</h3>
+            <p>
+              Nuorisoseurat on hyvä vaihtoehto, jos kiinnostavat kulttuuri,
+              esiintyminen, tapahtumat tai muu yhteisöllinen tekeminen.
+            </p>
+            <ul>
+              <li>Harrastus- ja ryhmätoimintaa</li>
+              <li>Sopii luovasta tekemisestä kiinnostuneelle</li>
+              <li>Paikalliset seurat voivat olla erilaisia</li>
+            </ul>
+            <div class="button-row">
+              <a
+                class="btn btn-primary"
+                href="https://nuorisoseurat.fi/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa Nuorisoseurat</a
+              >
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="badge">Matalan kynnyksen paikka</div>
+            <h3>Nuorisotalo eli nuta</h3>
+            <p>
+              Nuorisotalo on hyvä vaihtoehto, jos haluat mennä ensin katsomaan
+              ilman isoa sitoutumista.
+            </p>
+            <ul>
+              <li>Usein maksutonta</li>
+              <li>Hengailua, pelejä, liikuntaa ja tapahtumia</li>
+              <li>
+                Paras tapa löytää oma nuta on hakea oman kunnan nuorisopalvelut
+              </li>
+            </ul>
+            <div class="search-box">
+              <strong>Kokeile hakua:</strong><br />
+              <code>oma kunta nuorisotalo</code><br />
+              <code>oma kaupunki nuorisopalvelut</code>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Punainen Risti – nuorille sopiva toiminta</h2>
+        <div class="grid" style="margin-top: 0.7rem">
+          <article class="card tip-card">
+            <h3>Nuorten toiminta</h3>
+            <p>
+              Nuorille suunnattua tekemistä, ryhmiä ja mahdollisuuksia osallistua
+              oman kiinnostuksen mukaan.
+            </p>
+            <div class="button-row">
+              <a
+                class="btn btn-red"
+                href="https://www.punainenristi.fi/vapaaehtoiseksi/toimintaa-ja-tekemista-nuorille/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa</a
+              >
+            </div>
+          </article>
+          <article class="card tip-card">
+            <h3>Ystävätoiminta</h3>
+            <p>
+              Tukea yksinäisyyteen, yhdessäoloa ja mahdollisuus löytää turvallinen
+              kontakti toiseen nuoreen tai vapaaehtoiseen.
+            </p>
+            <div class="button-row">
+              <a
+                class="btn btn-red"
+                href="https://rednet.punainenristi.fi/ystavananuorelle"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa</a
+              >
+            </div>
+          </article>
+          <article class="card tip-card">
+            <h3>Ensiapuohjeet</h3>
+            <p>
+              Ensiapu on hyödyllinen kansalaistaito. Sivulta voi opetella arjessa
+              tarpeellisia auttamistaitoja.
+            </p>
+            <div class="button-row">
+              <a
+                class="btn btn-red"
+                href="https://www.punainenristi.fi/ensiapu/ensiapuohjeet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Avaa</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section style="margin-top: 1rem">
+        <h2>Mikä voisi sopia minulle?</h2>
+        <div class="grid" style="margin-top: 0.7rem">
+          <article class="card tip-card">
+            <h3>Valitse 4H tai partio</h3>
+            <p>Kun haluat kuulua porukkaan ja käydä säännöllisesti.</p>
+          </article>
+          <article class="card tip-card">
+            <h3>Valitse nuta</h3>
+            <p>Kun haluat kokeilla ensin ilman painetta.</p>
+          </article>
+          <article class="card tip-card">
+            <h3>Valitse SPR tai Nuorisoseurat</h3>
+            <p>
+              Kun haluat auttamista, tapahtumia, kulttuuria tai muuta
+              yhteisöllistä tekemistä.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <div class="note">
+        Vinkki: sinun ei tarvitse tietää heti oikeaa vaihtoehtoa. Moni löytää
+        itselleen sopivan toiminnan vasta kokeilemalla.
+      </div>
+    </div>
+  </body>
+</html

@@ -1102,7 +1102,40 @@
         <ul id="end-answers-list"></ul>
       </div>
 
-      <div class="btn-row" style="justify-content: center">
+      <!-- Latausohje oppilaalle -->
+      <div
+        class="info-card"
+        style="
+          background: #e8f4fd;
+          border-color: #003366;
+          margin-bottom: var(--space-lg);
+        "
+        aria-label="Palautusohjeet"
+      >
+        <h2 style="color: var(--color-primary)">
+          📋 Palauta tehtävä opettajalle
+        </h2>
+        <ol style="margin-top: 10px; padding-left: 20px; line-height: 2">
+          <li>Paina <strong>Lataa vastauksesi</strong> -nappia alla.</li>
+          <li>
+            Tiedosto tallentuu laitteellesi nimellä
+            <strong>robo-vastaukset.txt</strong>.
+          </li>
+          <li>Avaa Google Classroom ja palauta tiedosto tehtävään.</li>
+        </ol>
+      </div>
+
+      <div
+        class="btn-row"
+        style="justify-content: center; gap: 16px; flex-wrap: wrap"
+      >
+        <button
+          class="btn-primary"
+          style="background: #003366"
+          onclick="downloadAnswers()"
+        >
+          ⬇️ Lataa vastauksesi
+        </button>
         <button class="btn-primary" onclick="restart()">
           Aloita alusta 🔄
         </button>
@@ -1317,6 +1350,38 @@
         });
 
         goTo("page-end");
+      }
+
+      // ==========================================
+      // LATAA VASTAUKSET TXT-TIEDOSTONA
+      // ==========================================
+
+      function downloadAnswers() {
+        const dream =
+          document.getElementById("dream").value.trim() || "Ei vastausta";
+        const learn =
+          document.getElementById("learn").value.trim() || "Ei vastausta";
+        const future =
+          document.getElementById("future").value.trim() || "Ei vastausta";
+
+        const date = new Date().toLocaleDateString("fi-FI");
+        const content =
+          "ROBO SAAPUU KOULUUN – Omat vastaukseni\n" +
+          "========================================\n" +
+          `Päivämäärä: ${date}\n\n` +
+          `🌟 Unelmani:\n${dream}\n\n` +
+          `📖 Mitä haluan oppia:\n${learn}\n\n` +
+          `🚀 Tulevaisuuden minä:\n${future}\n`;
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "robo-vastaukset.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
 
       function restart() {
