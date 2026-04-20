@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vahvuusmatka – Opettajan ohje</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #faf7f2;
+    --warm: #f5efe6;
+    --accent: #c8703a;
+    --accent2: #4a7c6f;
+    --accent3: #8b5e9b;
+    --rule: #d4c9bc;
+    --muted: #7a7068;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    padding: 3rem 1rem 5rem;
+  }
+
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 2rem 0 1.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    display: block;
+    border-top: 1px solid var(--ink);
+    margin-top: 0.5rem;
+  }
+  .label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  h1 span {
+    color: var(--accent);
+  }
+  .tagline {
+    margin-top: 0.7rem;
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Section headings */
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    color: var(--ink);
+  }
+
+  h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 2.8rem;
+    padding-bottom: 2.8rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  section:last-child {
+    border-bottom: none;
+  }
+
+  p + p { margin-top: 0.9rem; }
+
+  /* Info box */
+  .info-box {
+    background: var(--warm);
+    border-left: 3px solid var(--accent);
+    padding: 1.1rem 1.3rem;
+    margin: 1.4rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .info-box p { font-size: 0.96rem; color: #3a3530; }
+
+  /* Steps */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 1.2rem 0;
+  }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+  .steps li p { margin: 0; }
+
+  /* Module cards */
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  .mod {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .mod::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .mod.c1::before { background: var(--accent); }
+  .mod.c2::before { background: var(--accent2); }
+  .mod.c3::before { background: var(--accent3); }
+  .mod.c4::before { background: #3a7ab8; }
+  .mod.c5::before { background: #b85a3a; }
+  .mod-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .mod-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .mod-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  /* Tips */
+  .tips { list-style: none; margin: 1rem 0; }
+  .tips li {
+    padding: 0.4rem 0 0.4rem 1.5rem;
+    position: relative;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .tips li:last-child { border-bottom: none; }
+  .tips li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent2);
+    font-weight: 700;
+  }
+
+  /* Footer */
+  .footer {
+    border-top: 3px solid var(--ink);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-top: 3rem;
+  }
+  .footer strong { color: var(--ink); }
+
+  @media print {
+    body { padding: 0; font-size: 13px; }
+    .page { max-width: 100%; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="label">Opettajan ohje &nbsp;·&nbsp; Luokat 8–9</div>
+    <h1>Vahvuus<span>matka</span></h1>
+    <p class="tagline">Interaktiivinen tehtäväkokonaisuus omien vahvuuksien tunnistamiseen</p>
+  </header>
+
+  <!-- Mikä on Vahvuusmatka -->
+  <section>
+    <h3>Yleiskuvaus</h3>
+    <h2>Mikä on Vahvuusmatka?</h2>
+    <p>Vahvuusmatka on interaktiivinen tehtäväkokonaisuus, jossa oppilas tutkii omia vahvuuksiaan ohjattujen tehtävien, pikatestin ja kirjallisten pohdintojen avulla. Matkan lopuksi oppilas koostaa itselleen oman <strong>vahvuuskortin</strong>.</p>
+    <div class="info-box">
+      <p><strong>Ei oikeita tai vääriä vastauksia.</strong> Tehtävä on tarkoitettu itsereflektioon, ei arviointiin. Muistuta oppilaille, että heidän vastauksensa ovat henkilökohtaisia, eikä niitä tarvitse jakaa muille.</p>
+    </div>
+    
+  </section>
+
+  <!-- Rakenne -->
+  <section>
+    <h3>Sisältö</h3>
+    <h2>Tehtäväkokonaisuuden rakenne</h2>
+    <p>Vahvuusmatka koostuu kuudesta osiosta, jotka oppilas käy läpi järjestyksessä:</p>
+    <div class="modules">
+      <div class="mod c1">
+        <div class="mod-icon">⚡</div>
+        <div class="mod-title">Pikavahvuustesti</div>
+        <div class="mod-desc">5 kysymystä, joiden perusteella oppilas saa vahvuustyyppinsä: Tekijä, Ajattelija, Auttaja, Luova tai Oppija.</div>
+      </div>
+      <div class="mod c2">
+        <div class="mod-icon">💡</div>
+        <div class="mod-title">Tietopysäkit</div>
+        <div class="mod-desc">Lyhyitä tietoiskuja: mitä vahvuudet ovat ja miten ne löytää.</div>
+      </div>
+      <div class="mod c3">
+        <div class="mod-icon">✍️</div>
+        <div class="mod-title">Kirjauspysäkki</div>
+        <div class="mod-desc">Oppilas kirjoittaa oman vahvuutensa omin sanoin.</div>
+      </div>
+      <div class="mod c4">
+        <div class="mod-icon">🗺️</div>
+        <div class="mod-title">Tehtäväpysäkit</div>
+        <div class="mod-desc">Neljä pohdintatehtävää: Innostus, Oppiminen, Selviytyminen, Kaveritaidot, Tulevaisuus.</div>
+      </div>
+      <div class="mod c5">
+        <div class="mod-icon">🏅</div>
+        <div class="mod-title">Vahvuuskortti</div>
+        <div class="mod-desc">Oppilaan omat vahvuudet koottuna tulostettavaksi kortiksi.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Käyttöohje -->
+  <section>
+    <h3>Käyttöönotto</h3>
+    <h2>Näin otat Vahvuusmatkan käyttöön</h2>
+    <ol class="steps">
+        <li><p><strong>Anna alustava ohjeistus.</strong> Kerro oppilaille, että tehtävässä ei ole oikeita vastauksia ja jokainen etenee omaan tahtiinsa. Noin 20–45 minuuttia riittää hyvin.</p></li>
+      <li><p><strong>Vahvuuskortti tallentuu selaimeen.</strong> Tehtävän lopussa oppilas voi tulostaa tai tallentaa oman vahvuuskorttinsa. Muistuta, että jos selain suljetaan ilman tallennusta, tiedot häviävät.</p></li>
+    </ol>
+  </section>
+
+  <!-- Vinkit -->
+ 
+
+  <!-- Tekniset huomiot -->
+  <section>
+    <h3>Tekniset tiedot</h3>
+    <h2>Huomioitavaa</h2>
+    <p>Vahvuusmatka toimii kaikilla nykyaikaisilla selaimilla (Chrome, Firefox, Edge, Safari). Mobiililaitteet ovat tuettuja, mutta laaja näyttö on mukavampi kirjoitustehtävissä.</p>
+    <div class="info-box">
+      <p>Tehtävä ei lähetä tietoja mihinkään palvelimelle. Kaikki oppilaan vastaukset säilyvät paikallisesti selaimen muistissa kyseisen käyttökerran ajan.</p>
+    </div>
+    <p>Jos oppilas haluaa säilyttää vahvuuskorttinsa, hän voi tulostaa sen suoraan tehtävästä (<em>Tulosta vahvuuskortti</em> -painike) tai ottaa kuvakaappauksen.</p>
+  </section>
+
+  <footer class="footer">
+    <span>Vahvuusmatka &nbsp;·&nbsp; Opettajan ohje</span>
+    <span><strong>Luokat 8–9</strong> &nbsp;·&nbsp; Aika: 20–45 min</span>
+  </footer>
+
+</div>
+</body>
+</html>
