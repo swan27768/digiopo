@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supervoima-etsintä</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <style>body { margin: 0; padding: 0; }</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const { useState, useEffect } = React;
+
+// ── TILA ──────────────────────────────────────────────────────────────────────
+const initialState = {
+  vahvuudet: [],
+  laskuri: {},
+  lahteet: {},
+  tyypit: {
+    Tekija: 0,
+    Ajattelija: 0,
+    Auttaja: 0,
+    Luova: 0,
+    Seikkailija: 0
+  },
+  omaPohdinta: "",
+  kehittaminen: ""
+};
+function lisaaLahde(state, lahde, vahvuus) {
+  const s = {
+    ...state,
+    laskuri: {
+      ...state.laskuri
+    },
+    lahteet: {
+      ...state.lahteet
+    },
+    vahvuudet: [...state.vahvuudet]
+  };
+  if (!s.lahteet[lahde]) s.lahteet[lahde] = [];else s.lahteet[lahde] = [...s.lahteet[lahde]];
+  if (!s.lahteet[lahde].includes(vahvuus)) s.lahteet[lahde].push(vahvuus);
+  if (!s.vahvuudet.includes(vahvuus)) s.vahvuudet.push(vahvuus);
+  s.laskuri[vahvuus] = (s.laskuri[vahvuus] || 0) + 1;
+  return s;
+}
+function lisaaTyyppi(state, t) {
+  return {
+    ...state,
+    tyypit: {
+      ...state.tyypit,
+      [t]: (state.tyypit[t] || 0) + 1
+    }
+  };
+}
+function lisaaLahteet(state, lahde, tyyppi, ...vahvuudet) {
+  let s = lisaaTyyppi(state, tyyppi);
+  for (const v of vahvuudet) s = lisaaLahde(s, lahde, v);
+  return s;
+}
+function lisaaVahvuus(state, v) {
+  const s = {
+    ...state,
+    laskuri: {
+      ...state.laskuri
+    },
+    vahvuudet: [...state.vahvuudet]
+  };
+  if (!s.vahvuudet.includes(v)) s.vahvuudet.push(v);
+  s.laskuri[v] = (s.laskuri[v] || 0) + 1;
+  return s;
+}
+function parhaaTyyppi(tyypit) {
+  return Object.entries(tyypit).sort((a, b) => b[1] - a[1])[0][0];
+}
+function huippuVahvuudet(laskuri, n = 3) {
+  return Object.entries(laskuri).sort((a, b) => b[1] - a[1]).slice(0, n).map(e => e[0]);
+}
+
+// ── TYYPPITIETO ───────────────────────────────────────────────────────────────
+const TYYPPI = {
+  Tekija: {
+    emoji: "⚡",
+    nimi: "Tekijä",
+    kuvaus: "Sinä tartut toimeen. Kun muut miettivät, sinä jo teet. Energia ja into ovat supervoimiasi."
+  },
+  Ajattelija: {
+    emoji: "🧠",
+    nimi: "Ajattelija",
+    kuvaus: "Sinä näet asioissa syvyyttä. Sinulla on kyky ymmärtää ja ratkaista – se on harvinainen taito."
+  },
+  Auttaja: {
+    emoji: "🤝",
+    nimi: "Yhteisöllinen",
+    kuvaus: "Sinä teet muut tuntemaan itsensä nähdyiksi. Kyky ymmärtää ihmisiä on supervoima."
+  },
+  Luova: {
+    emoji: "🎨",
+    nimi: "Luova",
+    kuvaus: "Sinulla on ideoita, joita muilla ei ole. Luovuus on maailman muuttamisen taito."
+  },
+  Seikkailija: {
+    emoji: "🚀",
+    nimi: "Seikkailija",
+    kuvaus: "Sinä et pelkää uutta. Rohkeus kokeilla ja heittäytyä on supervoimasi."
+  }
+};
+
+// ── PASSAGET ──────────────────────────────────────────────────────────────────
+// Jokainen passage on { progress, render(goto, state, setState) }
+const PASSAGES = {
+  Start: {
+    progress: 0,
+    render: goto => /*#__PURE__*/React.createElement("div", {
+      className: "kansi"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "kansi-emoji"
+    }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("div", {
+      className: "kansi-logo"
+    }, "Supervoima-", /*#__PURE__*/React.createElement("br", null), "etsint\xE4"), /*#__PURE__*/React.createElement("p", {
+      className: "kansi-sub"
+    }, "Sinussa on vahvuuksia, joita et ehk\xE4 itse edes huomaa. L\xF6ydet\xE4\xE4n ne yhdess\xE4!"), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Intro")
+    }, "Aloita matka \u2192")))
+  },
+  Intro: {
+    progress: 5,
+    render: goto => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Mik\xE4 on supervoima?"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Supervoima on asia, joka on sinulle ", /*#__PURE__*/React.createElement("strong", null, "helppo ja luonteva"), ". Se voi olla taito, tapa toimia tai tapa ajatella.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), "Se ei aina tarkoita parhaana olemista \u2013 se tarkoittaa sit\xE4, mik\xE4 ", /*#__PURE__*/React.createElement("em", null, "tuntuu"), " sinulle omalta."), /*#__PURE__*/React.createElement("div", {
+      className: "tehtava-kortti"
+    }, "\uD83E\uDD14 Ajattele hetki: onko joku sanonut sinulle joskus \"olet hyv\xE4 tuossa\"? Tai huomaatko jonkun asian olevan sinulle helpompaa kuin muille?"), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("ValitseReitti")
+    }, "Selv\xE4, jatketaan! \u2192")))
+  },
+  ValitseReitti: {
+    progress: 12,
+    render: goto => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Mist\xE4 l\xE4hdet\xE4\xE4n?"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Vahvuuksia l\xF6ytyy kaikkialta. Valitse reitti, joka tuntuu sinulle sopivimmalta \u2013 tai k\xE4y kaikki l\xE4pi!"), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Harrastus")
+    }, "\uD83C\uDFC5 Harrastukseni kautta"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Lempiaine")
+    }, "\uD83D\uDCDA Lempiaineen kautta"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Kaverit")
+    }, "\uD83E\uDD1D Kaveritilanteissa"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Vaikeus")
+    }, "\uD83D\uDCAA Vaikeuksista selvi\xE4minen"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("PikaTesti")
+    }, "\u26A1 Pikapikatesti"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("OmaKirjaus")
+    }, "\u270D\uFE0F Kirjaa oma pohdinta")))
+  },
+  Harrastus: {
+    progress: 25,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83C\uDFC5 Harrastuksesi kertoo sinusta"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Mieti harrastustasi tai vapaa-ajan tekemist\xE4si. Mit\xE4 siin\xE4 tehd\xE4\xE4n? Miksi se tuntuu hyv\xE4lt\xE4?"), /*#__PURE__*/React.createElement("h3", null, "Mit\xE4 sinussa tapahtuu harrastuksessa?"), /*#__PURE__*/React.createElement(Choices, null, [["Autan muita tai teen yhteistyötä", "harrastus", "Auttaja", "Yhteistyökykyinen", "Avulias"], ["Keksin itse ratkaisuja ja tapoja", "harrastus", "Luova", "Luova", "Idearikas"], ["Harjoittelen paljon ja kehityn", "harrastus", "Tekija", "Sinnikäs", "Ahkera"], ["Suunnittelen ja mietin strategiaa", "harrastus", "Ajattelija", "Järjestelmällinen", "Analyyttinen"], ["Kokeilen uusia juttuja ja heittäydyn", "harrastus", "Seikkailija", "Rohkea", "Innostuva"]].map(([label, lahde, tyyppi, ...vv]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, ...vv));
+        goto("HarrastusJatko");
+      }
+    }, label))))
+  },
+  HarrastusJatko: {
+    progress: 35,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83C\uDFC5 Yksi juttu lis\xE4\xE4"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Kun harrastuksessa tulee vaikea tilanne tai ep\xE4onnistuminen, mit\xE4 sin\xE4 yleens\xE4 teet?"), /*#__PURE__*/React.createElement(Choices, null, [["Yritän uudelleen eri tavalla", "harrastus", "Tekija", "Sitkeä"], ["Kysyn joltain tai haen apua", "harrastus", "Auttaja", "Avunpyytäjä"], ["Mietin miksi meni pieleen", "harrastus", "Ajattelija", "Reflektoiva"], ["Pidän taukoa ja palaan asiaan", "harrastus", "Ajattelija", "Kärsivällinen"]].map(([label, lahde, tyyppi, v]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, v));
+        goto("HarrastusPalaute");
+      }
+    }, label))))
+  },
+  HarrastusPalaute: {
+    progress: 45,
+    render: (goto, state) => {
+      const loydetyt = state.lahteet.harrastus || [];
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83C\uDFC5 Harrastus tehty!"), /*#__PURE__*/React.createElement("div", {
+        className: "tulos-kortti"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, "\uD83C\uDFC5"), loydetyt.length > 0 && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "L\xF6ysit:"), " ", loydetyt.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v))), /*#__PURE__*/React.createElement("p", {
+        className: "muted"
+      }, "Harrastuksestasi l\xF6ytyi vahvuuksia \u2013 ne ovat oikeita taitoja, vaikka tuntuisivat itsest\xE4\xE4nselvyyksilt\xE4.")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("ValitseReitti")
+      }, "\uD83D\uDD0D Etsi lis\xE4\xE4 vahvuuksia"), /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: () => goto("Tulokset")
+      }, "\uD83C\uDF89 Katso tulokseni")));
+    }
+  },
+  Lempiaine: {
+    progress: 25,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCDA Lempiaineen salaisuus"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Mik\xE4 kouluaine tuntuu sinusta eniten omalta? Ei tarvitse olla se helpoin \u2013 mieti mik\xE4 kiinnostaa tai j\xE4tt\xE4\xE4 mieleen j\xE4lj\xE4n."), /*#__PURE__*/React.createElement("h3", null, "Mik\xE4 siin\xE4 aineessa on sinusta parasta?"), /*#__PURE__*/React.createElement(Choices, null, [["Opin uusia asioita ja faktat jäävät mieleen", "lempiaine", "Ajattelija", "Oppimishaluinen", "Muistava"], ["Saan tehdä jotain itse tai keksiä", "lempiaine", "Luova", "Luova", "Toimelias"], ["Tykkään selittää muille tai auttaa", "lempiaine", "Auttaja", "Ilmaisukykyinen", "Avulias"], ["Ratkaisen ongelmia tai pulmia", "lempiaine", "Ajattelija", "Analyyttinen", "Ratkaisuhakuinen"], ["Pääsen liikkumaan tai tekemään käytännössä", "lempiaine", "Tekija", "Energinen", "Toimelias"]].map(([label, lahde, tyyppi, ...vv]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, ...vv));
+        goto("LempiaineJatko");
+      }
+    }, label))))
+  },
+  LempiaineJatko: {
+    progress: 35,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCDA Oppitunnilla"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Opettaja antaa vapaan teht\xE4v\xE4n: saat itse p\xE4\xE4tt\xE4\xE4 miten teet sen. Mit\xE4 sin\xE4 teet?"), /*#__PURE__*/React.createElement(Choices, null, [["Aloitan heti, en mieti liikaa", "lempiaine", "Tekija", "Rohkea"], ["Suunnittelen ensin huolella", "lempiaine", "Ajattelija", "Järjestelmällinen"], ["Kysyn kavereilta ja teemme yhdessä", "lempiaine", "Auttaja", "Yhteistyökykyinen"], ["Keksin jotain omaa ja erilaista", "lempiaine", "Luova", "Idearikas"]].map(([label, lahde, tyyppi, v]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, v));
+        goto("LempiainePalaute");
+      }
+    }, label))))
+  },
+  LempiainePalaute: {
+    progress: 45,
+    render: (goto, state) => {
+      const loydetyt = state.lahteet.lempiaine || [];
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCDA Lempiaine tutkittu!"), /*#__PURE__*/React.createElement("div", {
+        className: "tulos-kortti"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, "\uD83D\uDCDA"), loydetyt.length > 0 && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "L\xF6ysit:"), " ", loydetyt.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v))), /*#__PURE__*/React.createElement("p", {
+        className: "muted"
+      }, "Lempiaineesi paljasti jotain t\xE4rke\xE4\xE4 sinusta oppijana. N\xE4m\xE4 vahvuudet toimivat muuallakin kuin koulussa.")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("ValitseReitti")
+      }, "\uD83D\uDD0D Etsi lis\xE4\xE4 vahvuuksia"), /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: () => goto("Tulokset")
+      }, "\uD83C\uDF89 Katso tulokseni")));
+    }
+  },
+  Kaverit: {
+    progress: 25,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83E\uDD1D Sin\xE4 ja muut"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Mieti kavereita, luokkaa tai perhett\xE4. Miten sin\xE4 toimit ihmisten kanssa?"), /*#__PURE__*/React.createElement("h3", null, "Millainen sin\xE4 olet ryhm\xE4ss\xE4?"), /*#__PURE__*/React.createElement(Choices, null, [["Kuuntelen enemmän kuin puhun", "kaverit", "Auttaja", "Kuunteleva", "Empaattinen"], ["Heitän ideoita ja ehdotuksia", "kaverit", "Luova", "Idearikas", "Innostuva"], ["Pidän huolta, että kaikki pääsevät mukaan", "kaverit", "Auttaja", "Reilu", "Kannustava"], ["Organisoin ja pidän langat käsissä", "kaverit", "Tekija", "Järjestelmällinen", "Vastuullinen"], ["Menen mukaan ja kokeilen rohkeasti", "kaverit", "Seikkailija", "Rohkea", "Sosiaalinen"]].map(([label, lahde, tyyppi, ...vv]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, ...vv));
+        goto("KaveritJatko");
+      }
+    }, label))))
+  },
+  KaveritJatko: {
+    progress: 35,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83E\uDD1D Kaverisi tarvitsee apua"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Kaverisi on surullinen tai hermostunut jostain. Mit\xE4 sin\xE4 teet?"), /*#__PURE__*/React.createElement(Choices, null, [["Kuuntelen ja yritän ymmärtää", "kaverit", "Auttaja", "Empaattinen"], ["Yritän piristää ja keksiä ratkaisun", "kaverit", "Tekija", "Optimistinen"], ["En tiedä mitä sanoa, mutta olen paikalla", "kaverit", "Auttaja", "Luotettava"], ["Ehdotan tekemistä, joka vie ajatukset muualle", "kaverit", "Luova", "Idearikas"]].map(([label, lahde, tyyppi, v]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, v));
+        goto("KaveritPalaute");
+      }
+    }, label))))
+  },
+  KaveritPalaute: {
+    progress: 45,
+    render: (goto, state) => {
+      const loydetyt = state.lahteet.kaverit || [];
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83E\uDD1D Kaveritaidot kartoitettu!"), /*#__PURE__*/React.createElement("div", {
+        className: "tulos-kortti"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, "\uD83E\uDD1D"), loydetyt.length > 0 && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "L\xF6ysit:"), " ", loydetyt.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v))), /*#__PURE__*/React.createElement("p", {
+        className: "muted"
+      }, "Tapa, jolla toimit muiden kanssa, on yksi t\xE4rkeimmist\xE4 vahvuuksista. Sit\xE4 tarvitaan kaikkialla.")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("ValitseReitti")
+      }, "\uD83D\uDD0D Etsi lis\xE4\xE4 vahvuuksia"), /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: () => goto("Tulokset")
+      }, "\uD83C\uDF89 Katso tulokseni")));
+    }
+  },
+  Vaikeus: {
+    progress: 25,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCAA Kun on vaikeaa"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "Kaikilla on joskus vaikeita hetki\xE4. Sinussa on kuitenkin jotain, joka auttaa sinua eteenp\xE4in."), /*#__PURE__*/React.createElement("h3", null, "Kun jokin tuntuu todella vaikealta, sin\xE4 yleens\xE4\u2026"), /*#__PURE__*/React.createElement(Choices, null, [["Jatkan silti, vaikka on raskasta", "vaikeus", "Tekija", "Sinnikäs", "Sitkeä"], ["Pysähdyn miettimään, mikä auttaisi", "vaikeus", "Ajattelija", "Ratkaisuhakuinen", "Reflektoiva"], ["Kerron jollekin luotettavalle", "vaikeus", "Auttaja", "Rohkea", "Avunpyytäjä"], ["Otan etäisyyttä ja yritän myöhemmin", "vaikeus", "Ajattelija", "Kärsivällinen", "Itsesäätelykykyinen"], ["Kokeilen jotain täysin erilaista", "vaikeus", "Seikkailija", "Luova", "Rohkea"]].map(([label, lahde, tyyppi, ...vv]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, ...vv));
+        goto("VaikeusJatko");
+      }
+    }, label))))
+  },
+  VaikeusJatko: {
+    progress: 38,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCAA Olet selvinnyt aiemminkin"), /*#__PURE__*/React.createElement("div", {
+      className: "tyyni-info"
+    }, "Mieti jotain tilannetta, jossa sin\xE4 selvisit vaikeudesta. Mit\xE4 teit silloin?"), /*#__PURE__*/React.createElement(Choices, null, [["Tein asiat yksi kerrallaan", "vaikeus", "Ajattelija", "Järjestelmällinen"], ["Muistin, että olen selvinnyt ennenkin", "vaikeus", "Seikkailija", "Itseluottamuksellinen"], ["Sain apua tai tukea joltain", "vaikeus", "Auttaja", "Yhteisöllinen"], ["En muista, mutta jotenkin se meni ohi", "vaikeus", "Tekija", "Sitkeä"]].map(([label, lahde, tyyppi, v]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaLahteet(s, lahde, tyyppi, v));
+        goto("VaikeusPalaute");
+      }
+    }, label))))
+  },
+  VaikeusPalaute: {
+    progress: 45,
+    render: (goto, state) => {
+      const loydetyt = state.lahteet.vaikeus || [];
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDCAA Sinnikkyys tunnistettu!"), /*#__PURE__*/React.createElement("div", {
+        className: "tulos-kortti"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, "\uD83D\uDCAA"), loydetyt.length > 0 && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "L\xF6ysit:"), " ", loydetyt.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v))), /*#__PURE__*/React.createElement("p", {
+        className: "muted"
+      }, "Vaikeuksista selvi\xE4minen vaatii oikeita vahvuuksia. Sinulla on niit\xE4 \u2013 juuri k\xE4ytit niit\xE4.")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("ValitseReitti")
+      }, "\uD83D\uDD0D Etsi lis\xE4\xE4 vahvuuksia"), /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: () => goto("Tulokset")
+      }, "\uD83C\uDF89 Katso tulokseni")));
+    }
+  },
+  PikaTesti: {
+    progress: 20,
+    render: goto => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "\u26A1 Pikapikatesti"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, "5 kysymyst\xE4, 30 sekuntia. Valitse ensimm\xE4inen vastaus, joka tulee mieleen \u2013 se on yleens\xE4 oikea!"), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("PK1")
+    }, "Menn\xE4\xE4n! \u2192")))
+  },
+  PK1: {
+    progress: 30,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "1/5 \u2013 Koulu alkaa uuden projektin. Sin\xE4\u2026"), /*#__PURE__*/React.createElement(Choices, null, [["Aloitan heti ilman suunnittelua", "Toimelias", "Tekija"], ["Suunnittelen tarkasti ensin", "Järjestelmällinen", "Ajattelija"], ["Idean hetki – keksin jotain luovaa", "Luova", "Luova"], ["Kysyn, haluaako joku tehdä yhdessä", "Yhteistyökykyinen", "Auttaja"]].map(([label, v, t]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaTyyppi(lisaaVahvuus(s, v), t));
+        goto("PK2");
+      }
+    }, label))))
+  },
+  PK2: {
+    progress: 42,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "2/5 \u2013 V\xE4litunnilla kaverisi riitelev\xE4t. Sin\xE4\u2026"), /*#__PURE__*/React.createElement(Choices, null, [["Yritän sovitella heidät yhteen", "Empaattinen", "Auttaja"], ["Mietin miksi riita alkoi", "Analyyttinen", "Ajattelija"], ["Ehdotan jotain muuta tekemistä", "Idearikas", "Luova"], ["Pysyn erillään, se ei kuulu minulle", "Itsenäinen", "Seikkailija"]].map(([label, v, t]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaTyyppi(lisaaVahvuus(s, v), t));
+        goto("PK3");
+      }
+    }, label))))
+  },
+  PK3: {
+    progress: 55,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "3/5 \u2013 Saat vapaata aikaa. Mit\xE4 teet?"), /*#__PURE__*/React.createElement(Choices, null, [["Harrastan tai teen jotain aktiivista", "Energinen", "Tekija"], ["Luen, pelaan tai ajattelen rauhassa", "Utelias", "Ajattelija"], ["Soittelen kavereille tai nähdään", "Sosiaalinen", "Auttaja"], ["Keksin jotain uutta tai kokeilen", "Rohkea", "Seikkailija"]].map(([label, v, t]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaTyyppi(lisaaVahvuus(s, v), t));
+        goto("PK4");
+      }
+    }, label))))
+  },
+  PK4: {
+    progress: 68,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "4/5 \u2013 Jossakin olet selv\xE4sti hyv\xE4. Se on\u2026"), /*#__PURE__*/React.createElement(Choices, null, [["Selittäminen tai puhuminen", "Ilmaisukykyinen", "Auttaja"], ["Keksiminen tai ongelmanratkaisu", "Luova", "Luova"], ["Aloittaminen ja tekeminen", "Toimelias", "Tekija"], ["Oppiminen tai asioiden ymmärtäminen", "Oppimishaluinen", "Ajattelija"]].map(([label, v, t]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaTyyppi(lisaaVahvuus(s, v), t));
+        goto("PK5");
+      }
+    }, label))))
+  },
+  PK5: {
+    progress: 80,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "5/5 \u2013 Mik\xE4 saa sinut tuntemaan, ett\xE4 olet parhaimmillasi?"), /*#__PURE__*/React.createElement(Choices, null, [["Kun pääsen auttamaan jotakuta", "Empaattinen", "Auttaja"], ["Kun keksin jotain omaa", "Luova", "Luova"], ["Kun saan jonkin valmiiksi", "Ahkera", "Tekija"], ["Kun ymmärrän jotain uutta", "Utelias", "Ajattelija"], ["Kun uskallan kokeilla uutta", "Rohkea", "Seikkailija"]].map(([label, v, t]) => /*#__PURE__*/React.createElement(Btn, {
+      key: label,
+      onClick: () => {
+        setState(s => lisaaTyyppi(lisaaVahvuus(s, v), t));
+        goto("PikaTestiValmis");
+      }
+    }, label))))
+  },
+  PikaTestiValmis: {
+    progress: 90,
+    render: goto => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\u26A1 Pikatesti valmis!"), /*#__PURE__*/React.createElement("div", {
+      className: "tulos-kortti"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "emoji-iso"
+    }, "\uD83C\uDFAF"), /*#__PURE__*/React.createElement("p", null, "Hienoa! Viisi kysymyst\xE4 vastattu. Sinulle kertyi jo l\xF6ydettyj\xE4 vahvuuksia.")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("ValitseReitti")
+    }, "\u21A9 Etsi viel\xE4 lis\xE4\xE4 vahvuuksia"), /*#__PURE__*/React.createElement(Btn, {
+      accent: true,
+      onClick: () => goto("Tulokset")
+    }, "\uD83C\uDF89 Katso tulokset")))
+  },
+  OmaKirjaus: {
+    progress: 85,
+    render: (goto, state, setState) => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "\u270D\uFE0F Oma pohdinta"), /*#__PURE__*/React.createElement("div", {
+      className: "tyyni-info"
+    }, "T\xE4t\xE4 ei arvostella. Kirjoita rehellisesti \u2013 tai j\xE4t\xE4 tyhj\xE4ksi, se on ok my\xF6s!"), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, /*#__PURE__*/React.createElement("h3", null, "Miss\xE4 olet mielest\xE4si hyv\xE4?"), /*#__PURE__*/React.createElement("textarea", {
+      placeholder: "Esim. olen hyv\xE4 selitt\xE4m\xE4\xE4n asioita, keksin ideoita, olen reilu...",
+      value: state.omaPohdinta,
+      onChange: e => setState(s => ({
+        ...s,
+        omaPohdinta: e.target.value
+      }))
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "kortti"
+    }, /*#__PURE__*/React.createElement("h3", null, "Mink\xE4 vahvuuden haluaisit kehitt\xE4\xE4?"), /*#__PURE__*/React.createElement("textarea", {
+      placeholder: "Esim. haluaisin olla rohkeampi tai k\xE4rsiv\xE4llisempi...",
+      value: state.kehittaminen,
+      onChange: e => setState(s => ({
+        ...s,
+        kehittaminen: e.target.value
+      }))
+    })), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+      accent: true,
+      onClick: () => goto("Tulokset")
+    }, "Tallenna ja katso tulokset \u2192"), /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => goto("Tulokset")
+    }, "Ohita ja katso tulokset")))
+  },
+  Tulokset: {
+    progress: 95,
+    render: (goto, state) => {
+      const tyyppi = parhaaTyyppi(state.tyypit);
+      const t = TYYPPI[tyyppi];
+      const top3 = huippuVahvuudet(state.laskuri, 3);
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "\uD83C\uDF89 Sinun supervoimasi"), /*#__PURE__*/React.createElement("div", {
+        className: "tulos-kortti"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, t.emoji), /*#__PURE__*/React.createElement("div", {
+        className: "tyyppi-palkki"
+      }, t.nimi), /*#__PURE__*/React.createElement("p", null, t.kuvaus)), top3.length > 0 && /*#__PURE__*/React.createElement("div", {
+        className: "kortti"
+      }, /*#__PURE__*/React.createElement("h3", null, "L\xF6ydetyt supervoimat:"), /*#__PURE__*/React.createElement("div", {
+        className: "vahvuus-grid"
+      }, top3.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v)))), state.vahvuudet.length > 3 && /*#__PURE__*/React.createElement("div", {
+        className: "tyyni-info"
+      }, /*#__PURE__*/React.createElement("strong", null, "Kaikki l\xF6ydetyt vahvuudet:"), /*#__PURE__*/React.createElement("br", null), state.vahvuudet.join(", ")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: () => goto("Vahvuuskortti")
+      }, "\uD83D\uDCCB Tee vahvuuskortti"), /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("ValitseReitti")
+      }, "\u21A9 Etsi lis\xE4\xE4 vahvuuksia")));
+    }
+  },
+  Vahvuuskortti: {
+    progress: 100,
+    render: (goto, state, setState) => {
+      const tyyppi = parhaaTyyppi(state.tyypit);
+      const t = TYYPPI[tyyppi];
+      const top3 = huippuVahvuudet(state.laskuri, 3);
+      const lataaAlkuperainen = () => {
+        setState(initialState);
+        goto("Start");
+      };
+      const lataaPDF = () => {
+        const script = document.createElement("script");
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+        script.onload = () => {
+          const {
+            jsPDF
+          } = window.jspdf;
+          const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+          });
+          const W = 210,
+            H = 297;
+
+          // Tausta
+          doc.setFillColor(15, 15, 26);
+          doc.rect(0, 0, W, H, "F");
+
+          // Kehys
+          doc.setDrawColor(245, 166, 35);
+          doc.setLineWidth(1.5);
+          doc.roundedRect(15, 15, W - 30, H - 30, 8, 8, "S");
+
+          // Sisäkehys
+          doc.setDrawColor(233, 69, 96);
+          doc.setLineWidth(0.4);
+          doc.roundedRect(20, 20, W - 40, H - 40, 6, 6, "S");
+
+          // Otsikko
+          doc.setFontSize(11);
+          doc.setTextColor(245, 166, 35);
+          doc.setFont("helvetica", "bold");
+          doc.text("MINUN SUPERVOIMANI", W / 2, 38, {
+            align: "center"
+          });
+
+          // Viiva otsikon alle
+          doc.setDrawColor(245, 166, 35);
+          doc.setLineWidth(0.5);
+          doc.line(40, 42, W - 40, 42);
+
+          // Tyyppi-symboli piirrettynä ympyränä (ei emojia – jsPDF ei tue niitä)
+          const symVarit = {
+            Tekija: [255, 200, 50],
+            Ajattelija: [100, 180, 255],
+            Auttaja: [80, 220, 160],
+            Luova: [220, 100, 220],
+            Seikkailija: [255, 130, 80]
+          };
+          const symVari = symVarit[tyyppi] || [200, 200, 200];
+          doc.setFillColor(...symVari);
+          doc.circle(W / 2, 57, 13, "F");
+          // Kirjain ympyrässä
+          doc.setFontSize(15);
+          doc.setTextColor(15, 15, 26);
+          doc.setFont("helvetica", "bold");
+          doc.text(t.nimi.substring(0, 2).toUpperCase(), W / 2, 61, {
+            align: "center"
+          });
+          doc.setFontSize(16);
+          doc.setTextColor(232, 232, 240);
+          doc.setFont("helvetica", "bold");
+          doc.text("Olen " + t.nimi, W / 2, 76, {
+            align: "center"
+          });
+
+          // Kuvaus
+          doc.setFontSize(9);
+          doc.setTextColor(180, 180, 200);
+          doc.setFont("helvetica", "normal");
+          const kuvausRivit = doc.splitTextToSize(t.kuvaus, W - 60);
+          doc.text(kuvausRivit, W / 2, 84, {
+            align: "center"
+          });
+
+          // Vahvuudet
+          const vahvY = 84 + kuvausRivit.length * 5 + 10;
+          doc.setFontSize(8);
+          doc.setTextColor(144, 144, 170);
+          doc.setFont("helvetica", "bold");
+          doc.text("VAHVUUTENI:", W / 2, vahvY, {
+            align: "center"
+          });
+          let tagX = 30;
+          let tagY = vahvY + 7;
+          doc.setFontSize(9);
+          top3.forEach(v => {
+            const tw = doc.getTextWidth(v) + 8;
+            if (tagX + tw > W - 30) {
+              tagX = 30;
+              tagY += 10;
+            }
+            doc.setFillColor(245, 166, 35);
+            doc.roundedRect(tagX, tagY - 5, tw, 7, 2, 2, "F");
+            doc.setTextColor(15, 15, 26);
+            doc.setFont("helvetica", "bold");
+            doc.text(v, tagX + tw / 2, tagY, {
+              align: "center"
+            });
+            tagX += tw + 4;
+          });
+          let y = tagY + 14;
+
+          // Oma pohdinta
+          if (state.omaPohdinta) {
+            doc.setDrawColor(0, 212, 170);
+            doc.setLineWidth(0.3);
+            doc.roundedRect(28, y - 4, W - 56, 22, 3, 3, "S");
+            doc.setFontSize(7.5);
+            doc.setTextColor(144, 144, 170);
+            doc.setFont("helvetica", "bold");
+            doc.text("OLEN HYVÄ:", W / 2, y + 1, {
+              align: "center"
+            });
+            doc.setFont("helvetica", "italic");
+            doc.setTextColor(220, 220, 240);
+            const pohdinRivit = doc.splitTextToSize(`"${state.omaPohdinta}"`, W - 70);
+            doc.text(pohdinRivit, W / 2, y + 7, {
+              align: "center"
+            });
+            y += 28;
+          }
+
+          // Kehittäminen
+          if (state.kehittaminen) {
+            doc.setFontSize(7.5);
+            doc.setTextColor(144, 144, 170);
+            doc.setFont("helvetica", "bold");
+            doc.text("HALUAN KEHITTÄÄ:", W / 2, y, {
+              align: "center"
+            });
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(220, 220, 240);
+            const kehRivit = doc.splitTextToSize(state.kehittaminen, W - 60);
+            doc.text(kehRivit, W / 2, y + 6, {
+              align: "center"
+            });
+            y += 14;
+          }
+
+          // Alatunniste
+          doc.setFontSize(7);
+          doc.setTextColor(80, 80, 100);
+          doc.setFont("helvetica", "normal");
+          doc.text("Supervoima-etsintä 2025", W / 2, H - 22, {
+            align: "center"
+          });
+          doc.save("vahvuuskortti.pdf");
+        };
+        document.head.appendChild(script);
+      };
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "\u2B50 Vahvuuskorttisi"), /*#__PURE__*/React.createElement("div", {
+        className: "school-card"
+      }, /*#__PURE__*/React.createElement("h2", {
+        style: {
+          color: "#f5a623",
+          marginTop: 0
+        }
+      }, "MINUN SUPERVOIMANI"), /*#__PURE__*/React.createElement("span", {
+        className: "emoji-iso"
+      }, t.emoji), /*#__PURE__*/React.createElement("div", {
+        className: "tyyppi-palkki"
+      }, "Olen ", t.nimi), /*#__PURE__*/React.createElement("div", {
+        style: {
+          margin: "1rem 0"
+        }
+      }, /*#__PURE__*/React.createElement("strong", {
+        style: {
+          color: "#9090aa",
+          fontSize: "0.85rem"
+        }
+      }, "VAHVUUTENI:"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("div", {
+        className: "vahvuus-grid"
+      }, top3.map(v => /*#__PURE__*/React.createElement("span", {
+        key: v,
+        className: "vk-tag"
+      }, v)))), state.omaPohdinta && /*#__PURE__*/React.createElement("div", {
+        style: {
+          margin: "1rem 0",
+          padding: "0.8rem",
+          background: "rgba(0,212,170,0.08)",
+          borderRadius: "12px",
+          fontStyle: "italic"
+        }
+      }, "\"", state.omaPohdinta, "\""), state.kehittaminen && /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: "0.5rem"
+        }
+      }, /*#__PURE__*/React.createElement("strong", {
+        style: {
+          color: "#9090aa",
+          fontSize: "0.85rem"
+        }
+      }, "HALUAN KEHITT\xC4\xC4:"), /*#__PURE__*/React.createElement("br", null), state.kehittaminen), /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: "1rem",
+          fontSize: "0.8rem",
+          color: "#9090aa"
+        }
+      }, "Supervoima-etsint\xE4 2025")), /*#__PURE__*/React.createElement(Choices, null, /*#__PURE__*/React.createElement(Btn, {
+        accent: true,
+        onClick: lataaPDF
+      }, "\u2B07\uFE0F Lataa PDF"), /*#__PURE__*/React.createElement(Btn, {
+        onClick: () => goto("Start")
+      }, "\u21A9 Takaisin alkuun"), /*#__PURE__*/React.createElement(Btn, {
+        danger: true,
+        onClick: lataaAlkuperainen
+      }, "\uD83D\uDDD1\uFE0F Tyhjenn\xE4 ja aloita alusta")));
+    }
+  }
+};
+
+// ── UI-KOMPONENTIT ────────────────────────────────────────────────────────────
+function Choices({
+  children
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "choices"
+  }, children);
+}
+function Btn({
+  children,
+  onClick,
+  accent,
+  danger
+}) {
+  const cls = `btn${accent ? " btn-accent" : ""}${danger ? " btn-danger" : ""}`;
+  return /*#__PURE__*/React.createElement("button", {
+    className: cls,
+    onClick: onClick
+  }, children);
+}
+function ProgressBar({
+  value
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "progress-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-fill",
+    style: {
+      width: `${value}%`
+    }
+  }));
+}
+
+// ── SOVELLUS ──────────────────────────────────────────────────────────────────
+function App() {
+  const [passage, setPassage] = useState("Start");
+  const [state, setState] = useState(initialState);
+  const [fadeKey, setFadeKey] = useState(0);
+  const goto = p => {
+    setFadeKey(k => k + 1);
+    setPassage(p);
+    window.scrollTo(0, 0);
+  };
+  const current = PASSAGES[passage];
+  if (!current) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "red",
+      padding: "2rem"
+    }
+  }, "Passage ei l\xF6ydy: ", passage);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "app"
+  }, /*#__PURE__*/React.createElement("style", null, CSS), passage !== "Start" && /*#__PURE__*/React.createElement(ProgressBar, {
+    value: current.progress
+  }), /*#__PURE__*/React.createElement("div", {
+    key: fadeKey,
+    className: "passage-content"
+  }, current.render(goto, state, setState)));
+}
+
+// ── CSS ───────────────────────────────────────────────────────────────────────
+const CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app {
+    min-height: 100vh;
+    background: #0f0f1a;
+    color: #e8e8f0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1rem 4rem;
+  }
+
+  .passage-content {
+    width: 100%;
+    max-width: 640px;
+    animation: fadeUp 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #e94560;
+    text-align: center;
+    width: 100%;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #00d4aa;
+    text-align: center;
+    width: 100%;
+  }
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #f5a623;
+    text-align: center;
+    width: 100%;
+  }
+
+  .kortti {
+    background: #16213e;
+    border: 1px solid rgba(233,69,96,0.3);
+    border-radius: 20px;
+    padding: 1.2rem 1.5rem;
+    width: 100%;
+    text-align: center;
+  }
+  .tulos-kortti {
+    background: linear-gradient(135deg, #16213e, #1a1a3e);
+    border: 2px solid #e94560;
+    border-radius: 24px;
+    padding: 1.5rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(233,69,96,0.2);
+  }
+  .tehtava-kortti {
+    background: rgba(0,212,170,0.08);
+    border: 1px dashed #00d4aa;
+    border-radius: 16px;
+    padding: 1rem 1.3rem;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+  }
+  .tyyni-info {
+    background: rgba(0,212,170,0.07);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 16px;
+    padding: 1rem 1.3rem;
+    width: 100%;
+    text-align: center;
+    color: #9090aa;
+    font-size: 0.95rem;
+  }
+  .school-card {
+    background: linear-gradient(135deg, #16213e, #1a1a3e);
+    border: 2px solid #f5a623;
+    border-radius: 24px;
+    padding: 1.5rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(245,166,35,0.2);
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    width: 100%;
+    align-items: center;
+    margin-top: 0.4rem;
+  }
+  .btn {
+    display: block;
+    background: #16213e;
+    border: 2px solid #e94560;
+    border-radius: 14px;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e8e8f0;
+    text-align: center;
+    width: 100%;
+    max-width: 480px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Nunito', sans-serif;
+  }
+  .btn:hover {
+    background: #e94560;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233,69,96,0.4);
+  }
+  .btn:focus-visible {
+    outline: 2px solid #00d4aa;
+    outline-offset: 3px;
+  }
+  .btn-accent {
+    background: #e94560;
+    color: #fff;
+  }
+  .btn-accent:hover {
+    background: #c73050;
+    box-shadow: 0 6px 20px rgba(233,69,96,0.6);
+  }
+  .btn-danger {
+    background: transparent;
+    border-color: #444466;
+    color: #666688;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+  .btn-danger:hover {
+    background: rgba(255,80,80,0.12);
+    border-color: #ff5050;
+    color: #ff8080;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 640px;
+    height: 5px;
+    background: #1a1a2e;
+    border-radius: 3px;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00d4aa, #e94560);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .emoji-iso {
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+    margin: 0.4rem 0;
+  }
+  .tyyppi-palkki {
+    display: inline-block;
+    background: linear-gradient(90deg, #e94560, #f5a623);
+    color: #fff;
+    border-radius: 50px;
+    padding: 0.4rem 1.2rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  .vahvuus-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+  }
+  .vk-tag {
+    display: inline-block;
+    background: #f5a623;
+    color: #0f0f1a;
+    border-radius: 50px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin: 0.15rem;
+  }
+  .muted { color: #9090aa; font-size: 0.95rem; margin-top: 0.5rem; }
+
+  textarea {
+    width: 100%;
+    background: #1a1a2e;
+    border: 1.5px solid rgba(233,69,96,0.3);
+    border-radius: 12px;
+    padding: 0.8rem;
+    color: #e8e8f0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 90px;
+    margin-top: 0.4rem;
+  }
+  textarea:focus { border-color: #00d4aa; outline: none; }
+
+  .kansi {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem;
+    width: 100%;
+  }
+  .kansi-emoji { font-size: 4rem; }
+  .kansi-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e94560, #f5a623);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .kansi-sub { color: #9090aa; font-size: 1.1rem; max-width: 380px; }
+`;
+
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>
