@@ -1,0 +1,1561 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Hakustrategia – suunnittele oma reittisi peruskoulun jälkeen." />
+    <title>Hakustrategia – DigiOpo</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- DigiOpo CSS (sama kuin 9luokka.html) -->
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/aihe.css" />
+    <link rel="stylesheet" href="../css/maskotti.css" />
+    <link rel="stylesheet" href="../css/utils.css" />
+
+    <style>
+      /* ── 9. luokka teal-aksentti (sama kuin 9luokka.html) ── */
+      :root {
+        --lk9-teal: #0d9488;
+        --lk9-teal-lt: #0f766e;
+        --lk9-teal-bg: #f0fdfa;
+        --lk9-teal-bd: #99f6e4;
+      }
+
+      .book-spread {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--lk9-teal-bd);
+        box-shadow: 0 8px 32px rgba(13, 148, 136, 0.08);
+      }
+      .book-page-left {
+        background: var(--lk9-teal-bg);
+        border-right: 1px solid var(--lk9-teal-bd);
+      }
+      .book-page-left h3 {
+        color: #134e4a;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+      .aihelista a {
+        color: #134e4a;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+      }
+      .aihelista a:hover {
+        color: var(--lk9-teal);
+        background: #ccfbf1;
+      }
+      .aihelista a.active {
+        color: #0f766e;
+        background: #ccfbf1;
+        border-left: 3px solid var(--lk9-teal);
+        font-weight: 700;
+      }
+      .breadcrumb a { color: var(--lk9-teal); }
+      .breadcrumb a:hover { color: var(--lk9-teal-lt); }
+      .aihe-osio {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--lk9-teal-bd);
+        box-shadow: 0 4px 16px rgba(13, 148, 136, 0.06);
+      }
+      .aihe-otsikko { border-bottom: 2px solid var(--lk9-teal); }
+      .aihe-otsikko h2 { color: #134e4a; }
+      .aihe-otsikko p { color: var(--lk9-teal); }
+      .theory-card {
+        background: var(--lk9-teal-bg);
+        border: 1px solid var(--lk9-teal-bd);
+        border-radius: 14px;
+      }
+      .theory-text h3 { color: #134e4a; }
+      .tasks-section {
+        background: #f0fdfa;
+        border: 1px solid var(--lk9-teal-bd);
+        border-radius: 14px;
+      }
+      .mission-card {
+        background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+        border: 2px solid var(--lk9-teal-bd);
+        box-shadow: 0 6px 20px rgba(13, 148, 136, 0.12);
+      }
+      .mission-card::before { display: none; }
+      .mission-header h4 { color: #134e4a; }
+      .mission-badge { background: #ccfbf1; color: #134e4a; }
+      .mission-card p { color: #475569; }
+      .mission-list li { color: #1e1b4b; }
+      .mission-card:hover { box-shadow: 0 10px 28px rgba(13, 148, 136, 0.2); }
+      #scrollTopBtn { background: var(--lk9-teal); }
+      #scrollTopBtn:hover { background: var(--lk9-teal-lt); }
+
+      .sr-only {
+        position: absolute; width: 1px; height: 1px;
+        padding: 0; margin: -1px; overflow: hidden;
+        clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+      }
+      .sr-only-focusable:focus {
+        position: static; width: auto; height: auto;
+        clip: auto; white-space: normal;
+        background: var(--lk9-teal); color: white;
+        padding: 8px 16px; border-radius: 6px; font-weight: 700;
+      }
+
+      /* ── Hakustrategia-tehtävän omat tyylit ── */
+
+      /* Edistymispalkki */
+      .progress-bar-wrap {
+        background: #e5e7eb;
+        border-radius: 999px;
+        height: 10px;
+        margin: 12px 0 4px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        background: var(--lk9-teal);
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.4s ease;
+      }
+      .progress-label {
+        font-size: 0.82rem;
+        color: var(--lk9-teal-lt);
+        font-weight: 700;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      /* Vaihekortti */
+      .vaihe-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ccfbf1;
+        color: #134e4a;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 999px;
+        font-size: 0.88rem;
+        margin-bottom: 10px;
+      }
+
+      /* Tavoite-palkki */
+      .tavoite-palkki {
+        background: #f0fdfa;
+        border-left: 4px solid var(--lk9-teal);
+        padding: 10px 14px;
+        border-radius: 0 10px 10px 0;
+        margin: 12px 0 18px;
+        font-size: 0.97rem;
+        color: #134e4a;
+      }
+
+      /* Lomakekentät */
+      .kentta-rivi { margin: 14px 0; }
+      .kentta-rivi label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: #1f2937;
+        font-size: 1rem;
+      }
+      .kentta-rivi .ohje {
+        display: block;
+        color: #6b7280;
+        font-size: 0.88rem;
+        margin-bottom: 5px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea,
+      select {
+        width: 100%;
+        border: 1.5px solid var(--lk9-teal-bd);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 1rem;
+        font-family: inherit;
+        background: #fff;
+        color: #1f2937;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+      input[type="text"]:focus,
+      input[type="date"]:focus,
+      textarea:focus,
+      select:focus {
+        outline: 3px solid #ccfbf1;
+        border-color: var(--lk9-teal);
+      }
+      textarea { min-height: 90px; resize: vertical; }
+
+      /* Gridit */
+      .kentta-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+      .kentta-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+
+      /* Liukuskaalat */
+      .liuku-rivi {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .liuku-rivi:last-child { border-bottom: none; }
+      .liuku-teksti {
+        flex: 1;
+        font-size: 0.97rem;
+        min-width: 0;
+      }
+      .liuku-arvio {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .liuku-arvio input[type="radio"] { display: none; }
+      .liuku-arvio label {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 0.9rem;
+        cursor: pointer;
+        border: 2px solid var(--lk9-teal-bd);
+        background: #fff;
+        transition: all 0.15s;
+        color: #374151;
+      }
+      .liuku-arvio input[type="radio"]:checked + label {
+        background: var(--lk9-teal);
+        border-color: var(--lk9-teal);
+        color: #fff;
+        transform: scale(1.1);
+      }
+      .liuku-arvio label:hover {
+        background: #ccfbf1;
+        border-color: var(--lk9-teal);
+      }
+      .liuku-arvio input[type="radio"]:focus + label {
+        outline: 3px solid #ccfbf1;
+        outline-offset: 2px;
+      }
+      .liuku-paatymerkit {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: #9ca3af;
+        margin-top: -4px;
+        padding: 0 2px 8px;
+      }
+
+      /* Vaihtoehtokortit */
+      .vaihtoehto-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin: 16px 0;
+      }
+      .vaihtoehto-kortti {
+        background: #fafafa;
+        border: 1.5px solid var(--lk9-teal-bd);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .vaihtoehto-kortti h3 {
+        color: #134e4a;
+        font-size: 1rem;
+        margin: 0 0 6px;
+      }
+      .vaihtoehto-kortti p {
+        font-size: 0.9rem;
+        color: #4b5563;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      /* Vertailutaulukko */
+      .vertailu-taulukko {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        font-size: 0.95rem;
+      }
+      .vertailu-taulukko th,
+      .vertailu-taulukko td {
+        border: 1px solid var(--lk9-teal-bd);
+        padding: 8px 10px;
+        vertical-align: top;
+        text-align: left;
+      }
+      .vertailu-taulukko th {
+        background: #f0fdfa;
+        color: #134e4a;
+        font-weight: 700;
+      }
+      .vertailu-taulukko td textarea { min-height: 70px; }
+
+      /* Päätösmatriisi */
+      .matriisi-taulukko {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+        margin: 14px 0;
+      }
+      .matriisi-taulukko th,
+      .matriisi-taulukko td {
+        border: 1px solid var(--lk9-teal-bd);
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .matriisi-taulukko th { background: #f0fdfa; color: #134e4a; font-weight: 700; }
+      .matriisi-taulukko td:first-child { text-align: left; font-weight: 500; padding-left: 12px; }
+      .matriisi-taulukko select { width: 64px; padding: 4px 6px; text-align: center; }
+      .pisteet-rivi { background: #ccfbf1 !important; font-weight: 700; }
+      .pisteet-rivi td { color: #134e4a; }
+
+      /* Vaihe-erottaja */
+      .vaihe-erottaja {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 28px 0 20px;
+      }
+      .vaihe-erottaja-viiva {
+        flex: 1;
+        height: 2px;
+        background: var(--lk9-teal-bd);
+        border-radius: 2px;
+      }
+      .vaihe-erottaja-teksti {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--lk9-teal-lt);
+        white-space: nowrap;
+        background: #f0fdfa;
+        padding: 4px 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--lk9-teal-bd);
+      }
+
+      /* Osa 2 – "Jälkeen" lukittu ennen avaamista */
+      .osa2-lukittu {
+        opacity: 0.5;
+        pointer-events: none;
+        filter: blur(1px);
+        transition: opacity 0.4s, filter 0.4s;
+      }
+      .osa2-lukittu-viesti {
+        background: #f0fdfa;
+        border: 2px dashed var(--lk9-teal-bd);
+        border-radius: 14px;
+        padding: 20px 24px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .osa2-lukittu-viesti p {
+        color: #134e4a;
+        font-size: 1rem;
+        margin: 0 0 12px;
+      }
+      .btn-avaa-osa2 {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--lk9-teal);
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 10px 22px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s;
+      }
+      .btn-avaa-osa2:hover { background: var(--lk9-teal-lt); }
+
+      /* Kannustusviesti */
+      .kannustus {
+        background: #ccfbf1;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin: 14px 0;
+        font-weight: 700;
+        color: #134e4a;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.97rem;
+      }
+      .kannustus.nakyvissa { display: flex; }
+
+      /* Yhteenveto */
+      .yhteenveto-kortti {
+        background: linear-gradient(135deg, #f0fdfa, #fff);
+        border: 2px solid var(--lk9-teal-bd);
+        border-radius: 16px;
+        padding: 20px 22px;
+        margin: 16px 0;
+      }
+      .yhteenveto-kortti h3 {
+        color: #134e4a;
+        margin: 0 0 14px;
+        font-size: 1.1rem;
+      }
+      .yhteenveto-rivi {
+        display: flex;
+        gap: 10px;
+        margin: 8px 0;
+        align-items: flex-start;
+        font-size: 0.97rem;
+      }
+      .yhteenveto-rivi-otsikko {
+        font-weight: 700;
+        color: #374151;
+        min-width: 140px;
+        flex-shrink: 0;
+      }
+      .yhteenveto-rivi-arvo {
+        color: #1f2937;
+        word-break: break-word;
+      }
+      .yhteenveto-tyhja { color: #9ca3af; font-style: italic; }
+      .matriisi-tulos-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .matriisi-tulos-kortti {
+        background: #fff;
+        border: 1.5px solid var(--lk9-teal-bd);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+      }
+      .matriisi-tulos-nimi {
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: #134e4a;
+        margin-bottom: 4px;
+      }
+      .matriisi-tulos-pisteet {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--lk9-teal);
+      }
+      .matriisi-tulos-max { font-size: 0.78rem; color: #9ca3af; }
+      .matriisi-voittaja {
+        border-color: var(--lk9-teal);
+        background: #f0fdfa;
+        box-shadow: 0 0 0 3px #ccfbf1;
+      }
+
+      /* Toimintopainikkeet */
+      .toiminnot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .btn-primary {
+        display: inline-flex; align-items: center; gap: 7px;
+        background: var(--lk9-teal); color: white;
+        font-weight: 700; font-size: 1rem;
+        padding: 11px 22px; border-radius: 10px; border: none;
+        cursor: pointer; transition: background 0.18s;
+      }
+      .btn-primary:hover { background: var(--lk9-teal-lt); }
+      .btn-secondary {
+        display: inline-flex; align-items: center; gap: 7px;
+        background: #e5e7eb; color: #1f2937;
+        font-weight: 700; font-size: 1rem;
+        padding: 11px 22px; border-radius: 10px; border: none;
+        cursor: pointer; transition: background 0.18s;
+      }
+      .btn-secondary:hover { background: #d1d5db; }
+      .btn-danger {
+        display: inline-flex; align-items: center; gap: 7px;
+        background: #fee2e2; color: #991b1b;
+        font-weight: 700; font-size: 1rem;
+        padding: 11px 22px; border-radius: 10px; border: none;
+        cursor: pointer; transition: background 0.18s;
+      }
+      .btn-danger:hover { background: #fecaca; }
+
+      @media (max-width: 500px) {
+        .matriisi-tulos-grid { grid-template-columns: repeat(2, 1fr); }
+        .liuku-arvio label { width: 30px; height: 30px; font-size: 0.82rem; }
+        .vertailu-taulukko { font-size: 0.85rem; }
+      }
+      @media print {
+        .toiminnot, #scrollTopBtn, .btn-avaa-osa2 { display: none !important; }
+        .osa2-lukittu { opacity: 1; filter: none; pointer-events: auto; }
+        body { background: white; }
+        .aihe-osio { box-shadow: none; break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigaatiopalkki (sama rakenne kuin 9luokka.html) -->
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="../9luokka.html" class="home-btn" aria-label="Takaisin 9. luokan sivulle">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          9. luokka
+        </a>
+      </div>
+    </header>
+
+    <a href="#main-content" class="sr-only sr-only-focusable">Siirry pääsisältöön</a>
+
+    <div class="book-spread">
+      <!-- Vasen sivupalkki -->
+      <aside class="book-page-left" aria-label="Tehtävän osat">
+        <h3>Hakustrategia</h3>
+        <nav class="aihelista" aria-label="Tehtävän osat">
+          <a href="#osa1-alku">🏁 Aluksi</a>
+          <a href="#osa1-mina">1. Minä opiskelijana</a>
+          <a href="#osa1-vaihtoehdot">2. Vaihtoehdot</a>
+          <a href="#osa1-hakukohteet">3. Hakukohteet</a>
+          <a href="#osa2-otsikko">📋 OSA 2 – Jälkeen</a>
+          <a href="#osa2-tutustuminen">4. Tutustuminen</a>
+          <a href="#osa2-arki">5. Arki ja todellisuus</a>
+          <a href="#osa2-paatos">6. Päätös</a>
+          <a href="#yhteenveto">✅ Yhteenveto</a>
+        </nav>
+      </aside>
+
+      <!-- Pääsisältö -->
+      <main class="book-page-right" id="main-content">
+        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">
+          <a href="../index.html">Etusivu</a> → <a href="../9luokka.html">9. luokka</a> → Hakustrategia
+        </div>
+
+        <h1>Hakustrategia – suunnittele oma reittisi</h1>
+        <p>Tämä tehtävä auttaa sinua miettimään, mihin haet peruskoulun jälkeen. Tee ensin <strong>Osa 1</strong>. Palaa <strong>Osaan 2</strong> sen jälkeen, kun olet käynyt tutustumassa kouluun tai puhunut jonkun kanssa.</p>
+
+        <!-- EDISTYMISPALKKI -->
+        <div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Tehtävän edistyminen" id="edistymisPalkki" style="margin:8px 0 20px;">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="edistymisBar" style="width:0%"></div>
+          </div>
+          <span class="progress-label" id="edistymisLabel">Aloita täyttäminen ⬇</span>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             OSA 1 – ENNEN TUTUSTUMISTA
+             ══════════════════════════════════════════════════════════ -->
+        <section id="osa1-alku" class="aihe-osio" aria-labelledby="otsikko-alku">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-alku">
+              <span class="vaihe-label"><i class="fa-solid fa-1 fa-xs" aria-hidden="true"></i> OSA 1 – Ennen tutustumista</span><br>
+              Aluksi: perustiedot
+            </h2>
+            <p>Aloita tästä. Täytä oma nimesi ja luokkasi.</p>
+          </div>
+
+          <div class="kentta-grid-2">
+            <div class="kentta-rivi">
+              <label for="nimi">Nimesi</label>
+              <input id="nimi" type="text" data-save autocomplete="name" placeholder="Etunimi Sukunimi" />
+            </div>
+            <div class="kentta-grid-2" style="gap:10px">
+              <div class="kentta-rivi">
+                <label for="luokka">Luokka</label>
+                <input id="luokka" type="text" data-save placeholder="esim. 9A" />
+              </div>
+              <div class="kentta-rivi">
+                <label for="paivays">Päivämäärä</label>
+                <input id="paivays" type="date" data-save />
+              </div>
+            </div>
+          </div>
+
+          <p class="sr-only">Vastauksesi tallentuvat automaattisesti tähän selaimeen. Voit sulkea sivun ja jatkaa myöhemmin.</p>
+          <p style="font-size:0.88rem;color:#6b7280;margin-top:8px;">
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+            Vastauksesi tallentuvat automaattisesti. Voit palata tähän tehtävään myöhemmin.
+          </p>
+        </section>
+
+        <!-- ── Oppitunti 1: Minä opiskelijana ── -->
+        <section id="osa1-mina" class="aihe-osio" aria-labelledby="otsikko-mina">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-mina">
+              <span class="vaihe-label"><i class="fa-solid fa-user" aria-hidden="true"></i> Kohta 1</span><br>
+              Millainen opiskelija sinä olet?
+            </h2>
+            <p>Mieti omia vahvuuksiasi ja sitä, miten opit parhaiten.</p>
+          </div>
+
+          <div class="tavoite-palkki" role="note">
+            <strong>Tavoite:</strong> Tunnistat, millainen opiskelija olet. Se auttaa valitsemaan sinulle sopivan koulutuksen.
+          </div>
+
+          <h3>Arvioi itsesi – valitse sopivin numero</h3>
+          <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">1 = ei sovi minulle &nbsp;·&nbsp; 5 = sopii hyvin minulle</p>
+
+          <!-- Liukuarviot -->
+          <div role="group" aria-label="Itsearviointikysymykset">
+            <div class="liuku-rivi">
+              <span class="liuku-teksti" id="label-teoria">Jaksan opiskella paljon teoriaa (lukemista, laskemista).</span>
+              <div class="liuku-arvio" role="radiogroup" aria-labelledby="label-teoria">
+                <input type="radio" name="teoria" id="teoria1" value="1" data-save-radio="teoria" /><label for="teoria1">1</label>
+                <input type="radio" name="teoria" id="teoria2" value="2" data-save-radio="teoria" /><label for="teoria2">2</label>
+                <input type="radio" name="teoria" id="teoria3" value="3" data-save-radio="teoria" /><label for="teoria3">3</label>
+                <input type="radio" name="teoria" id="teoria4" value="4" data-save-radio="teoria" /><label for="teoria4">4</label>
+                <input type="radio" name="teoria" id="teoria5" value="5" data-save-radio="teoria" /><label for="teoria5">5</label>
+              </div>
+            </div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+
+            <div class="liuku-rivi">
+              <span class="liuku-teksti" id="label-tekemalla">Opin parhaiten tekemällä ja kokeilemalla.</span>
+              <div class="liuku-arvio" role="radiogroup" aria-labelledby="label-tekemalla">
+                <input type="radio" name="tekemalla" id="tekemalla1" value="1" data-save-radio="tekemalla" /><label for="tekemalla1">1</label>
+                <input type="radio" name="tekemalla" id="tekemalla2" value="2" data-save-radio="tekemalla" /><label for="tekemalla2">2</label>
+                <input type="radio" name="tekemalla" id="tekemalla3" value="3" data-save-radio="tekemalla" /><label for="tekemalla3">3</label>
+                <input type="radio" name="tekemalla" id="tekemalla4" value="4" data-save-radio="tekemalla" /><label for="tekemalla4">4</label>
+                <input type="radio" name="tekemalla" id="tekemalla5" value="5" data-save-radio="tekemalla" /><label for="tekemalla5">5</label>
+              </div>
+            </div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+
+            <div class="liuku-rivi">
+              <span class="liuku-teksti" id="label-aikaa">Tarvitsen vielä aikaa miettiä, mitä haluan tehdä.</span>
+              <div class="liuku-arvio" role="radiogroup" aria-labelledby="label-aikaa">
+                <input type="radio" name="aikaa" id="aikaa1" value="1" data-save-radio="aikaa" /><label for="aikaa1">1</label>
+                <input type="radio" name="aikaa" id="aikaa2" value="2" data-save-radio="aikaa" /><label for="aikaa2">2</label>
+                <input type="radio" name="aikaa" id="aikaa3" value="3" data-save-radio="aikaa" /><label for="aikaa3">3</label>
+                <input type="radio" name="aikaa" id="aikaa4" value="4" data-save-radio="aikaa" /><label for="aikaa4">4</label>
+                <input type="radio" name="aikaa" id="aikaa5" value="5" data-save-radio="aikaa" /><label for="aikaa5">5</label>
+              </div>
+            </div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+
+            <div class="liuku-rivi">
+              <span class="liuku-teksti" id="label-toive">Minulla on jo selkeä ammatti tai ala, jota haluan opiskella.</span>
+              <div class="liuku-arvio" role="radiogroup" aria-labelledby="label-toive">
+                <input type="radio" name="toive" id="toive1" value="1" data-save-radio="toive" /><label for="toive1">1</label>
+                <input type="radio" name="toive" id="toive2" value="2" data-save-radio="toive" /><label for="toive2">2</label>
+                <input type="radio" name="toive" id="toive3" value="3" data-save-radio="toive" /><label for="toive3">3</label>
+                <input type="radio" name="toive" id="toive4" value="4" data-save-radio="toive" /><label for="toive4">4</label>
+                <input type="radio" name="toive" id="toive5" value="5" data-save-radio="toive" /><label for="toive5">5</label>
+              </div>
+            </div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+
+            <div class="liuku-rivi">
+              <span class="liuku-teksti" id="label-tuki">Tarvitsen tukea opiskeluun tai arkeen.</span>
+              <div class="liuku-arvio" role="radiogroup" aria-labelledby="label-tuki">
+                <input type="radio" name="tuki" id="tuki1" value="1" data-save-radio="tuki" /><label for="tuki1">1</label>
+                <input type="radio" name="tuki" id="tuki2" value="2" data-save-radio="tuki" /><label for="tuki2">2</label>
+                <input type="radio" name="tuki" id="tuki3" value="3" data-save-radio="tuki" /><label for="tuki3">3</label>
+                <input type="radio" name="tuki" id="tuki4" value="4" data-save-radio="tuki" /><label for="tuki4">4</label>
+                <input type="radio" name="tuki" id="tuki5" value="5" data-save-radio="tuki" /><label for="tuki5">5</label>
+              </div>
+            </div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+          </div>
+
+          <div class="kentta-grid-3" style="margin-top:18px;">
+            <div class="kentta-rivi">
+              <label for="kiinnostukset">Minua kiinnostaa</label>
+              <span class="ohje" id="ohje-kiinnostukset">Kirjoita 3–5 asiaa tai aihetta.</span>
+              <textarea id="kiinnostukset" data-save aria-describedby="ohje-kiinnostukset" placeholder="esim. teknologia, eläimet, musiikki..."></textarea>
+            </div>
+            <div class="kentta-rivi">
+              <label for="vahvuudet">Olen hyvä</label>
+              <span class="ohje" id="ohje-vahvuudet">Kirjoita taitoja tai kouluaineita.</span>
+              <textarea id="vahvuudet" data-save aria-describedby="ohje-vahvuudet" placeholder="esim. matematiikka, käsillä tekeminen, kuuntelu..."></textarea>
+            </div>
+            <div class="kentta-rivi">
+              <label for="ei_kiinnosta">En halua ainakaan</label>
+              <span class="ohje" id="ohje-ei">Kirjoita, mikä ei tunnu omalta.</span>
+              <textarea id="ei_kiinnosta" data-save aria-describedby="ohje-ei" placeholder="esim. paljon ulkona oleminen, yksin istuminen..."></textarea>
+            </div>
+          </div>
+
+          <div class="kentta-rivi" style="margin-top:10px;">
+            <label for="mina_paatelma">Mitä nämä vastaukset kertovat sinusta?</label>
+            <span class="ohje" id="ohje-mina-paatelma">Kirjoita omin sanoin. Ei tarvitse olla täydellinen.</span>
+            <textarea id="mina_paatelma" data-save aria-describedby="ohje-mina-paatelma" placeholder="Esim. olen käytännön ihminen. En viihdy pitkään paikallaan..."></textarea>
+          </div>
+
+          <div class="kannustus" id="kann1" aria-live="polite">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            Hyvä! Itsensä tunteminen on paras lähtökohta valinnalle.
+          </div>
+        </section>
+
+        <!-- ── Oppitunti 2: Vaihtoehdot ── -->
+        <section id="osa1-vaihtoehdot" class="aihe-osio" aria-labelledby="otsikko-vaihtoehdot">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-vaihtoehdot">
+              <span class="vaihe-label"><i class="fa-solid fa-signs-post" aria-hidden="true"></i> Kohta 2</span><br>
+              Mitä vaihtoehtoja sinulla on?
+            </h2>
+            <p>Tutustut eri koulutusvaihtoehtoihin ja mietit, mikä sopii sinulle.</p>
+          </div>
+
+          <div class="tavoite-palkki" role="note">
+            <strong>Tavoite:</strong> Tiedät, mitä eri koulutukset tarkoittavat käytännössä.
+          </div>
+
+          <div class="vaihtoehto-grid">
+            <div class="vaihtoehto-kortti">
+              <h3>🎓 Lukio</h3>
+              <p>Lukiossa luet paljon. Sopii, jos pidät kirjoista ja haluat enemmän aikaa miettiä alaa. Lukio ei opeta ammattia suoraan, mutta avaa tien moneen korkea-asteen opiskeluun.</p>
+            </div>
+            <div class="vaihtoehto-kortti">
+              <h3>🔧 Ammatillinen koulutus (amis)</h3>
+              <p>Opiskellet ammattia tekemällä. Oppitunnit ovat käytännönläheisiä. Saat tutkinnon ja voit mennä suoraan töihin – tai jatkaa opiskelua.</p>
+            </div>
+            <div class="vaihtoehto-kortti">
+              <h3>🌱 TUVA</h3>
+              <p>TUVA on valmentava vuosi. Hyvä valinta, jos et ole vielä varma tai tarvitset lisätukea. TUVA-vuoden jälkeen haet uudelleen.</p>
+            </div>
+            <div class="vaihtoehto-kortti">
+              <h3>🏡 Kansanopisto</h3>
+              <p>Kansanopistovuosi on erilainen tapa opiskella – usein sisäoppilaitoksessa. Sopii, jos haluat kokeilla itsenäistä elämää ja vahvistaa taitojasi ennen seuraavaa päätöstä.</p>
+            </div>
+          </div>
+
+          <h3>Vertaile vaihtoehtoja</h3>
+          <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">Kirjoita lyhyesti jokaisesta: mikä kiinnostaa, mikä mietityttää?</p>
+          <div class="kentta-rivi">
+            <table class="vertailu-taulukko" aria-label="Vaihtoehtojen vertailu">
+              <caption class="sr-only">Kirjoita jokaiseen kenttään, mikä kiinnostaa ja mikä mietityttää.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Vaihtoehto</th>
+                  <th scope="col">Mikä kiinnostaa?</th>
+                  <th scope="col">Mikä mietityttää?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Lukio</th>
+                  <td><textarea id="lukio_plus" data-save aria-label="Lukio – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="lukio_miinus" data-save aria-label="Lukio – mikä mietityttää"></textarea></td>
+                </tr>
+                <tr>
+                  <th scope="row">Ammatillinen</th>
+                  <td><textarea id="amis_plus" data-save aria-label="Ammatillinen – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="amis_miinus" data-save aria-label="Ammatillinen – mikä mietityttää"></textarea></td>
+                </tr>
+                <tr>
+                  <th scope="row">TUVA</th>
+                  <td><textarea id="tuva_plus" data-save aria-label="TUVA – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="tuva_miinus" data-save aria-label="TUVA – mikä mietityttää"></textarea></td>
+                </tr>
+                <tr>
+                  <th scope="row">Kansanopisto</th>
+                  <td><textarea id="kansa_plus" data-save aria-label="Kansanopisto – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="kansa_miinus" data-save aria-label="Kansanopisto – mikä mietityttää"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="kentta-rivi">
+            <label for="vaihtoehdot_paatelma">Mikä vaihtoehto tuntuu tässä vaiheessa kiinnostavimmalta – ja miksi?</label>
+            <textarea id="vaihtoehdot_paatelma" data-save placeholder="Kirjoita omin sanoin. Ei haittaa, vaikka et ole varma."></textarea>
+          </div>
+        </section>
+
+        <!-- ── Oppitunti 3: Hakukohteet ── -->
+        <section id="osa1-hakukohteet" class="aihe-osio" aria-labelledby="otsikko-hakukohteet">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-hakukohteet">
+              <span class="vaihe-label"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Kohta 3</span><br>
+              Mihin haluat hakea?
+            </h2>
+            <p>Etsi tietoa vähintään kolmesta paikasta, joihin voisit hakea.</p>
+          </div>
+
+          <div class="tavoite-palkki" role="note">
+            <strong>Tavoite:</strong> Sinulla on ainakin kolme hakukohdetta mietittynä – ja tiedät, mikä niistä tuntuu parhaimmalta.
+          </div>
+
+          <div class="theory-card" style="margin-bottom:16px;">
+            <div class="theory-text">
+              <h3>Hakustrategia: unelma, realistinen, varma</h3>
+              <p>Hyvä strategia on hakea kolmeen paikkaan: yksi unelmahakukohde, yksi realistinen ja yksi varma vaihtoehto. Näin sinulla on mahdollisuus, mutta myös turvaverkko.</p>
+            </div>
+          </div>
+
+          <div class="kentta-rivi">
+            <table class="vertailu-taulukko" aria-label="Hakukohteiden vertailu">
+              <caption class="sr-only">Kirjoita hakukohteen nimi, paikkakunta ja mitä ajattelet siitä.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Hakukohde ja paikkakunta</th>
+                  <th scope="col">Mikä kiinnostaa?</th>
+                  <th scope="col">Mikä epäilyttää?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input id="hakukohde1" type="text" data-save aria-label="Hakukohde 1 nimi" placeholder="Koulu ja linja" />
+                    <input id="hakukohde1_paikka" type="text" data-save aria-label="Hakukohde 1 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                  </td>
+                  <td><textarea id="hakukohde1_plus" data-save aria-label="Hakukohde 1 – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="hakukohde1_miinus" data-save aria-label="Hakukohde 1 – mikä epäilyttää"></textarea></td>
+                </tr>
+                <tr>
+                  <td>
+                    <input id="hakukohde2" type="text" data-save aria-label="Hakukohde 2 nimi" placeholder="Koulu ja linja" />
+                    <input id="hakukohde2_paikka" type="text" data-save aria-label="Hakukohde 2 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                  </td>
+                  <td><textarea id="hakukohde2_plus" data-save aria-label="Hakukohde 2 – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="hakukohde2_miinus" data-save aria-label="Hakukohde 2 – mikä epäilyttää"></textarea></td>
+                </tr>
+                <tr>
+                  <td>
+                    <input id="hakukohde3" type="text" data-save aria-label="Hakukohde 3 nimi" placeholder="Koulu ja linja" />
+                    <input id="hakukohde3_paikka" type="text" data-save aria-label="Hakukohde 3 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                  </td>
+                  <td><textarea id="hakukohde3_plus" data-save aria-label="Hakukohde 3 – mikä kiinnostaa"></textarea></td>
+                  <td><textarea id="hakukohde3_miinus" data-save aria-label="Hakukohde 3 – mikä epäilyttää"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="kentta-rivi">
+            <label for="tietolahteet">Mistä löysit tietoa?</label>
+            <span class="ohje" id="ohje-tietolahteet">Esim. Opintopolku, oppilaitoksen nettisivut, opo, kaveri...</span>
+            <textarea id="tietolahteet" data-save aria-describedby="ohje-tietolahteet" placeholder="Kirjoita tähän..."></textarea>
+          </div>
+
+          <div class="kentta-rivi">
+            <label for="paras_hakukohde">Mikä hakukohde tuntuu tällä hetkellä parhaimmalta – ja miksi?</label>
+            <textarea id="paras_hakukohde" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+          </div>
+
+          <div class="kannustus" id="kann2" aria-live="polite">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            OSA 1 on valmis! Käy nyt tutustumassa – sitten jatkat Osaan 2.
+          </div>
+
+          <!-- Osa 1 palautus -->
+          <div style="background:#f0fdfa;border:1.5px solid var(--lk9-teal-bd);border-radius:14px;padding:16px 18px;margin-top:18px;">
+            <p style="margin:0 0 8px;font-weight:700;color:#134e4a;">
+              <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
+              Osa 1 valmis? Palauta opolle.
+            </p>
+            <p style="margin:0 0 14px;font-size:0.92rem;color:#475569;">
+              Lataa tai tulosta Osa 1 ja palauta se opollesi. Palaa Osaan 2 sen jälkeen kun olet käynyt tutustumassa kouluun – esimerkiksi viikon tai kahden viikon päästä.
+            </p>
+            <div class="toiminnot">
+              <button class="btn-primary" onclick="lataaOsa1()">
+                <i class="fa-solid fa-download" aria-hidden="true"></i>
+                Lataa Osa 1 TXT opolle
+              </button>
+              <button class="btn-secondary" onclick="window.print()">
+                <i class="fa-solid fa-print" aria-hidden="true"></i>
+                Tulosta / PDF
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════════
+             OSA 2 – JÄLKEEN TUTUSTUMISEN
+             ══════════════════════════════════════════════════════════ -->
+        <div class="vaihe-erottaja" aria-hidden="true">
+          <div class="vaihe-erottaja-viiva"></div>
+          <div class="vaihe-erottaja-teksti">📋 OSA 2 – Täytä tämä JÄLKEEN tutustumisen</div>
+          <div class="vaihe-erottaja-viiva"></div>
+        </div>
+
+        <!-- Lukittu viesti + avaa-nappi -->
+        <div id="osa2-lukittu-viesti" class="osa2-lukittu-viesti" aria-live="polite">
+          <p><strong>Täytä Osa 2 sen jälkeen, kun olet käynyt Avoimilla Ovilla, tutustunut kouluun tai haastatellut jonkun.</strong><br>Osa 1:n vastauksesi ovat tallessa – palaa tänne silloin.</p>
+          <button class="btn-avaa-osa2" onclick="avaaOsa2()" aria-expanded="false" aria-controls="osa2-sisalto">
+            <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+            Olen käynyt tutustumassa – avaa Osa 2
+          </button>
+        </div>
+
+        <!-- OSA 2 sisältö (alussa piilotettu blur) -->
+        <div id="osa2-sisalto" class="osa2-lukittu" aria-hidden="true">
+
+          <section id="osa2-otsikko" class="aihe-osio" aria-labelledby="otsikko-osa2" style="border-top:3px solid var(--lk9-teal);">
+            <div class="aihe-otsikko">
+              <h2 id="otsikko-osa2">
+                <span class="vaihe-label"><i class="fa-solid fa-2 fa-xs" aria-hidden="true"></i> OSA 2 – Tutustumisen jälkeen</span><br>
+                Mitä kokeit ja opit?
+              </h2>
+              <p>Nyt kirjaat, mitä tapahtui – ja teet lopullisen suunnitelman.</p>
+            </div>
+            <div class="kentta-rivi">
+              <label for="osa2_paivays">Milloin kävit tutustumassa?</label>
+              <input id="osa2_paivays" type="date" data-save />
+            </div>
+          </section>
+
+          <!-- ── Kohta 4: Tutustuminen ── -->
+          <section id="osa2-tutustuminen" class="aihe-osio" aria-labelledby="otsikko-tutustuminen">
+            <div class="aihe-otsikko">
+              <h2 id="otsikko-tutustuminen">
+                <span class="vaihe-label"><i class="fa-solid fa-door-open" aria-hidden="true"></i> Kohta 4</span><br>
+                Tutustumiskokemus
+              </h2>
+              <p>Kirjaa, mitä koit Avoimilla Ovilla, vierailulla tai haastattelussa.</p>
+            </div>
+
+            <div class="tavoite-palkki" role="note">
+              <strong>Tavoite:</strong> Saat tuntuman oikeasta koulusta – ei pelkästä nettisivusta.
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="tutustumistapa">Miten tutustuit?</label>
+              <select id="tutustumistapa" data-save>
+                <option value="">-- Valitse --</option>
+                <option>Kävin Avoimilla Ovilla</option>
+                <option>Kävin kouluvierailulla</option>
+                <option>Haastattelin opiskelijaa tai opettajaa</option>
+                <option>Seurasin oppilaitoksen somekanavaa</option>
+                <option>Tein useamman näistä</option>
+              </select>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="tutustumispaikka">Mihin kouluun tutustuit?</label>
+              <input id="tutustumispaikka" type="text" data-save placeholder="Koulun nimi" />
+            </div>
+
+            <div class="kentta-grid-2">
+              <div class="kentta-rivi">
+                <label for="tunnelma">Millainen tunnelma paikassa oli?</label>
+                <textarea id="tunnelma" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="opiskelijat">Millaisilta opiskelijat vaikuttivat?</label>
+                <textarea id="opiskelijat" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="opetus">Millainen opetus vaikutti olevan?</label>
+                <textarea id="opetus" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="naenko_itseni">Näenkö itseni siellä opiskelijana?</label>
+                <select id="naenko_itseni" data-save>
+                  <option value="">-- Valitse --</option>
+                  <option>Kyllä, näen</option>
+                  <option>Ehkä</option>
+                  <option>En oikein</option>
+                  <option>En näe</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="muuttuiko">Muuttuiko mielesi tutustumisen jälkeen?</label>
+              <select id="muuttuiko" data-save>
+                <option value="">-- Valitse --</option>
+                <option>Kiinnostus vahvistui</option>
+                <option>Kiinnostus heikkeni</option>
+                <option>Mielipiteeni ei muuttunut</option>
+              </select>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="tutustuminen_paatelma">Tärkein asia, jonka opit tutustumisesta</label>
+              <textarea id="tutustuminen_paatelma" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+            </div>
+          </section>
+
+          <!-- ── Kohta 5: Arki ja todellisuus ── -->
+          <section id="osa2-arki" class="aihe-osio" aria-labelledby="otsikko-arki">
+            <div class="aihe-otsikko">
+              <h2 id="otsikko-arki">
+                <span class="vaihe-label"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> Kohta 5</span><br>
+                Toimiiko tämä arjessa?
+              </h2>
+              <p>Mietit, onko valinta realistinen sinun elämässäsi.</p>
+            </div>
+
+            <div class="tavoite-palkki" role="note">
+              <strong>Tavoite:</strong> Tiedät, että valitsemasi koulutus toimii myös käytännössä.
+            </div>
+
+            <div class="kentta-grid-2">
+              <div class="kentta-rivi">
+                <label for="koulumatka">Miten pääsisin sinne kouluun?</label>
+                <span class="ohje" id="ohje-koulumatka">Esim. bussi, pyörä, kauanko kestäisi?</span>
+                <textarea id="koulumatka" data-save aria-describedby="ohje-koulumatka" placeholder="Kirjoita tähän..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="paivarytmi">Millainen päivärytmi minulla olisi?</label>
+                <span class="ohje" id="ohje-paivarytmi">Ajattele tavallista arkipäivää.</span>
+                <textarea id="paivarytmi" data-save aria-describedby="ohje-paivarytmi" placeholder="Kirjoita tähän..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="tuki_arjessa">Millaista tukea tarvitsisin?</label>
+                <textarea id="tuki_arjessa" data-save placeholder="Kirjoita tähän..."></textarea>
+              </div>
+              <div class="kentta-rivi">
+                <label for="jaksaminen">Jaksaisinko tätä arkea useamman vuoden?</label>
+                <textarea id="jaksaminen" data-save placeholder="Perustele lyhyesti..."></textarea>
+              </div>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="haastattelu">Mitä opin haastattelusta tai somehavainnosta?</label>
+              <span class="ohje" id="ohje-haastattelu">Jos haastattelin jonkun: mitä hän sanoi? Jos seurasin somea: mitä näin?</span>
+              <textarea id="haastattelu" data-save aria-describedby="ohje-haastattelu" placeholder="Kirjoita omin sanoin..."></textarea>
+            </div>
+          </section>
+
+          <!-- ── Kohta 6: Päätös ── -->
+          <section id="osa2-paatos" class="aihe-osio" aria-labelledby="otsikko-paatos">
+            <div class="aihe-otsikko">
+              <h2 id="otsikko-paatos">
+                <span class="vaihe-label"><i class="fa-solid fa-check-to-slot" aria-hidden="true"></i> Kohta 6</span><br>
+                Hakujärjestys ja päätös
+              </h2>
+              <p>Kokoat kaikki tiedot yhteen ja kirjaat oman suunnitelmasi.</p>
+            </div>
+
+            <div class="tavoite-palkki" role="note">
+              <strong>Tavoite:</strong> Sinulla on selkeä suunnitelma, mitä haet ja missä järjestyksessä.
+            </div>
+
+            <h3>Pisteytä vaihtoehdot</h3>
+            <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">Anna jokaiselle vaihtoehdolle pisteet 1–5 jokaisesta kohdasta. Pisteet lasketaan automaattisesti.</p>
+
+            <div class="kentta-rivi" style="overflow-x:auto;">
+              <table class="matriisi-taulukko" aria-label="Päätösmatriisi">
+                <caption class="sr-only">Anna jokaiselle koulutukselle pisteet 1–5.</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Kriteeri</th>
+                    <th scope="col">🎓 Lukio</th>
+                    <th scope="col">🔧 Ammatillinen</th>
+                    <th scope="col">🌱 TUVA</th>
+                    <th scope="col">🏡 Kansanopisto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Kiinnostaa minua</td>
+                    <td><select id="m_lukio_1" data-save aria-label="Lukio kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_amis_1" data-save aria-label="Ammatillinen kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_tuva_1" data-save aria-label="TUVA kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_kansa_1" data-save aria-label="Kansanopisto kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                  </tr>
+                  <tr>
+                    <td>Sopii vahvuuksiini</td>
+                    <td><select id="m_lukio_2" data-save aria-label="Lukio sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_amis_2" data-save aria-label="Ammatillinen sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_tuva_2" data-save aria-label="TUVA sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_kansa_2" data-save aria-label="Kansanopisto sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                  </tr>
+                  <tr>
+                    <td>Tukee tulevaisuuttani</td>
+                    <td><select id="m_lukio_3" data-save aria-label="Lukio tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_amis_3" data-save aria-label="Ammatillinen tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_tuva_3" data-save aria-label="TUVA tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_kansa_3" data-save aria-label="Kansanopisto tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                  </tr>
+                  <tr>
+                    <td>Arki toimii</td>
+                    <td><select id="m_lukio_4" data-save aria-label="Lukion arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_amis_4" data-save aria-label="Ammatillisen arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_tuva_4" data-save aria-label="TUVA:n arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_kansa_4" data-save aria-label="Kansanopiston arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                  </tr>
+                  <tr>
+                    <td>Saan tarvitsemaani tukea</td>
+                    <td><select id="m_lukio_5" data-save aria-label="Lukiossa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_amis_5" data-save aria-label="Ammatillisessa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_tuva_5" data-save aria-label="TUVA:ssa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_kansa_5" data-save aria-label="Kansanopistossa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                  </tr>
+                  <tr class="pisteet-rivi">
+                    <td>Yhteispisteet</td>
+                    <td id="pisteet-lukio" aria-live="polite">–</td>
+                    <td id="pisteet-amis" aria-live="polite">–</td>
+                    <td id="pisteet-tuva" aria-live="polite">–</td>
+                    <td id="pisteet-kansa" aria-live="polite">–</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Hakujärjestys</h3>
+            <div class="kentta-grid-2">
+              <div class="kentta-rivi">
+                <label for="haku1">1. hakutoive</label>
+                <input id="haku1" type="text" data-save placeholder="Ensisijainen vaihtoehto" />
+              </div>
+              <div class="kentta-rivi">
+                <label for="haku2">2. hakutoive</label>
+                <input id="haku2" type="text" data-save placeholder="Toinen vaihtoehto" />
+              </div>
+              <div class="kentta-rivi">
+                <label for="haku3">3. hakutoive</label>
+                <input id="haku3" type="text" data-save placeholder="Kolmas vaihtoehto" />
+              </div>
+              <div class="kentta-rivi">
+                <label for="vara">Varavaihtoehto</label>
+                <input id="vara" type="text" data-save placeholder="Jos muut eivät onnistu..." />
+              </div>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="hakujarjestys_perustelu">Miksi tämä järjestys?</label>
+              <textarea id="hakujarjestys_perustelu" data-save placeholder="Kirjoita omin sanoin..."></textarea>
+            </div>
+
+            <div class="kentta-rivi">
+              <label for="paatoskirje">Kirje itsellesi</label>
+              <span class="ohje" id="ohje-kirje">Kirjoita kuin puhuisit kaverillesi. Kerro, miksi valitsit tämän – ja mitä teet, jos et pääse ensimmäiseen vaihtoehtoon.</span>
+              <textarea id="paatoskirje" data-save aria-describedby="ohje-kirje" style="min-height:130px;" placeholder="Valitsin ensisijaisesti... koska... Jos en pääse sinne, suunnitelmani on..."></textarea>
+            </div>
+          </section>
+
+        </div><!-- /osa2-sisalto -->
+
+        <!-- ══════════════════════════════════════════════════════════
+             YHTEENVETO
+             ══════════════════════════════════════════════════════════ -->
+        <section id="yhteenveto" class="aihe-osio" aria-labelledby="otsikko-yhteenveto">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-yhteenveto">
+              <span class="vaihe-label"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Yhteenveto</span><br>
+              Oma hakusuunnitelma tiivistettynä
+            </h2>
+            <p>Tässä koostuu se, mitä olet täyttänyt. Näytä tämä opolle tai lataa se itsellesi.</p>
+          </div>
+
+          <!-- Yhteenvetokortit – generoituvat JS:llä -->
+          <div id="yhteenveto-sisalto" aria-live="polite">
+            <p style="color:#9ca3af;font-style:italic;">Yhteenveto ilmestyy, kun alat täyttää tehtävää.</p>
+          </div>
+
+          <div class="toiminnot">
+            <button class="btn-primary" onclick="paivitaYhteenveto()">
+              <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+              Päivitä yhteenveto
+            </button>
+            <button class="btn-secondary" onclick="lataaYhteenveto()">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              Lataa TXT opolle
+            </button>
+            <button class="btn-secondary" onclick="window.print()">
+              <i class="fa-solid fa-print" aria-hidden="true"></i>
+              Tulosta / PDF
+            </button>
+            <button class="btn-danger" onclick="tyhjennaVastaukset()">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              Tyhjennä kaikki
+            </button>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /book-spread -->
+
+    <button id="scrollTopBtn" aria-label="Takaisin sivun alkuun" style="display:none;">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <script>
+      // ── Tallennus selaimeen ──────────────────────────────────────
+      const AVAIN = 'digiopo_hakustrategia_v2';
+
+      function haeKentat() {
+        return Array.from(document.querySelectorAll('[data-save]'));
+      }
+      function haeRadiot() {
+        return Array.from(document.querySelectorAll('[data-save-radio]'));
+      }
+
+      function tallenna() {
+        const d = {};
+        haeKentat().forEach(f => { d[f.id] = f.value; });
+        haeRadiot().forEach(r => {
+          if (r.checked) d['radio_' + r.getAttribute('data-save-radio')] = r.value;
+        });
+        d['osa2_avattu'] = document.getElementById('osa2-sisalto').getAttribute('aria-hidden') === 'false' ? '1' : '0';
+        localStorage.setItem(AVAIN, JSON.stringify(d));
+        paivitaEdistyminen();
+        paivitaPisteet();
+        paivitaYhteenveto();
+      }
+
+      function lataaData() {
+        const raw = localStorage.getItem(AVAIN);
+        if (!raw) return;
+        try {
+          const d = JSON.parse(raw);
+          haeKentat().forEach(f => { if (d[f.id] !== undefined) f.value = d[f.id]; });
+          haeRadiot().forEach(r => {
+            const key = 'radio_' + r.getAttribute('data-save-radio');
+            if (d[key] === r.value) r.checked = true;
+          });
+          if (d['osa2_avattu'] === '1') avaaOsa2(true);
+        } catch(e) { console.warn('Latausvirhe', e); }
+      }
+
+      // ── Osa 2 avaaminen ──────────────────────────────────────────
+      function avaaOsa2(hiljainen) {
+        const sisalto = document.getElementById('osa2-sisalto');
+        const viesti = document.getElementById('osa2-lukittu-viesti');
+        const nappi = document.querySelector('.btn-avaa-osa2');
+        sisalto.classList.remove('osa2-lukittu');
+        sisalto.setAttribute('aria-hidden', 'false');
+        if (nappi) nappi.setAttribute('aria-expanded', 'true');
+        viesti.innerHTML = '<p style="color:#134e4a;font-weight:700;"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Osa 2 on auki. Kirjaa kokemuksesi alla.</p>';
+        if (!hiljainen) {
+          tallenna();
+          sisalto.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      // ── Edistymispalkki ──────────────────────────────────────────
+      function paivitaEdistyminen() {
+        const kaikki = haeKentat().length + haeRadiot().filter(r => r.checked).length;
+        const taystetyt = haeKentat().filter(f => f.value.trim()).length
+          + ['teoria','tekemalla','aikaa','toive','tuki'].filter(nimi => {
+              return document.querySelector(`input[name="${nimi}"]:checked`);
+            }).length;
+        const prosentti = Math.min(100, Math.round((taystetyt / Math.max(1, haeKentat().length + 5)) * 100));
+        document.getElementById('edistymisBar').style.width = prosentti + '%';
+        document.getElementById('edistymisPalkki').setAttribute('aria-valuenow', prosentti);
+        const label = prosentti === 100 ? 'Valmis! 🎉' :
+                      prosentti >= 50 ? `${prosentti}% – jatka!` :
+                      prosentti > 0 ? `${prosentti}% – hyvä alku!` : 'Aloita täyttäminen ⬇';
+        document.getElementById('edistymisLabel').textContent = label;
+
+        // Kannustusviestit
+        if (taystetyt > 8) document.getElementById('kann1').classList.add('nakyvissa');
+        if (taystetyt > 16) document.getElementById('kann2').classList.add('nakyvissa');
+      }
+
+      // ── Pisteet ──────────────────────────────────────────────────
+      const VAIHTOEHDOT = ['lukio','amis','tuva','kansa'];
+
+      function paivitaPisteet() {
+        const pisteet = {};
+        VAIHTOEHDOT.forEach(v => {
+          let summa = 0;
+          for (let i = 1; i <= 5; i++) {
+            const el = document.getElementById(`m_${v}_${i}`);
+            if (el) summa += parseInt(el.value) || 0;
+          }
+          pisteet[v] = summa;
+        });
+
+        const maks = Math.max(...Object.values(pisteet));
+        VAIHTOEHDOT.forEach(v => {
+          const el = document.getElementById(`pisteet-${v}`);
+          if (!el) return;
+          const p = pisteet[v];
+          el.textContent = p > 0 ? `${p} / 25` : '–';
+          el.parentElement.style.background = (p === maks && p > 0) ? '#ccfbf1' : '';
+          el.parentElement.style.fontWeight = (p === maks && p > 0) ? '800' : '';
+        });
+
+        return pisteet;
+      }
+
+      // ── Yhteenveto ───────────────────────────────────────────────
+      function arvo(id) {
+        const el = document.getElementById(id);
+        return el ? (el.value || '').trim() : '';
+      }
+      function radioArvo(nimi) {
+        const el = document.querySelector(`input[name="${nimi}"]:checked`);
+        return el ? el.value : '';
+      }
+      function rivi(otsikko, teksti) {
+        const arvoStr = teksti || '';
+        return `<div class="yhteenveto-rivi">
+          <span class="yhteenveto-rivi-otsikko">${otsikko}</span>
+          <span class="yhteenveto-rivi-arvo ${arvoStr ? '' : 'yhteenveto-tyhja'}">${arvoStr || 'ei vastattu'}</span>
+        </div>`;
+      }
+      function radioRivi(otsikko, nimi) {
+        return rivi(otsikko, radioArvo(nimi));
+      }
+
+      function paivitaYhteenveto() {
+        const pisteet = paivitaPisteet();
+        const maks = Math.max(...Object.values(pisteet));
+        const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
+        const emojit = { lukio:'🎓', amis:'🔧', tuva:'🌱', kansa:'🏡' };
+
+        // Pisteytyskortit
+        const matrGrid = `<div class="matriisi-tulos-grid">
+          ${VAIHTOEHDOT.map(v => `
+            <div class="matriisi-tulos-kortti ${pisteet[v] === maks && pisteet[v] > 0 ? 'matriisi-voittaja' : ''}">
+              <div class="matriisi-tulos-nimi">${emojit[v]} ${nimet[v]}</div>
+              <div class="matriisi-tulos-pisteet">${pisteet[v] > 0 ? pisteet[v] : '–'}</div>
+              <div class="matriisi-tulos-max">${pisteet[v] > 0 ? '/ 25' : ''}</div>
+            </div>`).join('')}
+        </div>`;
+
+        const html = `
+          <div class="yhteenveto-kortti">
+            <h3>👤 Perustiedot</h3>
+            ${rivi('Nimi', arvo('nimi'))}
+            ${rivi('Luokka', arvo('luokka'))}
+            ${rivi('Päivämäärä', arvo('paivays'))}
+          </div>
+
+          <div class="yhteenveto-kortti">
+            <h3>🙋 Minä opiskelijana</h3>
+            ${radioRivi('Teorian opiskelu', 'teoria')}
+            ${radioRivi('Tekemällä oppiminen', 'tekemalla')}
+            ${radioRivi('Tarvitsen lisäaikaa', 'aikaa')}
+            ${radioRivi('Selkeä toive', 'toive')}
+            ${radioRivi('Tuen tarve', 'tuki')}
+            ${rivi('Kiinnostaa', arvo('kiinnostukset'))}
+            ${rivi('Vahvuudet', arvo('vahvuudet'))}
+            ${rivi('Ei kiinnosta', arvo('ei_kiinnosta'))}
+            ${rivi('Oma päätelmä', arvo('mina_paatelma'))}
+          </div>
+
+          <div class="yhteenveto-kortti">
+            <h3>🔍 Hakukohteet</h3>
+            ${rivi('Hakukohde 1', arvo('hakukohde1') + (arvo('hakukohde1_paikka') ? ' – ' + arvo('hakukohde1_paikka') : ''))}
+            ${rivi('Hakukohde 2', arvo('hakukohde2') + (arvo('hakukohde2_paikka') ? ' – ' + arvo('hakukohde2_paikka') : ''))}
+            ${rivi('Hakukohde 3', arvo('hakukohde3') + (arvo('hakukohde3_paikka') ? ' – ' + arvo('hakukohde3_paikka') : ''))}
+            ${rivi('Paras hakukohde', arvo('paras_hakukohde'))}
+          </div>
+
+          <div class="yhteenveto-kortti">
+            <h3>📋 Tutustuminen (Osa 2)</h3>
+            ${rivi('Tutustumistapa', arvo('tutustumistapa'))}
+            ${rivi('Koulu', arvo('tutustumispaikka'))}
+            ${rivi('Tunnelma', arvo('tunnelma'))}
+            ${rivi('Näenkö itseni siellä', arvo('naenko_itseni'))}
+            ${rivi('Muuttuiko mieli', arvo('muuttuiko'))}
+            ${rivi('Tärkein havainto', arvo('tutustuminen_paatelma'))}
+          </div>
+
+          <div class="yhteenveto-kortti">
+            <h3>📊 Päätösmatriisi</h3>
+            ${matrGrid}
+          </div>
+
+          <div class="yhteenveto-kortti">
+            <h3>✅ Hakusuunnitelma</h3>
+            ${rivi('1. hakutoive', arvo('haku1'))}
+            ${rivi('2. hakutoive', arvo('haku2'))}
+            ${rivi('3. hakutoive', arvo('haku3'))}
+            ${rivi('Varavaihtoehto', arvo('vara'))}
+            ${rivi('Perustelut', arvo('hakujarjestys_perustelu'))}
+            ${rivi('Kirje itselleni', arvo('paatoskirje'))}
+          </div>
+        `;
+
+        document.getElementById('yhteenveto-sisalto').innerHTML = html;
+      }
+
+      // ── Osa 1 TXT-lataus ─────────────────────────────────────────────
+      function lataaOsa1() {
+        tallenna();
+        const txt = [
+          'HAKUSTRATEGIA – OSA 1',
+          '======================',
+          `Nimi: ${arvo('nimi') || '-'}`,
+          `Luokka: ${arvo('luokka') || '-'}`,
+          `Päivämäärä: ${arvo('paivays') || '-'}`,
+          '',
+          'MINÄ OPISKELIJANA',
+          '-----------------',
+          `Teorian opiskelu (1–5): ${radioArvo('teoria') || '-'}`,
+          `Tekemällä oppiminen (1–5): ${radioArvo('tekemalla') || '-'}`,
+          `Tarvitsen lisäaikaa (1–5): ${radioArvo('aikaa') || '-'}`,
+          `Selkeä toive (1–5): ${radioArvo('toive') || '-'}`,
+          `Tuen tarve (1–5): ${radioArvo('tuki') || '-'}`,
+          `Minua kiinnostaa: ${arvo('kiinnostukset') || '-'}`,
+          `Olen hyvä: ${arvo('vahvuudet') || '-'}`,
+          `En halua ainakaan: ${arvo('ei_kiinnosta') || '-'}`,
+          `Oma päätelmä: ${arvo('mina_paatelma') || '-'}`,
+          '',
+          'VAIHTOEHDOT',
+          '-----------',
+          `Lukio – kiinnostaa: ${arvo('lukio_plus') || '-'}`,
+          `Lukio – mietityttää: ${arvo('lukio_miinus') || '-'}`,
+          `Ammatillinen – kiinnostaa: ${arvo('amis_plus') || '-'}`,
+          `Ammatillinen – mietityttää: ${arvo('amis_miinus') || '-'}`,
+          `TUVA – kiinnostaa: ${arvo('tuva_plus') || '-'}`,
+          `TUVA – mietityttää: ${arvo('tuva_miinus') || '-'}`,
+          `Kansanopisto – kiinnostaa: ${arvo('kansa_plus') || '-'}`,
+          `Kansanopisto – mietityttää: ${arvo('kansa_miinus') || '-'}`,
+          `Kiinnostavin vaihtoehto: ${arvo('vaihtoehdot_paatelma') || '-'}`,
+          '',
+          'HAKUKOHTEET',
+          '-----------',
+          `Hakukohde 1: ${arvo('hakukohde1') || '-'} (${arvo('hakukohde1_paikka') || '-'})`,
+          `  Kiinnostaa: ${arvo('hakukohde1_plus') || '-'}`,
+          `  Epäilyttää: ${arvo('hakukohde1_miinus') || '-'}`,
+          `Hakukohde 2: ${arvo('hakukohde2') || '-'} (${arvo('hakukohde2_paikka') || '-'})`,
+          `  Kiinnostaa: ${arvo('hakukohde2_plus') || '-'}`,
+          `  Epäilyttää: ${arvo('hakukohde2_miinus') || '-'}`,
+          `Hakukohde 3: ${arvo('hakukohde3') || '-'} (${arvo('hakukohde3_paikka') || '-'})`,
+          `  Kiinnostaa: ${arvo('hakukohde3_plus') || '-'}`,
+          `  Epäilyttää: ${arvo('hakukohde3_miinus') || '-'}`,
+          `Tietolähteet: ${arvo('tietolahteet') || '-'}`,
+          `Paras hakukohde: ${arvo('paras_hakukohde') || '-'}`,
+          '',
+          '-- OSA 2 täytetään tutustumisen jälkeen --',
+        ].join('\n');
+
+        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hakustrategia_osa1_${(arvo('nimi') || 'oppilas').replace(/\s+/g,'_').toLowerCase()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // ── TXT-lataus ───────────────────────────────────────────────
+      function lataaYhteenveto() {
+        tallenna();
+        const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
+        const pisteet = paivitaPisteet();
+
+        const txt = [
+          'HAKUSTRATEGIA – DIGIOPO',
+          '========================',
+          `Nimi: ${arvo('nimi') || '-'}`,
+          `Luokka: ${arvo('luokka') || '-'}`,
+          `Päivämäärä: ${arvo('paivays') || '-'}`,
+          '',
+          'OSA 1 – MINÄ OPISKELIJANA',
+          '--------------------------',
+          `Teorian opiskelu (1–5): ${radioArvo('teoria') || '-'}`,
+          `Tekemällä oppiminen (1–5): ${radioArvo('tekemalla') || '-'}`,
+          `Tarvitsen lisäaikaa (1–5): ${radioArvo('aikaa') || '-'}`,
+          `Selkeä toive (1–5): ${radioArvo('toive') || '-'}`,
+          `Tuen tarve (1–5): ${radioArvo('tuki') || '-'}`,
+          `Kiinnostaa: ${arvo('kiinnostukset') || '-'}`,
+          `Vahvuudet: ${arvo('vahvuudet') || '-'}`,
+          `Ei kiinnosta: ${arvo('ei_kiinnosta') || '-'}`,
+          `Oma päätelmä: ${arvo('mina_paatelma') || '-'}`,
+          '',
+          'HAKUKOHTEET',
+          '-----------',
+          `Hakukohde 1: ${arvo('hakukohde1') || '-'} (${arvo('hakukohde1_paikka') || '-'})`,
+          `Hakukohde 2: ${arvo('hakukohde2') || '-'} (${arvo('hakukohde2_paikka') || '-'})`,
+          `Hakukohde 3: ${arvo('hakukohde3') || '-'} (${arvo('hakukohde3_paikka') || '-'})`,
+          `Paras hakukohde: ${arvo('paras_hakukohde') || '-'}`,
+          '',
+          'OSA 2 – TUTUSTUMINEN',
+          '--------------------',
+          `Tutustumistapa: ${arvo('tutustumistapa') || '-'}`,
+          `Koulu: ${arvo('tutustumispaikka') || '-'}`,
+          `Tunnelma: ${arvo('tunnelma') || '-'}`,
+          `Opiskelijat: ${arvo('opiskelijat') || '-'}`,
+          `Opetus: ${arvo('opetus') || '-'}`,
+          `Näenkö itseni siellä: ${arvo('naenko_itseni') || '-'}`,
+          `Muuttuiko mieli: ${arvo('muuttuiko') || '-'}`,
+          `Tärkein havainto: ${arvo('tutustuminen_paatelma') || '-'}`,
+          '',
+          'ARKI JA TODELLISUUS',
+          '-------------------',
+          `Koulumatka: ${arvo('koulumatka') || '-'}`,
+          `Päivärytmi: ${arvo('paivarytmi') || '-'}`,
+          `Tuen tarve: ${arvo('tuki_arjessa') || '-'}`,
+          `Jaksaminen: ${arvo('jaksaminen') || '-'}`,
+          `Haastattelu tai some: ${arvo('haastattelu') || '-'}`,
+          '',
+          'PÄÄTÖSMATRIISI (pisteet / 25)',
+          '-----------------------------',
+          ...Object.entries(pisteet).map(([v, p]) => `${nimet[v]}: ${p > 0 ? p : '-'}`),
+          '',
+          'HAKUSUUNNITELMA',
+          '---------------',
+          `1. hakutoive: ${arvo('haku1') || '-'}`,
+          `2. hakutoive: ${arvo('haku2') || '-'}`,
+          `3. hakutoive: ${arvo('haku3') || '-'}`,
+          `Varavaihtoehto: ${arvo('vara') || '-'}`,
+          `Perustelut: ${arvo('hakujarjestys_perustelu') || '-'}`,
+          `Kirje itselleni: ${arvo('paatoskirje') || '-'}`,
+        ].join('\n');
+
+        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hakustrategia_${(arvo('nimi') || 'oppilas').replace(/\s+/g,'_').toLowerCase()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // ── Tyhjennä ─────────────────────────────────────────────────
+      function tyhjennaVastaukset() {
+        if (!confirm('Haluatko varmasti tyhjentää kaikki vastaukset? Tätä ei voi peruuttaa.')) return;
+        localStorage.removeItem(AVAIN);
+        haeKentat().forEach(f => f.value = '');
+        haeRadiot().forEach(r => r.checked = false);
+        paivitaEdistyminen();
+        paivitaPisteet();
+        paivitaYhteenveto();
+      }
+
+      // ── Scrollnäppäin ─────────────────────────────────────────────
+      const scrollBtn = document.getElementById('scrollTopBtn');
+      window.addEventListener('scroll', () => {
+        scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+      }, { passive: true });
+      scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // ── Sivupalkkilinkit aktiiviksesi ─────────────────────────────
+      function paivitaNav() {
+        const osiot = document.querySelectorAll('section[id]');
+        const linkit = document.querySelectorAll('.aihelista a');
+        let nykyinen = '';
+        osiot.forEach(s => {
+          if (s.getBoundingClientRect().top <= 120) nykyinen = s.id;
+        });
+        linkit.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + nykyinen);
+        });
+      }
+      window.addEventListener('scroll', paivitaNav, { passive: true });
+
+      // ── Init ───────────────────────────────────────────────────────
+      document.addEventListener('DOMContentLoaded', () => {
+        lataaData();
+        // Kuuntelijat kaikille kentille
+        haeKentat().forEach(f => {
+          f.addEventListener('input', tallenna);
+          f.addEventListener('change', tallenna);
+        });
+        haeRadiot().forEach(r => r.addEventListener('change', tallenna));
+        // Matriisi-selects
+        document.querySelectorAll('[id^="m_"]').forEach(s => s.addEventListener('change', paivitaPisteet));
+        paivitaEdistyminen();
+        paivitaPisteet();
+        paivitaYhteenveto();
+      });
+    </script>
+  </body>
+</html>
