@@ -188,16 +188,7 @@ const tehtavat = {
   ],
 
   9: [
-    {
-      aiheId: "tasks-jatko",
-      title: "Minne minä menen?",
-      description:
-        "Pohdi ja kirjaa kolme mahdollista polkua peruskoulun jälkeen.",
-      href: "../tehtava.html?id=jatko9",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-jatko",
       title: "Päivän aihe: Lukio vai amis?",
@@ -207,16 +198,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-yhteishaku",
-      title: "Hakustrategiani",
-      description:
-        "Suunnittele oma hakustrategiasi: varma, realistinen ja unelma.",
-      href: "../tehtava.html?id=hakustrategia",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-yhteishaku",
       title: "Päivän aihe: Miten haen?",

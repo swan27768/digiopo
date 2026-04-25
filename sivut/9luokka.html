@@ -390,6 +390,131 @@
         border-radius: 6px;
         font-weight: 700;
       }
+
+      /* ── Hakustrategia hero ──────────────────────────────────── */
+      .hakustr-hero {
+        position: relative;
+        border-radius: 18px;
+        overflow: hidden;
+        margin: 20px 0;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #0d9488, #134e4a);
+      }
+      .hakustr-hero-deco {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 80% 30%, rgba(153,246,228,0.18) 0%, transparent 60%),
+          radial-gradient(circle at 20% 80%, rgba(13,148,136,0.25) 0%, transparent 50%);
+        pointer-events: none;
+      }
+      .hakustr-hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 28px 32px;
+        color: #fff;
+        width: 100%;
+      }
+      .hakustr-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        padding: 4px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .hakustr-hero-content h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+      .hakustr-hero-content p {
+        margin: 0 0 20px;
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 520px;
+        opacity: 0.92;
+      }
+      .hakustr-hero-icon {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 5rem;
+        opacity: 0.12;
+        color: #fff;
+        pointer-events: none;
+      }
+      .btn-hakustr {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        color: #134e4a;
+        font-weight: 700;
+        font-size: 15px;
+        padding: 11px 24px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+      .btn-hakustr:hover {
+        background: #f0fdfa;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      .hakustr-sulje-rivi {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      }
+      .hakustr-sulje-btn {
+        background: #0d9488;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s;
+      }
+      .hakustr-sulje-btn:hover {
+        background: #0f766e;
+      }
+      .hakustr-osat-info {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .hakustr-osa-pilli {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 600;
+      }
     </style>
   </head>
 
@@ -441,6 +566,7 @@
           <a href="#yhteishaku-mission" class="sub-link mission-link"
             >Toiminta</a
           >
+          <a href="#hakustrategia" class="sub-link mission-link" style="font-weight:700;color:#0d9488;">📋 Hakustrategia-tehtävä</a>
           <a href="#tet">Duuniin! – työelämä tutuksi</a>
           <a href="#tet-mission" class="sub-link mission-link">Toiminta</a>
           <a href="#testi">Testaa itsesi</a>
@@ -539,20 +665,65 @@
               aria-live="polite"
             ></div>
           </div>
-          <div id="yhteishaku-mission" class="mission-section">
-            <div class="mission-card">
-              <div class="mission-header">
-                <h4>Hakustrategia</h4>
-                <span class="mission-badge">Yksilötehtävä</span>
-              </div>
-              <p>Suunnittele omat hakukohteesi.</p>
-              <ul class="mission-list">
-                <li>1 varma – johon pääset melko varmasti</li>
-                <li>1 realistinen – johon sinulla on hyvät mahdollisuudet</li>
-                <li>1 unelma – johon haluaisit päästä</li>
-              </ul>
-              <p class="mission-hint">⏱ Aika: 10 min</p>
+        
+        </section>
+
+        <!-- Hakustrategia-tehtävä -->
+        <section id="hakustrategia" class="aihe-osio" aria-labelledby="otsikko-hakustrategia">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-hakustrategia">Hakustrategia-tehtävä</h2>
+            <p>Yksilötehtävä – tee oma hakusuunnitelma vaihe vaiheelta.</p>
+          </div>
+
+          <div class="theory-card">
+            <div class="theory-text">
+              <h3>Miten tehtävä toimii?</h3>
+              <p>Tehtävä on jaettu <strong>kahteen osaan</strong>. Tee ensin <strong>Osa 1</strong> tunnilla ja palauta se opolle. Palaa <strong>Osaan 2</strong> sen jälkeen, kun olet käynyt tutustumassa – esimerkiksi Avoimilla Ovilla.</p>
+              <p>Vastauksesi tallentuvat automaattisesti selaimeen, joten voit jatkaa myöhemmin.</p>
             </div>
+          </div>
+
+          <!-- Hero-banneri -->
+          <div class="hakustr-hero">
+            <div class="hakustr-hero-deco" aria-hidden="true"></div>
+            <div class="hakustr-hero-content">
+              <div class="hakustr-badge">
+                <i class="fa-solid fa-route" aria-hidden="true"></i>
+                Yksilötehtävä
+              </div>
+              <h3>Hakustrategia – suunnittele oma reittisi</h3>
+              <p>Mieti kiinnostuksiasi, tutki hakukohteita ja tee oma hakusuunnitelma. Tehtävä ohjaa sinut vaihe vaiheelta.</p>
+              <div class="hakustr-osat-info" aria-label="Tehtävän osat">
+                <span class="hakustr-osa-pilli"><i class="fa-solid fa-1 fa-xs" aria-hidden="true"></i> Osa 1 – Ennen tutustumista</span>
+                <span class="hakustr-osa-pilli"><i class="fa-solid fa-2 fa-xs" aria-hidden="true"></i> Osa 2 – Tutustumisen jälkeen</span>
+              </div>
+              <div style="margin-top: 18px;">
+                <button class="btn-hakustr" onclick="avaaHakustrategia()" aria-expanded="false" aria-controls="hakustrategiaContainer">
+                  <i class="fa-solid fa-play" aria-hidden="true"></i>
+                  Aloita tehtävä
+                </button>
+              </div>
+            </div>
+            <i class="fa-solid fa-map-location-dot hakustr-hero-icon" aria-hidden="true"></i>
+          </div>
+
+          <!-- Iframe-upotus (piilossa ennen klikkausta) -->
+          <div id="hakustrategiaContainer" style="display: none; margin-top: 12px;">
+            <div class="hakustr-sulje-rivi">
+              <button class="hakustr-sulje-btn" onclick="suljeHakustrategia()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                Sulje tehtävä
+              </button>
+            </div>
+            <iframe
+              id="hakustrategiaFrame"
+              src=""
+              width="100%"
+              height="900px"
+              style="border: none; border-radius: 14px; box-shadow: 0 4px 20px rgba(13,148,136,0.12);"
+              title="Hakustrategia-tehtävä – suunnittele oma reittisi peruskoulun jälkeen"
+              loading="lazy"
+            ></iframe>
           </div>
         </section>
 
@@ -840,6 +1011,7 @@
         const puhetekstit = {
           jatko: "Ei ole yhtä oikeaa reittiä – mikä tuntuu omalta? 🙂",
           yhteishaku: "Varma, realistinen, unelma – hyvä strategia!",
+          hakustrategia: "Tee oma suunnitelmasi – vaihe vaiheelta 📋",
           tet: "Duuniin! Kokeile työelämää ja löydä omat vahvuutesi 💭",
           testi: "Kumpi tuntui tutummalta? Se kertoo jotain 👀",
           valinnat: "Rohkeus valita on jo puolet matkasta ✨",
@@ -878,6 +1050,28 @@
         window.addEventListener("scroll", paivitaOsio, { passive: true });
       }
       window.addEventListener("load", setupMaskotti);
+
+      function avaaHakustrategia() {
+        const container = document.getElementById("hakustrategiaContainer");
+        const frame = document.getElementById("hakustrategiaFrame");
+        const btn = document.querySelector('[onclick="avaaHakustrategia()"]');
+        if (!frame.getAttribute("src")) {
+          frame.src = "../tehtavat/hakustrategia.html";
+        }
+        container.style.display = "block";
+        if (btn) btn.setAttribute("aria-expanded", "true");
+        container.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function suljeHakustrategia() {
+        const container = document.getElementById("hakustrategiaContainer");
+        const btn = document.querySelector('[onclick="avaaHakustrategia()"]');
+        container.style.display = "none";
+        if (btn) btn.setAttribute("aria-expanded", "false");
+        document
+          .getElementById("hakustrategia")
+          .scrollIntoView({ behavior: "smooth" });
+      }
 
       const scrollBtn = document.getElementById("scrollTopBtn");
       window.addEventListener(
