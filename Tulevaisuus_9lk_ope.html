@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opettajan ohje — Vesi 2045 | DigiOpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1e40af;
+    --blue-mid: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-pale: #eff6ff;
+    --blue-dark: #1e3a5f;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --amber-border: #fcd34d;
+    --green: #065f46;
+    --green-light: #d1fae5;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --bg: #f0f7ff;
+    --white: #ffffff;
+    --border: rgba(30,64,175,0.12);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+  .header { background: var(--blue-dark); color: white; padding: 36px 32px 52px; position: relative; overflow: hidden; }
+  .header::before { content: '💧'; position: absolute; top: -10px; right: 20px; font-size: 100px; opacity: 0.1; }
+  .header::after { content: ''; position: absolute; bottom: -32px; left: -5%; right: -5%; height: 64px; background: var(--bg); border-radius: 50%; }
+  .header-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; padding: 5px 14px; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .header-eyebrow { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; margin-bottom: 10px; }
+  .header-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .header-title em { font-style: italic; color: #93c5fd; }
+  .header-sub { font-size: 14px; opacity: 0.65; line-height: 1.6; max-width: 480px; }
+
+  .main { max-width: 680px; margin: 0 auto; padding: 40px 24px 0; }
+
+  .miksi-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .miksi-card::before { content: '"'; font-family: 'Lora', serif; font-size: 80px; color: var(--blue-light); position: absolute; top: 8px; left: 20px; line-height: 1; }
+  .miksi-card p { font-family: 'Lora', serif; font-size: 16px; font-style: italic; line-height: 1.75; color: var(--blue-dark); padding-left: 8px; margin-top: 16px; }
+
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-mid); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Matka-kaavio */
+  .matka-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 28px; }
+  .matka-card h3 { font-size: 13px; font-weight: 500; color: var(--blue-dark); margin-bottom: 16px; }
+  .matka-steps { display: flex; flex-direction: column; gap: 0; }
+  .matka-step { display: flex; align-items: flex-start; gap: 14px; position: relative; padding-bottom: 16px; }
+  .matka-step:last-child { padding-bottom: 0; }
+  .matka-step::before { content: ''; position: absolute; left: 17px; top: 36px; bottom: 0; width: 2px; background: var(--blue-light); }
+  .matka-step:last-child::before { display: none; }
+  .matka-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-size: 16px; font-weight: 600; flex-shrink: 0; }
+  .matka-num.lk7 { background: #d1fae5; color: #065f46; }
+  .matka-num.lk8 { background: #ede9fe; color: #5b21b6; }
+  .matka-num.lk9 { background: var(--blue-light); color: var(--blue); }
+  .matka-content h4 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .matka-content p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  .vaihe-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .vaihe-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 24px; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: flex-start; }
+  .vaihe-num { width: 44px; height: 44px; background: var(--blue-light); color: var(--blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-size: 20px; font-weight: 600; flex-shrink: 0; }
+  .vaihe-content h3 { font-size: 15px; font-weight: 500; color: var(--blue-dark); margin-bottom: 4px; }
+  .vaihe-content .vaihe-meta { font-size: 11px; color: var(--blue-mid); letter-spacing: 0.05em; margin-bottom: 10px; }
+  .vaihe-content p { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+  .vaihe-tip { margin-top: 10px; background: var(--blue-pale); border-left: 3px solid var(--blue-mid); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; line-height: 1.6; color: var(--blue-dark); }
+  .vaihe-tip strong { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: block; color: var(--blue-mid); margin-bottom: 4px; }
+
+  /* Taso-lista */
+  .taso-lista { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .taso-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--text-muted); padding: 10px 14px; background: var(--bg); border-radius: 8px; line-height: 1.5; }
+  .taso-item.highlight { background: var(--blue-light); color: var(--blue-dark); font-weight: 500; }
+
+  .seuraava-card { background: var(--amber-light); border: 1.5px solid var(--amber-border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+  .seuraava-card h3 { font-size: 15px; font-weight: 500; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .seuraava-card p { font-size: 14px; line-height: 1.7; color: #78350f; margin-bottom: 12px; }
+  .seuraava-steps { display: flex; flex-direction: column; gap: 8px; }
+  .seuraava-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: #78350f; line-height: 1.55; }
+  .seuraava-step-icon { flex-shrink: 0; width: 22px; height: 22px; background: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
+
+  .muistutus-card { background: var(--green-light); border: 1.5px solid rgba(6,95,70,0.2); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+  .muistutus-card h3 { font-size: 14px; font-weight: 500; color: var(--green); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .muistutus-card p { font-size: 14px; line-height: 1.75; color: #064e3b; }
+  .muistutus-card p + p { margin-top: 10px; }
+
+  .print-bar { position: sticky; bottom: 0; background: var(--white); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: flex-end; }
+  .btn-print { display: flex; align-items: center; gap: 8px; background: var(--blue-mid); color: white; border: none; border-radius: 50px; padding: 11px 24px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .btn-print:hover { background: var(--blue-dark); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .miksi-card  { animation: fadeUp 0.4s ease both; }
+  .matka-card  { animation: fadeUp 0.4s 0.06s ease both; }
+  .vaihe-card:nth-child(1) { animation: fadeUp 0.4s 0.12s ease both; }
+  .vaihe-card:nth-child(2) { animation: fadeUp 0.4s 0.18s ease both; }
+  .vaihe-card:nth-child(3) { animation: fadeUp 0.4s 0.24s ease both; }
+  .seuraava-card { animation: fadeUp 0.4s 0.30s ease both; }
+  .muistutus-card { animation: fadeUp 0.4s 0.36s ease both; }
+
+  @media print { .print-bar { display: none; } body { background: white; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">🎓 DigiOpo · Opettajan ohje</div>
+  <div class="header-eyebrow">9. luokka · Tulevaisuus-kokonaisuus</div>
+  <div class="header-title">Vesi <em>2045</em></div>
+  <div class="header-sub">Pedagoginen ohje tehtäväkokonaisuuden ohjaamiseen — ei teknistä osaamista tarvita.</div>
+</div>
+
+<div class="main">
+
+  <!-- Miksi -->
+  <div class="miksi-card">
+    <p>Yhdeksäsluokkalainen on yläkoulun lopussa. Hän on harjoitellut kuvittelemaan, rakentamaan ja perustelemaan. Nyt on aika katsoa kauemmaksi — oman luokan ja koulun ulkopuolelle, sinne missä oikeat päätökset syntyvät. Vesi 2045 ei ole ympäristötehtävä. Se on harjoitus siitä miten yksi ihminen liittyy johonkin suurempaan.</p>
+  </div>
+
+  <!-- Kolmen vuoden matka -->
+  <div class="section-label">Kolmen vuoden matka</div>
+
+  <div class="matka-card">
+    <h3>Miten tämä päättää koko Tulevaisuus-kokonaisuuden?</h3>
+    <div class="matka-steps">
+      <div class="matka-step">
+        <div class="matka-num lk7">7</div>
+        <div class="matka-content">
+          <h4>Kuvittelu — Oma luokka</h4>
+          <p>Mitä jos some katoaa? Harjoiteltiin reagoimista ja ryhmässä toimimista.</p>
+        </div>
+      </div>
+      <div class="matka-step">
+        <div class="matka-num lk8">8</div>
+        <div class="matka-content">
+          <h4>Rakentaminen — Instituutio</h4>
+          <p>Tulevaisuuden koulu pala palalta. Opittiin perustelemaan ja ajattelemaan muiden tarpeita.</p>
+        </div>
+      </div>
+      <div class="matka-step">
+        <div class="matka-num lk9">9</div>
+        <div class="matka-content">
+          <h4>Vastuu — Maailma</h4>
+          <p>Vesikriisi 2045. Harjoitellaan globaalia vastuuta ja vaikuttamista — yksilöstä maailmaan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kolme tasoa -->
+  <div class="section-label">Kolme tasoa — kolme eri kysymystä</div>
+
+  <div class="vaihe-grid">
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">🎰</div>
+      <div class="vaihe-content">
+        <h3>Onnenpyörä — lämmittely</h3>
+        <div class="vaihe-meta">5–8 min · jokainen yksin · kerrotaan ryhmälle</div>
+        <p>Kysymykset ovat tällä kertaa isompia kuin aiemmilla luokilla. Se on tarkoitus. Jos oppilas sanoo "en osaa vastata" — se on täsmälleen oikea reaktio.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Sano se ääneen: <em>"Hyvä. Siitä alkaa oikea ajattelu."</em> Hiljaisuus on merkki siitä että kysymys on osunut oikeaan paikkaan — ei siitä että tehtävä on epäonnistunut.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">🌍</div>
+      <div class="vaihe-content">
+        <h3>Kolme tasoa — Minä, Suomi, Maailma</h3>
+        <div class="vaihe-meta">15–20 min · tiimityö · kirjuri kirjaa</div>
+        <p>Sama ongelma kolmella eri tasolla. Tärkeys kasvaa alhaalta ylös.</p>
+        <div class="taso-lista">
+          <div class="taso-item"><span>🙋</span><span><strong>Taso 1 — Minä:</strong> Konkreettiset teot. Helpoin taso — lähellä arkea.</span></div>
+          <div class="taso-item highlight"><span>🇫🇮</span><span><strong>Taso 2 — Suomi:</strong> Päätös arvojen välillä. Tämä on tehtävän vaikein kohta — perustelu on tärkeämpi kuin valinta.</span></div>
+          <div class="taso-item"><span>🌍</span><span><strong>Taso 3 — Maailma:</strong> YK-lause. Lyhyin mutta tärkein — jokainen sana harkittu.</span></div>
+        </div>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Suomi-päätöksessä ei ole hyvää vastausta. Oikeudenmukaisuus, turvallisuus ja talous ovat kaikki ristiriidassa. Anna ristiriidan olla — älä ratkaise sitä oppilaiden puolesta.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">📄</div>
+      <div class="vaihe-content">
+        <h3>Koonti ja palautus</h3>
+        <div class="vaihe-meta">5 min · yksilö · Classroom</div>
+        <p>Ryhmän suunnitelma tallentuu tekstitiedostona. Jokainen ryhmäläinen palauttaa oman tiedostonsa Classroomin kautta.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Muistuta oppilaita lataamaan tiedosto ennen sivun sulkemista. Pyydä ryhmää myös harjoittelemaan YK-lauseensa ääneen ennen seuraavaa tuntia.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Seuraava tunti -->
+  <div class="section-label">Seuraavalla tunnilla</div>
+
+  <div class="seuraava-card">
+    <h3>🎤 YK-lauseet ääneen — luokka kuuntelee</h3>
+    <p>Jokainen ryhmä lukee YK-lauseensa ääneen. Kirjaa lauseet taululle. Pyydä luokkaa katsomaan mitä niissä on yhteistä — se yhteinen asia on teidän luokkanne arvojen ydin.</p>
+    <div class="seuraava-steps">
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🎤</span>
+        <span>Jokainen ryhmä lukee YK-lauseensa ääneen — puhuja lukee, muut kuuntelevat</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">📋</span>
+        <span>Opettaja kirjaa lauseet taululle — kaikki näkyvissä yhtä aikaa</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">💬</span>
+        <span>Purku yhdellä kysymyksellä: <em>"Mikä lause sai sinut pysähtymään — ja miksi?"</em></span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🔍</span>
+        <span>Yhteinen havainto: mitä lauseissa on yhteistä? Se kertoo mitä luokka oikeasti arvostaa.</span>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:13px; font-style:italic;">Tämä on usein koko kolmen vuoden kokonaisuuden paras hetki.</p>
+  </div>
+
+  <!-- Muistutus -->
+  <div class="section-label">Yksi muistutus</div>
+
+  <div class="muistutus-card">
+    <h3>🌱 Tämä on kolmen vuoden matkan viimeinen etappi</h3>
+    <p>7. luokalla kuviteltiin, 8. luokalla rakennettiin, 9. luokalla otetaan vastuu. Jos on mahdollista, muistuta oppilaita siitä — he ovat kulkeneet pitkän matkan.</p>
+    <p>Ja jos joku oppilas sanoo että hän ei voi vaikuttaa maailman vesikriisiin — hän on oikeassa. Mutta hän voi vaikuttaa siihen miten hän ajattelee siitä. <strong>Se on jo jotain.</strong></p>
+  </div>
+
+</div>
+
+<div class="print-bar">
+  <button class="btn-print" onclick="window.print()">🖨 Tulosta ohje</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opettajan ohje — Rakenna huomisen koulu | DigiOpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #5b21b6;
+    --purple-mid: #7c3aed;
+    --purple-light: #ede9fe;
+    --purple-pale: #faf5ff;
+    --purple-dark: #3b0764;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --amber-border: #fcd34d;
+    --green: #065f46;
+    --green-light: #d1fae5;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --bg: #f9f7f4;
+    --white: #ffffff;
+    --border: rgba(91,33,182,0.12);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+
+  /* Header */
+  .header { background: var(--purple-dark); color: white; padding: 36px 32px 52px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(124,58,237,0.2); border-radius: 50%; }
+  .header::after { content: ''; position: absolute; bottom: -32px; left: -5%; right: -5%; height: 64px; background: var(--bg); border-radius: 50%; }
+  .header-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; padding: 5px 14px; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .header-eyebrow { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; margin-bottom: 10px; }
+  .header-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }
+  .header-title em { font-style: italic; color: #c4b5fd; }
+  .header-sub { font-size: 14px; opacity: 0.65; line-height: 1.6; max-width: 480px; }
+
+  /* Main */
+  .main { max-width: 680px; margin: 0 auto; padding: 40px 24px 0; }
+
+  /* Miksi */
+  .miksi-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .miksi-card::before { content: '"'; font-family: 'Lora', serif; font-size: 80px; color: var(--purple-light); position: absolute; top: 8px; left: 20px; line-height: 1; }
+  .miksi-card p { font-family: 'Lora', serif; font-size: 16px; font-style: italic; line-height: 1.75; color: var(--purple-dark); padding-left: 8px; margin-top: 16px; }
+
+  /* Section label */
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Vaihe-kortit */
+  .vaihe-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .vaihe-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 24px; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: flex-start; }
+  .vaihe-num { width: 44px; height: 44px; background: var(--purple-light); color: var(--purple); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-size: 20px; font-weight: 600; flex-shrink: 0; }
+  .vaihe-content h3 { font-size: 15px; font-weight: 500; color: var(--purple-dark); margin-bottom: 4px; }
+  .vaihe-content .vaihe-meta { font-size: 11px; color: var(--purple-mid); letter-spacing: 0.05em; margin-bottom: 10px; }
+  .vaihe-content p { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+  .vaihe-tip { margin-top: 10px; background: var(--purple-pale); border-left: 3px solid var(--purple-mid); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; line-height: 1.6; color: var(--purple-dark); }
+  .vaihe-tip strong { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; display: block; color: var(--purple-mid); margin-bottom: 4px; }
+
+  /* Palika-lista — miksi-palikan korostus */
+  .palika-lista { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+  .palika-item { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--text-muted); padding: 8px 12px; background: var(--bg); border-radius: 8px; }
+  .palika-item.highlight { background: var(--purple-light); color: var(--purple-dark); font-weight: 500; }
+  .palika-emoji { font-size: 15px; }
+
+  /* Seuraava tunti */
+  .seuraava-card { background: var(--amber-light); border: 1.5px solid var(--amber-border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+  .seuraava-card h3 { font-size: 15px; font-weight: 500; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .seuraava-card p { font-size: 14px; line-height: 1.7; color: #78350f; margin-bottom: 12px; }
+  .seuraava-steps { display: flex; flex-direction: column; gap: 8px; }
+  .seuraava-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: #78350f; line-height: 1.55; }
+  .seuraava-step-icon { flex-shrink: 0; width: 22px; height: 22px; background: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
+
+  /* Muistutus */
+  .muistutus-card { background: var(--green-light); border: 1.5px solid rgba(6,95,70,0.2); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+  .muistutus-card h3 { font-size: 14px; font-weight: 500; color: var(--green); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .muistutus-card p { font-size: 14px; line-height: 1.75; color: #064e3b; }
+  .muistutus-card p + p { margin-top: 10px; }
+
+  /* 7lk vertailu */
+  .vertailu-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 28px; }
+  .vertailu-card h3 { font-size: 13px; font-weight: 500; color: var(--purple-dark); margin-bottom: 14px; letter-spacing: 0.02em; }
+  .vertailu-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vertailu-col { border-radius: 10px; padding: 14px; }
+  .vertailu-col.v7 { background: #e1f5ee; }
+  .vertailu-col.v8 { background: var(--purple-light); }
+  .vertailu-col-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .vertailu-col.v7 .vertailu-col-label { color: #065f46; }
+  .vertailu-col.v8 .vertailu-col-label { color: var(--purple); }
+  .vertailu-col ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .vertailu-col li { font-size: 12.5px; line-height: 1.4; color: var(--text-muted); display: flex; gap: 6px; }
+  .vertailu-col li::before { content: '→'; flex-shrink: 0; opacity: 0.5; }
+
+  /* Print */
+  .print-bar { position: sticky; bottom: 0; background: var(--white); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: flex-end; }
+  .btn-print { display: flex; align-items: center; gap: 8px; background: var(--purple-mid); color: white; border: none; border-radius: 50px; padding: 11px 24px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .btn-print:hover { background: var(--purple-dark); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .miksi-card  { animation: fadeUp 0.4s ease both; }
+  .vaihe-card:nth-child(1) { animation: fadeUp 0.4s 0.08s ease both; }
+  .vaihe-card:nth-child(2) { animation: fadeUp 0.4s 0.16s ease both; }
+  .vaihe-card:nth-child(3) { animation: fadeUp 0.4s 0.24s ease both; }
+  .seuraava-card { animation: fadeUp 0.4s 0.30s ease both; }
+  .muistutus-card { animation: fadeUp 0.4s 0.36s ease both; }
+
+  @media print { .print-bar { display: none; } body { background: white; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">🎓 DigiOpo · Opettajan ohje</div>
+  <div class="header-eyebrow">8. luokka · Tulevaisuus-kokonaisuus</div>
+  <div class="header-title">Rakenna <em>huomisen koulu</em></div>
+  <div class="header-sub">Pedagoginen ohje tehtäväkokonaisuuden ohjaamiseen — ei teknistä osaamista tarvita.</div>
+</div>
+
+<div class="main">
+
+  <!-- Miksi -->
+  <div class="miksi-card">
+    <p>Kahdeksasluokkalainen on jo tarpeeksi kypsä kysymään miksi — ei vain mitä. Tämä tehtävä vie askeleen pidemmälle kuin 7. luokan tulevaisuustehtävä: nyt ei vain reagoida tilanteeseen, vaan rakennetaan jotain kokonaan uutta. Se vaatii sekä mielikuvitusta että perustelemista.</p>
+  </div>
+
+  <!-- Yhteys 7. luokkaan -->
+  <div class="section-label">Yhteys 7. luokkaan</div>
+
+  <div class="vertailu-card">
+    <h3>Miten tämä rakentuu 7. luokan päälle?</h3>
+    <div class="vertailu-row">
+      <div class="vertailu-col v7">
+        <div class="vertailu-col-label">7. luokka</div>
+        <ul>
+          <li>Reagoi kriisiin</li>
+          <li>Valitse miten toimit</li>
+          <li>Yksi ratkaisu ryhmässä</li>
+          <li>Kuvittelu ja ryhmätyö</li>
+        </ul>
+      </div>
+      <div class="vertailu-col v8">
+        <div class="vertailu-col-label">8. luokka</div>
+        <ul>
+          <li>Rakenna jotain uutta</li>
+          <li>Valitse ja perustele</li>
+          <li>Kokonainen suunnitelma</li>
+          <li>Arvot ja päätöksenteko</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kolme vaihetta -->
+  <div class="section-label">Kolme vaihetta — kolme eri tasoa</div>
+
+  <div class="vaihe-grid">
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">1</div>
+      <div class="vaihe-content">
+        <h3>Onnenpyörä — lämmittely</h3>
+        <div class="vaihe-meta">5–8 min · jokainen yksin · kerrotaan ryhmälle</div>
+        <p>Jokainen pyörittää oman "Mitä jos..."-kysymyksen ja vastaa siihen ensin itse. Sitten kerrotaan ryhmälle. Kysymykset etenevät kevyestä syvempään — viimeiset ovat jo oikeasti haastavia.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Anna jokaisen pyörittää rauhassa — älä hoputa. Kun kysymykset kerrotaan ryhmälle, siellä syntyy usein paras idea koko tunnilta. Älä kommentoi — pelkkä kuunteleminen riittää.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">2</div>
+      <div class="vaihe-content">
+        <h3>Tulevaisuuden koulu — viisi palikkaa</h3>
+        <div class="vaihe-meta">15–20 min · tiimityö · kirjuri kirjaa</div>
+        <p>Ryhmä rakentaa koulun viidessä osassa. Ensimmäiset neljä ovat konkreettisia — ryhmä pääsee niihin helposti kiinni.</p>
+        <div class="palika-lista">
+          <div class="palika-item"><span class="palika-emoji">📍</span>Missä koulu sijaitsee?</div>
+          <div class="palika-item"><span class="palika-emoji">📚</span>Mitä siellä opitaan?</div>
+          <div class="palika-item"><span class="palika-emoji">⚙️</span>Miten opitaan?</div>
+          <div class="palika-item"><span class="palika-emoji">👥</span>Keitä siellä on?</div>
+          <div class="palika-item highlight"><span class="palika-emoji">🎯</span>Miksi koulu on olemassa? — tämä on vaikein</div>
+        </div>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Anna viimeiselle palikolle — "Miksi?" — enemmän aikaa kuin muille. Jos ryhmä sanoo "en tiedä", se on hyvä merkki. Sieltä alkaa oikea ajattelu. Sinun ei tarvitse tietää vastausta itsekään.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">3</div>
+      <div class="vaihe-content">
+        <h3>Koonti ja palautus</h3>
+        <div class="vaihe-meta">5 min · yksilö · Classroom</div>
+        <p>Ryhmän suunnitelma tallentuu tekstitiedostona ja palautetaan Classroomin kautta. Jokainen ryhmäläinen palauttaa oman tiedostonsa — nimet näkyvät tiedostossa.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Muistuta oppilaita lataamaan tiedosto ennen sivun sulkemista — vastaukset eivät tallennu automaattisesti pilveen.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Seuraava tunti -->
+  <div class="section-label">Seuraavalla tunnilla</div>
+
+  <div class="seuraava-card">
+    <h3>🏫 Ryhmät esittelevät — luokka äänestää</h3>
+    <p>Ryhmät esittelevät koulunsa muulle luokalle. Pyydä esittelijää kertomaan erityisesti yksi asia: <strong>miksi heidän koulunsa on olemassa.</strong></p>
+    <div class="seuraava-steps">
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🎤</span>
+        <span>Jokainen ryhmä esittelee koulunsa — esittelijä kertoo erityisesti miksi-palikat</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🗳</span>
+        <span>Luokka äänestää: mikä idea yllätti eniten?</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">💬</span>
+        <span>Yhteinen purku: mitä jokaisessa koulussa oli yhteistä? — se yhteinen asia kertoo mitä luokka oikeasti arvostaa</span>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:13px; font-style:italic;">Purku on usein tunnin paras hetki.</p>
+  </div>
+
+  <!-- Muistutus -->
+  <div class="section-label">Yksi muistutus</div>
+
+  <div class="muistutus-card">
+    <h3>🌱 Idea ei riitä — pitää myös perustella</h3>
+    <p>Tähän ei ole oikeaa vastausta. Mutta se ei tarkoita että kaikki vastaukset ovat yhtä hyviä.</p>
+    <p>Hyvä vastaus on <strong>perusteltu vastaus.</strong> Se on 8. luokan lisä verrattuna 7. luokkaan — ja se on myös se taito jota tarvitaan eniten 9. luokalla kun tehdään oikeita koulutusvalintoja.</p>
+  </div>
+
+</div>
+
+<div class="print-bar">
+  <button class="btn-print" onclick="window.print()">🖨 Tulosta ohje</button>
+</div>
+
+</body>
+</html>
