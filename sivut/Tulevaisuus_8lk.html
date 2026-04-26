@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tulevaisuuden koulu — 8. luokka | DigiOpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #5b21b6;
+    --purple-mid: #7c3aed;
+    --purple-light: #ede9fe;
+    --purple-pale: #faf5ff;
+    --purple-dark: #3b0764;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --amber-border: #fcd34d;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --bg: #f9f7f4;
+    --white: #ffffff;
+    --border: rgba(91,33,182,0.13);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+  .progress-bar { height: 4px; background: var(--purple-light); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+  .progress-fill { height: 100%; background: var(--purple-mid); transition: width 0.5s ease; }
+
+  .header { background: var(--purple-dark); color: white; padding: 28px 32px 44px; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; background: rgba(124,58,237,0.2); border-radius: 50%; }
+  .header::after { content: ''; position: absolute; bottom: -32px; left: -5%; right: -5%; height: 64px; background: var(--bg); border-radius: 50%; }
+  .header-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; }
+  .header-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; line-height: 1.2; }
+  .header-title em { font-style: italic; color: #c4b5fd; }
+  .phase-dots { display: flex; gap: 8px; margin-top: 16px; }
+  .phase-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); transition: background 0.3s; }
+  .phase-dot.active { background: white; }
+  .phase-dot.done { background: #c4b5fd; }
+
+  .main { padding: 48px 24px 20px; max-width: 680px; margin: 0 auto; }
+
+  .slide { display: none; animation: fadeIn 0.4s ease; }
+  .slide.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .vaihe-tag { display: inline-block; background: var(--purple-light); color: var(--purple-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; margin-bottom: 16px; }
+
+  /* Nimi */
+  .name-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 28px; }
+  .name-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .name-row:last-child { margin-bottom: 0; }
+  .name-row label { font-size: 13px; font-weight: 500; color: var(--purple-dark); white-space: nowrap; min-width: 130px; }
+  .name-row input { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; width: 100%; }
+  .name-row input:focus { border-color: var(--purple-mid); background: white; }
+  .name-row input::placeholder { color: #c0bfba; }
+  .name-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0 10px; }
+  .name-hint { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+
+  /* Situation */
+  .situation-card { background: var(--purple-dark); color: white; border-radius: var(--radius); padding: 28px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .situation-card::before { content: '🏫'; position: absolute; right: 18px; top: 14px; font-size: 48px; opacity: 0.15; }
+  .situation-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.5; margin-bottom: 10px; }
+  .situation-card h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 14px; line-height: 1.3; }
+  .situation-card p { font-size: 14px; line-height: 1.7; opacity: 0.88; margin-bottom: 10px; }
+  .situation-card strong { color: #c4b5fd; font-weight: 500; }
+
+  /* Wheel */
+  .wheel-intro { font-family: 'Fraunces', serif; font-size: 18px; font-style: italic; color: var(--purple-dark); margin-bottom: 20px; line-height: 1.45; }
+  .wheel-container { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 28px; }
+  .wheel-wrapper { position: relative; width: 280px; height: 280px; }
+  .wheel-pointer { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 28px solid var(--purple-dark); z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+  canvas { border-radius: 50%; box-shadow: 0 8px 32px rgba(91,33,182,0.25); display: block; }
+  .btn-spin { background: var(--purple-mid); color: white; border: none; border-radius: 50px; padding: 14px 36px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-spin:hover { background: var(--purple-dark); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(91,33,182,0.3); }
+  .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .wheel-result { display: none; background: var(--purple-pale); border: 2px solid var(--purple-mid); border-radius: var(--radius); padding: 22px 24px; text-align: center; width: 100%; animation: fadeIn 0.4s ease; }
+  .result-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 8px; font-weight: 500; }
+  .result-text { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--purple-dark); line-height: 1.45; }
+
+  /* Vastauskenttä pyörän jälkeen */
+  .input-group { margin-bottom: 18px; }
+  .input-label { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--purple); margin-bottom: 8px; display: block; }
+  textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; color: var(--text); background: var(--white); resize: none; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  textarea:focus { border-color: var(--purple-mid); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  textarea::placeholder { color: #c0bfba; }
+
+  .pair-box { background: var(--amber-light); border-left: 3px solid var(--amber-border); border-radius: 0 10px 10px 0; padding: 18px 20px; margin: 20px 0 24px; font-size: 14px; line-height: 1.65; color: #4a3200; }
+  .pair-box strong { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+
+  /* Rakennuspalikat */
+  .palika { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .palika:focus-within { border-color: var(--purple-mid); }
+  .palika-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .palika-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .palika-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--purple-dark); }
+  .palika-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .palika-kysymys { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; font-style: italic; }
+
+  /* Roolit */
+  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .role-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--white); cursor: pointer; transition: all 0.2s; text-align: center; }
+  .role-card:hover { border-color: var(--purple-mid); background: var(--purple-pale); }
+  .role-card.selected { border-color: var(--purple); background: var(--purple-light); }
+  .role-emoji { font-size: 22px; margin-bottom: 6px; }
+  .role-title { font-size: 13px; font-weight: 500; color: var(--purple-dark); margin-bottom: 2px; }
+  .role-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+  .highlight-quote { font-family: 'Fraunces', serif; font-size: 16px; font-style: italic; color: var(--purple-dark); border-left: 3px solid var(--purple-mid); padding: 12px 20px; margin: 0 0 24px; line-height: 1.5; background: var(--purple-pale); border-radius: 0 8px 8px 0; }
+
+  /* Ending */
+  .ending-card { background: var(--purple-dark); color: white; border-radius: var(--radius); padding: 32px; text-align: center; margin-bottom: 24px; }
+  .ending-card .big-emoji { font-size: 48px; margin-bottom: 16px; }
+  .ending-card h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 12px; font-style: italic; }
+  .ending-card p { font-size: 14px; line-height: 1.75; opacity: 0.88; max-width: 380px; margin: 0 auto; }
+  .ending-card strong { color: #c4b5fd; }
+
+  /* Save */
+  .save-section { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 24px; text-align: center; }
+  .save-section h3 { font-size: 15px; font-weight: 500; color: var(--purple-dark); margin-bottom: 6px; }
+  .save-section p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+  .btn-save { background: var(--purple-mid); color: white; border: none; padding: 13px 30px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-save:hover { background: var(--purple-dark); transform: translateY(-1px); }
+  .save-confirm { display: none; font-size: 13px; color: var(--purple); margin-top: 12px; font-weight: 500; }
+  .save-steps { text-align: left; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .save-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
+  .save-step-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: var(--purple-light); color: var(--purple); border-radius: 50%; font-size: 11px; font-weight: 500; flex-shrink: 0; margin-top: 1px; }
+
+  /* Nav */
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-info { font-size: 12px; color: var(--text-muted); }
+  .nav-info span { font-weight: 500; color: var(--purple); }
+  .btn { padding: 12px 28px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--purple-mid); color: white; }
+  .btn-primary:hover { background: var(--purple-dark); transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--text-muted); padding: 12px 16px; }
+
+  .task-intro { font-family: 'Fraunces', serif; font-size: 19px; font-style: italic; color: var(--purple-dark); margin-bottom: 16px; line-height: 1.4; }
+  .task-body { font-size: 15px; line-height: 1.75; color: var(--text-muted); margin-bottom: 24px; }
+
+  @media (max-width: 480px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .header-title { font-size: 21px; }
+    .wheel-wrapper { width: 240px; height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="header">
+  <div class="header-label">8. luokka · DigiOpo · Tulevaisuus</div>
+  <div class="header-title">Rakennetaan <em>tulevaisuuden koulu</em></div>
+  <div class="phase-dots">
+    <div class="phase-dot active" id="dot0"></div>
+    <div class="phase-dot" id="dot1"></div>
+    <div class="phase-dot" id="dot2"></div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ===== SIVU 1: ONNENPYÖRÄ ===== -->
+<div class="slide active" id="slide-0">
+  <div class="vaihe-tag">Lämmittely — Mitä jos... · Jokainen yksin → kerrotaan ryhmälle</div>
+
+  <div class="situation-card">
+    <div class="situation-label">Tehtäväkokonaisuus — 8. luokka</div>
+    <h2>Tulevaisuuden koulu</h2>
+    <p><em>Millainen koulu voisi olla — jos saisit päättää?</em></p>
+    <p>Kukaan ei tiedä miltä tulevaisuuden koulu näyttää. Ei opettajat, ei rehtorit, ei tutkijatkaan. <strong>Se tarkoittaa että teidän ideanne ovat yhtä päteviä kuin kenellä tahansa.</strong></p>
+    <p>Tässä tehtävässä te rakennatte sen — pala palalta.</p>
+  </div>
+
+  <!-- Nimet -->
+  <div class="name-card">
+    <div class="name-row">
+      <label for="studentName">Oma nimesi</label>
+      <input type="text" id="studentName" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <hr class="name-divider">
+    <div class="name-hint">Ryhmäläisten nimet — täytetään ennen vaihetta 2</div>
+    <div class="name-row">
+      <label for="g1">Ryhmäläinen 2</label>
+      <input type="text" id="g1" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <div class="name-row">
+      <label for="g2">Ryhmäläinen 3</label>
+      <input type="text" id="g2" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <div class="name-row">
+      <label for="g3">Ryhmäläinen 4</label>
+      <input type="text" id="g3" placeholder="Etunimi Sukunimi — jos ryhmässä 4" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- Pyörä -->
+  <p class="wheel-intro">Pyöritä onnenpyörää — saat oman "Mitä jos..."-kysymyksen. Mieti itse ensin, sitten kerrot vastauksesi ryhmälle.</p>
+
+  <div class="wheel-container">
+    <div class="wheel-wrapper">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheelCanvas" width="280" height="280"></canvas>
+    </div>
+    <button class="btn-spin" id="spinBtn" onclick="spinWheel()">🎰 Pyöritä!</button>
+    <div class="wheel-result" id="wheelResult">
+      <div class="result-label">Sinun kysymyksesi</div>
+      <div class="result-text" id="resultText"></div>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label class="input-label">Minun vastaukseni</label>
+    <textarea id="wheel_vastaus" placeholder="Kirjoita vastauksesi tähän — ei ole oikeaa tai väärää..." rows="4" style="min-height:100px;"></textarea>
+  </div>
+
+  <div class="pair-box">
+    <strong>👥 Kerro ryhmälle</strong>
+    Jokainen kertoo vuorollaan oman kysymyksensä ja vastauksensa.<br><br>
+    Kuunnelkaa — älä kommentoi toisen vastausta vielä. Jokainen idea on yhtä arvokas.
+  </div>
+</div>
+
+<!-- ===== SIVU 2: TULEVAISUUDEN KOULU ===== -->
+<div class="slide" id="slide-1">
+  <div class="vaihe-tag">Vaihe 2 — Tulevaisuuden koulu · Tiimi · 15–20 min</div>
+
+  <p class="task-intro">Nyt rakennetaan oikeasti.</p>
+  <p class="task-body">Ryhmänne rakentaa tulevaisuuden koulun pala palalta. Jokaiseen palikoista vastataan yhdessä — yksi kirjuri kirjaa. Ei tarvita oikeita vastauksia, tarvitaan rohkeita ideoita.</p>
+
+  <div class="highlight-quote">Sopikaa ensin roolit — kuka tekee mitäkin.</div>
+
+  <div class="role-grid">
+    <div class="role-card" onclick="selectRole(this)"><div class="role-emoji">🗣</div><div class="role-title">Puheenjohtaja</div><div class="role-desc">Pitää keskustelun liikkeessä</div></div>
+    <div class="role-card" onclick="selectRole(this)"><div class="role-emoji">📝</div><div class="role-title">Kirjuri</div><div class="role-desc">Kirjaa ryhmän vastaukset</div></div>
+    <div class="role-card" onclick="selectRole(this)"><div class="role-emoji">🔍</div><div class="role-title">Kyselijä</div><div class="role-desc">"Mutta toimiiko tämä oikeasti?"</div></div>
+    <div class="role-card" onclick="selectRole(this)"><div class="role-emoji">🎤</div><div class="role-title">Esittäjä</div><div class="role-desc">Esittelee koulun muille</div></div>
+  </div>
+
+  <!-- MISSÄ -->
+  <div class="palika">
+    <div class="palika-header">
+      <div class="palika-icon">📍</div>
+      <div>
+        <div class="palika-title">Missä?</div>
+        <div class="palika-subtitle">Paikka ja ympäristö</div>
+      </div>
+    </div>
+    <p class="palika-kysymys">Missä tulevaisuuden koulu sijaitsee? Onko se rakennus, luonto, verkko — vai jotain muuta? Millainen tila tukee oppimista parhaiten?</p>
+    <div class="input-group" style="margin-bottom:10px;">
+      <label class="input-label">Koulumme sijaitsee / näyttää tältä</label>
+      <textarea id="p_missa" placeholder="Kuvaile tarkasti — missä ja millainen paikka?" rows="3" style="min-height:80px;"></textarea>
+    </div>
+    <div class="input-group" style="margin-bottom:0;">
+      <label class="input-label">Miksi valitsitte juuri tämän?</label>
+      <textarea id="p_missa_miksi" placeholder="Perustelu..." rows="2" style="min-height:60px;"></textarea>
+    </div>
+  </div>
+
+  <!-- MITÄ -->
+  <div class="palika">
+    <div class="palika-header">
+      <div class="palika-icon">📚</div>
+      <div>
+        <div class="palika-title">Mitä?</div>
+        <div class="palika-subtitle">Opittavat asiat</div>
+      </div>
+    </div>
+    <p class="palika-kysymys">Mitä tulevaisuuden koulussa opitaan? Mitä aineita tai taitoja tarvitaan — ja mitä ei enää tarvita? Mitä jää pois, mitä tulee tilalle?</p>
+    <div class="input-group" style="margin-bottom:10px;">
+      <label class="input-label">Näitä opitaan koulussamme</label>
+      <textarea id="p_mita_on" placeholder="Uudet aineet, taidot, teemat..." rows="3" style="min-height:80px;"></textarea>
+    </div>
+    <div class="input-group" style="margin-bottom:0;">
+      <label class="input-label">Näitä ei enää opeteta — ja miksi</label>
+      <textarea id="p_mita_ei" placeholder="Mitä jää pois ja miksi?" rows="2" style="min-height:60px;"></textarea>
+    </div>
+  </div>
+
+  <!-- MITEN -->
+  <div class="palika">
+    <div class="palika-header">
+      <div class="palika-icon">⚙️</div>
+      <div>
+        <div class="palika-title">Miten?</div>
+        <div class="palika-subtitle">Oppimisen tapa</div>
+      </div>
+    </div>
+    <p class="palika-kysymys">Miten koulussamme opitaan? Onko oppitunteja, projekteja, tekemällä oppimista? Kuinka pitkä koulupäivä on? Onko kokeita?</p>
+    <div class="input-group" style="margin-bottom:10px;">
+      <label class="input-label">Näin meillä opitaan</label>
+      <textarea id="p_miten" placeholder="Oppimisen tapa, rytmi, rakenne..." rows="3" style="min-height:80px;"></textarea>
+    </div>
+    <div class="input-group" style="margin-bottom:0;">
+      <label class="input-label">Yksi asia jonka haluatte ehdottomasti säilyttää nykyisestä koulusta</label>
+      <textarea id="p_miten_sailyta" placeholder="Mikä toimii jo nyt hyvin?" rows="2" style="min-height:60px;"></textarea>
+    </div>
+  </div>
+
+  <!-- KUKA -->
+  <div class="palika">
+    <div class="palika-header">
+      <div class="palika-icon">👥</div>
+      <div>
+        <div class="palika-title">Kuka?</div>
+        <div class="palika-subtitle">Ihmiset koulussa</div>
+      </div>
+    </div>
+    <p class="palika-kysymys">Keitä koulussa on? Onko opettajia — ja millaisia? Voivatko oppilaat opettaa toisiaan? Ovatko vanhemmat tai muut aikuiset mukana?</p>
+    <div class="input-group" style="margin-bottom:0;">
+      <label class="input-label">Keitä koulussamme on ja mikä heidän roolinsa on</label>
+      <textarea id="p_kuka" placeholder="Opettajat, oppilaat, muut — kuvaile roolit..." rows="4" style="min-height:100px;"></textarea>
+    </div>
+  </div>
+
+  <!-- MIKSI -->
+  <div class="palika" style="border-color: var(--purple-mid); background: var(--purple-pale);">
+    <div class="palika-header">
+      <div class="palika-icon" style="background: var(--purple-mid);">🎯</div>
+      <div>
+        <div class="palika-title" style="color: var(--purple);">Miksi?</div>
+        <div class="palika-subtitle">Koulun tarkoitus</div>
+      </div>
+    </div>
+    <p class="palika-kysymys" style="color: var(--purple-dark);">Tämä on vaikein kysymys. Miksi koulu on olemassa? Mitä varten lapset ja nuoret sinne menevät? Mitä koulu antaa — mitä se ei voi antaa?</p>
+    <div class="input-group" style="margin-bottom:0;">
+      <label class="input-label">Koulumme on olemassa koska...</label>
+      <textarea id="p_miksi" placeholder="Mikä on koulun tärkein tehtävä? Voitte olla eri mieltä — kirjatkaa molemmat näkemykset." rows="4" style="min-height:100px;"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIVU 3: KOONTI ===== -->
+<div class="slide" id="slide-2">
+  <div class="vaihe-tag">Vaihe 3 — Koonti ja palautus · 5 min</div>
+
+  <p class="task-intro">Teidän koulunne on valmis.</p>
+  <p class="task-body">Alla näkyy yhteenveto kaikesta mitä rakensitte. Tallentakaa se ja lähettäkää opoille Classroomin kautta.</p>
+
+  <!-- Esikatselu -->
+  <div style="background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px;">
+    <div style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 14px; font-weight: 500;">Esikatselu — Tulevaisuuden koulu</div>
+    <div id="preview" style="font-size: 14px; line-height: 1.8; color: var(--text-muted); white-space: pre-wrap;"></div>
+  </div>
+
+  <div class="ending-card">
+    <div class="big-emoji">🏫</div>
+    <h2>Teidän koulunne on olemassa.</h2>
+    <p>Ette vain vastanneet kysymyksiin.<br>Te suunnittelitte paikan jossa <strong>ihmiset oppivat olemaan ihmisiä.</strong><br><br>
+    Se on vaikein suunnittelutehtävä maailmassa.<br><strong>Te teetitte sen.</strong></p>
+  </div>
+
+  <div class="save-section">
+    <h3>💾 Tallenna ja palauta opoille</h3>
+    <p>Lataa tulevaisuuden koulunne suunnitelma tekstitiedostona ja lähetä Classroomin kautta.</p>
+    <button class="btn-save" onclick="saveAnswers()">⬇ Lataa Tulevaisuuden koulu -suunnitelma</button>
+    <div class="save-confirm" id="saveConfirm">✓ Tiedosto ladattu! Muista lähettää se Classroomiin.</div>
+    <div class="save-steps">
+      <div class="save-step"><span class="save-step-num">1</span>Paina "Lataa" — tiedosto tallentuu automaattisesti</div>
+      <div class="save-step"><span class="save-step-num">2</span>Avaa Google Classroom ja etsi tämä tehtävä</div>
+      <div class="save-step"><span class="save-step-num">3</span>Liitä tekstitiedosto ja palauta</div>
+    </div>
+
+    <div style="border-top: 1px solid var(--border); margin-top: 20px; padding-top: 18px;">
+      <button
+        onclick="confirmClear()"
+        style="
+          background: transparent;
+          border: 1.5px solid #fca5a5;
+          color: #991b1b;
+          border-radius: 50px;
+          padding: 10px 22px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin: 0 auto;
+        "
+        onmouseover="this.style.background='#fee2e2'"
+        onmouseout="this.style.background='transparent'"
+      >🗑 Tyhjennä kaikki vastaukset</button>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">Poistaa kaikki kirjoitetut vastaukset — ei voi peruuttaa</p>
+    </div>
+  </div>
+
+  <!-- Vahvistus-dialogi -->
+  <div id="clearDialog" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  ">
+    <div style="
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 340px;
+      margin: 0 24px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    ">
+      <div style="font-size: 36px; margin-bottom: 14px;">🗑</div>
+      <h3 style="font-family: 'Fraunces', serif; font-size: 18px; color: #1c1917; margin-bottom: 10px;">Tyhjennetäänkö kaikki?</h3>
+      <p style="font-size: 14px; color: #57534e; line-height: 1.6; margin-bottom: 24px;">Kaikki kirjoittamanne vastaukset poistetaan. Tätä ei voi peruuttaa.<br><br>Varmista ensin että olette ladanneet tiedoston!</p>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button
+          onclick="closeClearDialog()"
+          style="
+            background: #f5f5f4;
+            border: none;
+            border-radius: 50px;
+            padding: 11px 22px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #57534e;
+          "
+        >Peruuta</button>
+        <button
+          onclick="clearAll()"
+          style="
+            background: #dc2626;
+            border: none;
+            border-radius: 50px;
+            padding: 11px 22px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: white;
+          "
+        >Kyllä, tyhjennä</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="nav">
+  <button class="btn btn-secondary" id="btnBack" onclick="navigate(-1)" style="visibility:hidden">← Takaisin</button>
+  <div class="nav-info">Vaihe <span id="currentStep">1</span> / 3</div>
+  <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Seuraava →</button>
+</div>
+
+<script>
+// ===== ONNENPYÖRÄ =====
+const questions = [
+  "Mitä jos olisit koulun rehtori — mikä olisi ensimmäinen asia jonka muuttaisit?",
+  "Mitä jos koulussa ei olisi lainkaan oppitunteja — mitä silloin olisi?",
+  "Mitä jos saisit valita itse mitä opiskelet — mitä valitsisit?",
+  "Mitä jos koulu olisi auki vain kolme päivää viikossa — mitä tapahtuisi muina päivinä?",
+  "Mitä jos opettajat ja oppilaat vaihtaisivat rooleja viikoksi — mitä tapahtuisi?",
+  "Mitä jos koulu olisi kokonaan ulkona — ei rakennusta, ei luokkia?",
+  "Mitä jos koulussa ei olisi kokeita eikä arvosanoja — miten tietäisit oppiiko joku jotain?",
+  "Mitä jos kouluun saisi tuoda mitä tahansa — mitä toisit?"
+];
+
+const segColors  = ['#3b0764','#5b21b6','#6d28d9','#7c3aed','#4c1d95','#5b21b6','#6d28d9','#3b0764'];
+const segLight   = ['#ede9fe','#ddd6fe','#c4b5fd','#a78bfa','#ddd6fe','#ede9fe','#c4b5fd','#a78bfa'];
+
+let spinning = false, currentAngle = 0, selectedQuestion = '';
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const n = questions.length;
+const arc = (2 * Math.PI) / n;
+
+function drawWheel(angle) {
+  const cx = canvas.width / 2, cy = canvas.height / 2, r = cx - 6;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < n; i++) {
+    const s = angle + i * arc, e = s + arc;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, s, e); ctx.closePath();
+    ctx.fillStyle = i % 2 === 0 ? segColors[i] : segLight[i]; ctx.fill();
+    ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s + arc / 2);
+    ctx.fillStyle = i % 2 === 0 ? 'white' : '#3b0764';
+    ctx.font = 'bold 13px DM Sans,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(i + 1, r - 12, 5); ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(cx, cy, 18, 0, 2 * Math.PI);
+  ctx.fillStyle = '#3b0764'; ctx.fill();
+  ctx.strokeStyle = 'white'; ctx.lineWidth = 3; ctx.stroke();
+}
+
+function spinWheel() {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('wheelResult').style.display = 'none';
+  const totalRot = (5 + Math.floor(Math.random() * 5)) * 2 * Math.PI + Math.random() * 2 * Math.PI;
+  const duration = 3500, start = performance.now(), startAngle = currentAngle;
+  function animate(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 4);
+    currentAngle = startAngle + totalRot * ease;
+    drawWheel(currentAngle);
+    if (p < 1) { requestAnimationFrame(animate); return; }
+    spinning = false;
+    const norm = ((currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    const ptr = (2 * Math.PI - norm + 3 * Math.PI / 2) % (2 * Math.PI);
+    const idx = Math.floor(ptr / arc) % n;
+    selectedQuestion = questions[idx];
+    document.getElementById('resultText').textContent = selectedQuestion;
+    document.getElementById('wheelResult').style.display = 'block';
+    document.getElementById('spinBtn').textContent = '🔄 Pyöritä uudelleen';
+    document.getElementById('spinBtn').disabled = false;
+  }
+  requestAnimationFrame(animate);
+}
+drawWheel(0);
+
+// ===== NAV =====
+let current = 0;
+const total = 3;
+
+function navigate(dir) {
+  if (current === total - 1 && dir > 0) return;
+  if (dir > 0 && current === total - 2) buildPreview();
+  document.querySelectorAll('.slide')[current].classList.remove('active');
+  current = Math.max(0, Math.min(total - 1, current + dir));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateUI() {
+  document.getElementById('currentStep').textContent = current + 1;
+  document.getElementById('btnBack').style.visibility = current === 0 ? 'hidden' : 'visible';
+  const btn = document.getElementById('btnNext');
+  btn.textContent = current === total - 1 ? 'Valmis ✓' : 'Seuraava →';
+  btn.disabled = current === total - 1;
+  btn.style.opacity = current === total - 1 ? '0.4' : '1';
+  document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+  for (let i = 0; i < total; i++) {
+    const d = document.getElementById('dot' + i);
+    d.classList.remove('active', 'done');
+    if (i === current) d.classList.add('active');
+    else if (i < current) d.classList.add('done');
+  }
+}
+
+function selectRole(el) { el.classList.toggle('selected'); }
+
+// ===== ESIKATSELU & TALLENNUS =====
+function g(id) { return (document.getElementById(id) || {}).value?.trim() || '(ei vastausta)'; }
+
+function buildPreview() {
+  const name = g('studentName');
+  const g1 = document.getElementById('g1').value.trim();
+  const g2 = document.getElementById('g2').value.trim();
+  const g3 = document.getElementById('g3').value.trim();
+  const ryhmä = [name, g1, g2, g3].filter(Boolean).join(', ');
+  const prev = `Ryhmä: ${ryhmä}
+
+📍 MISSÄ
+${g('p_missa')}
+Miksi: ${g('p_missa_miksi')}
+
+📚 MITÄ opitaan
+${g('p_mita_on')}
+Ei enää opeteta: ${g('p_mita_ei')}
+
+⚙️ MITEN opitaan
+${g('p_miten')}
+Säilytetään nykyisestä: ${g('p_miten_sailyta')}
+
+👥 KUKA
+${g('p_kuka')}
+
+🎯 MIKSI koulu on olemassa
+${g('p_miksi')}`;
+  document.getElementById('preview').textContent = prev;
+}
+
+function saveAnswers() {
+  buildPreview();
+  const name = g('studentName');
+  const g1 = document.getElementById('g1').value.trim();
+  const g2 = document.getElementById('g2').value.trim();
+  const g3 = document.getElementById('g3').value.trim();
+  const ryhmä = [name, g1, g2, g3].filter(Boolean).join(', ');
+  const today = new Date().toLocaleDateString('fi-FI');
+
+  const txt = `DIGIOPO — TULEVAISUUDEN KOULU
+8. luokka · Tulevaisuus-tehtäväkokonaisuus
+==========================================
+Ryhmä: ${ryhmä}
+Päivämäärä: ${today}
+
+------------------------------------------
+LÄMMITTELY — Mitä jos... -kysymys
+------------------------------------------
+Kysymys: ${selectedQuestion || '(ei pyöritetty)'}
+
+Vastaus:
+${g('wheel_vastaus')}
+
+------------------------------------------
+📍 MISSÄ — Paikka ja ympäristö
+------------------------------------------
+Koulumme sijaitsee / näyttää tältä:
+${g('p_missa')}
+
+Miksi valitsimme tämän:
+${g('p_missa_miksi')}
+
+------------------------------------------
+📚 MITÄ — Opittavat asiat
+------------------------------------------
+Näitä opitaan koulussamme:
+${g('p_mita_on')}
+
+Näitä ei enää opeteta — ja miksi:
+${g('p_mita_ei')}
+
+------------------------------------------
+⚙️ MITEN — Oppimisen tapa
+------------------------------------------
+Näin meillä opitaan:
+${g('p_miten')}
+
+Nykyisestä koulusta säilytetään:
+${g('p_miten_sailyta')}
+
+------------------------------------------
+👥 KUKA — Ihmiset koulussa
+------------------------------------------
+${g('p_kuka')}
+
+------------------------------------------
+🎯 MIKSI — Koulun tarkoitus
+------------------------------------------
+Koulumme on olemassa koska:
+${g('p_miksi')}
+
+==========================================
+DigiOpo · Tulevaisuus-kokonaisuus · 8lk
+`;
+
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tulevaisuuden_koulu_${name.replace(/\s+/g,'_')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('saveConfirm').style.display = 'block';
+}
+
+function confirmClear() {
+  document.getElementById('clearDialog').style.display = 'flex';
+}
+function closeClearDialog() {
+  document.getElementById('clearDialog').style.display = 'none';
+}
+function clearAll() {
+  ['studentName','g1','g2','g3','wheel_vastaus','p_missa','p_missa_miksi',
+   'p_mita_on','p_mita_ei','p_miten','p_miten_sailyta','p_kuka','p_miksi']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  selectedQuestion = '';
+  document.getElementById('wheelResult').style.display = 'none';
+  document.getElementById('spinBtn').textContent = '🎰 Pyöritä!';
+  currentAngle = 0; drawWheel(0);
+  document.getElementById('preview').textContent = '';
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('saveConfirm').style.display = 'none';
+  closeClearDialog();
+  current = 0;
+  document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i === 0));
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+updateUI();
+</script>
+</body>
+</html>
