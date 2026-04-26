@@ -10,15 +10,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-omat-vahvuudet",
-      title: "Minun vahvuuteni",
-      description: "Pohdi omia vahvuuksiasi ja kirjoita ne ylös tehtävään.",
-      href: "../tehtava.html?id=vahvuudet",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+   
     {
       aiheId: "tasks-omat-vahvuudet",
       title: "Päivän aihe: Missä olen hyvä?",
@@ -29,16 +21,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-opiskelutaidot",
-      title: "Minun opiskelutaitoni",
-      description:
-        "Arvioi omia opiskelutaitojasi ja mieti, mitä haluat kehittää.",
-      href: "../tehtava.html?id=opiskelutaidot",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+  
     {
       aiheId: "tasks-opiskelutaidot",
       title: "Kirja kiinni – mitä muistat?",
@@ -49,16 +32,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-mina-oppijana",
-      title: "Minä oppijana",
-      description:
-        "Tutki omia oppimistapojasi ja kirjaa huomioita itsestäsi oppijana.",
-      href: "../tehtava.html?id=mina-oppijana",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-mina-oppijana",
       title: "Päivän aihe: Motivaatio",
@@ -91,16 +65,6 @@ const tehtavat = {
   ],
 
   8: [
-    {
-      aiheId: "tasks-koulutus",
-      title: "Koulutusalat – oma suunta",
-      description: "Tutustu eri koulutusaloihin Twine-pelissä.",
-      href: "../pelit/koulutusalat.html",
-      tag: "Interaktiivinen",
-      tagClass: "tag-interactive",
-      icon: "fa-gamepad",
-    },
-
     {
       aiheId: "tasks-koulutus",
       title: "Päivän aihe: Lukio vai ammattiin?",
@@ -147,15 +111,7 @@ const tehtavat = {
       tagClass: "",
       icon: "fa-pencil",
     },
-    {
-      aiheId: "tasks-raha",
-      title: "Budjetti kuukaudelle",
-      description: "Laadi itsellesi realistinen kuukausibudjetti.",
-      href: "../tehtava.html?id=budjetti",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-raha",
       title: "Päivän aihe: Mistä rahaa nuorena?",

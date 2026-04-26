@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervoima-etsintä – Opettajan ohje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --ink2: #3a3a5c;
+    --muted: #6b6b8a;
+    --paper: #f9f7f2;
+    --paper2: #f0ede4;
+    --rule: #e2ddd4;
+    --accent: #c84b31;
+    --accent2: #2d6a4f;
+    --accent3: #1d4e89;
+    --gold: #b5830a;
+    --tag-bg: #e8f4f0;
+    --tag-text: #1a4035;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* === HEADER === */
+  .site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3.5rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(200,75,49,0.12);
+    pointer-events: none;
+  }
+
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 10%;
+    width: 400px; height: 200px;
+    border-radius: 50%;
+    background: rgba(45,106,79,0.1);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.1;
+    color: var(--paper);
+    margin-bottom: 1rem;
+  }
+
+  .header-title em {
+    font-style: italic;
+    color: #f5c5bb;
+  }
+
+  .header-desc {
+    font-size: 1.05rem;
+    color: rgba(249,247,242,0.7);
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(249,247,242,0.6);
+    border: 1px solid rgba(249,247,242,0.15);
+    border-radius: 100px;
+    padding: 0.3rem 0.85rem;
+  }
+
+  .meta-chip span { color: var(--paper); }
+
+  /* === MAIN LAYOUT === */
+  .page-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* === SECTIONS === */
+  section {
+    margin-bottom: 3.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  section:nth-child(1) { animation-delay: 0.05s; }
+  section:nth-child(2) { animation-delay: 0.12s; }
+  section:nth-child(3) { animation-delay: 0.19s; }
+  section:nth-child(4) { animation-delay: 0.26s; }
+  section:nth-child(5) { animation-delay: 0.33s; }
+  section:nth-child(6) { animation-delay: 0.40s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    section { animation: none; }
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1.5px solid var(--rule);
+  }
+
+  p { color: var(--ink2); margin-bottom: 0.85rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* === INTRO CARD === */
+  .intro-card {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 16px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.018) 18px,
+      rgba(255,255,255,0.018) 19px
+    );
+    pointer-events: none;
+  }
+
+  .intro-card p {
+    color: rgba(249,247,242,0.8);
+    font-size: 1.05rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .intro-card strong { color: var(--paper); }
+
+  /* === STEP LIST === */
+  .step-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-list li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .step-num {
+    width: 2.4rem;
+    height: 2.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .step-content strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .step-content p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* === INFO GRID === */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .info-card {
+    background: var(--paper2);
+    border: 1.5px solid var(--rule);
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+  }
+
+  .info-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .info-card strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .info-card p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* === REITIT === */
+  .route-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .route-card {
+    background: var(--paper2);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    border-left: 3px solid var(--accent2);
+  }
+
+  .route-card strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .route-card span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* === NOTICE BOXES === */
+  .notice {
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+  }
+
+  .notice-tip {
+    background: #edf7f2;
+    border-left: 3px solid var(--accent2);
+    color: #1a3d2b;
+  }
+
+  .notice-warn {
+    background: #fef9ec;
+    border-left: 3px solid var(--gold);
+    color: #4a3600;
+  }
+
+  .notice-info {
+    background: #eaf1fb;
+    border-left: 3px solid var(--accent3);
+    color: #162f52;
+  }
+
+  .notice strong { font-weight: 600; }
+
+  /* === CODE === */
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--paper2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.1em 0.45em;
+    font-size: 0.85em;
+    color: var(--accent);
+  }
+
+  /* === IFRAME CODE BLOCK === */
+  .code-block {
+    background: var(--ink);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .code-block pre {
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    color: #a8d8b9;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .code-block pre .cm { color: #6b9e7e; }
+  .code-block pre .at { color: #f5c8a0; }
+  .code-block pre .vl { color: #c8e6c9; }
+
+  /* === VAHVUUSTYYPIT === */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .type-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--paper2);
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink2);
+  }
+
+  .type-pill .ico { font-size: 1rem; }
+
+  /* === UL === */
+  .plain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .plain-list li {
+    display: flex;
+    gap: 0.7rem;
+    font-size: 0.93rem;
+    color: var(--ink2);
+    align-items: baseline;
+  }
+
+  .plain-list li::before {
+    content: '—';
+    color: var(--muted);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+  }
+
+  /* === FOOTER === */
+  .page-footer {
+    border-top: 1px solid var(--rule);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* === PRINT === */
+  @media print {
+    .site-header { background: #fff; color: #000; padding: 1rem 0; }
+    .site-header::before, .site-header::after { display: none; }
+    .header-title { color: #000; }
+    .header-desc { color: #444; }
+    .header-label { color: #c84b31; }
+    .intro-card { background: #f0ede4; color: #000; border: 1px solid #ccc; }
+    .intro-card p { color: #333; }
+    .code-block { background: #f0ede4; border: 1px solid #ccc; }
+    .code-block pre { color: #333; }
+    .meta-chip { border-color: #ccc; color: #555; }
+    .meta-chip span { color: #000; }
+    section { animation: none; page-break-inside: avoid; }
+  }
+
+  @media (max-width: 600px) {
+    .page-wrap { padding: 2rem 1.2rem 4rem; }
+    .site-header { padding: 2.5rem 1.2rem 2rem; }
+    .route-list { grid-template-columns: 1fr 1fr; }
+    .type-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <p class="header-label">Opettajan ohje</p>
+    <h1 class="header-title">Supervoima-<em>etsintä</em></h1>
+    <p class="header-desc">Opinto-ohjauksen ja ryhmäyttämisen tueksi suunniteltu interaktiivinen vahvuustyökalu</p>
+    <div class="header-meta">
+      <div class="meta-chip">Kohderyhmä: <span>yläaste &amp; 7.luokka</span></div>
+      <div class="meta-chip">Kesto: <span>15–25 min</span></div>
+      <div class="meta-chip">Alusta: <span>SugarCube / Twine</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="page-wrap">
+
+  <!-- MIKÄ TÄMÄ ON -->
+  <div class="intro-card">
+    <p>Supervoima-etsintä on selainpohjainen tarina, jossa oppilas tunnistaa omia vahvuuksiaan vastaamalla lyhyisiin tilannekohtaisiin kysymyksiin. Työkalu <strong>ei testaa tietoja</strong> — se heijastaa oppilaan tapaa toimia ja ajatella. Tuloksena syntyy henkilökohtainen vahvuuslista, jonka oppilas voi ladata ja lähettää opolle Classroomin kautta.</p>
+  </div>
+
+  <!-- PEDAGOGINEN TAUSTA -->
+  <section>
+    <p class="section-label">Tausta</p>
+    <h2 class="section-title">Pedagoginen lähtökohta</h2>
+    <p>Työkalu pohjautuu positiivisen psykologian vahvuuslähtöiseen ajatteluun. Kysymykset on rakennettu niin, että ne lähestyvät vahvuuksia kolmesta eri kulmasta: <strong>toimintatavat</strong> (miten toimit haastavissa tilanteissa), <strong>kiinnostuksen kohteet</strong> (mikä tuntuu luontevalta) ja <strong>sosiaaliset tilanteet</strong> (miten toimit ryhmässä).</p>
+    <p>Viisi vahvuusprofiilia — Tekijä, Ajattelija, Yhteisöllinen, Luova ja Seikkailija — perustuvat yleisiin persoonallisuuden toimintatyyppeihin. Ne ovat kuvailevia, eivät rajoittavia: oppilaalle kerrotaan, että vahvuuksia voi olla useita.</p>
+
+    <div class="notice notice-tip">
+      <strong>Pedagoginen huomio:</strong> Työkalu toimii parhaiten osana laajempaa opo-tuntia tai ryhmäytymisjaksoa, ei irrallisena tehtävänä. Varaa aikaa tulosten purkamiseen.
+    </div>
+  </section>
+
+  <!-- TOIMINTA -->
+  <section>
+    <p class="section-label">Käyttö</p>
+    <h2 class="section-title">Miten tarina toimii</h2>
+
+    <p>Oppilas etenee tarinassa omaan tahtiinsa. Hän voi valita yhden tai useamman reitin:</p>
+
+    <div class="route-list">
+      <div class="route-card">
+        <strong>🏅 Harrastus</strong>
+        <span>Toimintatavat vapaa-ajalla</span>
+      </div>
+      <div class="route-card">
+        <strong>📚 Lempiaine</strong>
+        <span>Oppimistyylit koulussa</span>
+      </div>
+      <div class="route-card">
+        <strong>🤝 Kaverit</strong>
+        <span>Rooli sosiaalisissa tilanteissa</span>
+      </div>
+      <div class="route-card">
+        <strong>💪 Vaikeus</strong>
+        <span>Selviytymisstrategiat</span>
+      </div>
+      <div class="route-card">
+        <strong>⚡ Pikatesti</strong>
+        <span>5 nopeaa kysymystä</span>
+      </div>
+      <div class="route-card">
+        <strong>✏️ Oma kirjaus</strong>
+        <span>Vapaa tekstikenttä</span>
+      </div>
+    </div>
+
+    <p>Mitä enemmän reittejä oppilas käy läpi, sitä luotettavammat tulokset. Tulossivulla näkyy enintään 5 useimmin toistunutta vahvuutta sekä vahvuusprofiili.</p>
+
+    <div class="type-grid" style="margin-top:1rem;">
+      <div class="type-pill"><span class="ico">⚡</span> Tekijä</div>
+      <div class="type-pill"><span class="ico">🧠</span> Ajattelija</div>
+      <div class="type-pill"><span class="ico">🤝</span> Yhteisöllinen</div>
+      <div class="type-pill"><span class="ico">🎨</span> Luova</div>
+      <div class="type-pill"><span class="ico">🚀</span> Seikkailija</div>
+    </div>
+  </section>
+
+  
+  <!-- TUNNIN RAKENNE -->
+  <section>
+    <p class="section-label">Didaktiikka</p>
+    <h2 class="section-title">Ehdotettu tunnin rakenne</h2>
+    <ol class="step-list">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Orientointi (5 min)</strong>
+          <p>Kerro oppilaille, että työkalu ei testaa eikä arvioi. Ei ole oikeita tai vääriä vastauksia. Tarkoitus on löytää, ei todistaa.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Itsenäinen työskentely (15–20 min)</strong>
+          <p>Oppilaat käyvät tarinan läpi itsenäisesti. Kannusta käymään läpi vähintään kaksi reittiä. Pikatesti on nopein vaihtoehto, jos aika on rajallinen.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Tuloksen lataaminen ja lähettäminen</strong>
+          <p>Oppilas lataa TXT-tiedoston omalle koneelleen ja lähettää sen opolle Classroomin kautta tehtävänpalautuksena.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Purku ryhmässä (valinnainen, 5–10 min)</strong>
+          <p>Voidaan käydä läpi esimerkiksi: "Kuka yllätti itsensä?" tai "Mikä vahvuus tuntui tutulta, mikä uudelta?" Ei vaadita jakamaan tuloksia.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- HUOMIOITAVAA -->
+  <section>
+    <p class="section-label">Muuta</p>
+    <h2 class="section-title">Huomioitavaa käytössä</h2>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">🔒</span>
+        <strong>Tietosuoja</strong>
+        <p>Tarina ei tallenna mitään palvelimelle. Kaikki data pysyy oppilaan selaimessa. Tiedosto syntyy vasta kun oppilas itse painaa "Lataa".</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">♿</span>
+        <strong>Saavutettavuus</strong>
+        <p>Tarina toimii näppäimistöllä. Progress-bar kertoo edistymisen ruudunlukijalle. Animaatiot kunnioittavat reduced-motion-asetusta.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">🔄</span>
+        <strong>Uusi kierros</strong>
+        <p>Oppilas voi tyhjentää tulokset ja aloittaa alusta "Tyhjennä ja poistu" -napista. Aiemmat valinnat eivät jää muistiin.</p>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">📱</span>
+        <strong>Laitteet</strong>
+        <p>Toimii mobiilissa, tabletilla ja tietokoneella. Suositeltava minimikoko 360px leveyttä.</p>
+      </div>
+    </div>
+
+    <div class="notice notice-tip" style="margin-top:1.2rem;">
+      <strong>Vinkki erityistä tukea tarvitseville:</strong> Pikatesti (5 kysymystä) on lyhin reitti tuloksiin. OmaKirjaus-reitti sopii oppilaille, jotka haluavat ilmaista itseään vapaasti ilman monivalintoja.
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  Supervoima-etsintä · Opettajan ohje · DigiOpo
+</footer>
+
+</body>
+</html>

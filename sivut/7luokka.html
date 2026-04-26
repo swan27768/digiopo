@@ -312,6 +312,9 @@
           >
 
           <a href="#teppo">TEPPO – Työelämäpainotteinen perusopetus</a>
+
+          <a href="#koulun-jalkeen" id="nav-koulun-jalkeen" style="pointer-events:none; opacity:0.5;">Koulun jälkeen</a>
+          <span id="nav-koulun-jalkeen-aika" style="display:block; padding-left:12px; font-size:0.78rem; color:#a78bfa; margin-top:-2px; margin-bottom:4px;">🔒 Aukeaa klo 15:00</span>
         </nav>
       </aside>
 
@@ -890,6 +893,109 @@
               aria-live="polite"
             ></div>
           </div>
+
+          <!-- Supervoimat-peli hero-banneri -->
+          <div
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 20px 0;
+              min-height: 200px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(124, 58, 237, 0.25);
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(76, 29, 149, 0.88) 0%, rgba(168, 85, 247, 0.78) 100%);
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background-image: url(&quot;../images/vahvuudet.png&quot;);
+                background-size: auto 75%;
+                background-position: right center;
+                background-repeat: no-repeat;
+                opacity: 0.55;
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: relative;
+                z-index: 1;
+                padding: 28px 32px;
+                color: #fff;
+                width: 100%;
+              "
+            >
+              <div class="hero-badge" style="margin-bottom: 12px">
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+                Interaktiivinen tehtävä
+              </div>
+              <h3
+                style="
+                  margin: 0 0 8px;
+                  font-size: clamp(1.2rem, 3vw, 1.6rem);
+                  font-weight: 800;
+                  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+                "
+              >
+                Supervoimat – löydä omat vahvuutesi!
+              </h3>
+              <p
+                style="
+                  margin: 0 0 20px;
+                  font-size: 15px;
+                  line-height: 1.6;
+                  opacity: 0.92;
+                  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                  max-width: 480px;
+                "
+              >
+                Pelaa interaktiivinen tarina ja selvitä, mitkä ovat sinun supervoimasi. Tee valintoja ja löydä itsesi!
+              </p>
+              <button
+                class="btn-hero"
+                onclick="avaaSupervoimatPeli()"
+                aria-haspopup="dialog"
+              >
+                Aloita peli
+              </button>
+            </div>
+          </div>
+
+          <!-- Supervoimat-peli container -->
+          <div
+            id="supervoimatContainer"
+            class="interactive-wrapper"
+            style="display: none"
+          >
+            <div class="peli-sulje-rivi">
+              <button class="peli-sulje-btn" onclick="suljeSupervoimatPeli()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje peli
+              </button>
+            </div>
+            <iframe
+              src="../pelit/supervoimat.html"
+              style="
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                border: none;
+                border-radius: 14px;
+              "
+              title="Supervoimat – löydä omat vahvuutesi"
+            ></iframe>
+          </div>
+
           <div id="omat-vahvuudet-mission" class="mission-section">
             <div class="mission-card">
               <div class="mission-header">
@@ -1030,6 +1136,27 @@
               💼 Kysy lisää TEPPOsta omalta opolta – haku alkaa tammikuussa!
             </p>
           </div>
+        </section>
+
+        <!-- 7. Koulun jälkeen -->
+        <section id="koulun-jalkeen" class="aihe-osio" aria-labelledby="otsikko-koulun-jalkeen" style="display:none;">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-koulun-jalkeen">Koulun jälkeen</h2>
+            <p>Löydä mielekästä tekemistä vapaa-ajalle.</p>
+          </div>
+
+          <iframe
+            src="after-school.html"
+            style="
+              width: 100%;
+              min-height: 700px;
+              border: none;
+              border-radius: 14px;
+              display: block;
+            "
+            title="Mistä löydän toimintaa koulun jälkeen"
+            loading="lazy"
+          ></iframe>
         </section>
       </main>
     </div>
@@ -1214,6 +1341,30 @@
           .scrollIntoView({ behavior: "smooth" });
       }
 
+      function avaaSupervoimatPeli() {
+        const container = document.getElementById("supervoimatContainer");
+        container.style.display = "block";
+        container.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function suljeSupervoimatPeli() {
+        const container = document.getElementById("supervoimatContainer");
+        const iframe = container.querySelector("iframe");
+        if (iframe) {
+          const src = iframe.getAttribute("src");
+          iframe.src = "about:blank";
+          setTimeout(function () {
+            iframe.src = src;
+            container.style.display = "none";
+          }, 120);
+        } else {
+          container.style.display = "none";
+        }
+        document
+          .getElementById("omat-vahvuudet")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
       function suljePeli() {
         const peli = document.getElementById("peliContainer");
         peli.style.display = "none";
@@ -1291,5 +1442,27 @@
         window.scrollTo({ top: 0, behavior: "smooth" }),
       );
     </script>
+  <script>
+    function tarkistaAika() {
+      var nyt = new Date();
+      var auki = nyt.getHours() >= 15;
+      var osio = document.getElementById('koulun-jalkeen');
+      var navLinkki = document.getElementById('nav-koulun-jalkeen');
+      var aikateksti = document.getElementById('nav-koulun-jalkeen-aika');
+      if (auki) {
+        osio.style.display = '';
+        navLinkki.style.pointerEvents = '';
+        navLinkki.style.opacity = '';
+        if (aikateksti) aikateksti.style.display = 'none';
+      } else {
+        osio.style.display = 'none';
+        navLinkki.style.pointerEvents = 'none';
+        navLinkki.style.opacity = '0.5';
+        if (aikateksti) aikateksti.style.display = 'block';
+      }
+    }
+    tarkistaAika();
+    setInterval(tarkistaAika, 60000);
+  </script>
   </body>
 </html>
