@@ -42,16 +42,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-tulevaisuus",
-      title: "Unelmieni tulevaisuus",
-      description:
-        "Pohdi, millainen tulevaisuus voisi olla sinulle sopiva. Ei tarvitse tietää varmasti.",
-      href: "../tehtava.html?id=tulevaisuus7",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-tulevaisuus",
       title: "Päivän aihe: Mikä minusta tulee isona?",

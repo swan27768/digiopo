@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opi haaveilemaan tulevaisuutta — 7. luokka</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --teal-dark: #085041;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --text: #1a1a18;
+    --text-muted: #5a5a56;
+    --bg: #f7f5f0;
+    --white: #ffffff;
+    --border: rgba(15,110,86,0.15);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .progress-bar { height: 4px; background: var(--teal-light); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+  .progress-fill { height: 100%; background: var(--teal-mid); transition: width 0.5s ease; width: 0%; }
+
+  .header { background: var(--teal-dark); color: white; padding: 28px 32px 24px; position: relative; overflow: hidden; }
+  .header::after { content: ''; position: absolute; bottom: -30px; left: -10%; right: -10%; height: 60px; background: var(--bg); border-radius: 50%; }
+  .header-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+  .header-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; line-height: 1.2; }
+  .header-title em { font-style: italic; color: #9FE1CB; }
+  .phase-dots { display: flex; gap: 8px; margin-top: 16px; }
+  .phase-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); transition: background 0.3s; }
+  .phase-dot.active { background: white; }
+  .phase-dot.done { background: #9FE1CB; }
+
+  .main { padding: 48px 24px 100px; max-width: 680px; margin: 0 auto; }
+
+  /* Nimi-kortti */
+  .name-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 28px;
+  }
+  .name-card-row { display: flex; align-items: center; gap: 14px; }
+  .name-card-row + .name-card-row { margin-top: 10px; }
+  .name-card label { font-size: 13px; font-weight: 500; color: var(--teal-dark); white-space: nowrap; min-width: 120px; }
+  .name-card input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .name-card input:focus { border-color: var(--teal-mid); background: white; }
+  .name-card input::placeholder { color: #b0afa8; }
+  .name-card-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0 4px; }
+  .name-card-hint { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.04em; }
+
+  .slide { display: none; animation: fadeIn 0.4s ease; }
+  .slide.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .situation-card { background: var(--teal-dark); color: white; border-radius: var(--radius); padding: 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .situation-card::before { content: '📵'; position: absolute; right: 20px; top: 16px; font-size: 40px; opacity: 0.2; }
+  .situation-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
+  .situation-card h2 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 14px; line-height: 1.3; }
+  .situation-card p { font-size: 14px; line-height: 1.7; opacity: 0.88; }
+  .situation-card strong { color: #9FE1CB; font-weight: 500; }
+
+  .task-intro { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 400; font-style: italic; color: var(--teal-dark); margin-bottom: 20px; line-height: 1.4; }
+  .task-body { font-size: 15px; line-height: 1.75; color: var(--text-muted); margin-bottom: 28px; }
+
+  .input-group { margin-bottom: 20px; }
+  .input-label { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--teal); margin-bottom: 8px; display: block; }
+  textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; color: var(--text); background: var(--white); resize: none; min-height: 90px; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  textarea:focus { border-color: var(--teal-mid); box-shadow: 0 0 0 3px rgba(29,158,117,0.1); }
+  textarea::placeholder { color: #b0afa8; }
+
+  .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .radio-option { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--white); cursor: pointer; transition: border-color 0.2s, background 0.2s; font-size: 14px; line-height: 1.5; color: var(--text); user-select: none; }
+  .radio-option:hover { border-color: var(--teal-mid); background: var(--teal-light); }
+  .radio-option.selected { border-color: var(--teal); background: var(--teal-light); }
+  .radio-emoji { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .pair-box { background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; padding: 18px 20px; margin: 28px 0; font-size: 14px; line-height: 1.65; color: #4a3200; }
+  .pair-box strong { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+
+  .step-question { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 16px; }
+  .step-number { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: var(--teal); color: white; border-radius: 50%; font-size: 12px; font-weight: 500; margin-bottom: 10px; }
+  .step-question h3 { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .step-question p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6; }
+
+  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+  .role-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--white); cursor: pointer; transition: all 0.2s; text-align: center; }
+  .role-card:hover { border-color: var(--teal-mid); background: var(--teal-light); }
+  .role-card.selected { border-color: var(--teal); background: var(--teal-light); }
+  .role-emoji { font-size: 22px; margin-bottom: 6px; }
+  .role-title { font-size: 13px; font-weight: 500; color: var(--teal-dark); margin-bottom: 2px; }
+  .role-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+  .highlight-quote { font-family: 'Fraunces', serif; font-size: 17px; font-style: italic; color: var(--teal-dark); border-left: 3px solid var(--teal-mid); padding: 12px 20px; margin: 20px 0; line-height: 1.5; background: var(--teal-light); border-radius: 0 8px 8px 0; }
+
+  .ending-card { background: var(--teal-dark); color: white; border-radius: var(--radius); padding: 32px; text-align: center; margin-bottom: 24px; }
+  .ending-card .big-emoji { font-size: 48px; margin-bottom: 16px; }
+  .ending-card h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 12px; font-style: italic; }
+  .ending-card p { font-size: 14px; line-height: 1.7; opacity: 0.85; max-width: 340px; margin: 0 auto; }
+  .ending-card strong { color: #9FE1CB; }
+
+  /* Tallenna-nappi viimeisellä sivulla */
+  .save-section { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 24px; text-align: center; }
+  .save-section h3 { font-size: 15px; font-weight: 500; color: var(--teal-dark); margin-bottom: 6px; }
+  .save-section p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+  .btn-save { background: var(--teal); color: white; border: none; padding: 14px 32px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-save:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .save-confirm { display: none; font-size: 13px; color: var(--teal); margin-top: 12px; font-weight: 500; }
+  .save-steps { text-align: left; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .save-steps p { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .save-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
+  .save-step-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: var(--teal-light); color: var(--teal); border-radius: 50%; font-size: 11px; font-weight: 500; flex-shrink: 0; margin-top: 1px; }
+
+  .vaihe-tag { display: inline-block; background: var(--teal-light); color: var(--teal-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; margin-bottom: 16px; }
+
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--border); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-info { font-size: 12px; color: var(--text-muted); }
+  .nav-info span { font-weight: 500; color: var(--teal); }
+  .btn { padding: 12px 28px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--teal); color: white; }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--text-muted); padding: 12px 16px; }
+  .btn-secondary:hover { color: var(--text); }
+
+  @media (max-width: 480px) { .role-grid { grid-template-columns: 1fr; } .header-title { font-size: 22px; } .name-card { flex-direction: column; align-items: flex-start; } }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="header">
+  <div class="header-label">7. luokka · DigiOpo · Tulevaisuus</div>
+  <div class="header-title">Opi haaveilemaan <em>tulevaisuutta</em></div>
+  <div class="phase-dots">
+    <div class="phase-dot active" id="dot0"></div>
+    <div class="phase-dot" id="dot1"></div>
+    <div class="phase-dot" id="dot2"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- VAIHE 1 -->
+  <div class="slide active" id="slide-0">
+
+  <!-- Nimi — näkyy vain vaiheessa 1 -->
+  <div class="name-card">
+    <div class="name-card-row">
+      <label for="studentName">Oma nimesi</label>
+      <input type="text" id="studentName" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <hr class="name-card-divider">
+    <div class="name-card-hint">Ryhmäläisten nimet — täytetään kun ryhmä muodostuu (vaihe 3)</div>
+    <div class="name-card-row">
+      <label for="groupName1">Ryhmäläinen 2</label>
+      <input type="text" id="groupName1" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <div class="name-card-row">
+      <label for="groupName2">Ryhmäläinen 3</label>
+      <input type="text" id="groupName2" placeholder="Etunimi Sukunimi" autocomplete="off">
+    </div>
+    <div class="name-card-row">
+      <label for="groupName3">Ryhmäläinen 4</label>
+      <input type="text" id="groupName3" placeholder="Etunimi Sukunimi — jos ryhmässä 4" autocomplete="off">
+    </div>
+  </div>
+    <div class="vaihe-tag">Vaihe 1 — Herättely · Yksin → pari · 5–8 min</div>
+
+    <div class="situation-card">
+      <div class="situation-label">Tilanne — Kallioharjun koulu</div>
+      <h2>Kallioharjun some-katastrofi</h2>
+      <p><em>Some oli kerran uusi keksintö. Joku keksi sen. Nyt te keksitte seuraavan.</em><br><br>
+      Kallioharjun koulun rehtori Virtanen teki eilen historian suurimman päätöksen:<br><br>
+      <strong>"Koulu sulkee kaikki digitaaliset viestintäkanavansa. Heti. Lopullisesti."</strong><br><br>
+      Instagram? Poistettu. TikTok? Häipynyt. Discord? Tuhottu.<br><br>
+      Ja sitten tuli se isoin uutinen:<br><br>
+      <strong>Wilma sammutetaan.</strong><br><br>
+      Ei poissaoloilmoituksia. Ei koetuloksia. Ei viestejä kotiin. Opettajat eivät tiedä kenen vanhemmille soittaa. Vanhemmat eivät tiedä mitä koulussa tapahtuu. Sijaiset eivät tiedä mihin luokkaan mennä.<br><br>
+      Nyt kukaan ei tiedä milloin on välitunti. Uusi oppilas ei löydä koulua. Koko koulu on sekaisin.<br><br>
+      <strong>Olette oppilaskunnan hätäkokous.</strong></p>
+    </div>
+
+    <p class="task-intro">Mitä keksit somen tilalle?</p>
+    <p class="task-body">Mieti itse ensin — kirjoita yksi idea. Se voi olla tekninen, hauska, erikoinen tai täysin hullu. Ei ole väärää vastausta.</p>
+
+    <div class="input-group">
+      <label class="input-label">Minun ideani</label>
+      <textarea id="v1_oma" placeholder="Kirjoita tähän — mitä keksit somen tilalle?" rows="4"></textarea>
+    </div>
+
+    <div class="pair-box">
+      <strong>👥 Sitten parille</strong>
+      Kerro ideasi vieruskaverille. Kuuntele hänen ideansa. Miettikää yhdessä: mikä toimisi paremmin kuin kumpikaan yksin?
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">Yhteinen ideamme</label>
+      <textarea id="v1_yhdessa" placeholder="Kirjoita tähän mitä keksitte yhdessä..." rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- VAIHE 2 -->
+  <div class="slide" id="slide-1">
+    <div class="vaihe-tag">Vaihe 2 — Millainen ajattelija sinä olet · Yksilö · 8–10 min</div>
+
+    <p class="task-intro">Oppilaskunta tarvitsee erilaisia ihmisiä.</p>
+    <p class="task-body">Alla on neljä tilannetta. Valitse jokaisesta se vaihtoehto, joka kuulostaa sinulta — ei ole oikeaa tai väärää.</p>
+
+    <div class="step-question">
+      <div class="step-number">1</div>
+      <h3>Oppilaskokous alkaa. Kukaan ei sano mitään. Sinä...</h3>
+      <div class="radio-group" id="q1">
+        <div class="radio-option" onclick="selectOption('q1',this,'Aloitat puhumaan')"><span class="radio-emoji">🗣</span><span>Aloitat puhumaan — joku sen on tehtävä</span></div>
+        <div class="radio-option" onclick="selectOption('q1',this,'Odotat ja kuuntelet')"><span class="radio-emoji">👂</span><span>Odotat että muut aloittavat — kuuntelet ensin</span></div>
+        <div class="radio-option" onclick="selectOption('q1',this,'Kirjoitat ensin')"><span class="radio-emoji">📝</span><span>Kirjoitat paperille mitä ajattelet — kerrot sitten</span></div>
+        <div class="radio-option" onclick="selectOption('q1',this,'Mietit miksi kukaan ei puhu')"><span class="radio-emoji">🔍</span><span>Mietit miksi kukaan ei puhu — ongelma on siinä</span></div>
+      </div>
+    </div>
+
+    <div class="step-question">
+      <div class="step-number">2</div>
+      <h3>Ryhmällä on kolme ideaa eikä päästä yhteiseen ratkaisuun. Sinä...</h3>
+      <div class="radio-group" id="q2">
+        <div class="radio-option" onclick="selectOption('q2',this,'Ehdotat äänestystä')"><span class="radio-emoji">⚖️</span><span>Ehdotat äänestystä — demokratia ratkaisee</span></div>
+        <div class="radio-option" onclick="selectOption('q2',this,'Etsit yhteistä')"><span class="radio-emoji">🤝</span><span>Yrität löytää mitä ideoissa on yhteistä</span></div>
+        <div class="radio-option" onclick="selectOption('q2',this,'Keksit neljännen idean')"><span class="radio-emoji">💡</span><span>Keksit neljännen idean joka yhdistää kaikki</span></div>
+        <div class="radio-option" onclick="selectOption('q2',this,'Muistutat aikataulusta')"><span class="radio-emoji">⏱</span><span>Muistutat että aika loppuu — pakko päättää</span></div>
+      </div>
+    </div>
+
+    <div class="step-question">
+      <div class="step-number">3</div>
+      <h3>Joku ehdottaa ideaa joka kuulostaa hullulta. Sinä...</h3>
+      <div class="radio-group" id="q3">
+        <div class="radio-option" onclick="selectOption('q3',this,'Innostut hullusta ideasta')"><span class="radio-emoji">😄</span><span>Innostut — hullut ideat ovat parhaita</span></div>
+        <div class="radio-option" onclick="selectOption('q3',this,'Kysyt miten toimisi')"><span class="radio-emoji">🤔</span><span>Kysyt miten se käytännössä toimisi</span></div>
+        <div class="radio-option" onclick="selectOption('q3',this,'Pidät mielipiteen itsellä')"><span class="radio-emoji">🔇</span><span>Pidät mielipiteen omana — ei kannata tyrmätä</span></div>
+        <div class="radio-option" onclick="selectOption('q3',this,'Muokkaat ideaa paremmaksi')"><span class="radio-emoji">🔄</span><span>Muokkaat ideaa heti paremmaksi mielessäsi</span></div>
+      </div>
+    </div>
+
+    <div class="step-question">
+      <div class="step-number">4</div>
+      <h3>Ratkaisu on löydetty mutta kukaan ei halua esittää sitä rehtorille. Sinä...</h3>
+      <div class="radio-group" id="q4">
+        <div class="radio-option" onclick="selectOption('q4',this,'Ilmoittaudut heti')"><span class="radio-emoji">🙋</span><span>Ilmoittaudut heti — ei se niin vaikeaa ole</span></div>
+        <div class="radio-option" onclick="selectOption('q4',this,'Teet ensin esityksen')"><span class="radio-emoji">📊</span><span>Ehdotat ensin selkeää esitystä — sitten mennään</span></div>
+        <div class="radio-option" onclick="selectOption('q4',this,'Ehdotat menemistä yhdessä')"><span class="radio-emoji">👥</span><span>Ehdotat että mennään yhdessä — ei yksin</span></div>
+        <div class="radio-option" onclick="selectOption('q4',this,'Ehdotat kirjettä')"><span class="radio-emoji">✍️</span><span>Kirjoitat mieluummin kuin puhut — ehdotat kirjettä</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VAIHE 3 -->
+  <div class="slide" id="slide-2">
+    <div class="vaihe-tag">Vaihe 3 — Kallioharjun ratkaisu · Pienryhmä · 15–20 min</div>
+
+    <p class="task-intro">Aika on tullut.</p>
+    <p class="task-body">Oppilaskunta kokoontuu. Teillä on yksi mahdollisuus vakuuttaa rehtori Virtanen. Katsokaa ryhmäänne — teillä on erilaisia ajattelijoita. Se on teidän vahvuutenne.</p>
+
+    <div class="highlight-quote">Kuka teistä hoitaa mitäkin? Sopikaa roolit ensin.</div>
+
+    <div class="role-grid">
+      <div class="role-card" onclick="selectRole(this)">
+        <div class="role-emoji">🗣</div>
+        <div class="role-title">Puheenjohtaja</div>
+        <div class="role-desc">Pitää keskustelun liikkeessä, huolehtii että kaikki pääsevät ääneen</div>
+      </div>
+      <div class="role-card" onclick="selectRole(this)">
+        <div class="role-emoji">📝</div>
+        <div class="role-title">Kirjuri</div>
+        <div class="role-desc">Kirjaa ryhmän parhaat ideat</div>
+      </div>
+      <div class="role-card" onclick="selectRole(this)">
+        <div class="role-emoji">🔍</div>
+        <div class="role-title">Kyselijä</div>
+        <div class="role-desc">Esittää vaikeita kysymyksiä: "Mutta toimiiko tämä oikeasti?"</div>
+      </div>
+      <div class="role-card" onclick="selectRole(this)">
+        <div class="role-emoji">🎤</div>
+        <div class="role-title">Esittäjä</div>
+        <div class="role-desc">Kertoo lopuksi muille luokalle mitä ryhmä keksi</div>
+      </div>
+    </div>
+
+    <div class="step-question">
+      <div class="step-number">1</div>
+      <h3>Rehtori kysyy: miten koulu tiedottaa vanhemmille ilman somea?</h3>
+      <p>Keksikää yksi konkreettinen idea. Se voi olla tekninen, hauska tai erikoinen — kunhan se toimii.</p>
+      <textarea id="v3_k1" placeholder="Ryhmämme idea..." rows="3"></textarea>
+    </div>
+
+    <div class="step-question">
+      <div class="step-number">2</div>
+      <h3>Uusi oppilas tulee ensi viikolla. Hän ei tunne ketään eikä tiedä mitään koulusta.</h3>
+      <p>Miten hän saa tiedon ja löytää kaverit — ilman somea?</p>
+      <textarea id="v3_k2" placeholder="Ryhmämme idea..." rows="3"></textarea>
+    </div>
+
+    <div class="step-question" style="border-color: var(--teal); background: var(--teal-light);">
+      <div class="step-number" style="background: var(--teal-mid);">3</div>
+      <h3>Tämä on vaikein kysymys.</h3>
+      <p>Mitä koulu menettää pysyvästi kun some lähtee — ja voiko sen korvata millään? Tähän ei ole oikeaa vastausta. Keskustelkaa 3 minuuttia.</p>
+      <textarea id="v3_k3" placeholder="Yksi asia jonka ryhmänne menettäisi eniten..." rows="3"></textarea>
+    </div>
+
+    <div class="ending-card">
+      <div class="big-emoji">🌱</div>
+      <h2>Huomasitteko jotain?</h2>
+      <p>Yksin teidän ideat olivat yhdenlaisia.<br>Yhdessä ne muuttuivat.<br><br>
+      <strong>Juuri niin tulevaisuutta rakennetaan — ei yksin.</strong></p>
+    </div>
+
+    <!-- Tallenna-osio -->
+    <div class="save-section">
+      <h3>💾 Tallenna vastauksesi</h3>
+      <p>Lataa vastauksesi tekstitiedostona ja lähetä se opettajalle Classroomin kautta.</p>
+      <button class="btn-save" onclick="saveAnswers()">⬇ Lataa vastaukseni</button>
+      <div class="save-confirm" id="saveConfirm">✓ Tiedosto ladattu! Muista lähettää se Classroomiin.</div>
+      <div class="save-steps">
+        <p style="font-weight:500; color:var(--text); margin-bottom:10px;">Mitä seuraavaksi:</p>
+        <div class="save-step"><span class="save-step-num">1</span>Paina "Lataa vastaukseni" — tiedosto tallentuu automaattisesti</div>
+        <div class="save-step"><span class="save-step-num">2</span>Avaa Google Classroom ja etsi tämä tehtävä</div>
+        <div class="save-step"><span class="save-step-num">3</span>Liitä tekstitiedosto tehtävään ja palauta</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button class="btn btn-secondary" id="btnBack" onclick="navigate(-1)" style="visibility:hidden">← Takaisin</button>
+  <div class="nav-info">Vaihe <span id="currentStep">1</span> / 3</div>
+  <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Seuraava →</button>
+</div>
+
+<script>
+  let current = 0;
+  const total = 3;
+  const answers = { q1: '', q2: '', q3: '', q4: '' };
+
+  function navigate(dir) {
+    if (current === total - 1 && dir > 0) return;
+    document.querySelectorAll('.slide')[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    document.querySelectorAll('.slide')[current].classList.add('active');
+    updateUI();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateUI() {
+    document.getElementById('currentStep').textContent = current + 1;
+    document.getElementById('btnBack').style.visibility = current === 0 ? 'hidden' : 'visible';
+    const btn = document.getElementById('btnNext');
+    btn.textContent = current === total - 1 ? 'Valmis ✓' : 'Seuraava →';
+    btn.disabled = current === total - 1;
+    btn.style.opacity = current === total - 1 ? '0.4' : '1';
+    document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+    for (let i = 0; i < total; i++) {
+      const dot = document.getElementById('dot' + i);
+      dot.classList.remove('active', 'done');
+      if (i === current) dot.classList.add('active');
+      else if (i < current) dot.classList.add('done');
+    }
+  }
+
+  function selectOption(groupId, el, label) {
+    document.querySelectorAll('#' + groupId + ' .radio-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[groupId] = label;
+  }
+
+  function selectRole(el) {
+    el.classList.toggle('selected');
+  }
+
+  function saveAnswers() {
+    const name = document.getElementById('studentName').value.trim() || 'Oppilas';
+    const g1 = document.getElementById('groupName1').value.trim();
+    const g2 = document.getElementById('groupName2').value.trim();
+    const g3 = document.getElementById('groupName3').value.trim();
+    const groupNames = [g1, g2, g3].filter(n => n).join(', ') || '(ei täytetty)';
+    const today = new Date().toLocaleDateString('fi-FI');
+
+    const v1_oma    = document.getElementById('v1_oma').value.trim() || '(ei vastausta)';
+    const v1_yhd   = document.getElementById('v1_yhdessa').value.trim() || '(ei vastausta)';
+    const v3_k1    = document.getElementById('v3_k1').value.trim() || '(ei vastausta)';
+    const v3_k2    = document.getElementById('v3_k2').value.trim() || '(ei vastausta)';
+    const v3_k3    = document.getElementById('v3_k3').value.trim() || '(ei vastausta)';
+
+    const q1 = answers.q1 || '(ei valittu)';
+    const q2 = answers.q2 || '(ei valittu)';
+    const q3 = answers.q3 || '(ei valittu)';
+    const q4 = answers.q4 || '(ei valittu)';
+
+    const txt = `DIGIOPO — OPI HAAVEILEMAAN TULEVAISUUTTA
+7. luokka · Kallioharjun some-katastrofi
+=========================================
+Oppilas: ${name}
+Ryhmäläiset: ${groupNames}
+Päivämäärä: ${today}
+
+-----------------------------------------
+VAIHE 1 — Herättely
+-----------------------------------------
+Oma idea somen tilalle:
+${v1_oma}
+
+Yhteinen idea parin kanssa:
+${v1_yhd}
+
+-----------------------------------------
+VAIHE 2 — Millainen ajattelija sinä olet
+-----------------------------------------
+Tilanne 1 — Kukaan ei puhu kokouksessa:
+  → ${answers.q1 || '(ei valittu)'}
+
+Tilanne 2 — Kolme ideaa, ei päätöstä:
+  → ${answers.q2 || '(ei valittu)'}
+
+Tilanne 3 — Hullu idea ehdolla:
+  → ${answers.q3 || '(ei valittu)'}
+
+Tilanne 4 — Ei esittäjää rehtorille:
+  → ${answers.q4 || '(ei valittu)'}
+
+-----------------------------------------
+VAIHE 3 — Kallioharjun ratkaisu (ryhmä)
+-----------------------------------------
+1. Miten tiedotetaan vanhemmille ilman somea/Wilmaa:
+${v3_k1}
+
+2. Miten uusi oppilas löytää tiedon ja kaverit:
+${v3_k2}
+
+3. Mitä koulu menettää pysyvästi:
+${v3_k3}
+
+=========================================
+DigiOpo · Tulevaisuus-kokonaisuus · 7lk
+`;
+
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tulevaisuus_7lk_${name.replace(/\s+/g, '_')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    document.getElementById('saveConfirm').style.display = 'block';
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
