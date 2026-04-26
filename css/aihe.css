@@ -47,13 +47,11 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-  padding: 0; /* padding siirretty sisälle border-top:n alle */
-  margin-bottom: 48px; /* ← enemmän tilaa osioiden väliin (oli 32px) */
+  padding: 0;
+  margin-bottom: 48px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   scroll-margin-top: 100px;
-  overflow: hidden; /* pitää border-radius + yläraita siistinä */
-
-  /* Värillinen yläraita — oletusväri, ylikirjoitetaan per luokka */
+  overflow: hidden;
   border-top: 5px solid #4f46e5;
 }
 
@@ -68,6 +66,7 @@
 }
 
 /* 8. luokka — pinkki */
+#johdanto,
 #koulutus,
 #vahvuudet,
 #tet,
@@ -79,7 +78,6 @@
 /* 9. luokka — teal */
 #jatko,
 #yhteishaku,
-#tet,
 #testi,
 #valinnat {
   border-top-color: #0d9488;
@@ -109,11 +107,16 @@
   padding-right: 0;
 }
 
+/* Hero-kortti johdannossa — reunasta reunaan */
+#johdanto > div[style] {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .aihe-otsikko {
   margin-bottom: 20px;
   padding-bottom: 14px;
   border-bottom: 3px solid #4f46e5;
-  /* padding-top ja left/right tulee .aihe-osio > * säännöstä */
 }
 
 .aihe-otsikko h2 {
@@ -136,6 +139,7 @@
   border-bottom-color: #7c3aed;
 }
 
+#johdanto .aihe-otsikko,
 #koulutus .aihe-otsikko,
 #vahvuudet .aihe-otsikko,
 #tet .aihe-otsikko,
@@ -157,7 +161,10 @@
   background: var(--color-teoria);
   overflow: hidden;
   border-radius: 14px;
-  padding: 18px;
+  padding-top: 18px;     /* ← erota top/bottom */
+  padding-bottom: 18px;
+  padding-left: 0;       /* ← nolla, tulee ylemmältä säännöltä */
+  padding-right: 0;
   margin-top: 16px;
   border: 1px solid var(--color-teoria-border);
   opacity: 0.9;
@@ -165,6 +172,18 @@
   grid-template-columns: 1fr 160px;
   gap: 20px;
   align-items: center;
+}
+
+/* Yhtenäinen leveys tasks-sectionin kanssa
+   + nollataan aihe-osio > * automaattinen padding */
+.aihe-osio > .theory-card,
+.aihe-osio > .tasks-section {
+  box-sizing: border-box;
+  width: calc(100% - 56px);
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 18px;   /* ← ei nolla, vaan cardin oma padding */
+  padding-right: 18px;  /* ← sama */
 }
 
 .theory-label {
@@ -202,7 +221,6 @@
   object-fit: contain;
   object-position: center;
 }
-
 /* --- Teoria-kortti (kuvan kanssa) -------------------------- */
 
 .teoria-kortti {
@@ -550,6 +568,12 @@
     margin-right: 16px;
   }
 
+  /* Hero-kortti johdannossa — reunasta reunaan myös mobiilissa */
+  #johdanto > div[style] {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .teoria-kortti {
     flex-direction: column;
     align-items: flex-start;
@@ -566,9 +590,11 @@
   .theory-card {
     grid-template-columns: 1fr;
   }
+
   .theory-image {
     width: 100%;
   }
+
   .theory-image img {
     width: 100%;
     height: 160px;
@@ -577,6 +603,7 @@
     object-fit: cover;
     object-position: center;
   }
+
   .theory-card,
   .tasks-section,
   .interactive-card {
