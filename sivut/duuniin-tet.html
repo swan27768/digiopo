@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duuniin! – TET-peli</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-success: #E1F5EE;
+    --bg-warning: #FAEEDA;
+    --bg-error: #FCEBEB;
+    --text-primary: #1a1a18;
+    --text-secondary: #5a5a57;
+    --text-success: #04342C;
+    --text-warning: #412402;
+    --text-error: #501313;
+    --border-default: #d0d0cc;
+    --border-strong: #a0a09c;
+    --border-success: #0F6E56;
+    --border-warning: #854F0B;
+    --border-error: #A32D2D;
+    --accent: #1a1a18;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 1.25rem;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .card-secondary {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .hero-logo { font-size: 44px; margin-bottom: .75rem; }
+  .hero-title { font-size: 26px; font-weight: 600; color: var(--text-primary); margin-bottom: .3rem; }
+  .hero-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 1.75rem; }
+
+  /* ── LABELS ── */
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: .65rem;
+  }
+
+  /* ── NAME INPUT ── */
+  .name-wrap { margin-bottom: 1.5rem; text-align: left; }
+  .name-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .name-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,26,24,.12); }
+  .name-input::placeholder { color: #aaa; }
+  .name-input.error { border-color: var(--border-error); }
+  .input-hint { font-size: 12px; color: var(--border-error); margin-top: 4px; display: none; }
+  .input-hint.show { display: block; }
+
+  /* ── LEVEL CARDS ── */
+  .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .level-card {
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 1.1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .15s, background .15s;
+  }
+  .level-card:hover { background: var(--bg-secondary); border-color: var(--border-strong); }
+  .level-card.selected { border: 2.5px solid var(--accent); background: var(--bg-secondary); }
+  .level-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .level-icon { font-size: 20px; margin-bottom: .4rem; }
+  .level-name { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: .2rem; }
+  .level-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* ── WORKPLACE CHIPS ── */
+  .wp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 1.75rem; }
+  .wp-card {
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: .65rem .5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color .15s, background .15s;
+  }
+  .wp-card:hover { background: var(--bg-secondary); border-color: var(--border-strong); }
+  .wp-card.selected { border: 2.5px solid var(--accent); background: var(--bg-secondary); }
+  .wp-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .wp-icon { font-size: 18px; margin-bottom: .2rem; }
+  .wp-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-block;
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: opacity .15s, background .15s;
+    text-align: center;
+  }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .btn-dark { background: var(--accent); color: #fff; }
+  .btn-dark:hover { opacity: .82; }
+  .btn-outline {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-strong);
+    padding: 11px 24px;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  .btn-outline:hover { background: var(--bg-secondary); }
+  .btn-success { background: #0F6E56; color: #fff; }
+  .btn-success:hover { opacity: .85; }
+
+  /* ── PROGRESS ── */
+  .prog-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .prog-track {
+    flex: 1; height: 7px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: 99px; overflow: hidden;
+  }
+  .prog-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s ease; }
+  .prog-label { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+  .stars-label { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    border-radius: var(--radius-sm);
+    padding: 4px 10px; font-size: 12px; font-weight: 600;
+    border: 1px solid; margin-bottom: .75rem;
+  }
+  .badge-module { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-default); }
+  .badge-easy { background: #E1F5EE; color: #04342C; border-color: #5DCAA5; }
+  .badge-hard { background: #FCEBEB; color: #501313; border-color: #F09595; }
+
+  /* ── SCENARIO CARD ── */
+  .scenario-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 1.35rem;
+    margin-bottom: 1rem;
+  }
+  .sit-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .5rem; }
+  .q-text { font-size: 15px; color: var(--text-primary); line-height: 1.75; }
+  .hint-box {
+    background: var(--bg-secondary);
+    border-left: 3px solid var(--border-strong);
+    padding: .6rem .9rem;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-top: .85rem;
+    font-size: 13px; color: var(--text-primary); line-height: 1.5;
+    display: none;
+  }
+
+  /* ── CHOICES ── */
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: 13px 15px;
+    font-size: 14px; font-family: inherit;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.55;
+    transition: background .12s, border-color .12s;
+  }
+  .choice-btn:hover:not(:disabled) { background: var(--bg-secondary); border-color: var(--border-strong); }
+  .choice-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .choice-btn:disabled { cursor: default; }
+  .choice-btn.correct { border: 2px solid var(--border-success); background: var(--bg-success); color: var(--text-success); font-weight: 600; }
+  .choice-btn.wrong   { border: 2px solid var(--border-error);   background: var(--bg-error);   color: var(--text-error);   font-weight: 600; }
+  .choice-btn.neutral { border: 2px solid var(--border-warning); background: var(--bg-warning); color: var(--text-warning); font-weight: 600; }
+
+  /* ── FEEDBACK ── */
+  .fb-box {
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    font-size: 14px; line-height: 1.6;
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .fb-box.show { display: block; }
+  .fb-box.good { background: var(--bg-success); color: var(--text-success); border: 1.5px solid var(--border-success); }
+  .fb-box.bad  { background: var(--bg-error);   color: var(--text-error);   border: 1.5px solid var(--border-error); }
+  .fb-box.ok   { background: var(--bg-warning); color: var(--text-warning); border: 1.5px solid var(--border-warning); }
+  .fb-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+
+  /* ── BTN ROW ── */
+  .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn-next { display: none; }
+  .btn-next.show { display: inline-block; }
+  .btn-hint {
+    background: transparent;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 11px 18px;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .btn-hint:hover { background: var(--bg-secondary); }
+  .btn-hint:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .btn-hint:disabled { opacity: .38; cursor: default; }
+
+  /* ── RESULTS ── */
+  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .sc-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    padding: .9rem; text-align: center;
+  }
+  .sc-num { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+  .sc-lbl { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+
+  .summary-head { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+  .head-good { color: #04342C; }
+  .head-dev  { color: #412402; }
+  .divider { height: 1px; background: var(--border-default); margin: .85rem 0; }
+  .summary-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.5; margin-bottom: .5rem; }
+  .sum-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .dot-g { background: #0F6E56; }
+  .dot-o { background: #854F0B; }
+
+  /* ── DOWNLOAD ── */
+  .dl-steps { font-size: 14px; color: var(--text-primary); line-height: 2; margin-bottom: 1rem; padding-left: 1.25rem; }
+
+  /* ── SCREEN READER ── */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+
+<h1 class="sr-only">Duuniin! – TET-peli. Harjoittele työelämän tilanteita ennen TET-jaksoa.</h1>
+
+<!-- ═══════════════ START ═══════════════ -->
+<div id="s-start" class="screen active">
+  <div class="hero">
+    <div class="hero-logo" aria-hidden="true">💼</div>
+    <div class="hero-title">Duuniin!</div>
+    <div class="hero-sub">Opas työelämään – TET-harjoitus<br>Harjoittele oikeita tilanteita ennen kuin astut ovesta sisään.</div>
+
+    <div class="name-wrap">
+      <div class="section-label">Kirjoita nimesi</div>
+      <label for="player-name" class="sr-only">Etu- ja sukunimi</label>
+      <input class="name-input" id="player-name" type="text" placeholder="Etunimi Sukunimi" maxlength="60" autocomplete="name" aria-required="true"/>
+      <div class="input-hint" id="name-hint" role="alert">Kirjoita nimesi ennen kuin aloitat.</div>
+    </div>
+
+    <div class="section-label">Valitse taso</div>
+    <div class="level-grid" role="group" aria-label="Vaikeustason valinta">
+      <div class="level-card selected" data-level="easy" onclick="selectLevel(this,'easy')" role="button" tabindex="0" aria-pressed="true">
+        <div class="level-icon" aria-hidden="true">🟢</div>
+        <div class="level-name">Perustaso</div>
+        <div class="level-desc">Selkeät tilanteet, kolme vaihtoehtoa. Hyvä ensimmäiselle kerralle.</div>
+      </div>
+      <div class="level-card" data-level="hard" onclick="selectLevel(this,'hard')" role="button" tabindex="0" aria-pressed="false">
+        <div class="level-icon" aria-hidden="true">🔴</div>
+        <div class="level-name">Haastava taso</div>
+        <div class="level-desc">Monitulkintaisia tilanteita. Vihjeestä menettää yhden pisteen.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Valitse harjoittelupaikka</div>
+    <div class="wp-grid" role="group" aria-label="Harjoittelupaikan valinta">
+      <div class="wp-card selected" data-wp="all"     onclick="selectWP(this,'all')"     role="button" tabindex="0" aria-pressed="true" ><div class="wp-icon" aria-hidden="true">🌐</div><div class="wp-name">Kaikki</div></div>
+      <div class="wp-card"          data-wp="school"  onclick="selectWP(this,'school')"  role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🏫</div><div class="wp-name">Koulu</div></div>
+      <div class="wp-card"          data-wp="daycare" onclick="selectWP(this,'daycare')" role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🧒</div><div class="wp-name">Päiväkoti</div></div>
+      <div class="wp-card"          data-wp="shop"    onclick="selectWP(this,'shop')"    role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🛒</div><div class="wp-name">Kauppa</div></div>
+      <div class="wp-card"          data-wp="office"  onclick="selectWP(this,'office')"  role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🏢</div><div class="wp-name">Toimisto</div></div>
+    </div>
+
+    <button class="btn btn-dark" onclick="startGame()">Aloita peli</button>
+  </div>
+</div>
+
+<!-- ═══════════════ GAME ═══════════════ -->
+<div id="s-game" class="screen" aria-live="polite">
+  <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-aria">
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-label" id="prog-label">1 / 10</div>
+    <div class="stars-label" id="stars-label" aria-label="Pisteet">⭐ 0</div>
+  </div>
+  <div>
+    <span class="badge badge-module" id="mod-badge"></span>
+    <span class="badge" id="diff-badge"></span>
+  </div>
+  <div class="scenario-card">
+    <div class="sit-label" id="sit-label"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="hint-box" id="hint-box" role="note"></div>
+  </div>
+  <div class="choices" id="choices" role="group" aria-label="Valitse vastaus"></div>
+  <div class="fb-box" id="fb-box" role="alert">
+    <div class="fb-title" id="fb-title"></div>
+    <div id="fb-text"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-dark btn-next" id="btn-next" onclick="nextQ()"></button>
+    <button class="btn-hint" id="btn-hint" onclick="showHint()">💡 Vihje</button>
+  </div>
+</div>
+
+<!-- ═══════════════ RESULT ═══════════════ -->
+<div id="s-result" class="screen">
+  <div class="hero">
+    <div class="hero-logo" aria-hidden="true" id="r-emoji"></div>
+    <div class="hero-title" id="r-title"></div>
+    <div class="hero-sub" id="r-sub"></div>
+    <div class="score-grid">
+      <div class="sc-card"><div class="sc-num" id="r-correct"></div><div class="sc-lbl">Oikeita vastauksia</div></div>
+      <div class="sc-card"><div class="sc-num" id="r-stars"></div><div class="sc-lbl">Tähteä yhteensä</div></div>
+      <div class="sc-card"><div class="sc-num" id="r-pct"></div><div class="sc-lbl">Pisteprosentti</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="summary-head head-good">Vahvuudet</div>
+    <div id="strengths-list"></div>
+    <div class="divider"></div>
+    <div class="summary-head head-dev">Kehityskohteet</div>
+    <div id="develop-list"></div>
+  </div>
+
+  <div class="card-secondary">
+    <div class="section-label">Lähetä tulokset opettajalle</div>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6;">Lataa tuloksesi tekstitiedostona ja palauta se opettajalle Google Classroomin tai Wilman kautta.</p>
+    <ol class="dl-steps">
+      <li>Paina "Lataa tulokset" – tiedosto tallentuu koneellesi</li>
+      <li>Avaa Google Classroom tai Wilma</li>
+      <li>Liitä tiedosto tehtävään ja lähetä</li>
+    </ol>
+    <button class="btn btn-dark" id="btn-dl" onclick="downloadResults()">⬇ Lataa tulokset</button>
+  </div>
+
+  <div style="margin-top:.75rem;">
+    <button class="btn btn-outline" onclick="restartGame()">Pelaa uudelleen</button>
+    <button class="btn btn-dark" onclick="switchLevel()">Kokeile toista tasoa</button>
+  </div>
+</div>
+
+<script>
+const ALL_Q=[
+  {level:'easy',wp:['school','all'],module:'⏰ Arjen säännöt',situation:'Myöhästyminen',hint:'Mieti, miten ammattilainen toimii yllättävässä tilanteessa.',
+   text:'Bussisi myöhästyy ja huomaat, ettet ehdi kouluun TET-harjoitteluun ajoissa. Mitä teet?',
+   choices:[
+    {text:'Soitan ohjaajalle heti, kerron tilanteen ja arvioidun saapumisajan.',score:3,type:'correct',fb:{t:'Juuri näin!',d:'Myöhästymisestä ilmoitetaan aina etukäteen. Ohjaaja arvostaa rehellistä viestintää.'}},
+    {text:'Kiirehdin niin nopeasti kuin pystyn – en ehdi ilmoittaa.',score:1,type:'neutral',fb:{t:'Ymmärrettävää, mutta...',d:'30 sekunnin puhelu riittää. Ohjaaja voi järjestellä töitä sen mukaan.'}},
+    {text:'Tulen myöhässä hiljaa ja toivon, ettei kukaan huomaa.',score:0,type:'wrong',fb:{t:'Ei näin.',d:'Myöhästyminen huomataan aina. Rehellisyys kuuluu ammatilliseen käytökseen.'}},
+  ]},
+  {level:'easy',wp:['daycare','all'],module:'🔒 Vaitiolovelvollisuus',situation:'Sosiaalinen media',hint:'Muista: lapsia koskevat erityiset tietosuojasäännöt.',
+   text:'Päiväkotipäivä oli hauska! Haluaisit julkaista kuvan, jossa lapsia leikkii pihalla. Mitä teet?',
+   choices:[
+    {text:'En julkaise kuvia lapsista ilman lupaa – kysyn ohjaajalta ensin.',score:3,type:'correct',fb:{t:'Täysin oikein!',d:'Lasten kuvaaminen ja julkaiseminen vaatii aina huoltajien luvan. Tietosuojalaki koskee kaikkia.'}},
+    {text:'Julkaisen kuvan, jossa kasvoja ei näy – näin on ok.',score:0,type:'wrong',fb:{t:'Ei riitä!',d:'Tunnistettavuuden poistaminen ei riitä. Lupa tarvitaan aina.'}},
+    {text:'Kysyn ohjaajalta luvan ensin.',score:3,type:'correct',fb:{t:'Loistava tapa!',d:'Luvan kysyminen on aina oikea ensimmäinen askel.'}},
+  ]},
+  {level:'easy',wp:['shop','all'],module:'🤝 Ihmiset',situation:'Hankala asiakas',hint:'Et voi ratkaista kaikkea – mutta voit aina ohjata eteenpäin.',
+   text:'Olet kaupassa TET:ssä. Asiakas valittaa ääneen sinulle jostain, mikä ei ole sinun vikasi. Mitä teet?',
+   choices:[
+    {text:'Kuuntelen rauhallisesti ja ohjaan asiakkaan henkilökunnan luo.',score:3,type:'correct',fb:{t:'Ammattimaista!',d:'Ei tarvitse ratkaista kaikkea itse – kuuntele ja ohjaa oikean henkilön luo.'}},
+    {text:'Kerron suoraan, että asia ei kuulu minulle.',score:0,type:'wrong',fb:{t:'Liian töykeä vastaus.',d:'Asiakasta ei saa torjua. Ohjaa aina eteenpäin ystävällisesti.'}},
+    {text:'Lupaan ratkaista asian heti, vaikka en tiedä miten.',score:0,type:'wrong',fb:{t:'Älä lupaa liikaa.',d:'Katteettomien lupausten antaminen pahentaa tilannetta.'}},
+  ]},
+  {level:'easy',wp:['office','all'],module:'📱 Käyttäytyminen',situation:'Puhelimen käyttö',hint:'Toimistossa on omat pelisääntönsä puhelimen käytölle.',
+   text:'Olet toimistossa TET:ssä. Sinulle tulee viesti kaverilta kesken työn. Mitä teet?',
+   choices:[
+    {text:'Jätän viestin ja tarkistan sen tauolla.',score:3,type:'correct',fb:{t:'Täydellinen!',d:'Työn aikana puhelin pysyy poissa. Tauolla voi vapaasti tarkistaa viestit.'}},
+    {text:'Luen viestin nopeasti – kestää vain sekunnin.',score:1,type:'neutral',fb:{t:'Lähes ok, mutta...',d:'Toimistossa kollegat huomaavat. Parempi tapa on odottaa tauko.'}},
+    {text:'Vastaan heti, koska se on tärkeä asia.',score:0,type:'wrong',fb:{t:'Ei sovi toimistoon.',d:'Yksityisviestien lukeminen kesken työn on epäammatillista.'}},
+  ]},
+  {level:'easy',wp:['school','all'],module:'🤫 Hiljainen tieto',situation:'Taukohuoneen kulttuuri',hint:'Uudessa paikassa kannattaa ensin havainnoida.',
+   text:'Olet tauolla opettajainhuoneessa. Opettajat alkavat puhua oppilaan hankalasta tilanteesta kotona. Mitä teet?',
+   choices:[
+    {text:'Kuuntelen hiljaa enkä osallistu – tiedän, että kuulemani on salassa pidettävää.',score:3,type:'correct',fb:{t:'Tilannetajua!',d:'Harjoittelijana saatat kuulla arkaluonteisia asioita. Hiljaa kuunteleminen on oikea tapa.'}},
+    {text:'Osallistun keskusteluun – olen osa tiimiä!',score:0,type:'wrong',fb:{t:'Ei vielä.',d:'Oppilaiden asioita käsitellään luottamuksellisesti. Roolisi on seurata ja oppia.'}},
+    {text:'Poistun taukohuoneesta hienotunteisesti.',score:2,type:'neutral',fb:{t:'Hyvä vaihtoehto!',d:'Poistuminen on täysin hyväksyttävää. Tärkeintä: ei levitellä kuulemaansa.'}},
+  ]},
+  {level:'easy',wp:['office','all'],module:'🌅 Valmistautuminen',situation:'Pukeutuminen',hint:'Toimistot vaihtelevat – osa on rento, osa virallinen.',
+   text:'Olet menossa TET:iin toimistoon. Miten hoidat pukeutumisen?',
+   choices:[
+    {text:'Kysyn etukäteen ohjaajalta, onko pukukoodi tai erityisiä toiveita.',score:3,type:'correct',fb:{t:'Viisas kysymys!',d:'Pukukoodit vaihtelevat. Kysyminen on paljon parempi kuin arvata.'}},
+    {text:'Pukeudun niin kuin kouluun – rento on aina ok.',score:0,type:'wrong',fb:{t:'Ei aina toimiva.',d:'Toimistossa voidaan odottaa siistimpää pukeutumista.'}},
+    {text:'Pukeudun hyvin siististi – ei voi mennä pieleen.',score:2,type:'neutral',fb:{t:'Turvallinen valinta!',d:'Siisti pukeutuminen on harvoin väärä – kysyminen etukäteen olisi silti parempi.'}},
+  ]},
+  {level:'easy',wp:['shop','all'],module:'⏰ Arjen säännöt',situation:'Tauot',hint:'Sovituista ajoista kiinni pitäminen on luottamuksen perusta.',
+   text:'Olet töissä kaupassa. Huomaat, että olet ollut tauolla jo 15 minuuttia pidempään kuin piti. Mitä teet?',
+   choices:[
+    {text:'Palaan heti töihin ja pahoittelen ohjaajalle ylipitkää taukoa.',score:3,type:'correct',fb:{t:'Oikea teko!',d:'Rehellisyys ja nopea korjaus ovat avainasemassa.'}},
+    {text:'Viivyn vähän – kukaan ei varmaan laske minuutteja.',score:0,type:'wrong',fb:{t:'Laskevat!',d:'Luottamus rakentuu hitaasti ja menetetään nopeasti.'}},
+    {text:'Sanon ohjaajalle, että bussi myöhästyi.',score:0,type:'wrong',fb:{t:'Valehtelu on huono strategia.',d:'Rehellinen pahoittelu on aina parempi ratkaisu.'}},
+  ]},
+  {level:'easy',wp:['daycare','school','all'],module:'🤝 Ihmiset',situation:'Ohjeiden vastaanottaminen',hint:'Kysyminen ei ole heikkous – se on vastuullisuutta.',
+   text:'Ohjaaja antaa sinulle moniosaisia ohjeita nopeasti. Et ole varma, ymmärsitkö kaiken. Mitä teet?',
+   choices:[
+    {text:'Pyydän ohjaajaa toistamaan epäselvät kohdat ja kirjaan ohjeet ylös.',score:3,type:'correct',fb:{t:'Erinomaista!',d:'Kysyminen osoittaa vastuullisuutta. Muistiinpanot näyttävät, että otat tehtävän vakavasti.'}},
+    {text:'Yritän muistaa kaiken ja teen niin kuin luulen, että piti.',score:1,type:'neutral',fb:{t:'Rohkaistuisit kysymään!',d:'Arvaukset johtavat helposti virheisiin.'}},
+    {text:'En tee mitään ennen kuin saan täysin selvät ohjeet.',score:1,type:'neutral',fb:{t:'Tarkkuus on hyvä, mutta...',d:'Työssä pitää myös osata aloittaa ja pyytää lisäohjeita tarvittaessa.'}},
+  ]},
+  {level:'hard',wp:['office','all'],module:'🤫 Hiljainen tieto',situation:'Toimiston hierarkia',hint:'Toimistoissa on usein epävirallinen järjestys, jota ei kerrota ääneen.',
+   text:'Toimistossa lounaalle mennessä kaikki odottavat, että joku tietty henkilö menee ensin. Sinulla on kiire. Mitä teet?',
+   choices:[
+    {text:'Odotan kärsivällisesti – huomaan, että kyseessä on jokin tapa.',score:3,type:'correct',fb:{t:'Hyvä havainto!',d:'Monissa toimistoissa on epävirallinen senioriteettijärjestys. Uutena kannattaa havainnoida ensin.'}},
+    {text:'Menen itse ensin – olen harjoittelija, minua ei kukaan katso.',score:0,type:'wrong',fb:{t:'Huomio kiinnittyy!',d:'Harjoittelijaa katsotaan erityisen tarkasti. Pienetkin tilanteet jäävät mieleen.'}},
+    {text:'Kysyn vieressä olevalta kollegalta hiljaa: "Onko teillä jokin tietty käytäntö?"',score:3,type:'correct',fb:{t:'Erinomainen tapa!',d:'Hiljaisen tiedon voi myös kysyä – kunhan tekee sen hienotunteisesti.'}},
+  ]},
+  {level:'hard',wp:['shop','all'],module:'🤝 Ihmiset',situation:'Ristiriitaiset ohjeet',hint:'Kaksi esimiestä, kaksi eri ohjetta – mitä tehdä?',
+   text:'Kassapäällikkö käski sinut järjestelemään hyllyjä. Myymäläpäällikkö tulee ja sanoo, että sinun pitää mennä kassalle. Kummalle totellaan?',
+   choices:[
+    {text:'Menen kassalle – myymäläpäällikkö on korkeammalla hierarkiassa.',score:2,type:'neutral',fb:{t:'Ihan perusteltu, mutta...',d:'Parempi olisi ilmoittaa molemmille tilanteesta.'}},
+    {text:'Kerron molemmille tilanteen ja pyydän heitä sopimaan keskenään.',score:3,type:'correct',fb:{t:'Viisain ratkaisu!',d:'Ristiriitaisissa ohjeissa avoin viestintä on paras tapa.'}},
+    {text:'Jatkan hyllyjärjestelyä – sain ensin sen ohjeen.',score:1,type:'neutral',fb:{t:'Ymmärrettävä, mutta jäykkä.',d:'"Ensin tullut" -periaate ei toimi hierarkkisessa organisaatiossa.'}},
+  ]},
+  {level:'hard',wp:['school','daycare','all'],module:'🔒 Vaitiolovelvollisuus',situation:'Vaikea tilanne',hint:'Vaitiolovelvollisuudella on rajansa – joskus pitää puhua.',
+   text:'Näet koulussa oppilaan, jolla näyttää olevan mustelmia käsivarressa. Oppilas pyytää sinua olemaan kertomatta kenellekään. Mitä teet?',
+   choices:[
+    {text:'Pidän asian omana tietonani – lupasin olla kertomatta.',score:0,type:'wrong',fb:{t:'Tässä tilanteessa vaitiolovelvollisuus ei päde.',d:'Lapsen turvallisuus menee aina salassapidon edelle. Lastensuojelulaki velvoittaa ilmoittamaan.'}},
+    {text:'Kerron tilanteesta ohjaajalle tai opettajalle diskreetisti.',score:3,type:'correct',fb:{t:'Oikea ja rohkea teko!',d:'Vaitiolovelvollisuus ei tarkoita, että lapsen turvallisuus voidaan sivuuttaa.'}},
+    {text:'Kysyn oppilaalta lisää ennen kuin teen mitään.',score:1,type:'neutral',fb:{t:'Huomaavaisuus on hyvä, mutta...',d:'Tilanne vaatii nopeaa toimintaa. Aikuisen informoiminen on tärkeämpää.'}},
+  ]},
+  {level:'hard',wp:['office','all'],module:'🌅 Valmistautuminen',situation:'Kahvikäytäntö',hint:'Toimistoissa on paljon kirjoittamattomia sääntöjä.',
+   text:'Toimistossa on kahvikone. Kuulet illalla, että siellä on tapana maksaa kahvikassaan 5 € kuukaudessa. Mitä teet seuraavana päivänä?',
+   choices:[
+    {text:'Maksan kassaan ja pahoittelen, etten tiennyt käytännöstä.',score:3,type:'correct',fb:{t:'Täydellinen reaktio!',d:'Uusiin käytäntöihin sopeutuminen osoittaa kypsyyttä.'}},
+    {text:'En tee mitään – kukaan ei maininnut asiaa minulle.',score:0,type:'wrong',fb:{t:'Hiljainen tieto on yhteinen vastuu.',d:'Vaikka käytäntöä ei kerrottu, sen noudattaminen kuuluu hyviin tapoihin.'}},
+    {text:'Otan jatkossa kahvia vain, kun joku tarjoaa.',score:2,type:'neutral',fb:{t:'Varovainen ratkaisu.',d:'Pidättäytyminen on yksi tapa, mutta kassaan maksaminen olisi reilumpaa.'}},
+  ]},
+  {level:'hard',wp:['shop','all'],module:'⏰ Arjen säännöt',situation:'Kiireinen ruuhka',hint:'Miten priorisoit, kun kaikki tuntuu tulevan yhtä aikaa?',
+   text:'Kaupassa on ruuhka. Kassapäällikkö pyytää kassalle, varastomies pyytää apua laatikoihin, ja asiakas seisoo edessäsi eksyksissä. Mitä teet ensin?',
+   choices:[
+    {text:'Opastan asiakkaan nopeasti, sitten menen kassalle ja ilmoitan varastomiehelle.',score:3,type:'correct',fb:{t:'Erinomainen priorisointi!',d:'Asiakas edessäsi ratkeaa nopeasti. Sen jälkeen esimiehen pyyntö menee edelle.'}},
+    {text:'Menen ensin kassalle – esimies on tärkein.',score:1,type:'neutral',fb:{t:'Perusteltua, mutta...',d:'Asiakas seisoo edessäsi. Häntä ei voi ohittaa ilman lyhyttä vastausta.'}},
+    {text:'Autan varastomiestä – fyysinen työ tuntuu kiireisimmältä.',score:0,type:'wrong',fb:{t:'Priorisointi meni pieleen.',d:'Varastotilanne voi siirtää helpoiten. Asiakas edessä ja esimiehen pyyntö menevät edelle.'}},
+  ]},
+  {level:'hard',wp:['daycare','all'],module:'🤫 Hiljainen tieto',situation:'Tiimikulttuuri',hint:'Päiväkodeissa on vahva tiimikulttuuri – ja omat rituaalit.',
+   text:'Päiväkodissa on tapana siivota omat astiat lounaan jälkeen. Huomaat, että ohjaajasi ei tee niin. Muut vaikenevat. Mitä teet?',
+   choices:[
+    {text:'Siivoan omat astiani ja noudatan yhteistä sääntöä – en kommentoi ohjaajan toimintaa.',score:3,type:'correct',fb:{t:'Viisas ratkaisu!',d:'Harjoittelijana tehtäväsi on noudattaa yhteisiä käytäntöjä, ei puuttua ohjaajan tekemisiin.'}},
+    {text:'Sanon ohjaajalle ystävällisesti: "Eikö kaikkien pitäisi siivota astiat?"',score:0,type:'wrong',fb:{t:'Liian rohkea harjoittelijalta.',d:'Harjoittelijana ei ole sopivaa huomauttaa ohjaajalle.'}},
+    {text:'Siivoan ohjaajan astiat myös, jotta tilanne ratkeaa.',score:1,type:'neutral',fb:{t:'Ystävällistä, mutta...',d:'Jatkuva toisen perässä siivoominen ei ole kestävä ratkaisu.'}},
+  ]},
+];
+
+let chosenLevel='easy',chosenWP='all',gameQ=[],curQ=0,stars=0,maxStars=0,answers=[],hintUsed=false;
+
+function selectLevel(el,l){
+  document.querySelectorAll('.level-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
+  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenLevel=l;
+}
+function selectWP(el,w){
+  document.querySelectorAll('.wp-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
+  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenWP=w;
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){
+    if(e.target.classList.contains('level-card')||e.target.classList.contains('wp-card')){
+      e.preventDefault();e.target.click();
+    }
+  }
+});
+
+function startGame(){
+  const name=document.getElementById('player-name').value.trim();
+  const hint=document.getElementById('name-hint');
+  const inp=document.getElementById('player-name');
+  if(!name){inp.classList.add('error');inp.setAttribute('aria-invalid','true');hint.classList.add('show');inp.focus();return;}
+  inp.classList.remove('error');inp.setAttribute('aria-invalid','false');hint.classList.remove('show');
+  let pool=ALL_Q.filter(q=>q.level===chosenLevel&&q.wp.includes(chosenWP));
+  if(!pool.length)pool=ALL_Q.filter(q=>q.level===chosenLevel);
+  gameQ=shuffle(pool).slice(0,Math.min(10,pool.length));
+  maxStars=gameQ.reduce((s,q)=>s+Math.max(...q.choices.map(c=>c.score)),0);
+  curQ=0;stars=0;answers=[];
+  show('s-game');loadQ();
+}
+
+function loadQ(){
+  const q=gameQ[curQ];
+  const pct=Math.round(curQ/gameQ.length*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-aria').setAttribute('aria-valuenow',pct);
+  document.getElementById('prog-label').textContent=(curQ+1)+' / '+gameQ.length;
+  document.getElementById('stars-label').textContent='⭐ '+stars;
+  document.getElementById('mod-badge').textContent=q.module;
+  const db=document.getElementById('diff-badge');
+  if(chosenLevel==='hard'){db.className='badge badge-hard';db.textContent='🔴 Haastava taso';}
+  else{db.className='badge badge-easy';db.textContent='🟢 Perustaso';}
+  document.getElementById('sit-label').textContent=q.situation;
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('hint-box').style.display='none';
+  document.getElementById('fb-box').className='fb-box';
+  const bn=document.getElementById('btn-next');
+  bn.className='btn btn-dark btn-next';
+  bn.textContent=curQ<gameQ.length-1?'Seuraava tilanne →':'Katso tulokset →';
+  const bh=document.getElementById('btn-hint');
+  bh.disabled=false;bh.textContent='💡 Vihje';
+  hintUsed=false;
+  const cont=document.getElementById('choices');cont.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='choice-btn';b.textContent=c.text;
+    b.setAttribute('aria-label',c.text);
+    b.onclick=()=>pick(i);cont.appendChild(b);
+  });
+}
+
+function showHint(){
+  const hb=document.getElementById('hint-box');
+  hb.style.display='block';hb.textContent='Vihje: '+gameQ[curQ].hint;
+  document.getElementById('btn-hint').disabled=true;hintUsed=true;
+}
+
+function pick(idx){
+  const q=gameQ[curQ];const c=q.choices[idx];
+  document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.choice-btn')[idx].classList.add(c.type==='correct'?'correct':c.type==='wrong'?'wrong':'neutral');
+  const earned=hintUsed?Math.max(0,c.score-1):c.score;
+  stars+=earned;
+  answers.push({module:q.module,sit:q.situation,ans:c.text,score:c.score,type:c.type,hintUsed});
+  const fb=document.getElementById('fb-box');
+  fb.className='fb-box '+(c.type==='correct'?'good':c.type==='wrong'?'bad':'ok')+' show';
+  document.getElementById('fb-title').textContent=c.fb.t;
+  document.getElementById('fb-text').textContent=c.fb.d;
+  document.getElementById('btn-next').classList.add('show');
+  document.getElementById('stars-label').textContent='⭐ '+stars;
+}
+
+function nextQ(){curQ++;if(curQ>=gameQ.length)showResults();else loadQ();}
+
+function buildSummary(){
+  const themes={};
+  answers.forEach(a=>{
+    if(!themes[a.module])themes[a.module]={good:0,total:0};
+    themes[a.module].total++;
+    if(a.type==='correct')themes[a.module].good++;
+  });
+  const s=[],d=[];
+  Object.entries(themes).forEach(([mod,v])=>{
+    if(v.good/v.total>=0.67)s.push(mod+' – valinnat olivat pääosin oikeita');
+    else d.push(mod+' – kannattaa harjoitella lisää ennen TET-jaksoa');
+  });
+  if(!s.length)s.push('Kaikki osa-alueet kaipaavat vielä harjoittelua');
+  if(!d.length)d.push('Ei erityisiä kehityskohteita – hyvä suoritus!');
+  return{strengths:s,develop:d};
+}
+
+function showResults(){
+  show('s-result');
+  const correct=answers.filter(a=>a.type==='correct').length;
+  const pct=Math.round(stars/maxStars*100);
+  let emoji,title,sub;
+  if(pct>=85){emoji='🏆';title='Duuniin-mestari!';sub='Upea tulos! Olet selvästi valmis TET-jaksolle.';}
+  else if(pct>=60){emoji='👍';title='Hyvällä tiellä!';sub='Hyvä suoritus! Käy läpi kehityskohteet ennen TET-jaksoa.';}
+  else{emoji='💡';title='Hyvä harjoitus!';sub='Tutustu kehityskohteisiin ja pelaa uudelleen!';}
+  document.getElementById('r-emoji').textContent=emoji;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-sub').textContent=sub;
+  document.getElementById('r-correct').textContent=correct+'/'+gameQ.length;
+  document.getElementById('r-stars').textContent=stars;
+  document.getElementById('r-pct').textContent=pct+'%';
+  const{strengths,develop}=buildSummary();
+  const sl=document.getElementById('strengths-list');sl.innerHTML='';
+  strengths.forEach(s=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML=`<div class="sum-dot dot-g" aria-hidden="true"></div><div>${s}</div>`;sl.appendChild(d);});
+  const dl=document.getElementById('develop-list');dl.innerHTML='';
+  develop.forEach(s=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML=`<div class="sum-dot dot-o" aria-hidden="true"></div><div>${s}</div>`;dl.appendChild(d);});
+}
+
+function downloadResults(){
+  const name=document.getElementById('player-name').value.trim();
+  const pct=Math.round(stars/maxStars*100);
+  const correct=answers.filter(a=>a.type==='correct').length;
+  const{strengths,develop}=buildSummary();
+  const date=new Date().toLocaleDateString('fi-FI');
+  const level=chosenLevel==='hard'?'Haastava':'Perus';
+  const wp={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',office:'Toimisto'}[chosenWP];
+  let txt='DUUNIIN! – TET-pelin tulokset\n================================\n\n';
+  txt+=`Nimi:              ${name}\nPäivämäärä:        ${date}\nTaso:              ${level}\nHarjoittelupaikka: ${wp}\nOikeita vastauksia:${correct} / ${gameQ.length}\nPisteet:           ${pct}%\n\n`;
+  txt+='VAHVUUDET\n---------\n';strengths.forEach(s=>txt+=`+ ${s}\n`);
+  txt+='\nKEHITYSKOHTEET\n--------------\n';develop.forEach(s=>txt+=`> ${s}\n`);
+  txt+='\nVASTAUKSET\n----------\n';
+  answers.forEach((a,i)=>{
+    const m=a.type==='correct'?'[OK]':a.type==='wrong'?'[EI]':'[OS]';
+    txt+=`${i+1}. ${a.module} – ${a.sit}\n   ${m} ${a.ans}${a.hintUsed?' (vihje käytetty)':''}\n\n`;
+  });
+  txt+='================================\nLähetetty opettajalle Google Classroomin tai Wilman kautta.\n';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  a.download=`TET-tulokset_${name.replace(/\s+/g,'_')}_${date.replace(/\./g,'-')}.txt`;
+  a.click();URL.revokeObjectURL(url);
+  const btn=document.getElementById('btn-dl');
+  btn.textContent='✓ Tiedosto ladattu!';btn.className='btn btn-success';
+}
+
+function restartGame(){show('s-start');}
+function switchLevel(){
+  chosenLevel=chosenLevel==='easy'?'hard':'easy';
+  document.querySelectorAll('.level-card').forEach(c=>{
+    const sel=c.dataset.level===chosenLevel;
+    c.classList.toggle('selected',sel);c.setAttribute('aria-pressed',sel?'true':'false');
+  });
+  show('s-start');
+}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function shuffle(a){return a.slice().sort(()=>Math.random()-.5);}
+</script>
+</body>
+</html>

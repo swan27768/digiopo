@@ -167,8 +167,8 @@ const tehtavat = {
     },
     {
       aiheId: "tasks-tet",
-      title: "Päivän aihe: Mitä TET opetti?",
-      description: "Miten TET vaikutti ajatuksiisi tulevaisuudesta?",
+      title: "Millaisen työkaverin haluaisit olla TETissä?",
+      description: "Millaisen työkaverin haluaisit olla TETissä?",
       href: "../tehtava.html?id=keskustelu-tet9",
       tag: "Keskustelu",
       tagClass: "tag-keskustelu",

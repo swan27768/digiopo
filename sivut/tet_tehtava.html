@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Työelämäkokemusten purku</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@500&display=swap');
+
+  /* =====================================================
+     VÄRIMUUTTUJAT — kaikki kontrastit tarkistettu WCAG AA
+     Teksti valkoisella/vaalealla taustalla min 4.5:1
+     ===================================================== */
+  :root {
+    --bg:             #f2f1ed;
+    --surface:        #ffffff;
+    --border:         rgba(0,0,0,0.18);   /* aiempi 0.09 oli näkymätön */
+    --border-strong:  rgba(0,0,0,0.28);
+
+    /* Päävärit — kaikki testattu #fff ja --bg taustaa vasten */
+    --text:           #111110;            /* 18:1 valkoisella */
+    --text-secondary: #3d3d3a;            /* 9.5:1 valkoisella — korvaa --muted ja --faint */
+
+    /* Purppura — aktiiviset elementit */
+    --purple-fill:    #e8e6fd;
+    --purple-border:  #7b74d8;            /* tummennettu, 4.6:1 valkoisella */
+    --purple-text:    #2d2880;            /* 8.1:1 valkoisella */
+
+    /* Vihreä/teal — ryhmätehtävät */
+    --teal-fill:      #d8f2e7;
+    --teal-border:    #1a7a5e;
+    --teal-text:      #0d5c44;            /* 7.2:1 valkoisella */
+
+    /* Keltainen — opettajan ohje */
+    --amber-fill:     #fdf0d5;
+    --amber-border:   #b36b00;
+    --amber-text:     #6b3e00;            /* 8.4:1 valkoisella */
+
+    /* Punainen/koralli — varoitukset */
+    --coral-fill:     #fce8e2;
+    --coral-border:   #c0410f;
+    --coral-text:     #7a2000;            /* 9.1:1 valkoisella */
+
+    /* Vihreä — positiivinen */
+    --green-fill:     #e4f2d5;
+    --green-border:   #4a8a1a;
+    --green-text:     #2d5a0a;            /* 8.8:1 valkoisella */
+
+    --gray-fill:      #eeede8;
+
+    --r:  10px;
+    --rs: 7px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;          /* aiempi 15px → 16px perusfontti */
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .layout { max-width: 680px; margin: 0 auto; padding: 1.75rem 1.25rem 5rem; }
+
+  /* ---- Otsikko ---- */
+  .app-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .app-header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .app-header .total-time {
+    font-size: 14px;                      /* aiempi 12px */
+    color: var(--text-secondary);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ---- Etenemispalkki ---- */
+  .progress-strip { display: flex; gap: 5px; margin-bottom: 1.25rem; }
+  .progress-dot {
+    flex: 1;
+    height: 5px;                          /* aiempi 3px — näkyy paremmin */
+    border-radius: 3px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .progress-dot.done   { background: var(--purple-border); }
+  .progress-dot.active { background: var(--purple-text); }
+
+  /* ---- Vaihenavigointi ---- */
+  .phase-nav {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 4px;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+    gap: 2px;
+  }
+  .phase-btn {
+    padding: 7px 13px;
+    font-size: 14px;                      /* aiempi 12px */
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s;
+    min-height: 44px;                     /* kosketusystävällinen */
+  }
+  .phase-btn.active    { background: var(--purple-fill); color: var(--purple-text); }
+  .phase-btn.completed { color: var(--teal-text); }
+  .phase-btn:focus-visible {
+    outline: 3px solid var(--purple-border);
+    outline-offset: 2px;
+  }
+
+  /* ---- Kortit ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .section-lbl {
+    font-size: 14px;                      /* aiempi 11px */
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 17px;                      /* aiempi 15px */
+    font-weight: 500;
+    margin-bottom: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* ---- Värilliset boksivihjeet ---- */
+  .box {
+    border-radius: 0 var(--rs) var(--rs) 0;
+    padding: 0.75rem 1rem;
+    font-size: 15px;                      /* aiempi 13px */
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .box-purple { border-left: 4px solid var(--purple-border); background: var(--purple-fill);  color: var(--purple-text); }
+  .box-teal   { border-left: 4px solid var(--teal-border);   background: var(--teal-fill);    color: var(--teal-text); }
+  .box-amber  { border-left: 4px solid var(--amber-border);  background: var(--amber-fill);   color: var(--amber-text); }
+  .box-coral  { border-left: 4px solid var(--coral-border);  background: var(--coral-fill);   color: var(--coral-text); }
+  .box-green  { border-left: 4px solid var(--green-border);  background: var(--green-fill);   color: var(--green-text); }
+  .box ul { padding-left: 1.2rem; margin-top: 4px; }
+  .box li { margin-bottom: 3px; }
+
+  /* ---- Tagit / valintalappuset ---- */
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .tag {
+    padding: 8px 16px;                   /* aiempi 5px 13px */
+    border-radius: 24px;
+    font-size: 15px;                     /* aiempi 13px */
+    border: 1.5px solid var(--border-strong);
+    cursor: pointer;
+    color: var(--text-secondary);
+    background: var(--bg);
+    transition: all 0.12s;
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 44px;                    /* kosketusystävällinen */
+    display: flex;
+    align-items: center;
+  }
+  .tag.sel {
+    background: var(--purple-fill);
+    border-color: var(--purple-border);
+    color: var(--purple-text);
+    font-weight: 500;
+  }
+  .tag:focus-visible {
+    outline: 3px solid var(--purple-border);
+    outline-offset: 2px;
+  }
+
+  /* ---- Syöttökentät ---- */
+  textarea,
+  input[type="text"] {
+    width: 100%;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--rs);
+    padding: 10px 12px;
+    font-size: 16px;                     /* aiempi 14px */
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--surface);
+    resize: vertical;
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  textarea { min-height: 72px; }
+  textarea:focus,
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--purple-border);
+    box-shadow: 0 0 0 3px rgba(123,116,216,0.2);
+  }
+
+  /* ---- Kenttäotsikot ---- */
+  .field-lbl {
+    font-size: 15px;                     /* aiempi 12px */
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* ---- Tunneilmaisin ---- */
+  .mood-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .mood-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--border-strong);
+    font-size: 22px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    transition: all 0.12s;
+    color: var(--text-secondary);
+    min-height: 52px;
+  }
+  .mood-btn:hover { background: var(--surface); border-color: var(--border-strong); }
+  .mood-btn.sel-pos { background: var(--green-fill);  border-color: var(--green-border);  color: var(--green-text); }
+  .mood-btn.sel-neu { background: var(--gray-fill);   border-color: var(--border-strong); color: var(--text-secondary); }
+  .mood-btn.sel-neg { background: var(--coral-fill);  border-color: var(--coral-border);  color: var(--coral-text); }
+  .mood-btn:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
+
+  /* ---- Ajastin ---- */
+  .timer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--gray-fill);
+    border-radius: var(--rs);
+    border: 1px solid var(--border);
+  }
+  .timer-lbl {
+    font-size: 14px;                     /* aiempi 12px */
+    color: var(--text-secondary);
+    flex: 1;
+    font-weight: 500;
+  }
+  .timer-val {
+    font-size: 20px;                     /* aiempi 17px */
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    min-width: 50px;
+  }
+  .timer-val.running { color: var(--teal-text); }
+  .timer-val.done    { color: var(--coral-text); }
+  .tbtn {
+    padding: 7px 14px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .tbtn:hover { background: var(--bg); }
+  .tbtn:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
+
+  /* ---- Napit ---- */
+  .btn-save {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 22px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--purple-border);
+    background: var(--purple-fill);
+    color: var(--purple-text);
+    font-size: 15px;                     /* aiempi 13px */
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.12s;
+    min-height: 44px;
+  }
+  .btn-save:hover   { background: #d4d0f8; }
+  .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-save:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
+
+  .btn-next {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 22px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--teal-border);
+    background: var(--teal-fill);
+    color: var(--teal-text);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-top: 12px;
+    margin-left: 6px;
+    transition: all 0.12s;
+    min-height: 44px;
+  }
+  .btn-next:hover { background: #b8e8d4; }
+  .btn-next:focus-visible { outline: 3px solid var(--teal-border); outline-offset: 2px; }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 16px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .btn-ghost:hover { background: var(--surface); }
+  .btn-ghost:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
+
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 16px;
+    border-radius: var(--rs);
+    border: 1.5px solid var(--coral-border);
+    background: var(--coral-fill);
+    color: var(--coral-text);
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .btn-danger:hover { background: #f8d5ca; }
+  .btn-danger:focus-visible { outline: 3px solid var(--coral-border); outline-offset: 2px; }
+
+  .btn-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+
+  /* ---- Yhteenveto ---- */
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 0.85rem;
+  }
+  .summary-section { margin-bottom: 1rem; }
+  .summary-section:last-child { margin-bottom: 0; }
+
+  .summary-val {
+    font-size: 16px;                     /* aiempi 14px */
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .summary-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 24px;
+    font-size: 14px;                     /* aiempi 12px */
+    background: var(--purple-fill);
+    color: var(--purple-text);
+    margin: 3px;
+    font-weight: 500;
+  }
+  .three-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .three-cell { background: var(--bg); border-radius: var(--rs); padding: 10px 12px; font-size: 15px; }
+  .three-cell .cell-lbl {
+    font-size: 13px;                     /* tämä on otsikko, saa olla pienempi – mutta tumma */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);        /* ei enää --faint */
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  /* ---- Muut ---- */
+  .divider { height: 1px; background: var(--border); margin: 1rem 0; }
+  .phase-view { display: none; }
+  .phase-view.active { display: block; }
+
+  .print-hint {
+    font-size: 14px;                     /* aiempi 12px */
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+
+  /* ---- Saavutettavuus: skip-linkki ---- */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 4px;
+    background: var(--purple-text);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--rs);
+    font-size: 15px;
+    z-index: 100;
+    text-decoration: none;
+  }
+  .skip-link:focus { left: 4px; }
+
+  /* ---- Tulostusnäkymä ---- */
+  @media print {
+    .phase-nav,
+    .timer-row,
+    .btn-save,
+    .btn-next,
+    .btn-ghost,
+    .btn-danger,
+    .btn-row,
+    .progress-strip,
+    .print-hint { display: none !important; }
+    body { background: #fff; font-size: 14pt; }
+    .layout { padding: 0; max-width: 100%; }
+    .card, .summary-card { border: 1px solid #bbb; break-inside: avoid; margin-bottom: 1rem; }
+    .phase-view { display: block !important; }
+  }
+
+  /* ---- Mobiili ---- */
+  @media (max-width: 480px) {
+    .phase-btn { padding: 7px 9px; font-size: 13px; }
+    .three-grid { grid-template-columns: 1fr; }
+    .btn-save, .btn-next { width: 100%; justify-content: center; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Siirry pääsisältöön</a>
+
+<div class="layout">
+
+  <header class="app-header">
+    <h1>Työelämäkokemusten purku</h1>
+    <span class="total-time" aria-label="Kokonaiskesto noin 37 minuuttia">yht. ~37 min</span>
+  </header>
+
+  <!-- Etenemispalkki -->
+  <div class="progress-strip" role="progressbar" aria-label="Edistyminen" aria-valuemin="1" aria-valuemax="6">
+    <div class="progress-dot active" id="pd-0"></div>
+    <div class="progress-dot" id="pd-1"></div>
+    <div class="progress-dot" id="pd-2"></div>
+    <div class="progress-dot" id="pd-3"></div>
+    <div class="progress-dot" id="pd-4"></div>
+    <div class="progress-dot" id="pd-5"></div>
+  </div>
+
+  <!-- Vaihenavigointi -->
+  <nav class="phase-nav" aria-label="Osionavigointi">
+    <button class="phase-btn active" onclick="goPhase(0)" id="pnav-0" aria-current="true">1 · Virittäytyminen</button>
+    <button class="phase-btn" onclick="goPhase(1)" id="pnav-1">2 · Työpäivä</button>
+    <button class="phase-btn" onclick="goPhase(2)" id="pnav-2">3 · Osaaminen</button>
+    <button class="phase-btn" onclick="goPhase(3)" id="pnav-3">4 · Kolme hetkeä</button>
+    <button class="phase-btn" onclick="goPhase(4)" id="pnav-4">5 · Asiakkuus</button>
+    <button class="phase-btn" onclick="goPhase(5)" id="pnav-5">6 · Yhteenveto</button>
+  </nav>
+
+  <main id="main-content">
+
+  <!-- ======================== OSIO 1 ======================== -->
+  <div class="phase-view active" id="phase-0">
+    <div class="card">
+      <div class="section-lbl">Osio 1 — virittäytyminen · 3 min</div>
+      <div class="box box-purple" role="note">
+        "Tänään ei arvioida työpaikkoja hyviksi tai huonoiksi, vaan pyritään ymmärtämään, millaista työelämä oikeasti on – myös silloin kun se on rutiinia tai tylsää."
+      </div>
+      <h2 class="card-title">Kirjoita yksi sana, joka kuvaa jaksoa</h2>
+      <label for="p0-word" class="field-lbl">Yksi sana</label>
+      <input type="text" id="p0-word" placeholder="Kirjoita sana tähän..." maxlength="40" autocomplete="off">
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(0)">Tallenna</button>
+        <button class="btn-next" onclick="saveAndNext(0)">Seuraava →</button>
+      </div>
+      <div class="box box-teal" style="margin-top:14px" role="note">
+        <strong>Parikeskustelu:</strong> Jaa sanasi vierustoverin kanssa — mitä yhtäläisyyksiä tai eroja?
+      </div>
+      <div class="timer-row" role="timer" aria-label="Osion ajastin">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-0" aria-live="off">3:00</span>
+        <button class="tbtn" onclick="startT(0,180)" aria-label="Käynnistä ajastin">▶</button>
+        <button class="tbtn" onclick="resetT(0,180)" aria-label="Nollaa ajastin">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== OSIO 2 ======================== -->
+  <div class="phase-view" id="phase-1">
+    <div class="card">
+      <div class="section-lbl">Osio 2 — työpäivän anatomia · 7 min</div>
+      <h2 class="card-title">Kuvaa yksi tavallinen työpäivä (klo 8–16)</h2>
+
+      <label for="p1-what" class="field-lbl">Mitä teit? (konkreettisesti)</label>
+      <textarea id="p1-what" placeholder="Esim. lajittelin tuotteita, tein asiakaspalvelua kassalla..."></textarea>
+
+      <span class="field-lbl" id="lbl-with">Kenen kanssa?</span>
+      <div class="tag-wrap" id="p1-with" role="group" aria-labelledby="lbl-with">
+        <span class="tag" onclick="selOne(this,'p1-with')" role="button" tabindex="0" onkeydown="tagKey(event,this,'p1-with','one')">Yksin</span>
+        <span class="tag" onclick="selOne(this,'p1-with')" role="button" tabindex="0" onkeydown="tagKey(event,this,'p1-with','one')">Tiimi</span>
+        <span class="tag" onclick="selOne(this,'p1-with')" role="button" tabindex="0" onkeydown="tagKey(event,this,'p1-with','one')">Asiakkaat</span>
+        <span class="tag" onclick="selOne(this,'p1-with')" role="button" tabindex="0" onkeydown="tagKey(event,this,'p1-with','one')">Esimies</span>
+        <span class="tag" onclick="selOne(this,'p1-with')" role="button" tabindex="0" onkeydown="tagKey(event,this,'p1-with','one')">Vaihtelevasti</span>
+      </div>
+
+      <span class="field-lbl" id="lbl-mood">Miltä tuntui?</span>
+      <div class="mood-row" role="group" aria-labelledby="lbl-mood">
+        <button class="mood-btn" id="m-pos" onclick="selMood('pos')" aria-pressed="false" aria-label="Positiivinen">+</button>
+        <button class="mood-btn" id="m-neu" onclick="selMood('neu')" aria-pressed="false" aria-label="Neutraali">○</button>
+        <button class="mood-btn" id="m-neg" onclick="selMood('neg')" aria-pressed="false" aria-label="Negatiivinen">–</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(1)">Tallenna</button>
+        <button class="btn-next" onclick="saveAndNext(1)">Seuraava →</button>
+      </div>
+      <div class="box box-teal" style="margin-top:14px" role="note">
+        <strong>Pienryhmä (3–4 hlö):</strong>
+        <ul>
+          <li>Missä kohtaa päivä kului nopeimmin?</li>
+          <li>Missä kohtaa tuntui raskaimmalta?</li>
+        </ul>
+      </div>
+      <div class="timer-row" role="timer">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-1">7:00</span>
+        <button class="tbtn" onclick="startT(1,420)" aria-label="Käynnistä">▶</button>
+        <button class="tbtn" onclick="resetT(1,420)" aria-label="Nollaa">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== OSIO 3 ======================== -->
+  <div class="phase-view" id="phase-2">
+    <div class="card">
+      <div class="section-lbl">Osio 3 — näkymätön osaaminen · 7 min</div>
+      <h2 class="card-title">Valitse 2–3 taitoa, joita tarvittiin</h2>
+
+      <div class="tag-wrap" id="p2-skills" role="group" aria-label="Taitovalinnat, valitse 2–3">
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Täsmällisyys</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Ohjeiden noudattaminen</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Rutiinityön tekeminen</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Asiakaspalvelu</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Yhteistyö</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Fyysinen jaksaminen</span>
+        <span class="tag" onclick="selMulti(this,'p2-skills',3)" role="checkbox" aria-checked="false" tabindex="0" onkeydown="tagKey(event,this,'p2-skills','multi',3)">Keskittyminen</span>
+      </div>
+
+      <label for="p2-example" class="field-lbl">Missä tilanteessa taito näkyi?</label>
+      <textarea id="p2-example" placeholder="Kirjoita konkreettinen esimerkki..."></textarea>
+
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(2)">Tallenna</button>
+        <button class="btn-next" onclick="saveAndNext(2)">Seuraava →</button>
+      </div>
+      <div class="box box-teal" style="margin-top:14px" role="note">
+        <strong>Parikeskustelu:</strong> Kerro esimerkkisi parille.
+      </div>
+      <div class="box box-amber" role="note">
+        "Vaikka työ olisi yksinkertaista, se voi vaatia yllättävän paljon taitoja."
+      </div>
+      <div class="timer-row" role="timer">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-2">7:00</span>
+        <button class="tbtn" onclick="startT(2,420)" aria-label="Käynnistä">▶</button>
+        <button class="tbtn" onclick="resetT(2,420)" aria-label="Nollaa">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== OSIO 4 ======================== -->
+  <div class="phase-view" id="phase-3">
+    <div class="card">
+      <div class="section-lbl">Osio 4 — kolme hetkeä · 7 min</div>
+      <h2 class="card-title">Kirjoita lyhyesti kolme hetkeä jaksolta</h2>
+
+      <label for="p3-good" class="field-lbl" style="color:var(--green-text)">Hyvä hetki</label>
+      <textarea id="p3-good" placeholder="Kuvaile lyhyesti..." style="border-color:var(--green-border)"></textarea>
+
+      <label for="p3-boring" class="field-lbl">Tylsä hetki</label>
+      <textarea id="p3-boring" placeholder="Kuvaile lyhyesti..."></textarea>
+
+      <label for="p3-hard" class="field-lbl" style="color:var(--coral-text)">Hankala hetki</label>
+      <textarea id="p3-hard" placeholder="Kuvaile lyhyesti..." style="border-color:var(--coral-border)"></textarea>
+
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(3)">Tallenna</button>
+        <button class="btn-next" onclick="saveAndNext(3)">Seuraava →</button>
+      </div>
+      <div class="box box-teal" style="margin-top:14px" role="note">
+        <strong>Pienryhmä:</strong> Jokainen kertoo yhden valitsemansa tilanteen.
+      </div>
+      <div class="box box-amber" role="note">
+        Normalisoidaan kaikki kokemukset — ei tarvitse olla "kiva jakso".
+      </div>
+      <div class="timer-row" role="timer">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-3">7:00</span>
+        <button class="tbtn" onclick="startT(3,420)" aria-label="Käynnistä">▶</button>
+        <button class="tbtn" onclick="resetT(3,420)" aria-label="Nollaa">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== OSIO 5 ======================== -->
+  <div class="phase-view" id="phase-4">
+    <div class="card">
+      <div class="section-lbl">Osio 5 — mitä asiakas ei näe · 7 min</div>
+      <h2 class="card-title">Kirjoita 3 asiaa, joita asiakas ei näe</h2>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+        <label for="p4-h1" class="field-lbl" style="margin-top:0">Asia 1</label>
+        <input type="text" id="p4-h1" placeholder="Esim. varaston järjestely ennen aukioloa">
+        <label for="p4-h2" class="field-lbl" style="margin-top:0">Asia 2</label>
+        <input type="text" id="p4-h2" placeholder="">
+        <label for="p4-h3" class="field-lbl" style="margin-top:0">Asia 3</label>
+        <input type="text" id="p4-h3" placeholder="">
+      </div>
+
+      <label for="p4-surprise" class="field-lbl">1 asia, joka yllätti:</label>
+      <textarea id="p4-surprise" placeholder="Kirjoita tähän..."></textarea>
+
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(4)">Tallenna</button>
+        <button class="btn-next" onclick="saveAndNext(4)">Yhteenveto →</button>
+      </div>
+      <div class="timer-row" role="timer">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-4">7:00</span>
+        <button class="tbtn" onclick="startT(4,420)" aria-label="Käynnistä">▶</button>
+        <button class="tbtn" onclick="resetT(4,420)" aria-label="Nollaa">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== OSIO 6: YHTEENVETO ======================== -->
+  <div class="phase-view" id="phase-5">
+    <div class="card">
+      <div class="section-lbl">Osio 6 — lopetus · 5 min</div>
+      <h2 class="card-title">Nopea kierros — kerro yksi asia luokalle:</h2>
+      <div class="box box-teal" role="note">
+        <ul>
+          <li>"Asia, joka yllätti työelämässä"</li>
+          <li>"Asia, joka oli erilaista kuin kuvittelin"</li>
+        </ul>
+      </div>
+      <label for="p5-reflection" class="field-lbl">Valinnainen jatkotehtävä:</label>
+      <textarea id="p5-reflection" placeholder="Mitä opin työelämästä, jota en tiennyt ennen jaksoa?"></textarea>
+      <div class="btn-row">
+        <button class="btn-save" onclick="savePhase(5)">Tallenna ja näytä yhteenveto</button>
+      </div>
+      <div class="timer-row" role="timer">
+        <span class="timer-lbl">Ajastin</span>
+        <span class="timer-val" id="tv-5">5:00</span>
+        <button class="tbtn" onclick="startT(5,300)" aria-label="Käynnistä">▶</button>
+        <button class="tbtn" onclick="resetT(5,300)" aria-label="Nollaa">↺</button>
+      </div>
+    </div>
+
+    <!-- Yhteenvetokortti -->
+    <div class="summary-card" id="summary-card" style="display:none" aria-live="polite">
+      <div class="section-lbl" style="margin-bottom:0.85rem">Omat vastauksesi — tallennettu tähän laitteeseen</div>
+
+      <div class="summary-section">
+        <div class="section-lbl">Osio 1 — yksi sana</div>
+        <div class="summary-val" id="sum-word">–</div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="summary-section">
+        <div class="section-lbl">Osio 2 — työpäivä</div>
+        <div class="summary-val" id="sum-what">–</div>
+        <div style="margin-top:6px" id="sum-with-mood"></div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="summary-section">
+        <div class="section-lbl">Osio 3 — taidot</div>
+        <div id="sum-skills"></div>
+        <div class="summary-val" style="margin-top:8px" id="sum-example">–</div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="summary-section">
+        <div class="section-lbl">Osio 4 — kolme hetkeä</div>
+        <div class="three-grid">
+          <div class="three-cell">
+            <div class="cell-lbl" style="color:var(--green-text)">Hyvä</div>
+            <div id="sum-good">–</div>
+          </div>
+          <div class="three-cell">
+            <div class="cell-lbl">Tylsä</div>
+            <div id="sum-boring">–</div>
+          </div>
+          <div class="three-cell">
+            <div class="cell-lbl" style="color:var(--coral-text)">Hankala</div>
+            <div id="sum-hard">–</div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="summary-section">
+        <div class="section-lbl">Osio 5 — asiakkaan näkymättömät asiat</div>
+        <div class="summary-val" id="sum-hidden">–</div>
+        <div class="summary-val" style="margin-top:6px;font-style:italic;color:var(--text-secondary)" id="sum-surprise"></div>
+      </div>
+
+      <div id="sum-reflection-wrap" style="display:none">
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="section-lbl">Jatkotehtävä</div>
+          <div class="summary-val" id="sum-reflection">–</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="window.print()">Tulosta / tallenna PDF</button>
+        <button class="btn-danger" onclick="clearData()">Tyhjennä omat tiedot</button>
+      </div>
+      <p class="print-hint">Vastauksesi on tallennettu vain tähän laitteeseen. Ne eivät siirry muualle automaattisesti.</p>
+    </div>
+  </div>
+
+  </main>
+</div><!-- /layout -->
+
+<script>
+const KEY = 'tyoelamatunti_v2';
+const PHASES = 6;
+let timers = {};
+let mood = '';
+
+/* ---- localStorage ---- */
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function save(data) {
+  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+/* ---- Vaihenavigointi ---- */
+let currentPhase = 0;
+
+function goPhase(n) {
+  document.querySelectorAll('.phase-view').forEach((v,i) => v.classList.toggle('active', i===n));
+  document.querySelectorAll('.phase-btn').forEach((b,i) => {
+    b.classList.remove('active');
+    b.removeAttribute('aria-current');
+    if (i===n) { b.classList.add('active'); b.setAttribute('aria-current','true'); }
+  });
+  currentPhase = n;
+  if (n === 5) renderSummary();
+  updateProgress();
+  document.getElementById('main-content').focus();
+}
+
+function saveAndNext(n) {
+  savePhase(n);
+  if (n < PHASES-1) goPhase(n+1);
+}
+
+/* ---- Etenemispisteet ---- */
+function updateProgress() {
+  const d = load();
+  for (let i=0; i<PHASES; i++) {
+    const dot = document.getElementById('pd-'+i);
+    if (!dot) continue;
+    dot.classList.remove('done','active');
+    if (d['phase'+i+'_saved']) dot.classList.add('done');
+    else if (i===currentPhase) dot.classList.add('active');
+  }
+  document.querySelectorAll('.phase-btn').forEach((b,i) => {
+    b.classList.remove('completed');
+    if (d['phase'+i+'_saved'] && i!==currentPhase) b.classList.add('completed');
+  });
+}
+
+/* ---- Tagit ---- */
+function selOne(el, groupId) {
+  document.querySelectorAll('#'+groupId+' .tag').forEach(t => t.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selMulti(el, groupId, max) {
+  const sel = document.querySelectorAll('#'+groupId+' .tag.sel');
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    el.setAttribute('aria-checked','false');
+    return;
+  }
+  if (sel.length < max) {
+    el.classList.add('sel');
+    el.setAttribute('aria-checked','true');
+  }
+}
+function tagKey(e, el, group, type, max) {
+  if (e.key===' '||e.key==='Enter') {
+    e.preventDefault();
+    type==='one' ? selOne(el,group) : selMulti(el,group,max);
+  }
+}
+function selMood(m) {
+  ['pos','neu','neg'].forEach(x => {
+    const b = document.getElementById('m-'+x);
+    b.className = 'mood-btn';
+    b.setAttribute('aria-pressed','false');
+  });
+  document.getElementById('m-'+m).classList.add('mood-btn','sel-'+m);
+  document.getElementById('m-'+m).setAttribute('aria-pressed','true');
+  mood = m;
+}
+
+/* ---- Tallenna osio ---- */
+function savePhase(n) {
+  const d = load();
+  d['phase'+n+'_saved'] = true;
+
+  if (n===0) {
+    d.p0_word = document.getElementById('p0-word').value.trim();
+  }
+  if (n===1) {
+    d.p1_what = document.getElementById('p1-what').value.trim();
+    const w = document.querySelector('#p1-with .tag.sel');
+    d.p1_with = w ? w.textContent : '';
+    d.p1_mood = mood;
+  }
+  if (n===2) {
+    d.p2_skills  = [...document.querySelectorAll('#p2-skills .tag.sel')].map(t=>t.textContent);
+    d.p2_example = document.getElementById('p2-example').value.trim();
+  }
+  if (n===3) {
+    d.p3_good   = document.getElementById('p3-good').value.trim();
+    d.p3_boring = document.getElementById('p3-boring').value.trim();
+    d.p3_hard   = document.getElementById('p3-hard').value.trim();
+  }
+  if (n===4) {
+    d.p4_h1      = document.getElementById('p4-h1').value.trim();
+    d.p4_h2      = document.getElementById('p4-h2').value.trim();
+    d.p4_h3      = document.getElementById('p4-h3').value.trim();
+    d.p4_surprise= document.getElementById('p4-surprise').value.trim();
+  }
+  if (n===5) {
+    d.p5_reflection = document.getElementById('p5-reflection').value.trim();
+  }
+
+  save(d);
+  updateProgress();
+  if (n===5) renderSummary();
+}
+
+/* ---- Palauta kentät muistista ---- */
+function restoreFields() {
+  const d = load();
+  const s = id => document.getElementById(id);
+
+  if (d.p0_word)   s('p0-word').value   = d.p0_word;
+  if (d.p1_what)   s('p1-what').value   = d.p1_what;
+  if (d.p1_with) {
+    document.querySelectorAll('#p1-with .tag').forEach(t => {
+      if (t.textContent===d.p1_with) t.classList.add('sel');
+    });
+  }
+  if (d.p1_mood)  selMood(d.p1_mood);
+  if (d.p2_skills) {
+    document.querySelectorAll('#p2-skills .tag').forEach(t => {
+      if (d.p2_skills.includes(t.textContent)) {
+        t.classList.add('sel');
+        t.setAttribute('aria-checked','true');
+      }
+    });
+  }
+  if (d.p2_example) s('p2-example').value = d.p2_example;
+  if (d.p3_good)    s('p3-good').value     = d.p3_good;
+  if (d.p3_boring)  s('p3-boring').value   = d.p3_boring;
+  if (d.p3_hard)    s('p3-hard').value     = d.p3_hard;
+  if (d.p4_h1)      s('p4-h1').value       = d.p4_h1;
+  if (d.p4_h2)      s('p4-h2').value       = d.p4_h2;
+  if (d.p4_h3)      s('p4-h3').value       = d.p4_h3;
+  if (d.p4_surprise)s('p4-surprise').value = d.p4_surprise;
+  if (d.p5_reflection) s('p5-reflection').value = d.p5_reflection;
+  updateProgress();
+}
+
+/* ---- Yhteenveto ---- */
+function renderSummary() {
+  const d = load();
+  document.getElementById('summary-card').style.display = 'block';
+
+  const moodLabel = { pos:'Positiivinen (+)', neu:'Neutraali (○)', neg:'Negatiivinen (–)' };
+
+  document.getElementById('sum-word').textContent = d.p0_word || '–';
+  document.getElementById('sum-what').textContent = d.p1_what || '–';
+  document.getElementById('sum-with-mood').innerHTML =
+    (d.p1_with ? `<span class="summary-tag">${d.p1_with}</span>` : '') +
+    (d.p1_mood ? `<span class="summary-tag">${moodLabel[d.p1_mood]||d.p1_mood}</span>` : '');
+
+  const skills = d.p2_skills || [];
+  document.getElementById('sum-skills').innerHTML =
+    skills.map(s=>`<span class="summary-tag">${s}</span>`).join('') || '–';
+  document.getElementById('sum-example').textContent = d.p2_example || '–';
+
+  document.getElementById('sum-good').textContent   = d.p3_good   || '–';
+  document.getElementById('sum-boring').textContent = d.p3_boring || '–';
+  document.getElementById('sum-hard').textContent   = d.p3_hard   || '–';
+
+  const hidden = [d.p4_h1, d.p4_h2, d.p4_h3].filter(Boolean);
+  document.getElementById('sum-hidden').innerHTML =
+    hidden.map((h,i)=>`${i+1}. ${h}`).join('<br>') || '–';
+  document.getElementById('sum-surprise').textContent =
+    d.p4_surprise ? 'Yllätti: ' + d.p4_surprise : '';
+
+  if (d.p5_reflection) {
+    document.getElementById('sum-reflection-wrap').style.display = 'block';
+    document.getElementById('sum-reflection').textContent = d.p5_reflection;
+  }
+}
+
+/* ---- Tyhjennä ---- */
+function clearData() {
+  if (!confirm('Poistetaanko kaikki omat vastauksesi tältä laitteelta?')) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+}
+
+/* ---- Ajastimet ---- */
+function fmt(s) {
+  const m = Math.floor(s/60);
+  return m + ':' + (s%60 < 10 ? '0' : '') + s%60;
+}
+function startT(id, total) {
+  if (timers[id]?.running) return;
+  const el = document.getElementById('tv-'+id);
+  let left = parseInt(el.dataset.left || total);
+  el.classList.remove('done'); el.classList.add('running');
+  const iv = setInterval(() => {
+    left--;
+    el.dataset.left = left;
+    el.textContent  = fmt(left);
+    if (left <= 0) {
+      clearInterval(iv);
+      timers[id].running = false;
+      el.classList.remove('running');
+      el.classList.add('done');
+      el.textContent = 'Aika!';
+    }
+  }, 1000);
+  timers[id] = { iv, running: true };
+}
+function resetT(id, total) {
+  if (timers[id]) { clearInterval(timers[id].iv); timers[id].running = false; }
+  const el = document.getElementById('tv-'+id);
+  el.dataset.left = total;
+  el.textContent  = fmt(total);
+  el.classList.remove('running','done');
+}
+
+/* ---- Käynnistys ---- */
+restoreFields();
+</script>
+</body>
+</html>
