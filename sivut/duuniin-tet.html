@@ -324,6 +324,7 @@
       <div class="wp-card"          data-wp="daycare" onclick="selectWP(this,'daycare')" role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🧒</div><div class="wp-name">Päiväkoti</div></div>
       <div class="wp-card"          data-wp="shop"    onclick="selectWP(this,'shop')"    role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🛒</div><div class="wp-name">Kauppa</div></div>
       <div class="wp-card"          data-wp="office"  onclick="selectWP(this,'office')"  role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🏢</div><div class="wp-name">Toimisto</div></div>
+      <div class="wp-card"          data-wp="cafe"    onclick="selectWP(this,'cafe')"    role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">☕</div><div class="wp-name">Ravintola/Kahvila</div></div>
     </div>
 
     <button class="btn btn-dark" onclick="startGame()">Aloita peli</button>
@@ -451,7 +452,7 @@ const ALL_Q=[
    choices:[
     {text:'Pyydän ohjaajaa toistamaan epäselvät kohdat ja kirjaan ohjeet ylös.',score:3,type:'correct',fb:{t:'Erinomaista!',d:'Kysyminen osoittaa vastuullisuutta. Muistiinpanot näyttävät, että otat tehtävän vakavasti.'}},
     {text:'Yritän muistaa kaiken ja teen niin kuin luulen, että piti.',score:1,type:'neutral',fb:{t:'Rohkaistuisit kysymään!',d:'Arvaukset johtavat helposti virheisiin.'}},
-    {text:'En tee mitään ennen kuin saan täysin selvät ohjeet.',score:1,type:'neutral',fb:{t:'Tarkkuus on hyvä, mutta...',d:'Työssä pitää myös osata aloittaa ja pyytää lisäohjeita tarvittaessa.'}},
+    {text:'En tee mitään, ennen kuin saan täysin selvät ohjeet.',score:1,type:'neutral',fb:{t:'Tarkkuus on hyvä, mutta...',d:'Työssä pitää myös osata aloittaa ja pyytää lisäohjeita tarvittaessa.'}},
   ]},
   {level:'hard',wp:['office','all'],module:'🤫 Hiljainen tieto',situation:'Toimiston hierarkia',hint:'Toimistoissa on usein epävirallinen järjestys, jota ei kerrota ääneen.',
    text:'Toimistossa lounaalle mennessä kaikki odottavat, että joku tietty henkilö menee ensin. Sinulla on kiire. Mitä teet?',
@@ -472,7 +473,7 @@ const ALL_Q=[
    choices:[
     {text:'Pidän asian omana tietonani – lupasin olla kertomatta.',score:0,type:'wrong',fb:{t:'Tässä tilanteessa vaitiolovelvollisuus ei päde.',d:'Lapsen turvallisuus menee aina salassapidon edelle. Lastensuojelulaki velvoittaa ilmoittamaan.'}},
     {text:'Kerron tilanteesta ohjaajalle tai opettajalle diskreetisti.',score:3,type:'correct',fb:{t:'Oikea ja rohkea teko!',d:'Vaitiolovelvollisuus ei tarkoita, että lapsen turvallisuus voidaan sivuuttaa.'}},
-    {text:'Kysyn oppilaalta lisää ennen kuin teen mitään.',score:1,type:'neutral',fb:{t:'Huomaavaisuus on hyvä, mutta...',d:'Tilanne vaatii nopeaa toimintaa. Aikuisen informoiminen on tärkeämpää.'}},
+    {text:'Kysyn oppilaalta lisää, ennen kuin teen mitään.',score:1,type:'neutral',fb:{t:'Huomaavaisuus on hyvä, mutta...',d:'Tilanne vaatii nopeaa toimintaa. Aikuisen informoiminen on tärkeämpää.'}},
   ]},
   {level:'hard',wp:['office','all'],module:'🌅 Valmistautuminen',situation:'Kahvikäytäntö',hint:'Toimistoissa on paljon kirjoittamattomia sääntöjä.',
    text:'Toimistossa on kahvikone. Kuulet illalla, että siellä on tapana maksaa kahvikassaan 5 € kuukaudessa. Mitä teet seuraavana päivänä?',
@@ -481,6 +482,50 @@ const ALL_Q=[
     {text:'En tee mitään – kukaan ei maininnut asiaa minulle.',score:0,type:'wrong',fb:{t:'Hiljainen tieto on yhteinen vastuu.',d:'Vaikka käytäntöä ei kerrottu, sen noudattaminen kuuluu hyviin tapoihin.'}},
     {text:'Otan jatkossa kahvia vain, kun joku tarjoaa.',score:2,type:'neutral',fb:{t:'Varovainen ratkaisu.',d:'Pidättäytyminen on yksi tapa, mutta kassaan maksaminen olisi reilumpaa.'}},
   ]},
+  // ── RAVINTOLA / KAHVILA ──
+  {level:'easy',wp:['cafe','all'],module:'🤝 Ihmiset',situation:'Asiakkaan kohtaaminen',hint:'Ensivaikutelma syntyy kolmessa sekunnissa – myös ravintoloissa.',
+   text:'Olet kahvilassa TET:ssä. Asiakas tulee tiskille ja näyttää epävarmalta. Sinun pitäisi siivota pöytiä, mutta kukaan muu henkilökunnasta ei ole paikalla. Mitä teet?',
+   choices:[
+    {text:'Tervehdin asiakasta, kysyn voiko auttaa ja palvelen hänet – siivous odottaa.',score:3,type:'correct',fb:{t:'Asiakas ensin!',d:'Asiakaspalvelu on aina prioriteetti. Siivous voi odottaa hetken.'}},
+    {text:'Jatkan siivousta ja odotan, että joku muu tulee palvelemaan.',score:0,type:'wrong',fb:{t:'Asiakas jää heitteille.',d:'Harjoittelijana sinullakin on vastuu asiakkaan palvelemisesta.'}},
+    {text:'Vilkaisen asiakasta ja sanon: "Odota hetki, joku tulee pian."',score:1,type:'neutral',fb:{t:'Tunnustit tilanteen, mutta...',d:'Parempi olisi itse palvella, jos tilanne sen sallii.'}},
+  ]},
+  {level:'easy',wp:['cafe','all'],module:'🌅 Valmistautuminen',situation:'Hygienia',hint:'Elintarvikeala on tarkka hygieniastaan – hyvästä syystä.',
+   text:'Olet töissä kahvilassa ja menossa tauolta takaisin. Muistat, että koskit ovenkahvaan ja mobiilipuhelimeesi. Mitä teet, ennen kuin menet leivontaa avustamaan?',
+   choices:[
+    {text:'Pesen kädet huolellisesti vedellä ja saippualla, ennen kuin kosken mihinkään.',score:3,type:'correct',fb:{t:'Juuri oikein!',d:'Elintarviketyössä käsihygienia on lain vaatimus ja kaikkien turvallisuuden perusta.'}},
+    {text:'Käytän käsidesiä – se on tarpeeksi.',score:2,type:'neutral',fb:{t:'Parempi kuin ei mitään, mutta...',d:'Saippuapesu on ensisijainen vaihtoehto ennen elintarvikkeiden käsittelyä.'}},
+    {text:'Menen suoraan apuun – kädet näyttävät puhtailta.',score:0,type:'wrong',fb:{t:'Ei riitä.',d:'Käsien puhtaus ei näy silmällä. Pese aina kädet ennen elintarvikekosketusta.'}},
+  ]},
+  {level:'easy',wp:['cafe','all'],module:'📱 Käyttäytyminen',situation:'Tilauksen kuittaus',hint:'Kiireisessä kahvilassa jokainen sekunnin virhe maksaa.',
+   text:'Kahvilassa syntyy hälinää ja et kuule asiakkaan tilausta kunnolla. Mitä teet?',
+   choices:[
+    {text:'Pyydän kohteliaasti toistamaan tilauksen: "Anteeksi, enkö kuullut oikein – sanoitko cappuccinon?"',score:3,type:'correct',fb:{t:'Täydellinen!',d:'Tilauksen varmistaminen estää virheet ja näyttää ammattimaiselta.'}},
+    {text:'Arvaan ja teen niin kuin luulen – ei halua odottaa.',score:0,type:'wrong',fb:{t:'Arvaaminen johtaa virheisiin.',d:'Väärä tuote maksaa aikaa ja rahaa, ja asiakas pettyy.'}},
+    {text:'Huudan kollegalle apuun – en uskalla kysyä uudelleen.',score:1,type:'neutral',fb:{t:'Ymmärrettävää, mutta...',d:'Uudelleen kysyminen on täysin ammattimaista – asiakkaat arvostavat tarkkuutta.'}},
+  ]},
+  {level:'hard',wp:['cafe','all'],module:'🤫 Hiljainen tieto',situation:'Kiire ja virheet',hint:'Kiireessä virheitä sattuu – tärkeintä on miten niihin reagoi.',
+   text:'Olet kahvilassa ja huomaat tehneesi väärän tilauksen: annoit asiakkaalle täysmaidon sijaan kauramaidan. Asiakas on jo istahtanut. Mitä teet?',
+   choices:[
+    {text:'Menen asiakkaan luo, pahoittelen rehellisesti ja tarjoan oikean tuotteen.',score:3,type:'correct',fb:{t:'Rohkea ja oikea ratkaisu!',d:'Rehellinen pahoittelu ja korjaus on ammattimaista. Asiakas arvostaa sitä enemmän kuin virheen peittelyä.'}},
+    {text:'En sano mitään – ehkä asiakas ei huomaa.',score:0,type:'wrong',fb:{t:'Asiakas huomaa kyllä.',d:'Virheen piilottaminen voi aiheuttaa vakaviakin seurauksia, esim. allergioiden takia.'}},
+    {text:'Kerron kollegalle ja jätän hänen hoidettavakseen.',score:1,type:'neutral',fb:{t:'Vastuunsiirto ei ole paras.',d:'Oma virhe kuuluu itse korjata – toki kollegan avulla jos tarvitsee.'}},
+  ]},
+  {level:'hard',wp:['cafe','all'],module:'⏰ Arjen säännöt',situation:'Ruuhkahuippu',hint:'Kahvilassa ruuhkahuippu voi kestää vain 20 minuuttia – jokainen toiminto pitää priorisoida.',
+   text:'Kahvilassa on lounasruuhka. Jono kasvaa, astianpesuallas on täynnä, asiakas pyytää laskua ja esimies soittaa puhelimeen. Mitä teet ensin?',
+   choices:[
+    {text:'Palvelen jonossa olevan seuraavan asiakkaan, annan laskun edessä olevalle ja kerron esimiehelle odottavan.',score:3,type:'correct',fb:{t:'Priorisointi kohdillaan!',d:'Kassalla asiakas edellä, sitten esimies – astianpesu voi hetkeksi odottaa.'}},
+    {text:'Vastaan esimiehen puheluun – esimies menee kaiken edelle.',score:0,type:'wrong',fb:{t:'Asiakas ei voi odottaa.',d:'Ruuhkassa asiakaspalvelu on etusijalla. Esimiehelle voi viestittää lyhyesti.'}},
+    {text:'Aloitan astianpesusta, koska muuten loppuvat mukit.',score:1,type:'neutral',fb:{t:'Looginen ajatus, mutta...',d:'Odottavat asiakkaat menevät astianpesun edelle ruuhkahuipulla.'}},
+  ]},
+  {level:'hard',wp:['cafe','all'],module:'🔒 Vaitiolovelvollisuus',situation:'Asiakkaan tieto',hint:'Ravintoloissa kuulee paljon – kaikki ei kuulu eteenpäin.',
+   text:'Olet siivotessasi pöytiä kuullut kahden yritysasiakkaan liikesalaisuuden. Iltapäivällä kollega kysyy, mitä ne tyypit puhuivat. Mitä teet?',
+   choices:[
+    {text:'Kerron, etten kuunnellut tarkoituksella, ettei minun pidä kertoa asiakkaiden yksityisiä keskusteluja.',score:3,type:'correct',fb:{t:'Täysin oikein!',d:'Asiakkaiden luottamukselliset keskustelut kuuluvat vaitiolovelvollisuuden piiriin.'}},
+    {text:'Kerron kaiken – kollega on luotettava.',score:0,type:'wrong',fb:{t:'Kollegakaan ei tarvitse tietää.',d:'Asiakkaan yksityisyys on suojattu. Tiedot eivät kuulu edes kollegoille.'}},
+    {text:'Kerron vähän, mutta jätän tärkeimmät asiat pois.',score:1,type:'neutral',fb:{t:'Puoliksi oikein, mutta...',d:'Parasta on olla kertomatta mitään asiakkaan yksityisestä keskustelusta.'}},
+  ]},
+  // ── RAVINTOLA / KAHVILA END ──
   {level:'hard',wp:['shop','all'],module:'⏰ Arjen säännöt',situation:'Kiireinen ruuhka',hint:'Miten priorisoit, kun kaikki tuntuu tulevan yhtä aikaa?',
    text:'Kaupassa on ruuhka. Kassapäällikkö pyytää kassalle, varastomies pyytää apua laatikoihin, ja asiakas seisoo edessäsi eksyksissä. Mitä teet ensin?',
    choices:[
@@ -628,7 +673,7 @@ function downloadResults(){
   const{strengths,develop}=buildSummary();
   const date=new Date().toLocaleDateString('fi-FI');
   const level=chosenLevel==='hard'?'Haastava':'Perus';
-  const wp={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',office:'Toimisto'}[chosenWP];
+  const wp={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',office:'Toimisto',cafe:'Ravintola/Kahvila'}[chosenWP];
   let txt='DUUNIIN! – TET-pelin tulokset\n================================\n\n';
   txt+=`Nimi:              ${name}\nPäivämäärä:        ${date}\nTaso:              ${level}\nHarjoittelupaikka: ${wp}\nOikeita vastauksia:${correct} / ${gameQ.length}\nPisteet:           ${pct}%\n\n`;
   txt+='VAHVUUDET\n---------\n';strengths.forEach(s=>txt+=`+ ${s}\n`);
