@@ -156,17 +156,9 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
+    
     {
-      aiheId: "tasks-tet",
-      title: "TET-päiväkirja",
-      description: "Kirjoita TET-jakson kokemuksista ja oppimisesta.",
-      href: "../tehtava.html?id=tet9",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
-    {
-      aiheId: "tasks-tet",
+      aiheId: "tasks-tet-tyokaveri",
       title: "Millaisen työkaverin haluaisit olla TETissä?",
       description: "Millaisen työkaverin haluaisit olla TETissä?",
       href: "../tehtava.html?id=keskustelu-tet9",
@@ -251,30 +243,7 @@ const tehtavat = {
     pdf: "tehtavat/mina-oppijana.pdf",
   },
 
-  tet8: {
-    title: "TET-päiväkirja",
-    category: "tet",
-    class: "8",
-    instructions: [
-      "Missä olit TET-jaksolla?",
-      "Mitä työtehtäviä teit?",
-      "Mitä opit työelämästä?",
-    ],
-    pdf: "tehtavat/tet.pdf",
-  },
-
-  tet9: {
-    title: "TET-päiväkirja",
-    category: "tet",
-    class: "9",
-    instructions: [
-      "Missä olit TET-jaksolla?",
-      "Mitä työtehtäviä teit?",
-      "Mitä opit työelämästä?",
-    ],
-    pdf: "tehtavat/tet.pdf",
-  },
-
+    
   tulevaisuus7: {
     title: "Unelmieni tulevaisuus",
     category: "urat",
@@ -614,25 +583,25 @@ const tehtavat = {
   },
 
   "keskustelu-tet9": {
-    title: "Päivän aihe: Mitä TET opetti?",
+    title: "Millaisen työkaverin haluaisit olla TETissä?",
     category: "keskustelu",
     class: "9",
     tyyppi: "keskustelu",
-    kesto: "15–20 min",
+    kesto: "10–15 min",
     kysymykset: [
-      "Muuttiko TET-jakso ajatuksiasi tulevaisuudesta – miten?",
-      "Oliko jotain, mitä et osannut odottaa?",
-      "Jos voisit tehdä TET:n uudelleen, mitä tekisit toisin tai samoin?",
+      "🎯 Virittäytyminen (2–3 min): \"Kuvittele, että TET on ohi. Työpaikalla sinusta sanotaan jotain hyvää – mitä haluaisit sen olevan?\" Oppilaat miettivät hetken yksin.",
+      "💬 Parikeskustelu (4–5 min): Mitä tarkoittaa hyvä työkaveri? Mitä aiot itse tehdä, jotta onnistut TETissä? Mikä jännittää – ja miten siitä voisi selvitä?",
+      
     ],
     vinkit: [
-      "TET on 9. luokalla erityisen tärkeä – se voi vahvistaa tai muuttaa suunnitelmia.",
-      "Anna tilaa myös pettymyksille – ne ovat yhtä arvokkaita oppimiskokemuksia.",
-      "Kysy myös: mitä tämä kertoo sinulle itsestäsi?",
+      "Virittäytyminen: Heitä aloituskysymys ja anna hetki hiljaiseen pohdintaan ennen parikeskustelua.",
+      "Parikeskustelu: Tavoite on madaltaa kynnystä puhua ja jakaa ajatuksia – ei ole oikeita tai vääriä vastauksia.",
+      "Yhteinen nosto: Mieti, mitä haluaisit sanoa ääneen koko luokalle – yksi ominaisuus tai teko, joka tuntuu sinulle tärkeältä.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Muuttiko TET ajatuksiasi tulevaisuudesta?",
-      "Keskustelukysymys 2: Oliko jotain, mitä et osannut odottaa?",
-      "Keskustelukysymys 3: Mitä tekisit toisin tai samoin?",
+      "Vaihe 1 – Virittäytyminen: \"Mitä haluaisit, että sinusta sanotaan TETin jälkeen?\"",
+      "Vaihe 2 – Parikeskustelu: Hyvä työkaveri, onnistuminen TETissä, jännittävät asiat.",
+      "Vaihe 3 – Yhteinen nosto: Yksi ominaisuus ja yksi teko – nosta ääneen.",
     ],
   },
 

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALA-SET</title>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAbraPn4LQVLP_wKh31FTn46y9nlYWKHX0",
+  authDomain: "ammatti-peli.firebaseapp.com",
+  projectId: "ammatti-peli",
+  storageBucket: "ammatti-peli.firebasestorage.app",
+  messagingSenderId: "988252896453",
+  appId: "1:988252896453:web:081567a5e07df9c55304ac",
+  measurementId: "G-M2YMQ6H3LM"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ── TULOSTAULU API ── */
+async function lbGet() {
+  try {
+    const q = query(collection(db, "tulostaulu"), orderBy("score", "desc"), limit(10));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); return []; }
+}
+
+async function lbSave(playerId, name, koulu, luokka, score) {
+  try {
+    const ref = doc(db, "tulostaulu", playerId);
+    const existing = await getDoc(ref);
+    if (existing.exists() && existing.data().score >= score) return { saved: false, reason: "Aiempi tulos on parempi" };
+    await setDoc(ref, {
+      name, koulu, luokka: luokka || "",
+      score,
+      date: new Date().toLocaleDateString("fi-FI"),
+      updated: Date.now()
+    });
+    return { saved: true };
+  } catch(e) { console.error(e); return { saved: false, reason: "Verkkovirhe" }; }
+}
+
+/* ── OPETTAJAN SANARYHMÄT ── */
+async function wordsGet() {
+  try {
+    const snap = await getDoc(doc(db, "asetukset", "sanaryhmät"));
+    return snap.exists() ? snap.data().ryhmät || [] : [];
+  } catch(e) { console.error(e); return []; }
+}
+
+/* ── KIINNITÄ GLOBAALEIHIN ── */
+window._fbLbGet = lbGet;
+window._fbLbSave = lbSave;
+window._fbWordsGet = wordsGet;
+window._fbReady = true;
+window.dispatchEvent(new Event("fbready"));
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--sur:#161b22;--sur2:#21262d;--bdr:#30363d;
+  --txt:#e6edf3;--mut:#8b949e;
+  --acc:#58a6ff;--grn:#3fb950;--yel:#d29922;--red:#f85149;--pur:#bc8cff;
+  --cy:#b8860b;--cg:#1a5c3a;--cb:#1a3f6b;--cp:#5a1f7a;
+  --cyl:#ffd700;--cgl:#52b788;--cbl:#74b9ff;--cpl:#da77ff;
+  --r:8px;--rl:12px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px;gap:0}
+
+.screen{display:none;width:100%;max-width:580px;flex-direction:column;align-items:center;gap:12px;padding-top:6px}
+.screen.on{display:flex}
+
+/* LOGO */
+.logo{font-size:26px;font-weight:900;letter-spacing:-1px;text-align:center}
+.logo em{font-style:normal;color:var(--acc)}
+.tag{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;text-align:center}
+
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);padding:18px 20px;width:100%}
+
+/* TURNAUSBAR */
+.tbar{display:flex;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);width:100%;overflow:hidden}
+.tcell{flex:1;text-align:center;padding:9px 4px;border-right:1px solid var(--bdr)}
+.tcell:last-child{border-right:none}
+.tval{font-size:17px;font-weight:700;color:var(--acc)}
+.tlbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+
+/* PROGRESS */
+.pwrap{width:100%;height:3px;background:var(--sur2);border-radius:2px}
+.pbar{height:100%;background:var(--acc);border-radius:2px;transition:width .4s}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+.cell{
+  background:var(--sur2);border:1.5px solid var(--bdr);border-radius:var(--r);
+  padding:11px 4px;text-align:center;cursor:pointer;font-weight:600;font-size:13px;
+  transition:all .15s;user-select:none;min-height:54px;display:flex;
+  align-items:center;justify-content:center;line-height:1.2;color:var(--txt)
+}
+.cell:hover:not(.locked){background:#2a3441;border-color:#58a6ff44;transform:translateY(-1px)}
+.cell.sel{background:#1a2d42;border-color:var(--acc);color:var(--acc);transform:translateY(-2px)}
+.cell.hint{background:#2a2000;border-color:var(--yel)!important;color:var(--yel)!important}
+.cell.wrong{animation:shake .4s}
+
+/* LOCKED */
+.lrow{width:100%;border-radius:var(--r);padding:10px 14px;display:flex;flex-direction:column;gap:2px;animation:fadeD .3s}
+.lrow.y{background:var(--cy);border:1px solid var(--cyl)}
+.lrow.g{background:var(--cg);border:1px solid var(--cgl)}
+.lrow.b{background:var(--cb);border:1px solid var(--cbl)}
+.lrow.p{background:var(--cp);border:1px solid var(--cpl)}
+.ltheme{font-size:13px;font-weight:700;color:#fff}
+.lwords{font-size:11px;color:rgba(255,255,255,.72)}
+.lbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5)}
+
+/* DOTS */
+.drow{display:flex;gap:6px;align-items:center}
+.dot{width:12px;height:12px;border-radius:50%;transition:all .3s}
+.edot{background:var(--sur2);border:1.5px solid var(--bdr)}
+.edot.on{background:var(--red);border-color:var(--red)}
+.hdot{background:var(--sur2);border:1.5px solid var(--yel)}
+.hdot.on{background:var(--yel);border-color:var(--yel)}
+
+/* STATUS */
+.status{font-size:13px;color:var(--mut);text-align:center;min-height:18px;transition:color .2s}
+.status.ok{color:var(--grn);font-weight:600}
+.status.err{color:var(--red);font-weight:600}
+.status.hi{color:var(--yel);font-weight:600}
+
+/* BUTTONS */
+.btns{display:flex;gap:8px;width:100%;justify-content:center;flex-wrap:wrap}
+.btn{padding:9px 18px;border-radius:var(--r);border:1px solid var(--bdr);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;background:var(--sur2);color:var(--txt)}
+.btn:hover{background:var(--sur);border-color:var(--acc);color:var(--acc)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;color:var(--mut)}
+.btn-acc{background:var(--acc);color:#000;border-color:var(--acc)}
+.btn-acc:hover{background:#79bcff;border-color:#79bcff;color:#000}
+.btn-yel{background:var(--yel);color:#000;border-color:var(--yel)}
+.btn-yel:hover{filter:brightness(1.15)}
+.btn-grn{background:var(--grn);color:#000;border-color:var(--grn)}
+.btn-grn:hover{filter:brightness(1.1)}
+
+/* RESULT */
+.bscore{font-size:52px;font-weight:900;color:var(--acc);text-align:center;line-height:1}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.rcell{background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--r);padding:11px;text-align:center}
+.rval{font-size:20px;font-weight:700}
+.rlbl{font-size:10px;color:var(--mut);text-transform:uppercase}
+
+/* LEADERBOARD */
+.lbwrap{width:100%;border-radius:var(--r);overflow:hidden;border:1px solid var(--bdr)}
+.lbrow{display:grid;grid-template-columns:34px 1fr auto;gap:6px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--bdr);font-size:13px}
+.lbrow:last-child{border-bottom:none}
+.lbrow.hdr{background:var(--sur2);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);font-weight:600}
+.lbrow.me{background:#1a2d42;border-left:3px solid var(--acc)}
+.lbrank{font-weight:700;text-align:center}
+.r1{color:gold}.r2{color:silver}.r3{color:#cd7f32}
+.lbname{font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0}
+.lbname small{font-weight:400;color:var(--mut);font-size:11px}
+.lbpts{font-weight:700;color:var(--acc);white-space:nowrap;text-align:right}
+
+/* INPUTS */
+.finp{width:100%;padding:10px 14px;background:var(--sur2);border:1.5px solid var(--bdr);border-radius:var(--r);color:var(--txt);font-size:14px;outline:none;transition:border-color .2s}
+.finp:focus{border-color:var(--acc)}
+.finp::placeholder{color:var(--mut)}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.inp-lbl{font-size:11px;color:var(--mut);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+/* MEDALS */
+.medals{display:flex;justify-content:center;gap:18px}
+.medal{text-align:center}
+.medal-i{font-size:28px}
+.medal-s{font-size:16px;font-weight:700}
+.medal-l{font-size:10px;color:var(--mut);text-transform:uppercase}
+
+/* MISC */
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);align-self:flex-start}
+.lb-msg{font-size:12px;color:var(--mut);text-align:center;padding:3px}
+.rules{background:var(--sur2);border-radius:var(--r);padding:13px 16px;width:100%}
+.rules li{font-size:13px;color:var(--mut);margin-bottom:7px;line-height:1.5;padding-left:2px}
+.rules li:last-child{margin-bottom:0}
+.rules strong{color:var(--txt)}
+.notice{background:#1c2a1c;border:1px solid #2d4a2d;border-radius:var(--r);padding:10px 14px;font-size:12px;color:#7ec87e;width:100%}
+
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes fadeD{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:400px){
+  .cell{font-size:11px;padding:9px 2px;min-height:50px}
+  .btn{padding:8px 12px;font-size:12px}
+  .inp-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── WELCOME ── -->
+<div id="s-welcome" class="screen on">
+  <div style="margin-top:4px"><div class="logo">ALA-<em>SET</em></div><div class="tag">Ryhmittele ammatit oikeille aloille</div></div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:46px;margin-bottom:10px">🎯</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:8px">Turnaus – 4 peliä</div>
+    <div style="font-size:13px;color:var(--mut);margin-bottom:14px;line-height:1.6">Ryhmittele ammatit oikeille aloille. Paras tuloksesi tallentuu yhteiseen tulostauluun!</div>
+    <ul class="rules">
+      <li>🎯 <strong>Valitse 4 ammattia</strong> samalta alalta ja paina Tarkista</li>
+      <li>❌ <strong>Max 4 virhettä</strong> per peli – muuten peli päättyy</li>
+      <li>💡 <strong>3 vihjettä</strong> käytettävissä (maksaa yrityksen)</li>
+      <li>⚡ <strong>Nopeus</strong> tuo lisäpisteitä</li>
+      <li>🏆 <strong>Paras tulos</strong> tallentuu tulostauluun</li>
+    </ul>
+  </div>
+
+  <div style="width:100%;display:flex;flex-direction:column;gap:6px">
+    <div style="display:flex;gap:8px;width:100%">
+      <div style="flex:1">
+        <div class="inp-lbl">Nimi *</div>
+        <input class="finp" id="inp-nimi" placeholder="Nimimerkki" maxlength="30">
+      </div>
+    </div>
+    <div class="inp-row">
+      <div>
+        <div class="inp-lbl">Koulu *</div>
+        <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40">
+      </div>
+      <div>
+        <div class="inp-lbl">Luokka (vapaaehtoinen)</div>
+        <input class="finp" id="inp-luokka" placeholder="Luokka" maxlength="10">
+      </div>
+    </div>
+  </div>
+
+  <div id="welcome-err" style="font-size:12px;color:var(--red);display:none">⚠ Kirjoita ainakin nimi ja koulu</div>
+
+  <div class="btns">
+    <button class="btn btn-acc" onclick="startTournament()" style="min-width:150px;font-size:15px;padding:12px 24px">Aloita turnaus</button>
+    <button class="btn" onclick="goLb()">🏆 Tulostaulu</button>
+  </div>
+</div>
+
+<!-- ── GAME ── -->
+<div id="s-game" class="screen">
+  <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
+    <div class="logo" style="font-size:18px">ALA-<em>SET</em></div>
+    <div style="font-size:12px;color:var(--mut)" id="game-lbl">Peli 1/4</div>
+  </div>
+  <div class="pwrap"><div class="pbar" id="prog" style="width:0%"></div></div>
+  <div class="tbar">
+    <div class="tcell"><div class="tval" id="t-total">0</div><div class="tlbl">Turnaus</div></div>
+    <div class="tcell"><div class="tval" id="t-game">0</div><div class="tlbl">Tässä pelissä</div></div>
+    <div class="tcell"><div class="tval" id="t-time">0:00</div><div class="tlbl">Aika</div></div>
+  </div>
+  <div id="locked-area"></div>
+  <div class="grid" id="word-grid"></div>
+  <div style="display:flex;gap:22px;align-items:center;justify-content:center">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+      <div class="drow" id="err-dots"></div>
+      <div style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px">Virheet</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+      <div class="drow" id="hint-dots"></div>
+      <div style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px">Vihjeet</div>
+    </div>
+  </div>
+  <div class="status" id="status-msg"></div>
+  <div class="btns">
+    <button class="btn btn-acc" id="btn-check" onclick="checkAnswer()" disabled>Tarkista</button>
+    <button class="btn btn-yel" id="btn-hint" onclick="useHint()">💡 Vihje</button>
+    <button class="btn" onclick="clearSel()">Tyhjennä</button>
+  </div>
+</div>
+
+<!-- ── GAME RESULT ── -->
+<div id="s-result" class="screen">
+  <div class="logo" style="font-size:18px">ALA-<em>SET</em></div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:42px;margin-bottom:8px" id="r-emoji">🎉</div>
+    <div style="font-size:19px;font-weight:800;margin-bottom:6px" id="r-title">Hyvä suoritus!</div>
+    <div class="bscore" id="r-pts">+0</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:4px" id="r-sub">pistettä</div>
+    <div class="rgrid" id="r-grid" style="margin-top:13px"></div>
+  </div>
+  <div class="tbar">
+    <div class="tcell"><div class="tval" id="r-total">0</div><div class="tlbl">Turnauksen pisteet</div></div>
+    <div class="tcell"><div class="tval" id="r-left">3</div><div class="tlbl">Pelejä jäljellä</div></div>
+  </div>
+  <div class="btns">
+    <button class="btn btn-acc" id="btn-next" onclick="nextGame()" style="min-width:160px;font-size:15px;padding:12px">Seuraava peli →</button>
+  </div>
+</div>
+
+<!-- ── TOURNAMENT END ── -->
+<div id="s-end" class="screen">
+  <div class="logo" style="font-size:18px">ALA-<em>SET</em></div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:42px;margin-bottom:8px" id="te-emoji">🏆</div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:4px" id="te-title">Turnaus päättyi!</div>
+    <div class="bscore" id="te-score">0</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:4px">kokonaispistettä</div>
+    <div class="medals" id="te-medals" style="margin-top:14px"></div>
+  </div>
+
+  <div class="sec-lbl">🏆 TULOSTAULU – TOP 10</div>
+  <div id="te-lb-area" style="width:100%"><div style="text-align:center;padding:16px;color:var(--mut);font-size:13px">Ladataan...</div></div>
+  <div id="te-lb-msg" class="lb-msg"></div>
+
+  <div class="notice" id="save-notice" style="display:none"></div>
+
+  <div class="btns" id="te-btns">
+    <button class="btn btn-grn" id="btn-save" onclick="saveScore()">💾 Tallenna tulos</button>
+    <button class="btn" onclick="goPlayAgain()">🔄 Pelaa uudelleen</button>
+    <button class="btn" onclick="goLb()">🏆 Tulostaulu</button>
+  </div>
+</div>
+
+<!-- ── PLAY AGAIN ── -->
+<div id="s-again" class="screen">
+  <div class="logo" style="font-size:18px">ALA-<em>SET</em></div>
+  <div class="card" style="text-align:center">
+    <div style="font-size:42px;margin-bottom:10px">🔄</div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:8px">Haluatko parantaa tulostasi?</div>
+    <div style="font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:14px">Samat ammattikortit – uusi mahdollisuus!<br>Paras tuloksesi tallentuu tulostauluun.</div>
+    <div style="background:var(--sur2);border-radius:var(--r);padding:13px">
+      <div style="font-size:12px;color:var(--mut)">Edellinen tulos</div>
+      <div style="font-size:34px;font-weight:900;color:var(--acc)" id="pa-score">0</div>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="btn btn-acc" onclick="replayTournament()" style="min-width:150px;font-size:15px;padding:12px">Pelaa uudelleen</button>
+    <button class="btn" onclick="showScreen('s-welcome')">← Vaihda pelaaja</button>
+  </div>
+</div>
+
+<!-- ── LEADERBOARD ── -->
+<div id="s-lb" class="screen">
+  <div class="logo" style="font-size:18px">ALA-<em>SET</em></div>
+  <div class="sec-lbl">🏆 TULOSTAULU – TOP 10</div>
+  <div id="main-lb-area" style="width:100%"><div style="text-align:center;padding:20px;color:var(--mut);font-size:13px">Ladataan...</div></div>
+  <div id="main-lb-msg" class="lb-msg"></div>
+  <div class="btns">
+    <button class="btn btn-acc" onclick="showScreen('s-welcome')" style="min-width:140px">← Takaisin</button>
+    <button class="btn" onclick="loadLb('main-lb-area','main-lb-msg',null)">🔄 Päivitä</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   SANKARIPANKKI – 24 ammattialaa
+══════════════════════════════════════════ */
+const JOBS = [
+  {theme:"Terveydenhuolto",            color:"g", words:["Lääkäri","Sairaanhoitaja","Fysioterapeutti","Hammaslääkäri"]},
+  {theme:"Rakennusala",                color:"y", words:["Rakennusmestari","Kirvesmies","Sähköasentaja","LVI-asentaja"]},
+  {theme:"Opetusala",                  color:"b", words:["Luokanopettaja","Rehtori","Lastentarhanopettaja","Erityisopettaja"]},
+  {theme:"Oikeusala",                  color:"p", words:["Asianajaja","Tuomari","Syyttäjä","Haastemies"]},
+  {theme:"IT & ohjelmistokehitys",     color:"g", words:["Ohjelmistokehittäjä","Tietoturva-asiantuntija","Tietokanta-arkkitehti","DevOps-insinööri"]},
+  {theme:"Ravintola-ala",              color:"y", words:["Kokki","Tarjoilija","Konditoria-artesaani","Ravintolapäällikkö"]},
+  {theme:"Kuljetusala",                color:"b", words:["Rekkakuski","Bussinkuljettaja","Lentäjä","Junakonduktööri"]},
+  {theme:"Taideala",                   color:"p", words:["Kuvataiteilija","Muusikko","Näyttelijä","Graafikko"]},
+  {theme:"Poliisi & turvallisuus",     color:"g", words:["Poliisi","Vanginvartija","Rajavartija","Turvallisuuspäällikkö"]},
+  {theme:"Kaupan ala",                 color:"y", words:["Myyjä","Kassatyöntekijä","Ostaja","Varastonhoitaja"]},
+  {theme:"Media & viestintä",          color:"b", words:["Toimittaja","Valokuvaaja","Videotuottaja","Tiedottaja"]},
+  {theme:"Sosiaalityö",                color:"p", words:["Sosiaalityöntekijä","Perhetyöntekijä","Nuorisotyöntekijä","Kuraattori"]},
+  {theme:"Talous & rahoitus",          color:"g", words:["Kirjanpitäjä","Tilintarkastaja","Finanssineuvoja","Pankkivirkailija"]},
+  {theme:"Maatalous & ympäristö",      color:"y", words:["Maanviljelijä","Metsänhoitaja","Ympäristötarkastaja","Agronomi"]},
+  {theme:"Kauneus & hyvinvointi",      color:"b", words:["Parturi","Kosmetologi","Maskeeraaja","Kynsimuotoilija"]},
+  {theme:"Suunnitteluala",             color:"p", words:["Arkkitehti","Sisustussuunnittelija","Teollinen muotoilija","Kaupunkisuunnittelija"]},
+  {theme:"Liikunta & valmennus",       color:"g", words:["Personal trainer","Urheiluvalmentaja","Liikuntaneuvoja","Fysiikkavalmentaja"]},
+  {theme:"Palo- & pelastustoimi",      color:"y", words:["Palomies","Ensihoitaja","Pelastussukellusjohtaja","Hätäkeskuspäivystäjä"]},
+  {theme:"Logistiikka & varastointi",  color:"b", words:["Logistiikkakoordinaattori","Tullaaja","Varastotyöntekijä","Kuljetussuunnittelija"]},
+  {theme:"Tiede & tutkimus",           color:"p", words:["Tutkija","Kemisti","Biologi","Fyysikko"]},
+  {theme:"Mielenterveys & psykologia", color:"g", words:["Psykologi","Psykiatri","Työnohjaaja","Kriisityöntekijä"]},
+  {theme:"Matkailu & hotelli",         color:"y", words:["Hotellivirkailija","Matkailuneuvoja","Concierge","Matkaopas"]},
+  {theme:"Autoala",                    color:"b", words:["Automekaanikko","Automaalaaja","Myyntineuvottelija","Ajoneuvoasentaja"]},
+  {theme:"Hyvinvointi & hoiva",        color:"p", words:["Lähihoitaja","Vanhustyöntekijä","Kehitysvammaohjaaja","Kotihoitaja"]},
+];
+
+const COLORS = ["y","g","b","p"];
+const CLR_NAMES = {y:"🟡 Keltainen",g:"🟢 Vihreä",b:"🔵 Sininen",p:"🟣 Violetti"};
+const GAMES = 4, MAX_ERR = 4, MAX_HINT = 3;
+
+let st = {
+  nimi:"", koulu:"", luokka:"",
+  playerId:"",
+  tour:{idx:0, total:0, scores:[], sets:null},
+  game:null,
+  lastTotal:0
+};
+
+/* ── PLAYER ID (pysyvä per selain) ── */
+function getPlayerId() {
+  let id = localStorage.getItem("ammatit-pid");
+  if (!id) { id = "p_" + Date.now() + "_" + Math.random().toString(36).slice(2,8); localStorage.setItem("ammatit-pid", id); }
+  return id;
+}
+
+/* ── FIREBASE WAIT ── */
+function withFb(fn) {
+  if (window._fbReady) { fn(); }
+  else { window.addEventListener("fbready", fn, {once:true}); }
+}
+
+/* ── LB HELPERS ── */
+async function loadLb(areaId, msgId, highlight) {
+  const area = document.getElementById(areaId);
+  const msg  = document.getElementById(msgId);
+  if (msg) msg.textContent = "Ladataan...";
+  withFb(async () => {
+    const lb = await window._fbLbGet();
+    if (msg) msg.textContent = lb.length > 0 ? "Päivitetty juuri nyt ✓" : "";
+    renderLb(area, lb, highlight);
+  });
+}
+
+function renderLb(area, lb, highlight) {
+  if (!area) return;
+  if (!lb || lb.length === 0) {
+    area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mut);font-size:13px">Ei tuloksia vielä – ole ensimmäinen! 🎯</div>';
+    return;
+  }
+  const medals = ["🥇","🥈","🥉"];
+  let h = `<div class="lbwrap"><div class="lbrow hdr"><span>#</span><span>Pelaaja</span><span>Pisteet</span></div>`;
+  lb.forEach((e, i) => {
+    const me = (e.id === st.playerId || e.name === highlight) ? "me" : "";
+    const rc = i < 3 ? `r${i+1}` : "";
+    const rank = medals[i] || (i+1);
+    const luokka = e.luokka ? ` / ${e.luokka}` : "";
+    const sub = e.koulu ? `<small> · ${e.koulu}${luokka}</small>` : "";
+    h += `<div class="lbrow ${me}"><span class="lbrank ${rc}">${rank}</span><span class="lbname">${e.name}${sub}</span><span class="lbpts">${e.score}</span></div>`;
+  });
+  h += "</div>";
+  area.innerHTML = h;
+}
+
+/* ── SCREENS ── */
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+}
+async function goLb() {
+  showScreen("s-lb");
+  await loadLb("main-lb-area", "main-lb-msg", null);
+}
+
+/* ── SET PICKER ── */
+async function loadAllJobs() {
+  let teacherJobs = [];
+  try { teacherJobs = await window._fbWordsGet(); } catch(e) {}
+  // Yhdistä sisäänrakennetut + opettajan sanat, poista duplikaatit
+  const all = [...JOBS, ...teacherJobs];
+  return all.filter((r, i, arr) => arr.findIndex(x => x.theme === r.theme) === i);
+}
+
+async function pickSets() {
+  const allJobs = await loadAllJobs();
+  const pool = [...allJobs].sort(() => Math.random() - .5);
+  const result = [];
+  for (let g = 0; g < GAMES; g++) {
+    const used = result.flat().map(x => x.theme);
+    const avail = pool.filter(j => !used.includes(j.theme));
+    const gameGroups = COLORS.map((c, i) => {
+      const pick = avail[i] || pool[i];
+      return {...pick, color: c};
+    });
+    result.push(gameGroups);
+  }
+  return result;
+}
+
+/* ── TOURNAMENT ── */
+function startTournament() {
+  const nimi  = document.getElementById("inp-nimi").value.trim();
+  const koulu = document.getElementById("inp-koulu").value.trim();
+  const luokka = document.getElementById("inp-luokka").value.trim();
+  if (!nimi || !koulu) {
+    document.getElementById("welcome-err").style.display = "block";
+    return;
+  }
+  document.getElementById("welcome-err").style.display = "none";
+  st.nimi = nimi.slice(0,30);
+  st.koulu = koulu.slice(0,40);
+  st.luokka = luokka.slice(0,10);
+  st.playerId = getPlayerId();
+  // Näytä latausnäkymä ja lataa sanat
+  showScreen("s-game");
+  document.getElementById("word-grid").innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--mut);font-size:13px">Ladataan sanoja...</div>';
+  withFb(async () => {
+    const sets = await pickSets();
+    st.tour = {idx:0, total:0, scores:[], sets};
+    startGame();
+  });
+}
+
+function replayTournament() {
+  showScreen("s-game");
+  document.getElementById("word-grid").innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--mut);font-size:13px">Ladataan sanoja...</div>';
+  withFb(async () => {
+    const sets = await pickSets();
+    st.tour.idx = 0; st.tour.total = 0; st.tour.scores = []; st.tour.sets = sets;
+    startGame();
+  });
+}
+
+/* ── GAME ── */
+function startGame() {
+  const gi = st.tour.idx;
+  const groups = st.tour.sets[gi];
+  const all = [];
+  groups.forEach(g => g.words.forEach(w => all.push({word:w, group:g})));
+  all.sort(() => Math.random() - .5);
+  st.game = {groups, all, sel:[], locked:[], err:0, hints:0, hintCells:[], score:0, start:Date.now(), timer:null, done:false};
+  renderGame();
+  showScreen("s-game");
+  startTimer();
+}
+
+function startTimer() {
+  if (st.game.timer) clearInterval(st.game.timer);
+  st.game.timer = setInterval(() => {
+    const e = Math.floor((Date.now() - st.game.start) / 1000);
+    document.getElementById("t-time").textContent = Math.floor(e/60) + ":" + (e%60).toString().padStart(2,"0");
+  }, 500);
+}
+function stopTimer() { if (st.game.timer) { clearInterval(st.game.timer); st.game.timer = null; } }
+
+function renderGame() {
+  const gi = st.tour.idx;
+  document.getElementById("game-lbl").textContent = `Peli ${gi+1}/${GAMES}`;
+  document.getElementById("prog").style.width = `${(gi/GAMES)*100}%`;
+  document.getElementById("t-total").textContent = st.tour.total;
+  document.getElementById("t-game").textContent = st.game.score;
+  renderGrid(); renderDots(); renderLocked();
+}
+
+function renderGrid() {
+  const g = document.getElementById("word-grid"); g.innerHTML = "";
+  const rem = st.game.all.filter(w => !st.game.locked.some(l => l.words.includes(w.word)));
+  rem.forEach(item => {
+    const d = document.createElement("div");
+    d.className = "cell";
+    d.textContent = item.word;
+    if (st.game.sel.includes(item.word)) d.classList.add("sel");
+    if (st.game.hintCells.includes(item.word)) d.classList.add("hint");
+    d.onclick = () => toggleWord(item.word);
+    g.appendChild(d);
+  });
+}
+
+function renderDots() {
+  const er = document.getElementById("err-dots"); er.innerHTML = "";
+  for (let i=0; i<MAX_ERR; i++) { const d=document.createElement("div"); d.className="dot edot"+(i<st.game.err?" on":""); er.appendChild(d); }
+  const hr = document.getElementById("hint-dots"); hr.innerHTML = "";
+  for (let i=0; i<MAX_HINT; i++) { const d=document.createElement("div"); d.className="dot hdot"+(i<st.game.hints?" on":""); hr.appendChild(d); }
+  document.getElementById("btn-hint").disabled = st.game.hints >= MAX_HINT;
+}
+
+function renderLocked() {
+  const a = document.getElementById("locked-area"); a.innerHTML = "";
+  st.game.locked.forEach(g => {
+    const d = document.createElement("div");
+    d.className = `lrow ${g.color}`;
+    d.innerHTML = `<div class="lbadge">${CLR_NAMES[g.color]}</div><div class="ltheme">${g.theme}</div><div class="lwords">${g.words.join(" · ")}</div>`;
+    a.appendChild(d);
+  });
+}
+
+function toggleWord(w) {
+  if (st.game.done) return;
+  const i = st.game.sel.indexOf(w);
+  if (i >= 0) st.game.sel.splice(i, 1);
+  else if (st.game.sel.length < 4) st.game.sel.push(w);
+  renderGrid();
+  document.getElementById("btn-check").disabled = st.game.sel.length !== 4;
+}
+
+function clearSel() { st.game.sel = []; renderGrid(); document.getElementById("btn-check").disabled = true; }
+
+function setStatus(msg, type="") {
+  const el = document.getElementById("status-msg");
+  el.textContent = msg;
+  el.className = "status" + (type ? " "+type : "");
+}
+
+function checkAnswer() {
+  if (st.game.sel.length !== 4) return;
+  const sel = [...st.game.sel];
+  let match = null;
+  for (const g of st.game.groups) {
+    if (!st.game.locked.includes(g)) {
+      if (sel.every(w => g.words.includes(w)) && g.words.every(w => sel.includes(w))) { match = g; break; }
+    }
+  }
+  if (match) {
+    const elapsed = Math.floor((Date.now() - st.game.start) / 1000);
+    const timeBonus = Math.max(0, 90 - elapsed) * 2;
+    const cleanBonus = st.game.err === 0 ? 60 : 0;
+    const pts = 120 + timeBonus + cleanBonus;
+    st.game.score += pts;
+    st.game.locked.push(match);
+    st.game.sel = []; st.game.hintCells = [];
+    document.getElementById("t-game").textContent = st.game.score;
+    setStatus(`✓ Oikein! +${pts} pistettä`, "ok");
+    renderLocked(); renderGrid();
+    if (st.game.locked.length === 4) setTimeout(endGame, 800);
+  } else {
+    const almost = st.game.groups.find(g => !st.game.locked.includes(g) && sel.filter(w => g.words.includes(w)).length === 3);
+    st.game.err++; renderDots();
+    document.querySelectorAll(".cell.sel").forEach(c => { c.classList.add("wrong"); setTimeout(() => c.classList.remove("wrong"), 500); });
+    setStatus(almost ? "Melkein! Yksi väärä ammatti 🤏" : "Väärä yhdistelmä – kokeile uudelleen!", "err");
+    if (st.game.err >= MAX_ERR) setTimeout(endGame, 700);
+  }
+}
+
+function useHint() {
+  if (st.game.hints >= MAX_HINT) return;
+  const rem = st.game.groups.filter(g => !st.game.locked.includes(g));
+  if (!rem.length) return;
+  const tgt = rem[Math.floor(Math.random() * rem.length)];
+  const reveal = tgt.words.slice().sort(() => Math.random() - .5).slice(0, 2);
+  st.game.hintCells = reveal; st.game.hints++; st.game.err++;
+  renderDots(); renderGrid();
+  setStatus(`💡 ${reveal.join(" ja ")} ovat samalla alalla`, "hi");
+  if (st.game.err >= MAX_ERR) setTimeout(endGame, 700);
+}
+
+function endGame() {
+  stopTimer(); st.game.done = true;
+  const gi = st.tour.idx;
+  st.tour.total += st.game.score;
+  st.tour.scores.push(st.game.score);
+  const found = st.game.locked.length;
+  const emojis = ["💪","👍","🌟","🎉","🏆"];
+  document.getElementById("r-emoji").textContent = emojis[found] || "🎮";
+  document.getElementById("r-title").textContent = found===4?"Täydellinen!":found===3?"Melkein täydellinen!":found===2?"Hyvä yritys!":"Harjoitus tekee mestarin!";
+  document.getElementById("r-pts").textContent = "+" + st.game.score;
+  document.getElementById("r-sub").textContent = `${found}/4 alaa tunnistettu`;
+  document.getElementById("r-total").textContent = st.tour.total;
+  document.getElementById("r-left").textContent = GAMES - gi - 1;
+  const elapsed = Math.floor((Date.now() - st.game.start) / 1000);
+  const m = Math.floor(elapsed/60), s = elapsed%60;
+  document.getElementById("r-grid").innerHTML = `
+    <div class="rcell"><div class="rval">${found}/4</div><div class="rlbl">Alat löydetty</div></div>
+    <div class="rcell"><div class="rval">${st.game.err}</div><div class="rlbl">Virheitä</div></div>
+    <div class="rcell"><div class="rval">${m}:${String(s).padStart(2,"0")}</div><div class="rlbl">Aika</div></div>
+    <div class="rcell"><div class="rval">${st.game.hints}</div><div class="rlbl">Vihjeitä</div></div>`;
+  document.getElementById("btn-next").textContent = gi+1 >= GAMES ? "Tulokset →" : `Peli ${gi+2} →`;
+  showScreen("s-result");
+}
+
+function nextGame() {
+  st.tour.idx++;
+  if (st.tour.idx >= GAMES) endTournament();
+  else startGame();
+}
+
+async function endTournament() {
+  const total = st.tour.total;
+  st.lastTotal = total;
+  document.getElementById("te-score").textContent = total;
+  document.getElementById("te-emoji").textContent = total > 1800 ? "🏆" : total > 900 ? "🌟" : "🎮";
+  document.getElementById("te-title").textContent = total > 1800 ? "Legendaarinen tulos!" : total > 900 ? "Mahtava suoritus!" : "Turnaus päättyi!";
+  document.getElementById("te-medals").innerHTML = st.tour.scores.map((s,i) =>
+    `<div class="medal"><div class="medal-i">${["🥇","🥈","🥉","🏅"][i]}</div><div class="medal-s">${s}</div><div class="medal-l">Peli ${i+1}</div></div>`
+  ).join("");
+
+  // Reset save UI
+  const saveNotice = document.getElementById("save-notice");
+  saveNotice.style.display = "none";
+  const btnSave = document.getElementById("btn-save");
+  btnSave.disabled = true;
+  btnSave.textContent = "💾 Tallennetaan...";
+
+  showScreen("s-end");
+
+  // Automaattinen tallennus heti turnauksen paattyessa
+  withFb(async () => {
+    const res = await window._fbLbSave(st.playerId, st.nimi, st.koulu, st.luokka, total);
+    if (res.saved) {
+      btnSave.textContent = "✓ Tallennettu!";
+      saveNotice.textContent = "✓ Tulos tallennettu tulostauluun!";
+      saveNotice.style.background = ""; saveNotice.style.borderColor = ""; saveNotice.style.color = "";
+      saveNotice.style.display = "block";
+      await loadLb("te-lb-area", "te-lb-msg", st.nimi);
+    } else if (res.reason === "Aiempi tulos on parempi") {
+      btnSave.textContent = "✓ Aiempi tulos parempi";
+      saveNotice.textContent = "ℹ️ Sinulla on jo parempi tulos tallennettuna – sitä ei ylikirjoitettu.";
+      saveNotice.style.background = "#1c2030"; saveNotice.style.borderColor = "#2d3a4a"; saveNotice.style.color = "#74b9ff";
+      saveNotice.style.display = "block";
+      await loadLb("te-lb-area", "te-lb-msg", st.nimi);
+    } else {
+      // Verkkovirhe - anna kayttajan yrittaa manuaalisesti
+      btnSave.textContent = "💾 Yritä tallentaa uudelleen";
+      btnSave.disabled = false;
+      saveNotice.textContent = "⚠️ Automaattinen tallennus epäonnistui – paina nappia yrittäksesi uudelleen.";
+      saveNotice.style.background = "#2a1515"; saveNotice.style.borderColor = "#4a2d2d"; saveNotice.style.color = "#f87171";
+      saveNotice.style.display = "block";
+      await loadLb("te-lb-area", "te-lb-msg", null);
+    }
+  });
+}
+
+async function saveScore() {
+  const btn = document.getElementById("btn-save");
+  const notice = document.getElementById("save-notice");
+  btn.textContent = "Tallennetaan..."; btn.disabled = true;
+
+  withFb(async () => {
+    const res = await window._fbLbSave(st.playerId, st.nimi, st.koulu, st.luokka, st.lastTotal);
+    if (res.saved) {
+      btn.textContent = "✓ Tallennettu!";
+      notice.textContent = "✓ Tulos tallennettu tulostauluun!";
+      notice.style.display = "block";
+      document.getElementById("te-lb-msg").textContent = "";
+      await loadLb("te-lb-area", "te-lb-msg", st.nimi);
+    } else if (res.reason === "Aiempi tulos on parempi") {
+      btn.textContent = "✓ Aiempi tulos parempi";
+      notice.textContent = "ℹ️ Sinulla on jo parempi tulos tallennettuna – sitä ei ylikirjoitettu.";
+      notice.style.background = "#1c2030"; notice.style.borderColor = "#2d3a4a"; notice.style.color = "#74b9ff";
+      notice.style.display = "block";
+    } else {
+      btn.textContent = "💾 Yritä uudelleen";
+      btn.disabled = false;
+      notice.textContent = "⚠️ Tallennus epäonnistui – tarkista nettiyhteys.";
+      notice.style.background = "#2a1515"; notice.style.borderColor = "#4a2d2d"; notice.style.color = "#f87171";
+      notice.style.display = "block";
+    }
+  });
+}
+
+function goPlayAgain() {
+  document.getElementById("pa-score").textContent = st.lastTotal;
+  showScreen("s-again");
+}
+</script>
+</body>
+</html>
