@@ -525,16 +525,7 @@ const tehtavat = {
     ],
   },
 
-  paatos9: {
-    title: "Oma päätökseni",
-    category: "urat",
-    class: "9",
-    instructions: [
-      "Kirjoita, mitä olet päättänyt hakea ensisijaisesti.",
-      "Perustele: miksi juuri tämä on sinulle sopiva?",
-      "Mitä teet seuraavaksi – mitä konkreettisia askeleita otat?",
-    ],
-  },
+
 
   "keskustelu-jatko9": {
     title: "Päivän aihe: Lukio vai amis?",

@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mitä sitten? — korttipeli valinnoista</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#fff;color:#1a1a2e;font-family:'Nunito',sans-serif;min-height:100%;}
+#g{padding:1rem;max-width:620px;margin:0 auto;background:#fff;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+.intro{max-width:400px;margin:0 auto;padding:1.5rem 0;}
+.intro-title{font-size:34px;font-family:'Fredoka One',sans-serif;color:#1a1a2e;margin-bottom:.3rem;}
+.intro-hook{font-size:15px;color:#3a3a3a;font-style:italic;margin-bottom:1.5rem;line-height:1.65;}
+.intro-section{margin-bottom:1.1rem;}
+.intro-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#3C3489;margin-bottom:.4rem;}
+.intro-section-text{font-size:15px;color:#222;line-height:1.7;}
+.intro-divider{border:none;border-top:1px solid #ddd;margin:1.25rem 0;}
+.card-deco-row{display:flex;gap:8px;margin-bottom:1.5rem;justify-content:center;}
+.mini-card{width:46px;height:64px;border-radius:8px;border:2px solid rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:22px;}
+
+.setup{max-width:360px;margin:0 auto;padding:1rem 0;}
+.setup-title{font-size:24px;font-family:'Fredoka One',sans-serif;color:#1a1a2e;margin-bottom:.2rem;}
+.setup-sub{font-size:15px;color:#444;margin-bottom:1.25rem;}
+.slabel{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:.5rem;margin-top:.9rem;}
+.pc-row{display:flex;gap:8px;margin-bottom:.25rem;}
+.pc-btn{flex:1;padding:.6rem;border:2px solid #bbb;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;font-family:'Nunito',sans-serif;font-weight:700;color:#1a1a2e;}
+.pc-btn.on{border-color:#3C3489;background:#EEEDFE;color:#26215C;}
+.pc-btn:hover{background:#f0f0f0;}
+.name-inputs{display:flex;flex-direction:column;gap:8px;margin-bottom:.5rem;}
+.name-row{display:flex;align-items:center;gap:8px;}
+.ndot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.name-inputs input{flex:1;padding:.6rem .8rem;border:2px solid #bbb;border-radius:10px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:600;background:#fff;color:#1a1a2e;}
+.name-inputs input:focus{outline:3px solid #3C3489;border-color:#3C3489;}
+.back-link{text-align:center;margin-top:.75rem;font-size:13px;color:#555;cursor:pointer;text-decoration:underline;}
+
+.primary-btn{width:100%;padding:.85rem;border:none;border-radius:12px;background:#3C3489;color:#fff;cursor:pointer;font-size:16px;font-family:'Fredoka One',sans-serif;letter-spacing:.02em;}
+.primary-btn:hover{background:#26215C;}
+.primary-btn.green{background:#085041;}
+.primary-btn.green:hover{background:#04342C;}
+
+/* HUD */
+.hud{margin-bottom:.75rem;}
+.hud-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:6px;}
+.player-tabs{display:flex;gap:5px;flex-wrap:wrap;}
+.ptab{font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;border:2px solid #ddd;color:#555;background:#f5f5f5;}
+.ptab.active{border-color:currentColor;}
+
+/* Pokerikortti — aina näkyvissä */
+.poker-bar{display:flex;align-items:center;gap:8px;background:#EEEDFE;border:2px solid #3C3489;border-radius:10px;padding:8px 12px;margin-bottom:.65rem;}
+.poker-bar-icon{font-size:18px;}
+.poker-bar-text{font-size:13px;font-weight:700;color:#26215C;flex:1;}
+.poker-bar-btn{padding:5px 14px;border:none;border-radius:8px;background:#3C3489;color:#fff;cursor:pointer;font-size:13px;font-family:'Fredoka One',sans-serif;}
+.poker-bar-btn:hover{background:#26215C;}
+.poker-bar-btn:disabled{opacity:.4;cursor:default;}
+.poker-bar.used{background:#f5f5f5;border-color:#ddd;}
+.poker-bar.used .poker-bar-text{color:#aaa;}
+
+/* Pisteet piilotettu */
+.stats-hidden{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.sp-hidden{background:#f5f5f5;border-radius:8px;padding:6px 8px;text-align:center;border:1px solid #e5e5e5;}
+.sp-hidden-label{font-size:12px;font-weight:700;color:#aaa;margin-bottom:2px;}
+.sp-hidden-val{font-size:16px;font-weight:800;color:#ddd;}
+
+.rrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;font-size:13px;font-weight:700;color:#444;}
+.pips{display:flex;gap:4px;flex-wrap:wrap;}
+.pip{width:10px;height:10px;border-radius:50%;background:#ddd;}
+.pip.done{background:#085041;}.pip.active{background:#3C3489;}.pip.surp{background:#BA7517;}
+
+.play-area{display:flex;align-items:flex-start;gap:1rem;}
+.deck-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;}
+.deck-stack{position:relative;width:82px;height:118px;cursor:pointer;}
+.ds1{position:absolute;top:6px;left:2px;width:80px;height:116px;border-radius:12px;background:#7F77DD;}
+.ds2{position:absolute;top:3px;left:1px;width:80px;height:116px;border-radius:12px;background:#AFA9EC;}
+.dtop{position:absolute;top:0;left:0;width:80px;height:116px;border-radius:12px;background:#3C3489;border:2px solid #26215C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:transform .15s;}
+.dtop:hover{transform:translateY(-4px);}
+.dtop-icon{font-size:24px;color:#fff;}
+.dtop-count{font-size:11px;font-weight:800;color:rgba(255,255,255,.9);}
+.shuf-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.7;transition:opacity .15s;}
+.shuf-btn:hover{opacity:1;}
+.shuf-icon{width:34px;height:34px;border-radius:50%;background:#f5f5f5;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.shuf-label{font-size:11px;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:.05em;}
+
+.card-area{flex:1;min-height:300px;}
+.gcard{border-radius:16px;padding:1.1rem;border:2.5px solid rgba(0,0,0,.12);position:relative;overflow:hidden;animation:cardIn .4s cubic-bezier(.22,1,.36,1);}
+@keyframes cardIn{0%{opacity:0;transform:translateX(-60px) rotate(-5deg);}100%{opacity:1;transform:none;}}
+.card-koulu    {background:#E6F1FB;border-color:#378ADD;}
+.card-terveys  {background:#EAF3DE;border-color:#639922;}
+.card-kaverit  {background:#EEEDFE;border-color:#7F77DD;}
+.card-raha     {background:#FAEEDA;border-color:#BA7517;}
+.card-rakkaus  {background:#FBEAF0;border-color:#D4537E;}
+.card-tulevaisuus{background:#FAECE7;border-color:#D85A30;}
+.card-ura      {background:#EAF3DE;border-color:#639922;}
+.card-perhe    {background:#E6F1FB;border-color:#378ADD;}
+.card-yllatys  {background:#FAEEDA;border-color:#BA7517;cursor:pointer;}
+.card-digi     {background:#EEEDFE;border-color:#7F77DD;}
+.card-vaikea   {background:#FBEAF0;border-color:#D4537E;}
+.cdeco{position:absolute;top:-20px;right:-20px;width:72px;height:72px;border-radius:50%;opacity:.15;}
+.ctag{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.cicon{font-size:28px;margin-bottom:3px;}
+.ctitle{font-size:17px;font-family:'Fredoka One',sans-serif;line-height:1.25;color:#1a1a2e;margin-bottom:5px;}
+.cdesc{font-size:13px;color:#222;line-height:1.6;margin-bottom:10px;}
+.timer-bar-wrap{height:5px;background:rgba(0,0,0,.10);border-radius:3px;margin-bottom:8px;overflow:hidden;}
+.timer-bar{height:5px;border-radius:3px;background:#3C3489;}
+
+/* Vaikea-merkki kortissa */
+.hard-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:#FBEAF0;color:#993556;border:1px solid #D4537E;margin-left:6px;vertical-align:middle;}
+
+.choices{display:flex;flex-direction:column;gap:6px;}
+.chbtn{background:rgba(255,255,255,.85);border:2px solid rgba(0,0,0,.15);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:700;color:#1a1a2e;cursor:pointer;text-align:left;line-height:1.4;transition:background .1s,transform .1s;font-family:'Nunito',sans-serif;}
+.chbtn:hover:not(:disabled){background:#fff;transform:scale(1.01);}
+.chbtn:focus{outline:3px solid #3C3489;outline-offset:2px;}
+.chbtn:disabled{opacity:.5;cursor:default;}
+.chbtn.chosen{background:#fff;border-width:2.5px;}
+
+/* Pokeri */
+.slow-down{background:#EEEDFE;border:2px solid #3C3489;border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:13px;font-weight:700;color:#26215C;line-height:1.5;animation:cardIn .3s ease;}
+.slow-down-icon{font-size:18px;margin-right:4px;}
+.poker-swap{background:#EEEDFE;border:2px dashed #3C3489;border-radius:10px;padding:10px 13px;margin-top:8px;font-size:13px;font-weight:700;color:#26215C;line-height:1.5;}
+.poker-swap-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px;}
+.poker-swap-btns{display:flex;gap:8px;margin-top:8px;}
+.poker-swap-btns button{flex:1;padding:.5rem;font-size:14px;}
+.poker-perspective{background:#EEEDFE;border:2px solid #3C3489;border-radius:14px;padding:1rem 1.1rem;margin-top:8px;animation:cardIn .35s ease;}
+.poker-perspective-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#3C3489;margin-bottom:.5rem;display:block;}
+.poker-who{font-size:12px;font-weight:800;color:#534AB7;margin-bottom:3px;}
+.poker-quote{font-size:15px;font-style:italic;color:#26215C;line-height:1.55;margin-bottom:.85rem;padding-left:10px;border-left:3px solid #7F77DD;}
+.poker-motive-label{font-size:12px;font-weight:800;color:#3C3489;margin-bottom:.5rem;display:block;}
+.motive-btns{display:flex;flex-direction:column;gap:6px;}
+.motive-btn{background:rgba(255,255,255,.8);border:1.5px solid #AFA9EC;border-radius:9px;padding:8px 11px;font-size:13px;font-weight:700;color:#26215C;cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;}
+.motive-btn:hover{background:#fff;border-color:#534AB7;}
+.motive-btn.selected{background:#fff;border-color:#3C3489;border-width:2px;}
+
+.surp-back{align-items:center;justify-content:center;text-align:center;min-height:260px;display:flex;flex-direction:column;gap:8px;}
+.surp-icon-big{font-size:48px;}
+.surp-title{font-size:20px;font-family:'Fredoka One',sans-serif;color:#633806;}
+.surp-tap{font-size:13px;color:#854F0B;font-weight:700;}
+.surp-result-box{border-radius:14px;padding:1rem 1.1rem;margin-bottom:8px;text-align:center;}
+.surp-result-good{background:#EAF3DE;border:2.5px solid #639922;}
+.surp-result-bad {background:#FCEBEB;border:2.5px solid #E24B4A;}
+.surp-result-icon{font-size:36px;margin-bottom:6px;}
+.surp-result-title{font-size:18px;font-family:'Fredoka One',sans-serif;margin-bottom:4px;}
+.surp-result-good .surp-result-title{color:#173404;}
+.surp-result-bad  .surp-result-title{color:#501313;}
+.surp-result-text{font-size:13px;line-height:1.55;}
+.surp-result-good .surp-result-text{color:#27500A;}
+.surp-result-bad  .surp-result-text{color:#791F1F;}
+.surp-delta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.surp-delta{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;}
+.surp-delta.pos{background:#C0DD97;color:#173404;}
+.surp-delta.neg{background:#F7C1C1;color:#501313;}
+
+.ap-box{border-radius:10px;padding:10px 13px;margin-bottom:8px;font-size:13px;font-weight:700;line-height:1.5;}
+.ap-warn{background:#FAEEDA;border:2px solid #BA7517;color:#412402;}
+.ap-good{background:#EAF3DE;border:2px solid #639922;color:#173404;}
+.ap-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px;}
+
+.reveal-box{background:#f5f5f5;border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;border:1px solid #e0e0e0;}
+.reveal-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #e0e0e0;font-size:13px;}
+.reveal-row:last-child{border-bottom:none;}
+.rev-name{font-weight:800;color:#1a1a2e;}
+.rev-choice{color:#333;max-width:55%;text-align:right;line-height:1.4;}
+
+/* Kierroksen pisteet */
+.round-stats-reveal{background:#fff;border:2px solid #3C3489;border-radius:14px;padding:1rem;margin-bottom:.75rem;animation:cardIn .35s ease;}
+.round-stats-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#3C3489;margin-bottom:.65rem;}
+.round-delta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.rd-item{background:#f5f5f5;border-radius:8px;padding:6px 8px;text-align:center;}
+.rd-label{font-size:11px;font-weight:700;color:#444;margin-bottom:2px;}
+.rd-val{font-size:15px;font-weight:800;}
+.rd-delta{font-size:11px;font-weight:800;margin-top:1px;}
+.rd-delta.pos{color:#085041;}.rd-delta.neg{color:#791F1F;}
+.rd-bar{height:4px;border-radius:2px;margin-top:3px;background:#ddd;}
+.rd-fill{height:4px;border-radius:2px;}
+
+/* END */
+.end-screen{padding:.5rem 0;}
+.end-title{font-size:24px;font-family:'Fredoka One',sans-serif;color:#1a1a2e;margin-bottom:.3rem;}
+.end-sub{font-size:14px;color:#444;margin-bottom:1rem;}
+.pres{border:2px solid #ddd;border-radius:14px;padding:.9rem 1rem;margin-bottom:.9rem;background:#fff;}
+.pre-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.65rem;}
+.pre-name{font-size:16px;font-weight:800;}
+.pre-total{font-size:13px;color:#444;font-weight:700;}
+.pre-sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.75rem;}
+.pre-stat{border-radius:10px;padding:8px 6px;text-align:center;border:2px solid transparent;}
+.prs-label{font-size:11px;font-weight:800;margin-bottom:3px;}
+.prs-val{font-size:20px;font-weight:800;}
+.prs-bar-bg{height:5px;border-radius:3px;margin-top:4px;background:rgba(0,0,0,.1);}
+.prs-fill{height:5px;border-radius:3px;}
+.chart-wrap{background:#f9f9f9;border-radius:10px;padding:.85rem 1rem;margin-bottom:.6rem;border:1px solid #e8e8e8;}
+.chart-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:.5rem;}
+.chart-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.5rem;}
+.cleg{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#333;}
+.cleg-dot{width:9px;height:9px;border-radius:50%;}
+.story-box{background:#f9f9f9;border-radius:10px;padding:.85rem 1rem;border:1px solid #e8e8e8;}
+.story-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:.5rem;}
+.story-text{font-size:13px;color:#222;line-height:1.65;}
+.trend-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.5rem;}
+.tpill{font-size:12px;font-weight:800;padding:4px 11px;border-radius:99px;}
+.tup{background:#1D9E75;color:#fff;}.tdown{background:#E24B4A;color:#fff;}.tflat{background:#888780;color:#fff;}
+.strength-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.6rem;}
+.strength-box{border-radius:10px;padding:.75rem .9rem;}
+.strength-box.pos{background:#EAF3DE;border:1.5px solid #639922;}
+.strength-box.neg{background:#FCEBEB;border:1.5px solid #E24B4A;}
+.strength-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;display:block;}
+.strength-box.pos .strength-label{color:#27500A;}
+.strength-box.neg .strength-label{color:#501313;}
+.strength-item{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:13px;font-weight:700;}
+.strength-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.moment-box{border-radius:10px;padding:.75rem .9rem;background:#FAEEDA;border:1.5px solid #BA7517;margin-bottom:.6rem;}
+.moment-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#633806;margin-bottom:.4rem;display:block;}
+.moment-card{font-size:14px;font-weight:800;color:#412402;margin-bottom:3px;}
+.moment-choice{font-size:12px;color:#633806;margin-bottom:.4rem;line-height:1.4;}
+.moment-delta{display:flex;flex-wrap:wrap;gap:5px;}
+.moment-delta span{font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;}
+.moment-delta .pos{background:#C0DD97;color:#173404;}
+.moment-delta .neg{background:#F7C1C1;color:#501313;}
+
+@keyframes dshake{0%,100%{transform:rotate(0);}20%{transform:rotate(-4deg);}40%{transform:rotate(4deg);}60%{transform:rotate(-2deg);}80%{transform:rotate(2deg);}}
+
+/* Reflektiokysymys */
+.reflect-screen{padding:1.5rem 0;max-width:420px;margin:0 auto;}
+.reflect-title{font-size:22px;font-family:'Fredoka One',sans-serif;color:#1a1a2e;margin-bottom:.4rem;}
+.reflect-sub{font-size:14px;color:#444;line-height:1.6;margin-bottom:1.25rem;}
+.reflect-divider{border:none;border-top:1px solid #ddd;margin:1rem 0;}
+.reflect-q{font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:.75rem;}
+.reflect-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:.85rem;}
+.reflect-opt{background:#f5f5f5;border:2px solid #ddd;border-radius:11px;padding:10px 14px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;transition:background .1s,border-color .1s;}
+.reflect-opt:hover{background:#EEEDFE;border-color:#7F77DD;}
+.reflect-opt.sel{background:#EEEDFE;border-color:#3C3489;color:#26215C;}
+.reflect-why-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:.4rem;display:block;}
+.reflect-textarea{width:100%;border:2px solid #ddd;border-radius:11px;padding:.7rem .9rem;font-size:14px;font-family:'Nunito',sans-serif;font-weight:600;color:#1a1a2e;resize:none;min-height:80px;background:#fff;}
+.reflect-textarea:focus{outline:3px solid #3C3489;border-color:#3C3489;}
+.reflect-answer-box{background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:10px;padding:.75rem 1rem;margin-top:8px;}
+.reflect-answer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#3C3489;margin-bottom:.3rem;display:block;}
+.reflect-answer-text{font-size:13px;color:#26215C;font-weight:700;line-height:1.55;font-style:italic;}
+
+</style>
+</head>
+<body>
+<div id="g">
+  <h1 class="sr-only">Mitä sitten? — korttipeli valinnoista</h1>
+  <div id="ui"></div>
+</div>
+<script>
+const STATS=[
+  {key:"terveys",    label:"Terveys",     color:"#185FA5",bg:"#E6F1FB",border:"#378ADD"},
+  {key:"raha",       label:"Raha",        color:"#EF9F27",bg:"#FAEEDA",border:"#BA7517"},
+  {key:"sosiaaliset",label:"Sosiaaliset", color:"#534AB7",bg:"#EEEDFE",border:"#7F77DD"},
+  {key:"empatia",    label:"Empatia",     color:"#D4537E",bg:"#FBEAF0",border:"#D4537E"},
+  {key:"itseilmaisu",label:"Itseilmaisu", color:"#1D9E75",bg:"#EAF3DE",border:"#639922"},
+  {key:"sinnikkyys", label:"Sinnikkyys",  color:"#E24B4A",bg:"#FCEBEB",border:"#E24B4A"},
+  {key:"rohkeus",    label:"Rohkeus",     color:"#D85A30",bg:"#FAECE7",border:"#D85A30"},
+  {key:"rakkaus",    label:"Rakkaus",     color:"#A32D2D",bg:"#FCEBEB",border:"#E24B4A"},
+  {key:"organisointi",label:"Organisointi",color:"#26215C",bg:"#EEEDFE",border:"#534AB7"},
+];
+const TAG_COLORS={terveys:"#27500A",koulu:"#0C447C",kaverit:"#26215C",raha:"#633806",rakkaus:"#72243E",tulevaisuus:"#4A1B0C",ura:"#27500A",perhe:"#0C447C",yllatys:"#633806",digi:"#26215C",vaikea:"#72243E"};
+const TAG_LABELS={koulu:"Koulu",raha:"Raha",kaverit:"Kaverit",terveys:"Terveys",tulevaisuus:"Tulevaisuus",rakkaus:"Rakkaus",ura:"Ura",perhe:"Perhe",yllatys:"Yllätyskorttti",digi:"Digitaalisuus",vaikea:"Vaikea tilanne"};
+const PCOLORS=["#3C3489","#085041","#791F1F"];
+const PBGS=["#EEEDFE","#E1F5EE","#FCEBEB"];
+const MAX=20,START=10,ROUNDS=4,PER=5;
+
+const MOTIVES=[
+  "Pelkäsin, mitä muut ajattelevat",
+  "Se tuntui oikealta",
+  "Halusin suojella toista",
+  "En tiennyt, mitä tehdä",
+];
+
+/* ── TOISTUVAT TEEMAT ── */
+const RECURRING=[
+  {theme:"uni",cards:[
+    {tag:"terveys",icon:"🌙",title:"Puhelin myöhään yöllä",desc:"Kello 23:00, koulu klo 8. Olet puhelimella — 'vielä vain hetki'.",choices:["Laitan puhelimen pois ja nukun","Vielä puoli tuntia","Jatkan kunnes nukahdan"],d:[{terveys:2,sinnikkyys:1,organisointi:1},{terveys:-1},{terveys:-2,sinnikkyys:-1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
+    {tag:"terveys",icon:"🌙",title:"Sama tilanne, viikko myöhemmin",desc:"Kello 23:00 taas. Tuleeko sama rutiini uudelleen?",choices:["Puhelin pois — päätin tämän jo viimeksi","Tänään on poikkeus","En edes yritä"],d:[{terveys:2,sinnikkyys:2,organisointi:2},{terveys:-1,sinnikkyys:-1},{terveys:-2,sinnikkyys:-2}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
+    {tag:"terveys",icon:"🌙",title:"Puhelin yöllä — kolmas viikko peräkkäin",desc:"Sama tilanne kuin viimeiset kaksi viikkoa. Kello 23:00, koulu klo 8. Oletko muuttanut tapojasi vai toistuuko sama kaava?",choices:["Puhelin pois — tämä on jo rutiinini","Tänään en jaksa","Mitä väliä — en usko muutokseen"],d:[{terveys:3,sinnikkyys:3,organisointi:2},{terveys:-1,sinnikkyys:-2},{terveys:-2,sinnikkyys:-3,rohkeus:-1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
+  ]},
+  {theme:"liikunta",cards:[
+    {tag:"terveys",icon:"⚽",title:"Harjoitukset vai sohva?",desc:"Olet väsynyt. Joukkue odottaa harjoituksissa tänään.",choices:["Menen — lupaukset on pidettävä","Jään lepäämään, tarvitsen sen","Jään pelaamaan koko illan"],d:[{terveys:2,sinnikkyys:1,sosiaaliset:1},{terveys:1,sosiaaliset:-1},{terveys:-2,sinnikkyys:-1}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
+    {tag:"terveys",icon:"⚽",title:"Harjoitukset taas — väsyttää enemmän",desc:"Rankka viikko. Viimeksi teit jo päätöksen — mitä nyt?",choices:["Menen — juuri väsyneenä tämä on tärkeintä","Pidän kertatauon","En mene — yksi kerta ei merkitse"],d:[{terveys:2,sinnikkyys:2,sosiaaliset:1},{sinnikkyys:-1},{terveys:-1,sinnikkyys:-2}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
+    {tag:"terveys",icon:"⚽",title:"Kolmas kerta — onko liikunta osa elämääsi?",desc:"Harjoitukset odottavat. Kolme viikkoa — tapa juurtuu tai häipyy.",choices:["Menen — olen päättänyt että tämä kuuluu elämääni","Jään kotiin — en halua pakottaa itseäni","Lopetan harrastuksen kokonaan — ei sovi minulle"],d:[{terveys:3,sinnikkyys:3,sosiaaliset:2},{terveys:-1,sinnikkyys:-1},{terveys:-2,sinnikkyys:-3,sosiaaliset:-2}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
+  ]},
+  {theme:"raha",cards:[
+    {tag:"raha",icon:"☕",title:"Kahvi ruokatauolla",desc:"Kaikki käyvät kahvilassa. ~5 €. Sinulla on tiukka kuukausi.",choices:["Otan veden — säästän pienestä","Ostan normaalisti","Ostan kaikille"],d:[{raha:1,organisointi:1,sinnikkyys:1},{raha:-1},{raha:-3,sosiaaliset:2}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
+    {tag:"raha",icon:"☕",title:"Sama kahvila, toinen viikko",desc:"Sama hetki. Viimeksi teit päätöksen. Pysytkö siinä?",choices:["Vesi taas — tottumukset kertyvät","Tänään on poikkeus","Pienillä asioilla ei ole väliä"],d:[{raha:2,organisointi:2,sinnikkyys:2},{raha:-1,sinnikkyys:-1},{raha:-2,sinnikkyys:-2,organisointi:-1}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
+    {tag:"raha",icon:"☕",title:"Kolmas viikko — oletko säästäjä?",desc:"Sama tilanne. Kolme viikkoa pienistä valinnoista — ne kerääntyvät.",choices:["Vesi — tämä on nyt tapa","Ostan — ansaitsin tänään","Rahankäyttö ei kiinnosta minua"],d:[{raha:3,organisointi:2,sinnikkyys:3},{raha:-1},{raha:-3,organisointi:-2,sinnikkyys:-2}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
+  ]},
+];
+
+/* ── KAIKKI SINGLE-KORTIT (35 kpl) ── */
+const SINGLES=[
+  // Koulu
+  {tag:"koulu",icon:"📚",title:"Koe huomenna, kaveri kutsuu",desc:"Matikassa koe aamulla. Kaveri: 'Tuu meille, on muutakin porukkaa!'",choices:["Kieltäydyn ja selitän syyn","Menen — en halua jäädä ulkopuolelle","Sanon kyllä ja peryn viime hetkellä"],d:[{sinnikkyys:2,rohkeus:1,organisointi:1},{sosiaaliset:2,sinnikkyys:-1,terveys:-1},{sosiaaliset:-2,terveys:-1,empatia:-1}],perspective:{who:"Kaveri",quote:"Toivoin, että tulisit — mutta ymmärrän kyllä."}},
+  {tag:"koulu",icon:"👥",title:"Ryhmätyö ilman panosta",desc:"Tiimiläinen ei tee mitään ja deadline lähestyy. Kukaan ei sano mitään.",choices:["Otan asian puheeksi suoraan hänelle","Teen hänen osuutensa itse — deadline ensin","Valitan muille mutta en tee mitään"],d:[{rohkeus:3,organisointi:2,empatia:1},{sinnikkyys:1,terveys:-1},{sosiaaliset:-1,organisointi:-2}],perspective:{who:"Laiska tiimiläinen",quote:"Tiesin, että joku tekisi sen puolestani."}},
+  {tag:"koulu",icon:"📄",title:"Lunttilappu löytyy lattialta",desc:"Juuri ennen koetta löydät lattialta huijauslappun. Koe on vaikea.",choices:["Jätän sen lattialle — en tarvitse sitä","Käytän sitä — se oli jo tehty valmiiksi","Annan sen opettajalle"],d:[{sinnikkyys:2,rohkeus:2,itseilmaisu:1},{sinnikkyys:-2,rohkeus:-1},{rohkeus:3,empatia:1}],perspective:{who:"Opettaja",quote:"Luotan oppilaisiini. Se ei ole itsestäänselvyys."}},
+  {tag:"koulu",icon:"😬",title:"Palaute sattuu",desc:"Opettaja antaa julkisesti kovaa kritiikkiä työstäsi. Koko luokka kuulee.",choices:["Kuuntelen rauhallisesti ja kysyn miten voin parantaa","Sulkeudun — en sano mitään","Vastaan takaisin — kritiikki oli epäreilu"],d:[{sinnikkyys:2,rohkeus:1,organisointi:2},{terveys:-1,itseilmaisu:-1},{rohkeus:2,itseilmaisu:2,sosiaaliset:-1}],perspective:{who:"Opettaja",quote:"Sanoin sen, koska uskon, että pystyt parempaan."}},
+  {tag:"koulu",icon:"✏️",title:"Opettaja syyttää väärin",desc:"Opettaja syyttää sinua häiritsemisestä tunnilla. Et ollut se.",choices:["Sanon rauhallisesti: 'En ollut minä'","Hyväksyn syytöksen hiljaa","Kerron kenen se oli"],d:[{rohkeus:3,itseilmaisu:2,sinnikkyys:1},{sinnikkyys:-1,rohkeus:-1},{rohkeus:2,empatia:-1,sosiaaliset:-1}],perspective:{who:"Syyllinen oppilas",quote:"Toivoin, ettet sanoisi mitään."}},
+  {tag:"koulu",icon:"⏰",title:"Deadline unohtuikin",desc:"Huomaat tänään aamulla, että tärkeä tehtävä piti palauttaa eilen.",choices:["Otan vastuun ja kerron opettajalle rehellisesti","Yritän palauttaa myöhässä ja selitän syyksi sairauden","Jätän tehtävän kokonaan palauttamatta"],d:[{rohkeus:3,itseilmaisu:2,sinnikkyys:1},{rohkeus:-1,sinnikkyys:-1},{organisointi:-3,sinnikkyys:-2}],perspective:{who:"Opettaja",quote:"Vastuullisuus on taito, jota voi oppia."}},
+  {tag:"koulu",icon:"🤝",title:"Kaveri pyytää kopioimaan",desc:"Paras kaverisi pyytää saada kopioida kotitehtäväsi. Deadline on tunnin päästä.",choices:["Kieltäydyn — se olisi huijaamista","Annan kopioida — kaveria autetaan","Autan häntä tekemään omansa alusta"],d:[{rohkeus:2,empatia:2,sinnikkyys:1},{empatia:-1,sinnikkyys:-1},{empatia:3,rohkeus:1,organisointi:1}],perspective:{who:"Kaveri",quote:"Tarvitsin apua — en tiennyt muuta tapaa pyytää."}},
+  // Kaverit
+  {tag:"kaverit",icon:"💬",title:"Juoru leviää WhatsAppissa",desc:"Ryhmässä kiertelee juoru koulukaveristasi. Hän ei ole ryhmässä.",choices:["Kirjoitan: 'Lopetetaanko tämä?'","En sano mitään, en myöskään jaa","Jaan eteenpäin"],d:[{empatia:3,rohkeus:2,sosiaaliset:-1},{terveys:-1,empatia:1},{sosiaaliset:1,empatia:-3,sinnikkyys:-1}],perspective:{who:"Juorun kohde",quote:"En tiedä, miksi ihmiset puhuvat minusta."}},
+  {tag:"kaverit",icon:"🤝",title:"Kaveri on selvästi surullinen",desc:"Hyvä kaverisi on ollut hiljainen muutaman päivän.",choices:["Kysyn: 'Onko kaikki ok?'","Odotan, että hän ottaa asian esille","En puutu — se on hänen asiansa"],d:[{empatia:3,rohkeus:2,rakkaus:2},{empatia:1,sosiaaliset:-1},{empatia:-2,rakkaus:-1}],perspective:{who:"Kaveri",quote:"Toivoin, että joku huomaisi."}},
+  {tag:"kaverit",icon:"🤫",title:"Kaveri pyytää salaisuutta",desc:"Kaveri kertoo jotain vakavaa: 'Älä kerro kenellekään.' Mutta asia huolestuttaa sinua.",choices:["Lupaan vaitiolon ja tuen häntä","Kerron luotetulle aikuiselle — huoleni on liian suuri","Sanon: 'En voi luvata, mutta olen sinun puolellasi'"],d:[{rakkaus:2,empatia:2,rohkeus:1},{empatia:3,rohkeus:2,sosiaaliset:-1},{rohkeus:3,empatia:3,rakkaus:1}],perspective:{who:"Kaveri",quote:"Et ymmärrä, miten vaikea tämä on minulle."}},
+  {tag:"kaverit",icon:"🎂",title:"Syntymäpäivä unohtuikin",desc:"Unohdit läheisen kaverin syntymäpäivän — se oli eilen. Huomaat vasta nyt.",choices:["Soitan heti ja pyydän anteeksi rehellisesti","Lähetän viestin kuin ei olisi tapahtunut mitään","Jätän asian — hän ei ehkä edes huomannut"],d:[{rohkeus:2,rakkaus:2,empatia:2},{empatia:-1,rakkaus:-1},{empatia:-2,rakkaus:-2}],perspective:{who:"Kaveri",quote:"Mietin koko päivän, miksi kukaan ei muistanut."}},
+  {tag:"kaverit",icon:"😔",title:"Jätettiin pois suunnitelmista",desc:"Huomaat somesta että kaveriporukka suunnitteli viikonloppua — ilman sinua.",choices:["Otan asian puheeksi suoraan: 'Huomasin tämän'","Jätän asian — ehkä syy oli hyvä","Loukkaannun hiljaa ja etäännyn porukasta"],d:[{rohkeus:2,itseilmaisu:2,rakkaus:1},{terveys:-1},{terveys:-2,sosiaaliset:-2,rakkaus:-1}],perspective:{who:"Kaveri porukasta",quote:"Emme ajatelleet miltä se sinusta tuntuisi."}},
+  {tag:"kaverit",icon:"🌟",title:"Uusi oppilas luokassa",desc:"Luokkaan tulee uusi oppilas. Hän istuu yksin ruokalassa.",choices:["Menen juttelemaan ja kysyn haluaako liittyä","En mene — voisi olla kiusallista","Ehdotan kaverilleni että hän menee"],d:[{empatia:3,rohkeus:2,sosiaaliset:1},{empatia:-1},{rohkeus:1,empatia:1}],perspective:{who:"Uusi oppilas",quote:"Ensimmäinen viikko on kaikkein vaikein."}},
+  {tag:"kaverit",icon:"🗣️",title:"Kaveria kiusataan",desc:"Näet, kuinka joku kiusaa luokkakaverisi — ei fyysisesti mutta sanoin. Muut katsovat.",choices:["Puutun tilanteeseen heti: 'Hei, lopeta'","Haen opettajan apuun","En tee mitään — tilanne jatkuu"],d:[{rohkeus:3,empatia:3,sosiaaliset:1},{rohkeus:2,empatia:2},{empatia:-3,rohkeus:-2}],perspective:{who:"Kiusattu",quote:"Pahin on kun kukaan ei sano mitään."}},
+  // Terveys
+  {tag:"terveys",icon:"🍺",title:"Kaveri tarjoaa alkoholia",desc:"Bileissä kaveri tarjoaa olutta. Et halua juoda. Muut ottavat.",choices:["Kieltäydyn suoraan","Otan käteen mutta en juo","Juon — en halua erottua"],d:[{rohkeus:3,sinnikkyys:2,terveys:2},{sosiaaliset:1,terveys:1},{sosiaaliset:2,terveys:-2,sinnikkyys:-2}],perspective:{who:"Tarjoava kaveri",quote:"Luulin, että kaikki haluavat."}},
+  {tag:"terveys",icon:"⚡",title:"Energiajuoma vai uni",desc:"Tenttipäivänä olet väsynyt. Kaupassa on energiajuomia. Koe alkaa tunnissa.",choices:["Jätän energiajuoman — yritän ilman","Otan yhden — tarvitsen piristystä","Otan kaksi varmuuden vuoksi"],d:[{terveys:2,sinnikkyys:1},{terveys:-1},{terveys:-3,sinnikkyys:-1}],perspective:{who:"Keho",quote:"Anna minulle lepoa — ei piristeitä."}},
+  {tag:"terveys",icon:"📱",title:"Somehaaste menee liian pitkälle",desc:"Kaveri haastaa sinut somevideolle, joka tuntuu typerälle. Kaikki muut ovat jo mukana.",choices:["Kieltäydyn — en tarvitse tätä","Osallistun — halusin kuulua porukkaan","Ehdotan hauskempaa haastetta sen tilalle"],d:[{rohkeus:3,sinnikkyys:2,itseilmaisu:1},{itseilmaisu:-1,sinnikkyys:-1},{rohkeus:2,itseilmaisu:2,sosiaaliset:1}],perspective:{who:"Haastaja",quote:"En ajatellut, että se voisi tuntua pahalta."}},
+  {tag:"terveys",icon:"😴",title:"Nukkua vai valvoa",desc:"Huomenna on vapaa. Kaverit sanovat valvoa myöhään — olet jo väsynyt.",choices:["Sanon meneväni nukkumaan — terveys ensin","Valvon mukana — elämää ei elä nukkuessa","Sovitaan kompromissi: lähden kotiin puolen yön jälkeen"],d:[{terveys:2,sinnikkyys:1,rohkeus:1},{terveys:-2,sosiaaliset:2},{terveys:1,sosiaaliset:1,organisointi:1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
+  {tag:"terveys",icon:"🏃",title:"Liikunta vai lepääminen",desc:"Olet ollut stressaantunut. Lääkäri suosittelee liikuntaa — sinua ei huvita yhtään.",choices:["Pakkohan se on lähteä — teen lyhyen kävelylenkin","En mene — tänään on lepopäivä","Yritän kevyen liikkeen — venyttely tai jooga"],d:[{terveys:2,sinnikkyys:2},{terveys:-1},{terveys:1,sinnikkyys:1,organisointi:1}],perspective:{who:"Keho",quote:"Liike auttaa — mutta pakko ei auta."}},
+  // Raha
+  {tag:"raha",icon:"💰",title:"Kesätyö vai vapaa kesä?",desc:"Sinulle tarjotaan kesätyötä. Kaverit viettävät kesän vapaanammin.",choices:["Otan työn — raha ja kokemus kiinnostavat","En ota — haluan vapauden","Neuvottelen osa-aikaisen"],d:[{raha:4,sinnikkyys:2,organisointi:2,sosiaaliset:-1},{sosiaaliset:3,rakkaus:1,raha:-2},{raha:2,rohkeus:3,organisointi:2,sosiaaliset:1}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
+  {tag:"raha",icon:"👛",title:"Lompakko löytyy",desc:"Löydät kadulta lompakon — siinä on 50 € käteistä ja henkilökortti.",choices:["Vien lähimmälle poliisiasemalle","Pidän rahat, jätän lompakon","Yritän tavoittaa omistajan itse"],d:[{empatia:3,rohkeus:1,raha:1},{raha:3,empatia:-3,sinnikkyys:-1},{empatia:3,rohkeus:2,raha:1}],perspective:{who:"Omistaja",quote:"Olen etsinyt sitä koko päivän."}},
+  {tag:"raha",icon:"🛒",title:"Heräteostos houkuttaa",desc:"Verkkokaupassa on juuri se tuote, mitä olet halunnut. Alennusmyynti loppuu tunnissa.",choices:["En osta — säästöt ovat tärkeämmät","Ostan — ansaitsin tämän","Laitan muistiin ja katson vielä huomenna"],d:[{raha:2,sinnikkyys:2,organisointi:1},{raha:-3,sinnikkyys:-1},{organisointi:2,sinnikkyys:1}],perspective:{who:"Säästötavoite",quote:"Olin niin lähellä."}},
+  {tag:"raha",icon:"💳",title:"Kaveri haluaa lainata rahaa",desc:"Kaveri on jo velkaa sinulle 30 €. Nyt hän pyytää lisää 20 €, koska 'on pakko'.",choices:["Kieltäydyn — hän ei ole maksanut vanhaa","Lainaan — ei voi jättää kaveria pulaan","Kysyn ensin milloin maksaa vanhan velan"],d:[{rohkeus:2,organisointi:2,raha:1},{raha:-2,sinnikkyys:-1,rakkaus:1},{rohkeus:2,empatia:1,organisointi:1}],perspective:{who:"Kaveri",quote:"Lupaan maksaa — oikeasti tällä kertaa."}},
+  {tag:"raha",icon:"🎮",title:"Peliostos vai säästäminen",desc:"Uusi peli on tullut — se maksaa 60 €. Sinulla on rahat mutta olit säästämässä johonkin tärkeämpään.",choices:["En osta — säästöt ensin","Ostan — ansaitsin tämän hemmottelun","Otan päätöksen harkinta-ajan — katson viikon päästä"],d:[{raha:2,sinnikkyys:2,organisointi:1},{raha:-3,sinnikkyys:-1},{sinnikkyys:1,organisointi:2}],perspective:{who:"Säästötavoite",quote:"Jokainen pieni valinta vie sinua lähemmäs tai kauemmaksi."}},
+  // Rakkaus
+  {tag:"rakkaus",icon:"💌",title:"Ihastuit — kerrotko?",desc:"Olet ihastunut luokkakaveriin jo kuukausia. Et tiedä mitä hän ajattelee.",choices:["Kerron — rehellisesti","Odotan lisää merkkejä","En sano koskaan"],d:[{rakkaus:3,rohkeus:3,itseilmaisu:2},{rakkaus:1,terveys:-1},{rohkeus:-2,rakkaus:-2,itseilmaisu:-2}],perspective:{who:"Ihastuksen kohde",quote:"En tiennyt mitä sinä ajattelet minusta."}},
+  {tag:"rakkaus",icon:"💔",title:"Ystävyys vai rakkaus",desc:"Paras kaverisi kertoo ihastuneensa sinuun. Et tunne samoin. Mitä sanot?",choices:["Kerron rehellisesti miten tunnen — ystävyys on tärkeä","Vältän vastausta — toivon tilanteen menevän ohi","Suostun kokeilemaan — ehkä tunteet kehittyvät"],d:[{rohkeus:3,empatia:2,rakkaus:1},{empatia:-2,rakkaus:-1,terveys:-1},{rakkaus:1,empatia:-1}],perspective:{who:"Kaveri",quote:"Toivoin rehellisyyttä enemmän kuin hellyyttä."}},
+  // Tulevaisuus / ura
+  {tag:"tulevaisuus",icon:"🌅",title:"Koulutusvalinta painaa",desc:"Vanhemmat toivovat lukiota. Sinua kiinnostaa käytännön työ.",choices:["Valitsen oman polun ja perustelen","Haen lukioon vanhempien toiveesta","En päätä vielä — lykkään"],d:[{rohkeus:3,itseilmaisu:2,sinnikkyys:1},{sosiaaliset:1,sinnikkyys:-1,rakkaus:1},{organisointi:-2,terveys:-1}],perspective:{who:"Vanhempi",quote:"Haluamme sinulle hyvää — ehkä eri tavalla kuin sinä."}},
+  {tag:"ura",icon:"🏢",title:"Harjoittelu vai palkkatyö",desc:"Saat harjoittelupaikan unelmayrityksessä — palkatta. Tai palkallisen kesätyön kaupassa.",choices:["Otan harjoittelun — kokemus ratkaisee","Otan palkkatyön — tarvitsen rahaa","Kysyn voiko harjoittelussa saada pienenkin korvauksen"],d:[{itseilmaisu:3,sinnikkyys:2,raha:-2},{raha:4,sosiaaliset:1,itseilmaisu:-1},{rohkeus:3,organisointi:2,itseilmaisu:2}],perspective:{who:"Tulevaisuuden sinä",quote:"Raha loppuu — kokemus jää."}},
+  {tag:"ura",icon:"🎤",title:"Epämukava esitys edessä",desc:"Pitäisi esittää oma idea koko luokalle. Sinua jännittää kovasti.",choices:["Esitän — jännitys on osa oppimista","Pyydän vapautuksen — nyt ei onnistu","Pyydän saada esittää vain pienelle ryhmälle"],d:[{rohkeus:3,itseilmaisu:3,sinnikkyys:2},{rohkeus:-2,itseilmaisu:-1},{rohkeus:1,itseilmaisu:2,sinnikkyys:1}],perspective:{who:"Yleisö",quote:"Olimme uteliaita — emme tuomitsevia."}},
+  {tag:"ura",icon:"🎸",title:"Harrastus vai tehokas aika",desc:"Sinulle tärkeä harrastus vie paljon aikaa. Ystävät sanovat sen olevan 'ajanhukkaa'.",choices:["Jatkan harrastusta — se on minulle tärkeää","Lopetan — ehkä he ovat oikeassa","Vähennän harrastusta mutta en lopeta"],d:[{itseilmaisu:3,sinnikkyys:2,rohkeus:2},{itseilmaisu:-3,sinnikkyys:-2},{itseilmaisu:1,sinnikkyys:1,organisointi:1}],perspective:{who:"Harrastuksen sinä",quote:"Tämä on se paikka, jossa olet oma itsesi."}},
+  // Perhe
+  {tag:"perhe",icon:"🏠",title:"Riita kotona",desc:"Vanhempasi riitelevät. Siskollesi tulee paha olo.",choices:["Menen siskoni luokse ja rauhoittelen","Sulkeudun huoneeseeni","Pyydän vanhempia lopettamaan"],d:[{empatia:3,rakkaus:2,rohkeus:1},{terveys:-1,empatia:-1},{rohkeus:3,empatia:2,sosiaaliset:-1}],perspective:{who:"Sisko/veli",quote:"Kun aikuiset riitelevät, lapset luulevat, että se on heidän vikansa."}},
+  {tag:"perhe",icon:"📖",title:"Sisarus tarvitsee apua",desc:"Nuorempi sisaruksesi pyytää apua koulutehtävässä juuri kun olet lähdössä ulos.",choices:["Jään ja autan — kaverit voivat odottaa","Selitän että minulla on menoa — sovitaan myöhemmin","Autan nopeasti ja lähden sitten"],d:[{empatia:3,rakkaus:3,sosiaaliset:-1},{organisointi:1,sosiaaliset:1},{empatia:2,rakkaus:2,organisointi:2}],perspective:{who:"Sisarus",quote:"Kysyin sinulta, koska luotan sinuun eniten."}},
+  {tag:"perhe",icon:"🔍",title:"Vanhempi kyselee liikaa",desc:"Vanhempi haluaa tietää kaikesta. Se tuntuu ahdistavalta.",choices:["Vastailen rehellisesti — he välittävät","Sanon rauhallisesti tarvitsevani omaa tilaa","Vältän vastauksia ja sulkeudun"],d:[{rakkaus:2,itseilmaisu:1},{rohkeus:2,itseilmaisu:2,rakkaus:1},{terveys:-1,rakkaus:-1,itseilmaisu:-1}],perspective:{who:"Vanhempi",quote:"Kysyn, koska pelkään menettäväni sinut."}},
+  // Digitaalisuus
+  {tag:"digi",icon:"💻",title:"Kommentti internetissä",desc:"Näet julkisen some-kommentin, joka loukkaa kaveriasi. Hän ei tiedä siitä.",choices:["Vastaan kommenttiin ja puolustan kaveria","Ilmoitan kommentin asiattomana","En tee mitään — ei ole minun asiaa"],d:[{rohkeus:3,empatia:3,rakkaus:2},{rohkeus:2,empatia:2},{empatia:-1,rakkaus:-1}],perspective:{who:"Kaveri",quote:"En tiennyt, että joku puolustaisi minua."}},
+  {tag:"digi",icon:"📸",title:"Kuva ilman lupaa",desc:"Kaveri julkaisi somessa kuvan sinusta, jossa et näytä hyvältä. Et antanut lupaa.",choices:["Pyydän poistamaan kuvan heti","En sano mitään — se on vain kuva","Tykkään kuvasta — ei kannata tehdä draamaa"],d:[{rohkeus:2,itseilmaisu:2,rakkaus:1},{terveys:-1,itseilmaisu:-1},{rakkaus:-1,itseilmaisu:-1}],perspective:{who:"Sinä kuvassa",quote:"Halusin itse päättää mitä muut näkevät minusta."}},
+  // Vaikeat tilanteet
+  {tag:"vaikea",icon:"⚖️",hard:true,title:"Näet kaverin varkaudessa",desc:"Huomaat, että kaverisi varastaa kaupasta. Hän ei tiedä sinun nähneen. Kassa ei huomannut.",choices:["Kerron kaverille mitä näin — kahden kesken","Ilmoitan asiasta kaupalle","Jätän asian — se ei ole minun ongelmani"],d:[{rohkeus:3,empatia:2,sinnikkyys:1},{rohkeus:3,empatia:1,sosiaaliset:-2},{empatia:-2,sinnikkyys:-1}],perspective:{who:"Kauppias",quote:"Luotan asiakkaisiini — se on valinta sekin."}},
+  {tag:"vaikea",icon:"🆘",hard:true,title:"Kaveri kertoo ahdistuksestaan",desc:"Kaveri kertoo sinulle ettei jaksa — asiat kotona ovat huonosti ja hänellä on mustia ajatuksia.",choices:["Kuuntelen ja ehdotan hakemaan apua yhdessä","Kuuntelen mutta en tiedä mitä sanoa — lupaan pitää salaisuuden","Kerron aikuiselle heti — tämä on liikaa minulle yksin"],d:[{empatia:3,rohkeus:2,rakkaus:3},{empatia:2,rakkaus:2,terveys:-1},{empatia:2,rohkeus:3,rakkaus:2}],perspective:{who:"Kaveri",quote:"Kerroin sinulle, koska olet ainoa, jolle uskalsin."}},
+  {tag:"vaikea",icon:"🔥",hard:true,title:"Valhe joka levisi liian pitkälle",desc:"Kerroit pienen valheen, joka on nyt kasvanut isoksi. Monta ihmistä uskoo siihen.",choices:["Tunnustan totuuden — se sattuu mutta on oikein","Jatkan tarinaa — ei ole paluuta","Yritän hiljaa korjata tilannetta kertomatta suoraan"],d:[{rohkeus:3,itseilmaisu:3,sinnikkyys:2},{sinnikkyys:-2,empatia:-2,rohkeus:-2},{rohkeus:1,sinnikkyys:1,empatia:1}],perspective:{who:"Henkilö jolle valehtelit",quote:"Olisin ymmärtänyt totuuden."}},
+  {tag:"vaikea",icon:"👁️",hard:true,title:"Kiusaaminen jatkuu",desc:"Olet nähnyt saman oppilaan saavan osakseen ilkeää kohtelua jo viikkojen ajan. Olet hiljaa pysynyt.",choices:["Puhun hänelle — kysyn voiko tehdä jotain","Menen opettajan puheille tänään","Liityn muihin — en halua olla seuraava kohde"],d:[{empatia:4,rohkeus:3,rakkaus:2},{empatia:3,rohkeus:2,sinnikkyys:2},{empatia:-3,rohkeus:-3,sinnikkyys:-1}],perspective:{who:"Kiusattu",quote:"Näit mitä tapahtui. Se riitti jo."}},
+];
+
+const SURPRISES=[
+  {good:{text:"Löydät 20 € taskustasi!",d:{raha:3}},bad:{text:"Puhelin hajoaa — korjaus maksaa.",d:{raha:-3,terveys:-1}}},
+  {good:{text:"Saat yllättäen kehuja opettajalta!",d:{sinnikkyys:2,itseilmaisu:2}},bad:{text:"Koe palautuu — tulos yllätti ikävästi.",d:{sinnikkyys:-2,terveys:-1}}},
+  {good:{text:"Vanha kaveri ottaa yhteyttä — pitkästä aikaa!",d:{rakkaus:3,sosiaaliset:2}},bad:{text:"Suunnitelmasi peruuntuu viime hetkellä.",d:{organisointi:-2,terveys:-1}}},
+  {good:{text:"Voitat pienen kilpailun — yllätys!",d:{itseilmaisu:2,rohkeus:2,raha:1}},bad:{text:"Unohdit tärkeän deadline — seurauksia tulossa.",d:{organisointi:-3,terveys:-1}}},
+  {good:{text:"Saat vapaalipun konserttiin!",d:{rakkaus:2,sosiaaliset:2,terveys:1}},bad:{text:"Sairastut juuri viikonloppuna.",d:{terveys:-3,sosiaaliset:-1}}},
+];
+
+let players,queue,ci,round,rChoices,curP,pDeltas,apCounts,pokerUsed,surpriseOk,pendingRoundDeltas,cardStartTime;
+
+function mkS(){const s={};STATS.forEach(st=>s[st.key]=START);return s;}
+
+function buildQ(){
+  const th=RECURRING[Math.floor(Math.random()*RECURRING.length)];
+  const surp=SURPRISES[Math.floor(Math.random()*SURPRISES.length)];
+  // Sekoita singles, erota vaikeat erikseen
+  const hardCards=SINGLES.filter(c=>c.hard).sort(()=>Math.random()-.5);
+  const normalCards=SINGLES.filter(c=>!c.hard).sort(()=>Math.random()-.5);
+  // Tarvitaan 4 kierrosta × 5 korttia = 20 korttia
+  // Rakenne per kierros: [rec, normal, normal, normal, normal]
+  // + 1 yllätyskorttti kierroksella 2 (korvaa yhden normalin)
+  // + 1-2 vaikeaa korttia kierroksilla 3-4
+  const q=[];
+  let ni=0,hi=0;
+  for(let r=0;r<ROUNDS;r++){
+    // Toistuvat kierros r:lle (0,1,2) — kierros 3 käyttää taas 0:ta jos loppuu
+    const recCard={...th.cards[Math.min(r,2)],type:"normal",rec:true,recR:Math.min(r,2)+1};
+    q.push(recCard);
+    // Muut 4 paikkaa
+    for(let s=0;s<PER-1;s++){
+      // Kierros 1 (r=1), paikka 3: yllätyskorttti
+      if(r===1&&s===2){
+        q.push({type:"surprise",tag:"yllatys",icon:"✦",title:"Yllätyskorttti",surp});
+        continue;
+      }
+      // Kierros 2-3 (r=2,3): 1 vaikea kortti per kierros
+      if((r===2||r===3)&&s===3&&hi<hardCards.length){
+        q.push({...hardCards[hi++],type:"normal",rec:false});
+        continue;
+      }
+      if(ni<normalCards.length) q.push({...normalCards[ni++],type:"normal",rec:false});
+    }
+  }
+  return q;
+}
+
+function renderIntro(){
+  document.getElementById("ui").innerHTML=`
+    <div class="intro">
+      <div class="card-deco-row">
+        <div class="mini-card" style="background:#E6F1FB;border-color:#378ADD">📚</div>
+        <div class="mini-card" style="background:#EAF3DE;border-color:#639922">⚽</div>
+        <div class="mini-card" style="background:#FAEEDA;border-color:#BA7517">☕</div>
+        <div class="mini-card" style="background:#FBEAF0;border-color:#D4537E">💌</div>
+        <div class="mini-card" style="background:#EEEDFE;border-color:#7F77DD">💬</div>
+      </div>
+      <div class="intro-title">Mitä sitten?</div>
+      <div class="intro-hook">Teemme kaikki erilaisia valintoja — oikeita ja vääriä, ne kuuluvat elämään. Tässä pelissä harjoittelet valintojen tekemistä.</div>
+      <hr class="intro-divider">
+      <div class="intro-section">
+        <div class="intro-section-title">Miten peli toimii</div>
+        <div class="intro-section-text">Nostat kortin pakasta. Luet tilanteen. Valitset — sen mikä tuntuu sinulta oikealta, ei sen minkä luulet olevan "oikea vastaus". Mitä rehellisemmin pelaat, sitä enemmän opit itsestäsi.</div>
+      </div>
+      <div class="intro-section">
+        <div class="intro-section-title">Mitä peli kertoo sinusta</div>
+        <div class="intro-section-text">Pisteet eivät mittaa menestystä. Ne heijastavat sitä, mihin suuntaan valintasi vievät sinua — terveydessä, rahassa, ihmissuhteissa, rohkeudessa. Loppuyhteenvedosta näet oman suuntasi.</div>
+      </div>
+      <hr class="intro-divider">
+      <button class="primary-btn" id="intro-next">Aloitetaan →</button>
+    </div>`;
+  document.getElementById("intro-next").addEventListener("click",renderSetup);
+}
+
+function renderSetup(){
+  let n=1;
+  document.getElementById("ui").innerHTML=`
+    <div class="setup">
+      <div class="setup-title">Ketkä pelaavat?</div>
+      <div class="setup-sub">Voit pelata yksin tai kaverin kanssa.</div>
+      <div class="slabel">Pelaajia</div>
+      <div class="pc-row">
+        <button class="pc-btn on" id="pc1">1</button>
+        <button class="pc-btn" id="pc2">2</button>
+        <button class="pc-btn" id="pc3">3</button>
+      </div>
+      <div class="slabel">Nimet</div>
+      <div class="name-inputs" id="ni">
+        <div class="name-row"><div class="ndot" style="background:${PCOLORS[0]}"></div><input placeholder="Sinun nimesi" id="n0" maxlength="14" autocomplete="off"/></div>
+      </div>
+      <button class="primary-btn" id="go" style="margin-top:.75rem">Nostetaan kortit →</button>
+      <div class="back-link" id="back">← Takaisin ohjeisiin</div>
+    </div>`;
+  function upc(k){
+    n=k;[1,2,3].forEach(i=>document.getElementById("pc"+i).classList.toggle("on",i===k));
+    document.getElementById("ni").innerHTML=Array.from({length:k},(_,i)=>
+      `<div class="name-row"><div class="ndot" style="background:${PCOLORS[i]}"></div><input placeholder="${i===0?"Sinun nimesi":"Pelaaja "+(i+1)}" id="n${i}" maxlength="14" autocomplete="off"/></div>`
+    ).join("");
+  }
+  [1,2,3].forEach(k=>document.getElementById("pc"+k).addEventListener("click",()=>upc(k)));
+  document.getElementById("go").addEventListener("click",()=>{
+    const names=Array.from({length:n},(_,i)=>(document.getElementById("n"+i)||{}).value?.trim()||`Pelaaja ${i+1}`);
+    startGame(names);
+  });
+  document.getElementById("back").addEventListener("click",renderIntro);
+}
+
+function startGame(names){
+  players=names.map((nm,i)=>({name:nm,stats:mkS(),color:PCOLORS[i],bg:PBGS[i],hist:[],snapshots:[mkS()],motives:[]}));
+  queue=buildQ();
+  ci=0;round=1;rChoices={};curP=0;pDeltas={};
+  apCounts=players.map(()=>0);
+  pokerUsed=players.map(()=>false);
+  surpriseOk=false;
+  pendingRoundDeltas=players.map(()=>({}));
+  renderGame();
+}
+
+function renderPokerBar(pi){
+  const used=pokerUsed[pi];
+  return`<div class="poker-bar${used?" used":""}">
+    <div class="poker-bar-icon">🃏</div>
+    <div class="poker-bar-text">${used?"Pokerikortti käytetty":"Pokerikortti — voit vaihtaa yhden valinnan"}</div>
+    <button class="poker-bar-btn" id="poker-use-btn" ${used||rChoices[pi]===undefined?"disabled":""}>
+      ${used?"Käytetty":"Vaihda"}
+    </button>
+  </div>`;
+}
+
+function renderGame(){
+  const c=queue[ci];const TOTAL=queue.length;const solo=players.length===1;const cp=players[curP];
+  const myDone=rChoices[curP]!==undefined;
+  const isLastInRound=(ci%PER===PER-1)||(c.type==="surprise");
+
+  const pips=Array.from({length:TOTAL},(_,i)=>{
+    let cls="pip";
+    if(i<ci)cls+=" done";else if(i===ci)cls+=" active";else if(queue[i].type==="surprise")cls+=" surp";
+    return`<div class="${cls}"></div>`;
+  }).join("");
+
+  const tabs=!solo?`<div class="player-tabs">${players.map((p,i)=>
+    `<div class="ptab${i===curP?" active":""}" style="${i===curP?`color:${p.color};background:${p.bg};border-color:${p.color}`:""}">
+      ${p.name}${rChoices[i]!==undefined?" ✓":""}
+    </div>`).join("")}</div>`:"";
+
+  let cardHTML="";
+  if(c.type==="surprise"&&!surpriseOk){
+    cardHTML=`<div class="gcard card-yllatys surp-back" id="scard" role="button" tabindex="0">
+      <div class="surp-icon-big">✦</div>
+      <div class="surp-title">${c.title}</div>
+      <div class="surp-tap">Napauta kääntääksesi</div>
+    </div>`;
+  } else if(c.type!=="surprise"){
+    const tc=TAG_COLORS[c.tag]||"#26215C";
+    const hardBadge=c.hard?`<span class="hard-badge">Vaikea tilanne</span>`:"";
+    const chs=c.choices.map((ch,i)=>
+      `<button class="chbtn" data-i="${i}">${ch}</button>`
+    ).join("");
+function getCardSVG(tag,title){
+  // Tietyt kortit saavat oman kuvan otsikon perusteella
+  if(title&&title.includes("pyytää salaisuutta")) return svgSalaisuus();
+  if(title&&title.includes("Harjoitukset vai sohva")) return svgHarjoituksetVsSohva();
+  if(title&&title.includes("pyytää kopioimaan")) return svgKopiointi();
+  if(title&&title.includes("Kiusaaminen jatkuu")) return svgKiusaaminenJatkuu();
+  if(title&&title.includes("selvästi surullinen")) return svgKaveriSurullinen();
+  if(title&&title.includes("Jätettiin pois")) return svgJatettiinPois();
+  if(title&&title.includes("Kaveria kiusataan")) return svgKaveriaKiusataan();
+  if(title&&title.includes("väsyttää enemmän")) return svgHarjoituksetVasyttaa();
+  if(title&&title.includes("onko liikunta")) return svgLiikuntaTapa();
+  if(title&&title.includes("Epämukava esitys")) return svgEsitys();
+  if(title&&title.includes("kahvila")) return svgKahvila();
+  if(title&&title.includes("Uusi oppilas")) return svgUusiOppilas();
+  if(title&&title.includes("Syntymäpäivä")) return svgSyntymapaivaUnohtuikin();
+  if(title&&title.includes("syyttää väärin")) return svgOpettajaSyyttaa();
+  if(title&&title.includes("tarjoaa alkoholia")) return svgAlkoholi();
+  if(title&&title.includes("Harrastus vai tehokas")) return svgHarrastus();
+  if(title&&title.includes("Liikunta vai lepääminen")) return svgLiikuntaLepaaminen();
+  if(title&&title.includes("Somehaaste")) return svgSomehaaste();
+  if(title&&title.includes("Deadline")) return svgDeadline();
+  if(title&&title.includes("Palaute sattuu")) return svgPalauteSattuu();
+  if(title&&title.includes("Lunttilappu")) return svgLunttilappu();
+  if(title&&title.includes("Ryhmätyö")) return svgRyhmatyo();
+  if(title&&title.includes("Energiajuoma")) return svgEnergiajuoma();
+  if(title&&title.includes("lainata")) return svgLaina();
+  if(title&&title.includes("Lompakko")) return svgLompakko();
+  if(title&&title.includes("Heräteostos")) return svgOstos();
+  if(title&&title.includes("Kesätyö")||title&&title.includes("vapaa kesä")) return svgKesatyo();
+  if(title&&title.includes("Kahvi")) return svgKahvi();
+  if(title&&title.includes("Peliostos")) return svgPeliostos();
+  return svgByTag(tag);
+}
+
+function svgKopiointi(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Pyytävä kaveri vasemmalla -->
+  <circle cx="45" cy="48" r="13" fill="#185FA5" opacity=".5"/>
+  <rect x="36" y="61" width="18" height="24" rx="4" fill="#185FA5" opacity=".42"/>
+  <!-- Puhekupla -->
+  <rect x="62" y="14" width="88" height="28" rx="7" fill="#fff" opacity=".88"/>
+  <polygon points="68,42 78,42 73,50" fill="#fff" opacity=".88"/>
+  <text x="106" y="32" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#185FA5">Saisinko kopioida?</text>
+  <!-- Tehtäväpaperi keskellä -->
+  <rect x="110" y="38" width="50" height="60" rx="4" fill="#fff" opacity=".85" stroke="#378ADD" stroke-width="1.5"/>
+  <rect x="116" y="46" width="38" height="6" rx="2" fill="#185FA5" opacity=".35"/>
+  <rect x="116" y="56" width="30" height="4" rx="2" fill="#378ADD" opacity=".28"/>
+  <rect x="116" y="64" width="35" height="4" rx="2" fill="#378ADD" opacity=".28"/>
+  <rect x="116" y="72" width="28" height="4" rx="2" fill="#378ADD" opacity=".28"/>
+  <rect x="116" y="80" width="33" height="4" rx="2" fill="#378ADD" opacity=".28"/>
+  <!-- Omistaja oikealla — epäröi -->
+  <circle cx="210" cy="48" r="13" fill="#854F0B" opacity=".45"/>
+  <rect x="201" y="61" width="18" height="24" rx="4" fill="#854F0B" opacity=".38"/>
+  <text x="210" y="32" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#BA7517" opacity=".6">?</text>
+  <!-- Deadline kello -->
+  <circle cx="232" cy="18" r="12" fill="#E24B4A" opacity=".65"/>
+  <text x="232" y="22" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">1h</text>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgKiusaaminenJatkuu(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FBEAF0"/>
+  <!-- Kiusattu hahmo yksin vasemmalla, pää alaspäin -->
+  <circle cx="45" cy="52" r="13" fill="#993556" opacity=".42"/>
+  <rect x="36" y="65" width="18" height="24" rx="4" fill="#993556" opacity=".35"/>
+  <!-- Suruviiva -->
+  <line x1="38" y1="58" x2="52" y2="58" stroke="#993556" stroke-width="1.5" opacity=".35"/>
+  <!-- Kiusaajat oikealla -->
+  <circle cx="175" cy="48" r="12" fill="#D4537E" opacity=".5"/>
+  <rect x="167" y="60" width="16" height="22" rx="4" fill="#D4537E" opacity=".42"/>
+  <circle cx="205" cy="44" r="12" fill="#D4537E" opacity=".5"/>
+  <rect x="197" y="56" width="16" height="22" rx="4" fill="#D4537E" opacity=".42"/>
+  <!-- Ilkeä puhekupla -->
+  <rect x="155" y="10" width="90" height="26" rx="7" fill="#E24B4A" opacity=".65"/>
+  <polygon points="175,36 185,36 180,44" fill="#E24B4A" opacity=".65"/>
+  <text x="200" y="27" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">Ha ha ha!</text>
+  <!-- Sivustakatsoja keskellä — hiljaa -->
+  <circle cx="110" cy="55" r="12" fill="#854F0B" opacity=".38"/>
+  <rect x="102" y="67" width="16" height="22" rx="4" fill="#854F0B" opacity=".3"/>
+  <!-- Suu kiinni viiva -->
+  <line x1="104" y1="60" x2="116" y2="60" stroke="#633806" stroke-width="1.5" opacity=".4"/>
+  <!-- Viikkoja jatkunut — kalenteri merkinnät -->
+  <text x="130" y="95" text-anchor="middle" font-size="9" font-weight="700" font-family="Nunito,sans-serif" fill="#993556" opacity=".5">viikkoja...</text>
+  <rect x="0" y="100" width="260" height="10" fill="#D4537E" opacity=".15"/>
+</svg>`;}
+
+function svgKaveriSurullinen(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Surullinen kaveri vasemmalla — pää alaspäin -->
+  <circle cx="70" cy="48" r="15" fill="#534AB7" opacity=".45"/>
+  <rect x="60" y="63" width="20" height="26" rx="5" fill="#534AB7" opacity=".38"/>
+  <!-- Kyyneleet -->
+  <ellipse cx="64" cy="56" rx="3" ry="5" fill="#185FA5" opacity=".4"/>
+  <ellipse cx="76" cy="57" rx="3" ry="5" fill="#185FA5" opacity=".35"/>
+  <!-- Pilvet pään päällä -->
+  <ellipse cx="55" cy="26" rx="16" ry="10" fill="#7F77DD" opacity=".3"/>
+  <ellipse cx="72" cy="20" rx="20" ry="12" fill="#7F77DD" opacity=".28"/>
+  <ellipse cx="88" cy="26" rx="14" ry="9" fill="#7F77DD" opacity=".3"/>
+  <!-- Pisteet viestittömyydestä -->
+  <text x="70" y="12" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#534AB7" opacity=".4">...</text>
+  <!-- Huolestunut kaveri oikealla katsoo -->
+  <circle cx="190" cy="52" r="13" fill="#3C3489" opacity=".5"/>
+  <rect x="181" y="65" width="18" height="24" rx="4" fill="#3C3489" opacity=".42"/>
+  <!-- Puhekupla kysyvä -->
+  <rect x="148" y="16" width="82" height="26" rx="7" fill="#fff" opacity=".85"/>
+  <polygon points="185,42 195,42 190,50" fill="#fff" opacity=".85"/>
+  <text x="189" y="33" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#3C3489">Onko kaikki ok?</text>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgJatettiinPois(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Puhelin etualalla — some feed -->
+  <rect x="95" y="12" width="70" height="88" rx="8" fill="#3C3489" opacity=".3" stroke="#7F77DD" stroke-width="1.5"/>
+  <rect x="101" y="20" width="58" height="72" rx="4" fill="#fff" opacity=".55"/>
+  <!-- Some-kuva ryhmästä -->
+  <rect x="105" y="24" width="50" height="28" rx="3" fill="#534AB7" opacity=".3"/>
+  <circle cx="116" cy="35" r="7" fill="#534AB7" opacity=".5"/>
+  <circle cx="130" cy="33" r="7" fill="#534AB7" opacity=".5"/>
+  <circle cx="144" cy="35" r="7" fill="#534AB7" opacity=".5"/>
+  <!-- Teksti feedissä -->
+  <rect x="105" y="56" width="40" height="5" rx="2" fill="#7F77DD" opacity=".4"/>
+  <rect x="105" y="65" width="50" height="4" rx="2" fill="#AFA9EC" opacity=".35"/>
+  <rect x="105" y="73" width="35" height="4" rx="2" fill="#AFA9EC" opacity=".3"/>
+  <!-- Hahmo vasemmalla katsoo puhelinta — järkyttynyt -->
+  <circle cx="45" cy="55" r="13" fill="#993556" opacity=".42"/>
+  <rect x="36" y="68" width="18" height="24" rx="4" fill="#993556" opacity=".35"/>
+  <rect x="58" y="62" width="14" height="22" rx="3" fill="#3C3489" opacity=".45"/>
+  <text x="45" y="38" text-anchor="middle" font-size="16" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".7">!</text>
+  <!-- Porukka oikealla ilman hahmoa -->
+  <circle cx="195" cy="52" r="11" fill="#534AB7" opacity=".45"/>
+  <circle cx="218" cy="48" r="11" fill="#534AB7" opacity=".45"/>
+  <circle cx="240" cy="52" r="11" fill="#534AB7" opacity=".45"/>
+  <rect x="188" y="63" width="14" height="20" rx="3" fill="#534AB7" opacity=".38"/>
+  <rect x="211" y="59" width="14" height="20" rx="3" fill="#534AB7" opacity=".38"/>
+  <rect x="233" y="63" width="14" height="20" rx="3" fill="#534AB7" opacity=".38"/>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgKaveriaKiusataan(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Kiusattu vasemmalla -->
+  <circle cx="40" cy="52" r="12" fill="#993556" opacity=".42"/>
+  <rect x="32" y="64" width="16" height="22" rx="4" fill="#993556" opacity=".35"/>
+  <!-- Kiusaaja keskellä -->
+  <circle cx="120" cy="46" r="13" fill="#D4537E" opacity=".55"/>
+  <rect x="111" y="59" width="18" height="24" rx="4" fill="#D4537E" opacity=".45"/>
+  <!-- Ilkeä puhekupla -->
+  <rect x="65" y="10" width="90" height="26" rx="7" fill="#E24B4A" opacity=".65"/>
+  <polygon points="100,36 110,36 105,44" fill="#E24B4A" opacity=".65"/>
+  <text x="110" y="27" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">Katsokaa tätä!</text>
+  <!-- Katsojat oikealla — hiljaa -->
+  <circle cx="185" cy="55" r="10" fill="#534AB7" opacity=".35"/>
+  <circle cx="207" cy="52" r="10" fill="#534AB7" opacity=".35"/>
+  <circle cx="229" cy="55" r="10" fill="#534AB7" opacity=".35"/>
+  <rect x="179" y="65" width="12" height="18" rx="3" fill="#534AB7" opacity=".28"/>
+  <rect x="201" y="62" width="12" height="18" rx="3" fill="#534AB7" opacity=".28"/>
+  <rect x="223" y="65" width="12" height="18" rx="3" fill="#534AB7" opacity=".28"/>
+  <!-- Katse kohti tilannetta -->
+  <line x1="179" y1="55" x2="136" y2="52" stroke="#534AB7" stroke-width="1" stroke-dasharray="3,3" opacity=".3"/>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgSalaisuus(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Kertova kaveri vasemmalla — kuiskaa -->
+  <circle cx="60" cy="52" r="13" fill="#534AB7" opacity=".5"/>
+  <rect x="51" y="65" width="18" height="24" rx="4" fill="#534AB7" opacity=".42"/>
+  <!-- Kuiskaus-puhekupla — katkoviiva -->
+  <rect x="78" y="18" width="104" height="30" rx="8" fill="#fff" opacity=".85" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <polygon points="84,48 94,48 89,56" fill="#fff" opacity=".85"/>
+  <text x="130" y="33" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#3C3489">Älä kerro kenellekään.</text>
+  <text x="130" y="44" text-anchor="middle" font-size="9" font-weight="700" font-family="Nunito,sans-serif" fill="#534AB7" opacity=".8">Se on vakavaa.</text>
+  <!-- Kuunteleva hahmo oikealla — huolestunut -->
+  <circle cx="200" cy="52" r="13" fill="#854F0B" opacity=".45"/>
+  <rect x="191" y="65" width="18" height="24" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Huoli päällä -->
+  <circle cx="218" cy="34" r="10" fill="#EF9F27" opacity=".55"/>
+  <text x="218" y="38" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">!</text>
+  <!-- Lukko symboli — salaisuus -->
+  <rect x="122" y="68" width="16" height="14" rx="3" fill="#3C3489" opacity=".45"/>
+  <path d="M125 68 Q125 60 130 60 Q135 60 135 68" fill="none" stroke="#3C3489" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgHarjoituksetVsSohva(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Vasen puoli: sohva + väsynyt hahmo -->
+  <rect x="10" y="62" width="90" height="36" rx="6" fill="#639922" opacity=".25"/>
+  <rect x="10" y="54" width="20" height="44" rx="5" fill="#639922" opacity=".32"/>
+  <rect x="80" y="54" width="20" height="44" rx="5" fill="#639922" opacity=".32"/>
+  <circle cx="50" cy="50" r="13" fill="#3B6D11" opacity=".45"/>
+  <rect x="41" y="63" width="18" height="26" rx="4" fill="#3B6D11" opacity=".38"/>
+  <text x="68" y="38" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".5">z</text>
+  <text x="76" y="29" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".4">z</text>
+  <!-- Nuoli keskellä -->
+  <text x="130" y="62" text-anchor="middle" font-size="20" font-family="sans-serif" fill="#639922" opacity=".45">↔</text>
+  <!-- Oikea puoli: jalkapallo + joukkue odottaa -->
+  <circle cx="200" cy="62" r="20" fill="#1D9E75" opacity=".28" stroke="#639922" stroke-width="1.5"/>
+  <circle cx="200" cy="62" r="12" fill="#fff" opacity=".5"/>
+  <polygon points="200,52 205,59 203,67 197,67 195,59" fill="#0F6E56" opacity=".35"/>
+  <!-- Joukkuekaverit odottavat -->
+  <circle cx="170" cy="38" r="9" fill="#1D9E75" opacity=".5"/>
+  <circle cx="188" cy="32" r="9" fill="#1D9E75" opacity=".5"/>
+  <circle cx="208" cy="30" r="9" fill="#1D9E75" opacity=".5"/>
+  <!-- Puhekupla: joukkue odottaa -->
+  <rect x="168" y="8" width="82" height="20" rx="6" fill="#fff" opacity=".85"/>
+  <polygon points="190,28 200,28 195,36" fill="#fff" opacity=".85"/>
+  <text x="209" y="22" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#085041">Missä olet?</text>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgHarjoituksetVasyttaa(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Hahmo väsyneenä vasemmalla, nojaa seinään -->
+  <circle cx="45" cy="50" r="13" fill="#3B6D11" opacity=".45"/>
+  <rect x="36" y="63" width="18" height="26" rx="4" fill="#3B6D11" opacity=".38"/>
+  <!-- Zzz -->
+  <text x="64" y="40" font-size="10" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".55">z</text>
+  <text x="72" y="31" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".45">z</text>
+  <text x="82" y="22" font-size="14" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".35">z</text>
+  <!-- Jalkapallo oikealla odottaa -->
+  <circle cx="195" cy="65" r="22" fill="#1D9E75" opacity=".3" stroke="#639922" stroke-width="1.5"/>
+  <circle cx="195" cy="65" r="14" fill="#fff" opacity=".5"/>
+  <polygon points="195,54 201,62 198,71 192,71 189,62" fill="#0F6E56" opacity=".35"/>
+  <!-- Nuoli hahmosta palloon -->
+  <line x1="68" y1="68" x2="168" y2="66" stroke="#639922" stroke-width="1.5" stroke-dasharray="5,4" opacity=".4"/>
+  <polygon points="168,62 176,66 168,70" fill="#639922" opacity=".4"/>
+  <!-- Kalenteri — rankka viikko -->
+  <rect x="90" y="20" width="80" height="38" rx="5" fill="#fff" opacity=".6" stroke="#639922" stroke-width="1"/>
+  <rect x="90" y="20" width="80" height="12" rx="5" fill="#1D9E75" opacity=".45"/>
+  <text x="130" y="30" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">RANKKA VIIKKO</text>
+  <rect x="96" y="37" width="10" height="10" rx="2" fill="#E24B4A" opacity=".4"/>
+  <rect x="110" y="37" width="10" height="10" rx="2" fill="#E24B4A" opacity=".4"/>
+  <rect x="124" y="37" width="10" height="10" rx="2" fill="#E24B4A" opacity=".4"/>
+  <rect x="138" y="37" width="10" height="10" rx="2" fill="#E24B4A" opacity=".4"/>
+  <rect x="152" y="37" width="10" height="10" rx="2" fill="#E24B4A" opacity=".4"/>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgLiikuntaTapa(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Kolme viikkoa — kolme kalenteria peräkkäin -->
+  <rect x="15" y="28" width="50" height="48" rx="4" fill="#fff" opacity=".6" stroke="#639922" stroke-width="1"/>
+  <rect x="15" y="28" width="50" height="12" rx="4" fill="#639922" opacity=".4"/>
+  <text x="40" y="38" text-anchor="middle" font-size="7" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">VIIKKO 1</text>
+  <circle cx="40" cy="58" r="10" fill="#1D9E75" opacity=".5"/>
+  <text x="40" y="62" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#fff" opacity=".9">✓</text>
+  <rect x="80" y="28" width="50" height="48" rx="4" fill="#fff" opacity=".6" stroke="#639922" stroke-width="1"/>
+  <rect x="80" y="28" width="50" height="12" rx="4" fill="#639922" opacity=".4"/>
+  <text x="105" y="38" text-anchor="middle" font-size="7" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">VIIKKO 2</text>
+  <circle cx="105" cy="58" r="10" fill="#1D9E75" opacity=".5"/>
+  <text x="105" y="62" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#fff" opacity=".9">✓</text>
+  <rect x="145" y="28" width="50" height="48" rx="4" fill="#fff" opacity=".6" stroke="#639922" stroke-width="1"/>
+  <rect x="145" y="28" width="50" height="12" rx="4" fill="#639922" opacity=".4"/>
+  <text x="170" y="38" text-anchor="middle" font-size="7" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">VIIKKO 3</text>
+  <circle cx="170" cy="58" r="10" fill="#EF9F27" opacity=".6"/>
+  <text x="170" y="62" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#fff" opacity=".9">?</text>
+  <!-- Juokseva hahmo oikealla -->
+  <circle cx="228" cy="38" r="11" fill="#1D9E75" opacity=".55"/>
+  <line x1="228" y1="49" x2="220" y2="65" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <line x1="228" y1="49" x2="238" y2="63" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <line x1="220" y1="65" x2="213" y2="78" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <line x1="238" y1="63" x2="244" y2="76" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <line x1="223" y1="52" x2="214" y2="58" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+  <line x1="233" y1="52" x2="242" y2=".56" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgEsitys(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Taulu/esitysnäyttö edessä -->
+  <rect x="15" y="15" width="110" height="68" rx="4" fill="#fff" opacity=".6" stroke="#639922" stroke-width="1.5"/>
+  <rect x="15" y="15" width="110" height="16" rx="4" fill="#1D9E75" opacity=".5"/>
+  <text x="70" y="27" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">MINUN IDEA</text>
+  <!-- Esityksen sisältö taululla -->
+  <rect x="24" y="38" width="70" height="6" rx="2" fill="#3B6D11" opacity=".35"/>
+  <rect x="24" y="49" width="55" height="6" rx="2" fill="#3B6D11" opacity=".28"/>
+  <rect x="24" y="60" width="62" height="6" rx="2" fill="#3B6D11" opacity=".28"/>
+  <!-- Esittäjä hahmo -->
+  <circle cx="148" cy="42" r="13" fill="#3B6D11" opacity=".5"/>
+  <rect x="139" y="55" width="18" height="24" rx="4" fill="#3B6D11" opacity=".42"/>
+  <!-- Käsi osoittaa taulua -->
+  <line x1="139" y1="60" x2="125" y2="55" stroke="#3B6D11" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+  <!-- Jännitys — hiki -->
+  <ellipse cx="162" cy="36" rx="4" ry="6" fill="#185FA5" opacity=".35"/>
+  <ellipse cx="170" cy="32" rx="3" ry="5" fill="#185FA5" opacity=".25"/>
+  <!-- Yleisö oikealla -->
+  <circle cx="195" cy="62" r="9" fill="#854F0B" opacity=".38"/>
+  <circle cx="215" cy="58" r="9" fill="#854F0B" opacity=".38"/>
+  <circle cx="235" cy="62" r="9" fill="#854F0B" opacity=".38"/>
+  <rect x="188" y="71" width="14" height="16" rx="3" fill="#854F0B" opacity=".3"/>
+  <rect x="208" y="67" width="14" height="16" rx="3" fill="#854F0B" opacity=".3"/>
+  <rect x="228" y="71" width="14" height="16" rx="3" fill="#854F0B" opacity=".3"/>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgKahvila(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <!-- Kahvilan tiski -->
+  <rect x="30" y="55" width="200" height="12" rx="3" fill="#854F0B" opacity=".3"/>
+  <!-- Iso kahvikuppi keskellä -->
+  <rect x="102" y="30" width="56" height="42" rx="6" fill="#633806" opacity=".35"/>
+  <ellipse cx="130" cy="30" rx="28" ry="9" fill="#854F0B" opacity=".45"/>
+  <ellipse cx="130" cy="30" rx="20" ry="6" fill="#412402" opacity=".4"/>
+  <!-- Höyry -->
+  <path d="M116 20 Q119 12 122 20" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>
+  <path d="M128 18 Q131 8 134 18" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>
+  <path d="M140 20 Q143 12 146 20" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>
+  <!-- Hahmo vasemmalla — miettii -->
+  <circle cx="45" cy="42" r="12" fill="#854F0B" opacity=".48"/>
+  <rect x="36" y="54" width="18" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Miettimiskupla -->
+  <circle cx="62" cy="26" r="3" fill="#fff" opacity=".7"/>
+  <circle cx="70" cy="19" r="4" fill="#fff" opacity=".7"/>
+  <circle cx="81" cy="14" r="6" fill="#fff" opacity=".75"/>
+  <text x="81" y="18" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">?</text>
+  <!-- Kukka / koristeet tiskillä -->
+  <rect x="210" y="38" width="8" height="18" rx="2" fill="#639922" opacity=".5"/>
+  <circle cx="214" cy="35" r="7" fill="#E24B4A" opacity=".4"/>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgUusiOppilas(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Ruokala: pöytä vasemmalla — porukka yhdessä -->
+  <rect x="10" y="68" width="100" height="8" rx="3" fill="#7F77DD" opacity=".35"/>
+  <circle cx="30" cy="58" r="10" fill="#534AB7" opacity=".5"/>
+  <rect x="23" y="68" width="14" height="18" rx="4" fill="#534AB7" opacity=".42"/>
+  <circle cx="58" cy="55" r="10" fill="#534AB7" opacity=".5"/>
+  <rect x="51" y="65" width="14" height="18" rx="4" fill="#534AB7" opacity=".42"/>
+  <circle cx="86" cy="58" r="10" fill="#534AB7" opacity=".5"/>
+  <rect x="79" y="68" width="14" height="18" rx="4" fill="#534AB7" opacity=".42"/>
+  <!-- Puhekupla porukalla -->
+  <rect x="20" y="32" width="80" height="18" rx="7" fill="#fff" opacity=".8"/>
+  <polygon points="50,50 60,50 55,58" fill="#fff" opacity=".8"/>
+  <text x="60" y="45" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#3C3489">Ha ha ha!</text>
+  <!-- Uusi oppilas oikealla yksin -->
+  <rect x="165" y="68" width="70" height="8" rx="3" fill="#7F77DD" opacity=".2"/>
+  <circle cx="200" cy="55" r="13" fill="#854F0B" opacity=".42"/>
+  <rect x="192" y="68" width="16" height="22" rx="4" fill="#854F0B" opacity=".35"/>
+  <!-- Yksinäisyys — tyhjä pöytä, lautanen yksin -->
+  <ellipse cx="200" cy="82" rx="14" ry="6" fill="#fff" opacity=".5"/>
+  <!-- Surullinen ilme -->
+  <text x="200" y="38" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#854F0B" opacity=".5">...</text>
+  <!-- Katkoviiva porukan ja yksinäisen välillä — etäisyys -->
+  <line x1="115" y1="75" x2="160" y2="75" stroke="#AFA9EC" stroke-width="1.5" stroke-dasharray="5,4" opacity=".5"/>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgSyntymapaivaUnohtuikin(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EEEDFE"/>
+  <!-- Kakku oikealla -->
+  <rect x="160" y="55" width="70" height="40" rx="6" fill="#D4537E" opacity=".45"/>
+  <rect x="155" y="48" width="80" height="12" rx="4" fill="#ED93B1" opacity=".6"/>
+  <!-- Kynttilät palamassa -->
+  <rect x="175" y="33" width="5" height="16" rx="2" fill="#EF9F27" opacity=".8"/>
+  <rect x="193" y="30" width="5" height="19" rx="2" fill="#EF9F27" opacity=".8"/>
+  <rect x="211" y="33" width="5" height="16" rx="2" fill="#EF9F27" opacity=".8"/>
+  <ellipse cx="177" cy="32" rx="4" ry="6" fill="#EF9F27" opacity=".6"/>
+  <ellipse cx="195" cy="29" rx="4" ry="6" fill="#EF9F27" opacity=".6"/>
+  <ellipse cx="213" cy="32" rx="4" ry="6" fill="#EF9F27" opacity=".6"/>
+  <!-- Koristeet kakussa -->
+  <circle cx="172" cy="68" r="4" fill="#fff" opacity=".5"/>
+  <circle cx="185" cy="72" r="4" fill="#fff" opacity=".5"/>
+  <circle cx="198" cy="68" r="4" fill="#fff" opacity=".5"/>
+  <circle cx="211" cy="72" r="4" fill="#fff" opacity=".5"/>
+  <circle cx="224" cy="68" r="4" fill="#fff" opacity=".5"/>
+  <!-- Hahmo vasemmalla — kauhissaan huomasi unohduksen -->
+  <circle cx="55" cy="50" r="14" fill="#534AB7" opacity=".5"/>
+  <rect x="45" y="64" width="20" height="26" rx="5" fill="#534AB7" opacity=".42"/>
+  <!-- Kauhun ilme -->
+  <text x="55" y="32" text-anchor="middle" font-size="18" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".8">!</text>
+  <!-- Puhelin kädessä — huomasi viestistä -->
+  <rect x="66" y="60" width="14" height="22" rx="3" fill="#3C3489" opacity=".55"/>
+  <rect x="68" y="63" width="10" height="14" rx="2" fill="#fff" opacity=".5"/>
+  <!-- Kalenteri taustalla — eilen merkittynä -->
+  <rect x="100" y="30" width="50" height="50" rx="5" fill="#fff" opacity=".6" stroke="#7F77DD" stroke-width="1.5"/>
+  <rect x="100" y="30" width="50" height="14" rx="5" fill="#534AB7" opacity=".5"/>
+  <text x="125" y="41" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">EILEN</text>
+  <circle cx="125" cy="65" r="10" fill="#E24B4A" opacity=".3"/>
+  <text x="125" y="69" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#A32D2D">!</text>
+  <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+</svg>`;}
+
+function svgOpettajaSyyttaa(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Opettaja vasemmalla -->
+  <circle cx="35" cy="45" r="13" fill="#185FA5" opacity=".6"/>
+  <rect x="26" y="58" width="18" height="24" rx="4" fill="#185FA5" opacity=".5"/>
+  <!-- Opettajan sormi osoittaa syyttävästi -->
+  <line x1="52" y1="52" x2="88" y2="60" stroke="#185FA5" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <!-- Syyttävä puhekupla -->
+  <rect x="48" y="14" width="90" height="26" rx="7" fill="#E24B4A" opacity=".75"/>
+  <polygon points="55,40 65,40 60,48" fill="#E24B4A" opacity=".75"/>
+  <text x="93" y="31" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">Sinä häiritset!</text>
+  <!-- Syyllistetty oppilas keskellä — yllättynyt -->
+  <circle cx="115" cy="55" r="13" fill="#854F0B" opacity=".45"/>
+  <rect x="106" y="68" width="18" height="24" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Hämmästys -->
+  <text x="115" y="38" text-anchor="middle" font-size="16" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".8">!</text>
+  <!-- Todellinen häiritsijä oikealla — yrittää olla huomaamaton -->
+  <circle cx="200" cy="58" r="12" fill="#3B6D11" opacity=".45"/>
+  <rect x="192" y="70" width="16" height="22" rx="4" fill="#3B6D11" opacity=".38"/>
+  <!-- Häiritsijä katsoo muualle -->
+  <text x="200" y="42" text-anchor="middle" font-size="11" font-family="Nunito,sans-serif" fill="#3B6D11" opacity=".5">...</text>
+  <!-- Luokka katsoo -->
+  <circle cx="155" cy="70" r="8" fill="#185FA5" opacity=".3"/>
+  <circle cx="175" cy="68" r="8" fill="#185FA5" opacity=".3"/>
+  <circle cx="230" cy="70" r="8" fill="#185FA5" opacity=".3"/>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgAlkoholi(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Kolme hahmoa jotka juovat -->
+  <circle cx="55" cy="48" r="11" fill="#3B6D11" opacity=".5"/>
+  <rect x="47" y="59" width="16" height="20" rx="4" fill="#3B6D11" opacity=".42"/>
+  <circle cx="90" cy="44" r="11" fill="#3B6D11" opacity=".5"/>
+  <rect x="82" y="55" width="16" height="20" rx="4" fill="#3B6D11" opacity=".42"/>
+  <!-- Oluttuopit hahmoilla -->
+  <rect x="62" y="52" width="10" height="14" rx="2" fill="#EF9F27" opacity=".8"/>
+  <rect x="98" y="48" width="10" height="14" rx="2" fill="#EF9F27" opacity=".8"/>
+  <!-- Vaahto -->
+  <ellipse cx="67" cy="51" rx="6" ry="4" fill="#fff" opacity=".8"/>
+  <ellipse cx="103" cy="47" rx="6" ry="4" fill="#fff" opacity=".8"/>
+  <!-- Tarjoava kaveri keskellä -->
+  <circle cx="140" cy="46" r="12" fill="#1D9E75" opacity=".55"/>
+  <rect x="131" y="58" width="18" height="22" rx="4" fill="#1D9E75" opacity=".45"/>
+  <!-- Tarjottava tuoppi -->
+  <rect x="150" y="52" width="12" height="18" rx="2" fill="#EF9F27" opacity=".85"/>
+  <ellipse cx="156" cy="51" rx="7" ry="4" fill="#fff" opacity=".85"/>
+  <!-- Nuoli kohti kieltäytyvää -->
+  <line x1="164" y1="62" x2="182" y2="62" stroke="#1D9E75" stroke-width="2" stroke-dasharray="3,2" opacity=".5"/>
+  <polygon points="182,58 190,62 182,66" fill="#1D9E75" opacity=".5"/>
+  <!-- Kieltäytyvä hahmo oikealla — käsi pystyssä -->
+  <circle cx="210" cy="46" r="12" fill="#854F0B" opacity=".45"/>
+  <rect x="202" y="58" width="16" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Käsi ylhäällä kieltäytyminen -->
+  <line x1="218" y1="54" x2="228" y2="38" stroke="#854F0B" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+  <!-- Ei-merkki -->
+  <circle cx="234" cy="32" r="10" fill="#E24B4A" opacity=".7"/>
+  <line x1="228" y1="26" x2="240" y2="38" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="240" y1="26" x2="228" y2="38" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgHarrastus(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Kitara keskellä -->
+  <ellipse cx="130" cy="72" rx="22" ry="24" fill="#854F0B" opacity=".55"/>
+  <ellipse cx="130" cy="72" rx="8" ry="8" fill="#633806" opacity=".4"/>
+  <rect x="127" y="22" width="6" height="52" rx="3" fill="#633806" opacity=".55"/>
+  <rect x="118" y="22" width="24" height="10" rx="4" fill="#412402" opacity=".5"/>
+  <line x1="122" y1="32" x2="122" y2="72" stroke="#EF9F27" stroke-width="1" opacity=".6"/>
+  <line x1="127" y1="32" x2="127" y2="72" stroke="#EF9F27" stroke-width="1" opacity=".6"/>
+  <line x1="133" y1="32" x2="133" y2="72" stroke="#EF9F27" stroke-width="1" opacity=".6"/>
+  <line x1="138" y1="32" x2="138" y2="72" stroke="#EF9F27" stroke-width="1" opacity=".6"/>
+  <!-- Hahmo soittamassa -->
+  <circle cx="80" cy="48" r="13" fill="#3B6D11" opacity=".5"/>
+  <rect x="70" y="61" width="20" height="26" rx="5" fill="#3B6D11" opacity=".42"/>
+  <line x1="88" y1="68" x2="118" y2="72" stroke="#3B6D11" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+  <!-- Nuotit -->
+  <text x="55" y="30" font-size="14" font-family="sans-serif" fill="#1D9E75" opacity=".6">♪</text>
+  <text x="38" y="48" font-size="11" font-family="sans-serif" fill="#1D9E75" opacity=".5">♫</text>
+  <!-- Kaverit oikealla — kritisoivat -->
+  <circle cx="190" cy="52" r="11" fill="#854F0B" opacity=".42"/>
+  <rect x="182" y="63" width="16" height="20" rx="4" fill="#854F0B" opacity=".35"/>
+  <circle cx="215" cy="56" r="11" fill="#854F0B" opacity=".42"/>
+  <rect x="207" y="67" width="16" height="20" rx="4" fill="#854F0B" opacity=".35"/>
+  <!-- Kritiikki-puhekupla -->
+  <rect x="165" y="14" width="82" height="26" rx="7" fill="#fff" opacity=".85"/>
+  <polygon points="194,40 204,40 199,48" fill="#fff" opacity=".85"/>
+  <text x="206" y="31" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">Ajanhukkaa!</text>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgLiikuntaLepaaminen(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Vasen puoli: sohva + väsynyt hahmo -->
+  <rect x="15" y="62" width="90" height="36" rx="6" fill="#639922" opacity=".28"/>
+  <rect x="15" y="54" width="20" height="44" rx="6" fill="#639922" opacity=".35"/>
+  <rect x="85" y="54" width="20" height="44" rx="6" fill="#639922" opacity=".35"/>
+  <circle cx="55" cy="52" r="13" fill="#3B6D11" opacity=".45"/>
+  <rect x="44" y="65" width="22" height="24" rx="5" fill="#3B6D11" opacity=".38"/>
+  <!-- Zzz väsymys -->
+  <text x="74" y="40" font-size="10" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".6">z</text>
+  <text x="82" y="32" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".5">z</text>
+  <text x="92" y="22" font-size="14" font-weight="800" font-family="Nunito,sans-serif" fill="#0F6E56" opacity=".4">z</text>
+  <!-- Nuoli keskellä -->
+  <text x="130" y="62" text-anchor="middle" font-size="22" font-family="sans-serif" fill="#639922" opacity=".5">↔</text>
+  <!-- Oikea puoli: juoksija -->
+  <circle cx="195" cy="38" r="12" fill="#1D9E75" opacity=".6"/>
+  <!-- Juokseva keho -->
+  <line x1="195" y1="50" x2="185" y2="68" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <line x1="195" y1="50" x2="208" y2="65" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <!-- Juoksevat jalat -->
+  <line x1="185" y1="68" x2="175" y2="82" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <line x1="208" y1="65" x2="218" y2="80" stroke="#1D9E75" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+  <!-- Kädet -->
+  <line x1="190" y1="55" x2="178" y2="62" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <line x1="200" y1="55" x2="212" y2="60" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+  <!-- Lääkärin puhekupla -->
+  <rect x="148" y="8" width="100" height="26" rx="7" fill="#fff" opacity=".85"/>
+  <polygon points="158,34 168,34 163,42" fill="#fff" opacity=".85"/>
+  <text x="198" y="25" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#085041">Liike on lääke!</text>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgSomehaaste(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Puhelin edessä kamera-tilassa -->
+  <rect x="95" y="18" width="70" height="78" rx="8" fill="#1D9E75" opacity=".35" stroke="#639922" stroke-width="1.5"/>
+  <rect x="101" y="26" width="58" height="46" rx="4" fill="#fff" opacity=".55"/>
+  <!-- Kamera-ikoni ruudulla -->
+  <circle cx="130" cy="49" r="10" fill="#1D9E75" opacity=".4" stroke="#0F6E56" stroke-width="1.5"/>
+  <circle cx="130" cy="49" r="5" fill="#0F6E56" opacity=".5"/>
+  <rect x="140" y="38" width="8" height="6" rx="2" fill="#0F6E56" opacity=".5"/>
+  <!-- Rec-merkki -->
+  <circle cx="148" cy="31" r="4" fill="#E24B4A" opacity=".8"/>
+  <text x="155" y="34" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#A32D2D">REC</text>
+  <!-- Kolme hahmoa vasemmalla — innoissaan -->
+  <circle cx="28" cy="55" r="9" fill="#3B6D11" opacity=".5"/>
+  <rect x="21" y="64" width="14" height="18" rx="3" fill="#3B6D11" opacity=".42"/>
+  <circle cx="50" cy="50" r="9" fill="#3B6D11" opacity=".5"/>
+  <rect x="43" y="59" width="14" height="18" rx="3" fill="#3B6D11" opacity=".42"/>
+  <circle cx="72" cy="55" r="9" fill="#3B6D11" opacity=".5"/>
+  <rect x="65" y="64" width="14" height="18" rx="3" fill="#3B6D11" opacity=".42"/>
+  <!-- Sydämet ja tykkäykset -->
+  <text x="28" y="42" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#E24B4A" opacity=".7">♥</text>
+  <text x="50" y="37" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#E24B4A" opacity=".7">♥</text>
+  <!-- Hahmo oikealla — epäröi -->
+  <circle cx="225" cy="52" r="11" fill="#854F0B" opacity=".45"/>
+  <rect x="217" y="63" width="16" height="20" rx="4" fill="#854F0B" opacity=".38"/>
+  <text x="225" y="36" text-anchor="middle" font-size="14" font-family="Nunito,sans-serif" fill="#BA7517" opacity=".7">?</text>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgDeadline(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Kalenteri -->
+  <rect x="75" y="18" width="110" height="80" rx="6" fill="#fff" opacity=".75" stroke="#378ADD" stroke-width="1.5"/>
+  <rect x="75" y="18" width="110" height="22" rx="6" fill="#E24B4A" opacity=".7"/>
+  <rect x="75" y="30" width="110" height="10" fill="#E24B4A" opacity=".7"/>
+  <text x="130" y="34" text-anchor="middle" font-size="10" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">EILEN</text>
+  <!-- Päivämäärä ruudukko -->
+  <text x="95" y="56" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#aaa">1</text>
+  <text x="115" y="56" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#aaa">2</text>
+  <text x="135" y="56" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#aaa">3</text>
+  <text x="155" y="56" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#aaa">4</text>
+  <text x="175" y="56" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#aaa">5</text>
+  <!-- Eilen yliviivattu punaisella -->
+  <circle cx="135" cy="72" r="13" fill="#E24B4A" opacity=".25"/>
+  <text x="135" y="77" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#A32D2D">14</text>
+  <line x1="123" y1="65" x2="147" y2="79" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+  <!-- Hahmo kauhissaan vasemmalla -->
+  <circle cx="30" cy="55" r="13" fill="#185FA5" opacity=".5"/>
+  <rect x="21" y="68" width="18" height="24" rx="4" fill="#185FA5" opacity=".42"/>
+  <!-- Kauhun merkki -->
+  <text x="30" y="38" text-anchor="middle" font-size="16" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".8">!</text>
+  <!-- Puhelin hahmon kädessä -->
+  <rect x="38" y="62" width="12" height="18" rx="3" fill="#0C447C" opacity=".5"/>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgPalauteSattuu(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Taulu taustalla -->
+  <rect x="60" y="12" width="140" height="52" rx="4" fill="#185FA5" opacity=".25" stroke="#378ADD" stroke-width="1.5"/>
+  <!-- Työ taululla — yliviivattu -->
+  <rect x="70" y="20" width="120" height="8" rx="2" fill="#fff" opacity=".5"/>
+  <rect x="70" y="32" width="90" height="8" rx="2" fill="#fff" opacity=".4"/>
+  <line x1="65" y1="18" x2="185" y2="56" stroke="#E24B4A" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <line x1="185" y1="18" x2="65" y2="56" stroke="#E24B4A" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+  <!-- Opettaja vasemmalla -->
+  <circle cx="35" cy="42" r="12" fill="#185FA5" opacity=".6"/>
+  <rect x="26" y="54" width="18" height="22" rx="4" fill="#185FA5" opacity=".5"/>
+  <!-- Opettajan puhekupla -->
+  <rect x="50" y="8" width="72" height="24" rx="7" fill="#E24B4A" opacity=".75"/>
+  <polygon points="52,32 62,32 57,40" fill="#E24B4A" opacity=".75"/>
+  <text x="86" y="24" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">Ei riitä!</text>
+  <!-- Oppilas oikealla — pää alaspäin, häpeissään -->
+  <circle cx="220" cy="70" r="12" fill="#854F0B" opacity=".45"/>
+  <rect x="211" y="82" width="18" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Luokka katsoo -->
+  <circle cx="155" cy="80" r="8" fill="#185FA5" opacity=".35"/>
+  <circle cx="175" cy="78" r="8" fill="#185FA5" opacity=".35"/>
+  <circle cx="195" cy="80" r="8" fill="#185FA5" opacity=".35"/>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgLunttilappu(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Lattia -->
+  <rect x="0" y="88" width="260" height="22" fill="#378ADD" opacity=".12"/>
+  <!-- Lunttilappu maassa — pieni, taitettu paperi -->
+  <rect x="108" y="74" width="44" height="30" rx="3" fill="#fff" opacity=".9" stroke="#378ADD" stroke-width="1.5"/>
+  <line x1="114" y1="82" x2="146" y2="82" stroke="#185FA5" stroke-width="1.5" opacity=".5"/>
+  <line x1="114" y1="88" x2="146" y2="88" stroke="#185FA5" stroke-width="1.5" opacity=".4"/>
+  <line x1="114" y1="94" x2="135" y2="94" stroke="#185FA5" stroke-width="1.5" opacity=".3"/>
+  <!-- Taiteltu kulma -->
+  <polygon points="146,74 152,74 152,80 146,80" fill="#E6F1FB" stroke="#378ADD" stroke-width="1"/>
+  <!-- Hahmo katsoo alas lappuun -->
+  <circle cx="130" cy="42" r="14" fill="#185FA5" opacity=".55"/>
+  <rect x="119" y="56" width="22" height="26" rx="5" fill="#185FA5" opacity=".45"/>
+  <!-- Katsesuunta alas -->
+  <line x1="130" y1="70" x2="130" y2="74" stroke="#185FA5" stroke-width="2" stroke-dasharray="3,2" opacity=".4"/>
+  <!-- Kysymysmerkki pään päällä -->
+  <circle cx="152" cy="28" r="14" fill="#EF9F27" opacity=".6"/>
+  <text x="152" y="33" text-anchor="middle" font-size="14" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">?</text>
+  <!-- Pulpetti -->
+  <rect x="105" y="70" width="50" height="6" rx="2" fill="#378ADD" opacity=".3"/>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgRyhmatyo(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#E6F1FB"/>
+  <!-- Pöytä -->
+  <rect x="40" y="68" width="180" height="10" rx="3" fill="#378ADD" opacity=".35"/>
+  <rect x="55" y="78" width="8" height="22" rx="2" fill="#378ADD" opacity=".25"/>
+  <rect x="197" y="78" width="8" height="22" rx="2" fill="#378ADD" opacity=".25"/>
+  <!-- Hahmo 1 vasemmalla — työskentelee -->
+  <circle cx="60" cy="48" r="12" fill="#185FA5" opacity=".55"/>
+  <rect x="50" y="60" width="20" height="20" rx="4" fill="#185FA5" opacity=".45"/>
+  <!-- Paperi hahmon edessä -->
+  <rect x="44" y="56" width="28" height="14" rx="2" fill="#fff" opacity=".7"/>
+  <rect x="47" y="59" width="18" height="2" rx="1" fill="#378ADD" opacity=".4"/>
+  <rect x="47" y="63" width="14" height="2" rx="1" fill="#378ADD" opacity=".3"/>
+  <!-- Hahmo 2 keskellä — työskentelee -->
+  <circle cx="130" cy="46" r="12" fill="#185FA5" opacity=".55"/>
+  <rect x="120" y="58" width="20" height="20" rx="4" fill="#185FA5" opacity=".45"/>
+  <rect x="114" y="54" width="28" height="14" rx="2" fill="#fff" opacity=".7"/>
+  <rect x="117" y="57" width="18" height="2" rx="1" fill="#378ADD" opacity=".4"/>
+  <rect x="117" y="61" width="12" height="2" rx="1" fill="#378ADD" opacity=".3"/>
+  <!-- Hahmo 3 oikealla — LAISKA, nojaa taaksepäin -->
+  <circle cx="205" cy="52" r="12" fill="#854F0B" opacity=".45"/>
+  <rect x="195" y="64" width="20" height="20" rx="4" fill="#854F0B" opacity=".38"/>
+  <!-- Laiskalla tyhjä paperi -->
+  <rect x="188" y="60" width="28" height="14" rx="2" fill="#fff" opacity=".6"/>
+  <!-- Deadline-kello -->
+  <circle cx="215" cy="18" r="14" fill="#E24B4A" opacity=".75" stroke="#A32D2D" stroke-width="1.5"/>
+  <line x1="215" y1="18" x2="215" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="215" y1="18" x2="221" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="215" y="36" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#A32D2D">DEADLINE</text>
+  <!-- Ärsyyntynyt merkki hahmo 1 päällä -->
+  <text x="60" y="30" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".7">!</text>
+  <!-- Ärsyyntynyt merkki hahmo 2 päällä -->
+  <text x="130" y="28" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#E24B4A" opacity=".7">!</text>
+  <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+</svg>`;}
+
+function svgEnergiajuoma(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#EAF3DE"/>
+  <!-- Energiajuomatölkki -->
+  <rect x="105" y="22" width="50" height="76" rx="10" fill="#1D9E75" opacity=".7"/>
+  <rect x="108" y="22" width="44" height="8" rx="4" fill="#0F6E56" opacity=".8"/>
+  <rect x="108" y="88" width="44" height="8" rx="4" fill="#0F6E56" opacity=".8"/>
+  <rect x="112" y="35" width="36" height="14" rx="3" fill="#fff" opacity=".5"/>
+  <text x="130" y="46" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#085041">ENERGY</text>
+  <polygon points="125,56 135,56 128,70 138,70 123,88 126,74 118,74" fill="#EF9F27" opacity=".85"/>
+  <!-- Hahmo väsyneenä -->
+  <circle cx="45" cy="58" r="13" fill="#3B6D11" opacity=".45"/>
+  <rect x="36" y="71" width="18" height="26" rx="5" fill="#3B6D11" opacity=".38"/>
+  <!-- Väsymysviivat -->
+  <line x1="38" y1="52" x2="34" y2="48" stroke="#3B6D11" stroke-width="1.5" opacity=".4"/>
+  <line x1="52" y1="50" x2="56" y2="46" stroke="#3B6D11" stroke-width="1.5" opacity=".4"/>
+  <!-- Kello -->
+  <circle cx="210" cy="38" r="20" fill="#fff" opacity=".65" stroke="#639922" stroke-width="1.5"/>
+  <line x1="210" y1="38" x2="210" y2="24" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
+  <line x1="210" y1="38" x2="220" y2="38" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
+  <text x="210" y="66" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#3B6D11">8:00</text>
+  <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+</svg>`;}
+
+function svgLaina(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <circle cx="55" cy="50" r="14" fill="#854F0B" opacity=".55"/>
+  <rect x="44" y="64" width="22" height="28" rx="5" fill="#854F0B" opacity=".45"/>
+  <circle cx="205" cy="50" r="14" fill="#BA7517" opacity=".55"/>
+  <rect x="194" y="64" width="22" height="28" rx="5" fill="#BA7517" opacity=".45"/>
+  <rect x="95" y="46" width="70" height="36" rx="6" fill="#EF9F27" opacity=".85" stroke="#BA7517" stroke-width="1.5"/>
+  <rect x="101" y="52" width="58" height="24" rx="4" fill="#fff" opacity=".5"/>
+  <text x="130" y="68" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">20 €</text>
+  <line x1="77" y1="72" x2="95" y2="64" stroke="#854F0B" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <line x1="183" y1="72" x2="165" y2="64" stroke="#BA7517" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <rect x="20" y="12" width="80" height="26" rx="8" fill="#fff" opacity=".88"/>
+  <polygon points="48,38 58,38 53,46" fill="#fff" opacity=".88"/>
+  <text x="60" y="29" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#633806">Lainaisitko?</text>
+  <rect x="158" y="12" width="82" height="26" rx="8" fill="#fff" opacity=".88"/>
+  <polygon points="200,38 210,38 205,46" fill="#fff" opacity=".88"/>
+  <text x="199" y="29" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#854F0B">Lupaan...</text>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgLompakko(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <circle cx="50" cy="62" r="12" fill="#854F0B" opacity=".5"/>
+  <rect x="41" y="74" width="18" height="24" rx="4" fill="#854F0B" opacity=".42"/>
+  <rect x="90" y="55" width="80" height="48" rx="8" fill="#EF9F27" opacity=".6" stroke="#BA7517" stroke-width="1.5"/>
+  <rect x="98" y="63" width="64" height="10" rx="3" fill="#fff" opacity=".6"/>
+  <rect x="98" y="77" width="40" height="10" rx="3" fill="#fff" opacity=".5"/>
+  <text x="130" y="97" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">50 €</text>
+  <line x1="65" y1="72" x2="88" y2="72" stroke="#633806" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+  <ellipse cx="185" cy="78" rx="22" ry="14" fill="#EF9F27" opacity=".35"/>
+  <text x="185" y="82" text-anchor="middle" font-size="10" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">ID</text>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgOstos(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <rect x="60" y="25" width="140" height="75" rx="8" fill="#fff" opacity=".6" stroke="#BA7517" stroke-width="1.5"/>
+  <rect x="68" y="33" width="124" height="12" rx="3" fill="#EF9F27" opacity=".5"/>
+  <rect x="68" y="50" width="55" height="40" rx="4" fill="#EF9F27" opacity=".4"/>
+  <rect x="129" y="50" width="55" height="18" rx="3" fill="#BA7517" opacity=".25"/>
+  <rect x="129" y="72" width="55" height="10" rx="3" fill="#BA7517" opacity=".2"/>
+  <rect x="170" y="85" width="22" height="10" rx="5" fill="#EF9F27" opacity=".8"/>
+  <text x="181" y="93" text-anchor="middle" font-size="8" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">OSTA</text>
+  <circle cx="35" cy="60" r="11" fill="#854F0B" opacity=".45"/>
+  <rect x="27" y="71" width="16" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgKesatyo(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <circle cx="45" cy="28" r="18" fill="#EF9F27" opacity=".7"/>
+  <line x1="45" y1="5" x2="45" y2="1" stroke="#EF9F27" stroke-width="2" opacity=".5"/>
+  <line x1="45" y1="51" x2="45" y2="55" stroke="#EF9F27" stroke-width="2" opacity=".5"/>
+  <line x1="22" y1="28" x2="18" y2="28" stroke="#EF9F27" stroke-width="2" opacity=".5"/>
+  <line x1="68" y1="28" x2="72" y2="28" stroke="#EF9F27" stroke-width="2" opacity=".5"/>
+  <rect x="80" y="40" width="80" height="60" rx="4" fill="#BA7517" opacity=".22"/>
+  <rect x="80" y="28" width="80" height="16" rx="3" fill="#BA7517" opacity=".35"/>
+  <text x="120" y="40" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" font-weight="800" fill="#633806">TYÖ</text>
+  <rect x="92" y="52" width="22" height="18" rx="2" fill="#fff" opacity=".6"/>
+  <rect x="146" y="52" width="22" height="18" rx="2" fill="#fff" opacity=".6"/>
+  <circle cx="195" cy="62" r="12" fill="#854F0B" opacity=".45"/>
+  <rect x="187" y="74" width="16" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <rect x="201" y="76" width="10" height="14" rx="3" fill="#633806" opacity=".45"/>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgKahvi(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <rect x="85" y="42" width="90" height="58" rx="8" fill="#854F0B" opacity=".22"/>
+  <ellipse cx="130" cy="42" rx="45" ry="12" fill="#854F0B" opacity=".28"/>
+  <ellipse cx="130" cy="42" rx="35" ry="8" fill="#633806" opacity=".35"/>
+  <path d="M118 30 Q121 20 124 30" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/>
+  <path d="M130 28 Q133 16 136 28" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/>
+  <path d="M142 30 Q145 20 148 30" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/>
+  <circle cx="55" cy="62" r="11" fill="#854F0B" opacity=".45"/>
+  <rect x="47" y="73" width="16" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <circle cx="205" cy="62" r="11" fill="#854F0B" opacity=".45"/>
+  <rect x="197" y="73" width="16" height="22" rx="4" fill="#854F0B" opacity=".38"/>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgPeliostos(){return`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+  <rect width="260" height="110" fill="#FAEEDA"/>
+  <rect x="75" y="28" width="110" height="66" rx="10" fill="#633806" opacity=".35"/>
+  <rect x="83" y="36" width="94" height="50" rx="6" fill="#fff" opacity=".5"/>
+  <circle cx="105" cy="68" r="8" fill="#EF9F27" opacity=".7"/>
+  <circle cx="130" cy="55" r="5" fill="#EF9F27" opacity=".5"/>
+  <circle cx="155" cy="68" r="8" fill="#EF9F27" opacity=".7"/>
+  <rect x="122" y="75" width="16" height="6" rx="3" fill="#854F0B" opacity=".5"/>
+  <ellipse cx="40" cy="75" rx="14" ry="10" fill="#EF9F27" opacity=".6"/>
+  <text x="40" y="79" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">60 €</text>
+  <line x1="56" y1="72" x2="73" y2="65" stroke="#633806" stroke-width="1.5" stroke-dasharray="3,3" opacity=".5"/>
+  <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+</svg>`;}
+
+function svgByTag(tag){
+  const svgs={
+    koulu:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#E6F1FB"/>
+      <rect x="80" y="40" width="100" height="62" rx="3" fill="#378ADD" opacity=".25"/>
+      <rect x="90" y="25" width="80" height="20" rx="3" fill="#378ADD" opacity=".4"/>
+      <rect x="115" y="74" width="30" height="28" rx="3" fill="#185FA5" opacity=".5"/>
+      <rect x="95" y="45" width="18" height="16" rx="2" fill="#fff" opacity=".7"/>
+      <rect x="147" y="45" width="18" height="16" rx="2" fill="#fff" opacity=".7"/>
+      <line x1="130" y1="6" x2="130" y2="25" stroke="#185FA5" stroke-width="2"/>
+      <polygon points="130,6 148,13 130,20" fill="#185FA5" opacity=".7"/>
+      <circle cx="45" cy="68" r="11" fill="#185FA5" opacity=".55"/>
+      <rect x="37" y="79" width="16" height="22" rx="4" fill="#185FA5" opacity=".45"/>
+      <rect x="51" y="81" width="9" height="13" rx="3" fill="#0C447C" opacity=".55"/>
+      <rect x="158" y="30" width="72" height="28" rx="8" fill="#fff" opacity=".88"/>
+      <polygon points="163,58 172,58 167,66" fill="#fff" opacity=".88"/>
+      <text x="172" y="48" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#185FA5">Tuu meille!</text>
+      <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+    </svg>`,
+
+    kaverit:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#EEEDFE"/>
+      <circle cx="75" cy="52" r="13" fill="#534AB7" opacity=".55"/>
+      <rect x="64" y="65" width="22" height="26" rx="5" fill="#534AB7" opacity=".45"/>
+      <circle cx="130" cy="46" r="15" fill="#3C3489" opacity=".65"/>
+      <rect x="117" y="61" width="26" height="28" rx="5" fill="#3C3489" opacity=".55"/>
+      <circle cx="185" cy="52" r="13" fill="#534AB7" opacity=".55"/>
+      <rect x="174" y="65" width="22" height="26" rx="5" fill="#534AB7" opacity=".45"/>
+      <rect x="90" y="8" width="80" height="26" rx="8" fill="#fff" opacity=".9"/>
+      <polygon points="118,34 130,34 124,42" fill="#fff" opacity=".9"/>
+      <text x="130" y="25" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" font-weight="800" fill="#3C3489">Kuulitteko...?</text>
+      <rect x="15" y="88" width="55" height="15" rx="7" fill="#7F77DD" opacity=".35"/>
+      <rect x="80" y="92" width="90" height="15" rx="7" fill="#7F77DD" opacity=".28"/>
+      <rect x="182" y="88" width="55" height="15" rx="7" fill="#7F77DD" opacity=".35"/>
+      <rect x="0" y="100" width="260" height="10" fill="#7F77DD" opacity=".15"/>
+    </svg>`,
+
+    terveys:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#EAF3DE"/>
+      <rect x="30" y="55" width="140" height="44" rx="6" fill="#639922" opacity=".22"/>
+      <rect x="30" y="45" width="38" height="54" rx="6" fill="#639922" opacity=".32"/>
+      <ellipse cx="52" cy="60" rx="18" ry="11" fill="#fff" opacity=".65"/>
+      <circle cx="52" cy="53" r="12" fill="#3B6D11" opacity=".5"/>
+      <rect x="70" y="58" width="85" height="28" rx="4" fill="#3B6D11" opacity=".22"/>
+      <rect x="172" y="48" width="38" height="52" rx="6" fill="#1D9E75" opacity=".32"/>
+      <rect x="176" y="54" width="30" height="36" rx="3" fill="#fff" opacity=".55"/>
+      <ellipse cx="191" cy="72" rx="11" ry="7" fill="#185FA5" opacity=".18"/>
+      <circle cx="220" cy="30" r="17" fill="#fff" opacity=".7" stroke="#639922" stroke-width="1.5"/>
+      <line x1="220" y1="30" x2="220" y2="18" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
+      <line x1="220" y1="30" x2="229" y2="30" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/>
+      <text x="220" y="53" text-anchor="middle" font-size="9" font-weight="800" font-family="Nunito,sans-serif" fill="#3B6D11">23:00</text>
+      <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+    </svg>`,
+
+    raha:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#FAEEDA"/>
+      <circle cx="55" cy="50" r="14" fill="#854F0B" opacity=".55"/>
+      <rect x="44" y="64" width="22" height="28" rx="5" fill="#854F0B" opacity=".45"/>
+      <circle cx="205" cy="50" r="14" fill="#BA7517" opacity=".55"/>
+      <rect x="194" y="64" width="22" height="28" rx="5" fill="#BA7517" opacity=".45"/>
+      <rect x="95" y="46" width="70" height="36" rx="6" fill="#EF9F27" opacity=".85" stroke="#BA7517" stroke-width="1.5"/>
+      <rect x="101" y="52" width="58" height="24" rx="4" fill="#fff" opacity=".5"/>
+      <text x="130" y="68" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#633806">20 €</text>
+      <line x1="77" y1="72" x2="95" y2="64" stroke="#854F0B" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+      <line x1="183" y1="72" x2="165" y2="64" stroke="#BA7517" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+      <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".15"/>
+    </svg>`,
+
+    rakkaus:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#FBEAF0"/>
+      <circle cx="90" cy="62" r="14" fill="#D4537E" opacity=".5"/>
+      <rect x="78" y="76" width="24" height="28" rx="5" fill="#D4537E" opacity=".42"/>
+      <circle cx="170" cy="62" r="14" fill="#993556" opacity=".5"/>
+      <rect x="158" y="76" width="24" height="28" rx="5" fill="#993556" opacity=".42"/>
+      <path d="M130 50 C125 38 108 34 108 46 C108 56 130 70 130 70 C130 70 152 56 152 46 C152 34 135 38 130 50Z" fill="#E24B4A" opacity=".55"/>
+      <circle cx="90" cy="32" r="8" fill="#D4537E" opacity=".35"/>
+      <circle cx="130" cy="22" r="6" fill="#E24B4A" opacity=".3"/>
+      <circle cx="170" cy="32" r="8" fill="#993556" opacity=".35"/>
+      <rect x="0" y="100" width="260" height="10" fill="#D4537E" opacity=".15"/>
+    </svg>`,
+
+    tulevaisuus:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#FAECE7"/>
+      <rect x="0" y="55" width="260" height="55" fill="#D85A30" opacity=".12"/>
+      <ellipse cx="130" cy="58" rx="55" ry="22" fill="#EF9F27" opacity=".45"/>
+      <ellipse cx="130" cy="56" rx="42" ry="18" fill="#EF9F27" opacity=".55"/>
+      <ellipse cx="130" cy="54" rx="28" ry="13" fill="#fff" opacity=".7"/>
+      <line x1="0" y1="58" x2="260" y2="58" stroke="#D85A30" opacity=".2" stroke-width="1"/>
+      <rect x="110" y="58" width="40" height="42" rx="4" fill="#D85A30" opacity=".3"/>
+      <rect x="122" y="48" width="16" height="12" rx="2" fill="#D85A30" opacity=".4"/>
+      <circle cx="65" cy="72" r="10" fill="#993C1D" opacity=".42"/>
+      <rect x="57" y="82" width="16" height="20" rx="4" fill="#993C1D" opacity=".35"/>
+      <circle cx="195" cy="72" r="10" fill="#993C1D" opacity=".42"/>
+      <rect x="187" y="82" width="16" height="20" rx="4" fill="#993C1D" opacity=".35"/>
+      <rect x="0" y="100" width="260" height="10" fill="#D85A30" opacity=".15"/>
+    </svg>`,
+
+    ura:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#EAF3DE"/>
+      <rect x="70" y="28" width="120" height="72" rx="4" fill="#639922" opacity=".2"/>
+      <rect x="70" y="18" width="120" height="14" rx="3" fill="#639922" opacity=".35"/>
+      <text x="130" y="29" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" font-weight="800" fill="#27500A">TOIMISTO</text>
+      <rect x="82" y="40" width="30" height="24" rx="3" fill="#fff" opacity=".65"/>
+      <rect x="118" y="40" width="30" height="24" rx="3" fill="#fff" opacity=".65"/>
+      <rect x="154" y="40" width="24" height="24" rx="3" fill="#3B6D11" opacity=".35"/>
+      <rect x="95" y="72" width="70" height="28" rx="3" fill="#3B6D11" opacity=".2"/>
+      <circle cx="35" cy="62" r="11" fill="#3B6D11" opacity=".5"/>
+      <rect x="27" y="73" width="16" height="22" rx="4" fill="#3B6D11" opacity=".42"/>
+      <rect x="38" y="75" width="10" height="14" rx="3" fill="#27500A" opacity=".5"/>
+      <rect x="0" y="100" width="260" height="10" fill="#639922" opacity=".15"/>
+    </svg>`,
+
+    perhe:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#E6F1FB"/>
+      <polygon points="130,15 195,55 65,55" fill="#378ADD" opacity=".3"/>
+      <rect x="65" y="55" width="130" height="55" rx="3" fill="#378ADD" opacity=".2"/>
+      <rect x="108" y="72" width="44" height="38" rx="3" fill="#185FA5" opacity=".4"/>
+      <rect x="74" y="62" width="22" height="20" rx="3" fill="#fff" opacity=".65"/>
+      <rect x="164" y="62" width="22" height="20" rx="3" fill="#fff" opacity=".65"/>
+      <circle cx="95" cy="80" r="10" fill="#185FA5" opacity=".5"/>
+      <rect x="87" y="90" width="16" height="20" rx="4" fill="#185FA5" opacity=".42"/>
+      <circle cx="165" cy="80" r="10" fill="#185FA5" opacity=".5"/>
+      <rect x="157" y="90" width="16" height="20" rx="4" fill="#185FA5" opacity=".42"/>
+      <circle cx="130" cy="76" r="8" fill="#0C447C" opacity=".45"/>
+      <rect x="123" y="84" width="14" height="16" rx="3" fill="#0C447C" opacity=".38"/>
+      <rect x="0" y="100" width="260" height="10" fill="#378ADD" opacity=".18"/>
+    </svg>`,
+
+    digi:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#EEEDFE"/>
+      <rect x="80" y="20" width="100" height="70" rx="8" fill="#534AB7" opacity=".25"/>
+      <rect x="86" y="28" width="88" height="52" rx="4" fill="#fff" opacity=".6"/>
+      <rect x="92" y="35" width="60" height="8" rx="3" fill="#7F77DD" opacity=".5"/>
+      <rect x="92" y="48" width="76" height="6" rx="3" fill="#AFA9EC" opacity=".5"/>
+      <rect x="92" y="58" width="50" height="6" rx="3" fill="#AFA9EC" opacity=".4"/>
+      <rect x="116" y="90" width="28" height="6" rx="3" fill="#534AB7" opacity=".4"/>
+      <circle cx="40" cy="62" r="13" fill="#3C3489" opacity=".45"/>
+      <rect x="30" y="75" width="20" height="26" rx="5" fill="#3C3489" opacity=".38"/>
+      <circle cx="220" cy="62" r="13" fill="#3C3489" opacity=".45"/>
+      <rect x="210" y="75" width="20" height="26" rx="5" fill="#3C3489" opacity=".38"/>
+      <rect x="0" y="100" width="260" height="10" fill="#534AB7" opacity=".15"/>
+    </svg>`,
+
+    vaikea:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#FBEAF0"/>
+      <circle cx="130" cy="48" r="28" fill="#D4537E" opacity=".15" stroke="#D4537E" stroke-width="1.5" opacity=".3"/>
+      <circle cx="130" cy="48" r="18" fill="#D4537E" opacity=".2"/>
+      <text x="130" y="54" text-anchor="middle" font-size="22" font-family="Nunito,sans-serif" font-weight="800" fill="#993556" opacity=".6">?</text>
+      <circle cx="60" cy="72" r="11" fill="#993556" opacity=".42"/>
+      <rect x="52" y="83" width="16" height="20" rx="4" fill="#993556" opacity=".35"/>
+      <circle cx="200" cy="72" r="11" fill="#993556" opacity=".42"/>
+      <rect x="192" y="83" width="16" height="20" rx="4" fill="#993556" opacity=".35"/>
+      <line x1="75" y1="72" x2="115" y2="62" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="4,3" opacity=".4"/>
+      <line x1="185" y1="72" x2="145" y2="62" stroke="#D4537E" stroke-width="1.5" stroke-dasharray="4,3" opacity=".4"/>
+      <rect x="0" y="100" width="260" height="10" fill="#D4537E" opacity=".15"/>
+    </svg>`,
+
+    yllatys:`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:13px 13px 0 0">
+      <rect width="260" height="110" fill="#FAEEDA"/>
+      <polygon points="130,15 145,50 185,50 155,72 167,107 130,85 93,107 105,72 75,50 115,50" fill="#EF9F27" opacity=".45"/>
+      <polygon points="130,25 141,52 170,52 148,67 157,95 130,78 103,95 112,67 90,52 119,52" fill="#EF9F27" opacity=".65"/>
+      <rect x="0" y="100" width="260" height="10" fill="#BA7517" opacity=".18"/>
+    </svg>`,
+  };
+  return svgs[tag]||svgs.vaikea;
+}
+
+      cardHTML=!myDone?`<div class="gcard card-${c.tag}" role="region" aria-label="${c.title}">
+      ${getCardSVG(c.tag,c.title)}
+      <div style="padding:.85rem 1rem">
+        <div style="margin-bottom:4px">
+          <span class="ctag" style="color:${tc}">${TAG_LABELS[c.tag]||c.tag}${c.rec?` · kierros ${c.recR}/3`:""}</span>
+          ${hardBadge}
+        </div>
+        <div class="ctitle">${c.title}</div>
+        <div class="cdesc">${c.desc}</div>
+        <div class="choices" role="group">${chs}</div>
+      </div>
+    </div>`:"";
+  }
+
+  document.getElementById("ui").innerHTML=`
+    <div class="hud">
+      <div class="hud-top">${tabs||"<div></div>"}</div>
+    </div>
+    ${renderPokerBar(curP)}
+    <div class="rrow"><span>Kierros ${round}/${ROUNDS}</span><div class="pips" role="list">${pips}</div></div>
+    <div class="play-area">
+      <div class="deck-wrap">
+        <div class="deck-stack" id="dstk">
+          <div class="ds1"></div><div class="ds2"></div>
+          <div class="dtop" id="dtop"><div class="dtop-icon">✦</div><div class="dtop-count">${queue.length-ci} korttia</div></div>
+        </div>
+      </div>
+      <div class="card-area">
+        ${cardHTML}
+        ${myDone&&solo?(isLastInRound?`<button class="primary-btn" id="nxt-round" style="margin-top:8px">Katso kierroksen pisteet →</button>`:`<button class="primary-btn" id="nxt" style="margin-top:8px">Seuraava kortti →</button>`):""}
+        ${myDone&&!solo&&Object.keys(rChoices).length<players.length?`<div style="font-size:13px;color:#555;margin-top:8px;font-weight:700">Odotetaan muita…</div>`:""}
+      </div>
+    </div>`;
+
+  // Pokerikortti-nappi: klikkaus kun valinta tehty avaa vaihto-promptin
+  document.getElementById("poker-use-btn")?.addEventListener("click",()=>{
+    if(rChoices[curP]!==undefined&&!pokerUsed[curP]){
+      const cardArea=document.querySelector(".card-area");
+      const c=queue[ci];
+      const persp=c.perspective;
+      if(cardArea&&!document.getElementById("poker-confirm")){
+        const conf=document.createElement("div");
+        conf.className="poker-perspective";conf.id="poker-confirm";
+        const motiveBtns=MOTIVES.map((m,i)=>
+          `<button class="motive-btn" data-m="${i}">${m}</button>`
+        ).join("");
+        conf.innerHTML=`
+          <span class="poker-perspective-label">🃏 Pokerikortti — toinen näkökulma</span>
+          ${persp?`<div class="poker-who">${persp.who} sanoo:</div>
+          <div class="poker-quote">"${persp.quote}"</div>`:""}
+          <span class="poker-motive-label">Miksi teit tämän valinnan?</span>
+          <div class="motive-btns">${motiveBtns}</div>`;
+        cardArea.appendChild(conf);
+        // Motiivi-napit
+        conf.querySelectorAll(".motive-btn").forEach(btn=>{
+          btn.addEventListener("click",()=>{
+            conf.querySelectorAll(".motive-btn").forEach(b=>b.classList.remove("selected"));
+            btn.classList.add("selected");
+            const motiveText=MOTIVES[parseInt(btn.dataset.m)];
+            players[curP].motives.push({card:c.title,motive:motiveText});
+            // Pieni viive sitten aktivoi pokeri-vaihto
+            setTimeout(()=>{
+              conf.remove();
+              activPoker();
+            },400);
+          });
+        });
+      }
+    }
+  });
+  document.querySelectorAll(".chbtn").forEach(b=>b.addEventListener("click",()=>pick(curP,parseInt(b.dataset.i))));
+  document.getElementById("nxt")?.addEventListener("click",applyAndNext);
+  document.getElementById("nxt-round")?.addEventListener("click",applyAndShowRoundStats);
+  if(c.type==="surprise"&&!surpriseOk)document.getElementById("scard")?.addEventListener("click",doSurprise);
+  if(!myDone&&c.type==="normal"){
+    cardStartTime=Date.now();
+  }
+}
+
+function pick(pi,cho){
+  if(rChoices[pi]!==undefined)return;
+
+  // Varoitus jos valittu alle 5 sekunnissa
+  const elapsed=(Date.now()-cardStartTime)/1000;
+  if(elapsed<5&&queue[ci].type==="normal"){
+    // Näytä varoitus — estä valinta hetkeksi
+    const existing=document.getElementById("slow-down-msg");
+    if(!existing){
+      const warn=document.createElement("div");
+      warn.className="slow-down";warn.id="slow-down-msg";
+      warn.innerHTML=`<span class="slow-down-icon">⏸</span>Hidasta. Oikeassa elämässä et voi klikata ohi.`;
+      const cardArea=document.querySelector(".card-area");
+      if(cardArea) cardArea.insertBefore(warn,cardArea.firstChild);
+      // Poistetaan varoitus 2 sekunnin kuluttua
+      setTimeout(()=>document.getElementById("slow-down-msg")?.remove(),2000);
+    }
+    return; // Estä valinta
+  }
+
+  rChoices[pi]=cho;
+  if(cho===0)apCounts[pi]++;else apCounts[pi]=0;
+  const bon=recBonus(pi,cho);
+  const base={...queue[ci].d[cho]};
+  if(bon>0){const mk=Object.keys(base)[0];if(mk)base[mk]=(base[mk]||0)+bon;}
+  players[pi]._bon=bon;players[pi]._auto=apCounts[pi]>=3;
+  pDeltas[pi]=base;
+  Object.entries(base).forEach(([k,v])=>{pendingRoundDeltas[pi][k]=(pendingRoundDeltas[pi][k]||0)+v;});
+  players[pi].hist.push({ci,cho,rec:!!queue[ci].rec});
+  const rem=players.findIndex((_,i)=>rChoices[i]===undefined);
+  if(rem===-1){
+    if(players.length===1)renderGame();
+    else{showReveal();}
+  }else{curP=rem;renderGame();}
+}
+
+function activPoker(){
+  // Nollaa valinta, merkitse pokeri käytetyksi
+  pokerUsed[curP]=true;
+  const oldBase=pDeltas[curP]||{};
+  // Peru pending round deltat
+  Object.entries(oldBase).forEach(([k,v])=>{pendingRoundDeltas[curP][k]=(pendingRoundDeltas[curP][k]||0)-v;});
+  delete rChoices[curP];delete pDeltas[curP];players[curP]._bon=0;
+  renderGame();
+}
+
+function checkAfterChoice(){
+  const isLastInRound=(ci%PER===PER-1)||(queue[ci].type==="surprise");
+  if(isLastInRound) applyAndShowRoundStats();
+  else applyAndNext();
+}
+
+function recBonus(pi,cho){
+  const c=queue[ci];if(!c.rec)return 0;
+  const prev=players[pi].hist.filter(h=>h.rec);if(prev.length===0)return 0;
+  return(prev.every(h=>h.cho===0)&&cho===0)?prev.length:0;
+}
+
+function doSurprise(){
+  const s=queue[ci].surp;
+
+  // Lasketaan pelaajan "suunta" ennen yllätyskortttia
+  // Positiivinen valinta = choice index 0, negatiivinen = 2
+  // Tulos: goodChance 0.2 - 0.8 riippuen valinnoista
+  function calcGoodChance(pi){
+    const hist=players[pi].hist;
+    if(hist.length===0) return .5;
+    const score=hist.reduce((sum,h)=>{
+      if(h.cho===0) return sum+1;      // positiivinen valinta
+      if(h.cho===2) return sum-1;      // negatiivinen valinta
+      return sum;                       // neutraali
+    },0);
+    const normalized=score/hist.length; // -1 … +1
+    return Math.min(.8,Math.max(.2,.5+normalized*.3));
+  }
+
+  players.forEach((p,i)=>{
+    const chance=calcGoodChance(i);
+    const good=Math.random()<chance;
+    const res=good?s.good:s.bad;
+    pDeltas[i]=res.d;rChoices[i]=0;
+    Object.entries(res.d).forEach(([k,v])=>{pendingRoundDeltas[i][k]=(pendingRoundDeltas[i][k]||0)+v;});
+    players[i]._surpriseGood=good;
+    players[i]._surpriseRes=res;
+    players[i]._surpriseChance=Math.round(chance*100);
+  });
+  surpriseOk=true;
+
+  // Näytä ensimmäisen pelaajan tulos (solo) tai yhteinen
+  const good=players[0]._surpriseGood;
+  const res=players[0]._surpriseRes;
+  const chance=players[0]._surpriseChance;
+
+  const deltas=Object.entries(res.d).map(([k,v])=>{
+    const st=STATS.find(s=>s.key===k);
+    return`<span class="surp-delta ${v>0?"pos":"neg"}">${st?st.label:k} ${v>0?"+":""}${v}</span>`;
+  }).join("");
+
+  // Selitys miksi tämä tulos
+  const chanceNote=chance>=60
+    ? `<div style="font-size:12px;color:#27500A;margin-bottom:8px;font-style:italic">Valintasi ennen tätä olivat pääosin positiivisia — se vaikutti.</div>`
+    : chance<=40
+    ? `<div style="font-size:12px;color:#791F1F;margin-bottom:8px;font-style:italic">Valintasi ennen tätä olivat haastavia — se vaikutti.</div>`
+    : `<div style="font-size:12px;color:#555;margin-bottom:8px;font-style:italic">Elämässä tulee yllätyksiä — et voi aina valita, mutta voit valita miten reagoit.</div>`;
+
+  document.querySelector(".card-area").innerHTML=`
+    <div class="surp-result-box ${good?"surp-result-good":"surp-result-bad"}">
+      <div class="surp-result-icon">${good?"🌟":"⚡"}</div>
+      <div class="surp-result-title">${good?"Hyvä yllätys!":"Ikävä yllätys!"}</div>
+      <div class="surp-result-text">${res.text}</div>
+      <div class="surp-delta-row">${deltas}</div>
+    </div>
+    ${chanceNote}
+    <button class="primary-btn" id="nxt-round">Katso kierroksen pisteet →</button>`;
+  document.getElementById("nxt-round").addEventListener("click",applyAndShowRoundStats);
+}
+
+function showReveal(){
+  const c=queue[ci];const isLast=(ci%PER===PER-1)||(c.type==="surprise");
+  const rows=players.map((p,i)=>`<div class="reveal-row"><span class="rev-name" style="color:${p.color}">${p.name}</span><span class="rev-choice">${c.choices?c.choices[rChoices[i]]:""}</span></div>`).join("");
+  const notes=[...players.filter(p=>p._auto).map(p=>`⚡ ${p.name}: autopilotti?`),...players.filter(p=>p._bon>0).map(p=>`🔄 ${p.name}: toistuvuusbonus +${p._bon}`)].join(" · ");
+  const nextLabel=isLast?"Katso kierroksen pisteet →":"Seuraava kortti →";
+  document.getElementById("ui").innerHTML=`
+    <div class="rrow"><span>Kierros ${round}/${ROUNDS}</span></div>
+    <div class="reveal-box">
+      <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:8px">Jokainen valitsi</div>
+      ${rows}${notes?`<div style="font-size:12px;color:#444;margin-top:8px;font-weight:700">${notes}</div>`:""}
+    </div>
+    <button class="primary-btn" id="nxt">${nextLabel}</button>`;
+  document.getElementById("nxt").addEventListener("click",isLast?applyAndShowRoundStats:applyAndNext);
+}
+
+function applyAndNext(){
+  players.forEach((p,i)=>{
+    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));});
+    p.snapshots.push({...p.stats});
+  });
+  pDeltas={};ci++;
+  if(ci>=queue.length){renderEnd();return;}
+  if(ci%PER===0)round++;
+  rChoices={};curP=0;surpriseOk=false;
+  renderGame();
+}
+
+function applyAndShowRoundStats(){
+  players.forEach((p,i)=>{
+    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));});
+    p.snapshots.push({...p.stats});
+  });
+  pDeltas={};
+  const roundD=pendingRoundDeltas;
+  const solo=players.length===1;
+  let apBoxes="";
+  if(solo){
+    const p=players[0];
+    if(p._auto)apBoxes+=`<div class="ap-box ap-warn"><span class="ap-label">⚡ Autopilotti?</span>Valitsit ensimmäisen vaihtoehdon useita kertoja peräkkäin — oliko se tietoinen päätös?</div>`;
+    if(p._bon>0)apBoxes+=`<div class="ap-box ap-good"><span class="ap-label">🔄 Johdonmukainen valinta!</span>Toistuvuusbonus +${p._bon} — pienet teot kertyvät.</div>`;
+  }
+  const statsReveal=players.map((p,pi)=>{
+    const rd=roundD[pi]||{};
+    const items=STATS.map(s=>{
+      const delta=rd[s.key]||0;const val=p.stats[s.key];
+      return`<div class="rd-item">
+        <div class="rd-label">${s.label}</div>
+        <div class="rd-val" style="color:${s.color}">${val}</div>
+        <div class="rd-delta ${delta>0?"pos":delta<0?"neg":""}">${delta>0?"+"+delta:delta<0?delta:""}</div>
+        <div class="rd-bar"><div class="rd-fill" style="width:${Math.round(val/MAX*100)}%;background:${s.color}"></div></div>
+      </div>`;
+    }).join("");
+    return`<div class="round-stats-reveal" style="${!solo?`border-color:${p.color}`:""}">
+      <div class="round-stats-title">${solo?"Kierroksen pisteet":p.name+" — pisteet"}</div>
+      <div class="round-delta-grid">${items}</div>
+    </div>`;
+  }).join("");
+
+  ci++;
+  const gameOver=ci>=queue.length;
+  if(!gameOver&&ci%PER===0)round++;
+  rChoices={};curP=0;surpriseOk=false;
+  pendingRoundDeltas=players.map(()=>({}));
+
+  document.getElementById("ui").innerHTML=`
+    ${apBoxes}${statsReveal}
+    <button class="primary-btn" id="nxt" style="margin-top:4px">${gameOver?"Katso lopputulos →":"Seuraava kierros →"}</button>`;
+  document.getElementById("nxt").addEventListener("click",gameOver?renderReflect:renderGame);
+}
+
+function buildChart(p){
+  const snaps=p.snapshots;const n=snaps.length;
+  const W=300,H=100,PL=28,PR=8,PT=12,PB=8;const gW=W-PL-PR,gH=H-PT-PB;
+  const variances=STATS.map(s=>{const vals=snaps.map(sn=>sn[s.key]);return{s,range:Math.max(...vals)-Math.min(...vals)};}).sort((a,b)=>b.range-a.range);
+  const shown=variances.slice(0,4).map(v=>v.s);
+  const allVals=shown.flatMap(s=>snaps.map(sn=>sn[s.key]));
+  const minY=Math.min(...allVals),maxY=Math.max(...allVals),rangeY=Math.max(maxY-minY,2);
+  function px(i){return PL+Math.round(i/(n-1)*gW);}
+  function py(v){return PT+Math.round((1-(v-minY)/rangeY)*gH);}
+  const lines=shown.map(s=>`<polyline points="${snaps.map((sn,i)=>`${px(i)},${py(sn[s.key])}`).join(" ")}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${snaps.map((sn,i)=>`<circle cx="${px(i)}" cy="${py(sn[s.key])}" r="3.5" fill="${s.color}"/>`).join("")}`).join("");
+  const yLines=[minY,Math.round((minY+maxY)/2),maxY].map(v=>`<line x1="${PL}" x2="${W-PR}" y1="${py(v)}" y2="${py(v)}" stroke="#ddd" stroke-width="1"/><text x="${PL-4}" y="${py(v)+4}" text-anchor="end" font-size="10" fill="#555" font-family="Nunito,sans-serif" font-weight="700">${v}</text>`).join("");
+  const legend=shown.map(s=>`<div class="cleg"><div class="cleg-dot" style="background:${s.color}"></div>${s.label}</div>`).join("");
+  return`<div class="chart-wrap"><div class="chart-label">Kehitys kierros kierrokselta</div><div class="chart-legend">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;" role="img">${yLines}${lines}</svg></div>`;
+}
+
+function buildStrengths(p){
+  const sorted=[...STATS].sort((a,b)=>p.stats[b.key]-p.stats[a.key]);
+  const strong=sorted.slice(0,3);
+  const weak=sorted.slice(-3).reverse();
+  const strongItems=strong.map(s=>`<div class="strength-item"><div class="strength-dot" style="background:${s.color}"></div>${s.label} <span style="color:${s.color};margin-left:auto">${p.stats[s.key]}</span></div>`).join("");
+  const weakItems=weak.map(s=>`<div class="strength-item"><div class="strength-dot" style="background:${s.color}"></div>${s.label} <span style="color:${s.color};margin-left:auto">${p.stats[s.key]}</span></div>`).join("");
+  return`<div class="strength-grid">
+    <div class="strength-box pos"><span class="strength-label">💪 Vahvuutesi</span>${strongItems}</div>
+    <div class="strength-box neg"><span class="strength-label">🌱 Kehitysalueesi</span>${weakItems}</div>
+  </div>`;
+}
+
+function buildMoment(p){
+  // Löydä kortti jossa pisteet muuttuivat eniten yhden kierroksen aikana
+  if(p.snapshots.length<2) return"";
+  let maxChange=0,maxIdx=0;
+  for(let i=1;i<p.snapshots.length;i++){
+    const change=STATS.reduce((sum,s)=>sum+Math.abs(p.snapshots[i][s.key]-p.snapshots[i-1][s.key]),0);
+    if(change>maxChange){maxChange=change;maxIdx=i;}
+  }
+  if(maxChange===0) return"";
+  // Kortti on indeksissä maxIdx-1 (snapshot i vastaa korttia i-1)
+  const cardIdx=maxIdx-1;
+  const card=p.hist[cardIdx];
+  if(!card) return"";
+  const queueCard=queue[card.ci];
+  if(!queueCard||!queueCard.choices) return"";
+  const chosen=queueCard.choices[card.cho];
+  const before=p.snapshots[maxIdx-1];const after=p.snapshots[maxIdx];
+  const deltas=STATS.map(s=>({s,d:after[s.key]-before[s.key]})).filter(x=>x.d!==0);
+  const deltaHTML=deltas.map(x=>`<span class="${x.d>0?"pos":"neg"}">${x.s.label} ${x.d>0?"+":""}${x.d}</span>`).join("");
+  return`<div class="moment-box">
+    <span class="moment-label">⚡ Tämä valinta vaikutti eniten</span>
+    <div class="moment-card">${queueCard.title}</div>
+    <div class="moment-choice">Valitsit: "${chosen}"</div>
+    <div class="moment-delta">${deltaHTML}</div>
+  </div>`;
+}
+
+const REFLECT_OPTS=[
+  "Se vaati rohkeutta jota minulla ei ollut",
+  "En tiennyt mitä tehdä",
+  "Pelkäsin mitä muut ajattelevat",
+  "Tiesin oikean vastauksen mutta tein silti toisin",
+];
+
+function renderReflect(){
+  // Kerätään kaikki kortit joissa pelaaja teki valinnan
+  const hardMoment=buildMoment(players[0]);
+  document.getElementById("ui").innerHTML=`
+    <div class="reflect-screen">
+      <div class="reflect-title">Ennen kuin katsot tulokset</div>
+      <div class="reflect-sub">Yksi kysymys. Ei oikeaa vastausta — vain sinun ajatuksesi.</div>
+      <hr class="reflect-divider">
+      <div class="reflect-q">💭 Mikä valinta oli sinulle vaikein — ja miksi?</div>
+      <div class="reflect-opts" id="ropts">
+        ${REFLECT_OPTS.map((o,i)=>`<button class="reflect-opt" data-i="${i}">${o}</button>`).join("")}
+      </div>
+      <span class="reflect-why-label">Tai kirjoita omin sanoin</span>
+      <textarea class="reflect-textarea" id="rtxt" placeholder="Kirjoita tähän..."></textarea>
+      <button class="primary-btn" id="reflect-done" style="margin-top:.85rem">Katso tulokset →</button>
+    </div>`;
+
+  let selIdx=null;
+  document.querySelectorAll(".reflect-opt").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(".reflect-opt").forEach(b=>b.classList.remove("sel"));
+      btn.classList.add("sel");
+      selIdx=parseInt(btn.dataset.i);
+      document.getElementById("rtxt").value="";
+    });
+  });
+  document.getElementById("rtxt").addEventListener("input",()=>{
+    document.querySelectorAll(".reflect-opt").forEach(b=>b.classList.remove("sel"));
+    selIdx=null;
+  });
+  document.getElementById("reflect-done").addEventListener("click",()=>{
+    const txt=document.getElementById("rtxt").value.trim();
+    const answer=txt||(selIdx!==null?REFLECT_OPTS[selIdx]:null);
+    players.forEach(p=>p.reflectAnswer=answer||null);
+    renderEnd();
+  });
+}
+
+function renderEnd(){
+  const solo=players.length===1;
+  const sorted=[...players].sort((a,b)=>Object.values(b.stats).reduce((x,y)=>x+y,0)-Object.values(a.stats).reduce((x,y)=>x+y,0));
+  document.getElementById("ui").innerHTML=`
+    <div class="end-screen">
+      <div class="end-title">Mihin suuntaan olet menossa?</div>
+      <div class="end-sub">Katso miten valintasi kehittyivät kierros kierrokselta.</div>
+      ${sorted.map((p,rank)=>{
+        const total=Object.values(p.stats).reduce((a,b)=>a+b,0);
+        const trends={};STATS.forEach(s=>{const d=p.stats[s.key]-START;trends[s.key]=d>=3?"up":d<=-3?"down":"flat";});
+        const rH=p.hist.filter(h=>h.rec);
+        const rOk=rH.length>=2&&rH.every(h=>h.cho===0);
+        const rBad=rH.length>=2&&rH.every(h=>h.cho>=1);
+        const ups=STATS.filter(s=>trends[s.key]==="up").map(s=>s.label);
+        const downs=STATS.filter(s=>trends[s.key]==="down").map(s=>s.label);
+        let story="";
+        if(rOk)story+="Teit saman valinnan kolme kertaa — se on jo tapa. ";
+        if(rBad)story+="Toistuva tilanne tuli kolmesti, mutta valintasi ei pysynyt johdonmukaisena. ";
+        if(ups.length)story+=`${ups.join(", ")} kasvoi — olet menossa eteenpäin näillä alueilla. `;
+        if(downs.length)story+=`${downs.join(", ")} laski — nämä kaipaavat huomiota. `;
+        if(!story)story="Pisteet pysyivät melko tasaisina. Suuri muutos syntyy johdonmukaisista pienistä teoista.";
+        const pills=STATS.map(s=>`<span class="tpill ${trends[s.key]==="up"?"tup":trends[s.key]==="down"?"tdown":"tflat"}">${trends[s.key]==="up"?"↑":trends[s.key]==="down"?"↓":"→"} ${s.label}</span>`).join("");
+        const sgrid=STATS.map(s=>`
+          <div class="pre-stat" style="background:${s.bg};border-color:${s.border}">
+            <div class="prs-label" style="color:${s.color}">${s.label}</div>
+            <div class="prs-val" style="color:${s.color}">${p.stats[s.key]}</div>
+            <div class="prs-bar-bg"><div class="prs-fill" style="width:${Math.round(p.stats[s.key]/MAX*100)}%;background:${s.color}"></div></div>
+          </div>`).join("");
+        return`<div class="pres" style="${!solo&&rank===0?`border-color:${p.color};border-width:3px`:""}">
+          <div class="pre-hdr"><span class="pre-name" style="color:${p.color}">${!solo&&rank===0?"🏆 ":""}${p.name}</span><span class="pre-total">${total} pistettä</span></div>
+          <div class="pre-sgrid">${sgrid}</div>
+          ${buildStrengths(p)}
+          ${buildMoment(p)}
+          <div class="story-box" style="margin-top:10px"><div class="story-label">Sinun suuntasi</div><div class="trend-row">${pills}</div><div class="story-text">${story}</div></div>
+          ${p.motives&&p.motives.length>0?`<div class="story-box" style="margin-top:8px;background:#EEEDFE;border-color:#AFA9EC;">
+            <div class="story-label" style="color:#3C3489">🃏 Pokerikortti — miksi vaihdoit?</div>
+            ${p.motives.map(m=>`<div style="font-size:13px;color:#26215C;margin-bottom:4px;line-height:1.5">
+              <span style="font-weight:800">${m.card}:</span> ${m.motive}
+            </div>`).join("")}
+          </div>`:""}
+          ${p.reflectAnswer?`<div class="reflect-answer-box" style="margin-top:8px;">
+            <span class="reflect-answer-label">💭 Vaikein valinta — sinun vastauksesi</span>
+            <div class="reflect-answer-text">"${p.reflectAnswer}"</div>
+          </div>`:""}
+          ${buildChart(p)}
+        </div>`;
+      }).join("")}
+      <button class="primary-btn" id="restart" style="margin-top:.5rem">Pelaa uudelleen</button>
+    </div>`;
+  document.getElementById("restart").addEventListener("click",renderIntro);
+}
+
+renderIntro();
+</script>
+</body>
+</html>
