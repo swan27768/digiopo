@@ -192,8 +192,6 @@ let gameState = {
   attempts: 0,
   hintsLeft: 3,
   totalPairs: 6,
-  totalScore: 0,
-  gamesPlayed: 0,
 };
 
 function shuffleArray(array) {
@@ -211,38 +209,10 @@ function getRandomSubset(array, count) {
   return shuffleArray(array).slice(0, count);
 }
 
-function saveStats() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      totalScore: gameState.totalScore,
-      gamesPlayed: gameState.gamesPlayed,
-    }),
-  );
-}
 
-function loadStats() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-
-  if (!raw) return;
-
-  try {
-    const saved = JSON.parse(raw);
-    gameState.totalScore = Number(saved.totalScore) || 0;
-    gameState.gamesPlayed = Number(saved.gamesPlayed) || 0;
-  } catch (error) {
-    console.warn("Sanastopelin tallennettu data oli virheellinen.");
-  }
-}
 
 function initGame() {
   hideVictoryModal();
-
-  if (gameState.matchedPairs.length === gameState.totalPairs) {
-    gameState.totalScore += gameState.score;
-    gameState.gamesPlayed += 1;
-    saveStats();
-  }
 
   gameState.currentSet = getRandomSubset(vocabularyData, gameState.totalPairs);
   gameState.selectedTerm = null;
@@ -392,16 +362,11 @@ function checkMatch() {
 
 function updateUI() {
   const currentScore = document.getElementById("current-score");
-  const totalScore = document.getElementById("total-score");
-  const matches = document.getElementById("matches");
   const hintsLeft = document.getElementById("hints-left");
   const progressBar = document.getElementById("progress-bar");
   const hintBtn = document.getElementById("hint-btn");
 
   if (currentScore) currentScore.textContent = gameState.score;
-  if (totalScore) totalScore.textContent = gameState.totalScore;
-  if (matches)
-    matches.textContent = `${gameState.matchedPairs.length}/${gameState.totalPairs}`;
   if (hintsLeft) hintsLeft.textContent = gameState.hintsLeft;
   if (progressBar) {
     progressBar.style.width = `${(gameState.matchedPairs.length / gameState.totalPairs) * 100}%`;
@@ -545,7 +510,6 @@ function initSanastopeli() {
   if (shuffleBtn) shuffleBtn.addEventListener("click", shuffleCards);
   if (playAgainBtn) playAgainBtn.addEventListener("click", initGame);
 
-  loadStats();
   updateUI();
   initGame();
 }

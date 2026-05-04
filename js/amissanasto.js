@@ -321,7 +321,9 @@ function amisSelectAnswer(selected, clickedButton) {
 }
 
 function initAmissanasto() {
-  amisLoadStats();
+  // Nollataan tilastot aina sivun avautuessa (uusi oppitunti)
+  amisStats = { gamesPlayed: 0, totalScore: 0 };
+  localStorage.removeItem(AMIS_STORAGE_KEY);
   amisUpdateStartStats();
 
   document
