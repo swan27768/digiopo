@@ -75,15 +75,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-tet",
-      title: "TET-päiväkirja",
-      description: "Kirjoita TET-jakson kokemuksista ja oppimisesta.",
-      href: "../tehtava.html?id=tet8",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-tet",
       title: "Päivän aihe: Mitä työ oikeasti on?",
@@ -103,16 +95,7 @@ const tehtavat = {
       icon: "fa-pencil",
     },
     
-    {
-      aiheId: "tasks-raha",
-      title: "Päivän aihe: Mistä rahaa nuorena?",
-      description:
-        "Miten voi ansaita rahaa alle 18-vuotiaana? Mitä rajoituksia on?",
-      href: "../tehtava.html?id=keskustelu-raha",
-      tag: "Keskustelu",
-      tagClass: "tag-keskustelu",
-      icon: "fa-comments",
-    },
+   
     {
       aiheId: "tasks-ammatti",
       title: "Unelma-ammattini",

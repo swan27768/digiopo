@@ -1,7 +1,7 @@
 function luoTehtavaKortti(tehtava) {
   if (tehtava.tag === "Keskustelu") {
     return `
-      <a class="course-card keskustelu-kortti" href="${tehtava.href}" style="
+      <a class="keskustelu-kortti" href="${tehtava.href}" style="
         background: linear-gradient(135deg, #faf5ff, #ede9fe);
         border: 2px solid #c4b5fd;
         border-radius: 14px;
@@ -10,7 +10,7 @@ function luoTehtavaKortti(tehtava) {
         display: block;
         text-decoration: none;
         transition: box-shadow 0.2s, transform 0.2s;
-        margin-bottom: 2px;
+        margin-bottom: 12px;
       ">
         <div style="display:flex; align-items:flex-start; gap:12px;">
           <div style="
@@ -58,7 +58,7 @@ function luoTehtavaKortti(tehtava) {
 
   // Vihkomainen ulkoasu kirjoitustehtäville
   return `
-    <a class="course-card vihko-kortti" href="${tehtava.href}" style="
+    <a class="vihko-kortti" href="${tehtava.href}" style="
       background:
         repeating-linear-gradient(
           transparent,

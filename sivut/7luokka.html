@@ -26,6 +26,22 @@
     <style>
       /* 7. luokka — teema D: pehmeä violetti/pinkki */
 
+      .nav-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .nav-logo span {
+        color: #f0c040;
+        font-style: italic;
+      }
+
       .book-spread {
         background: rgba(255, 255, 255, 0.75);
         border: 1px solid #e9d5ff;
@@ -233,6 +249,105 @@
         border-radius: 6px;
         font-weight: 700;
       }
+    
+    /* ── Haaste ylöspäin eriyttäminen ── */
+    .haaste-osio {
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+    .haaste-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(135deg, #5b21b6, #7c3aed);
+      color: #fff;
+      border: 2px solid #6d28d9;
+      border-radius: 12px;
+      padding: 11px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      text-align: left;
+    }
+    .haaste-toggle:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #6d28d9, #a855f7);
+    }
+    .haaste-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .haaste-pollo-kuva {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .haaste-nuoli {
+      font-size: 0.85rem;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .haaste-toggle[aria-expanded="true"] .haaste-nuoli {
+      transform: rotate(180deg);
+    }
+    .haaste-sisalto {
+      background: linear-gradient(160deg, #faf5ff 0%, #f3e8ff 100%);
+      border: 1.5px solid #c4b5fd;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 18px 20px 16px;
+      margin-top: -4px;
+      color: #1e1b4b;
+    }
+    .haaste-ohje {
+      color: #3b0764;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin: 0 0 10px;
+    }
+    .haaste-ohje strong {
+      color: #6d28d9;
+    }
+    .haaste-vihje {
+      color: #4c1d95;
+      font-size: 0.83rem;
+      font-style: italic;
+      margin: 0;
+      padding: 8px 12px;
+      background: rgba(167, 139, 250, 0.18);
+      border-left: 3px solid #7c3aed;
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* ── tasks-section: poistetaan ulompi boksiefekti ── */
+    .tasks-section {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      margin-bottom: 12px !important;
+    }
+
+    /* ── Tehtäväkortit: yhtenäinen leveys ── */
+    .keskustelu-kortti,
+    .vihko-kortti {
+      box-sizing: border-box !important;
+      width: 100% !important;
+      margin-bottom: 12px !important;
+    }
+
+    /* ── mission-card: väli ja padding säilyy ── */
+    .mission-card {
+      margin-bottom: 12px !important;
+    }
     </style>
   </head>
 
@@ -240,13 +355,8 @@
     <!-- Navigaatio -->
     <header class="navbar">
       <div class="nav-left">
-        <a
-          href="../index.html"
-          class="home-btn"
-          aria-label="Takaisin DigiOpon etusivulle"
-        >
-          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-          DigiOpo
+        <a href="../index.html" class="logo nav-logo" aria-label="Takaisin DigiOpon etusivulle">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true" style="font-size:16px; margin-right:6px;"></i>Digi<span>opo</span>
         </a>
       </div>
 
@@ -596,19 +706,7 @@
             ></div>
           </div>
 
-
-        
-
-          <div class="tasks-section">
-            <div
-              class="task-list"
-              id="tasks-tervetuloa"
-              aria-live="polite"
-            ></div>
-          </div>
-
-          <div id="tervetuloa-mission" class="mission-section">
-            <div class="mission-card">
+          <div id="tervetuloa-mission" class="mission-card">
               <div class="mission-header">
                 <h4>Yläkoulu-bingo</h4>
                 <span class="mission-badge">Liiku ja löydä</span>
@@ -620,8 +718,26 @@
                 <li>Löydä joku, jolla on harrastus</li>
                 <li>Löydä joku, joka haluaa oppia uutta</li>
               </ul>
+              <p class="mission-hint">⏱ Aika: 5–10 min</p>
+          </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Kirjoita <strong>kirje itsellesi</strong> kolmen vuoden päähän: Mitä toivot olevasi silloin? Mitä pelkäät? Mikä sinussa on nyt sellaista, jota et halua unohtaa? Säilytä kirje ja lue se 9. luokalla.</p>
+              <p class="haaste-vihje">💡 Vinkki: Kirjoita rehellisesti — kirje on vain sinulle</p>
             </div>
-            <p class="mission-hint">⏱ Aika: 5–10 min</p>
           </div>
         </section>
 
@@ -765,8 +881,7 @@
               aria-live="polite"
             ></div>
           </div>
-          <div id="opiskelutaidot-mission" class="mission-section">
-            <div class="mission-card">
+          <div id="opiskelutaidot-mission" class="mission-card">
               <div class="mission-header">
                 <h4>Oppimistapapeli</h4>
                 <span class="mission-badge">Pikapeli</span>
@@ -777,6 +892,24 @@
                 <li>Piirtäkää asia kuvaksi</li>
                 <li>Keksikää esimerkki arjesta</li>
               </ul>
+            </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Tee itsellesi <strong>henkilökohtainen opiskelusuunnitelma</strong>: valitse yksi oppiaine, johon haluat panostaa tällä viikolla. Kirjaa, milloin opiskelet, miten ja miten arvioit onnistumistasi viikon lopussa.</p>
+              <p class="haaste-vihje">💡 Vinkki: Pienet, konkreettiset tavoitteet toimivat paremmin kuin isot haaveet</p>
             </div>
           </div>
         </section>
@@ -915,8 +1048,7 @@
               aria-live="polite"
             ></div>
           </div>
-          <div id="mina-oppijana-mission" class="mission-section">
-            <div class="mission-card">
+          <div id="mina-oppijana-mission" class="mission-card">
               <div class="mission-header">
                 <h4>Mikä auttaa jaksamaan?</h4>
                 <span class="mission-badge">Tiimitehtävä</span>
@@ -930,6 +1062,24 @@
                 <li>Keksi 1 palkinto itselle</li>
                 <li>Jaa ideat muille</li>
               </ul>
+              </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Pidä <strong>motivaatiopäiväkirjaa viikon ajan</strong>: kirjaa joka päivä yksi asia, joka innosti sinua oppimaan — ja yksi asia, joka söi motivaatiosi. Pohdi viikon lopussa: löydätkö jonkin kaavan?</p>
+              <p class="haaste-vihje">💡 Vinkki: Pienetkin asiat kelpaavat — vaikkapa se tunti, jolloin aika lensi</p>
             </div>
           </div>
         </section>
@@ -1073,8 +1223,7 @@
             ></iframe>
           </div>
 
-          <div id="omat-vahvuudet-mission" class="mission-section">
-            <div class="mission-card">
+          <div id="omat-vahvuudet-mission" class="mission-card">
               <div class="mission-header">
                 <h4>Vahvuusetsivä</h4>
                 <span class="mission-badge">Ryhmähaaste</span>
@@ -1087,6 +1236,24 @@
                 <li>Keksi yksi uusi vahvuus toiselle</li>
                 <li>Kerro oma vahvuutesi ääneen</li>
               </ul>
+            </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Luo oma <strong>vahvuuskartta</strong>: kirjoita paperille kaikki asiat, joissa olet mielestäsi hyvä — myös ne pieniltä tuntuvat. Luokittele vahvuudet: sosiaaliset, luovat, tekniset, fyysiset. Mitkä kategoria on sinulle vahvin?</p>
+              <p class="haaste-vihje">💡 Vinkki: Pyydä jotakuta, joka tuntee sinut hyvin, lisäämään listaan yhden vahvuuden, jota et itse huomannut</p>
             </div>
           </div>
         </section>
@@ -1291,8 +1458,7 @@
             </div>
           </div>
 
-          <div id="tulevaisuus-mission" class="mission-section">
-            <div class="mission-card">
+          <div id="tulevaisuus-mission" class="mission-card">
               <div class="mission-header">
                 <h4>Tulevaisuus-haaste</h4>
                 <span class="mission-badge">Amazing Race</span>
@@ -1303,6 +1469,24 @@
                 <li>Keksi 1 uusi ammatti</li>
                 <li>Kerro oma idea parille</li>
               </ul>
+            </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Tutki <strong>kahta ammattia</strong>, joista et tiedä juuri mitään. Selvitä molemmista: mitä arki siinä työssä on, millainen koulutuspolku sinne johtaa, ja mikä voisi olla siinä innostavaa — tai haastavaa — juuri sinulle.</p>
+              <p class="haaste-vihje">💡 Vinkki: Parhaat löydöt tulevat usein sieltä, missä et odota — kokeile etsiä ammatti, joka kuulostaa oudolta</p>
             </div>
           </div>
         </section>
@@ -1544,6 +1728,19 @@
 
     <script src="../js/tehtavat.js"></script>
     <script src="../js/luokka.js"></script>
+    <script>
+      function toggleHaaste(btn) {
+        var sisalto = btn.nextElementSibling;
+        var auki = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+        if (auki) {
+          sisalto.hidden = true;
+        } else {
+          sisalto.hidden = false;
+          sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    </script>
 
     <script>
       function avaaInfograafi() {
