@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajattelun tehostaminen</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.sr-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+body{font-family:system-ui,-apple-system,sans-serif;background:#FFF3E0;color:#412402;}
+.app{padding:1.25rem;max-width:700px;margin:0 auto;background:#FFF3E0;min-height:100vh;}
+
+/* Cards */
+.card{background:#fff;border:0.5px solid #F5C4B3;border-radius:12px;padding:1.25rem;margin-bottom:1rem;}
+.card-warm{background:#FFFBF5;border:0.5px solid #F5C4B3;border-radius:12px;padding:1.25rem;margin-bottom:1rem;}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.06em;color:#BA7517;text-transform:uppercase;margin-bottom:10px;}
+
+/* XP */
+.xp-wrap{background:#F5C4B3;border-radius:99px;height:14px;overflow:hidden;}
+.xp-fill{height:14px;border-radius:99px;transition:width 0.5s ease;background:#1D9E75;}
+.xp-fill2{height:14px;border-radius:99px;transition:width 0.5s ease;background:#7F77DD;}
+.xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.xp-label{font-size:13px;color:#633806;}
+.xp-val{font-size:13px;font-weight:500;color:#412402;}
+
+/* Typography */
+.mode-badge{display:inline-block;font-size:12px;font-weight:500;padding:3px 10px;border-radius:99px;margin-bottom:10px;}
+.scenario{font-size:15px;color:#412402;line-height:1.75;margin-bottom:1rem;}
+.thinking-label{font-size:13px;color:#633806;margin-bottom:8px;line-height:1.6;}
+
+/* Textarea */
+textarea{width:100%;font-size:14px;padding:10px 12px;border:1.5px solid #F0997B;border-radius:8px;background:#FFFBF5;color:#412402;font-family:inherit;resize:vertical;line-height:1.7;}
+textarea:focus{outline:3px solid #D85A30;outline-offset:2px;border-color:transparent;}
+textarea.too-short{border-color:#E24B4A;}
+textarea.ok{border-color:#1D9E75;}
+.char-counter{font-size:12px;margin-top:4px;transition:color .2s;}
+.char-ok{color:#1D9E75;}
+.char-warn{color:#E24B4A;}
+
+/* Hint */
+.hint-btn{font-size:13px;color:#633806;background:none;border:1px solid #F0997B;border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:8px;}
+.hint-btn:hover{background:#FAECE7;}
+.hint-btn:focus{outline:3px solid #D85A30;outline-offset:2px;}
+.hint-box{margin-top:10px;padding:10px 14px;background:#FAECE7;border-radius:8px;border-left:3px solid #D85A30;font-size:13px;color:#712B13;line-height:1.75;}
+
+/* Divider */
+.divider{height:1px;background:#F5C4B3;margin:1rem 0;}
+
+/* Stars */
+.stars-row{display:flex;align-items:center;gap:6px;margin-top:.75rem;flex-wrap:wrap;}
+.stars-label{font-size:13px;color:#633806;}
+.star-btn{font-size:28px;cursor:pointer;line-height:1;color:#F5C4B3;background:none;border:none;padding:2px;border-radius:4px;transition:color .1s,transform .1s;}
+.star-btn.lit{color:#EF9F27;}
+.star-btn:hover{transform:scale(1.15);}
+.star-btn:focus{outline:3px solid #D85A30;outline-offset:2px;}
+.star-desc{font-size:12px;color:#BA7517;min-width:130px;}
+
+/* Score chip */
+.score-chip{display:inline-flex;align-items:center;gap:5px;background:#FAECE7;border:0.5px solid #F0997B;border-radius:99px;padding:4px 12px;font-size:13px;color:#633806;}
+.score-chip strong{color:#412402;}
+
+/* Buttons */
+.btn-row{display:flex;gap:10px;margin-top:1rem;align-items:center;flex-wrap:wrap;}
+.next-btn{background:#fff;border:1px solid #F0997B;border-radius:8px;padding:10px 20px;font-size:14px;cursor:pointer;font-family:inherit;color:#412402;}
+.next-btn:hover{background:#FAECE7;}
+.next-btn:focus{outline:3px solid #D85A30;outline-offset:2px;}
+.next-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.primary-btn{color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500;}
+.primary-btn:hover{opacity:.88;}
+.primary-btn:focus{outline:3px solid #D85A30;outline-offset:2px;}
+.primary-btn:disabled{opacity:.4;cursor:not-allowed;}
+.step-counter{font-size:13px;color:#BA7517;}
+
+/* Notes */
+.bonus-note{font-size:12px;color:#633806;background:#FAEEDA;border-radius:99px;padding:2px 9px;display:inline-block;margin-top:6px;}
+.hint-penalty{font-size:11px;color:#633806;background:#FAEEDA;border-radius:99px;padding:2px 7px;margin-left:5px;}
+.no-hint-note{font-size:12px;color:#BA7517;margin-top:10px;padding:8px 12px;border:1px dashed #F0997B;border-radius:8px;background:#FFFBF5;}
+.error-note{font-size:12px;color:#A32D2D;margin-top:6px;}
+.reflect-btn{background:none;border:1px solid #F0997B;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer;color:#412402;font-family:inherit;}
+.reflect-btn:hover{background:#FAECE7;}
+.reflect-btn:focus{outline:3px solid #D85A30;outline-offset:2px;}
+
+/* Map */
+.map-row{display:flex;gap:8px;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-bottom:4px;}
+.map-node{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.map-circle{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid transparent;transition:all 0.3s;}
+.map-circle.done{border-color:transparent;}
+.map-circle.active{border-color:#EF9F27;box-shadow:0 0 0 3px #FAEEDA;}
+.map-circle.locked{opacity:.35;filter:grayscale(1);}
+.map-label{font-size:10px;color:#BA7517;text-align:center;max-width:54px;line-height:1.3;}
+.map-connector{width:24px;height:2px;margin-bottom:23px;border-radius:1px;}
+
+/* Brain */
+.brain-svg{display:block;margin:0 auto;}
+
+/* Radar */
+.radar-container{position:relative;width:100%;height:260px;}
+
+/* Summary grid */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:8px;margin:1rem 0;}
+.summary-item{padding:10px 12px;border-radius:8px;border:0.5px solid #F5C4B3;}
+.summary-mode{font-size:11px;font-weight:500;margin-bottom:5px;}
+.summary-stars{font-size:16px;letter-spacing:1px;}
+.summary-pts{font-size:12px;margin-top:3px;}
+
+/* Compare */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1rem;}
+.compare-col{background:#FAECE7;border-radius:8px;padding:10px 12px;}
+.compare-col-title{font-size:11px;font-weight:500;margin-bottom:8px;color:#633806;}
+.compare-bar-wrap{margin-bottom:6px;}
+.compare-bar-label{font-size:11px;color:#633806;margin-bottom:2px;}
+.compare-bar-bg{background:#F5C4B3;border-radius:99px;height:6px;overflow:hidden;}
+.compare-bar-fill{height:6px;border-radius:99px;transition:width .5s;}
+
+/* Peer */
+.peer-card{background:#fff;border:2px solid #7F77DD44;border-radius:12px;padding:1.25rem;margin-bottom:1rem;}
+.peer-phase-badge{display:inline-block;font-size:12px;font-weight:500;padding:4px 12px;border-radius:99px;background:#EEEDFE;color:#3C3489;margin-bottom:12px;}
+.peer-answer-box{background:#FFFBF5;border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.75;color:#412402;margin-bottom:1rem;border-left:3px solid #7F77DD;white-space:pre-wrap;}
+.peer-rubric{display:grid;gap:6px;margin-bottom:1rem;}
+.peer-rubric-item{display:flex;align-items:flex-start;gap:10px;background:#FFFBF5;border-radius:8px;padding:10px 12px;border:0.5px solid #F5C4B3;}
+.peer-rubric-check{width:24px;height:24px;border-radius:4px;border:1.5px solid #F0997B;background:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:1px;transition:all .15s;}
+.peer-rubric-check.checked{background:#7F77DD;border-color:#7F77DD;color:#fff;}
+.peer-rubric-check:focus{outline:3px solid #D85A30;outline-offset:2px;}
+.peer-rubric-text{font-size:13px;color:#412402;line-height:1.6;}
+.peer-score-display{text-align:center;padding:14px;background:#EEEDFE;border-radius:8px;margin-bottom:1rem;}
+.peer-score-num{font-size:34px;font-weight:500;color:#3C3489;}
+.peer-score-label{font-size:12px;color:#534AB7;margin-top:4px;}
+
+/* Pass device */
+.pass-screen{text-align:center;padding:2.5rem 1rem;}
+.pass-emoji{font-size:56px;line-height:1;margin-bottom:1rem;}
+.pass-title{font-size:20px;font-weight:500;margin-bottom:.75rem;color:#412402;}
+.pass-sub{font-size:14px;color:#633806;line-height:1.75;margin-bottom:1.5rem;}
+
+/* Level up */
+.levelup-card{background:#fff;border:0.5px solid #F5C4B3;border-radius:12px;padding:2rem 1.5rem;text-align:center;}
+.levelup-title{font-size:20px;font-weight:500;margin-bottom:.75rem;color:#412402;}
+.levelup-sub{font-size:15px;color:#633806;line-height:1.75;margin-bottom:1.5rem;max-width:440px;margin-left:auto;margin-right:auto;}
+.levelup-compare{display:flex;gap:12px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;}
+.levelup-box{border-radius:8px;border:1px solid #F5C4B3;padding:14px 18px;text-align:left;min-width:170px;background:#FFFBF5;}
+.levelup-box-title{font-size:12px;font-weight:500;margin-bottom:8px;}
+.levelup-box-item{font-size:13px;color:#412402;margin-bottom:6px;line-height:1.5;}
+.levelup-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* Hero */
+.hero-banner{background:#FAECE7;border-radius:12px;padding:1.75rem;text-align:center;margin-bottom:1rem;border:0.5px solid #F5C4B3;}
+.hero-title{font-size:24px;font-weight:500;color:#412402;margin-bottom:.4rem;}
+.hero-sub{font-size:14px;color:#633806;line-height:1.7;}
+
+/* Mode pills on start */
+.mode-pills{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:.75rem;}
+.mode-pill{border-radius:8px;padding:10px 6px;text-align:center;}
+.mode-pill-icon{font-size:20px;}
+.mode-pill-label{font-size:10px;font-weight:500;margin-top:4px;}
+
+/* Info box */
+.info-box{background:#FAEEDA;border-radius:8px;padding:10px 14px;font-size:13px;color:#633806;line-height:1.6;margin-bottom:1rem;border:0.5px solid #FAC775;}
+
+/* Play modes */
+.play-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.play-mode-box{background:#FAECE7;border-radius:8px;padding:14px;border:0.5px solid #F5C4B3;}
+.play-mode-icon{font-size:22px;margin-bottom:6px;}
+.play-mode-title{font-size:13px;font-weight:500;color:#412402;margin-bottom:4px;}
+.play-mode-desc{font-size:12px;color:#633806;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<h1 class="sr-only">Ajattelun tehostaminen – interaktiivinen harjoitus</h1>
+<div class="app" role="main"><div id="main-view" aria-live="polite"></div></div>
+
+<script>
+const MIN_CHARS = 30;
+
+const MODES = [
+  {key:'kriittinen',  label:'Kriittinen',    icon:'🔍', bg:'#EAF3DE', tc:'#27500A', color:'#639922'},
+  {key:'lateraalinen',label:'Lateraalinen',  icon:'💡', bg:'#E6F1FB', tc:'#0C447C', color:'#378ADD'},
+  {key:'looginen',    label:'Looginen',      icon:'🧩', bg:'#FBEAF0', tc:'#72243E', color:'#D4537E'},
+  {key:'luova',       label:'Luova',         icon:'🎨', bg:'#FAEEDA', tc:'#633806', color:'#EF9F27'},
+  {key:'reflektiivinen',label:'Reflektiivinen',icon:'🪞',bg:'#EEEDFE', tc:'#3C3489', color:'#7F77DD'},
+];
+
+const RUBRICS = {
+  kriittinen:[
+    'Epäilee tiedon lähdettä',
+    'Kysyy "miksi" tai "mistä tiedät"',
+    'Tunnistaa mahdollisen vinouman tai yliyleistyksen',
+    'Ehdottaa tapaa tarkistaa väite',
+  ],
+  lateraalinen:[
+    'Keksii ratkaisun, joka ei ole ilmeisin',
+    'Kyseenalaistaa jonkin oletuksen',
+    'Ehdottaa vähintään kaksi erilaista ideaa',
+    'Ajattelee asian ulkopuolelta',
+  ],
+  looginen:[
+    'Etenee askel kerrallaan',
+    'Käyttää annettuja ehtoja oikein',
+    'Päätyy selkeään vastaukseen',
+    'Perustelee jokaisen askeleen',
+  ],
+  luova:[
+    'Listaa vähintään 3 ideaa',
+    'Mukana yllättäviä tai odottamattomia ajatuksia',
+    'Miettii sekä hyviä että huonoja puolia',
+    'Ei sensuroi ideoita liian aikaisin',
+  ],
+  reflektiivinen:[
+    'Kuvaa mitä tapahtui konkreettisesti',
+    'Kertoo miltä tuntui',
+    'Pohtii miksi meni niin',
+    'Ehdottaa mitä tekisi eri tavalla',
+  ],
+};
+
+const ALL_TASKS = {
+  1: [
+    {
+      mode:'kriittinen',
+      scenario:'📰 Näet netissä uutisen:\n"Tutkimus: Puhelimet vahingoittavat nuorten aivoja!"\n\nUutisella on tuhat tykkäystä. Monet ovat vihaisia.\n\nMiten selvität, onko uutinen totta vai ei?',
+      thinking:'Pohdi: Kuka teki tutkimuksen? Mistä tieto tuli? Voiko uutinen olla väärässä?',
+      hint:'💡 Kysy: Kuka teki tutkimuksen? Kuinka monta ihmistä tutkittiin? Onko muita tutkimuksia, jotka sanovat eri asiaa?',
+    },
+    {
+      mode:'lateraalinen',
+      scenario:'🧩 Luokassanne on vain yksi tussitaulu. Kolme ryhmää tarvitsee sen samaan aikaan.\n\nOpettaja sanoo: "Ratkaiskaa ongelma. Mutta älkää jakako taulua kolmeen osaan."\n\nMiten ratkaiset tämän?',
+      thinking:'Älä mieti vain taulua. Onko muita tapoja, joilla ryhmät voivat tehdä töitä?',
+      hint:'💡 Tarvitsevatko kaikki taulua yhtä aikaa? Voisiko käyttää paperia, ikkunaa, lattiaa tai tablettia?',
+    },
+    {
+      mode:'looginen',
+      scenario:'🔍 Aino, Bea ja Cara ottavat kukin yhden esineen: kirja, kuulokkeet tai vesipullo.\n\n• Aino ei ottanut kirjaa.\n• Bea ei ottanut kuulokkeita.\n• Cara otti sen esineen, jonka Aino jätti.\n\nKuka otti mitä?',
+      thinking:'Mieti askel kerrallaan. Mitä tiedät varmasti? Mitä voit päätellä siitä?',
+      hint:'💡 Aloita Carasta. Ainolla oli kaksi vaihtoehtoa. Kokeile molemmat.',
+    },
+    {
+      mode:'luova',
+      scenario:'🎨 Kuvittele: koulussa ei ole lainkaan lukujärjestystä. Jokainen oppilas päättää itse, milloin opiskelee mitäkin.\n\nKeksi 5 yllättävää asiaa, joita voisi tapahtua!',
+      thinking:'Älä arvioi ideoita heti. Kirjoita kaikki ylös. Mieti sekä hyviä että huonoja seurauksia.',
+      hint:'💡 Kirjoita ensin, mieti vasta sitten. Esim: joku opiskelisi yöllä, jotkut eivät opiskelisi alussa...',
+    },
+    {
+      mode:'reflektiivinen',
+      scenario:'📔 Muistele tilannetta, jossa jokin asia tuntui todella vaikealta tai epäonnistuit jossakin.\n\nKirjoita:\n– Mitä tapahtui?\n– Mitä teit?\n– Mitä opit?\n– Mitä tekisit eri tavalla ensi kerralla?',
+      thinking:'Tämä on tapa oppia omista kokemuksista. Ole rehellinen, mutta armollinen itsellesi.',
+      hint:'💡 Kirjoita ensin mitä tapahtui. Sitten miltä tuntui. Miksi meni niin. Mitä tekisit eri tavalla.',
+    },
+  ],
+  2: [
+    {
+      mode:'kriittinen',
+      scenario:'🧪 Kaverisi lähettää videon. Siinä kuuluisa urheilija mainostaa lisäravinteita:\n\n"Nämä pillerit tuplasivat voimani kuukaudessa – tieteellisesti todistettu!"\n\nMitkä asiat ovat epäilyttäviä? Miten selvittäisit, onko tuote oikeasti tehokas?',
+      thinking:'Kuka hyötyy, jos uskot väitteen? Mitä "tieteellisesti todistettu" oikeasti tarkoittaa?',
+      hint:null,
+    },
+    {
+      mode:'lateraalinen',
+      scenario:'🚌 Kaupungissa on paljon ruuhkia. Uusia teitä ei rakenneta. Lisää busseja ja pyöräteitä on kokeiltu, mutta ne eivät auttaneet.\n\nKeksi kolme ratkaisua, jotka eivät liity liikenteeseen tai teihin lainkaan.',
+      thinking:'Onko ruuhka oikeasti liikenteen ongelma? Vai voisiko syy olla ihmisten tavoissa tai ajoissa?',
+      hint:null,
+    },
+    {
+      mode:'looginen',
+      scenario:'🔐 Kai, Leo, Mia ja Nora istuvat neliön muotoisen pöydän ääressä. Joka sivulla istuu yksi henkilö.\n\n• Kai ja Leo eivät istu vierekkäin.\n• Mia istuu Leon vasemmalla puolella.\n• Nora istuu Kain vastaapäätä.\n\nMissä järjestyksessä he istuvat? Perustele jokainen askel.',
+      thinking:'Etene askel kerrallaan. Kirjoita välivaiheet auki.',
+      hint:null,
+    },
+    {
+      mode:'luova',
+      scenario:'🌍 Suunnittele uusi kouluaine, jota ei vielä opeteta missään.\n\n– Mikä on aineen nimi?\n– Mitä siinä opitaan?\n– Miksi se on tärkeää 2030-luvun nuorille?\n– Millainen on yksi oppitunti?',
+      thinking:'Mikä taito puuttuu nykyisestä koulusta? Mitä nuoret tarvitsevat tulevaisuudessa?',
+      hint:null,
+    },
+    {
+      mode:'reflektiivinen',
+      scenario:'🪞 Muistele kolmea erilaista oppimistilannetta:\n– Tilanne, jossa onnistuit hyvin.\n– Tilanne, jossa epäonnistuit.\n– Tilanne, jossa opit eniten.\n\nMitä näillä on yhteistä? Mitä se kertoo sinusta oppijana?',
+      thinking:'Etsi kaavoja. Älä vain kuvaile tapahtumia – mieti mitä ne tarkoittavat.',
+      hint:null,
+    },
+  ],
+};
+
+const STAR_LABELS = ['','Hyvä alku!','Perusteet hallussa','Ajattelin laajasti','Vahva suoritus!','Mestariajattelija!'];
+
+const LEVELS = [
+  {min:0,  max:4,  label:'Aloittelija',       emoji:'🌱', color:'#9FE1CB'},
+  {min:5,  max:9,  label:'Harjoittelija',      emoji:'🔍', color:'#85B7EB'},
+  {min:10, max:14, label:'Taitava ajattelija', emoji:'⚡', color:'#AFA9EC'},
+  {min:15, max:19, label:'Monipuolinen ajattelija', emoji:'🏆', color:'#FAC775'},
+  {min:20, max:25, label:'Mestariajattelija',  emoji:'🌟', color:'#EF9F27'},
+];
+
+const LVL_COLORS = {1:'#D85A30', 2:'#7F77DD'};
+const LVL_NAMES  = {1:'Perustaso', 2:'Edistynyt taso'};
+
+/* ── State ── */
+let gLvl = 1, cur = 0;
+let answers     = {1:Array(5).fill(''), 2:Array(5).fill('')};
+let stars       = {1:Array(5).fill(0),  2:Array(5).fill(0)};
+let peerStars   = {1:Array(5).fill(0),  2:Array(5).fill(0)};
+let peerChecks  = {1:Array(5).fill(null),2:Array(5).fill(null)};
+let peerComments= {1:Array(5).fill(''), 2:Array(5).fill('')};
+let hintsUsed   = {1:Array(5).fill(false),2:Array(5).fill(false)};
+let hintsShown  = {1:Array(5).fill(false),2:Array(5).fill(false)};
+let history = [];
+let screen = 'start';
+let radarChart = null;
+
+/* ── Helpers ── */
+function getMode(k){ return MODES.find(m => m.key === k); }
+
+function calcScore(lvl){
+  let t = 0;
+  for(let i = 0; i < 5; i++){
+    const self = stars[lvl][i], peer = peerStars[lvl][i];
+    let base = peer > 0 ? Math.round((self + peer) / 2) : self;
+    if(hintsUsed[lvl][i] && base > 0) base = Math.max(1, base - 1);
+    t += base;
+  }
+  return t;
+}
+
+function adjStar(lvl, i){
+  const self = stars[lvl][i], peer = peerStars[lvl][i];
+  let base = peer > 0 ? Math.round((self + peer) / 2) : self;
+  if(hintsUsed[lvl][i] && base > 0) base = Math.max(1, base - 1);
+  return base;
+}
+
+function getLevel(s){ return LEVELS.find(l => s >= l.min && s <= l.max) || LEVELS[0]; }
+function charCount(lvl, i){ return (answers[lvl][i] || '').trim().length; }
+function isLongEnough(lvl, i){ return charCount(lvl, i) >= MIN_CHARS; }
+
+/* ── Shared visual components ── */
+function renderMap(curIdx, lvl){
+  const tasks = ALL_TASKS[lvl], color = LVL_COLORS[lvl];
+  let html = '<div class="map-row" role="list" aria-label="Tehtäväpolku">';
+  tasks.forEach((t, i) => {
+    const m = getMode(t.mode);
+    const isDone   = isLongEnough(lvl, i) && stars[lvl][i] > 0;
+    const isActive = i === curIdx;
+    const cls = 'map-circle' + (isDone ? ' done' : isActive ? ' active' : ' locked');
+    const bg  = (isDone || isActive) ? m.bg : '#FAECE7';
+    html += `<div class="map-node" role="listitem" aria-label="${m.label}: ${isDone?'valmis':isActive?'käynnissä':'odottaa'}">
+      <div class="${cls}" style="background:${bg};${isDone?'border-color:'+m.color:''}" aria-hidden="true">${isDone?'✓':isActive?m.icon:'○'}</div>
+      <div class="map-label" style="color:${isDone?m.tc:isActive?m.tc:'#BA7517'}">${m.label}</div>
+    </div>`;
+    if(i < tasks.length - 1)
+      html += `<div class="map-connector" style="background:${isDone?color:'#F5C4B3'}" aria-hidden="true"></div>`;
+  });
+  return html + '</div>';
+}
+
+function renderBrain(lvl){
+  const fills = MODES.map((_, i) => {
+    const pct = adjStar(lvl, i) / 5;
+    return {color: MODES[i].color, alpha: pct > 0 ? (0.25 + pct * 0.75) : 0.08, pct};
+  });
+  const cx = [72,148,78,142,110], cy = [68,68,108,108,120];
+  const rb = (i,base,extra) => 6 + fills[i].pct * (base+extra);
+  return `<svg class="brain-svg" viewBox="0 0 220 180" width="190" height="155"
+      aria-label="Aivokaavio: ajattelutapojen aktivoituminen" role="img">
+    <title>Aivokaavio</title>
+    <ellipse cx="110" cy="95" rx="72" ry="62" fill="#FAECE7" stroke="#F5C4B3" stroke-width="1"/>
+    <path d="M110,35 Q80,30 68,55 Q50,50 48,72 Q36,80 40,100 Q38,118 55,128 Q62,148 85,148 Q95,155 110,153"
+          fill="none" stroke="#F0997B" stroke-width="0.8"/>
+    <path d="M110,35 Q140,30 152,55 Q170,50 172,72 Q184,80 180,100 Q182,118 165,128 Q158,148 135,148 Q125,155 110,153"
+          fill="none" stroke="#F0997B" stroke-width="0.8"/>
+    <path d="M80,80 Q95,65 110,75 Q125,65 140,80" fill="none" stroke="#F5C4B3" stroke-width="0.8"/>
+    <path d="M75,100 Q90,90 105,98 Q110,102 115,98 Q130,90 145,100" fill="none" stroke="#F5C4B3" stroke-width="0.8"/>
+    <circle cx="${cx[0]}" cy="${cy[0]}" r="${rb(0,6,14)}" fill="${fills[0].color}" opacity="${fills[0].alpha}" style="transition:all .5s"/>
+    <circle cx="${cx[1]}" cy="${cy[1]}" r="${rb(1,6,14)}" fill="${fills[1].color}" opacity="${fills[1].alpha}" style="transition:all .5s"/>
+    <circle cx="${cx[2]}" cy="${cy[2]}" r="${rb(2,6,12)}" fill="${fills[2].color}" opacity="${fills[2].alpha}" style="transition:all .5s"/>
+    <circle cx="${cx[3]}" cy="${cy[3]}" r="${rb(3,6,12)}" fill="${fills[3].color}" opacity="${fills[3].alpha}" style="transition:all .5s"/>
+    <circle cx="${cx[4]}" cy="${cy[4]}" r="${rb(4,5,10)}" fill="${fills[4].color}" opacity="${fills[4].alpha}" style="transition:all .5s"/>
+    <text x="110" y="172" text-anchor="middle" font-size="9" fill="#BA7517">Aktiivisuus kasvaa pisteiden myötä</text>
+  </svg>`;
+}
+
+function renderXP(lvl){
+  const s1 = calcScore(1), s2 = lvl === 2 ? calcScore(2) : null;
+  let html = `
+    <div class="xp-row"><span class="xp-label">Perustaso XP</span><span class="xp-val">${s1} / 25</span></div>
+    <div class="xp-wrap" role="progressbar" aria-valuenow="${s1}" aria-valuemin="0" aria-valuemax="25" aria-label="Perustaso: ${s1}/25">
+      <div class="xp-fill" style="width:${Math.round(s1/25*100)}%"></div>
+    </div>`;
+  if(s2 !== null) html += `
+    <div class="xp-row" style="margin-top:10px"><span class="xp-label">Edistynyt XP</span><span class="xp-val">${s2} / 25</span></div>
+    <div class="xp-wrap" role="progressbar" aria-valuenow="${s2}" aria-valuemin="0" aria-valuemax="25" aria-label="Edistynyt: ${s2}/25">
+      <div class="xp-fill2" style="width:${Math.round(s2/25*100)}%"></div>
+    </div>`;
+  return html;
+}
+
+/* ── Screens ── */
+function render(){
+  const app = document.getElementById('main-view');
+  if(radarChart){ radarChart.destroy(); radarChart = null; }
+  const screens = {
+    start:    () => renderStart(app),
+    game:     () => renderGame(app),
+    passdevice:() => renderPassDevice(app),
+    peer:     () => renderPeer(app),
+    summary1: () => renderSummary(app, 1),
+    levelup:  () => renderLevelUp(app),
+    summary2: () => renderSummary(app, 2),
+  };
+  (screens[screen] || screens.game)();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderStart(app){
+  app.innerHTML = `
+    <div class="hero-banner">
+      <div style="font-size:52px;margin-bottom:.75rem">🧠</div>
+      <h1 class="hero-title">Ajattelun tehostaminen</h1>
+      <p class="hero-sub">Harjoittele viittä erilaista ajattelutapaa käytännön tehtävillä.<br>Voit pelata yksin, pareittain tai pienessä ryhmässä.</p>
+    </div>
+
+    <div class="card-warm">
+      <div class="section-label">Miten pelata</div>
+      <div class="play-modes">
+        <div class="play-mode-box">
+          <div class="play-mode-icon">👤</div>
+          <div class="play-mode-title">Yksin</div>
+          <div class="play-mode-desc">Vastaa tehtäviin ja arvioi oma suorituksesi tähdillä.</div>
+        </div>
+        <div class="play-mode-box">
+          <div class="play-mode-icon">👥</div>
+          <div class="play-mode-title">Pareittain tai ryhmässä</div>
+          <div class="play-mode-desc">Jokaisen tehtävän jälkeen kaveri arvioi vastauksesi arviointilistan avulla.</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        ⭐ Kirjoita vähintään 30 merkkiä ennen kuin voit edetä.<br>
+        💡 Voit pyytää vinkkiä – se maksaa yhden tähden.<br>
+        🔒 Edistyneellä tasolla ei ole vinkkejä.
+      </div>
+
+      <button class="primary-btn" style="background:#D85A30;font-size:15px;padding:12px 28px" onclick="screen='game';render()">
+        Aloita peli →
+      </button>
+    </div>
+
+    <div class="mode-pills">
+      ${MODES.map(m => `
+        <div class="mode-pill" style="background:${m.bg}">
+          <div class="mode-pill-icon">${m.icon}</div>
+          <div class="mode-pill-label" style="color:${m.tc}">${m.label}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderGame(app){
+  const tasks = ALL_TASKS[gLvl], t = tasks[cur], m = getMode(t.mode);
+  const color = LVL_COLORS[gLvl], score = calcScore(gLvl);
+  const len = charCount(gLvl, cur), enough = len >= MIN_CHARS;
+  const starsNow = stars[gLvl];
+  const canAdvance = enough && starsNow[cur] > 0;
+
+  app.innerHTML = `
+    <div role="region" aria-label="${LVL_NAMES[gLvl]}, tehtävä ${cur+1} / 5">
+
+      <div class="card-warm" style="padding:1rem">
+        <div class="section-label">Tehtäväpolku</div>
+        ${renderMap(cur, gLvl)}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+        <div class="card-warm" style="padding:1rem">
+          <div class="section-label">XP-mittari</div>
+          ${renderXP(gLvl)}
+        </div>
+        <div class="card-warm" style="padding:1rem;text-align:center">
+          <div class="section-label">Aivoaktiivisuus</div>
+          ${renderBrain(gLvl)}
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+          <span style="font-size:12px;font-weight:500;color:${color};background:${color}18;border-radius:99px;padding:3px 10px;border:1px solid ${color}44">
+            ${LVL_NAMES[gLvl]}
+          </span>
+          <div class="score-chip" aria-label="Pisteet: ${score} / 25">⭐ <strong>${score}</strong> / 25 p</div>
+        </div>
+
+        <h2 class="mode-badge" style="background:${m.bg};color:${m.tc}">${m.icon} ${m.label}${gLvl===2?' – edistynyt':''}</h2>
+        <p class="scenario">${t.scenario.replace(/\n/g,'<br>')}</p>
+        <div class="divider" role="separator"></div>
+        <p class="thinking-label"><strong>Ajatteluvinkki:</strong> ${t.thinking}</p>
+
+        <label for="answer-input" style="font-size:13px;color:#633806;display:block;margin-bottom:6px">
+          Kirjoita vastauksesi (vähintään ${MIN_CHARS} merkkiä):
+        </label>
+        <textarea id="answer-input" rows="5"
+          class="${len===0?'':enough?'ok':'too-short'}"
+          aria-describedby="char-counter"
+          placeholder="Kirjoita vastauksesi tähän…"
+          oninput="onInput(this.value)">${answers[gLvl][cur]}</textarea>
+        <p id="char-counter" class="${enough?'char-ok':'char-warn'}" aria-live="polite">
+          ${enough ? '✓ Riittävästi tekstiä ('+len+' merkkiä)' : 'Kirjoita vielä '+(MIN_CHARS-len)+' merkkiä lisää'}
+        </p>
+
+        <fieldset style="border:none;padding:0;margin-top:1.25rem">
+          <legend class="stars-label">Kuinka hyvin mielestäsi onnistuit? (1–5 tähteä)</legend>
+          <div class="stars-row">
+            ${[1,2,3,4,5].map(n => `
+              <button class="star-btn ${starsNow[cur]>=n?'lit':''}" id="sb${n}"
+                aria-label="${n} tähteä – ${STAR_LABELS[n]}"
+                aria-pressed="${starsNow[cur]>=n}"
+                onclick="setStar(${n})"
+                onmouseover="hoverS(${n})"
+                onmouseout="unhoverS()">★</button>`).join('')}
+            <span class="star-desc" id="sdesc" aria-live="polite">
+              ${starsNow[cur] ? STAR_LABELS[starsNow[cur]] : 'Valitse tähtiä'}
+            </span>
+          </div>
+        </fieldset>
+
+        ${hintsUsed[gLvl][cur] ? '<p class="bonus-note" role="note">⚠ Käytit vinkkiä – enintään 4 tähteä tästä tehtävästä</p>' : ''}
+
+        ${t.hint
+          ? `<button class="hint-btn" onclick="toggleHint()"
+               aria-expanded="${hintsShown[gLvl][cur]}" aria-controls="hintbox">
+               💡 Näytä vinkki${hintsUsed[gLvl][cur]?'<span class="hint-penalty"> -1 tähti</span>':''}
+             </button>
+             <div class="hint-box" id="hintbox" role="note" ${hintsShown[gLvl][cur]?'':'hidden'}>${t.hint}</div>`
+          : `<p class="no-hint-note" role="note">🔒 Edistyneellä tasolla ei ole vinkkejä. Luota omaan ajatteluusi!</p>`
+        }
+      </div>
+
+      <div class="btn-row">
+        <button class="next-btn" onclick="prevT()" ${cur===0?'disabled aria-disabled="true"':''} aria-label="Edellinen tehtävä">
+          ← Edellinen
+        </button>
+        <span class="step-counter" aria-hidden="true">Tehtävä ${cur+1} / 5</span>
+        ${cur < 4
+          ? `<button class="primary-btn" style="background:${color}" onclick="nextT()"
+               ${!canAdvance?'disabled aria-disabled="true"':''}
+               aria-label="${!enough?'Kirjoita enemmän ennen etenemistä':!starsNow[cur]?'Anna ensin tähtiä':'Seuraava tehtävä'}">
+               Seuraava →
+             </button>`
+          : `<button class="primary-btn" style="background:${color}" onclick="goToPeer()"
+               ${!canAdvance?'disabled aria-disabled="true"':''}
+               aria-label="${!enough?'Kirjoita enemmän ennen etenemistä':!starsNow[cur]?'Anna ensin tähtiä':'Anna laite kaverille'}">
+               Valmis – anna kaverille →
+             </button>`
+        }
+      </div>
+
+      ${!canAdvance && (len > 0 || starsNow[cur] > 0)
+        ? `<p class="error-note" role="alert">
+             ${!enough ? 'Kirjoita vähintään '+MIN_CHARS+' merkkiä ennen kuin voit jatkaa.'
+                       : 'Arvioi suorituksesi tähdillä ennen kuin voit jatkaa.'}
+           </p>` : ''}
+    </div>`;
+}
+
+function renderPassDevice(app){
+  const m = getMode(ALL_TASKS[gLvl][cur].mode);
+  app.innerHTML = `
+    <div class="card">
+      <div class="pass-screen">
+        <div class="pass-emoji" role="img" aria-label="Anna laite">📲</div>
+        <h2 class="pass-title">Anna laite kaverillesi!</h2>
+        <p class="pass-sub">
+          Kaverisi arvioi nyt vastauksesi tehtävässä<br>
+          <strong>${m.icon} ${m.label}</strong>.<br><br>
+          Älä katso ruutua ennen kuin kaveri on valmis.
+        </p>
+        <button class="primary-btn" style="background:#7F77DD;font-size:15px;padding:11px 24px"
+          onclick="screen='peer';render()">
+          Olen valmis arvioimaan →
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderPeer(app){
+  const t = ALL_TASKS[gLvl][cur], m = getMode(t.mode);
+  const rubric = RUBRICS[t.mode];
+  if(!peerChecks[gLvl][cur]) peerChecks[gLvl][cur] = Array(rubric.length).fill(false);
+  const checks = peerChecks[gLvl][cur];
+  const checkedCount = checks.filter(Boolean).length;
+  const peerScore = checkedCount === 0 ? 0 : Math.min(5, Math.ceil(checkedCount / rubric.length * 5));
+
+  app.innerHTML = `
+    <div class="peer-card" role="region" aria-label="Vertaisarviointi – ${m.label}">
+      <span class="peer-phase-badge">👥 Vertaisarviointi</span>
+      <h2 style="font-size:16px;font-weight:500;margin-bottom:8px;color:#412402">${m.icon} ${m.label}</h2>
+
+      <p style="font-size:13px;color:#633806;margin-bottom:8px">Kaverin vastaus:</p>
+      <div class="peer-answer-box" aria-label="Kaverin vastaus">${answers[gLvl][cur] || '(Ei vastausta)'}</div>
+
+      <p style="font-size:13px;font-weight:500;color:#412402;margin-bottom:8px">
+        Rastita kohdat, jotka löydät vastauksesta:
+      </p>
+      <div class="peer-rubric" role="group" aria-label="Arviointikriteerit">
+        ${rubric.map((item, i) => `
+          <div class="peer-rubric-item">
+            <button class="peer-rubric-check ${checks[i]?'checked':''}" id="chk${i}"
+              role="checkbox" aria-checked="${checks[i]}" aria-label="${item}"
+              onclick="toggleCheck(${i})">${checks[i]?'✓':''}</button>
+            <span class="peer-rubric-text">${item}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="peer-score-display" aria-label="Vertaisarvioinnin pisteet: ${peerScore}/5">
+        <div class="peer-score-num" id="pscore">${peerScore} / 5</div>
+        <div class="peer-score-label" id="pscorelab">
+          pistettä (${checkedCount} / ${rubric.length} kriteeriä täyttyy)
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:#633806;margin-bottom:6px">Vapaa palaute (valinnainen):</p>
+      <textarea id="peer-comment" rows="2"
+        placeholder="Kirjoita lyhyt palaute kaverille…"
+        oninput="savePeerComment(this.value)">${peerComments[gLvl][cur]||''}</textarea>
+
+      <div class="btn-row" style="margin-top:1rem">
+        <button class="next-btn" onclick="screen='game';render()">← Takaisin</button>
+        <button class="primary-btn" style="background:#7F77DD" onclick="submitPeer(${peerScore})">
+          Valmis – anna laite takaisin ✓
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderLevelUp(app){
+  const score1 = calcScore(1), lv = getLevel(score1);
+  app.innerHTML = `
+    <div class="levelup-card">
+      <div style="font-size:56px;line-height:1;margin-bottom:1rem" role="img" aria-label="Juhlia">🎉</div>
+      <h2 class="levelup-title">Perustaso on valmis!</h2>
+      <p class="levelup-sub">
+        Sait <strong>${score1} pistettä 25:stä</strong>.<br>
+        Tasosi on <strong>${lv.label}</strong>.<br><br>
+        Haluatko yrittää edistynyttä tasoa?<br>Tehtävät ovat vaikeampia. Vinkkejä ei ole.
+      </p>
+      <div class="levelup-compare">
+        <div class="levelup-box" style="border-color:#1D9E7566">
+          <div class="levelup-box-title" style="color:#0F6E56">Perustaso</div>
+          <div class="levelup-box-item">✓ Tutut tilanteet</div>
+          <div class="levelup-box-item">✓ Vinkit saatavilla</div>
+          <div class="levelup-box-item">✓ Selkeät tehtävät</div>
+        </div>
+        <div class="levelup-box" style="border-color:#7F77DD88">
+          <div class="levelup-box-title" style="color:#3C3489">Edistynyt taso</div>
+          <div class="levelup-box-item">★ Monimutkaisemmat tilanteet</div>
+          <div class="levelup-box-item">★ Ei vinkkejä</div>
+          <div class="levelup-box-item">★ Vaatii enemmän miettimistä</div>
+        </div>
+      </div>
+      <div class="levelup-btns">
+        <button class="primary-btn" style="background:#7F77DD;font-size:15px;padding:11px 24px" onclick="startLvl2()">
+          Otan haasteen vastaan →
+        </button>
+        <button class="next-btn" onclick="screen='summary1';render()">Katso vain tulokseni</button>
+      </div>
+    </div>`;
+}
+
+function renderSummary(app, lvl){
+  const score = calcScore(lvl), lv = getLevel(score);
+  const pct = Math.round(score / 25 * 100), color = LVL_COLORS[lvl];
+  const adjScores = MODES.map((_, i) => adjStar(lvl, i));
+  const hasPrev = history.length > 0;
+  const prevScores = hasPrev ? history[history.length-1][lvl] : null;
+
+  const compareHtml = hasPrev && prevScores ? `
+    <div class="divider"></div>
+    <div class="section-label">Edistyminen – ennen ja nyt</div>
+    <div class="compare-row">
+      <div class="compare-col">
+        <div class="compare-col-title">Edellinen kerta</div>
+        ${MODES.map((m,i)=>`<div class="compare-bar-wrap">
+          <div class="compare-bar-label" style="color:${m.tc}">${m.icon} ${m.label}</div>
+          <div class="compare-bar-bg"><div class="compare-bar-fill" style="width:${Math.round(prevScores[i]/5*100)}%;background:${m.color}44"></div></div>
+        </div>`).join('')}
+      </div>
+      <div class="compare-col">
+        <div class="compare-col-title">Tällä kertaa</div>
+        ${MODES.map((m,i)=>`<div class="compare-bar-wrap">
+          <div class="compare-bar-label" style="color:${m.tc}">${m.icon} ${m.label}</div>
+          <div class="compare-bar-bg"><div class="compare-bar-fill" style="width:${Math.round(adjScores[i]/5*100)}%;background:${m.color}"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  app.innerHTML = `
+    <div class="card">
+      <div style="text-align:center;padding:1rem 0 .5rem">
+        <div style="font-size:48px;line-height:1;margin-bottom:.5rem" role="img" aria-label="${lv.label}">${lv.emoji}</div>
+        <h2 style="font-size:22px;font-weight:500;margin-bottom:.25rem;color:#412402">${lv.label}</h2>
+        <p style="font-size:14px;color:#633806;margin-bottom:.5rem">${LVL_NAMES[lvl]} suoritettu!</p>
+        <p style="font-size:36px;font-weight:500;color:#412402" aria-label="${score} pistettä 25:stä">
+          ${score} <span style="font-size:16px;color:#BA7517">/ 25 p</span>
+        </p>
+      </div>
+      <div style="background:#F5C4B3;border-radius:99px;height:10px;overflow:hidden;margin:.5rem 0 .25rem"
+           role="progressbar" aria-valuenow="${score}" aria-valuemin="0" aria-valuemax="25">
+        <div style="height:10px;border-radius:99px;width:${pct}%;background:${color};transition:width .8s"></div>
+      </div>
+      <p style="font-size:12px;color:#BA7517;text-align:center;margin-bottom:1rem">
+        0–4 Aloittelija · 5–9 Harjoittelija · 10–14 Taitava · 15–19 Monipuolinen · 20–25 Mestari
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+        <div>
+          <div class="section-label">Tehtäväkohtaiset pisteet</div>
+          <div class="summary-grid">
+            ${MODES.map((m, i) => {
+              const self = stars[lvl][i], peer = peerStars[lvl][i], final = adjScores[i];
+              return `<div class="summary-item" style="background:${m.bg}30;border-color:${m.bg}"
+                aria-label="${m.label}: ${final} pistettä">
+                <div class="summary-mode" style="color:${m.tc}">${m.icon} ${m.label}</div>
+                <div class="summary-stars" aria-hidden="true">${'★'.repeat(final)}${'☆'.repeat(5-final)}</div>
+                <div class="summary-pts" style="color:${m.tc}">${final}/5</div>
+                ${peer>0?`<div style="font-size:10px;color:${m.tc};margin-top:2px">Oma ${self}★ · Kaveri ${peer}★</div>`:''}
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Ajatteluprofiili</div>
+          <div class="radar-container">
+            <canvas id="radarChart" role="img" aria-label="Hämähäkinverkko ajattelutaidoista">
+              ${MODES.map((m,i)=>m.label+': '+adjScores[i]+'/5').join(', ')}
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      ${compareHtml}
+
+      <div class="divider"></div>
+      <div class="section-label">Aivoaktiivisuus – loppukatselmus</div>
+      ${renderBrain(lvl)}
+
+      <div class="divider"></div>
+      <div class="btn-row" style="justify-content:center;margin-top:.5rem">
+        ${lvl === 1
+          ? `<button class="primary-btn" style="background:#7F77DD" onclick="goLevelUp()">
+               Siirry edistyneelle tasolle →
+             </button>`
+          : `<button class="reflect-btn" onclick="window.location.reload()">
+               Aloita alusta
+             </button>`
+        }
+        <button class="next-btn" onclick="restartAll()">Aloita alusta</button>
+      </div>
+    </div>`;
+
+  setTimeout(() => {
+    const cv = document.getElementById('radarChart');
+    if(!cv) return;
+    const datasets = [{
+      label: 'Tällä kertaa',
+      data: adjScores,
+      backgroundColor: color + '33',
+      borderColor: color,
+      borderWidth: 2,
+      pointBackgroundColor: color,
+      pointRadius: 4,
+    }];
+    if(prevScores) datasets.push({
+      label: 'Edellinen kerta',
+      data: prevScores,
+      backgroundColor: 'transparent',
+      borderColor: '#F0997B',
+      borderWidth: 1.5,
+      borderDash: [4,4],
+      pointBackgroundColor: '#F0997B',
+      pointRadius: 3,
+    });
+    radarChart = new Chart(cv, {
+      type: 'radar',
+      data: { labels: MODES.map(m => m.label), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { r: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, font: {size:10}, color: '#633806' },
+          grid: { color: '#F5C4B3' },
+          pointLabels: { font: {size:11}, color: '#412402' },
+        }},
+        plugins: { legend: { display: !!prevScores, position: 'bottom', labels: { font:{size:11}, boxWidth:12 } } },
+      },
+    });
+  }, 80);
+}
+
+/* ── Event handlers ── */
+function onInput(val){
+  answers[gLvl][cur] = val;
+  const len = val.trim().length, enough = len >= MIN_CHARS;
+  const ta = document.getElementById('answer-input');
+  if(ta) ta.className = len === 0 ? '' : enough ? 'ok' : 'too-short';
+  const cc = document.getElementById('char-counter');
+  if(cc){
+    cc.className = enough ? 'char-ok' : 'char-warn';
+    cc.textContent = enough
+      ? '✓ Riittävästi tekstiä (' + len + ' merkkiä)'
+      : 'Kirjoita vielä ' + (MIN_CHARS - len) + ' merkkiä lisää';
+  }
+  const nb = document.querySelector('.primary-btn');
+  if(nb) nb.disabled = !enough || !stars[gLvl][cur];
+}
+
+function setStar(n){
+  stars[gLvl][cur] = n;
+  updateStars(n);
+  const d = document.getElementById('sdesc');
+  if(d) d.textContent = STAR_LABELS[n];
+  const nb = document.querySelector('.primary-btn');
+  if(nb) nb.disabled = !isLongEnough(gLvl, cur) || !n;
+}
+
+function updateStars(n){
+  for(let i = 1; i <= 5; i++){
+    const b = document.getElementById('sb'+i);
+    if(b){ b.className = 'star-btn' + (n>=i?' lit':''); b.setAttribute('aria-pressed', n>=i); }
+  }
+}
+
+function hoverS(n){
+  for(let i=1;i<=5;i++){ const b=document.getElementById('sb'+i); if(b) b.style.color = i<=n?'#EF9F27':''; }
+  const d = document.getElementById('sdesc');
+  if(d) d.textContent = STAR_LABELS[n];
+}
+
+function unhoverS(){
+  updateStars(stars[gLvl][cur]);
+  const d = document.getElementById('sdesc');
+  if(d) d.textContent = stars[gLvl][cur] ? STAR_LABELS[stars[gLvl][cur]] : 'Valitse tähtiä';
+}
+
+function toggleHint(){
+  const inp = document.getElementById('answer-input');
+  if(inp) answers[gLvl][cur] = inp.value;
+  hintsShown[gLvl][cur] = !hintsShown[gLvl][cur];
+  if(hintsShown[gLvl][cur]) hintsUsed[gLvl][cur] = true;
+  const box = document.getElementById('hintbox');
+  if(box){ hintsShown[gLvl][cur] ? box.removeAttribute('hidden') : box.setAttribute('hidden',''); }
+  render();
+}
+
+function toggleCheck(i){
+  const checks = peerChecks[gLvl][cur];
+  checks[i] = !checks[i];
+  const btn = document.getElementById('chk'+i);
+  if(btn){ btn.className='peer-rubric-check'+(checks[i]?' checked':''); btn.setAttribute('aria-checked',checks[i]); btn.textContent=checks[i]?'✓':''; }
+  const cc = checks.filter(Boolean).length;
+  const r  = RUBRICS[ALL_TASKS[gLvl][cur].mode];
+  const ps = cc === 0 ? 0 : Math.min(5, Math.ceil(cc / r.length * 5));
+  const sd = document.getElementById('pscore');     if(sd) sd.textContent = ps+' / 5';
+  const sl = document.getElementById('pscorelab');  if(sl) sl.textContent = 'pistettä ('+cc+' / '+r.length+' kriteeriä täyttyy)';
+}
+
+function savePeerComment(v){ peerComments[gLvl][cur] = v; }
+
+function goToPeer(){
+  const inp = document.getElementById('answer-input');
+  if(inp) answers[gLvl][cur] = inp.value;
+  if(!isLongEnough(gLvl,cur) || !stars[gLvl][cur]) return;
+  screen = 'passdevice'; render();
+}
+
+function submitPeer(ps){
+  peerStars[gLvl][cur] = ps;
+  if(cur < 4){ cur++; screen='game'; render(); }
+  else{ screen = gLvl===1 ? 'levelup' : 'summary2'; render(); }
+}
+
+function nextT(){
+  const inp = document.getElementById('answer-input');
+  if(inp) answers[gLvl][cur] = inp.value;
+  if(!isLongEnough(gLvl,cur) || !stars[gLvl][cur]) return;
+  if(cur < 4){ cur++; screen='game'; render(); }
+}
+
+function prevT(){
+  const inp = document.getElementById('answer-input');
+  if(inp) answers[gLvl][cur] = inp.value;
+  if(cur > 0){ cur--; render(); }
+}
+
+function goLevelUp(){ screen='summary1'; render(); }
+function startLvl2(){ gLvl=2; cur=0; screen='game'; render(); }
+
+function restartAll(){
+  const snap = {
+    1: MODES.map((_,i) => adjStar(1,i)),
+    2: MODES.map((_,i) => adjStar(2,i)),
+  };
+  if(calcScore(1) > 0) history.push(snap);
+  gLvl=1; cur=0; screen='start';
+  answers      = {1:Array(5).fill(''),   2:Array(5).fill('')};
+  stars        = {1:Array(5).fill(0),    2:Array(5).fill(0)};
+  peerStars    = {1:Array(5).fill(0),    2:Array(5).fill(0)};
+  peerChecks   = {1:Array(5).fill(null), 2:Array(5).fill(null)};
+  peerComments = {1:Array(5).fill(''),   2:Array(5).fill('')};
+  hintsUsed    = {1:Array(5).fill(false),2:Array(5).fill(false)};
+  hintsShown   = {1:Array(5).fill(false),2:Array(5).fill(false)};
+  render();
+}
+
+/* ── Boot ── */
+render();
+</script>
+</body>
+</html>
