@@ -159,16 +159,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    {
-      aiheId: "tasks-valinnat",
-      title: "Oma päätökseni",
-      description:
-        "Kirjaa lopullinen suunnitelmasi ja perustelut valinnallesi.",
-      href: "../tehtava.html?id=paatos9",
-      tag: "Tehtävä",
-      tagClass: "",
-      icon: "fa-pencil",
-    },
+    
     {
       aiheId: "tasks-valinnat",
       title: "Palkka vai merkitys?",
@@ -179,14 +170,16 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
+    
     {
       aiheId: "tasks-valinnat",
-      title: "Päivän aihe: Mitä seuraavaksi?",
-      description: "Käydään läpi yhdessä: miltä tuntuu tehdä iso päätös?",
-      href: "../tehtava.html?id=keskustelu-valinnat",
-      tag: "Keskustelu",
-      tagClass: "tag-keskustelu",
-      icon: "fa-comments",
+      title: "Minä valintojen tekijänä",
+      description:
+        "Reflektoi omaa toimintaasi: miten teit valintoja tämän tunnin harjoituksissa — ja mitä se kertoo sinusta?",
+      href: "../tehtava.html?id=reflektio-valinnat9",
+      tag: "Kirjoitustehtävä",
+      tagClass: "tag-kirjoitus",
+      icon: "fa-pen-nib",
     },
   ],
 
@@ -463,28 +456,7 @@ const tehtavat = {
     ],
   },
 
-  "keskustelu-tulevaisuus": {
-    title: "Päivän aihe: Mikä minusta tulee isona?",
-    category: "keskustelu",
-    class: "7",
-    tyyppi: "keskustelu",
-    kesto: "15–20 min",
-    kysymykset: [
-      "Onko sinulla jokin haave tai unelma, vaikka se tuntuisi epärealistiselta?",
-      "Mikä ammatti kuulostaa tällä hetkellä kiinnostavimmalta – ja miksi?",
-      "Mitä haluaisit kokeilla tai oppia ennen kuin teet päätöksiä?",
-    ],
-    vinkit: [
-      "Painota, ettei tarvitse tietää vielä – pohtiminen on tärkeintä.",
-      "Voit käyttää ammattikortteja tai ammattialakarttaa apuna.",
-      "Anna tilaa myös erikoisille ja epätavanomaisille haaveille.",
-    ],
-    instructions: [
-      "Keskustelukysymys 1: Onko sinulla jokin haave, vaikka se tuntuisi epärealistiselta?",
-      "Keskustelukysymys 2: Mikä ammatti kuulostaa kiinnostavimmalta juuri nyt?",
-      "Keskustelukysymys 3: Mitä haluaisit kokeilla ennen kuin teet päätöksiä?",
-    ],
-  },
+  
 
   jatko9: {
     title: "Minne minä menen?",
@@ -579,28 +551,28 @@ const tehtavat = {
     ],
   },
 
-  "keskustelu-valinnat": {
-    title: "Päivän aihe: Mitä seuraavaksi?",
-    category: "keskustelu",
+  "reflektio-valinnat9": {
+    title: "Minä valintojen tekijänä",
+    category: "reflektio",
     class: "9",
-    tyyppi: "keskustelu",
+    tyyppi: "kirjoitus",
     kesto: "15–20 min",
-    kysymykset: [
-      "Miltä tuntuu, kun iso päätös on edessä – jännittääkö, innostaako, pelottaako?",
-      "Mikä auttaisi sinua tuntemaan olosi varmemmaksi valinnastasi?",
-      "Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+    kuvaus:
+      "Tässä tunnissa olet tehnyt valintoja kolmessa eri harjoituksessa: Elämänvalintapelissä, Kumpi valitsisit? -korttiharjoituksessa ja Arvopohjaisessa valinnassa. Nyt on aika pysähtyä ja katsoa taaksepäin — mitä teit, miksi ja mitä se kertoo sinusta?",
+    instructions: [
+      "Muistele kolmea harjoitusta: Elämänvalintapeli, Kumpi valitsisit? ja Arvopohjainen valinta. Mikä valinta tai tilanne jäi eniten mieleen — ja miksi juuri se?",
+      "Mikä ohjasi valintojasi eniten: tunne, järki, arvot vai muiden mielipide? Huomasitko eron eri harjoitusten välillä?",
+      "Oliko jokin valinta vaikea tehdä? Mistä vaikeus tuli — arvojen ristiriidasta, epävarmuudesta vai jostakin muusta?",
+      "Mitä opit itsestäsi valintojen tekijänä? Onko jotain, mitä haluaisit tehdä toisin jatkossa?",
     ],
     vinkit: [
-      "Tämä on tunnekuormainen aihe – anna tilaa kaikille tunteille.",
-      "Vältä painostamista – tarkoitus on tukea, ei ohjata tiettyyn valintaan.",
-      "Lopeta positiivisesti: jokainen on valmistautunut paremmin kuin luulee.",
-    ],
-    instructions: [
-      "Keskustelukysymys 1: Miltä tuntuu, kun iso päätös on edessä?",
-      "Keskustelukysymys 2: Mikä auttaisi sinua tuntemaan olosi varmemmaksi?",
-      "Keskustelukysymys 3: Mitä haluat muistaa tästä ajasta viiden vuoden päästä?",
+      "Ei ole oikeaa tai väärää vastausta — tärkeintä on rehellinen oman toiminnan tarkastelu.",
+      "Kirjoita ensin vapaasti ilman miettimistä. Voit siistiä tekstiä jälkikäteen.",
+      "Voit viitata johonkin tiettyyn korttiin, arvolistaan tai pelitilanteeseen — konkreettiset esimerkit tekevät reflektiosta elävän.",
     ],
   },
+
+
 
   "keskustelu-harrastus-ammatti": {
     title: "Harrastuksesta ammatti?",
@@ -687,5 +659,5 @@ const tehtavat = {
 const tehtavaJarjestys = {
   7: ["vahvuudet", "opiskelutaidot", "mina-oppijana"],
   8: ["kiinnostavat-alat", "yllattava-ala", "tet8"],
-  9: ["tet9"],
+  9: ["tet9", "reflektio-valinnat9"],
 };
