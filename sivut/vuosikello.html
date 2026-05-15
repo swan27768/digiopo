@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minun 9. luokan vuosikello – Lukuvuosi 2024–2025</title>
+<style>
+  /* ── DigiOpo 9. lk teal-teema ── */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --teal:       #0d9488;
+    --teal-lt:    #0f766e;
+    --teal-dk:    #134e4a;
+    --teal-bg:    #f0fdfa;
+    --teal-bg2:   #ccfbf1;
+    --teal-bd:    #99f6e4;
+    --text:       #134e4a;
+    --text2:      #374151;
+    --text3:      #6b7280;
+    --bg:         #ffffff;
+    --bg2:        #f0fdfa;
+    --bg3:        #f8fffe;
+    --border:     #99f6e4;
+    --border2:    #5eead4;
+    --radius:     8px;
+    --radius-lg:  14px;
+    --focus:      #0d9488;
+    /* Tapahtumatyyppien värit — DigiOpo-tyyliin */
+    --national-bg:  #eff6ff; --national-text: #1e3a5f; --national-bd: #93c5fd;
+    --school-bg:    #f0fdfa; --school-text:   #134e4a; --school-bd:   #5eead4;
+    --tet-bg:       #fefce8; --tet-text:      #713f12; --tet-bd:      #fde047;
+    --own-bg:       #fdf4ff; --own-text:      #581c87; --own-bd:      #d8b4fe;
+    --red-bg:       #fef2f2; --red-text:      #7f1d1d; --red-bd:      #fca5a5;
+    --success:      #0d9488;
+  }
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  html,body{height:auto;min-height:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text2);font-size:16px;line-height:1.5}
+
+  .app{max-width:760px;margin:0 auto;padding:1.25rem 1rem 2.5rem}
+
+  /* Otsikko — DigiOpo-tyyli */
+  .app-header{background:linear-gradient(135deg,var(--teal),var(--teal-lt));border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;color:#fff}
+  .app-header h1{font-size:20px;font-weight:700;letter-spacing:-0.01em;margin-bottom:2px;color:#fff}
+  .app-header p{font-size:13px;opacity:0.88}
+
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+  /* Tallennusbanneri */
+  .storage-banner{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;border:1px solid}
+  .storage-ok{background:var(--teal-bg);color:var(--teal-dk);border-color:var(--teal-bd)}
+  .storage-warn{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
+  .storage-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+  /* Kortit */
+  .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(13,148,136,0.06)}
+  h2{font-size:15px;font-weight:700;margin-bottom:.75rem;color:var(--teal-dk)}
+
+  /* Tyypin valinta */
+  .type-fieldset{border:none;padding:0;margin-bottom:.75rem}
+  .type-legend{font-size:13px;color:var(--text3);display:block;margin-bottom:6px}
+  .type-selector{display:flex;gap:6px;flex-wrap:wrap}
+  .type-btn{padding:5px 13px;border-radius:50px;border:1.5px solid var(--border2);background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3);transition:all .12s;font-family:inherit}
+  .type-btn:hover{background:var(--teal-bg)}
+  .type-btn[aria-pressed="true"].sel-national{background:var(--national-bg);color:var(--national-text);border-color:var(--national-bd)}
+  .type-btn[aria-pressed="true"].sel-school{background:var(--school-bg);color:var(--school-text);border-color:var(--school-bd)}
+  .type-btn[aria-pressed="true"].sel-own{background:var(--own-bg);color:var(--own-text);border-color:var(--own-bd)}
+  .type-btn[aria-pressed="true"].sel-tet{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
+
+  /* Lomake */
+  .add-row{display:grid;grid-template-columns:160px 1fr auto;gap:8px;align-items:end}
+  @media(max-width:520px){.add-row{grid-template-columns:1fr 1fr}.add-row .add-btn-wrap{grid-column:span 2}}
+  .field label{font-size:13px;color:var(--text3);display:block;margin-bottom:4px;font-weight:500}
+  select,input[type=text]{width:100%;padding:0 10px;height:38px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text2);font-size:14px;font-family:inherit;outline:none;transition:border .12s}
+  select:focus,input[type=text]:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,0.15)}
+  button{padding:0 16px;height:38px;border:1.5px solid var(--border2);border-radius:var(--radius);background:transparent;color:var(--teal-dk);cursor:pointer;font-size:14px;font-family:inherit;font-weight:500;transition:all .12s}
+  button:hover{background:var(--teal-bg)}
+  button:active{transform:scale(0.98)}
+  .btn-primary{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:700}
+  .btn-primary:hover{background:var(--teal-lt);color:#fff}
+  .btn-secondary{background:var(--bg);color:var(--teal-dk);border-color:var(--border2)}
+
+  /* Toolbar */
+  .toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+  .view-btn{padding:6px 14px;height:auto;border-radius:50px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;font-weight:500;color:var(--text3);font-family:inherit}
+  .view-btn[aria-pressed="true"]{background:var(--teal-bg2);color:var(--teal-dk);border-color:var(--teal-bd);font-weight:700}
+  .toolbar-right{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+
+  /* Selite */
+  .legend{margin-bottom:1rem}
+  .legend-heading{font-size:12px;color:var(--text3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .legend-list{display:flex;gap:10px;flex-wrap:wrap;list-style:none}
+  .leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);font-weight:500}
+  .leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+  /* Kuukausilistat */
+  .months-list{display:flex;flex-direction:column;gap:8px}
+  .month-section{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 1px 4px rgba(13,148,136,0.05)}
+  .month-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.65rem 1rem;background:var(--teal-bg);cursor:pointer;border:none;border-bottom:1px solid var(--border);font-family:inherit;text-align:left;transition:background .1s}
+  .month-toggle:hover{background:var(--teal-bg2)}
+  .mh-left{display:flex;align-items:center;gap:8px}
+  .month-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .month-name{font-size:14px;font-weight:700;color:var(--teal-dk)}
+  .month-count{font-size:12px;color:var(--teal-lt);margin-left:4px;font-weight:500}
+  .chevron{font-size:11px;color:var(--teal);transition:transform .15s;display:inline-block;flex-shrink:0}
+  .month-toggle[aria-expanded="true"] .chevron{transform:rotate(90deg)}
+  .month-body{padding:.5rem .75rem}
+  .month-body[hidden]{display:none}
+
+  /* Tapahtumarivit */
+  .event-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+  .event-row:last-child{border-bottom:none}
+  .ev-cb{width:17px;height:17px;cursor:pointer;flex-shrink:0;accent-color:var(--success)}
+  .ev-badge{font-size:11px;padding:2px 8px;border-radius:50px;font-weight:700;white-space:nowrap;flex-shrink:0;border:1px solid}
+  .ev-national{background:var(--national-bg);color:var(--national-text);border-color:var(--national-bd)}
+  .ev-school{background:var(--school-bg);color:var(--school-text);border-color:var(--school-bd)}
+  .ev-own{background:var(--own-bg);color:var(--own-text);border-color:var(--own-bd)}
+  .ev-tet{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
+  .ev-name{flex:1;font-size:14px;color:var(--text2)}
+  .ev-done .ev-name{text-decoration:line-through;color:var(--text3)}
+  .ev-del{font-size:12px;padding:2px 8px;height:auto;flex-shrink:0;color:var(--text3);border-color:transparent;border-radius:50px}
+  .ev-del:hover{background:var(--red-bg);color:var(--red-text);border-color:var(--red-bd)}
+  .empty-month{padding:.75rem;font-size:13px;color:var(--text3);text-align:center;font-style:italic}
+
+  /* Suodatuspalkki */
+  .filter-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+  .filter-label{font-size:13px;color:var(--text3);font-weight:500}
+  .filter-btn{font-size:12px;padding:3px 11px;height:auto;color:var(--text3);border-radius:50px;font-weight:500}
+  .filter-btn[aria-pressed="true"]{font-weight:700}
+  .filter-btn[aria-pressed="true"][data-f="all"]{background:var(--teal-bg2);color:var(--teal-dk);border-color:var(--teal-bd)}
+  .filter-btn[aria-pressed="true"][data-f="national"]{background:var(--national-bg);color:var(--national-text);border-color:var(--national-bd)}
+  .filter-btn[aria-pressed="true"][data-f="school"]{background:var(--school-bg);color:var(--school-text);border-color:var(--school-bd)}
+  .filter-btn[aria-pressed="true"][data-f="tet"]{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
+  .filter-btn[aria-pressed="true"][data-f="own"]{background:var(--own-bg);color:var(--own-text);border-color:var(--own-bd)}
+
+  /* Kaikki tapahtumat -lista */
+  .all-list{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 1px 4px rgba(13,148,136,0.05)}
+  .section-divider{font-size:12px;font-weight:700;color:var(--teal-dk);padding:6px 12px;background:var(--teal-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+  .all-list-row{padding:0 .75rem}
+
+  /* Modaali */
+  .modal-overlay{display:none;position:absolute;inset:0;background:rgba(19,78,74,0.35);z-index:100;align-items:center;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;max-width:340px;width:90%;box-shadow:0 8px 32px rgba(13,148,136,0.15)}
+  .modal h3{font-size:16px;font-weight:700;margin-bottom:.5rem;color:var(--teal-dk)}
+  .modal p{font-size:14px;color:var(--text2);margin-bottom:1.25rem;line-height:1.5}
+  .modal-btns{display:flex;gap:8px;justify-content:flex-end}
+  .modal-cancel{color:var(--text3);border-color:var(--border)}
+  .modal-confirm{background:var(--red-bg);color:var(--red-text);border-color:var(--red-bd)}
+  .modal-confirm:hover{background:#fee2e2}
+
+  /* Vienti */
+  .export-area{width:100%;margin-top:.75rem;height:160px;font-size:12px;font-family:monospace;border:1.5px solid var(--border);border-radius:var(--radius);padding:8px;background:var(--teal-bg);color:var(--text2);resize:vertical;display:none}
+  .export-area.open{display:block}
+
+  /* Toast */
+  #live-region{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .toast-wrap{position:sticky;bottom:0;z-index:10;pointer-events:none;display:flex;justify-content:flex-end;padding:.5rem .5rem 0}
+  .toast{background:var(--teal-dk);color:#fff;border-radius:var(--radius);padding:.5rem 1rem;font-size:13px;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div id="live-region" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Modaali -->
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h3 id="modal-title">Vahvistus</h3>
+      <p id="modal-msg"></p>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="modalCancel()">Peruuta</button>
+        <button class="modal-confirm" id="modal-ok" onclick="modalConfirm()">Vahvista</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Otsikko DigiOpo-tyyliin -->
+  <header class="app-header">
+    <h1>Minun 9. luokan vuosikello</h1>
+    <p>Lukuvuosi 2024–2025 — seuraa tapahtumiasi ja valmistaudu yhteishakuun</p>
+  </header>
+
+  <!-- Tallennusbanneri -->
+  <div id="storage-banner" class="storage-banner storage-ok" role="status">
+    <div class="storage-dot" aria-hidden="true"></div>
+    <span id="storage-msg">Yhdistetään digikirjaan — hetki...</span>
+  </div>
+
+  <main>
+    <!-- Lisää tapahtuma -->
+    <section class="card" aria-labelledby="add-heading">
+      <h2 id="add-heading">Lisää tapahtuma</h2>
+      <fieldset class="type-fieldset">
+        <legend class="type-legend">Tapahtuman tyyppi</legend>
+        <div class="type-selector">
+          <button class="type-btn sel-national" data-type="national" aria-pressed="true" onclick="selType(this)">Valtakunnallinen</button>
+          <button class="type-btn" data-type="school" aria-pressed="false" onclick="selType(this)">Koulun tapahtuma</button>
+          <button class="type-btn" data-type="tet" aria-pressed="false" onclick="selType(this)">TET-jakso</button>
+          <button class="type-btn" data-type="own" aria-pressed="false" onclick="selType(this)">Oma merkintä</button>
+        </div>
+      </fieldset>
+      <div class="add-row">
+        <div class="field">
+          <label for="f-month">Kuukausi</label>
+          <select id="f-month">
+            <option value="0">Elokuu</option><option value="1">Syyskuu</option>
+            <option value="2">Lokakuu</option><option value="3">Marraskuu</option>
+            <option value="4">Joulukuu</option><option value="5">Tammikuu</option>
+            <option value="6">Helmikuu</option><option value="7">Maaliskuu</option>
+            <option value="8">Huhtikuu</option><option value="9">Toukokuu</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-name">Tapahtuman nimi</label>
+          <input type="text" id="f-name" placeholder="Kirjoita tapahtuma..."
+                 aria-describedby="f-name-hint"
+                 onkeydown="if(event.key==='Enter')addEvent()">
+          <span id="f-name-hint" class="sr-only">Paina Enter tai Lisää-painiketta tallentaaksesi</span>
+        </div>
+        <div class="add-btn-wrap" style="align-self:end">
+          <button class="btn-primary" onclick="addEvent()" style="margin-top:20px">Lisää</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <div class="toolbar" role="toolbar" aria-label="Näkymän valinta">
+      <button class="view-btn" aria-pressed="true" onclick="setView('months',this)">Kuukausittain</button>
+      <button class="view-btn" aria-pressed="false" onclick="setView('all',this)">Kaikki tapahtumat</button>
+      <div class="toolbar-right">
+        <button class="btn-secondary" onclick="exportData(false)" aria-label="Vie kaikki tapahtumat">Vie kaikki</button>
+        <button class="btn-primary" onclick="exportData(true)" style="font-size:13px" aria-label="Vie vain tulevat tapahtumat">Tulosta tuleva</button>
+        <button onclick="askReset()" style="color:var(--text3);font-size:13px;border-color:transparent" aria-label="Palauta oletustapahtumat">Palauta oletukset</button>
+      </div>
+    </div>
+
+    <!-- Vientikenttä varavaihtoehto -->
+    <div id="export-wrap" style="margin-bottom:1rem;display:none">
+      <p style="font-size:13px;color:var(--text3);margin-bottom:6px">Kopioi teksti alta (lataus ei ole käytettävissä tässä ympäristössä):</p>
+      <textarea class="export-area open" id="export-area" readonly aria-label="Vietävä teksti"></textarea>
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <button class="btn-primary" onclick="copyExport()" style="font-size:13px;height:32px">Kopioi leikepöydälle</button>
+        <button onclick="closeExport()" style="font-size:13px;height:32px;color:var(--text3)">Sulje</button>
+      </div>
+    </div>
+
+    <!-- Selite -->
+    <nav aria-label="Värien selite" class="legend">
+      <p class="legend-heading">Selite</p>
+      <ul class="legend-list">
+        <li class="leg"><span class="leg-dot" style="background:#93c5fd" aria-hidden="true"></span>Valtakunnallinen</li>
+        <li class="leg"><span class="leg-dot" style="background:#5eead4" aria-hidden="true"></span>Koulun tapahtuma</li>
+        <li class="leg"><span class="leg-dot" style="background:#fde047" aria-hidden="true"></span>TET-jakso</li>
+        <li class="leg"><span class="leg-dot" style="background:#d8b4fe" aria-hidden="true"></span>Oma merkintä</li>
+      </ul>
+    </nav>
+
+    <!-- Suodatus (vain "kaikki"-näkymässä) -->
+    <div class="filter-row" id="filter-row" role="group" aria-label="Suodata tyypeittäin" style="display:none">
+      <span class="filter-label">Näytä:</span>
+      <button class="filter-btn" data-f="all" aria-pressed="true" onclick="setFilter(this)">Kaikki</button>
+      <button class="filter-btn" data-f="national" aria-pressed="false" onclick="setFilter(this)">Valtakunnalliset</button>
+      <button class="filter-btn" data-f="school" aria-pressed="false" onclick="setFilter(this)">Koulun tapahtumat</button>
+      <button class="filter-btn" data-f="tet" aria-pressed="false" onclick="setFilter(this)">TET-jaksot</button>
+      <button class="filter-btn" data-f="own" aria-pressed="false" onclick="setFilter(this)">Omat merkinnät</button>
+    </div>
+
+    <div id="main-view"></div>
+  </main>
+
+  <div class="toast-wrap" aria-hidden="true">
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+const MONTHS=['Elokuu','Syyskuu','Lokakuu','Marraskuu','Joulukuu','Tammikuu','Helmikuu','Maaliskuu','Huhtikuu','Toukokuu'];
+const TYPE_LABEL={national:'Valtakunnallinen',school:'Koulun tapahtuma',tet:'TET-jakso',own:'Oma merkintä'};
+const MONTH_COLORS=['#0d9488','#0f766e','#854F0B','#7c3aed','#dc2626','#059669','#0369a1','#0d9488','#0f766e','#7c3aed'];
+const STORAGE_KEY='vuosikello9lk';
+
+const DEFAULTS=[
+  {id:1,month:0,type:'school',name:'Lukuvuosi alkaa',done:false},
+  {id:2,month:0,type:'school',name:'Luokan esittäytyminen ja ryhmäyttäminen',done:false},
+  {id:3,month:0,type:'national',name:'Jatko-opintojen infotilaisuus koulussa',done:false},
+  {id:4,month:1,type:'national',name:'Avoimet ovet: ammatilliset oppilaitokset',done:false},
+  {id:5,month:1,type:'school',name:'Vanhempainilta',done:false},
+  {id:6,month:1,type:'national',name:'Tutustuminen yhteishakuun (Studyinfo.fi)',done:false},
+  {id:7,month:2,type:'tet',name:'TET-jakso — lisää oma ajankohtasi',done:false},
+  {id:8,month:2,type:'national',name:'Avoimet ovet: lukiot',done:false},
+  {id:9,month:2,type:'school',name:'Väliarviointi ja kehityskeskustelut',done:false},
+  {id:10,month:3,type:'national',name:'Tutustumiskäynnit oppilaitoksiin',done:false},
+  {id:11,month:3,type:'school',name:'Opo-tunnit: jatko-opintojen suunnittelu',done:false},
+  {id:12,month:4,type:'school',name:'Joulu- ja lukukauden päätösviikko',done:false},
+  {id:13,month:4,type:'school',name:'Joulutodistus',done:false},
+  {id:14,month:5,type:'national',name:'Yhteishaku alkaa (hakuaika n. 2 viikkoa)',done:false},
+  {id:15,month:5,type:'national',name:'Tarkista hakukohteet ja pisteet',done:false},
+  {id:16,month:6,type:'national',name:'Yhteishaku päättyy — hakemus jätettävä!',done:false},
+  {id:17,month:6,type:'school',name:'Arviointikeskustelut',done:false},
+  {id:18,month:7,type:'national',name:'Opiskelupaikkojen valintatulokset julki',done:false},
+  {id:19,month:7,type:'national',name:'Opiskelupaikan vastaanottaminen',done:false},
+  {id:20,month:7,type:'school',name:'Päättöarvioinnin loppusuora',done:false},
+  {id:21,month:8,type:'national',name:'Opiskelupaikan vahvistaminen (deadline)',done:false},
+  {id:22,month:8,type:'school',name:'Kevätjuhla',done:false},
+  {id:23,month:9,type:'school',name:'Päättötodistus',done:false},
+  {id:24,month:9,type:'school',name:'Yläkoulun päätösjuhla',done:false},
+];
+
+let events=[],nextId=200,selectedType='national',currentView='months',activeFilter='all';
+let openMonths=new Set([0,1,2,3,4,5,6,7,8,9]);
+
+/* ── Tallennusmoodi ── */
+let storageAvailable=false;
+let storageMode='local';
+let saveTimer=null;
+const DEBOUNCE_MS=800;
+const IN_IFRAME=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
+
+function checkStorage(){
+  try{
+    localStorage.setItem('__test__','1');localStorage.removeItem('__test__');
+    storageAvailable=true;
+  }catch(e){
+    storageAvailable=false;
+    const b=document.getElementById('storage-banner');
+    b.className='storage-banner storage-warn';
+    document.getElementById('storage-msg').textContent='Huom: tiedot tallennetaan vain tämän istunnon ajaksi.';
+  }
+}
+
+function sendToHost(payload){
+  try{window.parent.postMessage({type:'vuosikello-save',payload:JSON.stringify(payload)},'*');}catch(e){}
+}
+function requestFromHost(){
+  try{window.parent.postMessage({type:'vuosikello-load-request'},'*');}catch(e){}
+}
+
+window.addEventListener('message',e=>{
+  if(e.data?.type==='vuosikello-load-response'){
+    try{
+      const d=JSON.parse(e.data.payload);
+      if(d&&Array.isArray(d.events)){
+        events=d.events;nextId=d.nextId||200;render();
+        const b=document.getElementById('storage-banner');
+        b.className='storage-banner storage-ok';
+        document.getElementById('storage-msg').textContent='Tiedot ladattu digikirjasta — muutokset tallentuvat automaattisesti.';
+      }
+    }catch(err){}
+  }
+});
+
+function load(){
+  checkStorage();
+  if(IN_IFRAME){
+    storageMode='bridge';
+    requestFromHost();
+    setTimeout(()=>{
+      if(events.length===0){
+        if(storageAvailable){
+          try{const s=localStorage.getItem(STORAGE_KEY);if(s){const d=JSON.parse(s);events=d.events;nextId=d.nextId||200;}else resetToDefaults(false);}catch(e){resetToDefaults(false);}
+        }else resetToDefaults(false);
+        render();
+      }
+    },600);
+  }else{
+    storageMode='local';
+    if(!storageAvailable){resetToDefaults(false);return;}
+    try{
+      const s=localStorage.getItem(STORAGE_KEY);
+      if(s){const d=JSON.parse(s);events=d.events;nextId=d.nextId||200;}
+      else resetToDefaults(false);
+    }catch(e){resetToDefaults(false);}
+    const b=document.getElementById('storage-banner');
+    b.className='storage-banner storage-ok';
+    document.getElementById('storage-msg').textContent='Tiedot tallennetaan automaattisesti tähän selaimeen.';
+  }
+}
+
+function save(){
+  const payload={events,nextId};
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    if(storageMode==='bridge'){
+      sendToHost(payload);
+      if(storageAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}}
+    }else{
+      if(!storageAvailable)return;
+      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}
+    }
+  },DEBOUNCE_MS);
+}
+
+function resetToDefaults(ask){
+  if(ask){
+    openModal('Palautetaanko oletustapahtumat?','Kaikki itse lisäämäsi tapahtumat poistetaan.',()=>{
+      events=DEFAULTS.map(e=>({...e}));nextId=200;save();render();
+      announce('Oletustapahtumat palautettu');showToast('Oletustapahtumat palautettu');
+    });return;
+  }
+  events=DEFAULTS.map(e=>({...e}));nextId=200;
+}
+function askReset(){resetToDefaults(true);}
+
+/* postMessage korkeus */
+function notifyHeight(){
+  const h=document.getElementById('app').scrollHeight;
+  try{window.parent.postMessage({type:'vuosikello-height',height:h},'*');}catch(e){}
+}
+const ro=new ResizeObserver(notifyHeight);
+ro.observe(document.getElementById('app'));
+
+/* Modaali */
+let modalCallback=null;
+function openModal(title,msg,onConfirm){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  modalCallback=onConfirm;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-ok').focus();
+}
+function modalConfirm(){document.getElementById('modal').classList.remove('open');if(typeof modalCallback==='function')modalCallback();modalCallback=null;}
+function modalCancel(){document.getElementById('modal').classList.remove('open');modalCallback=null;}
+document.getElementById('modal').addEventListener('keydown',e=>{if(e.key==='Escape')modalCancel();});
+
+/* Ilmoitukset */
+function announce(msg){const r=document.getElementById('live-region');r.textContent='';setTimeout(()=>{r.textContent=msg;},60);}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+/* Vienti */
+function currentMonthIndex(){
+  const m=new Date().getMonth();
+  const map={7:0,8:1,9:2,10:3,11:4,0:5,1:6,2:7,3:8,4:9};
+  return map[m]??null;
+}
+function buildExportText(onlyUpcoming){
+  const nowIdx=currentMonthIndex();
+  const dateStr=new Date().toLocaleDateString('fi-FI');
+  function filterMonth(i,evs){if(!onlyUpcoming||nowIdx===null)return evs;if(i>=nowIdx)return evs;return [];}
+  let txt='MINUN 9. LUOKAN VUOSIKELLO\nLukuvuosi 2024-2025\n'+'='.repeat(40)+'\n';
+  txt+=onlyUpcoming&&nowIdx!==null?'Tulevat tapahtumat — '+dateStr+' alkaen\n\n':'\n';
+  const done=events.filter(e=>e.done).length;
+  txt+='Edistyminen: '+done+'/'+events.length+' tapahtumaa suoritettu\n\n';
+  let hasContent=false;
+  for(let i=0;i<MONTHS.length;i++){
+    const mevs=filterMonth(i,events.filter(e=>e.month===i));
+    if(!mevs.length)continue;
+    hasContent=true;
+    const isCurrent=onlyUpcoming&&nowIdx!==null&&i===nowIdx;
+    txt+=MONTHS[i].toUpperCase()+(isCurrent?' (TÄMÄ KUUKAUSI)':'')+'\n'+'-'.repeat(25)+'\n';
+    mevs.forEach(e=>{txt+=(e.done?'[X]':'[ ]')+' '+TYPE_LABEL[e.type]+': '+e.name+'\n';});
+    txt+='\n';
+  }
+  if(!hasContent)txt+='Ei tulevia tapahtumia.\n';
+  txt+='\nTulostettu: '+dateStr;
+  return txt;
+}
+function exportData(onlyUpcoming){
+  const txt=buildExportText(onlyUpcoming);
+  const filename=onlyUpcoming?'vuosikello-tuleva.txt':'vuosikello-9lk.txt';
+  let downloaded=false;
+  try{
+    const a=document.createElement('a');
+    const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+    a.href=URL.createObjectURL(blob);a.download=filename;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    downloaded=true;
+    const msg=onlyUpcoming?'Tulevat tapahtumat ladattu':'Kaikki tapahtumat ladattu';
+    announce(msg);showToast(msg+'!');
+  }catch(e){downloaded=false;}
+  if(!downloaded){
+    const area=document.getElementById('export-area');
+    area.value=txt;document.getElementById('export-wrap').style.display='block';
+    area.focus();area.select();announce('Kopioi teksti alla olevasta kentästä');
+  }
+}
+function copyExport(){
+  const area=document.getElementById('export-area');area.select();
+  try{navigator.clipboard.writeText(area.value).then(()=>{announce('Kopioitu');showToast('Kopioitu!');}).catch(()=>{document.execCommand('copy');showToast('Kopioitu!');});}
+  catch(e){document.execCommand('copy');showToast('Kopioitu!');}
+}
+function closeExport(){document.getElementById('export-wrap').style.display='none';}
+
+/* Toiminnot */
+function selType(btn){
+  selectedType=btn.dataset.type;
+  document.querySelectorAll('.type-btn').forEach(b=>{const s=b===btn;b.setAttribute('aria-pressed',s?'true':'false');b.className='type-btn'+(s?' sel-'+btn.dataset.type:'');});
+}
+function addEvent(){
+  const nameEl=document.getElementById('f-name');
+  const name=nameEl.value.trim();
+  if(!name){nameEl.focus();announce('Anna tapahtumalle nimi.');return;}
+  const month=parseInt(document.getElementById('f-month').value);
+  events.push({id:nextId++,month,type:selectedType,name,done:false});
+  nameEl.value='';save();render();
+  announce('Lisätty: '+name+', '+MONTHS[month]);showToast('Tapahtuma lisätty!');
+}
+function toggleDone(id){
+  const e=events.find(x=>x.id===id);
+  if(e){e.done=!e.done;save();render();announce(e.name+(e.done?' merkitty tehdyksi':' merkitty tekemättömäksi'));}
+}
+function deleteEvent(id){
+  const e=events.find(x=>x.id===id);
+  if(!e)return;
+  openModal('Poistetaanko tapahtuma?','"'+e.name+'" poistetaan pysyvästi.',()=>{
+    events=events.filter(x=>x.id!==id);save();render();announce('Poistettu: '+e.name);
+  });
+}
+function setView(v,btn){
+  currentView=v;
+  document.querySelectorAll('.view-btn').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+  document.getElementById('filter-row').style.display=v==='all'?'flex':'none';
+  render();
+}
+function setFilter(btn){
+  activeFilter=btn.dataset.f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'));
+  render();
+}
+function toggleMonth(idx){
+  const btn=document.querySelector('[data-month-idx="'+idx+'"]');
+  const body=document.getElementById('month-body-'+idx);
+  if(!btn||!body)return;
+  if(openMonths.has(idx)){openMonths.delete(idx);btn.setAttribute('aria-expanded','false');body.hidden=true;}
+  else{openMonths.add(idx);btn.setAttribute('aria-expanded','true');body.hidden=false;}
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function evRow(e){
+  const cbId='cb-'+e.id;
+  const fullLabel=(e.done?'Tehty — ':'')+TYPE_LABEL[e.type]+': '+e.name;
+  return`<div class="event-row${e.done?' ev-done':''}">
+    <input type="checkbox" class="ev-cb" id="${cbId}" ${e.done?'checked':''}
+           onchange="toggleDone(${e.id})" aria-label="${escHtml(fullLabel)}">
+    <span class="ev-badge ev-${e.type}" aria-hidden="true">${TYPE_LABEL[e.type]}</span>
+    <label for="${cbId}" class="ev-name">${escHtml(e.name)}</label>
+    <button class="ev-del" onclick="deleteEvent(${e.id})"
+            aria-label="Poista tapahtuma: ${escHtml(e.name)}">Poista</button>
+  </div>`;
+}
+
+function renderMonths(){
+  const typeOrder=['national','school','tet','own'];
+  let html='<div class="months-list">';
+  for(let i=0;i<MONTHS.length;i++){
+    const mevs=events.filter(e=>e.month===i).sort((a,b)=>typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type));
+    const done=mevs.filter(e=>e.done).length;
+    const open=openMonths.has(i);
+    const dotColor=mevs.length>0?MONTH_COLORS[i]:'#d1d5db';
+    const countLabel=mevs.length>0?done+'/'+mevs.length+' tehty':'Ei tapahtumia';
+    html+=`<div class="month-section">
+      <button class="month-toggle" data-month-idx="${i}"
+              aria-expanded="${open}" aria-controls="month-body-${i}"
+              onclick="toggleMonth(${i})">
+        <div class="mh-left">
+          <div class="month-dot" style="background:${dotColor}" aria-hidden="true"></div>
+          <span class="month-name">${MONTHS[i]}</span>
+          <span class="month-count" aria-label="${countLabel}">${mevs.length>0?done+'/'+mevs.length+' tehty':''}</span>
+        </div>
+        <span class="chevron" aria-hidden="true">&#9656;</span>
+      </button>
+      <div class="month-body" id="month-body-${i}"${open?'':' hidden'}>`;
+    if(mevs.length===0)html+='<p class="empty-month">Ei tapahtumia — lisää ylhäältä</p>';
+    else mevs.forEach(e=>{html+=evRow(e);});
+    html+='</div></div>';
+  }
+  document.getElementById('main-view').innerHTML=html+'</div>';
+}
+
+function renderAll(){
+  const typeOrder=['national','school','tet','own'];
+  const filtered=activeFilter==='all'?events:events.filter(e=>e.type===activeFilter);
+  const sorted=[...filtered].sort((a,b)=>a.month-b.month||(typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type)));
+  if(!sorted.length){document.getElementById('main-view').innerHTML='<p style="font-size:14px;color:var(--text3);padding:1rem;text-align:center;font-style:italic">Ei tapahtumia valitussa kategoriassa.</p>';return;}
+  let html='<div class="all-list">',lastMonth=-1;
+  sorted.forEach(e=>{
+    if(e.month!==lastMonth){html+=`<div class="section-divider">${MONTHS[e.month]}</div>`;lastMonth=e.month;}
+    html+=`<div class="all-list-row">${evRow(e)}</div>`;
+  });
+  document.getElementById('main-view').innerHTML=html+'</div>';
+}
+
+function render(){if(currentView==='months')renderMonths();else renderAll();}
+
+load();render();
+</script>
+</body>
+</html>
