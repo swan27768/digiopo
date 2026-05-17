@@ -427,7 +427,7 @@ function nollaa() {
   laske();
 }
 
-async function haePisterajat() {
+function haePisterajat() {
   const hakusana = document.getElementById('haku-input').value.trim();
   if (!hakusana) return;
   const tulosEl = document.getElementById('haku-tulos');
@@ -1138,127 +1138,111 @@ Yrkesinstitutet Prakticum, Borgå: Ajoneuvoalan perustutkinto 3.0 | Kone- ja tuo
 Ähtärin lukio: Lukion yleislinja 6.58
 Äänekosken lukio: Lukion yleislinja 6.08`;
 
-  // Suodata data hakusanan perusteella — lähetetään vain osuvat rivit API:lle
-  const hakuTermit = hakusana.toLowerCase().split(' ').filter(t => t.length > 2);
-  const filteredLines = PISTERAJADATA.split('\n').filter(rivi => {
-    const riviLow = rivi.toLowerCase();
-    return hakuTermit.some(termi => riviLow.includes(termi));
-  });
-  const kaytettavaData = filteredLines.length > 0
-    ? filteredLines.join('\n')
-    : PISTERAJADATA.split('\n').slice(0, 50).join('\n'); // fallback: ensimmäiset 50 riviä
+  // Haku suoraan PISTERAJADATA:sta — ei tarvita API:a eikä proxy-palvelinta
+  const hakuTermit = hakusana.toLowerCase().split(/\s+/).filter(t => t.length > 1);
 
-  const systemPrompt = `Olet peruskoulun yhteishakulaskurin pisteraja-asiantuntija. Käytä VAIN alla olevaa dataa (kevät 2025, OPH Vipunen) — älä keksi lukuja. Lukioille luku on KESKIARVO, ammatillisille PISTEET. Vastaa VAIN JSON-muodossa ilman markdown-koristuksia. Palauta ENINTÄÄN 5 tulosta.
+  const kaikki = [];
+  for (const rivi of PISTERAJADATA.split('\n')) {
+    const kolonniIdx = rivi.indexOf(': ');
+    if (kolonniIdx === -1) continue;
+    const oppilaitosOsa = rivi.substring(0, kolonniIdx).trim();
+    const koulutuksetOsa = rivi.substring(kolonniIdx + 2).trim();
+    if (!oppilaitosOsa || !koulutuksetOsa) continue;
 
-${kaytettavaData}`;
+    // Ohita otsikko/huom-rivit (ei numeerista pistettä oikeassa muodossa)
+    const oppLow = oppilaitosOsa.toLowerCase();
 
-  try {
-    const res = await fetch('http://localhost:3001/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 4096,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: `Hakusana: "${hakusana}"
-${omaKa !== '–' ? `Käyttäjän aritmeettinen keskiarvo: ${omaKa}` : ''}
-${omaP1 !== '–' ? `Käyttäjän ammatilliset pisteet (1. hakutoive): ${omaP1}` : ''}
+    for (const k of koulutuksetOsa.split(' | ')) {
+      const osat = k.trim().split(' ');
+      const viimeinenToken = osat[osat.length - 1];
+      // Hyväksy vain puhtaat numerot kuten "7.83" tai "20.0" tai "20"
+      if (!/^\d+(\.\d+)?$/.test(viimeinenToken)) continue;
+      const alaraja = parseFloat(viimeinenToken);
+      if (isNaN(alaraja)) continue;
+      const koulutusNimi = osat.slice(0, -1).join(' ');
+      const koulLow = koulutusNimi.toLowerCase();
 
-Etsi hakusanaan liittyvät oppilaitokset ja koulutukset. Palauta ENINTÄÄN 5 relevanteinta tulosta. Palauta JSON:
-{
-  "tulokset": [
-    {
-      "oppilaitos": "virallinen nimi",
-      "yksikko": "yksikön nimi tai null",
-      "koulutus": "koulutuksen nimi",
-      "tyyppi": "lukio" tai "ammatillinen",
-      "alaraja": numero (tarkka luku datasta) tai null,
-      "vertailu": "yli"/"alle"/"tasainen"/"ei_tiedossa" (verrattuna käyttäjän ka/pisteisiin)
-    }
-  ],
-  "yhteenveto": "2-3 lauseen yhteenveto tuloksista suomeksi. Mainitse että data on kevät 2025."
-}` }]
-      })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(`API virhe ${res.status}: ${JSON.stringify(data)}`);
-    const teksti = (data.content||[]).map(b=>b.text||'').join('');
-    const clean = teksti.replace(/```json|```/g,'').trim();
-    // Varmista että JSON on täydellinen ennen parsintaa
-    const lastBrace = clean.lastIndexOf('}');
-    const lastBracket = clean.lastIndexOf(']');
-    let cleanFixed = clean;
-    if (lastBrace === -1) throw new Error('Tyhjä vastaus API:lta');
-    // Jos JSON on katkennut, yritetään korjata se
-    if (!clean.endsWith('}')) {
-      // Etsi viimeinen täydellinen tulos-objekti
-      const truncated = clean.substring(0, lastBrace + 1);
-      // Varmista että tulokset-array on suljettu
-      if (truncated.includes('"tulokset"') && !truncated.includes('"yhteenveto"')) {
-        cleanFixed = truncated + ',"yhteenveto":"Osittainen tulos — hae tarkemmalla hakusanalla."}';
-      } else {
-        cleanFixed = truncated;
-      }
-    }
-    const json = JSON.parse(cleanFixed);
+      // AND-logiikka: KAIKKI hakusanat täytyy löytyä (oppilaitos + koulutus yhdistettynä)
+      const riviLow = oppLow + ' ' + koulLow;
+      if (!hakuTermit.every(t => riviLow.includes(t))) continue;
 
-    if (!json.tulokset || json.tulokset.length === 0) {
-      tulosEl.innerHTML = `<div style="padding:1rem;background:#fff8f0;border:1px solid #f0d9c0;border-radius:8px;font-size:0.88rem;color:#7a4520;">${json.yhteenveto||'Ei tuloksia.'}</div>`;
-      return;
-    }
+      const tyyppi = (koulLow.includes('perustutkinto') || koulLow.includes('osaamisala') ||
+                      koulLow.includes('ammattitutkinto') || koulLow.includes('erikoisammattitutkinto'))
+                     ? 'ammatillinen' : 'lukio';
 
-    const tyyppivari = t => t === 'lukio' ? '#e8f4f8' : '#f0f8e8';
-    const tyyppiLabel = t => t === 'lukio' ? '🎓 Lukio' : '🔧 Ammatillinen';
-
-    const vertailuHTML = (t) => {
-      if (t.vertailu === 'ei_tiedossa' || !t.alaraja) return '';
-      if (t.tyyppi === 'lukio' && omaKa !== '–') {
-        const diff = (parseFloat(omaKa) - t.alaraja).toFixed(2);
-        if (t.vertailu === 'yli') return `<span style="font-size:0.8rem;color:#2d6a4f;font-weight:600;">✓ +${diff} yli rajan</span>`;
-        if (t.vertailu === 'alle') return `<span style="font-size:0.8rem;color:#b7472a;font-weight:600;">✗ ${Math.abs(diff)} alle rajan</span>`;
-        return `<span style="font-size:0.8rem;color:#856404;font-weight:600;">≈ Tasainen</span>`;
-      }
-      if (t.tyyppi === 'ammatillinen' && omaP1 !== '–') {
-        const omaNum = parseFloat(omaP1);
-        if (!isNaN(omaNum) && t.alaraja) {
-          const diff = (omaNum - t.alaraja).toFixed(1);
-          if (omaNum >= t.alaraja) return `<span style="font-size:0.8rem;color:#2d6a4f;font-weight:600;">✓ +${diff} p yli rajan</span>`;
-          return `<span style="font-size:0.8rem;color:#b7472a;font-weight:600;">✗ ${Math.abs(diff)} p alle rajan</span>`;
+      let vertailu = 'ei_tiedossa';
+      if (tyyppi === 'lukio' && omaKa !== '–') {
+        const ka = parseFloat(omaKa.replace(',', '.'));
+        if (!isNaN(ka)) {
+          const diff = ka - alaraja;
+          vertailu = diff > 0.05 ? 'yli' : diff < -0.05 ? 'alle' : 'tasainen';
+        }
+      } else if (tyyppi === 'ammatillinen' && omaP1 !== '–') {
+        const p = parseFloat(omaP1.replace(',', '.'));
+        if (!isNaN(p)) {
+          vertailu = p > alaraja ? 'yli' : p < alaraja ? 'alle' : 'tasainen';
         }
       }
-      return '';
-    };
 
-    const rivit = json.tulokset.map(t => `
-      <div style="padding:0.85rem 1rem;border:1px solid #e2d9c8;border-radius:8px;margin-bottom:0.6rem;background:${tyyppivari(t.tyyppi)}">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;flex-wrap:wrap;">
-          <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;font-size:0.92rem;">${t.oppilaitos}</div>
-            ${t.yksikko && t.yksikko !== 'null' ? `<div style="font-size:0.78rem;color:#6b6355;">${t.yksikko}</div>` : ''}
-            <div style="font-size:0.85rem;color:#6b6355;margin-top:3px;">${t.koulutus}</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;">
-            <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:#2d6a4f;line-height:1;">${t.alaraja ?? '–'}</div>
-            <div style="font-size:0.72rem;color:#6b6355;">${t.tyyppi==='lukio'?'alin ka':'alin pisteet'}</div>
-            ${vertailuHTML(t)}
-          </div>
-        </div>
-        <div style="margin-top:5px;font-size:0.78rem;">${tyyppiLabel(t.tyyppi)}</div>
-      </div>`).join('');
-
-    tulosEl.innerHTML = rivit + `
-      <div style="margin-top:0.75rem;padding:0.85rem 1rem;background:#d8f3dc;border-radius:8px;font-size:0.83rem;color:#1b4332;line-height:1.55;">
-        ${json.yhteenveto}
-      </div>`;
-  } catch(e) {
-    const onProxyError = e.message.includes('Failed to fetch') || e.message.includes('NetworkError') || e.message.includes('ECONNREFUSED');
-    tulosEl.innerHTML = `<div style="padding:1rem;background:#fff0f0;border:1px solid #f0c0c0;border-radius:8px;font-size:0.88rem;color:#7a2020;line-height:1.6;">
-      ${onProxyError
-        ? `<strong>Proxy ei ole käynnissä.</strong><br>Käynnistä proxy-palvelin ensin:<br>
-           <code style="background:#f5f0f0;padding:2px 6px;border-radius:4px;font-size:0.85rem;">node proxy.js</code>`
-        : 'Haku epäonnistui: ' + e.message}
-    </div>`;
+      kaikki.push({ oppilaitos: oppilaitosOsa, yksikko: null, koulutus: koulutusNimi, tyyppi, alaraja, vertailu });
+    }
   }
+
+  if (kaikki.length === 0) {
+    tulosEl.innerHTML = `<div style="padding:1rem;background:#fff8f0;border:1px solid #f0d9c0;border-radius:8px;font-size:0.88rem;color:#7a4520;">Ei tuloksia hakusanalle "<strong>${hakusana}</strong>". Kokeile lyhyempää hakusanaa tai koulutuksen nimeä (esim. "sähkö" tai "Helsinki").</div>`;
+    return;
+  }
+
+  const json = {
+    tulokset: kaikki.slice(0, 5),
+    yhteenveto: `Löytyi ${kaikki.length} tulosta hakusanalle "${hakusana}"${kaikki.length > 5 ? ' — näytetään 5 ensimmäistä, tarkenna hakua saadaksesi täsmällisempiä tuloksia' : ''}. Data: kevät 2025, OPH Vipunen.`
+  };
+
+  const tyyppivari = t => t === 'lukio' ? '#e8f4f8' : '#f0f8e8';
+  const tyyppiLabel = t => t === 'lukio' ? '🎓 Lukio' : '🔧 Ammatillinen';
+
+  const vertailuHTML = (t) => {
+    if (t.vertailu === 'ei_tiedossa' || !t.alaraja) return '';
+    if (t.tyyppi === 'lukio' && omaKa !== '–') {
+      const diff = (parseFloat(omaKa) - t.alaraja).toFixed(2);
+      if (t.vertailu === 'yli') return `<span style="font-size:0.8rem;color:#2d6a4f;font-weight:600;">✓ +${diff} yli rajan</span>`;
+      if (t.vertailu === 'alle') return `<span style="font-size:0.8rem;color:#b7472a;font-weight:600;">✗ ${Math.abs(diff)} alle rajan</span>`;
+      return `<span style="font-size:0.8rem;color:#856404;font-weight:600;">≈ Tasainen</span>`;
+    }
+    if (t.tyyppi === 'ammatillinen' && omaP1 !== '–') {
+      const omaNum = parseFloat(omaP1);
+      if (!isNaN(omaNum) && t.alaraja) {
+        const diff = (omaNum - t.alaraja).toFixed(1);
+        if (omaNum >= t.alaraja) return `<span style="font-size:0.8rem;color:#2d6a4f;font-weight:600;">✓ +${diff} p yli rajan</span>`;
+        return `<span style="font-size:0.8rem;color:#b7472a;font-weight:600;">✗ ${Math.abs(diff)} p alle rajan</span>`;
+      }
+    }
+    return '';
+  };
+
+  const rivit = json.tulokset.map(t => `
+    <div style="padding:0.85rem 1rem;border:1px solid #e2d9c8;border-radius:8px;margin-bottom:0.6rem;background:${tyyppivari(t.tyyppi)}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:600;font-size:0.92rem;">${t.oppilaitos}</div>
+          ${t.yksikko && t.yksikko !== 'null' ? `<div style="font-size:0.78rem;color:#6b6355;">${t.yksikko}</div>` : ''}
+          <div style="font-size:0.85rem;color:#6b6355;margin-top:3px;">${t.koulutus}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:#2d6a4f;line-height:1;">${t.alaraja ?? '–'}</div>
+          <div style="font-size:0.72rem;color:#6b6355;">${t.tyyppi==='lukio'?'alin ka':'alin pisteet'}</div>
+          ${vertailuHTML(t)}
+        </div>
+      </div>
+      <div style="margin-top:5px;font-size:0.78rem;">${tyyppiLabel(t.tyyppi)}</div>
+    </div>`).join('');
+
+  tulosEl.innerHTML = rivit + `
+    <div style="margin-top:0.75rem;padding:0.85rem 1rem;background:#d8f3dc;border-radius:8px;font-size:0.83rem;color:#1b4332;line-height:1.55;">
+      ${json.yhteenveto}
+    </div>`;
 }
+
 </script>
 </body>
 </html>
