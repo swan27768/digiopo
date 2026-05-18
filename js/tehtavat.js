@@ -10,7 +10,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-   
+
     {
       aiheId: "tasks-omat-vahvuudet",
       title: "Päivän aihe: Missä olen hyvä?",
@@ -21,7 +21,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-  
+
     {
       aiheId: "tasks-opiskelutaidot",
       title: "Kirja kiinni – mitä muistat?",
@@ -32,7 +32,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-mina-oppijana",
       title: "Päivän aihe: Motivaatio",
@@ -42,7 +42,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-tulevaisuus",
       title: "Päivän aihe: Mikä minusta tulee isona?",
@@ -75,7 +75,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-tet",
       title: "Päivän aihe: Mitä työ oikeasti on?",
@@ -94,8 +94,7 @@ const tehtavat = {
       tagClass: "",
       icon: "fa-pencil",
     },
-    
-   
+
     {
       aiheId: "tasks-ammatti",
       title: "Unelma-ammattini",
@@ -118,7 +117,6 @@ const tehtavat = {
   ],
 
   9: [
-    
     {
       aiheId: "tasks-jatko",
       title: "Päivän aihe: Lukio vai amis?",
@@ -128,7 +126,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-yhteishaku",
       title: "Päivän aihe: Miten haen?",
@@ -139,7 +137,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-tet-tyokaveri",
       title: "Millaisen työkaverin haluaisit olla TETissä?",
@@ -159,7 +157,7 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-valinnat",
       title: "Palkka vai merkitys?",
@@ -170,12 +168,12 @@ const tehtavat = {
       tagClass: "tag-keskustelu",
       icon: "fa-comments",
     },
-    
+
     {
       aiheId: "tasks-valinnat",
       title: "Minä valintojen tekijänä",
       description:
-        "Reflektoi omaa toimintaasi: miten teit valintoja tämän tunnin harjoituksissa — ja mitä se kertoo sinusta?",
+        "Pohdi omaa toimintaasi: miten teit valintoja tämän tunnin harjoituksissa — ja mitä se kertoo sinusta?",
       href: "../tehtava.html?id=reflektio-valinnat9",
       tag: "Kirjoitustehtävä",
       tagClass: "tag-kirjoitus",
@@ -183,10 +181,13 @@ const tehtavat = {
     },
   ],
 
+  // ── Kirjoitustehtävät ────────────────────────────────────────────────────────
+
   vahvuudet: {
     title: "Omat vahvuudet",
     category: "vahvuudet",
     class: "7",
+    sektio: "vahvuudet",
     instructions: [
       "Kirjoita kolme asiaa, joissa olet hyvä.",
       "Mistä asioista pidät koulussa?",
@@ -199,6 +200,7 @@ const tehtavat = {
     title: "Opiskelutaidot",
     category: "opiskelu",
     class: "7",
+    sektio: "opiskelutaidot",
     instructions: [
       "Suunnittele oma opiskelupäiväsi.",
       "Milloin opiskelet parhaiten?",
@@ -211,6 +213,7 @@ const tehtavat = {
     title: "Minä oppijana",
     category: "oppiminen",
     class: "7",
+    sektio: "mina-oppijana",
     instructions: [
       "Millä tavalla opit parhaiten?",
       "Mikä auttaa sinua keskittymään?",
@@ -219,11 +222,11 @@ const tehtavat = {
     pdf: "tehtavat/mina-oppijana.pdf",
   },
 
-    
   tulevaisuus7: {
     title: "Unelmieni tulevaisuus",
     category: "urat",
     class: "7",
+    sektio: "tulevaisuus",
     instructions: [
       "Kirjoita kolme ammattia tai alaa jotka kuulostavat kiinnostavilta.",
       "Mikä sinussa on sellaista, joka voisi sopia niihin?",
@@ -232,12 +235,83 @@ const tehtavat = {
     pdf: "tehtavat/tulevaisuus7.pdf",
   },
 
+  "kesatyo-hakemus": {
+    title: "Kesätyöhakemus",
+    category: "urat",
+    class: "8",
+    sektio: "raha",
+    instructions: [
+      "Valitse jokin paikka tai ala, johon haluaisit hakea töihin.",
+      "Kirjoita lyhyt hakemus: kuka olet, miksi haet ja mitä osaat.",
+      "Mieti, mitä taitoja tai kiinnostuksia sinulla on, jotka sopivat paikkaan.",
+    ],
+    pdf: "tehtavat/kesatyo-hakemus.pdf",
+  },
+
+  budjetti: {
+    title: "Budjetti kuukaudelle",
+    category: "urat",
+    class: "8",
+    sektio: "raha",
+    instructions: [
+      "Arvioi, paljonko sinulla on tai voisi olla rahaa kuukaudessa.",
+      "Listaa mihin raha menee tai haluaisit sen menevän.",
+      "Laske, jääkö säästöön vai meneekö yli budjetin.",
+    ],
+    pdf: "tehtavat/budjetti.pdf",
+  },
+
+  "unelma-ammatti": {
+    title: "Unelma-ammattini",
+    category: "urat",
+    class: "8",
+    sektio: "ammatti",
+    instructions: [
+      "Valitse yksi ammatti, joka kiinnostaa sinua juuri nyt.",
+      "Etsi: mitä koulutusta se vaatii ja millainen arki siinä on.",
+      "Kirjoita: mikä sinussa sopii siihen – ja mitä pitäisi oppia lisää.",
+    ],
+    pdf: "tehtavat/unelma-ammatti.pdf",
+  },
+
+  jatko9: {
+    title: "Minne minä menen?",
+    category: "urat",
+    class: "9",
+    sektio: "jatko",
+    instructions: [
+      "Kirjoita kolme eri vaihtoehtoa peruskoulun jälkeen – vaikka epävarmat.",
+      "Mikä niissä houkuttaa, mikä epäilyttää?",
+      "Mikä on tällä hetkellä todennäköisin vaihtoehto – ja miksi?",
+    ],
+  },
+
+  hakustrategia: {
+    title: "Hakustrategiani",
+    category: "urat",
+    class: "9",
+    sektio: "hakustrategia",
+    instructions: [
+      "Kirjoita 1 varma hakukohde – johon pääset melko varmasti.",
+      "Kirjoita 1 realistinen hakukohde – johon sinulla on hyvät mahdollisuudet.",
+      "Kirjoita 1 unelmakohde – johon haluaisit päästä.",
+    ],
+  },
+
+  // ── Keskustelutehtävät – 7. luokka ─────────────────────────────────────────
+
   "keskustelu-tervetuloa": {
     title: "Päivän aihe: Ensimmäinen viikko",
     category: "keskustelu",
     class: "7",
+    sektio: "johdanto",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Virittäytyminen (2–3 min): Jokainen miettii hetken yksin.",
+      "Parikeskustelu (5–7 min): Jaetaan ajatukset parin kanssa.",
+      "Yhteinen nosto (5 min): Yksi asia ääneen koko luokalle.",
+    ],
     kysymykset: [
       "Mikä on tuntunut helpolta tällä viikolla?",
       "Mikä on jännittänyt tai mietityttänyt?",
@@ -249,9 +323,9 @@ const tehtavat = {
       "Voit aloittaa itse kertomalla oman muistosi yläkoulun alusta.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Mikä on tuntunut helpolta tällä viikolla?",
-      "Keskustelukysymys 2: Mikä on jännittänyt tai mietityttänyt?",
-      "Keskustelukysymys 3: Mitä odotat tältä vuodelta?",
+      "Vaihe 1: Mikä on tuntunut helpolta tällä viikolla?",
+      "Vaihe 2: Mikä on jännittänyt tai mietityttänyt?",
+      "Vaihe 3: Mitä odotat tältä vuodelta?",
     ],
   },
 
@@ -259,8 +333,14 @@ const tehtavat = {
     title: "Päivän aihe: Missä olen hyvä?",
     category: "keskustelu",
     class: "7",
+    sektio: "vahvuudet",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (3 min): Kirjoita yksi vahvuus lapulle ennen ääneen sanomista.",
+      "Parin kanssa (5–7 min): Kerro vahvuutesi ja kuuntele parin.",
+      "Koko luokka (5 min): Nostetaan yhteisesti esiin erilaisia vahvuuksia.",
+    ],
     kysymykset: [
       "Mikä on sellaista, jossa olet hyvä – myös koulun ulkopuolella?",
       "Onko joku joskus sanonut sinulle, että olet hyvä jossakin? Missä?",
@@ -272,9 +352,9 @@ const tehtavat = {
       "Voit käyttää vahvuuskortteja tai listaa apuna.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Mikä on sellaista, jossa olet hyvä – myös koulun ulkopuolella?",
-      "Keskustelukysymys 2: Onko joku joskus sanonut sinulle, että olet hyvä jossakin?",
-      "Keskustelukysymys 3: Miten vahvuuksia voi käyttää koulussa tai kaveriporukassa?",
+      "Vaihe 1: Mikä on sellaista, jossa olet hyvä – myös koulun ulkopuolella?",
+      "Vaihe 2: Onko joku joskus sanonut sinulle, että olet hyvä jossakin?",
+      "Vaihe 3: Miten vahvuuksia voi käyttää koulussa tai kaveriporukassa?",
     ],
   },
 
@@ -282,8 +362,14 @@ const tehtavat = {
     title: "Kirja kiinni – mitä muistat?",
     category: "keskustelu",
     class: "7",
+    sektio: "opiskelutaidot",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Lue ensin (3 min): Lue taustateksti ja kirjoita yksi asia, jonka muistit.",
+      "Parin kanssa (7 min): Vertaa muistamasi asiat parin kanssa.",
+      "Koko luokka (5 min): Mikä yhteinen havainto nousi esiin?",
+    ],
     taustaOtsikko: "Aktiivinen muisteleminen (Retrieval Practice)",
     taustateksti:
       'Passiivinen lukeminen ja alleviivaaminen on todettu tehottomaksi oppimisen kannalta.\n\nVuoden 2026 opiskeluvinkit korostavat "kirja kiinni" -menetelmää: lue kappale, laita kirja piiloon ja kirjoita tai sano ääneen kaikki, mitä muistat.',
@@ -299,9 +385,9 @@ const tehtavat = {
       "Tee tästä tapa: kirja kiinni -tekniikka toimii parhaiten kun käytät sitä joka kerta, ei vain ennen koetta.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Miksi lukeminen tuntuu helpommalta kuin muistaminen?",
-      "Keskustelukysymys 2: Kirja kiinni vai selaaminen – kumpaan luotat?",
-      "Keskustelukysymys 3: Milloin opiskelu tuntuu helpoimmalta?",
+      "Vaihe 1: Miksi lukeminen tuntuu helpommalta kuin muistaminen?",
+      "Vaihe 2: Kirja kiinni vai selaaminen – kumpaan luotat?",
+      "Vaihe 3: Milloin opiskelu tuntuu helpoimmalta?",
     ],
   },
 
@@ -309,8 +395,14 @@ const tehtavat = {
     title: "Päivän aihe: Motivaatio",
     category: "keskustelu",
     class: "7",
+    sektio: "mina-oppijana",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Mieti hetki – milloin motivaatio on korkeimmillaan?",
+      "Parin kanssa (7 min): Vertaa ajatuksia ja etsikää yhteinen havainto.",
+      "Koko luokka (5 min): Mikä motivoi meitä – ja mistä apua, kun motivaatio on hukassa?",
+    ],
     kysymykset: [
       "Milloin koulussa on helpointa yrittää – ja milloin vaikeinta?",
       "Mikä saa sinut jatkamaan, vaikka jokin tuntuu tylsältä tai vaikealta?",
@@ -322,54 +414,55 @@ const tehtavat = {
       "Lopeta positiiviseen: jokainen löytää jonkin oman motivaattorinsa.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Milloin koulussa on helpointa yrittää?",
-      "Keskustelukysymys 2: Mikä saa sinut jatkamaan vaikean asian parissa?",
-      "Keskustelukysymys 3: Mitä tekisit, jos sinulla olisi vapaa oppimispäivä?",
+      "Vaihe 1: Milloin koulussa on helpointa yrittää?",
+      "Vaihe 2: Mikä saa sinut jatkamaan vaikean asian parissa?",
+      "Vaihe 3: Mitä tekisit, jos sinulla olisi vapaa oppimispäivä?",
     ],
   },
 
-  "kesatyo-hakemus": {
-    title: "Kesätyöhakemus",
-    category: "urat",
-    class: "8",
-    instructions: [
-      "Valitse jokin paikka tai ala, johon haluaisit hakea töihin.",
-      "Kirjoita lyhyt hakemus: kuka olet, miksi haet ja mitä osaat.",
-      "Mieti, mitä taitoja tai kiinnostuksia sinulla on, jotka sopivat paikkaan.",
+  "keskustelu-tulevaisuus": {
+    title: "Päivän aihe: Mikä minusta tulee isona?",
+    category: "keskustelu",
+    class: "7",
+    sektio: "tulevaisuus",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kirjoita yksi haave – ei tarvitse olla realistinen.",
+      "Parin kanssa (7 min): Kerro haaveesi ja kuuntele parin.",
+      "Koko luokka (5 min): Mitä yhteistä haaveissamme on?",
     ],
-    pdf: "tehtavat/kesatyo-hakemus.pdf",
+    kysymykset: [
+      "Mikä ammatti tai ala kuulostaa juuri nyt kiinnostavimmalta – ja miksi?",
+      "Onko jokin asia, jossa olet hyvä ja josta voisi tulla ammatti?",
+      "Onko haave, josta ei uskalla puhua ääneen? (Ei tarvitse jakaa – riittää että miettii.)",
+    ],
+    vinkit: [
+      "Muistuta, että haaveet saavat muuttua – tämä ei ole sitova päätös.",
+      "Rohkaise epätavanomaisia vastauksia.",
+      "Ei oikeita tai vääriä vastauksia – kevyt ja avoin tunnelma.",
+    ],
+    instructions: [
+      "Vaihe 1: Mikä ammatti kuulostaa kiinnostavimmalta juuri nyt?",
+      "Vaihe 2: Onko asia, jossa olet hyvä ja josta voisi tulla ammatti?",
+      "Vaihe 3: Haave, josta ei uskalla puhua ääneen – riittää että miettii.",
+    ],
   },
 
-  budjetti: {
-    title: "Budjetti kuukaudelle",
-    category: "urat",
-    class: "8",
-    instructions: [
-      "Arvioi, paljonko sinulla on tai voisi olla rahaa kuukaudessa.",
-      "Listaa mihin raha menee tai haluaisit sen menevän.",
-      "Laske, jääkö säästöön vai meneekö yli budjetin.",
-    ],
-    pdf: "tehtavat/budjetti.pdf",
-  },
-
-  "unelma-ammatti": {
-    title: "Unelma-ammattini",
-    category: "urat",
-    class: "8",
-    instructions: [
-      "Valitse yksi ammatti, joka kiinnostaa sinua juuri nyt.",
-      "Etsi: mitä koulutusta se vaatii ja millainen arki siinä on.",
-      "Kirjoita: mikä sinussa sopii siihen – ja mitä pitäisi oppia lisää.",
-    ],
-    pdf: "tehtavat/unelma-ammatti.pdf",
-  },
+  // ── Keskustelutehtävät – 8. luokka ─────────────────────────────────────────
 
   "keskustelu-koulutus": {
     title: "Päivän aihe: Lukio vai ammattiin?",
     category: "keskustelu",
     class: "8",
+    sektio: "koulutus",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kumpi tuntuu juuri nyt omimmalta? Kirjoita yksi sana.",
+      "Parin kanssa (7 min): Kerro valintasi ja perustele. Kuuntele parin perustelu.",
+      "Koko luokka (5 min): Nostetaan esiin: mistä tunne oikeasta polusta tulee?",
+    ],
     kysymykset: [
       "Mitä tiedät lukiosta ja ammatillisesta koulutuksesta – miten ne eroavat?",
       "Kumpi tuntuu juuri nyt enemmän omalta, ja miksi?",
@@ -381,9 +474,9 @@ const tehtavat = {
       "Anna tilaa molemmille vaihtoehdoille – ei ole parempi tai huonompi.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Miten lukio ja ammatillinen koulutus eroavat?",
-      "Keskustelukysymys 2: Kumpi tuntuu juuri nyt enemmän omalta?",
-      "Keskustelukysymys 3: Onko joku vaikuttanut ajatteluusi?",
+      "Vaihe 1: Miten lukio ja ammatillinen koulutus eroavat?",
+      "Vaihe 2: Kumpi tuntuu juuri nyt enemmän omalta?",
+      "Vaihe 3: Onko joku vaikuttanut ajatteluusi?",
     ],
   },
 
@@ -391,8 +484,14 @@ const tehtavat = {
     title: "Päivän aihe: Mitä työ oikeasti on?",
     category: "keskustelu",
     class: "8",
+    sektio: "tet",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Muistele yksi hetki TET-jaksolta – hyvä tai huono.",
+      "Parin kanssa (7 min): Kerro hetkesi. Mikä yllätti? Mikä opetti?",
+      "Koko luokka (5 min): Kirjataan taululle – mitä työ oikeasti on?",
+    ],
     kysymykset: [
       "Mikä TET-jaksolla yllätti eniten – hyvällä tai huonolla tavalla?",
       "Mitä sellaista opit, mitä ei opita koulussa?",
@@ -404,9 +503,9 @@ const tehtavat = {
       "Voit kirjata taululle yhteisesti: mikä yllätti, mikä kiinnosti.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Mikä TET-jaksolla yllätti eniten?",
-      "Keskustelukysymys 2: Mitä opit, mitä ei opita koulussa?",
-      "Keskustelukysymys 3: Haluaisitko mennä samaan paikkaan uudelleen?",
+      "Vaihe 1: Mikä TET-jaksolla yllätti eniten?",
+      "Vaihe 2: Mitä opit, mitä ei opita koulussa?",
+      "Vaihe 3: Haluaisitko mennä samaan paikkaan uudelleen?",
     ],
   },
 
@@ -414,8 +513,14 @@ const tehtavat = {
     title: "Päivän aihe: Mistä rahaa nuorena?",
     category: "keskustelu",
     class: "8",
+    sektio: "raha",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kirjoita yksi tapa, jolla olet ansainnut tai voisit ansaita rahaa.",
+      "Parin kanssa (7 min): Vertaa ideoita – mitkä ovat realistisia?",
+      "Koko luokka (5 min): Kootaan lista konkreettisista tavoista.",
+    ],
     kysymykset: [
       "Miten sinä olet ansainnut tai yrittänyt ansaita rahaa?",
       "Mitkä ovat realistisia tapoja tienata alle 18-vuotiaana?",
@@ -427,9 +532,9 @@ const tehtavat = {
       "Lopeta positiivisesti: mitä taitoja nuori jo osaa, joista voi saada rahaa?",
     ],
     instructions: [
-      "Keskustelukysymys 1: Miten olet ansainnut tai yrittänyt ansaita rahaa?",
-      "Keskustelukysymys 2: Mitkä ovat realistisia tapoja tienata alle 18-vuotiaana?",
-      "Keskustelukysymys 3: Mitä tekisit, jos sinulla olisi kuukauden palkka?",
+      "Vaihe 1: Miten olet ansainnut tai yrittänyt ansaita rahaa?",
+      "Vaihe 2: Mitkä ovat realistisia tapoja tienata alle 18-vuotiaana?",
+      "Vaihe 3: Mitä tekisit, jos sinulla olisi kuukauden palkka?",
     ],
   },
 
@@ -437,8 +542,14 @@ const tehtavat = {
     title: "Päivän aihe: Mikä työ sopii mulle?",
     category: "keskustelu",
     class: "8",
+    sektio: "ammatti",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kirjoita yksi ammatti, joka kiinnostaa – ja yksi, jota ei tekisi ikinä.",
+      "Parin kanssa (7 min): Kerro valintasi perusteluineen. Haasta kaverin ajatusta.",
+      "Koko luokka (5 min): Mistä tietää, sopiiko jokin ammatti itselle?",
+    ],
     kysymykset: [
       "Mikä ammatti on juuri nyt kiinnostavin – ja mistä se kiinnostus tulee?",
       "Mitä sellaista teet vapaa-ajalla, josta voisi tulla ammatti?",
@@ -450,181 +561,9 @@ const tehtavat = {
       "Nosta esiin, että ammatit muuttuvat – tulevaisuuden työtä ei vielä tiedetä.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Mikä ammatti on juuri nyt kiinnostavin?",
-      "Keskustelukysymys 2: Mistä vapaa-ajan asiasta voisi tulla ammatti?",
-      "Keskustelukysymys 3: Onko ammatti, jota et tekisi ikinä?",
-    ],
-  },
-
-  
-
-  jatko9: {
-    title: "Minne minä menen?",
-    category: "urat",
-    class: "9",
-    instructions: [
-      "Kirjoita kolme eri vaihtoehtoa peruskoulun jälkeen – vaikka epävarmat.",
-      "Mikä niissä houkuttaa, mikä epäilyttää?",
-      "Mikä on tällä hetkellä todennäköisin vaihtoehto – ja miksi?",
-    ],
-  },
-
-  hakustrategia: {
-    title: "Hakustrategiani",
-    category: "urat",
-    class: "9",
-    instructions: [
-      "Kirjoita 1 varma hakukohde – johon pääset melko varmasti.",
-      "Kirjoita 1 realistinen hakukohde – johon sinulla on hyvät mahdollisuudet.",
-      "Kirjoita 1 unelmakohde – johon haluaisit päästä.",
-    ],
-  },
-
-
-
-  "keskustelu-jatko9": {
-    title: "Päivän aihe: Lukio vai amis?",
-    category: "keskustelu",
-    class: "9",
-    tyyppi: "keskustelu",
-    kesto: "15–20 min",
-    kysymykset: [
-      "Mitä tiedät lukiosta ja ammatillisesta – mikä on epäselvää?",
-      "Mikä vaihtoehto tuntuu juuri nyt omimmalta, ja mistä se tunne tulee?",
-      "Onko joku asia, joka saisi sinut muuttamaan mieltä?",
-    ],
-    vinkit: [
-      "Tee selväksi, että molemmat polut ovat yhtä arvokkaita.",
-      "Anna oppilaille hetki kirjoittaa ajatus ennen ääneen sanomista.",
-      "Muistuta: yhteishaussa voi hakea molempiin – ei tarvitse valita nyt.",
-    ],
-    instructions: [
-      "Keskustelukysymys 1: Mitä tiedät eri poluista – mikä on epäselvää?",
-      "Keskustelukysymys 2: Mikä vaihtoehto tuntuu juuri nyt omimmalta?",
-      "Keskustelukysymys 3: Onko joku asia, joka saisi sinut muuttamaan mieltä?",
-    ],
-  },
-
-  "keskustelu-yhteishaku": {
-    title: "Päivän aihe: Miten haen?",
-    category: "keskustelu",
-    class: "9",
-    tyyppi: "keskustelu",
-    kesto: "15–20 min",
-    kysymykset: [
-      "Mitkä vaiheet yhteishaussa mietityttävät tai jännittävät eniten?",
-      "Mitä tietoja tarvitset vielä ennen kuin voit hakea?",
-      "Onko joku, jonka kanssa aiot jutella ennen hakemista?",
-    ],
-    vinkit: [
-      "Käy läpi Opintopolun aikataulu konkreettisesti – milloin hakuaika alkaa.",
-      "Muistuta: hakemuksen voi muuttaa hakuajan sisällä.",
-      "Tarjoa apua hakemuksen täyttämiseen jos oppilas sitä tarvitsee.",
-    ],
-    instructions: [
-      "Keskustelukysymys 1: Mitkä vaiheet yhteishaussa mietityttävät eniten?",
-      "Keskustelukysymys 2: Mitä tietoja tarvitset vielä ennen hakemista?",
-      "Keskustelukysymys 3: Onko joku, jonka kanssa aiot jutella ennen hakemista?",
-    ],
-  },
-
-  "keskustelu-tet9": {
-    title: "Millaisen työkaverin haluaisit olla TETissä?",
-    category: "keskustelu",
-    class: "9",
-    tyyppi: "keskustelu",
-    kesto: "10–15 min",
-    kysymykset: [
-      "🎯 Virittäytyminen (2–3 min): \"Kuvittele, että TET on ohi. Työpaikalla sinusta sanotaan jotain hyvää – mitä haluaisit sen olevan?\" Oppilaat miettivät hetken yksin.",
-      "💬 Parikeskustelu (4–5 min): Mitä tarkoittaa hyvä työkaveri? Mitä aiot itse tehdä, jotta onnistut TETissä? Mikä jännittää – ja miten siitä voisi selvitä?",
-      
-    ],
-    vinkit: [
-      "Virittäytyminen: Heitä aloituskysymys ja anna hetki hiljaiseen pohdintaan ennen parikeskustelua.",
-      "Parikeskustelu: Tavoite on madaltaa kynnystä puhua ja jakaa ajatuksia – ei ole oikeita tai vääriä vastauksia.",
-      "Yhteinen nosto: Mieti, mitä haluaisit sanoa ääneen koko luokalle – yksi ominaisuus tai teko, joka tuntuu sinulle tärkeältä.",
-    ],
-    instructions: [
-      "Vaihe 1 – Virittäytyminen: \"Mitä haluaisit, että sinusta sanotaan TETin jälkeen?\"",
-      "Vaihe 2 – Parikeskustelu: Hyvä työkaveri, onnistuminen TETissä, jännittävät asiat.",
-      "Vaihe 3 – Yhteinen nosto: Yksi ominaisuus ja yksi teko – nosta ääneen.",
-    ],
-  },
-
-  "reflektio-valinnat9": {
-    title: "Minä valintojen tekijänä",
-    category: "reflektio",
-    class: "9",
-    tyyppi: "kirjoitus",
-    kesto: "15–20 min",
-    kuvaus:
-      "Tässä tunnissa olet tehnyt valintoja kolmessa eri harjoituksessa: Elämänvalintapelissä, Kumpi valitsisit? -korttiharjoituksessa ja Arvopohjaisessa valinnassa. Nyt on aika pysähtyä ja katsoa taaksepäin — mitä teit, miksi ja mitä se kertoo sinusta?",
-    instructions: [
-      "Muistele kolmea harjoitusta: Elämänvalintapeli, Kumpi valitsisit? ja Arvopohjainen valinta. Mikä valinta tai tilanne jäi eniten mieleen — ja miksi juuri se?",
-      "Mikä ohjasi valintojasi eniten: tunne, järki, arvot vai muiden mielipide? Huomasitko eron eri harjoitusten välillä?",
-      "Oliko jokin valinta vaikea tehdä? Mistä vaikeus tuli — arvojen ristiriidasta, epävarmuudesta vai jostakin muusta?",
-      "Mitä opit itsestäsi valintojen tekijänä? Onko jotain, mitä haluaisit tehdä toisin jatkossa?",
-    ],
-    vinkit: [
-      "Ei ole oikeaa tai väärää vastausta — tärkeintä on rehellinen oman toiminnan tarkastelu.",
-      "Kirjoita ensin vapaasti ilman miettimistä. Voit siistiä tekstiä jälkikäteen.",
-      "Voit viitata johonkin tiettyyn korttiin, arvolistaan tai pelitilanteeseen — konkreettiset esimerkit tekevät reflektiosta elävän.",
-    ],
-  },
-
-
-
-  "keskustelu-harrastus-ammatti": {
-    title: "Harrastuksesta ammatti?",
-    category: "keskustelu",
-    class: "9",
-    tyyppi: "keskustelu",
-    kesto: "15–20 min",
-    taustaOtsikko: "Urheilu ja tavoitteellisuus",
-    taustateksti:
-      "Väite: Harrastuksen muuttaminen ammatiksi (esim. urheilu tai pelaaminen) pilaa ilon koko harrastuksesta, koska siitä tulee pakonomaista suorittamista.",
-    taustaLahde: "HS Lasten uutiset / Urheiluyläkoulun arki (2026)",
-    kysymykset: [
-      "Haluaisitko sinä tehdä harrastuksestasi työsi?",
-      'Mitä riskejä siinä on, jos kaikki "vapaa-aika" muuttuukin työksi?',
-      "Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin – miten se on sujunut?",
-    ],
-    vinkit: [
-      "Valitse puolesi: oletko väitteen puolella vai vastaan – ja perustele se yhdellä konkreettisella esimerkillä.",
-      "Kuuntele ensin toisen argumentti loppuun ennen kuin vastaat – hyvä väittelijä ei keskeytä.",
-      'Käytä vastaväitettä: "Ymmärrän mitä sanot, mutta..." – se osoittaa että olet kuunnellut.',
-    ],
-    instructions: [
-      "Keskustelukysymys 1: Haluaisitko tehdä harrastuksestasi työsi?",
-      "Keskustelukysymys 2: Mitä riskejä on, jos vapaa-aika muuttuu työksi?",
-      "Keskustelukysymys 3: Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin?",
-    ],
-  },
-
-  "keskustelu-palkka-vai-merkitys": {
-    title: "Palkka vai merkitys?",
-    category: "keskustelu",
-    class: "9",
-    tyyppi: "keskustelu",
-    kesto: "15–20 min",
-    taustaOtsikko: "Työn arvot ja motivaatio",
-    taustateksti:
-      "Väite: On järkevämpää valita ammatti, jossa on varma työllisyys ja huippupalkka, vaikka työ itsessään tuntuisi tylsältä tai turhalta.",
-    taustaLahde: "Nuorten NYT – Nuorten tulevaisuusraportti (2026)",
-    kysymykset: [
-      "Valitsisitko mieluummin 7 000 €/kk palkan työstä, josta et pidä, vai 2 500 €/kk palkan työstä, joka tuntuu todella tärkeältä ja kivalta? Miksi?",
-      "Voiko työ tuntua merkitykselliseltä, vaikka palkka olisi pieni – vai tarvitseeko rahan riittää ensin?",
-      "Muuttuuko vastauksesi, jos ajattelet tilannetta 10 vuoden päästä?",
-    ],
-    vinkit: [
-      "Valitse puolesi ennen keskustelua: palkka vai merkitys – ja perustele se yhdellä konkreettisella syyllä.",
-      'Haasta kaverin ajatus kysymällä: "Entä jos rahat loppuisivat – muuttaisitko mieltä?"',
-      "Muista: ei ole oikeaa vastausta – mutta sinulla pitää olla perustelu omalle valinnallesi.",
-    ],
-    instructions: [
-      "Keskustelukysymys 1: 7 000 € tylsästä vai 2 500 € kivasta – kumpi ja miksi?",
-      "Keskustelukysymys 2: Voiko työ tuntua merkitykselliseltä pienellä palkalla?",
-      "Keskustelukysymys 3: Muuttuuko vastauksesi 10 vuoden päästä?",
+      "Vaihe 1: Mikä ammatti on juuri nyt kiinnostavin?",
+      "Vaihe 2: Mistä vapaa-ajan asiasta voisi tulla ammatti?",
+      "Vaihe 3: Onko ammatti, jota et tekisi ikinä?",
     ],
   },
 
@@ -632,8 +571,14 @@ const tehtavat = {
     title: "Vaikuttaja ammattina – Haave vai painajainen?",
     category: "keskustelu",
     class: "8",
+    sektio: "ammatti",
     tyyppi: "keskustelu",
     kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Valitse puolesi – onko vaikuttajan työ oikeaa työtä vai ei?",
+      "Väittely pareittain (8 min): Perustele kantasi. Haasta kaverin argumentti.",
+      "Koko luokka (5 min): Mitä hyvän väittelyn tekeminen vaati?",
+    ],
     taustaOtsikko: "Sometyö ja julkisuus",
     taustateksti:
       'Suomessa on maaliskuussa 2026 käyty laajaa keskustelua ammattivaikuttajien eläketurvasta ja jaksamisesta. Moni nuori haaveilee tubettajan tai striimaajan urasta, mutta ala on osoittautunut henkisesti raskaaksi jatkuvan arvostelun vuoksi.\n\nVäite: "Vaikuttajana oleminen ei ole oikeaa työtä. Se on vain huomionhakua, joka loppuu heti, kun algoritmi muuttuu."',
@@ -649,9 +594,185 @@ const tehtavat = {
       "Muista: paras väittelijä ei huuda kovimpaa – hän esittää selkeimmän perustelun.",
     ],
     instructions: [
-      "Keskustelukysymys 1: Onko sometyö yhtä arvokasta kuin lääkärin tai opettajan työ?",
-      "Keskustelukysymys 2: Mitä tekisit jos saisit vain vihaisia kommentteja?",
-      "Keskustelukysymys 3: Haluaisitko itse olla vaikuttaja?",
+      "Vaihe 1: Onko sometyö yhtä arvokasta kuin lääkärin tai opettajan työ?",
+      "Vaihe 2: Mitä tekisit jos saisit vain vihaisia kommentteja?",
+      "Vaihe 3: Haluaisitko itse olla vaikuttaja?",
+    ],
+  },
+
+  // ── Keskustelutehtävät – 9. luokka ─────────────────────────────────────────
+
+  "keskustelu-jatko9": {
+    title: "Päivän aihe: Lukio vai amis?",
+    category: "keskustelu",
+    class: "9",
+    sektio: "jatko",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kirjoita yksi sana, joka kuvaa tunnettasi juuri nyt eri poluista.",
+      "Parin kanssa (7 min): Kerro mikä vaihtoehto tuntuu omimmalta – ja mistä tunne tulee.",
+      "Koko luokka (5 min): Nostetaan esiin: mitä vielä epäselvää? Mistä tietoa saa?",
+    ],
+    kysymykset: [
+      "Mitä tiedät lukiosta ja ammatillisesta – mikä on epäselvää?",
+      "Mikä vaihtoehto tuntuu juuri nyt omimmalta, ja mistä se tunne tulee?",
+      "Onko joku asia, joka saisi sinut muuttamaan mieltä?",
+    ],
+    vinkit: [
+      "Tee selväksi, että molemmat polut ovat yhtä arvokkaita.",
+      "Anna oppilaille hetki kirjoittaa ajatus ennen ääneen sanomista.",
+      "Muistuta: yhteishaussa voi hakea molempiin – ei tarvitse valita nyt.",
+    ],
+    instructions: [
+      "Vaihe 1: Mitä tiedät eri poluista – mikä on epäselvää?",
+      "Vaihe 2: Mikä vaihtoehto tuntuu juuri nyt omimmalta?",
+      "Vaihe 3: Onko joku asia, joka saisi sinut muuttamaan mieltä?",
+    ],
+  },
+
+  "keskustelu-yhteishaku": {
+    title: "Päivän aihe: Miten haen?",
+    category: "keskustelu",
+    class: "9",
+    sektio: "yhteishaku",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Kirjoita yksi asia yhteishaussa, joka mietityttää eniten.",
+      "Parin kanssa (7 min): Vertaa: mitkä kysymykset ovat yhteisiä? Tiedätkö vastauksen?",
+      "Koko luokka (5 min): Käydään läpi yhteiset kysymykset – opot vastaavat.",
+    ],
+    kysymykset: [
+      "Mitkä vaiheet yhteishaussa mietityttävät tai jännittävät eniten?",
+      "Mitä tietoja tarvitset vielä ennen kuin voit hakea?",
+      "Onko joku, jonka kanssa aiot jutella ennen hakemista?",
+    ],
+    vinkit: [
+      "Käy läpi Opintopolun aikataulu konkreettisesti – milloin hakuaika alkaa.",
+      "Muistuta: hakemuksen voi muuttaa hakuajan sisällä.",
+      "Tarjoa apua hakemuksen täyttämiseen jos oppilas sitä tarvitsee.",
+    ],
+    instructions: [
+      "Vaihe 1: Mitkä vaiheet yhteishaussa mietityttävät eniten?",
+      "Vaihe 2: Mitä tietoja tarvitset vielä ennen hakemista?",
+      "Vaihe 3: Onko joku, jonka kanssa aiot jutella ennen hakemista?",
+    ],
+  },
+
+  "keskustelu-tet9": {
+    title: "Millaisen työkaverin haluaisit olla TETissä?",
+    category: "keskustelu",
+    class: "9",
+    sektio: "tet",
+    tyyppi: "keskustelu",
+    kesto: "10–15 min",
+    rakenne: [
+      "Virittäytyminen yksin (2–3 min): Kuvittele, että TET on ohi – mitä haluaisit, että sinusta sanotaan?",
+      "Parikeskustelu (4–5 min): Hyvä työkaveri, onnistuminen TETissä, jännittävät asiat.",
+      "Yhteinen nosto (3–4 min): Yksi ominaisuus tai teko ääneen koko luokalle.",
+    ],
+    kysymykset: [
+      "🎯 Virittäytyminen: Kuvittele, että TET on ohi. Mitä haluaisit, että sinusta sanotaan työpaikalla?",
+      "💬 Parikeskustelu: Mitä tarkoittaa hyvä työkaveri? Mitä aiot itse tehdä, jotta onnistut TETissä? Mikä jännittää – ja miten siitä voisi selvitä?",
+    ],
+    vinkit: [
+      "Heitä aloituskysymys ja anna hetki hiljaiseen pohdintaan ennen parikeskustelua.",
+      "Tavoite on madaltaa kynnystä puhua ja jakaa ajatuksia – ei ole oikeita tai vääriä vastauksia.",
+      "Mieti, mitä haluaisit sanoa ääneen koko luokalle – yksi ominaisuus tai teko, joka tuntuu tärkeältä.",
+    ],
+    instructions: [
+      "Vaihe 1 – Virittäytyminen: Mitä haluaisit, että sinusta sanotaan TETin jälkeen?",
+      "Vaihe 2 – Parikeskustelu: Hyvä työkaveri, onnistuminen TETissä, jännittävät asiat.",
+      "Vaihe 3 – Yhteinen nosto: Yksi ominaisuus ja yksi teko – nosta ääneen.",
+    ],
+  },
+
+  "reflektio-valinnat9": {
+    title: "Minä valintojen tekijänä",
+    category: "reflektio",
+    class: "9",
+    sektio: "valinnat",
+    tyyppi: "kirjoitus",
+    kesto: "15–20 min",
+    kuvaus:
+      "Tässä tunnissa olet tehnyt valintoja kolmessa eri harjoituksessa: Elämänvalintapelissä, Kumpi valitsisit? -korttiharjoituksessa ja Arvopohjaisessa valinnassa. Nyt on aika pysähtyä ja katsoa taaksepäin — mitä teit, miksi ja mitä se kertoo sinusta?",
+    instructions: [
+      "Muistele kolmea harjoitusta: Elämänvalintapeli, Kumpi valitsisit? ja Arvopohjainen valinta. Mikä valinta tai tilanne jäi eniten mieleen — ja miksi juuri se?",
+      "Mikä ohjasi valintojasi eniten: tunne, järki, arvot vai muiden mielipide? Huomasitko eron eri harjoitusten välillä?",
+      "Oliko jokin valinta vaikea tehdä? Mistä vaikeus tuli — arvojen ristiriidasta, epävarmuudesta vai jostakin muusta?",
+      "Mitä opit itsestäsi valintojen tekijänä? Onko jotain, mitä haluaisit tehdä toisin jatkossa?",
+    ],
+    vinkit: [
+      "Ei ole oikeaa tai väärää vastausta — tärkeintä on rehellinen oman toiminnan tarkastelu.",
+      "Kirjoita ensin vapaasti ilman miettimistä. Voit siistiä tekstiä jälkikäteen.",
+      "Voit viitata johonkin tiettyyn korttiin, arvolistaan tai pelitilanteeseen — konkreettiset esimerkit tekevät pohdinnasta elävän.",
+    ],
+  },
+
+  "keskustelu-harrastus-ammatti": {
+    title: "Harrastuksesta ammatti?",
+    category: "keskustelu",
+    class: "9",
+    sektio: "tet",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Valitse puolesi – haluaisitko tehdä harrastuksestasi ammatin vai et?",
+      "Väittely pareittain (8 min): Perustele kantasi yhdellä konkreettisella esimerkillä.",
+      "Koko luokka (5 min): Mikä argumentti oli vakuuttavin – ja miksi?",
+    ],
+    taustaOtsikko: "Urheilu ja tavoitteellisuus",
+    taustateksti:
+      "Väite: Harrastuksen muuttaminen ammatiksi (esim. urheilu tai pelaaminen) pilaa ilon koko harrastuksesta, koska siitä tulee pakonomaista suorittamista.",
+    taustaLahde: "HS Lasten uutiset / Urheiluyläkoulun arki (2026)",
+    kysymykset: [
+      "Haluaisitko sinä tehdä harrastuksestasi työsi?",
+      'Mitä riskejä siinä on, jos kaikki "vapaa-aika" muuttuukin työksi?',
+      "Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin – miten se on sujunut?",
+    ],
+    vinkit: [
+      "Valitse puolesi: oletko väitteen puolella vai vastaan – ja perustele se yhdellä konkreettisella esimerkillä.",
+      "Kuuntele ensin toisen argumentti loppuun ennen kuin vastaat – hyvä väittelijä ei keskeytä.",
+      'Käytä vastaväitettä: "Ymmärrän mitä sanot, mutta..." – se osoittaa että olet kuunnellut.',
+    ],
+    instructions: [
+      "Vaihe 1: Haluaisitko tehdä harrastuksestasi työsi?",
+      "Vaihe 2: Mitä riskejä on, jos vapaa-aika muuttuu työksi?",
+      "Vaihe 3: Tiedätkö jonkun, joka on tehnyt harrastuksestaan ammatin?",
+    ],
+  },
+
+  "keskustelu-palkka-vai-merkitys": {
+    title: "Palkka vai merkitys?",
+    category: "keskustelu",
+    class: "9",
+    sektio: "valinnat",
+    tyyppi: "keskustelu",
+    kesto: "15–20 min",
+    rakenne: [
+      "Yksin (2 min): Valitse puolesi – palkka vai merkitys? Kirjoita yksi perustelu.",
+      "Väittely pareittain (8 min): Perustele valintasi. Haasta kaverin ajatusta.",
+      "Koko luokka (5 min): Muuttuuko vastaus, jos ajattelee 10 vuoden päästä?",
+    ],
+    taustaOtsikko: "Työn arvot ja motivaatio",
+    taustateksti:
+      "Väite: On järkevämpää valita ammatti, jossa on varma työllisyys ja huippupalkka, vaikka työ itsessään tuntuisi tylsältä tai turhalta.",
+    taustaLahde: "Nuorten NYT – Nuorten tulevaisuusraportti (2026)",
+    kysymykset: [
+      "Valitsisitko mieluummin 7 000 €/kk palkan työstä, josta et pidä, vai 2 500 €/kk palkan työstä, joka tuntuu todella tärkeältä ja kivalta? Miksi?",
+      "Voiko työ tuntua merkitykselliseltä, vaikka palkka olisi pieni – vai tarvitseeko rahan riittää ensin?",
+      "Muuttuuko vastauksesi, jos ajattelet tilannetta 10 vuoden päästä?",
+    ],
+    vinkit: [
+      "Valitse puolesi ennen keskustelua: palkka vai merkitys – ja perustele se yhdellä konkreettisella syyllä.",
+      'Haasta kaverin ajatus kysymällä: "Entä jos rahat loppuisivat – muuttaisitko mieltä?"',
+      "Muista: ei ole oikeaa vastausta – mutta sinulla pitää olla perustelu omalle valinnallesi.",
+    ],
+    instructions: [
+      "Vaihe 1: 7 000 € tylsästä vai 2 500 € kivasta – kumpi ja miksi?",
+      "Vaihe 2: Voiko työ tuntua merkitykselliseltä pienellä palkalla?",
+      "Vaihe 3: Muuttuuko vastauksesi 10 vuoden päästä?",
     ],
   },
 };
