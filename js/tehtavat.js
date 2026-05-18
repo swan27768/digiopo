@@ -696,7 +696,7 @@ const tehtavat = {
     tyyppi: "kirjoitus",
     kesto: "15–20 min",
     kuvaus:
-      "Tässä tunnissa olet tehnyt valintoja kolmessa eri harjoituksessa: Elämänvalintapelissä, Kumpi valitsisit? -korttiharjoituksessa ja Arvopohjaisessa valinnassa. Nyt on aika pysähtyä ja katsoa taaksepäin — mitä teit, miksi ja mitä se kertoo sinusta?",
+      "Olet tehnyt valintoja kolmessa eri harjoituksessa: Elämänvalintapelissä, Kumpi valitsisit? -korttiharjoituksessa ja Arvopohjaisessa valinnassa. Nyt on aika pysähtyä ja katsoa taaksepäin — mitä teit, miksi ja mitä se kertoo sinusta?",
     instructions: [
       "Muistele kolmea harjoitusta: Elämänvalintapeli, Kumpi valitsisit? ja Arvopohjainen valinta. Mikä valinta tai tilanne jäi eniten mieleen — ja miksi juuri se?",
       "Mikä ohjasi valintojasi eniten: tunne, järki, arvot vai muiden mielipide? Huomasitko eron eri harjoitusten välillä?",
