@@ -1,3 +1,4 @@
+// ── Tehtäväkorttien renderöinti ───────────────────────────────
 function luoTehtavaKortti(tehtava) {
   if (tehtava.tag === "Keskustelu") {
     return `
@@ -124,13 +125,12 @@ function luoTehtavaKortti(tehtava) {
   `;
 }
 
-function naytaLuokanTehtavat() {
+function naytaLuokanTehtavat(tehtavatData) {
   const classNumber = window.currentClassNumber || "7";
-  // Tue sekä merkkijono- että numeroavaimia
   const luokanTehtavat =
-    tehtavat[classNumber] ||
-    tehtavat[parseInt(classNumber)] ||
-    tehtavat[String(classNumber)] ||
+    (tehtavatData.tehtavat || {})[classNumber] ||
+    (tehtavatData.tehtavat || {})[parseInt(classNumber)] ||
+    (tehtavatData.tehtavat || {})[String(classNumber)] ||
     [];
 
   const kasitellyt = new Set();
@@ -259,11 +259,21 @@ function setupScrollTop() {
   });
 }
 
-// ── Käynnistys ────────────────────────────────────────────────
-// Käytetään window.load jotta window.currentClassNumber on
-// varmasti asetettu ennen tehtävien renderöintiä
-window.addEventListener("load", () => {
-  naytaLuokanTehtavat();
+// ── Käynnistys: hae tehtävädata JSONista, sitten renderöi ─────
+window.addEventListener("load", async () => {
+  let tehtavatData = { tehtavat: { "7": [], "8": [], "9": [] } };
+
+  try {
+    const vastaus = await fetch("../js/tehtavat.json");
+    if (!vastaus.ok) throw new Error(`HTTP ${vastaus.status}`);
+    tehtavatData = await vastaus.json();
+    // Asetetaan globaalisti saataville (esim. tehtava.html-sivuille)
+    window.tehtavatData = tehtavatData;
+  } catch (virhe) {
+    console.error("Tehtävädata ei latautunut:", virhe);
+  }
+
+  naytaLuokanTehtavat(tehtavatData);
   aktivoiSisallysluettelo();
   setupScrollTop();
 });
