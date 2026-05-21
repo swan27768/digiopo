@@ -1,4 +1,15 @@
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
+  // ── Hae tehtävädata (ei enää riippuvainen tehtavat.js:stä) ──────────────────
+  let tehtavat = window.tehtavat;
+  if (!tehtavat) {
+    try {
+      const vastaus = await fetch("js/tehtavat.json");
+      if (vastaus.ok) tehtavat = await vastaus.json();
+    } catch (e) {
+      console.error("Tehtävädata ei latautunut:", e);
+    }
+  }
+
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
