@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lukeminen – Seinätekstikortit (tulostus)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f9ff;
+    color: #1e3a8a;
+    padding: 20px;
+  }
+
+  /* Tulostuspainike – ei tulostu */
+  .print-bar {
+    background: #1d4ed8;
+    color: white;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .print-bar h1 { font-size: 1.2rem; font-weight: 900; }
+  .print-bar p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+  .print-btn {
+    background: white;
+    color: #1d4ed8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
+  }
+  .print-btn:hover { background: #dbeafe; }
+
+  /* Korttiruudukko näytöllä */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 36px 32px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .card-number {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.65;
+  }
+
+  .card-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+
+  .card-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.55;
+    margin-top: 8px;
+  }
+
+  /* Korttivärit */
+  .card-1 { background: #dbeafe; color: #1e3a8a; border: 3px solid #2563eb; }
+  .card-2 { background: #ccfbf1; color: #134e4a; border: 3px solid #0d9488; }
+  .card-3 { background: #ede9fe; color: #3b0764; border: 3px solid #7c3aed; }
+  .card-4 { background: #fce7f3; color: #831843; border: 3px solid #ec4899; }
+
+  /* Ohjeet näytöllä */
+  .instructions {
+    max-width: 900px;
+    margin: 32px auto 0;
+    background: #fff;
+    border: 2px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 20px 24px;
+    font-size: 0.88rem;
+    color: #374151;
+    line-height: 1.7;
+  }
+  .instructions h2 { font-size: 1rem; font-weight: 800; color: #1e3a8a; margin-bottom: 10px; }
+  .instructions ol { padding-left: 20px; }
+  .instructions li { margin-bottom: 6px; }
+
+  /* ===== TULOSTUSTYYLI ===== */
+  @media print {
+    body {
+      background: white;
+      padding: 0;
+    }
+    .print-bar, .instructions { display: none !important; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .card {
+      border-radius: 0;
+      min-height: 50vh;
+      padding: 40px 36px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .card-text { font-size: 1.6rem; }
+    .card-icon { font-size: 3.5rem; }
+
+    /* Reunaviivat tulostuksessa */
+    .card-1 { border: 4px solid #2563eb; }
+    .card-2 { border: 4px solid #0d9488; }
+    .card-3 { border: 4px solid #7c3aed; }
+    .card-4 { border: 4px solid #ec4899; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Tulostuspalkki – näkyy vain näytöllä -->
+<div class="print-bar">
+  <div>
+    <h1>📖 Tekstitaidelähtö – seinätekstikortit</h1>
+    <p>Tulosta A4, leikkaa neljä korttia irti ja kiinnitä seinille ympäri luokkaa.</p>
+  </div>
+  <button class="print-btn" onclick="window.print()">
+    🖨️ Tulosta kortit
+  </button>
+</div>
+
+<!-- Kortit -->
+<div class="cards-grid">
+
+  <!-- Kortti 1 -->
+  <div class="card card-1">
+    <div class="card-number">Asema 1</div>
+    <div class="card-icon">💧</div>
+    <div class="card-text">
+      Aivot tarvitsevat vettä. Kun juot tarpeeksi, muistisi ja keskittymisesi paranevat. Kuiva aivosolu toimii huonosti.
+    </div>
+    <div class="card-label">Lue – mieti – piirrä pääajatus</div>
+  </div>
+
+  <!-- Kortti 2 -->
+  <div class="card card-2">
+    <div class="card-number">Asema 2</div>
+    <div class="card-icon">😴</div>
+    <div class="card-text">
+      Uni on tärkeä oppimiselle. Nukkuessa aivot tallentavat päivän opit pitkäkestoiseen muistiin.
+    </div>
+    <div class="card-label">Lue – mieti – piirrä pääajatus</div>
+  </div>
+
+  <!-- Kortti 3 -->
+  <div class="card card-3">
+    <div class="card-number">Asema 3</div>
+    <div class="card-icon">🔁</div>
+    <div class="card-text">
+      Toistaminen on muistamisen tärkein taito. Mitä useammin kerrataan, sitä paremmin asia jää mieleen.
+    </div>
+    <div class="card-label">Lue – mieti – piirrä pääajatus</div>
+  </div>
+
+  <!-- Kortti 4 -->
+  <div class="card card-4">
+    <div class="card-number">Asema 4</div>
+    <div class="card-icon">🏃</div>
+    <div class="card-text">
+      Liikunta parantaa oppimista. Kun liikut, aivoihin virtaa enemmän verta ja happea.
+    </div>
+    <div class="card-label">Lue – mieti – piirrä pääajatus</div>
+  </div>
+
+</div>
+
+<!-- Ohjeet näytöllä -->
+<div class="instructions">
+  <h2>📋 Ohjeet opettajalle</h2>
+  <ol>
+    <li>Tulosta tämä sivu A4-kokoisena (Tiedosto → Tulosta, tai paina yllä olevaa nappia).</li>
+    <li>Leikkaa kortit irti leikkausviivoja pitkin tai paperin reunoilta puoliksi.</li>
+    <li>Kiinnitä kortit seinille ympäri luokkaa ennen tunnin alkua — asema 1–4.</li>
+    <li>Oppilaat kiertävät asemalta asemalle, lukevat tekstin ja piirtävät pääajatuksen paperilleen.</li>
+    <li>Purku: Jokainen esittelee piirustuksensa — miten eri tavoin sama ajatus voi näkyä kuvana?</li>
+  </ol>
+</div>
+
+</body>
+</html>

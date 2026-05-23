@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Ihmisaikajana – Tehtäväkortit (tulostus)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0fdf4;
+    color: #064e3b;
+    padding: 20px;
+  }
+
+  .print-bar {
+    background: #059669;
+    color: white;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .print-bar h1 { font-size: 1.2rem; font-weight: 900; }
+  .print-bar p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+  .print-btn {
+    background: white;
+    color: #059669;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
+  }
+  .print-btn:hover { background: #dcfce7; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 30px 24px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .card-icon { font-size: 3rem; line-height: 1; }
+  .card-title { font-size: 1.5rem; font-weight: 900; line-height: 1.2; }
+  .card-days { font-size: 0.95rem; font-weight: 600; opacity: 0.75; }
+  .card-desc { font-size: 0.88rem; line-height: 1.5; opacity: 0.85; flex: 1; margin-top: 4px; }
+  .card-instruction {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.55;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    padding-top: 10px;
+    width: 100%;
+  }
+
+  .card-aivoriihi { background: #fce7f3; color: #831843; border: 3px solid #ec4899; }
+  .card-tutkimus  { background: #fef3c7; color: #78350f; border: 3px solid #f59e0b; }
+  .card-luonnos   { background: #dbeafe; color: #1e3a8a; border: 3px solid #3b82f6; }
+  .card-viimeist  { background: #ede9fe; color: #3b0764; border: 3px solid #8b5cf6; }
+  .card-palautus  { background: #d1fae5; color: #064e3b; border: 3px solid #059669; grid-column: span 3; min-height: 140px; }
+
+  .card-palautus .card-title { font-size: 1.8rem; }
+  .card-palautus .card-icon { font-size: 3.5rem; }
+
+  .instructions {
+    max-width: 960px;
+    margin: 32px auto 0;
+    background: #fff;
+    border: 2px solid #a7f3d0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    font-size: 0.88rem;
+    color: #374151;
+    line-height: 1.7;
+  }
+  .instructions h2 { font-size: 1rem; font-weight: 800; color: #064e3b; margin-bottom: 10px; }
+  .instructions ol { padding-left: 20px; }
+  .instructions li { margin-bottom: 6px; }
+
+  /* Yllätystapahtuma-osa */
+  .surprise-box {
+    max-width: 960px;
+    margin: 20px auto 0;
+    background: #fef9c3;
+    border: 2px solid #fde047;
+    border-radius: 14px;
+    padding: 18px 24px;
+    font-size: 0.88rem;
+    color: #713f12;
+    line-height: 1.6;
+  }
+  .surprise-box h2 { font-size: 1rem; font-weight: 800; color: #92400e; margin-bottom: 8px; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .print-bar, .instructions, .surprise-box { display: none !important; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .card {
+      border-radius: 0;
+      min-height: 44vh;
+      padding: 36px 28px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .card-icon { font-size: 4rem; }
+    .card-title { font-size: 1.8rem; }
+    .card-palautus { min-height: auto; padding: 28px; }
+
+    @page { margin: 10mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <div>
+    <h1>📅 Ihmisaikajana – tehtäväkortit</h1>
+    <p>Tulosta A4, leikkaa kortit irti ja jaa oppilaille ennen toiminnallista tehtävää.</p>
+  </div>
+  <button class="print-btn" onclick="window.print()">
+    🖨️ Tulosta kortit
+  </button>
+</div>
+
+<div class="cards-grid">
+
+  <div class="card card-aivoriihi">
+    <div class="card-icon">💡</div>
+    <div class="card-title">Aivoriihi</div>
+    <div class="card-days">Päivät 1–2</div>
+    <div class="card-desc">Ideoita! Kirjoitetaan ylös kaikki ajatukset ilman sensuuria. Mitä projektissa voisi tehdä?</div>
+    <div class="card-instruction">Asetu aikajanalle: päivä 1–2</div>
+  </div>
+
+  <div class="card card-tutkimus">
+    <div class="card-icon">🔍</div>
+    <div class="card-title">Tutkimustyö</div>
+    <div class="card-days">Päivät 2–4</div>
+    <div class="card-desc">Hankitaan tietoa. Luetaan, etsitään ja kerätään materiaalia aiheen ympäriltä.</div>
+    <div class="card-instruction">Asetu aikajanalle: päivä 2–4</div>
+  </div>
+
+  <div class="card card-luonnos">
+    <div class="card-icon">✏️</div>
+    <div class="card-title">Luonnosten kirjoitus</div>
+    <div class="card-days">Päivät 4–7</div>
+    <div class="card-desc">Kirjoitetaan ensivedos. Ei tarvitse olla täydellinen — tärkeintä on saada ajatukset paperille!</div>
+    <div class="card-instruction">Asetu aikajanalle: päivä 4–7</div>
+  </div>
+
+  <div class="card card-viimeist">
+    <div class="card-icon">✨</div>
+    <div class="card-title">Viimeistely</div>
+    <div class="card-days">Päivät 7–9</div>
+    <div class="card-desc">Tarkistetaan, korjataan ja hiotaan. Oikeinkirjoitus, rakenne ja selkeys kuntoon.</div>
+    <div class="card-instruction">Asetu aikajanalle: päivä 7–9</div>
+  </div>
+
+  <div class="card card-palautus">
+    <div class="card-icon">📬</div>
+    <div class="card-title">PALAUTUS!</div>
+    <div class="card-days">Päivä 10 — deadline!</div>
+    <div class="card-instruction">Asetu aikajanalle: päivä 10 — aivan loppuun!</div>
+  </div>
+
+</div>
+
+<div class="surprise-box">
+  <h2>⚡ Yllätystapahtumia opettajalle — käytä toiminnallisessa tehtävässä:</h2>
+  Sanoa ääneen yksi näistä aikajanatehtävän aikana ja pyydä oppilaita miettimään, miten aikataulu muuttuu:<br><br>
+  <strong>„Päivä 7 — sairastuit!"</strong> · <strong>„Tietokone hajosi päivänä 5 — tallennukset menetetty!"</strong> · <strong>„Päivä 3 — unohditte aloittaa!"</strong> · <strong>„Päivä 9 — opettaja sairastui, tuleeko jatkoaikaa?"</strong>
+</div>
+
+<div class="instructions">
+  <h2>📋 Ohjeet opettajalle – Ihmisaikajana</h2>
+  <ol>
+    <li>Tulosta tämä sivu A4-kokoisena (Tiedosto → Tulosta).</li>
+    <li>Leikkaa viisi korttia irti. Jos luokassa on yli 5 oppilasta, tulosta useampi kopio ja jaa roolit pareittain tai ryhmissä.</li>
+    <li>Tee lattialle aikajana teipillä: merkitse numerot 1–10 tai päivät Ma–Pe.</li>
+    <li>Jaa kortit oppilaille — jokainen saa roolin.</li>
+    <li>Oppilaat asettuvat vapaasti aikajanalle. Sitten tarkistetaan yhdessä: onko järjestys oikea?</li>
+    <li>Lisää yllätystapahtuma ylläolevasta listasta ja katso, miten ryhmä ratkaisee ongelman.</li>
+    <li>Purku: Miksi aikatauluun kannattaa jättää puskuria?</li>
+  </ol>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Muisti ja muistaminen – Opi, kasva, loista</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-dark: #4c1d95;
+    --purple-light: #ede9fe;
+    --pink: #ec4899;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --bg: #faf5ff;
+    --text: #1e1b4b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  /* ── HEADER ── */
+  .game-header {
+    background: linear-gradient(135deg, #4c1d95, #7c3aed, #a855f7);
+    color: white;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+  .game-header .emoji-big { font-size: 52px; display: block; margin-bottom: 8px; }
+  .game-header h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; margin-bottom: 6px; }
+  .game-header p { font-size: 1rem; opacity: 0.9; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: #ddd6fe;
+    height: 8px;
+    border-radius: 4px;
+    margin: 20px 24px 0;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #ec4899);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-label {
+    text-align: center;
+    font-size: 13px;
+    color: #6b21a8;
+    font-weight: 700;
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+
+  /* ── STEP NAV ── */
+  .step-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 0 8px;
+  }
+  .step-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #ddd6fe;
+    color: #6d28d9;
+    font-weight: 800;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .step-dot.active { background: #7c3aed; color: white; border-color: #4c1d95; transform: scale(1.15); }
+  .step-dot.done { background: #10b981; color: white; border-color: #059669; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 24px; animation: fadeIn 0.35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── TEACHER BOX ── */
+  .teacher-box {
+    background: linear-gradient(135deg, #4c1d95, #6d28d9);
+    border-radius: 20px;
+    padding: 24px;
+    color: white;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .teacher-box::before {
+    content: '';
+    position: absolute; right: -20px; bottom: -20px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .teacher-label {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 8px;
+  }
+  .teacher-box h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; }
+  .teacher-box p { font-size: 0.95rem; opacity: 0.92; margin-bottom: 8px; line-height: 1.7; }
+  .brain-facts {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;
+  }
+  .brain-fact {
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px; padding: 12px 14px;
+    font-size: 0.85rem;
+  }
+  .brain-fact .fact-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+  .brain-fact strong { display: block; margin-bottom: 2px; font-size: 0.88rem; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 1.25rem; font-weight: 900; color: var(--purple-dark);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-badge {
+    background: var(--purple); color: white;
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  /* ── BTN ── */
+  .btn {
+    display: inline-block; padding: 14px 28px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white; border: none; border-radius: 14px;
+    font-size: 1rem; font-weight: 800; cursor: pointer;
+    transition: all 0.2s; text-align: center;
+    box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.45); }
+  .btn:active { transform: translateY(0); }
+  .btn-full { width: 100%; }
+  .btn-green {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    box-shadow: 0 4px 14px rgba(16,185,129,0.35);
+  }
+  .btn-green:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.45); }
+  .btn-outline {
+    background: white; color: var(--purple); border: 2px solid var(--purple);
+    box-shadow: none;
+  }
+  .btn-outline:hover { background: var(--purple-light); box-shadow: none; }
+
+  /* ── MEMORY TEST ── */
+  .number-display {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border-radius: 20px; padding: 36px 20px; text-align: center; margin: 20px 0;
+  }
+  .number-display .num-label { color: #a78bfa; font-size: 13px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .number-display .numbers {
+    font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900;
+    color: white; letter-spacing: 0.15em;
+    font-family: 'Courier New', monospace;
+  }
+  .number-display .countdown {
+    font-size: 1.1rem; color: #fbbf24; font-weight: 700; margin-top: 14px;
+  }
+  .number-input-area {
+    margin: 20px 0;
+  }
+  .number-input-area label { font-size: 1rem; font-weight: 700; color: var(--purple-dark); display: block; margin-bottom: 10px; }
+  .number-input-area input {
+    width: 100%; padding: 16px 20px; border: 3px solid #ddd6fe;
+    border-radius: 14px; font-size: 1.5rem; font-weight: 800; text-align: center;
+    font-family: 'Courier New', monospace; letter-spacing: 0.15em;
+    color: var(--purple-dark); transition: border-color 0.2s;
+  }
+  .number-input-area input:focus { border-color: var(--purple); outline: none; background: white; }
+  .result-badge {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px; border-radius: 14px; font-size: 1rem; font-weight: 700;
+    margin: 16px 0;
+  }
+  .result-badge.correct { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+  .result-badge.wrong { background: #fee2e2; color: #991b1b; border: 2px solid #fca5a5; }
+  .result-badge .ri { font-size: 1.8rem; }
+
+  /* ── MEMORY CARD GAME ── */
+  .memory-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0;
+  }
+  .mem-card {
+    aspect-ratio: 1; border-radius: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    background: linear-gradient(135deg, #6d28d9, #7c3aed);
+    border: 3px solid #5b21b6;
+    box-shadow: 0 4px 12px rgba(109,40,217,0.25);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+  .mem-card .card-back { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 4vw, 2rem); opacity: 1; transition: opacity 0.2s; }
+  .mem-card .card-front { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 4vw, 2rem); opacity: 0; transition: opacity 0.2s; background: white; border-radius: 9px; }
+  .mem-card.flipped .card-back { opacity: 0; }
+  .mem-card.flipped .card-front { opacity: 1; }
+  .mem-card.matched { background: #d1fae5; border-color: #10b981; cursor: default; }
+  .mem-card.matched .card-front { background: #d1fae5; }
+  .mem-card:hover:not(.matched):not(.flipped) { transform: scale(1.05); }
+  .mem-score { text-align: center; font-size: 1rem; font-weight: 700; color: var(--purple-dark); margin: 12px 0; }
+
+  /* ── DRAG & DROP ── */
+  .drag-area {
+    margin: 16px 0;
+  }
+  .drag-chips {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+    padding: 16px; background: white; border: 2px dashed #c4b5fd; border-radius: 14px;
+    min-height: 60px;
+  }
+  .drag-chip {
+    padding: 10px 18px; background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white; border-radius: 30px; font-size: 0.9rem; font-weight: 700;
+    cursor: grab; user-select: none; display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 3px 8px rgba(124,58,237,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .drag-chip:hover { transform: scale(1.04); }
+  .drag-chip.dragging { opacity: 0.5; cursor: grabbing; }
+  .drop-target {
+    border: 2.5px dashed #c4b5fd; border-radius: 14px; padding: 14px 16px;
+    min-height: 56px; margin-bottom: 12px;
+    background: white; transition: all 0.2s;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .drop-target .drop-label { font-size: 13px; color: #9ca3af; font-style: italic; width: 100%; }
+  .drop-target.drag-over { border-color: var(--purple); background: var(--purple-light); }
+  .drop-target.correct-drop { border-color: #10b981; background: #d1fae5; }
+  .drop-target.wrong-drop { border-color: var(--red); background: #fee2e2; }
+  .drop-zone-wrap { margin-bottom: 16px; }
+  .drop-zone-title { font-size: 1rem; font-weight: 800; color: var(--purple-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+  /* ── QUIZ ── */
+  .quiz-question {
+    background: white; border: 2px solid #e9d5ff;
+    border-radius: 18px; padding: 22px; margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.07);
+  }
+  .quiz-q-num { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #a78bfa; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .quiz-q-text { font-size: 1.05rem; font-weight: 700; color: var(--purple-dark); margin-bottom: 16px; line-height: 1.55; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    padding: 13px 18px; border: 2.5px solid #ddd6fe; border-radius: 12px;
+    font-size: 0.95rem; font-weight: 600; color: #4c1d95;
+    background: white; cursor: pointer; text-align: left;
+    transition: all 0.18s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--purple); background: var(--purple-light); transform: translateX(4px); }
+  .quiz-opt.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fee2e2; color: #991b1b; }
+  .quiz-opt .opt-letter { width: 26px; height: 26px; border-radius: 50%; background: #ddd6fe; color: #5b21b6; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .quiz-opt.correct .opt-letter { background: #10b981; color: white; }
+  .quiz-opt.wrong .opt-letter { background: var(--red); color: white; }
+  .quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #d1fae5; color: #065f46; }
+  .quiz-feedback.nope { background: #fee2e2; color: #991b1b; }
+
+  /* ── FINAL ── */
+  .final-screen {
+    text-align: center; padding: 32px 24px;
+  }
+  .final-screen .trophy { font-size: 72px; display: block; margin-bottom: 16px; animation: bounce 0.6s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .final-screen h2 { font-size: 1.8rem; font-weight: 900; color: var(--purple-dark); margin-bottom: 10px; }
+  .final-screen .score-circle {
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 20px auto; color: white;
+    box-shadow: 0 8px 24px rgba(124,58,237,0.4);
+  }
+  .score-circle .sc-num { font-size: 2.2rem; font-weight: 900; }
+  .score-circle .sc-label { font-size: 11px; font-weight: 700; opacity: 0.8; }
+  .tips-list { text-align: left; margin: 20px 0; }
+  .tip-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--purple-light); border-radius: 12px; margin-bottom: 10px; }
+  .tip-item .ti { font-size: 1.3rem; flex-shrink: 0; }
+  .tip-item p { font-size: 0.9rem; color: var(--purple-dark); line-height: 1.55; }
+
+  /* ── REPEAT STEPS ── */
+  .repeat-steps {
+    display: flex; flex-direction: column; gap: 10px; margin: 16px 0;
+  }
+  .repeat-step {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; border-radius: 14px; font-size: 0.95rem; font-weight: 700;
+    color: white;
+  }
+  .rs1 { background: #10b981; }
+  .rs2 { background: #3b82f6; }
+  .rs3 { background: #f59e0b; }
+  .rs4 { background: #ec4899; }
+  .rs5 { background: #7c3aed; }
+  .repeat-step .rs-num { font-size: 1.3rem; font-weight: 900; min-width: 30px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 400px) {
+    .memory-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .brain-facts { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="game-header">
+  <span class="emoji-big">🧠</span>
+  <h1>Muisti ja muistaminen</h1>
+  <p>Opi, miten aivosi toimivat – ja tee niistä terävämmät!</p>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar"></div>
+</div>
+<div class="progress-label" id="progressLabel">Osio 1 / 4</div>
+
+<div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
+  <div class="step-dot active" role="tab" aria-selected="true" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 3: Muistitesti" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Muistipeli" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+</div>
+
+<!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
+<section class="screen active" id="screen-0" aria-labelledby="s0-title">
+  <div class="teacher-box">
+    <div class="teacher-label">🎤 Opettajan puhe</div>
+    <h2 id="s0-title">Aivosi ovat tähän saakka kehitetty paras tietokone!</h2>
+    <p>Muisti ei ole vain yksi asia – se on kuin kirjasto, jossa on eri osastoja. Uusi tieto menee ensin <strong>lyhytkestoiseen muistiin</strong>. Sieltä se siirtyy <strong>pitkäkestoiseen muistiin</strong>, kun toistat sen tarpeeksi monta kertaa.</p>
+    <p>🔑 <strong>Tärkein juttu:</strong> Mitä useammin kerrataan, sitä paremmin muistaa!</p>
+    <div class="brain-facts">
+      <div class="brain-fact">
+        <span class="fact-icon">🤔</span>
+        <strong>Lyhytkestoinen muisti</strong>
+        Muistaa 7 asiaa noin 20 sekuntia
+      </div>
+      <div class="brain-fact">
+        <span class="fact-icon">💡</span>
+        <strong>Pitkäkestoinen muisti</strong>
+        Muistaa lopun elämää – jos toistat!
+      </div>
+      <div class="brain-fact">
+        <span class="fact-icon">💧</span>
+        <strong>Janottavaa hommaa</strong>
+        Juo vettä – kuiva aivosolu muistaa huonosti!
+      </div>
+      <div class="brain-fact">
+        <span class="fact-icon">😴</span>
+        <strong>Uni on tärkeää</strong>
+        Nukkuessa aivot tallentavat päivän opit
+      </div>
+    </div>
+  </div>
+
+  <div class="repeat-steps">
+    <div class="repeat-step rs1"><span class="rs-num">1</span> Toista pian oppimisen jälkeen</div>
+    <div class="repeat-step rs2"><span class="rs-num">2</span> Toista 1 vuorokauden kuluttua</div>
+    <div class="repeat-step rs3"><span class="rs-num">3</span> Toista 1 viikon kuluttua</div>
+    <div class="repeat-step rs4"><span class="rs-num">4</span> Toista 1 kuukauden kuluttua</div>
+    <div class="repeat-step rs5"><span class="rs-num">5</span> Toista 3–6 kuukauden kuluttua</div>
+  </div>
+
+  <button class="btn btn-full" onclick="nextScreen()" style="margin-top:8px;">
+    Aloita muistitesti! 🚀
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: TOIMINNALLINEN TEHTÄVÄ – MUISTIJONO ═══════════ -->
+<section class="screen" id="screen-toiminnallinen-muisti" aria-labelledby="s-toim-muisti-title">
+  <div class="teacher-box" style="background: linear-gradient(135deg, #7c3aed, #ec4899);">
+    <div class="teacher-label">🏃 Toiminnallinen tehtävä</div>
+    <h2 id="s-toim-muisti-title">Muistijono — liike muistaa!</h2>
+    <p>Tämä tehtävä tehdään <strong>seisten ja liikkuen</strong>. Nousette ylös ja muodostatte ringin!</p>
+  </div>
+
+  <div style="background: white; border: 2px solid #e9d5ff; border-radius: 18px; padding: 22px; margin-bottom: 16px;">
+    <p style="font-size: 1rem; font-weight: 800; color: #4c1d95; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span>🎯</span> Näin tehdään:
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+        <div style="font-size: 0.95rem; color: #1e1b4b; line-height: 1.6; padding-top: 5px;">
+          <strong>Muodostakaa rinki</strong> — kaikki seisovat.
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+        <div style="font-size: 0.95rem; color: #1e1b4b; line-height: 1.6; padding-top: 5px;">
+          Ensimmäinen keksii <strong>yhden liikkeen</strong> (esim. taputtaa, hyppää, kääntyy) ja tekee sen — kaikki toistavat.
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+        <div style="font-size: 0.95rem; color: #1e1b4b; line-height: 1.6; padding-top: 5px;">
+          Seuraava <strong>toistaa edellisen liikkeen ja lisää oman</strong> — kaikki toistavat koko jonon järjestyksessä.
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+        <div style="font-size: 0.95rem; color: #1e1b4b; line-height: 1.6; padding-top: 5px;">
+          Jatketaan rinkiä — <strong>kuinka pitkäksi jono kasvaa?</strong> Jos joku unohtaa, se on ok — katsotaan yhdessä missä muisti meni pieleen!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #fdf2f8, #fce7f3); border: 2px solid #f9a8d4; border-radius: 14px; padding: 18px 20px; margin-bottom: 20px;">
+    <p style="font-size: 0.9rem; font-weight: 700; color: #831843; margin-bottom: 10px;">💬 Purku — keskustelkaa sen jälkeen:</p>
+    <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+      <li style="display: flex; gap: 8px; font-size: 0.88rem; color: #9d174d;"><span>🤔</span> Mikä auttoi sinua muistamaan? (rytmi, kuva mielessä, tarina?)</li>
+      <li style="display: flex; gap: 8px; font-size: 0.88rem; color: #9d174d;"><span>📍</span> Monesko liike oli vaikein muistaa — ja miksi?</li>
+      <li style="display: flex; gap: 8px; font-size: 0.88rem; color: #9d174d;"><span>💡</span> Miten tätä voisi käyttää opiskellessasi?</li>
+    </ul>
+  </div>
+
+  <div style="background: #faf5ff; border: 2px solid #ddd6fe; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+    <span style="font-size: 1.5rem;">⏱</span>
+    <div>
+      <p style="font-size: 0.85rem; font-weight: 800; color: #4c1d95; margin-bottom: 2px;">Aika: 8–10 minuuttia</p>
+      <p style="font-size: 0.82rem; color: #6b7280;">Koko luokka ringissä tai 5–8 hengen ryhmissä</p>
+    </div>
+  </div>
+
+  <button class="btn btn-full" onclick="nextScreen()">
+    ✅ Olemme valmiit — jatketaan muistitestiin! 🚀
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: MUISTITESTI ═══════════ -->
+<section class="screen" id="screen-1" aria-labelledby="s1-title">
+  <div class="section-title">
+    <span>🔢</span> <span id="s1-title">Muistitesti</span>
+    <span class="section-badge">Vaihe 2</span>
+  </div>
+  <p style="color:#6b7280; margin-bottom:16px;">Katso numerot, muista ne – sitten kirjoita muistista!</p>
+
+  <div id="memTestArea">
+    <div class="number-display" id="numDisplay">
+      <div class="num-label">Muista nämä numerot!</div>
+      <div class="numbers" id="numSequence">–</div>
+      <div class="countdown" id="numCountdown" aria-live="polite"></div>
+    </div>
+    <button class="btn btn-full" id="startMemBtn" onclick="startMemoryTest()" style="margin-bottom:14px;">
+      ▶ Aloita testi
+    </button>
+    <div class="number-input-area" id="inputArea" style="display:none;">
+      <label for="numAnswer">Kirjoita numerot järjestyksessä:</label>
+      <input type="text" id="numAnswer" placeholder="esim. 4 7 2 ..." inputmode="numeric" aria-describedby="numHint"/>
+      <p id="numHint" style="font-size:13px;color:#9ca3af;margin-top:6px;">Vihje: välit eivät haittaa</p>
+      <button class="btn btn-full" onclick="checkMemory()" style="margin-top:12px;">✔ Tarkista</button>
+    </div>
+    <div id="memResult"></div>
+    <div id="memNext" style="display:none; margin-top:16px;">
+      <button class="btn btn-full" id="nextLevelBtn" onclick="nextMemLevel()">Kokeile vaikeampaa! 💪</button>
+      <p style="text-align:center;margin-top:10px;font-size:13px;color:#6b7280;">Tai siirry eteenpäin</p>
+      <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:8px;">Jatka seuraavaan ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCREEN 2: MEMORY-PELI ═══════════ -->
+<section class="screen" id="screen-2" aria-labelledby="s2-title">
+  <div class="section-title">
+    <span>🃏</span> <span id="s2-title">Muistipeli – löydä parit!</span>
+    <span class="section-badge">Vaihe 3</span>
+  </div>
+  <p style="color:#6b7280; margin-bottom:4px;">Käännä kortteja ja löydä kaikki parit. Muista missä olet nähnyt samanlaisen kortin!</p>
+  <div class="mem-score" id="memGameScore" aria-live="polite">Parit: 0 / 8 &nbsp;|&nbsp; Yritykset: 0</div>
+  <div class="memory-grid" id="memoryGrid" aria-label="Muistipelin kortit" role="grid"></div>
+  <div id="memGameResult" style="display:none;">
+    <div class="result-badge correct">
+      <span class="ri">🎉</span>
+      <div><strong>Loistava muisti!</strong><br>Löysit kaikki parit!</div>
+    </div>
+    <button class="btn btn-full" onclick="resetMemGame()" style="margin-top:10px;">Pelaa uudelleen 🔄</button>
+    <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:10px;">Jatka tietovisaan ▶</button>
+  </div>
+</section>
+
+<!-- ═══════════ SCREEN 3: TIETOVISA ═══════════ -->
+<section class="screen" id="screen-3" aria-labelledby="s3-title">
+  <div class="section-title">
+    <span>❓</span> <span id="s3-title">Tietovisa – muistin salaisuudet</span>
+    <span class="section-badge">Vaihe 4</span>
+  </div>
+  <div id="quizContainer"></div>
+  <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">
+    🏁 Katso tulokset!
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 4: LOPPUTULOS ═══════════ -->
+<section class="screen" id="screen-4" aria-labelledby="s4-title">
+  <div class="final-screen">
+    <span class="trophy">🧠</span>
+    <h2 id="s4-title">Hienosti tehty!</h2>
+    <p style="color:#6b7280;font-size:1rem;">Olet suorittanut muistitehtävän!</p>
+    <div class="score-circle" aria-label="Tietovisan tulos">
+      <span class="sc-num" id="finalScore">0/5</span>
+      <span class="sc-label">oikein</span>
+    </div>
+    <div class="tips-list" aria-label="Muistitekniikat yhteenveto">
+      <div class="tip-item"><span class="ti">🔁</span><p><strong>Toista!</strong> Lue tai kuuntele sama asia useampaan kertaan eri päivinä.</p></div>
+      <div class="tip-item"><span class="ti">🧩</span><p><strong>Yhdistele!</strong> Liitä uusi tieto johonkin, jonka jo tiedät.</p></div>
+      <div class="tip-item"><span class="ti">✍️</span><p><strong>Kirjoita muistiin!</strong> Kirjoittaminen auttaa aivojasi tallentamaan.</p></div>
+      <div class="tip-item"><span class="ti">🎮</span><p><strong>Leiki!</strong> Tee muistamisesta hauska peli – käytä loruja tai kuvia.</p></div>
+    </div>
+    <button class="btn btn-full" onclick="restartGame()">🔄 Aloita alusta</button>
+  </div>
+</section>
+
+<script>
+// ── STATE ──
+let currentScreen = 0;
+const totalScreens = 5;
+let quizScore = 0;
+let quizAnswered = 0;
+
+// ── NAVIGATION ──
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach((s,i) => {
+    s.classList.toggle('active', i === n);
+  });
+  document.querySelectorAll('.step-dot').forEach((d,i) => {
+    d.classList.remove('active','done');
+    if(i === n) d.classList.add('active');
+    else if(i < n) d.classList.add('done');
+  });
+  currentScreen = n;
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(n === 3 && !memGameInitialized) initMemGame();
+  if(n === 4 && !quizInitialized) initQuiz();
+}
+function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
+function updateProgress() {
+  const pct = (currentScreen / (totalScreens)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Osio ' + (currentScreen+1) + ' / ' + (totalScreens);
+}
+
+// ── MEMORY NUMBER TEST ──
+const sequences = [
+  [3,7,2],
+  [5,1,8,4],
+  [9,2,6,1,4],
+  [7,3,8,5,2,9],
+  [4,1,6,8,3,7,2]
+];
+let memLevel = 0;
+let currentSequence = [];
+let memPhase = 'idle';
+
+function startMemoryTest() {
+  memLevel = 0;
+  runMemLevel();
+}
+
+function runMemLevel() {
+  currentSequence = sequences[memLevel];
+  document.getElementById('startMemBtn').style.display = 'none';
+  document.getElementById('inputArea').style.display = 'none';
+  document.getElementById('memResult').innerHTML = '';
+  document.getElementById('memNext').style.display = 'none';
+  memPhase = 'showing';
+
+  const numEl = document.getElementById('numSequence');
+  const cdEl = document.getElementById('numCountdown');
+  numEl.textContent = currentSequence.join('  ');
+  cdEl.textContent = 'Katso tarkasti! ⏱';
+
+  let t = 3;
+  cdEl.textContent = 'Katoaa ' + t + ' sekunnissa...';
+  const iv = setInterval(() => {
+    t--;
+    if(t > 0) {
+      cdEl.textContent = 'Katoaa ' + t + ' sekunnissa...';
+    } else {
+      clearInterval(iv);
+      numEl.textContent = '❓  ❓  ❓';
+      cdEl.textContent = '';
+      document.getElementById('inputArea').style.display = 'block';
+      document.getElementById('numAnswer').value = '';
+      document.getElementById('numAnswer').focus();
+      memPhase = 'input';
+    }
+  }, 1000);
+}
+
+function checkMemory() {
+  if(memPhase !== 'input') return;
+  const raw = document.getElementById('numAnswer').value.replace(/\s+/g,'');
+  const correct = currentSequence.join('');
+  const res = document.getElementById('memResult');
+  const nextArea = document.getElementById('memNext');
+
+  if(raw === correct) {
+    res.innerHTML = `<div class="result-badge correct"><span class="ri">🎉</span><div><strong>Oikein!</strong> Muistit ${currentSequence.length} numeroa peräkkäin!</div></div>`;
+    if(memLevel < sequences.length - 1) {
+      document.getElementById('nextLevelBtn').style.display = 'inline-block';
+    } else {
+      document.getElementById('nextLevelBtn').style.display = 'none';
+    }
+    nextArea.style.display = 'block';
+  } else {
+    res.innerHTML = `<div class="result-badge wrong"><span class="ri">🤔</span><div><strong>Ei ihan oikein.</strong> Oikeat numerot olivat: <span style="font-family:monospace;font-size:1.1em;letter-spacing:0.1em;">${currentSequence.join(' ')}</span></div></div>`;
+    nextArea.style.display = 'block';
+    document.getElementById('nextLevelBtn').style.display = memLevel < sequences.length - 1 ? 'inline-block' : 'none';
+  }
+  memPhase = 'done';
+}
+
+function nextMemLevel() {
+  if(memLevel < sequences.length - 1) {
+    memLevel++;
+    runMemLevel();
+  }
+}
+
+// ── MEMORY CARD GAME ──
+let memGameInitialized = false;
+let flippedCards = [];
+let matchedPairs = 0;
+let memAttempts = 0;
+let lockBoard = false;
+
+const cardEmojis = ['🧠','📚','✏️','🎯','💡','🔑','🎵','⭐'];
+
+function initMemGame() {
+  memGameInitialized = true;
+  resetMemGame();
+}
+
+function resetMemGame() {
+  matchedPairs = 0;
+  memAttempts = 0;
+  flippedCards = [];
+  lockBoard = false;
+  document.getElementById('memGameResult').style.display = 'none';
+  updateMemGameScore();
+  const pairs = [...cardEmojis, ...cardEmojis];
+  shuffle(pairs);
+  const grid = document.getElementById('memoryGrid');
+  grid.innerHTML = '';
+  pairs.forEach((emoji, idx) => {
+    const card = document.createElement('div');
+    card.className = 'mem-card';
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'Pelikortti ' + (idx+1));
+    card.setAttribute('tabindex', '0');
+    card.dataset.emoji = emoji;
+    card.innerHTML = `
+      <div class="card-back" aria-hidden="true">🤔</div>
+      <div class="card-front" aria-hidden="true">${emoji}</div>`;
+    card.addEventListener('click', () => flipCard(card));
+    card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') flipCard(card); });
+    grid.appendChild(card);
+  });
+}
+
+function flipCard(card) {
+  if(lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  flippedCards.push(card);
+  if(flippedCards.length === 2) {
+    memAttempts++;
+    lockBoard = true;
+    setTimeout(checkMemMatch, 700);
+  }
+  updateMemGameScore();
+}
+
+function checkMemMatch() {
+  const [a, b] = flippedCards;
+  if(a.dataset.emoji === b.dataset.emoji) {
+    a.classList.add('matched'); b.classList.add('matched');
+    a.setAttribute('aria-label', 'Pari löydetty: ' + a.dataset.emoji);
+    b.setAttribute('aria-label', 'Pari löydetty: ' + b.dataset.emoji);
+    matchedPairs++;
+    if(matchedPairs === 8) {
+      setTimeout(() => {
+        document.getElementById('memGameResult').style.display = 'block';
+        document.getElementById('memGameResult').scrollIntoView({behavior:'smooth', block:'nearest'});
+      }, 400);
+    }
+  } else {
+    a.classList.remove('flipped'); b.classList.remove('flipped');
+  }
+  flippedCards = [];
+  lockBoard = false;
+  updateMemGameScore();
+}
+
+function updateMemGameScore() {
+  document.getElementById('memGameScore').textContent =
+    `Parit: ${matchedPairs} / 8  |  Yritykset: ${memAttempts}`;
+}
+
+function shuffle(arr) {
+  for(let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+}
+
+// ── QUIZ ──
+let quizInitialized = false;
+const quizData = [
+  {
+    q: "Kuinka monta asiaa lyhytkestoinen muisti muistaa kerrallaan?",
+    opts: ["Noin 7", "Noin 20", "Noin 50", "Rajattomasti"],
+    ans: 0,
+    feedback: "Oikein! Lyhytkestoinen muisti muistaa noin 7 asiaa – siksi puhelinnumerot ovat usein 7–8 numeroa pitkiä."
+  },
+  {
+    q: "Mikä muistitekniikka tarkoittaa alkukirjainten ottamista hankalasta sanalistasta?",
+    opts: ["Yhdistely", "Mnemonikka", "Toistaminen", "Piirtäminen"],
+    ans: 1,
+    feedback: "Juuri niin! Mnemonikka tarkoittaa muistisääntöä, kuten 'Äiti Laittoi Minulle Lämpimiä Villasukkia Näin' – se on helppo tapa muistaa lista!"
+  },
+  {
+    q: "Milloin kannattaa toistaa asia ensimmäistä kertaa sen oppimisen jälkeen?",
+    opts: ["Kuukauden päästä", "Viikon päästä", "Pian oppimisen jälkeen", "Ei tarvitse toistaa"],
+    ans: 2,
+    feedback: "Oikein! Toistaminen pian oppimisen jälkeen on tärkeintä – muuten aivojen on vaikea tallentaa asia pitkäkestoiseen muistiin."
+  },
+  {
+    q: "Miksi uni on tärkeää muistamiselle?",
+    opts: [
+      "Ei mitään syytä",
+      "Nukkuessa aivot tallentavat päivän opitut asiat",
+      "Uni tekee sinut nopeammaksi",
+      "Uni auttaa vain urheilussa"
+    ],
+    ans: 1,
+    feedback: "Aivan! Nukkuessa aivot käyvät läpi päivän tapahtumat ja tallentavat tärkeimmät asiat – siksi oppiminen illalla juuri ennen nukkumaanmenoa toimii usein hyvin."
+  },
+  {
+    q: "Miten juominen vaikuttaa muistiin?",
+    opts: [
+      "Ei mitenkään",
+      "Liika juominen heikentää muistia",
+      "Vesi auttaa aivosoluja toimimaan paremmin",
+      "Vain energiajuomat auttavat"
+    ],
+    ans: 2,
+    feedback: "Kyllä! Aivosolut tarvitsevat vettä toimiakseen. Kun olet janoinen, muistisi ja keskittymisesi heikkenevät. Juo vettä!"
+  }
+];
+
+function initQuiz() {
+  quizInitialized = true;
+  quizScore = 0;
+  quizAnswered = 0;
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.id = 'quiz-q-' + qi;
+    div.innerHTML = `
+      <div class="quiz-q-num">Kysymys ${qi+1} / ${quizData.length}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options" role="group" aria-label="Vastausvaihtoehdot">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-opt" onclick="answerQuiz(${qi},${oi})" aria-label="${['A','B','C','D'][oi]}. ${opt}">
+            <span class="opt-letter" aria-hidden="true">${['A','B','C','D'][oi]}</span>
+            ${opt}
+          </button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${qi}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function answerQuiz(qi, oi) {
+  const q = quizData[qi];
+  const qDiv = document.getElementById('quiz-q-' + qi);
+  const opts = qDiv.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.setAttribute('disabled','true'));
+  const fb = document.getElementById('qfb-' + qi);
+  if(oi === q.ans) {
+    opts[oi].classList.add('correct');
+    fb.className = 'quiz-feedback ok show';
+    fb.textContent = '✅ ' + q.feedback;
+    quizScore++;
+  } else {
+    opts[oi].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.className = 'quiz-feedback nope show';
+    fb.textContent = '❌ Ei ihan oikein. ' + q.feedback;
+  }
+  quizAnswered++;
+  if(quizAnswered === quizData.length) {
+    document.getElementById('quizDoneBtn').style.display = 'block';
+  }
+}
+
+function showFinal() {
+  document.getElementById('finalScore').textContent = quizScore + ' / ' + quizData.length;
+  goToScreen(5);
+}
+
+function restartGame() {
+  memGameInitialized = false;
+  quizInitialized = false;
+  quizScore = 0;
+  quizAnswered = 0;
+  memPhase = 'idle';
+  document.getElementById('startMemBtn').style.display = 'block';
+  document.getElementById('inputArea').style.display = 'none';
+  document.getElementById('memResult').innerHTML = '';
+  document.getElementById('memNext').style.display = 'none';
+  document.getElementById('numSequence').textContent = '–';
+  document.getElementById('numCountdown').textContent = '';
+  document.getElementById('quizDoneBtn').style.display = 'none';
+  goToScreen(0);
+}
+
+// init
+updateProgress();
+</script>
+</body>
+</html>

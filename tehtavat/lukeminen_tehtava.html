@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lukeminen – Opi, kasva, loista</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e3a8a;
+    --blue-light: #dbeafe;
+    --teal: #0d9488;
+    --orange: #ea580c;
+    --green: #10b981;
+    --red: #ef4444;
+    --bg: #f0f9ff;
+    --text: #1e3a8a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .game-header {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb, #0d9488);
+    color: white;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+  .game-header .emoji-big { font-size: 52px; display: block; margin-bottom: 8px; }
+  .game-header h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; margin-bottom: 6px; }
+  .game-header p { font-size: 1rem; opacity: 0.9; }
+
+  .progress-bar-wrap { background: #bfdbfe; height: 8px; border-radius: 4px; margin: 20px 24px 0; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #0d9488); border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+  .progress-label { text-align: center; font-size: 13px; color: #1d4ed8; font-weight: 700; margin-top: 6px; margin-bottom: 4px; }
+
+  .step-dots { display: flex; justify-content: center; gap: 10px; padding: 16px 0 8px; }
+  .step-dot { width: 32px; height: 32px; border-radius: 50%; background: #bfdbfe; color: #1d4ed8; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+  .step-dot.active { background: #2563eb; color: white; border-color: #1e3a8a; transform: scale(1.15); }
+  .step-dot.done { background: #10b981; color: white; border-color: #059669; }
+
+  .screen { display: none; padding: 24px; animation: fadeIn 0.35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .teacher-box {
+    background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+    border-radius: 20px; padding: 24px; color: white; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .teacher-box::before { content: ''; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .teacher-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 8px; }
+  .teacher-box h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; }
+  .teacher-box p { font-size: 0.95rem; opacity: 0.92; margin-bottom: 8px; line-height: 1.7; }
+
+  .step-cards { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .step-card { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 14px; color: white; font-size: 0.95rem; font-weight: 700; }
+  .sc1 { background: #ec4899; }
+  .sc2 { background: #f59e0b; }
+  .sc3 { background: #0d9488; }
+  .sc-num { font-size: 1.5rem; font-weight: 900; min-width: 36px; text-align: center; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .info-card { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 14px; font-size: 0.85rem; }
+  .info-card .ic-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+  .info-card strong { display: block; margin-bottom: 2px; }
+
+  .section-title { font-size: 1.25rem; font-weight: 900; color: var(--blue-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-badge { background: var(--blue); color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn { display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #1d4ed8, #2563eb); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; text-align: center; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.45); }
+  .btn-full { width: 100%; }
+  .btn-green { background: linear-gradient(135deg, #10b981, #34d399); box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
+  .btn-outline { background: white; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; }
+  .btn-outline:hover { background: var(--blue-light); box-shadow: none; }
+  .btn-teal { background: linear-gradient(135deg, #0d9488, #14b8a6); box-shadow: 0 4px 14px rgba(13,148,136,0.35); }
+
+  /* GUESS THE TOPIC */
+  .text-card {
+    background: white; border: 2px solid #bfdbfe; border-radius: 18px;
+    padding: 22px; margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  }
+  .text-card .text-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #60a5fa; margin-bottom: 10px; }
+  .text-card p { font-size: 0.95rem; color: #1e3a8a; line-height: 1.75; }
+  .guess-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .guess-opt { padding: 14px 12px; border: 2.5px solid #bfdbfe; border-radius: 12px; font-size: 0.9rem; font-weight: 700; color: #1e3a8a; background: white; cursor: pointer; text-align: center; transition: all 0.18s; }
+  .guess-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); transform: scale(1.02); }
+  .guess-opt.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+  .guess-opt.wrong { border-color: var(--red); background: #fee2e2; color: #991b1b; }
+  .guess-feedback { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; display: none; margin-top: 8px; }
+  .guess-feedback.show { display: block; }
+  .guess-feedback.ok { background: #d1fae5; color: #065f46; }
+  .guess-feedback.nope { background: #fee2e2; color: #991b1b; }
+
+  /* DRAG & DROP ORDER */
+  .drag-list { margin: 16px 0; }
+  .drag-item {
+    display: flex; align-items: center; gap: 14px;
+    background: white; border: 2.5px solid #bfdbfe; border-radius: 14px;
+    padding: 14px 18px; margin-bottom: 10px; cursor: grab;
+    font-size: 0.95rem; font-weight: 700; color: #1e3a8a;
+    transition: all 0.2s; user-select: none;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.08);
+  }
+  .drag-item:hover { transform: translateX(4px); border-color: var(--blue); }
+  .drag-item.dragging { opacity: 0.5; cursor: grabbing; }
+  .drag-item.drag-over-top { border-top: 3px solid #2563eb; }
+  .drag-item.drag-over-bottom { border-bottom: 3px solid #2563eb; }
+  .drag-item .drag-handle { font-size: 1.2rem; opacity: 0.5; flex-shrink: 0; }
+  .drag-item .item-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .drag-item .item-num { width: 28px; height: 28px; border-radius: 50%; background: #bfdbfe; color: #1d4ed8; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .drag-item.correct-pos .item-num { background: #10b981; color: white; }
+  .drag-item.wrong-pos .item-num { background: var(--red); color: white; }
+  .order-check-result { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; margin: 12px 0; display: none; }
+  .order-check-result.show { display: block; }
+  .order-check-result.ok { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+  .order-check-result.nope { background: #fff7ed; color: #92400e; border: 2px solid #fcd34d; }
+
+  /* CORE SENTENCE */
+  .passage-box { background: white; border: 2px solid #bfdbfe; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .passage-box .pass-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #60a5fa; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .sentence-opts { display: flex; flex-direction: column; gap: 10px; }
+  .sent-opt { padding: 12px 16px; border: 2.5px solid #bfdbfe; border-radius: 12px; font-size: 0.92rem; color: #1e3a8a; background: white; cursor: pointer; text-align: left; font-weight: 600; transition: all 0.18s; }
+  .sent-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); }
+  .sent-opt.correct { border-color: #10b981; background: #d1fae5; color: #065f46; font-weight: 800; }
+  .sent-opt.wrong { border-color: var(--red); background: #fee2e2; color: #991b1b; }
+
+  /* QUIZ */
+  .quiz-question { background: white; border: 2px solid #bfdbfe; border-radius: 18px; padding: 22px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(37,99,235,0.07); }
+  .quiz-q-num { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #60a5fa; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .quiz-q-text { font-size: 1.05rem; font-weight: 700; color: #1e3a8a; margin-bottom: 16px; line-height: 1.55; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt { padding: 13px 18px; border: 2.5px solid #bfdbfe; border-radius: 12px; font-size: 0.95rem; font-weight: 600; color: #1e3a8a; background: white; cursor: pointer; text-align: left; transition: all 0.18s; display: flex; align-items: center; gap: 10px; }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); transform: translateX(4px); }
+  .quiz-opt.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fee2e2; color: #991b1b; }
+  .quiz-opt .opt-letter { width: 26px; height: 26px; border-radius: 50%; background: #bfdbfe; color: #1d4ed8; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .quiz-opt.correct .opt-letter { background: #10b981; color: white; }
+  .quiz-opt.wrong .opt-letter { background: var(--red); color: white; }
+  .quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #d1fae5; color: #065f46; }
+  .quiz-feedback.nope { background: #fee2e2; color: #991b1b; }
+
+  .final-screen { text-align: center; padding: 32px 24px; }
+  .final-screen .trophy { font-size: 72px; display: block; margin-bottom: 16px; animation: bounce 0.6s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .final-screen h2 { font-size: 1.8rem; font-weight: 900; color: #1e3a8a; margin-bottom: 10px; }
+  .score-circle { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #0d9488); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; color: white; box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+  .sc-num { font-size: 2.2rem; font-weight: 900; }
+  .sc-label { font-size: 11px; font-weight: 700; opacity: 0.8; }
+  .tips-list { text-align: left; margin: 20px 0; }
+  .tip-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--blue-light); border-radius: 12px; margin-bottom: 10px; }
+  .tip-item .ti { font-size: 1.3rem; flex-shrink: 0; }
+  .tip-item p { font-size: 0.9rem; color: #1e3a8a; line-height: 1.55; }
+
+  @media (max-width: 400px) { .guess-options { grid-template-columns: 1fr; } .info-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="game-header">
+  <span class="emoji-big">📖</span>
+  <h1>Lukeminen</h1>
+  <p>Opi lukemaan älykkäämmin – ei nopeammin!</p>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar"></div>
+</div>
+<div class="progress-label" id="progressLabel">Osio 1 / 4</div>
+
+<div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
+  <div class="step-dot active" role="tab" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 3: Arvaa aihe" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 4: Järjestä vaiheet" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+</div>
+
+<!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
+<section class="screen active" id="screen-0" aria-labelledby="s0-title">
+  <div class="teacher-box">
+    <div class="teacher-label">🎤 Opettajan puhe</div>
+    <h2 id="s0-title">Älykäs lukija ei lue kaikkea – hän valitsee mitä lukee!</h2>
+    <p>Lukeminen ei tarkoita vain sanojen tunnistamista. <strong>Älykäs lukeminen</strong> tarkoittaa sitä, että osaat löytää tarvitsemasi tiedon nopeasti ja ymmärrät sen oikeasti.</p>
+    <p>📌 Ennen lukemista: Silmäile sisällysluettelo, lue otsikot ja ensimmäiset virkkeet. Näin tiedät, mistä tekstissä on kyse – ennen kuin edes aloitat!</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="ic-icon">🔍</span>
+        <strong>Älykas lukeminen</strong>
+        Silmäile ensin, sitten lue tarkasti tarvittavat kohdat
+      </div>
+      <div class="info-card">
+        <span class="ic-icon">✏️</span>
+        <strong>Aktiivinen lukeminen</strong>
+        Kynä kädessä – merkitse tärkeät kohdat heti!
+      </div>
+    </div>
+  </div>
+
+  <div class="step-cards">
+    <div class="step-card sc1"><span class="sc-num">1</span>Yritä saada yleiskuva – mistä teksti kertoo?</div>
+    <div class="step-card sc2"><span class="sc-num">2</span>Lue kappale kerrallaan – ymmärsitkö sen?</div>
+    <div class="step-card sc3"><span class="sc-num">3</span>Tee tiivistelmä muutamalla sanalla – kirjoita tai sano ääneen</div>
+  </div>
+
+  <button class="btn btn-full" onclick="nextScreen()" style="margin-top:20px;">
+    Kokeile: Arvaa aihe! 🕵️
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: TOIMINNALLINEN TEHTÄVÄ – TEKSTITAIDELÄHTÖ ═══════════ -->
+<section class="screen" id="screen-toiminnallinen-lukeminen" aria-labelledby="s-toim-luku-title">
+  <div class="teacher-box" style="background: linear-gradient(135deg, #1e3a8a, #0d9488);">
+    <div class="teacher-label">🚶 Toiminnallinen tehtävä</div>
+    <h2 id="s-toim-luku-title">Tekstitaidelähtö — piirrä mitä luit!</h2>
+    <p>Tämä tehtävä tehdään <strong>liikkuen ympäri luokkaa</strong> ja piirtäen. Ottakaa kynä ja paperi!</p>
+  </div>
+
+  <div style="background: white; border: 2px solid #bfdbfe; border-radius: 18px; padding: 22px; margin-bottom: 16px;">
+    <p style="font-size: 1rem; font-weight: 800; color: #1e3a8a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span>🎯</span> Näin tehdään:
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #1d4ed8, #0d9488); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+        <div style="font-size: 0.95rem; color: #1e3a8a; line-height: 1.6; padding-top: 5px;">
+          Opettaja kiinnittää <strong>4–5 lyhyttä tekstiä</strong> seinille ympäri luokkaa.
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #1d4ed8, #0d9488); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+        <div style="font-size: 0.95rem; color: #1e3a8a; line-height: 1.6; padding-top: 5px;">
+          Kierrätte tekstit vapaassa järjestyksessä ja luette ne — <strong>jokainen omaan tahtiin.</strong>
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #1d4ed8, #0d9488); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+        <div style="font-size: 0.95rem; color: #1e3a8a; line-height: 1.6; padding-top: 5px;">
+          Valitse <strong>yksi teksti</strong> ja piirrä sen pääajatus paperille. <strong>Ei sanoja — vain kuva!</strong>
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #1d4ed8, #0d9488); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+        <div style="font-size: 0.95rem; color: #1e3a8a; line-height: 1.6; padding-top: 5px;">
+          Esitellään kuvat — <strong>muut arvaavat, mitä tekstiä kuva esittää.</strong> Paras arvaus voittaa!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPETTAJAN MATERIAALI – TOGGLE -->
+  <div style="margin-bottom: 16px;">
+    <button
+      onclick="toggleOpettajaLukeminen(this)"
+      aria-expanded="false"
+      aria-controls="opettaja-lukeminen-sisalto"
+      style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:11px 18px; background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:600; color:#475569; text-align:left; transition:background 0.18s;"
+      onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"
+    >
+      <span style="display:flex; align-items:center; gap:10px;">
+        <span aria-hidden="true">🖨️</span>
+        <span>Opettajan materiaali – seinätekstit ja tulostus</span>
+      </span>
+      <span aria-hidden="true" style="font-size:0.8rem; color:#94a3b8; transition:transform 0.22s;" class="op-nuoli-luku">▼</span>
+    </button>
+    <div id="opettaja-lukeminen-sisalto" hidden style="background:#f8fafc; border:1.5px solid #cbd5e1; border-top:none; border-radius:0 0 10px 10px; padding:18px 20px;">
+      <p style="font-size:0.85rem; color:#475569; margin-bottom:14px; line-height:1.6;">
+        Tulosta neljä tekstikorttia ja kiinnitä ne seinille ympäri luokkaa ennen tuntia. Oppilaat kiertävät ja lukevat ne tehtävän alussa.
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+        <div style="background:white; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#374151; border-left:3px solid #2563eb;">
+          <strong>Teksti 1:</strong> "Aivot tarvitsevat vettä. Kun juot tarpeeksi, muistisi ja keskittymisesi paranevat. Kuiva aivosolu toimii huonosti."
+        </div>
+        <div style="background:white; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#374151; border-left:3px solid #0d9488;">
+          <strong>Teksti 2:</strong> "Uni on tärkeä oppimiselle. Nukkuessa aivot tallentavat päivän opit pitkäkestoiseen muistiin."
+        </div>
+        <div style="background:white; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#374151; border-left:3px solid #7c3aed;">
+          <strong>Teksti 3:</strong> "Toistaminen on muistamisen tärkein taito. Mitä useammin kerrataan, sitä paremmin asia jää mieleen."
+        </div>
+        <div style="background:white; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#374151; border-left:3px solid #ec4899;">
+          <strong>Teksti 4:</strong> "Liikunta parantaa oppimista. Kun liikut, aivoihin virtaa enemmän verta ja happea."
+        </div>
+      </div>
+      <a href="../tehtavat/lukeminen_tekstikortit.html" target="_blank"
+        style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; background:#1d4ed8; color:white; border-radius:8px; text-decoration:none; font-size:0.88rem; font-weight:700; transition:background 0.18s;"
+        onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">
+        <span aria-hidden="true">🖨️</span> Avaa tulostettavat tekstikortit
+      </a>
+      <p style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">Avautuu uuteen välilehteen · Tulosta A4, leikkaa kortit irti</p>
+    </div>
+  </div>
+
+  <div style="background: #eff6ff; border: 2px solid #bfdbfe; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+    <span style="font-size: 1.5rem;">💬</span>
+    <div>
+      <p style="font-size: 0.85rem; font-weight: 800; color: #1e3a8a; margin-bottom: 2px;">Purku: Miten tiivistit tekstin kuvaan?</p>
+      <p style="font-size: 0.82rem; color: #6b7280;">Se on juuri sitä, mitä älykas lukija tekee — etsii pääajatuksen ja tiivistää sen!</p>
+    </div>
+  </div>
+
+  <div style="background: white; border: 2px solid #bfdbfe; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+    <span style="font-size: 1.5rem;">⏱</span>
+    <div>
+      <p style="font-size: 0.85rem; font-weight: 800; color: #1e3a8a; margin-bottom: 2px;">Aika: 12–15 minuuttia</p>
+      <p style="font-size: 0.82rem; color: #6b7280;">Yksilö tai parit · Luokkahuone</p>
+    </div>
+  </div>
+
+  <button class="btn btn-full" onclick="nextScreen()">
+    ✅ Tehty — jatketaan digitehtäviin! 🕵️
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: ARVAA AIHE ═══════════ -->
+<section class="screen" id="screen-1" aria-labelledby="s1-title">
+  <div class="section-title">
+    <span>🕵️</span> <span id="s1-title">Arvaa mistä teksti kertoo!</span>
+    <span class="section-badge">Vaihe 2</span>
+  </div>
+  <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Lue vain tekstin alku. Arvaa sitten, mistä aiheesta teksti kertoo. Älykäs lukija osaa tehdä tämän!</p>
+  <div id="guessContainer"></div>
+  <button class="btn btn-full" onclick="nextScreen()" id="guessDoneBtn" style="display:none; margin-top:12px;">
+    Seuraava tehtävä ▶
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 2: JÄRJESTÄ VAIHEET ═══════════ -->
+<section class="screen" id="screen-2" aria-labelledby="s2-title">
+  <div class="section-title">
+    <span>🔀</span> <span id="s2-title">Järjestä lukemisen vaiheet</span>
+    <span class="section-badge">Vaihe 3</span>
+  </div>
+  <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Vedä (tai napauta ylös/alas) vaiheet oikeaan järjestykseen. Mikä on älykkään lukijan oikea järjestys?</p>
+  <div class="drag-list" id="dragList" role="list" aria-label="Lukemisen vaiheet, vedä järjestykseen"></div>
+  <button class="btn btn-full" onclick="checkOrder()" style="margin-top:4px;">✔ Tarkista järjestys</button>
+  <div class="order-check-result" id="orderResult"></div>
+  <button class="btn btn-outline btn-full" onclick="nextScreen()" id="orderNextBtn" style="display:none; margin-top:10px;">Jatka tietovisaan ▶</button>
+</section>
+
+<!-- ═══════════ SCREEN 3: TIETOVISA ═══════════ -->
+<section class="screen" id="screen-3" aria-labelledby="s3-title">
+  <div class="section-title">
+    <span>❓</span> <span id="s3-title">Tietovisa – lukemisen taito</span>
+    <span class="section-badge">Vaihe 4</span>
+  </div>
+  <div id="quizContainer"></div>
+  <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none; margin-top:8px;">
+    🏁 Katso tulokset!
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 4: LOPPUTULOS ═══════════ -->
+<section class="screen" id="screen-4" aria-labelledby="s4-title">
+  <div class="final-screen">
+    <span class="trophy">📖</span>
+    <h2 id="s4-title">Mahtavaa – olet älykäs lukija!</h2>
+    <p style="color:#1d4ed8; font-size:1rem;">Olet suorittanut lukemistehtävän!</p>
+    <div class="score-circle">
+      <span class="sc-num" id="finalScore">0/5</span>
+      <span class="sc-label">oikein</span>
+    </div>
+    <div class="tips-list">
+      <div class="tip-item"><span class="ti">🔍</span><p><strong>Silmäile ensin!</strong> Katso otsikot ja kuvat ennen kuin aloitat lukemisen. Näin tiedät mitä odottaa.</p></div>
+      <div class="tip-item"><span class="ti">✏️</span><p><strong>Kynä kädessä!</strong> Alleviivaa tai kirjoita muistiin tärkeimmät kohdat heti kun löydät ne.</p></div>
+      <div class="tip-item"><span class="ti">🎯</span><p><strong>Ydinvirke!</strong> Kappaleen ensimmäinen virke kertoo yleensä koko kappaleen pääasian.</p></div>
+      <div class="tip-item"><span class="ti">💬</span><p><strong>Tiivistä!</strong> Selitä juuri lukemasi asia jollekin toiselle omin sanoin – se on paras tapa varmistaa, että ymmärsit.</p></div>
+    </div>
+    <button class="btn btn-full" onclick="restartGame()">🔄 Aloita alusta</button>
+  </div>
+</section>
+
+<script>
+let currentScreen = 0;
+const totalScreens = 5;
+let quizScore = 0;
+let quizAnswered = 0;
+let guessAnswered = 0;
+
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach((s,i) => s.classList.toggle('active', i === n));
+  document.querySelectorAll('.step-dot').forEach((d,i) => {
+    d.classList.remove('active','done');
+    if(i === n) d.classList.add('active');
+    else if(i < n) d.classList.add('done');
+  });
+  currentScreen = n;
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(n === 2 && !guessInitialized) initGuess();
+  if(n === 3 && !orderInitialized) initOrder();
+  if(n === 4 && !quizInitialized) initQuiz();
+}
+function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
+function updateProgress() {
+  document.getElementById('progressBar').style.width = (currentScreen/totalScreens*100)+'%';
+  document.getElementById('progressLabel').textContent = 'Osio '+(currentScreen+1)+' / '+totalScreens;
+}
+
+// ── GUESS THE TOPIC ──
+let guessInitialized = false;
+const guessTexts = [
+  {
+    text: "Aivot tarvitsevat energiaa toimiakseen. Paras polttoaine aivoille on sokeri – mutta ei karkkisokeri, vaan hitaasti imeytyvä, kuten täysjyvässä tai hedelmissä. Kun verensokeri laskee, ajatteleminen käy vaikeaksi ja väsymys iskee. Siksi aamiainen on tärkeä koulupäivälle.",
+    opts: ["Urheilun hyödyt", "Aivojen ravinto ja ruokavalio", "Nukkuminen ja uni", "Sokerin haitat hampaissa"],
+    ans: 1,
+    hint: "Avainsanat: aivot, energia, sokeri, aamiainen → teksti kertoo siitä, mitä aivot tarvitsevat polttoaineekseen!"
+  },
+  {
+    text: "Sormesi koskettaa näyttöä satoja kertoja päivässä – mutta mihin kaikkeen se oikeastaan reagoi? Nykyiset kosketusnäytöt eivät tunnista pelkää painetta. Ne mittaavat sähkökenttää. Ihosi johtaa heikosti sähköä, ja kun sormi osuu lasin pintaan, kenttä muuttuu. Tietokone laskee missä kohdassa muutos tapahtui.",
+    opts: ["Miten kosketusnäyttö toimii", "Kuinka paljon puhelimet maksavat", "Sormenjälkien tunnistus", "Internetin historia"],
+    ans: 0,
+    hint: "Ydinvirke paljastaa aiheen: teksti selittää, miten kosketusnäyttö tunnistaa sormen liikkeen!"
+  },
+  {
+    text: "Vuonna 1969 kaksi ihmistä käveli ensi kerran Kuun pinnalla. Neil Armstrong astui sieltä alas ensimmäisenä. Hänen kuuluisa lauseensa 'Tämä on pieni askel ihmiselle, mutta jättiläisloikka ihmiskunnalle' on yksi tunnetuimmista lainauksista maailmassa. Apollo 11 -lennolla oli mukana kolme astronauttia.",
+    opts: ["Avaruusmatkailun tulevaisuus", "Mars-tutkimusohjelma", "Apollo 11 ja kuukävely", "Astronomian historia"],
+    ans: 2,
+    hint: "Teksti mainitsee heti Neil Armstrongin ja Kuun – aihe on selkeä jo ensimmäisestä virkkeestä!"
+  }
+];
+let guessIndex = 0;
+
+function initGuess() {
+  guessInitialized = true;
+  guessIndex = 0;
+  guessAnswered = 0;
+  renderGuess();
+}
+
+function renderGuess() {
+  const container = document.getElementById('guessContainer');
+  container.innerHTML = '';
+  if(guessIndex >= guessTexts.length) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;background:#d1fae5;border-radius:16px;font-size:1.1rem;font-weight:800;color:#065f46;">🎉 Hyvin meni! Olet älykas lukija!</div>`;
+    document.getElementById('guessDoneBtn').style.display = 'block';
+    return;
+  }
+  const g = guessTexts[guessIndex];
+  const counterEl = document.createElement('p');
+  counterEl.style.cssText = 'font-size:12px;color:#60a5fa;font-weight:700;margin-bottom:10px;';
+  counterEl.textContent = `Teksti ${guessIndex+1} / ${guessTexts.length}`;
+  container.appendChild(counterEl);
+  const textDiv = document.createElement('div');
+  textDiv.className = 'text-card';
+  textDiv.innerHTML = `<div class="text-label">📄 Lue vain tämä alku...</div><p>${g.text}</p>`;
+  container.appendChild(textDiv);
+  const questionP = document.createElement('p');
+  questionP.style.cssText = 'font-size:1rem;font-weight:800;color:#1e3a8a;margin-bottom:12px;';
+  questionP.textContent = 'Mistä aiheesta tämä teksti kertoo?';
+  container.appendChild(questionP);
+  const optsDiv = document.createElement('div');
+  optsDiv.className = 'guess-options';
+  g.opts.forEach((opt, oi) => {
+    const btn = document.createElement('button');
+    btn.className = 'guess-opt';
+    btn.textContent = opt;
+    btn.onclick = () => doGuess(oi, g.ans, g.hint, optsDiv, fb, btn);
+    optsDiv.appendChild(btn);
+  });
+  container.appendChild(optsDiv);
+  const fb = document.createElement('div');
+  fb.className = 'guess-feedback';
+  container.appendChild(fb);
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn btn-full';
+  nextBtn.textContent = guessIndex < guessTexts.length-1 ? 'Seuraava teksti ▶' : 'Valmis! ✅';
+  nextBtn.style.display = 'none';
+  nextBtn.id = 'guessNextBtn';
+  nextBtn.onclick = () => { guessIndex++; renderGuess(); };
+  container.appendChild(nextBtn);
+}
+
+function doGuess(oi, ans, hint, optsDiv, fb, clicked) {
+  const opts = optsDiv.querySelectorAll('.guess-opt');
+  opts.forEach(o => o.setAttribute('disabled','true'));
+  if(oi === ans) {
+    clicked.classList.add('correct');
+    fb.className = 'guess-feedback ok show';
+    fb.innerHTML = '✅ Oikein! ' + hint;
+  } else {
+    clicked.classList.add('wrong');
+    opts[ans].classList.add('correct');
+    fb.className = 'guess-feedback nope show';
+    fb.innerHTML = '❌ Ei ihan. ' + hint;
+  }
+  document.getElementById('guessNextBtn').style.display = 'block';
+}
+
+// ── ORDER DRAG & DROP ──
+let orderInitialized = false;
+const correctOrder = [0, 1, 2, 3, 4];
+const orderItems = [
+  { icon: '🔍', text: 'Silmäile otsikot ja kuvat – hae yleiskuva' },
+  { icon: '📖', text: 'Lue johdanto ja ensimmäinen kappale' },
+  { icon: '✏️', text: 'Merkitse tärkeät kohdat ja avainsanat' },
+  { icon: '🤔', text: 'Kysy itseltäsi: ymmärsinkö tämän?' },
+  { icon: '💬', text: 'Tee lyhyt tiivistelmä omin sanoin' }
+];
+let dragOrder = [];
+let dragSrcIdx = null;
+
+function initOrder() {
+  orderInitialized = true;
+  dragOrder = [2, 4, 0, 3, 1]; // shuffled
+  renderOrder();
+}
+
+function renderOrder() {
+  const list = document.getElementById('dragList');
+  list.innerHTML = '';
+  dragOrder.forEach((itemIdx, pos) => {
+    const item = orderItems[itemIdx];
+    const div = document.createElement('div');
+    div.className = 'drag-item';
+    div.draggable = true;
+    div.setAttribute('role','listitem');
+    div.setAttribute('aria-label', `Vaihe ${pos+1}: ${item.text}`);
+    div.dataset.pos = pos;
+    div.innerHTML = `
+      <span class="drag-handle" aria-hidden="true">⠿</span>
+      <span class="item-icon" aria-hidden="true">${item.icon}</span>
+      <span style="flex:1;">${item.text}</span>
+      <div style="display:flex;gap:6px;">
+        <button aria-label="Siirrä ylöspäin" style="background:#dbeafe;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;" onclick="moveItem(${pos},-1)">▲</button>
+        <button aria-label="Siirrä alaspäin" style="background:#dbeafe;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;" onclick="moveItem(${pos},1)">▼</button>
+      </div>`;
+    div.addEventListener('dragstart', e => { dragSrcIdx = pos; div.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    div.addEventListener('dragend', () => { div.classList.remove('dragging'); document.querySelectorAll('.drag-item').forEach(d=>d.classList.remove('drag-over-top','drag-over-bottom')); });
+    div.addEventListener('dragover', e => { e.preventDefault(); const rect=div.getBoundingClientRect(); const mid=(rect.top+rect.bottom)/2; div.classList.remove('drag-over-top','drag-over-bottom'); div.classList.add(e.clientY<mid?'drag-over-top':'drag-over-bottom'); });
+    div.addEventListener('drop', e => { e.preventDefault(); const tgtPos=parseInt(div.dataset.pos); if(dragSrcIdx!==null&&dragSrcIdx!==tgtPos){ const arr=[...dragOrder]; const [el]=arr.splice(dragSrcIdx,1); arr.splice(tgtPos,0,el); dragOrder=arr; renderOrder(); } dragSrcIdx=null; });
+    list.appendChild(div);
+  });
+}
+
+function moveItem(pos, dir) {
+  const newPos = pos + dir;
+  if(newPos < 0 || newPos >= dragOrder.length) return;
+  const arr = [...dragOrder];
+  [arr[pos], arr[newPos]] = [arr[newPos], arr[pos]];
+  dragOrder = arr;
+  renderOrder();
+}
+
+function checkOrder() {
+  const res = document.getElementById('orderResult');
+  const correctAnswer = [0,1,2,3,4]; // correct order of item indices
+  const isCorrect = JSON.stringify(dragOrder) === JSON.stringify(correctAnswer);
+  if(isCorrect) {
+    res.className = 'order-check-result ok show';
+    res.innerHTML = '🎉 <strong>Täydellinen järjestys!</strong> Juuri näin älykäs lukija toimii!';
+    document.getElementById('orderNextBtn').style.display = 'block';
+  } else {
+    res.className = 'order-check-result nope show';
+    // Show correct order
+    const correctLabels = correctAnswer.map((i,pos) => `${pos+1}. ${orderItems[i].icon} ${orderItems[i].text}`).join('<br>');
+    res.innerHTML = `🤔 <strong>Ei ihan oikein!</strong> Oikea järjestys on:<br><br>${correctLabels}<br><br>Kokeile uudelleen tai jatka!`;
+    document.getElementById('orderNextBtn').style.display = 'block';
+  }
+}
+
+// ── QUIZ ──
+let quizInitialized = false;
+const quizData = [
+  {
+    q: "Mitä tarkoittaa 'ydinvirke'?",
+    opts: ["Pisin virke kappaleessa", "Kappaleen ensimmäinen virke, joka kertoo pääasian", "Virke, joka on alleviivattu", "Viimeinen virke tekstissä"],
+    ans: 1,
+    feedback: "Kyllä! Ydinvirke on yleensä kappaleen ensimmäinen virke. Kun opit lukemaan ydinvirkkeet, pystyt silmäilemään tekstin pääideat hyvin nopeasti."
+  },
+  {
+    q: "Miksi kannattaa silmäillä teksti ennen tarkkaa lukemista?",
+    opts: ["Aikaa säästyy – ei tarvitse lukea koko tekstiä", "Saat yleiskuvan ja tiedät mitä etsiä", "Se on nopeampi tapa oppia", "Opettaja vaatii sen"],
+    ans: 1,
+    feedback: "Juuri niin! Kun tiedät etukäteen mistä teksti kertoo, aivosi osaavat paremmin yhdistää uuden tiedon jo tiedossa olevaan."
+  },
+  {
+    q: "Mitä 'aktiivinen lukeminen' tarkoittaa?",
+    opts: ["Lukemista seisten tai liikkuen", "Kynä kädessä lukemista ja tärkeiden kohtien merkitsemistä", "Hyvin nopeaa lukemista", "Ääneen lukemista"],
+    ans: 1,
+    feedback: "Oikein! Aktiivinen lukija pitää aina kynää kädessä ja merkitsee tärkeimmät kohdat. Se auttaa keskittymään ja muistamaan paremmin."
+  },
+  {
+    q: "Olet lukenut kappaleen. Miten varmistat, että ymmärsit sen?",
+    opts: ["Lue se vielä kerran heti perään", "Selitä juuri lukemasi itsellesi tai kaverille omin sanoin", "Merkitse kaikki sanat muistiin", "Hyppää seuraavaan kappaleeseen"],
+    ans: 1,
+    feedback: "Täydellinen! Tiivistäminen omin sanoin on paras tapa tarkistaa ymmärtäminen. Jos et pysty selittämään, et todennäköisesti ymmärtänyt vielä."
+  },
+  {
+    q: "Miksi joidenkin ihmisten on helpompi lukea värillistä paperia läpi?",
+    opts: ["Värit ovat kauniimpia", "Se auttaa erottamaan sanat toisistaan – erityisesti dysleksiasta kärsivillä", "Paperissa on enemmän kontrastia", "Ei mitään syytä – se on vain tapa"],
+    ans: 1,
+    feedback: "Kyllä! Esimerkiksi monille dyslektikoille sanat näyttävät hyppivän sivulla. Värillinen suodin tai paperi voi auttaa pitämään rivit paikallaan."
+  }
+];
+
+function initQuiz() {
+  quizInitialized = true;
+  quizScore = 0;
+  quizAnswered = 0;
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = `
+      <div class="quiz-q-num">Kysymys ${qi+1} / ${quizData.length}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options" role="group" aria-label="Vastausvaihtoehdot">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-opt" onclick="answerQuiz(${qi},${oi})" aria-label="${['A','B','C','D'][oi]}. ${opt}">
+            <span class="opt-letter" aria-hidden="true">${['A','B','C','D'][oi]}</span>
+            ${opt}
+          </button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${qi}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function answerQuiz(qi, oi) {
+  const q = quizData[qi];
+  const qDiv = document.querySelectorAll('.quiz-question')[qi];
+  const opts = qDiv.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.setAttribute('disabled','true'));
+  const fb = document.getElementById('qfb-'+qi);
+  if(oi === q.ans) {
+    opts[oi].classList.add('correct');
+    fb.className='quiz-feedback ok show';
+    fb.textContent='✅ '+q.feedback;
+    quizScore++;
+  } else {
+    opts[oi].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.className='quiz-feedback nope show';
+    fb.textContent='❌ Ei ihan oikein. '+q.feedback;
+  }
+  quizAnswered++;
+  if(quizAnswered === quizData.length) document.getElementById('quizDoneBtn').style.display='block';
+}
+
+function showFinal() {
+  document.getElementById('finalScore').textContent = quizScore+' / '+quizData.length;
+  goToScreen(5);
+}
+
+function restartGame() {
+  guessInitialized = false;
+  orderInitialized = false;
+  quizInitialized = false;
+  quizScore = 0;
+  quizAnswered = 0;
+  guessAnswered = 0;
+  guessIndex = 0;
+  document.getElementById('quizDoneBtn').style.display = 'none';
+  document.getElementById('guessDoneBtn').style.display = 'none';
+  document.getElementById('orderNextBtn').style.display = 'none';
+  document.getElementById('orderResult').className = 'order-check-result';
+  goToScreen(0);
+}
+
+updateProgress();
+
+function toggleOpettajaLukeminen(btn) {
+  var sisalto = document.getElementById('opettaja-lukeminen-sisalto');
+  var auki = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+  var nuoli = btn.querySelector('.op-nuoli-luku');
+  if (nuoli) nuoli.style.transform = auki ? '' : 'rotate(180deg)';
+  if (auki) {
+    sisalto.hidden = true;
+  } else {
+    sisalto.hidden = false;
+    sisalto.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Aikataulut – Opi, kasva, loista</title>
+<style>
+  :root {
+    --green: #059669;
+    --green-dark: #064e3b;
+    --green-light: #d1fae5;
+    --teal: #0d9488;
+    --orange: #ea580c;
+    --pink: #ec4899;
+    --red: #ef4444;
+    --blue: #2563eb;
+    --yellow: #d97706;
+    --bg: #f0fdf4;
+    --text: #064e3b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .game-header {
+    background: linear-gradient(135deg, #064e3b, #059669, #0d9488);
+    color: white;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+  .game-header .emoji-big { font-size: 52px; display: block; margin-bottom: 8px; }
+  .game-header h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; margin-bottom: 6px; }
+  .game-header p { font-size: 1rem; opacity: 0.9; }
+
+  .progress-bar-wrap { background: #a7f3d0; height: 8px; border-radius: 4px; margin: 20px 24px 0; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #059669, #ea580c); border-radius: 4px; transition: width 0.5s ease; width: 0%; }
+  .progress-label { text-align: center; font-size: 13px; color: #065f46; font-weight: 700; margin-top: 6px; margin-bottom: 4px; }
+
+  .step-dots { display: flex; justify-content: center; gap: 10px; padding: 16px 0 8px; }
+  .step-dot { width: 32px; height: 32px; border-radius: 50%; background: #a7f3d0; color: #065f46; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+  .step-dot.active { background: #059669; color: white; border-color: #064e3b; transform: scale(1.15); }
+  .step-dot.done { background: #2563eb; color: white; border-color: #1e40af; }
+
+  .screen { display: none; padding: 24px; animation: fadeIn 0.35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .teacher-box { background: linear-gradient(135deg, #064e3b, #059669); border-radius: 20px; padding: 24px; color: white; margin-bottom: 20px; position: relative; overflow: hidden; }
+  .teacher-box::before { content: ''; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .teacher-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 8px; }
+  .teacher-box h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; }
+  .teacher-box p { font-size: 0.95rem; opacity: 0.92; margin-bottom: 8px; line-height: 1.7; }
+
+  .project-steps { display: flex; flex-direction: column; gap: 0; margin-top: 16px; border-radius: 14px; overflow: hidden; }
+  .proj-step { padding: 12px 18px; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 700; color: white; }
+  .ps1{background:#ec4899;} .ps2{background:#f59e0b;} .ps3{background:#3b82f6;} .ps4{background:#8b5cf6;} .ps5{background:#10b981;} .ps6{background:#059669;}
+  .proj-step .ps-num { font-size: 1.1rem; font-weight: 900; min-width: 28px; }
+
+  .section-title { font-size: 1.25rem; font-weight: 900; color: var(--green-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-badge { background: var(--green); color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn { display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #065f46, #059669); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; text-align: center; box-shadow: 0 4px 14px rgba(5,150,105,0.35); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(5,150,105,0.45); }
+  .btn-full { width: 100%; }
+  .btn-orange { background: linear-gradient(135deg, #c2410c, #ea580c); box-shadow: 0 4px 14px rgba(234,88,12,0.35); }
+  .btn-outline { background: white; color: var(--green); border: 2px solid var(--green); box-shadow: none; }
+  .btn-outline:hover { background: var(--green-light); box-shadow: none; }
+
+  /* CALENDAR DRAG & DROP */
+  .calendar-wrap { margin: 16px 0; }
+  .task-pool { background: white; border: 2px dashed #6ee7b7; border-radius: 16px; padding: 16px; margin-bottom: 20px; min-height: 80px; }
+  .task-pool-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #059669; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .task-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .task-chip {
+    padding: 10px 16px; border-radius: 30px; font-size: 0.88rem; font-weight: 700;
+    cursor: grab; user-select: none; display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12); transition: transform 0.15s, opacity 0.15s;
+  }
+  .task-chip:hover { transform: scale(1.04); }
+  .task-chip.dragging { opacity: 0.4; cursor: grabbing; }
+  .tc-math { background: #3b82f6; color: white; }
+  .tc-hist { background: #8b5cf6; color: white; }
+  .tc-sport { background: #10b981; color: white; }
+  .tc-eng { background: #f59e0b; color: white; }
+  .tc-bio { background: #ec4899; color: white; }
+  .tc-rest { background: #6b7280; color: white; }
+  .tc-music { background: #ea580c; color: white; }
+  .tc-free { background: #0d9488; color: white; }
+
+  .week-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .day-col { background: white; border: 2px solid #a7f3d0; border-radius: 14px; overflow: hidden; }
+  .day-header { background: linear-gradient(135deg, #059669, #0d9488); color: white; padding: 10px 8px; text-align: center; font-size: 0.85rem; font-weight: 800; }
+  .day-slots { padding: 8px; min-height: 160px; display: flex; flex-direction: column; gap: 6px; }
+  .day-slot {
+    border: 2px dashed #a7f3d0; border-radius: 10px; min-height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; color: #9ca3af; font-style: italic;
+    transition: all 0.2s; cursor: default;
+    padding: 4px;
+  }
+  .day-slot.drag-over { border-color: #059669; background: #d1fae5; }
+  .day-slot.has-task { border-style: solid; border-color: transparent; font-style: normal; color: inherit; cursor: default; }
+  .placed-chip { padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 4px; width: 100%; text-align: center; justify-content: center; }
+  .slot-remove { background: rgba(255,255,255,0.3); border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; color: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+
+  .balance-bar-wrap { margin: 16px 0; }
+  .balance-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .balance-label { font-size: 0.85rem; font-weight: 700; color: var(--green-dark); width: 100px; flex-shrink: 0; }
+  .balance-track { flex: 1; height: 20px; background: #f0fdf4; border: 2px solid #a7f3d0; border-radius: 10px; overflow: hidden; position: relative; }
+  .balance-fill { height: 100%; border-radius: 8px; transition: width 0.5s ease; }
+  .balance-count { font-size: 0.8rem; font-weight: 800; width: 40px; text-align: right; flex-shrink: 0; }
+
+  /* COUNTDOWN GAME */
+  .countdown-game { background: white; border: 2px solid #a7f3d0; border-radius: 18px; padding: 22px; }
+  .deadline-display { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border-radius: 14px; padding: 16px 20px; text-align: center; margin-bottom: 16px; }
+  .deadline-display .dl-label { font-size: 12px; opacity: 0.8; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+  .deadline-display .dl-date { font-size: 1.5rem; font-weight: 900; }
+  .task-list-plan { list-style: none; margin: 12px 0; }
+  .task-plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 2px solid #a7f3d0; border-radius: 12px; margin-bottom: 8px; background: #f0fdf4; font-size: 0.9rem; font-weight: 600; color: var(--green-dark); }
+  .task-plan-item .tpi-days { background: var(--green); color: white; border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; font-weight: 800; min-width: 60px; text-align: center; }
+  .days-input { width: 60px; padding: 8px 10px; border: 2px solid #a7f3d0; border-radius: 8px; font-size: 0.9rem; font-weight: 700; text-align: center; color: var(--green-dark); }
+  .days-input:focus { border-color: var(--green); outline: none; background: white; }
+  .countdown-result { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; margin-top: 12px; display: none; }
+  .countdown-result.show { display: block; }
+  .countdown-result.ok { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+  .countdown-result.nope { background: #fff7ed; color: #92400e; border: 2px solid #fcd34d; }
+
+  /* QUIZ */
+  .quiz-question { background: white; border: 2px solid #a7f3d0; border-radius: 18px; padding: 22px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(5,150,105,0.07); }
+  .quiz-q-num { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #6ee7b7; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .quiz-q-text { font-size: 1.05rem; font-weight: 700; color: var(--green-dark); margin-bottom: 16px; line-height: 1.55; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt { padding: 13px 18px; border: 2.5px solid #a7f3d0; border-radius: 12px; font-size: 0.95rem; font-weight: 600; color: var(--green-dark); background: white; cursor: pointer; text-align: left; transition: all 0.18s; display: flex; align-items: center; gap: 10px; }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--green); background: var(--green-light); transform: translateX(4px); }
+  .quiz-opt.correct { border-color: #10b981; background: #d1fae5; color: #065f46; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fee2e2; color: #991b1b; }
+  .quiz-opt .opt-letter { width: 26px; height: 26px; border-radius: 50%; background: #a7f3d0; color: #065f46; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .quiz-opt.correct .opt-letter { background: #10b981; color: white; }
+  .quiz-opt.wrong .opt-letter { background: var(--red); color: white; }
+  .quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #d1fae5; color: #065f46; }
+  .quiz-feedback.nope { background: #fee2e2; color: #991b1b; }
+
+  .final-screen { text-align: center; padding: 32px 24px; }
+  .final-screen .trophy { font-size: 72px; display: block; margin-bottom: 16px; animation: bounce 0.6s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .final-screen h2 { font-size: 1.8rem; font-weight: 900; color: var(--green-dark); margin-bottom: 10px; }
+  .score-circle { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; color: white; box-shadow: 0 8px 24px rgba(5,150,105,0.4); }
+  .sc-num { font-size: 2.2rem; font-weight: 900; }
+  .sc-label { font-size: 11px; font-weight: 700; opacity: 0.8; }
+  .tips-list { text-align: left; margin: 20px 0; }
+  .tip-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--green-light); border-radius: 12px; margin-bottom: 10px; }
+  .tip-item .ti { font-size: 1.3rem; flex-shrink: 0; }
+  .tip-item p { font-size: 0.9rem; color: var(--green-dark); line-height: 1.55; }
+
+  @media (max-width: 500px) { .week-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 360px) { .week-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="game-header">
+  <span class="emoji-big">📅</span>
+  <h1>Aikataulut</h1>
+  <p>Suunnittele, järjestä ja ota kontrolli omasta ajastasi!</p>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar"></div>
+</div>
+<div class="progress-label" id="progressLabel">Osio 1 / 4</div>
+
+<div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
+  <div class="step-dot active" role="tab" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 3: Viikkokalenteri" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 4: Projektin suunnittelu" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+</div>
+
+<!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
+<section class="screen active" id="screen-0" aria-labelledby="s0-title">
+  <div class="teacher-box">
+    <div class="teacher-label">🎤 Opettajan puhe</div>
+    <h2 id="s0-title">Aikataulu on kuin kartta – ilman sitä eksyt!</h2>
+    <p>Aikataulu ei ole vankilankalteri vaan vapauslaitos. Kun tiedät mitä pitää tehdä ja milloin, voit rentoutua huoletta vapaa-ajalla – sinun ei tarvitse stressata tekemättömistä töistä!</p>
+    <p>🔑 <strong>Tärkein vinkki:</strong> Laske <em>taaksepäin</em> koepäivästä. Jos koe on perjantaina, milloin teet viimeisen kertauksen? Torstaina! Milloin harjoittelet tehtäviä? Keskiviikkona! Ja niin edelleen – älä jätä kaikkea viimeiseen iltaan!</p>
+  </div>
+
+  <p style="font-size:1rem;font-weight:800;color:#064e3b;margin-bottom:12px;">📋 Näin jaetaan iso projekti osiin:</p>
+  <div class="project-steps">
+    <div class="proj-step ps6"><span class="ps-num">6</span>Palautus (määräpäivä)</div>
+    <div class="proj-step ps5"><span class="ps-num">5</span>Viimeistely ja tarkistus</div>
+    <div class="proj-step ps4"><span class="ps-num">4</span>Luonnosten kirjoittaminen</div>
+    <div class="proj-step ps3"><span class="ps-num">3</span>Sisällön organisoiminen</div>
+    <div class="proj-step ps2"><span class="ps-num">2</span>Taustan selvittäminen</div>
+    <div class="proj-step ps1"><span class="ps-num">1</span>Aivoriihi – ideointi (aloita tästä!)</div>
+  </div>
+  <p style="font-size:0.85rem;color:#059669;margin-top:12px;text-align:center;font-style:italic;">↑ Suunnittele taaksepäin – aloita määräpäivästä!</p>
+
+  <button class="btn btn-full" onclick="nextScreen()" style="margin-top:20px;">
+    Rakenna viikkoaikataulu! 📅
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: TOIMINNALLINEN TEHTÄVÄ – IHMISAIKAJANA ═══════════ -->
+<section class="screen" id="screen-toiminnallinen-aikataulu" aria-labelledby="s-toim-aika-title">
+  <div class="teacher-box" style="background: linear-gradient(135deg, #064e3b, #ea580c);">
+    <div class="teacher-label">🏃 Toiminnallinen tehtävä</div>
+    <h2 id="s-toim-aika-title">Ihmisaikajana — sinä olet tehtäväkortti!</h2>
+    <p>Tämä tehtävä tehdään <strong>lattialla liikkuen</strong>. Jokainen teistä on osa projektia!</p>
+  </div>
+
+  <div style="background: white; border: 2px solid #a7f3d0; border-radius: 18px; padding: 22px; margin-bottom: 16px;">
+    <p style="font-size: 1rem; font-weight: 800; color: #064e3b; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span>🎯</span> Näin tehdään:
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
+          Opettaja tekee <strong>lattialle aikajanan</strong> teipillä tai merkitsemällä: päivät 1–10 (tai Ma–Pe).
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
+          Jokaiselle oppilaalle annetaan <strong>tehtäväkortti</strong>: Aivoriihi 💡 / Tutkimustyö 🔍 / Luonnokset ✏️ / Viimeistely ✨ / Palautus 📬
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
+          Jokainen <strong>asettuu aikajanalle</strong> kohtaan, johon oma vaihe kuuluu. Ensin vapaasti — sitten tarkistetaan yhdessä!
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
+          Opettaja sanoo: <strong>"Palautuspäivä on päivä 10!"</strong> — Ryhmä tarkistaa: mahtuuko kaikki? Onko puskuria? Siirretään tarvittaessa!
+        </div>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: flex-start;">
+        <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
+          Opettaja lisää yllätyksen: <strong>"Päivä 7 sairastuit!"</strong> — Mitä tapahtuu aikataululle? Siirretäänkö vaiheita?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPETTAJAN MATERIAALI – TOGGLE -->
+  <div style="margin-bottom: 16px;">
+    <button
+      onclick="toggleOpettajaAikataulu(this)"
+      aria-expanded="false"
+      aria-controls="opettaja-aikataulu-sisalto"
+      style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:11px 18px; background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:600; color:#475569; text-align:left; transition:background 0.18s;"
+      onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"
+    >
+      <span style="display:flex; align-items:center; gap:10px;">
+        <span aria-hidden="true">🖨️</span>
+        <span>Opettajan materiaali – tehtäväkortit ja tulostus</span>
+      </span>
+      <span aria-hidden="true" style="font-size:0.8rem; color:#94a3b8; transition:transform 0.22s;" class="op-nuoli-aika">▼</span>
+    </button>
+    <div id="opettaja-aikataulu-sisalto" hidden style="background:#f8fafc; border:1.5px solid #cbd5e1; border-top:none; border-radius:0 0 10px 10px; padding:18px 20px;">
+      <p style="font-size:0.85rem; color:#475569; margin-bottom:14px; line-height:1.6;">
+        Tulosta viisi tehtäväkorttia (yksi per oppilas tai pari). Oppilaat saavat kortit käteen ja asettuvat aikajanalle niiden mukaan.
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+        <div style="background: #ec4899; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">💡 Aivoriihi<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 1–2</span></div>
+        <div style="background: #f59e0b; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">🔍 Tutkimustyö<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 2–4</span></div>
+        <div style="background: #3b82f6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">✏️ Luonnosten kirjoitus<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 4–7</span></div>
+        <div style="background: #8b5cf6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">✨ Viimeistely<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 7–9</span></div>
+        <div style="background: #059669; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center; grid-column: span 2;">📬 PALAUTUS — Päivä 10!</div>
+      </div>
+      <a href="aikataulu_tehtavakortit.html" target="_blank"
+        style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; background:#059669; color:white; border-radius:8px; text-decoration:none; font-size:0.88rem; font-weight:700; transition:background 0.18s;"
+        onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+        <span aria-hidden="true">🖨️</span> Avaa tulostettavat tehtäväkortit
+      </a>
+      <p style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">Avautuu uuteen välilehteen · Tulosta A4, leikkaa kortit irti</p>
+    </div>
+  </div>
+
+  <div style="background: #ecfdf5; border: 2px solid #6ee7b7; border-radius: 14px; padding: 14px 18px; margin-bottom: 16px;">
+    <p style="font-size: 0.85rem; font-weight: 800; color: #065f46; margin-bottom: 8px;">💬 Purku — keskustelkaa lopuksi:</p>
+    <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px;">
+      <li style="font-size: 0.85rem; color: #065f46; display: flex; gap: 8px;"><span>🤔</span> Oliko aikataulussa tarpeeksi puskuria?</li>
+      <li style="font-size: 0.85rem; color: #065f46; display: flex; gap: 8px;"><span>📅</span> Mistä kohdasta laskettiin taaksepäin — ja miksi se on järkevää?</li>
+      <li style="font-size: 0.85rem; color: #065f46; display: flex; gap: 8px;"><span>💡</span> Mitä olisi tapahtunut, jos olisimme aloittaneet liian myöhään?</li>
+    </ul>
+  </div>
+
+  <div style="background: white; border: 2px solid #a7f3d0; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+    <span style="font-size: 1.5rem;">⏱</span>
+    <div>
+      <p style="font-size: 0.85rem; font-weight: 800; color: #064e3b; margin-bottom: 2px;">Aika: 10–12 minuuttia</p>
+      <p style="font-size: 0.82rem; color: #6b7280;">Koko luokka · Luokkahuone tai käytävä</p>
+    </div>
+  </div>
+
+  <button class="btn btn-full" onclick="nextScreen()">
+    ✅ Tehty — rakennetaan digitaalinen kalenteri! 📅
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN 1: VIIKKOKALENTERI ═══════════ -->
+<section class="screen" id="screen-1" aria-labelledby="s1-title">
+  <div class="section-title">
+    <span>📅</span> <span id="s1-title">Rakenna viikkosi!</span>
+    <span class="section-badge">Vaihe 2</span>
+  </div>
+  <p style="color:#065f46; margin-bottom:16px; font-size:0.95rem;">Vedä tehtävät kalenteriin. Yritä pitää tasapaino: ei liikaa samana päivänä! Napauta + lisätäksesi tehtävän päivälle.</p>
+
+  <div class="task-pool" aria-label="Siirrettävät tehtävät">
+    <div class="task-pool-label">🎒 Tehtäväpankki – vedä kalenteriin</div>
+    <div class="task-chips" id="taskPool"></div>
+  </div>
+
+  <div class="week-grid" id="weekGrid" role="grid" aria-label="Viikkokalenteri"></div>
+
+  <div class="balance-bar-wrap" style="margin-top:20px;" aria-label="Aikatasapaino">
+    <p style="font-size:0.9rem;font-weight:800;color:#064e3b;margin-bottom:12px;">⚖️ Työtaakka per päivä:</p>
+    <div id="balanceBars"></div>
+  </div>
+
+  <div id="calendarFeedback" style="display:none;margin-top:12px;"></div>
+  <button class="btn btn-full" onclick="checkCalendar()" style="margin-top:16px;">✔ Tarkista aikataulu</button>
+  <button class="btn btn-outline btn-full" onclick="nextScreen()" id="calNextBtn" style="display:none;margin-top:10px;">Jatka ▶</button>
+</section>
+
+<!-- ═══════════ SCREEN 2: KOKEESEEN LUKEMINEN ═══════════ -->
+<section class="screen" id="screen-2" aria-labelledby="s2-title">
+  <div class="section-title">
+    <span>📖</span> <span id="s2-title">Suunnittele kokeeseen lukeminen</span>
+    <span class="section-badge">Vaihe 3</span>
+  </div>
+  <p style="color:#065f46; margin-bottom:16px; font-size:0.95rem;">Matematiikan koe on <strong style="color:#dc2626;">ensi perjantaina</strong>! Sinulla on 10 päivää aikaa. Kuinka jaat ajan eri lukemisvaiheisiin? Muista jättää 1 päivä puskuria!</p>
+
+  <div class="countdown-game">
+    <div class="deadline-display">
+      <div class="dl-label">📌 Koepäivä</div>
+      <div class="dl-date">Perjantai – 10 päivän päästä</div>
+    </div>
+    <p style="font-size:0.9rem;font-weight:700;color:#064e3b;margin-bottom:14px;">Montako päivää annat kullekin vaiheelle? (Yhteensä max 9 päivää – 1 päivä puskuria!)</p>
+    <ul class="task-list-plan" id="planList"></ul>
+    <div id="totalDaysDisplay" style="text-align:center;font-size:1.1rem;font-weight:800;color:#064e3b;margin:12px 0;">Yhteensä: <span id="totalDays">0</span> / 9 päivää</div>
+    <button class="btn btn-full" onclick="checkPlan()" style="margin-top:8px;">✔ Tarkista suunnitelma</button>
+    <div class="countdown-result" id="planResult"></div>
+    <button class="btn btn-outline btn-full" onclick="nextScreen()" id="planNextBtn" style="display:none;margin-top:10px;">Jatka tietovisaan ▶</button>
+  </div>
+</section>
+
+<!-- ═══════════ SCREEN 3: TIETOVISA ═══════════ -->
+<section class="screen" id="screen-3" aria-labelledby="s3-title">
+  <div class="section-title">
+    <span>❓</span> <span id="s3-title">Tietovisa – aikataulujen salaisuudet</span>
+    <span class="section-badge">Vaihe 4</span>
+  </div>
+  <div id="quizContainer"></div>
+  <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">🏁 Katso tulokset!</button>
+</section>
+
+<!-- ═══════════ SCREEN 4: LOPPUTULOS ═══════════ -->
+<section class="screen" id="screen-4" aria-labelledby="s4-title">
+  <div class="final-screen">
+    <span class="trophy">📅</span>
+    <h2 id="s4-title">Olet aikatauluguru!</h2>
+    <p style="color:#065f46;font-size:1rem;">Olet suorittanut aikataulutehtävän!</p>
+    <div class="score-circle">
+      <span class="sc-num" id="finalScore">0/5</span>
+      <span class="sc-label">oikein</span>
+    </div>
+    <div class="tips-list">
+      <div class="tip-item"><span class="ti">📅</span><p><strong>Tarkista aikataulu joka viikko!</strong> Aikataulun täytyy olla elävä – päivitä se aina kun suunnitelmat muuttuvat.</p></div>
+      <div class="tip-item"><span class="ti">⏰</span><p><strong>Aseta hälytyksiä!</strong> Puhelimen kalenteri ja hälytykset muistuttavat tärkeistä päivämääristä.</p></div>
+      <div class="tip-item"><span class="ti">🔙</span><p><strong>Laske taaksepäin!</strong> Aloita aina suunnittelu määräpäivästä – ei aloituspäivästä.</p></div>
+      <div class="tip-item"><span class="ti">🛌</span><p><strong>Muista lepo!</strong> Hyvä aikataulu sisältää myös vapaa-aikaa. Väsynyt aivot ei opi!</p></div>
+    </div>
+    <button class="btn btn-full" onclick="restartGame()">🔄 Aloita alusta</button>
+  </div>
+</section>
+
+<script>
+let currentScreen = 0;
+const totalScreens = 5;
+let quizScore = 0;
+let quizAnswered = 0;
+
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach((s,i) => s.classList.toggle('active', i===n));
+  document.querySelectorAll('.step-dot').forEach((d,i) => { d.classList.remove('active','done'); if(i===n)d.classList.add('active'); else if(i<n)d.classList.add('done'); });
+  currentScreen = n;
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===2&&!calInit) initCalendar();
+  if(n===3&&!planInit) initPlan();
+  if(n===4&&!quizInitialized) initQuiz();
+}
+function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
+function updateProgress() {
+  document.getElementById('progressBar').style.width=(currentScreen/totalScreens*100)+'%';
+  document.getElementById('progressLabel').textContent='Osio '+(currentScreen+1)+' / '+totalScreens;
+}
+
+// ── CALENDAR DRAG & DROP ──
+let calInit = false;
+const tasks = [
+  { id:'math', label:'📐 Matematiikka', cls:'tc-math' },
+  { id:'hist', label:'📜 Historia', cls:'tc-hist' },
+  { id:'sport', label:'⚽ Liikunta', cls:'tc-sport' },
+  { id:'eng', label:'🌍 Englanti', cls:'tc-eng' },
+  { id:'bio', label:'🌿 Biologia', cls:'tc-bio' },
+  { id:'rest', label:'😴 Lepo', cls:'tc-rest' },
+  { id:'music', label:'🎵 Musiikki', cls:'tc-music' },
+  { id:'free', label:'🎮 Vapaa-aika', cls:'tc-free' },
+];
+const days = ['Ma','Ti','Ke','To','Pe'];
+let calState = { Ma:[], Ti:[], Ke:[], To:[], Pe:[] };
+let draggingTask = null;
+
+function initCalendar() {
+  calInit = true;
+  renderPool();
+  renderWeekGrid();
+  renderBalanceBars();
+}
+
+function renderPool() {
+  const pool = document.getElementById('taskPool');
+  pool.innerHTML = '';
+  tasks.forEach(t => {
+    // Check if all placed (simple: show all as re-draggable)
+    const chip = document.createElement('div');
+    chip.className = 'task-chip '+t.cls;
+    chip.textContent = t.label;
+    chip.draggable = true;
+    chip.setAttribute('tabindex','0');
+    chip.setAttribute('role','button');
+    chip.setAttribute('aria-label', t.label+' – vedä kalenteriin');
+    chip.dataset.taskId = t.id;
+    chip.addEventListener('dragstart', e => { draggingTask = t; chip.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+    chip.addEventListener('keydown', e => { if(e.key==='Enter') { addToFirstEmpty(t); } });
+    pool.appendChild(chip);
+  });
+}
+
+function addToFirstEmpty(t) {
+  for(const day of days) {
+    if(calState[day].length < 3) {
+      calState[day].push(t);
+      renderWeekGrid();
+      renderBalanceBars();
+      return;
+    }
+  }
+  alert('Kalenteri on täynnä!');
+}
+
+function renderWeekGrid() {
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+  days.forEach(day => {
+    const col = document.createElement('div');
+    col.className = 'day-col';
+    col.setAttribute('role','gridcell');
+    col.setAttribute('aria-label', day+'-päivä');
+    col.innerHTML = `<div class="day-header">${day}</div>`;
+    const slots = document.createElement('div');
+    slots.className = 'day-slots';
+    // 3 slots per day
+    for(let si=0; si<3; si++) {
+      const slot = document.createElement('div');
+      slot.className = 'day-slot';
+      if(calState[day][si]) {
+        const t = calState[day][si];
+        slot.className = 'day-slot has-task';
+        slot.innerHTML = `<div class="placed-chip ${t.cls}" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+          <span style="flex:1;font-size:0.68rem;">${t.label}</span>
+          <button class="slot-remove" onclick="removeTask('${day}',${si})" aria-label="${t.label} poista ${day}-päivästä">✕</button>
+        </div>`;
+      } else {
+        slot.textContent = '+ lisää';
+        slot.style.cursor = 'pointer';
+        slot.onclick = () => openAddMenu(day, si, slot);
+        slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+        slot.addEventListener('drop', e => { e.preventDefault(); slot.classList.remove('drag-over'); if(draggingTask && !calState[day][si]) { calState[day][si] = draggingTask; draggingTask = null; renderWeekGrid(); renderBalanceBars(); } });
+      }
+      slots.appendChild(slot);
+    }
+    col.appendChild(slots);
+    grid.appendChild(col);
+  });
+}
+
+function openAddMenu(day, si, slotEl) {
+  // Simple prompt-free: pick first available task
+  const placed = Object.values(calState).flat().map(t=>t?t.id:'');
+  const avail = tasks.filter(t => !placed.includes(t.id) || true); // allow re-use
+  if(avail.length === 0) return;
+  // Cycle through tasks on click
+  const idx = Math.floor(Math.random()*avail.length);
+  calState[day][si] = avail[idx];
+  renderWeekGrid();
+  renderBalanceBars();
+}
+
+function removeTask(day, si) {
+  calState[day].splice(si,1);
+  renderWeekGrid();
+  renderBalanceBars();
+}
+
+// Kuormapaino per aktiviteetti:
+// 0 = palautuminen (Lepo, Vapaa-aika)
+// 1 = kevyt (Liikunta, Musiikki)
+// 2 = kouluaine (Matematiikka, Historia, Englanti, Biologia)
+const taskWeight = { math:2, hist:2, eng:2, bio:2, sport:1, music:1, rest:0, free:0 };
+
+function getDayWeight(day) {
+  return calState[day].filter(Boolean).reduce((sum, t) => sum + (taskWeight[t.id] || 1), 0);
+}
+
+function renderBalanceBars() {
+  const wrap = document.getElementById('balanceBars');
+  wrap.innerHTML = '';
+  const maxSlots = 3;
+  days.forEach(day => {
+    const items = calState[day].filter(Boolean);
+    const count = items.length;
+    const weight = getDayWeight(day);
+    const pct = (count/maxSlots)*100;
+    // Väri perustuu kuormapainoon, ei pelkkään määrään:
+    // 0–2 = vihreä (kevyt), 3–4 = keltainen (sopiva täynnä), 5+ = punainen (liikaa)
+    let color = '#10b981';   // vihreä
+    if(weight >= 5) color = '#ef4444';      // punainen
+    else if(weight >= 3) color = '#f59e0b'; // keltainen
+    const label = weight === 0 ? 'Lepo 😴' : weight <= 2 ? 'Sopiva ✅' : weight <= 4 ? 'Melkein täynnä ⚠️' : 'Liikaa! 🔴';
+    const row = document.createElement('div');
+    row.className = 'balance-row';
+    row.innerHTML = `
+      <span class="balance-label">${day}:</span>
+      <div class="balance-track" role="progressbar" aria-valuenow="${count}" aria-valuemax="${maxSlots}" aria-label="${day}: ${count} aktiviteettia, kuorma ${label}">
+        <div class="balance-fill" style="width:${pct}%;background:${color};"></div>
+      </div>
+      <span class="balance-count" style="color:${color};">${count}/3</span>`;
+    wrap.appendChild(row);
+  });
+}
+
+function checkCalendar() {
+  const total = Object.values(calState).flat().filter(Boolean).length;
+  const fb = document.getElementById('calendarFeedback');
+  fb.style.display = 'block';
+  const hasRest = Object.values(calState).flat().some(t=>t&&t.id==='rest');
+  const hasFree = Object.values(calState).flat().some(t=>t&&t.id==='free');
+  // Ylikuormitettu = painoarvo >= 5 (esim. kolme kouluainetta = 6, tai kaksi kouluainetta + liikunta = 5)
+  const overloaded = days.some(d => getDayWeight(d) >= 5);
+
+  if(total < 4) {
+    fb.innerHTML = `<div style="background:#fff7ed;border:2px solid #fcd34d;border-radius:14px;padding:16px;color:#92400e;font-weight:600;">⚠️ Lisää vielä tehtäviä kalenteriin! Nyt sinulla on ${total} tehtävää.</div>`;
+    return;
+  }
+  let msg = '';
+  let type = 'ok';
+  if(!hasRest && !hasFree) {
+    msg = '⚠️ Muistit laittaa töitä, mutta unohdit levon ja vapaa-ajan! Hyvä aikataulu sisältää molempia.';
+    type = 'warn';
+  } else if(overloaded) {
+    msg = '💡 Jokin päivä on todella täynnä! Harkitse tehtävien siirtämistä toiselle päivälle.';
+    type = 'warn';
+  } else {
+    msg = '🎉 Hyvin tehty! Sinulla on tasapainoinen viikko – töitä ja lepoa sopivasti!';
+  }
+  fb.innerHTML = `<div style="background:${type==='ok'?'#d1fae5':'#fff7ed'};border:2px solid ${type==='ok'?'#6ee7b7':'#fcd34d'};border-radius:14px;padding:16px;color:${type==='ok'?'#065f46':'#92400e'};font-weight:600;">${msg}</div>`;
+  document.getElementById('calNextBtn').style.display = 'block';
+}
+
+// ── PLAN GAME ──
+let planInit = false;
+const planTasks = [
+  { label: '📋 Käy läpi muistiinpanot ja kirja', id:'muistiinpanot' },
+  { label: '🧠 Tee tiivistelmä tärkeimmistä asioista', id:'tiivistelma' },
+  { label: '✏️ Harjoittele tehtäviä ja testaa itsesi', id:'harjoittelu' },
+  { label: '🔁 Viimeinen kertaus – tarkista epäselvät kohdat', id:'kertaus' },
+];
+let planDays = { muistiinpanot:1, tiivistelma:1, harjoittelu:1, kertaus:1 };
+
+function initPlan() {
+  planInit = true;
+  renderPlanList();
+}
+
+function renderPlanList() {
+  const list = document.getElementById('planList');
+  list.innerHTML = '';
+  planTasks.forEach(t => {
+    const li = document.createElement('li');
+    li.className = 'task-plan-item';
+    li.innerHTML = `
+      <span style="flex:1;">${t.label}</span>
+      <input type="number" class="days-input" value="${planDays[t.id]}" min="1" max="5"
+        aria-label="${t.label}: päivien määrä"
+        onchange="updateDays('${t.id}', this.value)" oninput="updateDays('${t.id}', this.value)"/>
+      <span style="font-size:0.8rem;color:#059669;font-weight:700;">pv</span>`;
+    list.appendChild(li);
+  });
+  updateTotalDisplay();
+}
+
+function updateDays(id, val) {
+  planDays[id] = Math.max(1, Math.min(5, parseInt(val)||1));
+  updateTotalDisplay();
+}
+
+function updateTotalDisplay() {
+  const total = Object.values(planDays).reduce((a,b)=>a+b,0);
+  document.getElementById('totalDays').textContent = total;
+  const el = document.getElementById('totalDays').parentElement;
+  if(total <= 9) el.style.color = '#059669';
+  else el.style.color = '#dc2626';
+}
+
+function checkPlan() {
+  const total = Object.values(planDays).reduce((a,b)=>a+b,0);
+  const res = document.getElementById('planResult');
+  if(total > 9) {
+    res.className = 'countdown-result nope show';
+    res.innerHTML = `❌ <strong>Liian paljon!</strong> Yhteensä ${total} päivää, mutta käytössä on vain 9 (1 päivä puskuria). Vähennä jostain vaiheesta!`;
+  } else if(total < 5) {
+    res.className = 'countdown-result nope show';
+    res.innerHTML = `⚠️ <strong>Ehkä liian vähän.</strong> Vain ${total} päivää – onko se tarpeeksi? Kokeeseen lukeminen vie aikaa, varsinkin harjoitustehtävät!`;
+  } else {
+    res.className = 'countdown-result ok show';
+    res.innerHTML = `✅ <strong>Hyvä lukusuunnitelma!</strong> ${total} päivää valmistautumista + 1 päivä puskuria = täydellinen!<br><br>
+      <strong>Muista:</strong> Laske taaksepäin koepäivästä – niin löydät milloin pitää aloittaa!`;
+    document.getElementById('planNextBtn').style.display = 'block';
+  }
+}
+
+// ── QUIZ ──
+let quizInitialized = false;
+const quizData = [
+  {
+    q: "Miksi kannattaa suunnitella aikataulu taaksepäin – aloittaen määräpäivästä?",
+    opts: ["Se on helpompaa", "Näet selkeästi paljonko aikaa on käytettävissä ja milloin pitää aloittaa", "Opettaja haluaa niin", "Se on perinne"],
+    ans: 1,
+    feedback: "Juuri niin! Kun aloitat määräpäivästä ja lasket taaksepäin, tiedät tarkalleen milloin jokainen vaihe pitää aloittaa. Yllätyksiä ei tule!"
+  },
+  {
+    q: "Kuinka usein aikataulu kannattaa tarkistaa?",
+    opts: ["Kerran kuussa", "Kerran vuodessa", "Joka viikko", "Vain kun jotain menee pieleen"],
+    ans: 2,
+    feedback: "Oikein! Aikataulu on elävä dokumentti – se pitää tarkistaa viikoittain ja päivittää kun suunnitelmat muuttuvat tai tulee yllätyksiä."
+  },
+  {
+    q: "Mikä on 'puskuri' aikataulusuunnittelussa?",
+    opts: ["Liian tiukka aikataulu", "Ylimääräinen aika odottamattomien tilanteiden varalle", "Täysin vapaa aika viikonloppuna", "Ajan tuhlaamista"],
+    ans: 1,
+    feedback: "Kyllä! Puskuri on varaaikaa. Jos jokin vie odotettua kauemmin tai sairastut, puskuri pelastaa tilanteen. Aina kannattaa jättää hieman ilmaa!"
+  },
+  {
+    q: "Miten iso tehtävä kannattaa jakaa osiin?",
+    opts: ["Tehdään kaikki kerralla viimeisenä yönä", "Jaetaan pieniin vaiheisiin ja annetaan jokaiselle oma päivämäärä", "Pyydetään kaveria tekemään se", "Unohdetaan koko juttu"],
+    ans: 1,
+    feedback: "Hienoa! Pienissä paloissa tehtävä ei tunnu enää niin isolta. Jokainen vaihe tuntuu saavutettavalta, ja edistyminen motivoi jatkamaan!"
+  },
+  {
+    q: "Miksi lepo ja vapaa-aika pitää sisällyttää aikatauluun?",
+    opts: ["Ei pidä – kaikki aika pitää käyttää opiskeluun", "Väsynyt aivot ei opi hyvin – lepo on osa oppimista", "Koska vanhemmat sanovat niin", "Lepo on vain laiskottelua"],
+    ans: 1,
+    feedback: "Täysin oikein! Lepo ja vapaa-aika ovat osa oppimista. Aivot tarvitsevat taukoja tallentaakseen opitun ja palautuakseen. Väsyneenä opiskelu on tehottomampaa."
+  }
+];
+
+function initQuiz() {
+  quizInitialized = true;
+  quizScore = 0;
+  quizAnswered = 0;
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = `
+      <div class="quiz-q-num">Kysymys ${qi+1} / ${quizData.length}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options" role="group" aria-label="Vastausvaihtoehdot">
+        ${q.opts.map((opt,oi)=>`
+          <button class="quiz-opt" onclick="answerQuiz(${qi},${oi})" aria-label="${['A','B','C','D'][oi]}. ${opt}">
+            <span class="opt-letter" aria-hidden="true">${['A','B','C','D'][oi]}</span>
+            ${opt}
+          </button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${qi}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function answerQuiz(qi, oi) {
+  const q = quizData[qi];
+  const qDiv = document.querySelectorAll('.quiz-question')[qi];
+  const opts = qDiv.querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.setAttribute('disabled','true'));
+  const fb = document.getElementById('qfb-'+qi);
+  if(oi===q.ans){ opts[oi].classList.add('correct'); fb.className='quiz-feedback ok show'; fb.textContent='✅ '+q.feedback; quizScore++; }
+  else { opts[oi].classList.add('wrong'); opts[q.ans].classList.add('correct'); fb.className='quiz-feedback nope show'; fb.textContent='❌ Ei ihan oikein. '+q.feedback; }
+  quizAnswered++;
+  if(quizAnswered===quizData.length) document.getElementById('quizDoneBtn').style.display='block';
+}
+
+function showFinal() {
+  document.getElementById('finalScore').textContent=quizScore+' / '+quizData.length;
+  goToScreen(5);
+}
+
+function restartGame() {
+  calInit=false; planInit=false; quizInitialized=false;
+  quizScore=0; quizAnswered=0;
+  calState={Ma:[],Ti:[],Ke:[],To:[],Pe:[]};
+  draggingTask=null;
+  planDays={muistiinpanot:1,tiivistelma:1,harjoittelu:1,kertaus:1};
+  document.getElementById('calendarFeedback').style.display='none';
+  document.getElementById('calNextBtn').style.display='none';
+  document.getElementById('planNextBtn').style.display='none';
+  document.getElementById('planResult').className='countdown-result';
+  document.getElementById('quizDoneBtn').style.display='none';
+  goToScreen(0);
+}
+
+updateProgress();
+
+function toggleOpettajaAikataulu(btn) {
+  var sisalto = document.getElementById('opettaja-aikataulu-sisalto');
+  var auki = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+  var nuoli = btn.querySelector('.op-nuoli-aika');
+  if (nuoli) nuoli.style.transform = auki ? '' : 'rotate(180deg)';
+  if (auki) {
+    sisalto.hidden = true;
+  } else {
+    sisalto.hidden = false;
+    sisalto.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+</script>
+</body>
+</html>
