@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Motivaatiohuutokauppa – opettajan materiaali</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --violetti: #7c3aed;
+      --violetti-tumma: #4c1d95;
+      --violetti-syvä: #3b0764;
+      --violetti-vaalea: #ede9fe;
+      --violetti-reuna: #e9d5ff;
+      --violetti-bg: #faf5ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f3f0ff;
+      color: #1e1b4b;
+      padding: 32px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Otsikkoalue ── */
+    .page-header {
+      background: linear-gradient(135deg, #4c1d95, #7c3aed);
+      border-radius: 20px;
+      padding: 32px 36px;
+      color: white;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 28px rgba(124,58,237,0.25);
+    }
+    .page-header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .page-header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── Meta-pilleri ── */
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 999px;
+    }
+
+    /* ── Ohje-osio ── */
+    .ohje-osio {
+      background: white;
+      border: 1.5px solid var(--violetti-reuna);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.07);
+    }
+    .ohje-osio h2 {
+      color: var(--violetti-tumma);
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ohje-osio h2 .ikoni {
+      background: var(--violetti-vaalea);
+      color: var(--violetti);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Vaihelista ── */
+    .vaihelista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .vaihe {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--violetti-bg);
+      border: 1px solid var(--violetti-reuna);
+      border-radius: 12px;
+      padding: 14px 18px;
+    }
+    .vaihe-numero {
+      background: var(--violetti);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .vaihe-teksti strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--violetti-syvä);
+      margin-bottom: 3px;
+    }
+    .vaihe-teksti span {
+      font-size: 0.83rem;
+      color: #6b7280;
+      line-height: 1.55;
+    }
+
+    /* ── Vinkki-boksi ── */
+    .vinkki {
+      margin-top: 18px;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #78350f;
+      line-height: 1.55;
+    }
+    .vinkki strong { color: #92400e; }
+
+    /* ── Tulosta-nappi ── */
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--violetti);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 28px;
+      text-decoration: none;
+    }
+    .print-btn:hover { background: #6d28d9; }
+
+    /* ── Kortit-otsikko ── */
+    .kortit-otsikko {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--violetti);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .kortit-otsikko::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--violetti-reuna);
+    }
+
+    /* ── Korttiruudukko ── */
+    .korttiruudukko {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    /* ── Yksittäinen ongelmakortti ── */
+    .ongelmakortti {
+      background: white;
+      border: 2px solid var(--violetti-reuna);
+      border-radius: 16px;
+      padding: 22px 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 3px 12px rgba(124,58,237,0.08);
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .kortti-yläosa {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .kortti-numero {
+      background: linear-gradient(135deg, #4c1d95, #7c3aed);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .kortti-ongelma {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--violetti-syvä);
+      line-height: 1.35;
+    }
+    .kortti-kysymys {
+      font-size: 0.82rem;
+      color: #6b7280;
+      font-style: italic;
+      line-height: 1.5;
+      padding: 8px 12px;
+      background: var(--violetti-bg);
+      border-left: 3px solid var(--violetti);
+      border-radius: 0 8px 8px 0;
+    }
+    .kortti-viivat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .kortti-viivaLabel {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--violetti);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    .viiva {
+      height: 28px;
+      border-bottom: 1.5px dashed #d8b4fe;
+      width: 100%;
+    }
+
+    /* ── Purku-osio ── */
+    .purku-osio {
+      background: white;
+      border: 1.5px solid var(--violetti-reuna);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-top: 28px;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.07);
+    }
+    .purku-osio h2 {
+      color: var(--violetti-tumma);
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .purku-lista {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .purku-lista li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #374151;
+      line-height: 1.55;
+    }
+    .purku-lista li::before {
+      content: '→';
+      color: var(--violetti);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Tulostustyyli ── */
+    @media print {
+      body {
+        background: white;
+        padding: 12px;
+        max-width: 100%;
+      }
+      .page-header, .ohje-osio, .print-btn { display: none; }
+      .kortit-otsikko { margin-top: 0; }
+      .korttiruudukko { gap: 12px; }
+      .ongelmakortti {
+        border: 2px solid #c4b5fd;
+        box-shadow: none;
+      }
+      .purku-osio { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Otsikkoalue ── -->
+  <div class="page-header">
+    <div class="badge">
+      <i class="fa-solid fa-gavel"></i>
+      Selviytymiskeino 2 – Löydä motivaatiosi
+    </div>
+    <h1>Motivaatiohuutokauppa</h1>
+    <p>Pienryhmätehtävä, jossa oppilaat ensin keksivät ratkaisuja motivaatio-ongelmiin, sitten kiertelevät parantamassa toistensa ideoita.</p>
+    <div class="meta-row">
+      <span class="meta-pill"><i class="fa-solid fa-users"></i> Ryhmäkoko: 3–4</span>
+      <span class="meta-pill"><i class="fa-solid fa-clock"></i> 20–25 min</span>
+      <span class="meta-pill"><i class="fa-solid fa-person-walking"></i> Liikkuva tehtävä</span>
+      <span class="meta-pill"><i class="fa-solid fa-layer-group"></i> 6 ongelmakorttia</span>
+    </div>
+  </div>
+
+  <!-- ── Opettajan ohje ── -->
+  <div class="ohje-osio">
+    <h2>
+      <span class="ikoni"><i class="fa-solid fa-clipboard-list"></i></span>
+      Opettajan ohje
+    </h2>
+    <div class="vaihelista">
+      <div class="vaihe">
+        <div class="vaihe-numero">1</div>
+        <div class="vaihe-teksti">
+          <strong>Aloitus (2 min)</strong>
+          <span>Jaa oppilaat 3–4 hengen ryhmiin ja aseta yksi ongelmakortti kunkin ryhmän pöydälle tai kiinnitä seinälle. Jokaisella ryhmällä on oma kortti.</span>
+        </div>
+      </div>
+      <div class="vaihe">
+        <div class="vaihe-numero">2</div>
+        <div class="vaihe-teksti">
+          <strong>Kierros 1 – Oma ratkaisu (3 min)</strong>
+          <span>Ryhmä kirjaa korttiin kaikki omat ideat ja keinot ongelman ratkaisemiseksi. Ei ole vääriä vastauksia — kirjataan kaikki, myös hauskat ideat.</span>
+        </div>
+      </div>
+      <div class="vaihe">
+        <div class="vaihe-numero">3</div>
+        <div class="vaihe-teksti">
+          <strong>Kierrokset 2–4 – Huutokauppa (3 min/kierros)</strong>
+          <span>Opettajan merkistä ryhmät siirtyvät seuraavalle kortille. He lukevat aiemmat ratkaisut ja voivat lisätä uusia ideoita tai parantaa jo kirjattuja. Kierroksia niin monta kuin ryhmiä on.</span>
+        </div>
+      </div>
+      <div class="vaihe">
+        <div class="vaihe-numero">4</div>
+        <div class="vaihe-teksti">
+          <strong>Paluu omalle kortille (2 min)</strong>
+          <span>Ryhmät palaavat alkuperäiselle kortilleen, lukevat kaikki kertyneet ideat ja valitsevat parhaan — tai yhdistelevät useamman idean yhdeksi.</span>
+        </div>
+      </div>
+      <div class="vaihe">
+        <div class="vaihe-numero">5</div>
+        <div class="vaihe-teksti">
+          <strong>Purku (5 min)</strong>
+          <span>Jokainen ryhmä esittelee korttinsa ongelman ja voittajaidean 30 sekunnissa. Opettaja voi koota parhaat keinot taululle.</span>
+        </div>
+      </div>
+    </div>
+    <div class="vinkki">
+      <strong>💡 Vinkki:</strong> Kannusta oppilaita liikkumaan reippaasti kierrosten välillä — tempo pitää energiatason korkeana. Jos ryhmiä on vain 4, jätä kaksi korteista pois tai anna kahdelle ryhmälle sama kortti.
+    </div>
+  </div>
+
+  <!-- ── Tulosta-nappi ── -->
+  <button class="print-btn" onclick="window.print()">
+    <i class="fa-solid fa-print"></i> Tulosta ongelmakorttit
+  </button>
+
+  <!-- ── Ongelmakorttit ── -->
+  <div class="kortit-otsikko">
+    <i class="fa-solid fa-scissors"></i>
+    Leikkaa tai tulosta kortit — yksi per ryhmä
+  </div>
+
+  <div class="korttiruudukko">
+
+    <!-- Kortti 1 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 1</span>
+      </div>
+      <div class="kortti-ongelma">😩 Et jaksa tehdä kotitehtäviä</div>
+      <div class="kortti-kysymys">Miltä tuntuu katsoa pinkaa tekemättömiä tehtäviä? Mitkä keinot voisivat auttaa aloittamaan?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+    <!-- Kortti 2 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 2</span>
+      </div>
+      <div class="kortti-ongelma">🥱 Oppiaine tuntuu täysin turhalta</div>
+      <div class="kortti-kysymys">Miksi pitää opiskella asioita, joilla ei tunnu olevan mitään järkeä? Miten löytää yhteys omaan elämään?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+    <!-- Kortti 3 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 3</span>
+      </div>
+      <div class="kortti-ongelma">📉 Saat huonon arvosanan, vaikka yritit</div>
+      <div class="kortti-kysymys">Kuinka jaksaa yrittää uudelleen, kun pettymys on iso? Mitä sanoisit kaverille samassa tilanteessa?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+    <!-- Kortti 4 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 4</span>
+      </div>
+      <div class="kortti-ongelma">🙈 Kaveri häiritsee — et pysty keskittymään</div>
+      <div class="kortti-kysymys">Miten pitää oma fokus, kun ympäristö häiritsee? Entä jos häiritsijä on paras kaveri?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+    <!-- Kortti 5 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 5</span>
+      </div>
+      <div class="kortti-ongelma">😔 Vertaat itseäsi muihin ja tulee huono olo</div>
+      <div class="kortti-kysymys">Muut tuntuvat osaavan helpommin. Miten löytää oma tahti ja uskoa omaan osaamiseen?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+    <!-- Kortti 6 -->
+    <div class="ongelmakortti">
+      <div class="kortti-yläosa">
+        <span class="kortti-numero">Kortti 6</span>
+      </div>
+      <div class="kortti-ongelma">😴 Aamulla ei yhtään huvita tulla kouluun</div>
+      <div class="kortti-kysymys">Jokin saa kuitenkin nousemaan ylös. Mikä se voisi olla? Miten tehdä koulupäivästä sellainen, jota odottaa?</div>
+      <div class="kortti-viivat">
+        <div class="kortti-viivaLabel">Ratkaisut ja keinot:</div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+        <div class="viiva"></div>
+      </div>
+    </div>
+
+  </div><!-- /korttiruudukko -->
+
+  <!-- ── Purkuvinkit opettajalle ── -->
+  <div class="purku-osio">
+    <h2><i class="fa-solid fa-comments" style="color:var(--violetti);"></i> Purkukysymykset opettajalle</h2>
+    <ul class="purku-lista">
+      <li>Mikä idea yllätti teidät eniten — sellainen, jota ette olisi itse keksitty?</li>
+      <li>Löytyikö jokin keino, joka toistui useammassa kortissa? Mitä se kertoo motivaatiosta?</li>
+      <li>Onko helpompi keksiä ratkaisuja toisen ongelmaan kuin omaan? Miksi?</li>
+      <li>Mikä ero on sisäisellä ja ulkoisella motivaatiolla näissä keinoissa — kuinka moni keksitty idea liittyy kumpaan?</li>
+    </ul>
+  </div>
+
+</body>
+</html>s

@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vahvuushuutokauppa – tulostettava oppilaskortti</title>
+  <style>
+    /* ── Perusasetus ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f0ff;
+      color: #1e1b4b;
+      padding: 24px 20px;
+    }
+
+    /* ── Sivun otsikko (ei tulostu) ── */
+    .sivun-otsikko {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .sivun-otsikko h1 {
+      font-size: 1.4rem;
+      color: #4c1d95;
+      font-weight: 900;
+    }
+    .sivun-otsikko p {
+      font-size: 0.85rem;
+      color: #7c3aed;
+      margin-top: 4px;
+    }
+
+    /* ── Tulosta-nappi (ei tulostu) ── */
+    .tulosta-rivi {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .tulosta-btn {
+      background: #7c3aed;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .tulosta-btn:hover { background: #6d28d9; }
+
+    /* ── Korttiruudukko ── */
+    .kortit-ruudukko {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Yksittäinen ryhmäkortti ── */
+    .ryhmakortti {
+      background: white;
+      border: 2.5px solid #7c3aed;
+      border-radius: 16px;
+      padding: 20px 22px 18px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .kortti-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #e9d5ff;
+    }
+    .kortti-nimi {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #4c1d95;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .kortti-badge {
+      background: #7c3aed;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Budjettipalkki ── */
+    .budjetti-rivi {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ede9fe;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .budjetti-pallot {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .piste-pallo {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #7c3aed;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #4c1d95;
+      flex-shrink: 0;
+    }
+    .budjetti-ohje {
+      font-size: 0.78rem;
+      color: #4c1d95;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ── Vahvuuslista ── */
+    .vahvuuslista-otsikko {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7c3aed;
+      margin-bottom: 10px;
+    }
+
+    .vahvuudet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .vahvuus-rivi {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #faf5ff;
+      border: 1px solid #e9d5ff;
+      border-radius: 8px;
+      padding: 7px 10px;
+    }
+    .vahvuus-ruutu {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #a78bfa;
+      border-radius: 4px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .vahvuus-pisteet {
+      width: 28px;
+      height: 18px;
+      border-bottom: 1.5px solid #a78bfa;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .vahvuus-teksti {
+      font-size: 0.82rem;
+      color: #1e1b4b;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    /* ── Valitut vahvuudet -osio ── */
+    .valitut-osio {
+      background: #fdf2f8;
+      border: 1.5px solid #f9a8d4;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .valitut-otsikko {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #be185d;
+      margin-bottom: 10px;
+    }
+    .valittu-rivi {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .valittu-numero {
+      width: 22px;
+      height: 22px;
+      background: #7c3aed;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .valittu-viiva {
+      flex: 1;
+      border-bottom: 1.5px solid #f9a8d4;
+    }
+    .valittu-pisteet-label {
+      font-size: 0.72rem;
+      color: #be185d;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .valittu-pisteet-viiva {
+      width: 32px;
+      border-bottom: 1.5px solid #f9a8d4;
+    }
+
+    /* ── Ryhmän nimi -kenttä ── */
+    .ryhmanimi-rivi {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .ryhmanimi-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #4c1d95;
+      white-space: nowrap;
+    }
+    .ryhmanimi-viiva {
+      flex: 1;
+      border-bottom: 1.5px solid #c4b5fd;
+    }
+
+    /* ── Ohjeruutu ── */
+    .ohjeruutu {
+      background: #fffbeb;
+      border: 1.5px solid #fcd34d;
+      border-radius: 8px;
+      padding: 9px 12px;
+    }
+    .ohjeruutu p {
+      font-size: 0.76rem;
+      color: #78350f;
+      line-height: 1.5;
+    }
+    .ohjeruutu strong { color: #92400e; }
+
+    /* ── Leikkausviiva ── */
+    .leikkausviiva {
+      border: none;
+      border-top: 2px dashed #c4b5fd;
+      margin: 18px 0;
+    }
+    .leikkaus-label {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #a78bfa;
+      font-weight: 600;
+      margin-top: -9px;
+      margin-bottom: 18px;
+    }
+    .leikkaus-label span {
+      background: #f5f0ff;
+      padding: 0 10px;
+    }
+
+    /* ── Opettajan ohjekortti ── */
+    .opettaja-kortti {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      background: white;
+      border: 2.5px solid #94a3b8;
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .opettaja-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid #e2e8f0;
+    }
+    .opettaja-badge {
+      background: #475569;
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .opettaja-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1e293b;
+    }
+    .opettaja-ohjeet {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .ohje-askel {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .ohje-numero {
+      width: 22px;
+      height: 22px;
+      background: #475569;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ohje-teksti {
+      font-size: 0.8rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    /* ── TULOSTUS ── */
+    @media print {
+      body { background: white; padding: 0; }
+      .sivun-otsikko, .tulosta-rivi { display: none !important; }
+      .kortit-ruudukko { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .ryhmakortti { border-color: #7c3aed; }
+      .opettaja-kortti { margin-bottom: 18px; }
+      @page { margin: 14mm 12mm; size: A4; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sivun otsikko — ei tulostu -->
+  <div class="sivun-otsikko">
+    <h1>🛎️ Vahvuushuutokauppa – tulostettava oppilaskortti</h1>
+    <p>Tulosta yksi kortti per ryhmä (3–4 oppilasta)</p>
+  </div>
+
+  <!-- Tulosta-nappi — ei tulostu -->
+  <div class="tulosta-rivi">
+    <button class="tulosta-btn" onclick="window.print()">
+      🖨️ Tulosta kortit
+    </button>
+  </div>
+
+  <!-- ═══ OPETTAJAN OHJEKORTTI ═══ -->
+  <div class="opettaja-kortti">
+    <div class="opettaja-header">
+      <span class="opettaja-badge">Opettajalle</span>
+      <h2>Vahvuushuutokauppa — ohjeet</h2>
+    </div>
+    <div class="opettaja-ohjeet">
+      <div class="ohje-askel">
+        <span class="ohje-numero">1</span>
+        <p class="ohje-teksti">Jaa luokka 3–4 hengen ryhmiin. Anna jokaiselle ryhmälle yksi oppilaskortti.</p>
+      </div>
+      <div class="ohje-askel">
+        <span class="ohje-numero">2</span>
+        <p class="ohje-teksti">Ryhmä lukee vahvuuslistan läpi ja keskustelee: mitä kukin vahvuus tarkoittaa käytännössä?</p>
+      </div>
+      <div class="ohje-askel">
+        <span class="ohje-numero">3</span>
+        <p class="ohje-teksti">Ryhmä ostaa yhteensä 3 vahvuutta jakamalla 10 pistettä. Jokainen vahvuus maksaa vähintään 1 pisteen.</p>
+      </div>
+      <div class="ohje-askel">
+        <span class="ohje-numero">4</span>
+        <p class="ohje-teksti">Jokainen ryhmäläinen kertoo: onko jokin ostetuista vahvuuksista minun? Perustele.</p>
+      </div>
+      <div class="ohje-askel">
+        <span class="ohje-numero">5</span>
+        <p class="ohje-teksti">Kierretään kuuntelemassa muiden ryhmien valinnat. Purku: mikä vahvuus ostettiin useimmiten?</p>
+      </div>
+      <div class="ohje-askel">
+        <span class="ohje-numero">⏱</span>
+        <p class="ohje-teksti"><strong>Aika: 20–25 min</strong> · Muistuta: ei oikeaa tai väärää vastausta — tärkeää on perustelu.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LEIKKAUSVIIVA ═══ -->
+  <hr class="leikkausviiva">
+  <p class="leikkaus-label"><span>✂ leikkaa tästä</span></p>
+
+  <!-- ═══ KORTTIRUUDUKKO — tulostettavat oppilaskortit ═══ -->
+  <div class="kortit-ruudukko">
+
+    <!-- KORTTI 1 -->
+    <div class="ryhmakortti">
+      <div class="kortti-header">
+        <span class="kortti-nimi">🛎️ Vahvuushuutokauppa</span>
+        <span class="kortti-badge">Ryhmäkortti</span>
+      </div>
+
+      <div class="ryhmanimi-rivi">
+        <span class="ryhmanimi-label">Ryhmän jäsenet:</span>
+        <span class="ryhmanimi-viiva"></span>
+      </div>
+
+      <div class="budjetti-rivi">
+        <div class="budjetti-pallot">
+          <div class="piste-pallo">1</div>
+          <div class="piste-pallo">2</div>
+          <div class="piste-pallo">3</div>
+          <div class="piste-pallo">4</div>
+          <div class="piste-pallo">5</div>
+          <div class="piste-pallo">6</div>
+          <div class="piste-pallo">7</div>
+          <div class="piste-pallo">8</div>
+          <div class="piste-pallo">9</div>
+          <div class="piste-pallo">10</div>
+        </div>
+        <p class="budjetti-ohje">Budjetti:<br><strong>10 pistettä</strong></p>
+      </div>
+
+      <p class="vahvuuslista-otsikko">Vahvuuslista — merkitse rasti valitulle, kirjoita pisteet</p>
+
+      <div class="vahvuudet-grid">
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Luovuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Pitkäjänteisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Empatia</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rohkeus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huumorintaju</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Oikeudenmukaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Uteliaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Yhteistyötaito</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Sinnikkyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Johtajuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rehellisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rauhallisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Innokkuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huolellisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Kyky auttaa muita</span><div class="vahvuus-pisteet"></div></div>
+      </div>
+
+      <div class="valitut-osio">
+        <p class="valitut-otsikko">Ostetut vahvuudet — kirjoita tähän</p>
+        <div class="valittu-rivi"><span class="valittu-numero">1</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">2</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">3</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+      </div>
+
+      <div class="ohjeruutu">
+        <p><strong>Miksi ostitte juuri nämä?</strong> Jokainen ryhmäläinen kertoo vuorollaan: onko jokin näistä vahvuuksista minun? Perustele.</p>
+      </div>
+    </div>
+
+    <!-- KORTTI 2 (kopio) -->
+    <div class="ryhmakortti">
+      <div class="kortti-header">
+        <span class="kortti-nimi">🛎️ Vahvuushuutokauppa</span>
+        <span class="kortti-badge">Ryhmäkortti</span>
+      </div>
+      <div class="ryhmanimi-rivi">
+        <span class="ryhmanimi-label">Ryhmän jäsenet:</span>
+        <span class="ryhmanimi-viiva"></span>
+      </div>
+      <div class="budjetti-rivi">
+        <div class="budjetti-pallot">
+          <div class="piste-pallo">1</div><div class="piste-pallo">2</div><div class="piste-pallo">3</div><div class="piste-pallo">4</div><div class="piste-pallo">5</div>
+          <div class="piste-pallo">6</div><div class="piste-pallo">7</div><div class="piste-pallo">8</div><div class="piste-pallo">9</div><div class="piste-pallo">10</div>
+        </div>
+        <p class="budjetti-ohje">Budjetti:<br><strong>10 pistettä</strong></p>
+      </div>
+      <p class="vahvuuslista-otsikko">Vahvuuslista — merkitse rasti valitulle, kirjoita pisteet</p>
+      <div class="vahvuudet-grid">
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Luovuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Pitkäjänteisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Empatia</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rohkeus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huumorintaju</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Oikeudenmukaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Uteliaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Yhteistyötaito</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Sinnikkyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Johtajuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rehellisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rauhallisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Innokkuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huolellisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Kyky auttaa muita</span><div class="vahvuus-pisteet"></div></div>
+      </div>
+      <div class="valitut-osio">
+        <p class="valitut-otsikko">Ostetut vahvuudet — kirjoita tähän</p>
+        <div class="valittu-rivi"><span class="valittu-numero">1</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">2</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">3</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+      </div>
+      <div class="ohjeruutu">
+        <p><strong>Miksi ostitte juuri nämä?</strong> Jokainen ryhmäläinen kertoo vuorollaan: onko jokin näistä vahvuuksista minun? Perustele.</p>
+      </div>
+    </div>
+
+    <!-- KORTTI 3 -->
+    <div class="ryhmakortti">
+      <div class="kortti-header">
+        <span class="kortti-nimi">🛎️ Vahvuushuutokauppa</span>
+        <span class="kortti-badge">Ryhmäkortti</span>
+      </div>
+      <div class="ryhmanimi-rivi">
+        <span class="ryhmanimi-label">Ryhmän jäsenet:</span>
+        <span class="ryhmanimi-viiva"></span>
+      </div>
+      <div class="budjetti-rivi">
+        <div class="budjetti-pallot">
+          <div class="piste-pallo">1</div><div class="piste-pallo">2</div><div class="piste-pallo">3</div><div class="piste-pallo">4</div><div class="piste-pallo">5</div>
+          <div class="piste-pallo">6</div><div class="piste-pallo">7</div><div class="piste-pallo">8</div><div class="piste-pallo">9</div><div class="piste-pallo">10</div>
+        </div>
+        <p class="budjetti-ohje">Budjetti:<br><strong>10 pistettä</strong></p>
+      </div>
+      <p class="vahvuuslista-otsikko">Vahvuuslista — merkitse rasti valitulle, kirjoita pisteet</p>
+      <div class="vahvuudet-grid">
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Luovuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Pitkäjänteisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Empatia</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rohkeus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huumorintaju</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Oikeudenmukaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Uteliaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Yhteistyötaito</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Sinnikkyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Johtajuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rehellisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rauhallisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Innokkuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huolellisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Kyky auttaa muita</span><div class="vahvuus-pisteet"></div></div>
+      </div>
+      <div class="valitut-osio">
+        <p class="valitut-otsikko">Ostetut vahvuudet — kirjoita tähän</p>
+        <div class="valittu-rivi"><span class="valittu-numero">1</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">2</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">3</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+      </div>
+      <div class="ohjeruutu">
+        <p><strong>Miksi ostitte juuri nämä?</strong> Jokainen ryhmäläinen kertoo vuorollaan: onko jokin näistä vahvuuksista minun? Perustele.</p>
+      </div>
+    </div>
+
+    <!-- KORTTI 4 -->
+    <div class="ryhmakortti">
+      <div class="kortti-header">
+        <span class="kortti-nimi">🛎️ Vahvuushuutokauppa</span>
+        <span class="kortti-badge">Ryhmäkortti</span>
+      </div>
+      <div class="ryhmanimi-rivi">
+        <span class="ryhmanimi-label">Ryhmän jäsenet:</span>
+        <span class="ryhmanimi-viiva"></span>
+      </div>
+      <div class="budjetti-rivi">
+        <div class="budjetti-pallot">
+          <div class="piste-pallo">1</div><div class="piste-pallo">2</div><div class="piste-pallo">3</div><div class="piste-pallo">4</div><div class="piste-pallo">5</div>
+          <div class="piste-pallo">6</div><div class="piste-pallo">7</div><div class="piste-pallo">8</div><div class="piste-pallo">9</div><div class="piste-pallo">10</div>
+        </div>
+        <p class="budjetti-ohje">Budjetti:<br><strong>10 pistettä</strong></p>
+      </div>
+      <p class="vahvuuslista-otsikko">Vahvuuslista — merkitse rasti valitulle, kirjoita pisteet</p>
+      <div class="vahvuudet-grid">
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Luovuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Pitkäjänteisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Empatia</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rohkeus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huumorintaju</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Oikeudenmukaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Uteliaisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Yhteistyötaito</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Sinnikkyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Johtajuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rehellisyys</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Rauhallisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Innokkuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Huolellisuus</span><div class="vahvuus-pisteet"></div></div>
+        <div class="vahvuus-rivi"><div class="vahvuus-ruutu"></div><span class="vahvuus-teksti">Kyky auttaa muita</span><div class="vahvuus-pisteet"></div></div>
+      </div>
+      <div class="valitut-osio">
+        <p class="valitut-otsikko">Ostetut vahvuudet — kirjoita tähän</p>
+        <div class="valittu-rivi"><span class="valittu-numero">1</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">2</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+        <div class="valittu-rivi"><span class="valittu-numero">3</span><div class="valittu-viiva"></div><span class="valittu-pisteet-label">pisteet:</span><div class="valittu-pisteet-viiva"></div></div>
+      </div>
+      <div class="ohjeruutu">
+        <p><strong>Miksi ostitte juuri nämä?</strong> Jokainen ryhmäläinen kertoo vuorollaan: onko jokin näistä vahvuuksista minun? Perustele.</p>
+      </div>
+    </div>
+
+  </div><!-- /kortit-ruudukko -->
+
+</body>
+</html>
