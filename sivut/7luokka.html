@@ -348,6 +348,75 @@
     .mission-card {
       margin-bottom: 12px !important;
     }
+
+    /* ── Opettajan materiaali -toggle ── */
+    .opettaja-osio {
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+    .opettaja-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 18px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #475569;
+      text-align: left;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .opettaja-toggle:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+    .opettaja-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .opettaja-nuoli {
+      font-size: 0.8rem;
+      transition: transform 0.22s;
+      color: #94a3b8;
+    }
+    .opettaja-toggle[aria-expanded="true"] .opettaja-nuoli {
+      transform: rotate(180deg);
+    }
+    .opettaja-sisalto {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 16px 20px;
+    }
+    .opettaja-lataus {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #7c3aed;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      transition: background 0.18s;
+    }
+    .opettaja-lataus:hover {
+      background: #6d28d9;
+    }
+    .opettaja-kuvaus {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.5;
+    }
     </style>
   </head>
 
@@ -708,17 +777,50 @@
 
           <div id="tervetuloa-mission" class="mission-card">
               <div class="mission-header">
-                <h4>Yläkoulu-bingo</h4>
-                <span class="mission-badge">Liiku ja löydä</span>
+                <h4>Operaatio Yläkoulu</h4>
+                <span class="mission-badge">Amazing Race</span>
               </div>
-              <p>Etsi luokasta henkilöitä, joihin väitteet sopivat.</p>
+              <p>
+                Teette tämän tehtävän ryhmissä. Opettaja antaa jokaiselle
+                ryhmälle kirjekuoren – sisällä on neljä rastikorttia.
+                Ratkaiskaa rastit järjestyksessä yhdessä liikkuen.
+              </p>
               <ul class="mission-list">
-                <li>Löydä joku, joka odottaa yläkoulua</li>
-                <li>Löydä joku, joka jännittää</li>
-                <li>Löydä joku, jolla on harrastus</li>
-                <li>Löydä joku, joka haluaa oppia uutta</li>
+                <li>Avatkaa Rasti 1 ja lukekaa ohjeet ääneen yhdessä</li>
+                <li>Ratkaiskaa tehtävä – ryhmä päättää itse milloin on valmis</li>
+                <li>Vasta sitten avatkaa seuraava kortti</li>
+                <li>Viimeisessä rastissa valmistaudutte esitykseen koko luokalle</li>
               </ul>
-              <p class="mission-hint">⏱ Aika: 5–10 min</p>
+              <p class="mission-hint">⏱ Aika: 20–25 min · Ryhmäkoko: 3–4 oppilasta</p>
+          </div>
+
+          <!-- Opettajan materiaali -->
+          <div class="opettaja-osio">
+            <button
+              class="opettaja-toggle"
+              onclick="toggleOpettaja(this)"
+              aria-expanded="false"
+              aria-controls="opettaja-sisalto-1"
+            >
+              <span class="opettaja-toggle-left">
+                <span aria-hidden="true">🖨️</span>
+                <span>Opettajan materiaali</span>
+              </span>
+              <span class="opettaja-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div id="opettaja-sisalto-1" class="opettaja-sisalto" hidden>
+              <a
+                class="opettaja-lataus"
+                href="../tehtavat/selviytymismissio_opettaja.pdf"
+                download
+              >
+                <span aria-hidden="true">⬇</span> Lataa opettajan ohje (PDF)
+              </a>
+              <p class="opettaja-kuvaus">
+                Sisältää opettajan ohjeet, ryhmän passin (tulosta yksi per ryhmä)
+                sekä laminoitavat rastikorttit 1–6.
+              </p>
+            </div>
           </div>
 
           <!-- Haaste: eriyttäminen ylöspäin -->
@@ -1780,6 +1882,18 @@
     <script src="../js/luokka.js"></script>
     <script>
       function toggleHaaste(btn) {
+        var sisalto = btn.nextElementSibling;
+        var auki = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+        if (auki) {
+          sisalto.hidden = true;
+        } else {
+          sisalto.hidden = false;
+          sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      function toggleOpettaja(btn) {
         var sisalto = btn.nextElementSibling;
         var auki = btn.getAttribute('aria-expanded') === 'true';
         btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
