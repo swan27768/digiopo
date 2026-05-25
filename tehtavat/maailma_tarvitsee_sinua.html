@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maailma tarvitsee sinua – tehtäväkortti</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fdf2f8;
+      color: #1a1a2e;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* ── Hero-otsikko ── */
+    .hero {
+      background: linear-gradient(135deg, #831843 0%, #db2777 60%, #f472b6 100%);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      color: #fff;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 800;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 520px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .hero-chip {
+      background: rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ── Kortit ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1.5px solid #f9a8d4;
+      padding: 22px 22px 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #9d174d;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p {
+      color: #3b0764;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── Vaihenumerot ── */
+    .steps {
+      list-style: decimal;
+      padding-left: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .steps li {
+      font-size: 0.95rem;
+      color: #3b0764;
+      line-height: 1.6;
+      padding-left: 6px;
+    }
+    .steps li::marker {
+      color: #db2777;
+      font-weight: 700;
+    }
+    .steps li strong {
+      color: #9d174d;
+    }
+
+    /* ── Ongelmaskenaariot ── */
+    .scenarios {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .scenario-card {
+      background: linear-gradient(160deg, #fdf2f8, #fce7f3);
+      border: 1.5px solid #f9a8d4;
+      border-radius: 14px;
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      position: relative;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+    }
+    .scenario-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(219,39,119,0.18);
+      border-color: #db2777;
+    }
+    .scenario-card:focus-visible {
+      outline: 3px solid #db2777;
+      outline-offset: 3px;
+    }
+    .scenario-card[aria-pressed="true"] {
+      border-color: #db2777;
+      background: linear-gradient(160deg, #fce7f3, #fbcfe8);
+      box-shadow: 0 0 0 3px rgba(219,39,119,0.2);
+    }
+    .scenario-card[aria-pressed="true"]::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 18px;
+      height: 18px;
+      background: #db2777 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.5 3.5L11 1' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;
+      border-radius: 50%;
+    }
+    .scenario-emoji {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .scenario-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #9d174d;
+      margin-bottom: 4px;
+    }
+    .scenario-desc {
+      font-size: 0.8rem;
+      color: #500724;
+      line-height: 1.5;
+    }
+
+    /* ── Ammattilaiskortit ── */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .role-card {
+      background: #fff;
+      border: 1.5px solid #e2d9f3;
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      position: relative;
+      width: 100%;
+      font-family: inherit;
+    }
+    .role-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(88,28,135,0.15);
+      border-color: #a855f7;
+    }
+    .role-card:focus-visible {
+      outline: 3px solid #7c3aed;
+      outline-offset: 3px;
+    }
+    .role-card[aria-pressed="true"] {
+      border-color: #7c3aed;
+      background: #f5f3ff;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+    .role-card[aria-pressed="true"]::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      width: 16px;
+      height: 16px;
+      background: #7c3aed url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.5 3.5L11 1' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/10px no-repeat;
+      border-radius: 50%;
+    }
+    .role-emoji {
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .role-name {
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #3b0764;
+      margin-bottom: 2px;
+    }
+    .role-edu {
+      font-size: 0.75rem;
+      color: #5b21b6;
+      line-height: 1.4;
+    }
+
+    /* ── Valintapalkki ── */
+    .selection-bar {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 12px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .selection-bar.visible {
+      display: flex;
+    }
+
+    /* ── Esitysvaihe ── */
+    .esitys-ohje {
+      background: linear-gradient(135deg, #be185d, #db2777);
+      border-radius: 14px;
+      padding: 20px 22px;
+      color: #fff;
+      margin-top: 4px;
+    }
+    .esitys-ohje h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .esitys-ohje ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0;
+    }
+    .esitys-ohje ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .esitys-ohje ul li .bullet {
+      flex-shrink: 0;
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+    }
+
+    /* ── Reflektointi ── */
+    .reflektio-lista {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+    }
+    .reflektio-lista li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(160deg, #fdf2f8, #fce7f3);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      color: #500724;
+      line-height: 1.55;
+    }
+    .reflektio-lista li .q-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #db2777;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aria-hidden: true;
+    }
+
+    /* ── Haaste-osio ── */
+    .haaste-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(135deg, #be185d, #db2777);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      text-align: left;
+    }
+    .haaste-toggle:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .haaste-toggle:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+    }
+    .haaste-nuoli {
+      font-size: 0.85rem;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .haaste-toggle[aria-expanded="true"] .haaste-nuoli {
+      transform: rotate(180deg);
+    }
+    .haaste-sisalto {
+      background: linear-gradient(160deg, #fdf2f8, #fce7f3);
+      border: 1.5px solid #f9a8d4;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 16px 20px;
+      color: #500724;
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+    .haaste-sisalto p { margin-bottom: 10px; }
+    .haaste-sisalto p:last-child { margin-bottom: 0; }
+    .haaste-vihje {
+      font-style: italic;
+      padding: 8px 12px;
+      background: rgba(249,168,212,0.3);
+      border-left: 3px solid #db2777;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+    }
+
+    /* ── Aika-palkki ── */
+    .time-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .time-chip {
+      background: #fce7f3;
+      border: 1px solid #f9a8d4;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      color: #9d174d;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .scenario-card, .role-card { break-inside: avoid; }
+      .haaste-sisalto { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <header>
+    <div class="hero">
+      <div class="hero-badge">
+        <i class="fa-solid fa-earth-europe" aria-hidden="true"></i>
+        Toiminnallinen ryhmätehtävä
+      </div>
+      <h1><span aria-hidden="true">🌍 </span>Maailma tarvitsee sinua</h1>
+      <p>Valitse oikea ongelma. Kokoa tiimi eri alojen ammattilaisista. Esittäkää ratkaisunne muille – oikeasti, roolissa.</p>
+      <div class="hero-meta" aria-label="Tehtävän tiedot">
+        <span class="hero-chip"><i class="fa-solid fa-users" aria-hidden="true"></i> 3–5 hengen ryhmä</span>
+        <span class="hero-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> n. 30–45 min</span>
+        <span class="hero-chip"><i class="fa-solid fa-person-walking" aria-hidden="true"></i> Toiminnallinen</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Vaihe 1: Valitse ongelma -->
+    <section class="card" aria-labelledby="vaihe1-otsikko">
+      <h2 class="card-title" id="vaihe1-otsikko">
+        <span aria-hidden="true">1️⃣</span> Valitse ryhmälle ongelma
+      </h2>
+      <p>Alla on oikeita maailman ongelmia. Ryhmä valitsee <strong>yhden</strong> – sen, joka tuntuu tärkeimmältä. Paina korttia valitaksesi.</p>
+      <div class="scenarios" role="group" aria-label="Ongelmaskenaariot" id="scenariosGrid">
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">🏫</span>
+          <div class="scenario-title">Kylän viimeinen koulu</div>
+          <div class="scenario-desc">Pikkukaupungin ainoa koulu on sulkemisuhan alla. Lapset joutuvat muuttamaan pois.</div>
+        </button>
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">🌊</span>
+          <div class="scenario-title">Meri täyttyy muovista</div>
+          <div class="scenario-desc">Itämeren rannoille kasautuu muovia. Kalat, linnut ja ihmiset kärsivät.</div>
+        </button>
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">👴</span>
+          <div class="scenario-title">Vanhusten yksinäisyys</div>
+          <div class="scenario-desc">Sadat vanhukset asuvat yksin. Heillä ei ole ketään, jonka kanssa puhua.</div>
+        </button>
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">🌡️</span>
+          <div class="scenario-title">Kaupunki kuumenee</div>
+          <div class="scenario-desc">Kesäiset helleaallot tekevät kaupungeista vaarallisia. Puistot ja viheralueet ovat kadonneet.</div>
+        </button>
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">🧠</span>
+          <div class="scenario-title">Nuorten pahoinvointi</div>
+          <div class="scenario-desc">Yhä useampi nuori kärsii ahdistuksesta. Apua ei saa tarpeeksi nopeasti.</div>
+        </button>
+        <button class="scenario-card" onclick="selectScenario(this)" aria-pressed="false">
+          <span class="scenario-emoji" aria-hidden="true">💡</span>
+          <div class="scenario-title">Oma idea</div>
+          <div class="scenario-desc">Keksikää itse ongelma, jonka haluaisitte ratkaista!</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Vaihe 2: Kootaan tiimi -->
+    <section class="card" aria-labelledby="vaihe2-otsikko">
+      <h2 class="card-title" id="vaihe2-otsikko">
+        <span aria-hidden="true">2️⃣</span> Kootaan tiimi
+      </h2>
+      <p>Jokainen ryhmän jäsen valitsee <strong>yhden ammatin</strong> alla olevista. Miettikää yhdessä: ketkä osaisivat ratkaista valitsemanne ongelman parhaiten?</p>
+      <p style="font-size:0.88rem; color:#9d174d; font-style:italic;">Voit myös keksiä oman ammatin – kirjoita se paperille!</p>
+
+      <div class="roles-grid" role="group" aria-label="Ammattiroolit" id="rolesGrid">
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">👩‍⚕️</span>
+          <div class="role-name">Lääkäri</div>
+          <div class="role-edu">Yliopisto, 6 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🏗️</span>
+          <div class="role-name">Arkkitehti</div>
+          <div class="role-edu">Yliopisto, 5–6 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">💻</span>
+          <div class="role-name">Ohjelmoija</div>
+          <div class="role-edu">Ammattikorkeakoulu tai yliopisto, 3–5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🌿</span>
+          <div class="role-name">Ympäristötutkija</div>
+          <div class="role-edu">Yliopisto, 5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🎨</span>
+          <div class="role-name">Taiteilija</div>
+          <div class="role-edu">Taideyliopisto, 3–5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">📰</span>
+          <div class="role-name">Toimittaja</div>
+          <div class="role-edu">Ammattikorkeakoulu tai yliopisto, 3–4 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🔧</span>
+          <div class="role-name">Insinööri</div>
+          <div class="role-edu">Ammattikorkeakoulu tai yliopisto, 3–5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🧑‍🏫</span>
+          <div class="role-name">Opettaja</div>
+          <div class="role-edu">Yliopisto, 5–6 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">💰</span>
+          <div class="role-name">Talousasiantuntija</div>
+          <div class="role-edu">Ammattikorkeakoulu tai yliopisto, 3–5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🏋️</span>
+          <div class="role-name">Sosiaalityöntekijä</div>
+          <div class="role-edu">Yliopisto, 4–5 vuotta</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🌐</span>
+          <div class="role-name">Poliitikko</div>
+          <div class="role-edu">Useimmiten yliopistokoulutus</div>
+        </button>
+        <button class="role-card" onclick="selectRole(this)" aria-pressed="false">
+          <span class="role-emoji" aria-hidden="true">🚀</span>
+          <div class="role-name">Yrittäjä</div>
+          <div class="role-edu">Koulutus vaihtelee</div>
+        </button>
+      </div>
+
+      <div
+        class="selection-bar"
+        id="selectionBar"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+        <span id="selectionText">Valittu 0 roolia</span>
+      </div>
+    </section>
+
+    <!-- Vaihe 3: Suunnittelu -->
+    <section class="card" aria-labelledby="vaihe3-otsikko">
+      <h2 class="card-title" id="vaihe3-otsikko">
+        <span aria-hidden="true">3️⃣</span> Suunnittelkaa ratkaisu yhdessä
+      </h2>
+      <p>Jokainen miettii oman ammattinsa näkökulmasta: <strong>mitä minä tekisin tässä tilanteessa?</strong></p>
+
+      <ol class="steps">
+        <li>
+          <strong>5 min:</strong> Mieti yksin – mitä sinun ammattilaisesi tekisi? Kirjoita muutama asia paperille.
+        </li>
+        <li>
+          <strong>5 min:</strong> Ryhmä kokoaa ideat yhteen. Mitä kukin ammattilainen tuo ratkaisuun? Miten nämä toimivat yhdessä?
+        </li>
+        <li>
+          <strong>5 min:</strong> Harjoitelkaa lyhyt <strong>näytelmäkohtaus</strong> – kuin oikeassa kokouksessa, jossa tiimillänne on 2 minuuttia kertoa ratkaisustanne muille.
+        </li>
+      </ol>
+
+      <div class="time-bar">
+        <span class="time-chip">
+          <i class="fa-regular fa-clock" aria-hidden="true"></i>
+          Suunnitteluaika yhteensä: 15 min
+        </span>
+      </div>
+    </section>
+
+    <!-- Vaihe 4: Esitys -->
+    <section class="card" aria-labelledby="vaihe4-otsikko">
+      <h2 class="card-title" id="vaihe4-otsikko">
+        <span aria-hidden="true">4️⃣</span> Näytelmäkohtaus – esitys muille
+      </h2>
+      <div class="esitys-ohje">
+        <h3><span aria-hidden="true">📣 </span>Ryhmä esittää kohtauksen</h3>
+        <ul>
+          <li>
+            <span class="bullet" aria-hidden="true">▸</span>
+            Jokainen puhuu <strong>oman ammattinsa äänellä</strong> – mitä minä näen, mitä minä osaan, mitä minä teen
+          </li>
+          <li>
+            <span class="bullet" aria-hidden="true">▸</span>
+            Esitys kestää <strong>noin 2 minuuttia</strong> – ei enempää!
+          </li>
+          <li>
+            <span class="bullet" aria-hidden="true">▸</span>
+            Lopussa yksi ryhmän jäsen sanoo yhden lauseen: <em>"Yhdessä me pystymme tähän, koska…"</em>
+          </li>
+          <li>
+            <span class="bullet" aria-hidden="true">▸</span>
+            Muut ryhmät voivat esittää yhden kysymyksen esityksen jälkeen
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Vaihe 5: Reflektointi -->
+    <section class="card" aria-labelledby="vaihe5-otsikko">
+      <h2 class="card-title" id="vaihe5-otsikko">
+        <span aria-hidden="true">5️⃣</span> Pysähtykää hetkeksi – mitä opittiin?
+      </h2>
+      <p>Kun esitykset on pidetty, keskustellaan yhdessä.</p>
+      <ul class="reflektio-lista" aria-label="Pohdintakysymykset">
+        <li>
+          <span class="q-num" aria-hidden="true">1</span>
+          <span>Mikä sinun ammattisi yllätti sinut? Oliko se erilainen kuin kuvittelit?</span>
+        </li>
+        <li>
+          <span class="q-num" aria-hidden="true">2</span>
+          <span>Mitä koulutusta ammattisi vaatii – ja miltä se kuulostaa sinun mielestäsi?</span>
+        </li>
+        <li>
+          <span class="q-num" aria-hidden="true">3</span>
+          <span>Mitä ongelmaa <em>sinä</em> haluaisit ratkaista tulevaisuudessa? Mikä ammatti voisi auttaa siinä?</span>
+        </li>
+        <li>
+          <span class="q-num" aria-hidden="true">4</span>
+          <span>Miksi yhden ammattilaisen ratkaisu ei riitä – miksi tarvitaan koko tiimi?</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Haaste ylöspäin eriyttäville -->
+    <div style="margin-bottom: 16px;">
+      <button
+        class="haaste-toggle"
+        onclick="toggleHaaste(this)"
+        aria-expanded="false"
+        aria-controls="haaste-sisalto"
+      >
+        <span style="display:flex; align-items:center; gap:10px;">
+          <span aria-hidden="true" style="font-size:1.4rem;">⭐</span>
+          <span>Haluatko lisää haastetta?</span>
+        </span>
+        <span class="haaste-nuoli" aria-hidden="true">▼</span>
+      </button>
+      <div class="haaste-sisalto" id="haaste-sisalto" hidden>
+        <p>Tutki tarkemmin: käy <a href="https://opintopolku.fi" target="_blank" rel="noopener">opintopolku.fi</a>-sivustolla ja selvitä valitsemasi ammatin koulutuspolku. Montako vuotta koulutus kestää? Mitä oppilaitoksia? Voisiko polkuja olla useita erilaisia?</p>
+        <p>Tee oma "ilmoitus": miksi juuri sinun ammattilaisesi tarvitaan tähän tiimiin? Mitä tapahtuu, jos häntä ei ole mukana?</p>
+        <p class="haaste-vihje"><span aria-hidden="true">💡</span> Vinkki: Hyvä ammattilainen tietää myös, mihin hänen osaamisensa ei riitä – ja kenet hän kutsuu avuksi.</p>
+      </div>
+    </div>
+
+  </main>
+
+
+</div>
+
+<script>
+  function selectScenario(btn) {
+    const allCards = document.querySelectorAll('#scenariosGrid .scenario-card');
+    allCards.forEach(c => c.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+  }
+
+  function selectRole(btn) {
+    const isPressed = btn.getAttribute('aria-pressed') === 'true';
+    btn.setAttribute('aria-pressed', isPressed ? 'false' : 'true');
+
+    const count = document.querySelectorAll('#rolesGrid .role-card[aria-pressed="true"]').length;
+    const bar = document.getElementById('selectionBar');
+    const txt = document.getElementById('selectionText');
+
+    if (count > 0) {
+      bar.classList.add('visible');
+      txt.textContent = `Valittu ${count} rooli${count !== 1 ? 'a' : ''}`;
+    } else {
+      bar.classList.remove('visible');
+      txt.textContent = 'Valittu 0 roolia';
+    }
+  }
+
+  function toggleHaaste(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    const content = document.getElementById('haaste-sisalto');
+    content.hidden = expanded;
+  }
+</script>
+</body>
+</html>
