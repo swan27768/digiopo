@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Supervoima-etsintä</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #0f0f1a;
+      --card:    #16213e;
+      --accent:  #e94560;
+      --gold:    #f5a623;
+      --teal:    #00d4aa;
+      --purple:  #7c5cbf;
+      --blue:    #00a8ff;
+      --text:    #e8e8f0;
+      --muted:   #a8a8c0;
+      --border:  rgba(233,69,96,0.3);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+    }
+    #app {
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .screen {
+      width: 100%;
+      max-width: 680px;
+      padding: 1.5rem 1rem 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Progress */
+    .pbar {
+      width: 100%; max-width: 480px;
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .pfill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* Headings */
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem; font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      margin: 0.4rem 0 1rem;
+      letter-spacing: -0.5px;
+    }
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--gold);
+      text-align: center;
+      margin: 0.4rem 0 0.7rem;
+    }
+    h3 {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin: 0.4rem 0 0.6rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.1rem 1.3rem;
+      margin: 0.4rem 0;
+      width: 100%;
+      line-height: 1.7;
+    }
+    .card-info {
+      background: rgba(0,212,170,0.07);
+      border: 1px solid rgba(0,212,170,0.25);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: var(--teal);
+      margin: 0.4rem 0;
+      width: 100%;
+    }
+    .card-warn {
+      background: rgba(245,166,35,0.07);
+      border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      font-size: 0.88rem;
+      color: var(--gold);
+      margin: 0.4rem 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex; flex-direction: column;
+      gap: 0.55rem;
+      width: 100%; margin: 0.8rem 0;
+    }
+    .btn {
+      display: block; width: 100%;
+      padding: 0.8rem 1.1rem;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.98rem; font-weight: 600;
+      text-align: left; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+      line-height: 1.4;
+    }
+    .btn:hover, .btn:focus-visible {
+      border-color: var(--accent);
+      background: rgba(233,69,96,0.1);
+      transform: translateX(4px);
+      outline: none;
+    }
+    .btn-primary {
+      background: var(--accent); border-color: var(--accent);
+      color: #fff; text-align: center;
+      font-weight: 800; font-size: 1.02rem;
+    }
+    .btn-primary:hover, .btn-primary:focus-visible {
+      background: #c73a52; border-color: #c73a52;
+      transform: translateY(-2px);
+    }
+    .btn-gold {
+      background: rgba(245,166,35,0.1); border-color: var(--gold);
+      color: var(--gold); text-align: center; font-weight: 700;
+    }
+    .btn-gold:hover, .btn-gold:focus-visible {
+      background: rgba(245,166,35,0.2); transform: translateY(-2px);
+    }
+    .btn-teal {
+      background: rgba(0,212,170,0.1); border-color: var(--teal);
+      color: var(--teal); text-align: center; font-weight: 700;
+    }
+    .btn-teal:hover, .btn-teal:focus-visible {
+      background: rgba(0,212,170,0.2); transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(255,255,255,0.12);
+      color: var(--muted); text-align: center;
+    }
+    .btn-ghost:hover, .btn-ghost:focus-visible {
+      border-color: var(--teal); color: var(--teal); transform: none;
+    }
+
+    /* Route grid */
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      width: 100%; margin: 0.8rem 0;
+    }
+    .route-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 0.9rem 0.7rem;
+      cursor: pointer;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+      color: var(--text);
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .route-btn:hover, .route-btn:focus-visible {
+      border-color: var(--gold);
+      background: rgba(245,166,35,0.08);
+      outline: none;
+    }
+    .route-btn.done {
+      border-color: var(--teal);
+      background: rgba(0,212,170,0.07);
+    }
+    .route-btn .done-mark {
+      position: absolute; top: 6px; right: 8px;
+      font-size: 0.75rem; color: var(--teal);
+    }
+    .route-btn .remoji { font-size: 1.7rem; display: block; margin-bottom: 0.2rem; }
+
+    /* Emoji big */
+    .bigmoji { font-size: 3.2rem; display: block; text-align: center; margin: 0.5rem 0; }
+
+    /* Result card */
+    .result-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 1.4rem;
+      width: 100%; text-align: center;
+      margin: 0.4rem 0;
+    }
+    .type-badge {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      font-weight: 800; font-size: 1.15rem;
+      padding: 0.25rem 1.1rem;
+      border-radius: 99px; margin: 0.4rem 0;
+    }
+    .str-list {
+      list-style: none; padding: 0; margin: 0.5rem 0;
+      display: flex; flex-wrap: wrap;
+      gap: 0.4rem; justify-content: center;
+    }
+    .str-tag {
+      background: rgba(245,166,35,0.12);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      border-radius: 99px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.88rem; font-weight: 700;
+    }
+
+    /* Strength card */
+    .vk-card {
+      background: #16213e;
+      border: 3px solid var(--gold);
+      border-radius: 20px;
+      padding: 1.5rem;
+      width: 100%; max-width: 380px;
+      text-align: center;
+    }
+
+    /* Teacher box */
+    .teacher-box {
+      background: rgba(124,92,191,0.08);
+      border: 1px solid rgba(124,92,191,0.3);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      width: 100%; margin: 0.5rem 0;
+    }
+    .teacher-box h4 {
+      color: #a78fd4; margin: 0 0 0.5rem;
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    pre {
+      white-space: pre-wrap; word-break: break-word;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.86rem; color: var(--muted); margin: 0;
+    }
+
+    /* Textarea */
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.93rem;
+      padding: 0.65rem 0.8rem;
+      resize: vertical; min-height: 80px;
+      line-height: 1.5;
+    }
+    textarea:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
+    textarea::placeholder { color: var(--muted); }
+
+    /* Cover */
+    .cover { text-align: center; padding: 2rem 0 0.5rem; width: 100%; }
+    .cover-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--accent); line-height: 1.1;
+    }
+    .cover-sub {
+      color: var(--muted); font-size: 1.02rem;
+      margin: 0.7rem 0 1.5rem; line-height: 1.55;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff !important; }
+      .btn-group, .card-info, .card-warn, h1 { display: none !important; }
+      .vk-card {
+        border-color: #222 !important;
+        background: #fff !important;
+        color: #222 !important;
+        max-width: 100% !important;
+      }
+      .type-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .str-tag {
+        border-color: #555 !important;
+        color: #333 !important;
+        background: #eee !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app"><div class="screen" id="screen"></div></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const S = {
+  scores: {},
+  types: { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 },
+  done: new Set(),
+  reflection: '',
+  development: '',
+  reflSaved: false,
+  currentRoute: null,
+  routeStep: 0,
+  qtStep: 0
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+const addStr = s => { S.scores[s] = (S.scores[s] || 0) + 1; };
+const addTyp = t => { S.types[t] = (S.types[t] || 0) + 1; };
+
+function bestType() {
+  let max = 0, tied = [];
+  for (const [k,v] of Object.entries(S.types)) {
+    if (v > max)       { max = v; tied = [k]; }
+    else if (v === max && v > 0) { tied.push(k); }
+  }
+  if (tied.length === 0) return 'Tekijä'; // fallback jos ei yhtään vastausta
+  return tied[Math.floor(Math.random() * tied.length)];
+}
+function topStrengths(n) {
+  return Object.entries(S.scores).sort((a,b) => b[1]-a[1]).slice(0,n).map(e=>e[0]);
+}
+function pb(pct, lbl) {
+  return `<div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${lbl||'Edistyminen '+pct+'%'}"><div class="pfill" style="width:${pct}%"></div></div>`;
+}
+const $ = id => document.getElementById(id);
+function render(html) { $('screen').innerHTML = html; window.scrollTo(0,0); }
+
+// ─── TYPE DATA ────────────────────────────────────────────────────────────────
+const TYPES = {
+  Tekijä:     { emoji:'🔨', color:'#e94560',
+    desc:  'Sinä saat asiat liikkeelle! Olet toimelias, sinnikäs ja tavoitteellinen. Kun muut vielä miettivät, sinä olet jo aloittanut.',
+    super: 'Tekijä saa homman tehtyä – se on arvokas ja harvinainen taito.' },
+  Ajattelija: { emoji:'🔬', color:'#00a8ff',
+    desc:  'Sinä ymmärrät syvällisesti. Olet analyyttinen, utelias ja järjestelmällinen. Löydät yhteyksiä, joita muut eivät edes huomaa.',
+    super: 'Ajattelija ratkaisee ongelmat, joihin muilla ei ole vastausta.' },
+  Auttaja:    { emoji:'🤝', color:'#00d4aa',
+    desc:  'Sinä kannat muita. Olet empaattinen, kuunteleva ja luotettava. Ihmisten hyvinvointi on sinulle aidosti tärkeää.',
+    super: 'Auttajan läsnäolo tekee koko ryhmästä paremman.' },
+  Luova:      { emoji:'🎨', color:'#f5a623',
+    desc:  'Sinä keksit uutta. Olet idearikas, rohkea ja mielikuvituksellinen. Perinteinen tapa ei riitä – sinulla on aina oma näkemys.',
+    super: 'Luovan mielikuvitus on se kipinä, josta syntyy jotain ainutlaatuista.' },
+  Seikkailija:{ emoji:'🗺️', color:'#e05fff',
+    desc:  'Sinä uskallat. Olet rohkea, ennakkoluuloton ja joustava. Uudet tilanteet innostavat sen sijaan että pelottaisivat.',
+    super: 'Seikkailija vie muut sinne, minne kukaan muu ei uskaltanut mennä.' },
+  Johtaja:    { emoji:'⭐', color:'#7c5cbf',
+    desc:  'Sinä viet eteenpäin. Olet aloitteellinen, vastuullinen ja motivoiva. Sinulla on taito saada muut innostumaan yhteisistä tavoitteista.',
+    super: 'Johtaja luo yhteisön, jossa jokainen pääsee parhaimmilleen.' }
+};
+
+// ─── ROUTE DATA ───────────────────────────────────────────────────────────────
+const ROUTES = {
+  harrastus: {
+    name:'Harrastus', emoji:'🏅',
+    title:'Harrastuksesi kertoo sinusta',
+    intro:'Mieti harrastustasi tai vapaa-ajan tekemistäsi. Mitä siinä tehdään? Miksi se tuntuu hyvältä?',
+    questions:[
+      { text:'Mitä sinussa tapahtuu harrastuksessa?', opts:[
+        { text:'Autan muita tai teen yhteistyötä',          s:['Avulias','Yhteistyökykyinen'], t:'Auttaja' },
+        { text:'Keksin itse ratkaisuja ja uusia tapoja',    s:['Luova','Idearikas'],           t:'Luova' },
+        { text:'Harjoittelen paljon ja kehityn jatkuvasti', s:['Sinnikäs','Ahkera'],           t:'Tekijä' },
+        { text:'Suunnittelen ja mietin strategiaa',         s:['Järjestelmällinen','Analyyttinen'], t:'Ajattelija' }
+      ]},
+      { text:'Kun harrastuksessa tulee epäonnistuminen, sinä…', opts:[
+        { text:'Yritän uudelleen eri tavalla',          s:['Sitkeä','Rohkea'],           t:'Tekijä' },
+        { text:'Kysyn neuvoa tai haen apua',            s:['Avoin','Yhteisöllinen'],     t:'Auttaja' },
+        { text:'Mietin tarkasti, miksi meni pieleen',   s:['Reflektoiva','Analyyttinen'],t:'Ajattelija' },
+        { text:'Kokeilen jotain täysin erilaista',      s:['Ennakkoluuloton','Joustava'],t:'Seikkailija' }
+      ]}
+    ]
+  },
+  lempiaine: {
+    name:'Lempiaine', emoji:'📚',
+    title:'Lempiaineen salaisuus',
+    intro:'Mikä kouluaine tuntuu sinusta eniten omalta? Ei tarvitse olla helpoin – mieti mikä kiinnostaa tai jättää mieleen jäljän.',
+    questions:[
+      { text:'Mikä siinä aineessa on sinusta parasta?', opts:[
+        { text:'Opin uutta ja faktat jäävät mieleen',      s:['Oppimishaluinen','Utelias'],  t:'Ajattelija' },
+        { text:'Saan tehdä tai keksiä jotain itse',        s:['Luova','Toimelias'],          t:'Luova' },
+        { text:'Pääsen selittämään muille tai auttamaan',  s:['Ilmaisukykyinen','Avulias'],  t:'Auttaja' },
+        { text:'Pääsen johtamaan tai organisoimaan',       s:['Aloitteellinen','Vastuullinen'],t:'Johtaja' }
+      ]},
+      { text:'Opettaja antaa vapaan tehtävän. Mitä sinä teet?', opts:[
+        { text:'Aloitan heti ilman pitkää suunnittelua', s:['Rohkea','Toimelias'],          t:'Tekijä' },
+        { text:'Suunnittelen ensin huolella',             s:['Järjestelmällinen','Harkitseva'],t:'Ajattelija' },
+        { text:'Kysyn kavereilta ja teemme yhdessä',      s:['Yhteistyökykyinen','Sosiaalinen'],t:'Auttaja' },
+        { text:'Keksin jotain omaa ja erilaista',         s:['Idearikas','Luova'],           t:'Luova' }
+      ]}
+    ]
+  },
+  kaverit: {
+    name:'Kaverit', emoji:'🤝',
+    title:'Sinä ja muut',
+    intro:'Mieti kavereita, luokkaa tai perhettä. Miten sinä toimit ihmisten kanssa?',
+    questions:[
+      { text:'Millainen sinä olet ryhmässä?', opts:[
+        { text:'Kuuntelen enemmän kuin puhun',                        s:['Kuunteleva','Empaattinen'],    t:'Auttaja' },
+        { text:'Heitän ideoita ja ehdotuksia',                        s:['Idearikas','Innostuva'],       t:'Luova' },
+        { text:'Vien asioita eteenpäin ja teen päätöksiä',            s:['Aloitteellinen','Johtava'],    t:'Johtaja' },
+        { text:'Olen se, joka saa muut rentoutumaan tai nauramaan',   s:['Sosiaalinen','Rohkea'],        t:'Seikkailija' }
+      ]},
+      { text:'Kaverisi on surullinen tai hermostunut. Mitä sinä teet?', opts:[
+        { text:'Kuuntelen ja yritän aidosti ymmärtää',      s:['Empaattinen','Läsnäoleva'],  t:'Auttaja' },
+        { text:'Yritän piristää ja keksiä ratkaisun',       s:['Optimistinen','Toimelias'],  t:'Tekijä' },
+        { text:'En tiedä mitä sanoa, mutta olen paikalla',  s:['Luotettava','Sitkeä'],       t:'Auttaja' },
+        { text:'Ehdotan yhteistä tekemistä',                s:['Idearikas','Energinen'],     t:'Luova' }
+      ]}
+    ]
+  },
+  vaikeus: {
+    name:'Vaikeus', emoji:'💪',
+    title:'Kun on vaikeaa',
+    intro:'Kaikilla on joskus vaikeita hetkiä. Sinussa on kuitenkin jotain, joka auttaa sinua eteenpäin.',
+    questions:[
+      { text:'Kun jokin tuntuu todella vaikealta, sinä yleensä…', opts:[
+        { text:'Jatkan silti, vaikka on raskasta',               s:['Sinnikäs','Sitkeä'],           t:'Tekijä' },
+        { text:'Pysähdyn miettimään, mikä voisi auttaa',         s:['Ratkaisuhakuinen','Analyyttinen'],t:'Ajattelija' },
+        { text:'Puhun jollekin ja haen tukea',                   s:['Yhteisöllinen','Rohkea'],      t:'Auttaja' },
+        { text:'Muutan suuntaa tai kokeilen jotain muuta',       s:['Joustava','Ennakkoluuloton'],  t:'Seikkailija' }
+      ]},
+      { text:'Muistatko tilanteen, jossa selvisit vaikeudesta? Mitä teit?', opts:[
+        { text:'Tein asiat yksi kerrallaan, järjestelmällisesti', s:['Järjestelmällinen','Kärsivällinen'],t:'Ajattelija' },
+        { text:'Muistin, että olen selvinnyt ennenkin',           s:['Itseluottamuksellinen','Rohkea'],  t:'Seikkailija' },
+        { text:'Sain apua tai tukea joltain tärkeältä',           s:['Yhteisöllinen','Avoin'],           t:'Auttaja' },
+        { text:'Vain tein – en miettinyt liikaa',                 s:['Toimelias','Sitkeä'],              t:'Tekijä' }
+      ]}
+    ]
+  },
+  seikkailija: {
+    name:'Seikkailija-polku', emoji:'🗺️',
+    title:'Uusi, tuntematon ja rohkeus',
+    intro:'Tämä polku kertoo sinun tavastasi kohdata muutoksia, uusia tilanteita ja omaa itseäsi.',
+    questions:[
+      { text:'Kun tulee iso muutos tai uusi tilanne, sinä…', opts:[
+        { text:'Olen innoissani – uutta koettavaa!',                      s:['Ennakkoluuloton','Innostuva'],   t:'Seikkailija' },
+        { text:'Mietin ensin tarkasti, mitä se tarkoittaa',               s:['Harkitseva','Analyyttinen'],     t:'Ajattelija' },
+        { text:'Haluan olla mukana päättämässä, miten toimitaan',         s:['Aloitteellinen','Vastuullinen'],  t:'Johtaja' },
+        { text:'Sopeudun tilanteen mukaan – kyllä se selviää',            s:['Joustava','Rauhallinen'],        t:'Seikkailija' }
+      ]},
+      { text:'Mitä haluaisit eniten tehdä tai saada aikaan?', opts:[
+        { text:'Kokeilla jotain aivan uutta ja erilaista',              s:['Rohkea','Utelias'],          t:'Seikkailija' },
+        { text:'Tehdä tuttuja asioita paremmin kuin ennen',             s:['Sinnikäs','Tavoitteellinen'],t:'Tekijä' },
+        { text:'Löytää vastauksen johonkin isoon kysymykseen',          s:['Utelias','Syvällinen'],      t:'Ajattelija' },
+        { text:'Saada muut mukaan ja johtaa yhteistä tekemistä',        s:['Motivoiva','Vastuullinen'],  t:'Johtaja' }
+      ]}
+    ]
+  }
+};
+
+// ─── QUICK TEST ───────────────────────────────────────────────────────────────
+const QT = [
+  { text:'Koulu alkaa uuden projektin. Sinä…', opts:[
+    { text:'Aloitan heti ilman suurta suunnittelua', s:'Toimelias',        t:'Tekijä' },
+    { text:'Suunnittelen tarkasti ensin',             s:'Järjestelmällinen',t:'Ajattelija' },
+    { text:'Keksin jotain luovaa ja omaa',            s:'Luova',            t:'Luova' },
+    { text:'Kysyn, haluaako joku tehdä yhdessä',      s:'Yhteistyökykyinen',t:'Auttaja' },
+    { text:'Ehdotan, että johtaisin projektia',       s:'Aloitteellinen',   t:'Johtaja' }
+  ]},
+  { text:'Välitunnilla kaverisi riitelevät. Sinä…', opts:[
+    { text:'Yritän sovitella heidät yhteen',     s:'Empaattinen', t:'Auttaja' },
+    { text:'Mietin, miksi riita alkoi',           s:'Analyyttinen',t:'Ajattelija' },
+    { text:'Ehdotan jotain muuta tekemistä',      s:'Idearikas',   t:'Luova' },
+    { text:'Pysyn erillään – se ei kuulu minulle',s:'Itsenäinen',  t:'Seikkailija' }
+  ]},
+  { text:'Saat vapaata aikaa. Mitä teet?', opts:[
+    { text:'Harrastan tai teen jotain aktiivista', s:'Energinen', t:'Tekijä' },
+    { text:'Luen, pelaan tai ajattelen rauhassa',  s:'Utelias',   t:'Ajattelija' },
+    { text:'Soittelen kavereille tai nähdään',     s:'Sosiaalinen',t:'Auttaja' },
+    { text:'Keksin jotain uutta tai kokeilen',     s:'Rohkea',    t:'Seikkailija' }
+  ]},
+  { text:'Jossakin olet selvästi hyvä. Se on…', opts:[
+    { text:'Selittäminen tai puhuminen',              s:'Ilmaisukykyinen', t:'Auttaja' },
+    { text:'Keksiminen tai ongelmanratkaisu',         s:'Luova',           t:'Luova' },
+    { text:'Aloittaminen ja asioiden tekeminen',      s:'Toimelias',       t:'Tekijä' },
+    { text:'Asioiden ymmärtäminen syvällisesti',      s:'Oppimishaluinen', t:'Ajattelija' },
+    { text:'Johtaminen tai organisoiminen',           s:'Vastuullinen',    t:'Johtaja' }
+  ]},
+  { text:'Mikä saa sinut tuntemaan, että olet parhaimmillasi?', opts:[
+    { text:'Kun pääsen auttamaan jotakuta',      s:'Empaattinen',t:'Auttaja' },
+    { text:'Kun keksin jotain omaa',             s:'Luova',      t:'Luova' },
+    { text:'Kun saan jonkin valmiiksi',          s:'Ahkera',     t:'Tekijä' },
+    { text:'Kun ymmärrän jotain uutta',          s:'Utelias',    t:'Ajattelija' },
+    { text:'Kun uskallan kokeilla uutta',        s:'Rohkea',     t:'Seikkailija' }
+  ]}
+];
+
+// ─── SCREENS ─────────────────────────────────────────────────────────────────
+
+function showStart() {
+  render(`
+    <div class="cover">
+      <span class="bigmoji">🔍</span>
+      <div class="cover-logo">Supervoima-<br>etsintä</div>
+      <p class="cover-sub">Sinussa on vahvuuksia, joita et ehkä itse edes huomaa.<br>Löydetään ne yhdessä!</p>
+    </div>
+    <div class="btn-group" style="max-width:360px;width:100%">
+      <button class="btn btn-primary" onclick="showIntro()">Aloita matka →</button>
+    </div>
+    <p style="color:var(--muted);font-size:0.85rem;text-align:center;margin-top:0.8rem">Kesto: noin 5–10 minuuttia</p>
+  `);
+}
+
+function showIntro() {
+  render(`
+    ${pb(5)}
+    <h1>Mikä on supervoima?</h1>
+    <div class="card">
+      Supervoima on asia, joka on sinulle <strong>helppo ja luonteva</strong>. Se voi olla taito, tapa toimia tai tapa ajatella.<br><br>
+      Se ei tarkoita parhaana olemista – se tarkoittaa sitä, mikä <em>tuntuu</em> sinulle omalta.
+    </div>
+    <div class="card-info">
+      🤔 Ajattele hetki: onko joku sanonut sinulle "olet hyvä tuossa"? Tai onko jokin asia sinulle selvästi helpompaa kuin muille?
+    </div>
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
+      <button class="btn btn-primary" onclick="showRouteSelect()">Selvä, lähdetään! →</button>
+    </div>
+  `);
+}
+
+function showRouteSelect() {
+  const ids = Object.keys(ROUTES);
+  const anyDone = ids.some(r => S.done.has(r)) || S.done.has('pikatesti');
+  const ptDone  = S.done.has('pikatesti');
+
+  const cards = ids.map(id => {
+    const r = ROUTES[id];
+    const done = S.done.has(id);
+    return `<button class="route-btn${done?' done':''}" onclick="startRoute('${id}')">${done?'<span class="done-mark">✓</span>':''}<span class="remoji">${r.emoji}</span>${r.name}</button>`;
+  }).join('');
+
+  render(`
+    ${pb(12)}
+    <h1>Mistä lähdetään?</h1>
+    <div class="card">Vahvuuksia löytyy kaikkialta. Valitse reitti, joka tuntuu sopivimmalta – tai käy kaikki läpi!</div>
+    <div class="route-grid">${cards}</div>
+    <div style="width:100%;margin:0.3rem 0">
+      <button class="btn ${ptDone?'btn-ghost':'btn-gold'}" onclick="startQuickTest()">
+        ${ptDone?'✓ Pikatesti (tehty)':'⚡ Pikatesti – 5 kysymystä nopeasti'}
+      </button>
+    </div>
+    ${anyDone
+      ? `<div style="width:100%;margin-top:0.6rem">
+          <p class="card-warn">💡 Mitä useamman reitin käyt, sitä tarkemman tuloksen saat!</p>
+          <button class="btn btn-primary" onclick="showReflection()">✅ Olen valmis – katso tulokset →</button>
+         </div>`
+      : `<p class="card-warn">💡 Käy useammalla reitillä – mitä enemmän reittejä teet, sitä tarkemman tuloksen saat!</p>`}
+  `);
+}
+
+function startRoute(id) {
+  S.currentRoute = id; S.routeStep = 0;
+  showRouteQ();
+}
+
+function showRouteQ() {
+  const r = ROUTES[S.currentRoute];
+  const q = r.questions[S.routeStep];
+  const pct = 25 + Math.round((S.routeStep / r.questions.length) * 15);
+  const opts = q.opts.map((o,i) =>
+    `<button class="btn" onclick="answerRoute(${i})">${o.text}</button>`).join('');
+  render(`
+    ${pb(pct)}
+    <h2>${r.emoji} ${r.title}</h2>
+    ${S.routeStep===0 ? `<div class="card-info">${r.intro}</div>` : ''}
+    <div class="card"><strong>${q.text}</strong></div>
+    <div class="btn-group">${opts}</div>
+    <button class="btn btn-ghost" style="width:auto;padding:0.4rem 1rem;font-size:0.88rem" onclick="showRouteSelect()">← Takaisin reitinvalintaan</button>
+  `);
+}
+
+function answerRoute(i) {
+  const r = ROUTES[S.currentRoute];
+  const o = r.questions[S.routeStep].opts[i];
+  o.s.forEach(addStr); addTyp(o.t);
+  if (S.routeStep < r.questions.length-1) { S.routeStep++; showRouteQ(); }
+  else { S.done.add(S.currentRoute); showRouteDone(); }
+}
+
+function showRouteDone() {
+  const r = ROUTES[S.currentRoute];
+  const left = Object.keys(ROUTES).filter(k => !S.done.has(k)).length;
+  render(`
+    ${pb(40)}
+    <span class="bigmoji">${r.emoji}</span>
+    <h2>${r.name} – valmis!</h2>
+    <div class="card" style="text-align:center">
+      Hienoa! Sait kerättyä vahvuuksia tältä reitiltä.
+      ${left>0 ? `<br><br>Haluatko jatkaa vielä ${left} reitille?` : '<br><br>Olet käynyt kaikki reitit läpi!'}
+    </div>
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
+      <button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>
+      ${left>0 ? `<button class="btn btn-gold" onclick="showRouteSelect()">Jatkan vielä muille reiteille</button>` : ''}
+    </div>
+  `);
+}
+
+function startQuickTest() { S.qtStep = 0; showQTQ(); }
+
+function showQTQ() {
+  const q = QT[S.qtStep];
+  const pct = 20 + Math.round((S.qtStep / QT.length)*60);
+  const opts = q.opts.map((o,i) =>
+    `<button class="btn" onclick="answerQT(${i})">${o.text}</button>`).join('');
+  render(`
+    ${pb(pct)}
+    <h2>⚡ Pikatesti</h2>
+    <div class="card-info">Kysymys ${S.qtStep+1}/${QT.length} – Valitse ensimmäinen vaihtoehto, joka tulee mieleen!</div>
+    <div class="card"><strong>${q.text}</strong></div>
+    <div class="btn-group">${opts}</div>
+  `);
+}
+
+function answerQT(i) {
+  const o = QT[S.qtStep].opts[i];
+  addStr(o.s); addTyp(o.t); S.qtStep++;
+  if (S.qtStep < QT.length) { showQTQ(); }
+  else {
+    S.done.add('pikatesti');
+    render(`
+      ${pb(85)}
+      <span class="bigmoji">🎯</span>
+      <h2>Pikatesti valmis!</h2>
+      <div class="card" style="text-align:center">Hienoa! Viisi kysymystä vastattu – vahvuuksia on jo kertynyt.</div>
+      <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
+        <button class="btn btn-primary"  onclick="showReflection()">Jatka tuloksiin →</button>
+        <button class="btn btn-gold"     onclick="showRouteSelect()">Käy myös muilla reiteillä</button>
+      </div>
+    `);
+  }
+}
+
+function showReflection() {
+  render(`
+    ${pb(85)}
+    <h2>✍️ Oma pohdinta</h2>
+    <div class="card-info">Tätä ei arvostella. Kirjoita rehellisesti – tai jätä tyhjäksi, se on ok myös!</div>
+    <div class="card">
+      <h3 style="text-align:left;margin-top:0">Missä olet mielestäsi hyvä?</h3>
+      <textarea id="ref1" placeholder="Esim. olen hyvä selittämään asioita, keksin ideoita, olen reilu…">${S.reflection}</textarea>
+    </div>
+    <div class="card">
+      <h3 style="text-align:left;margin-top:0">Minkä vahvuuden haluaisit kehittää?</h3>
+      <textarea id="ref2" placeholder="Esim. haluaisin olla rohkeampi tai kärsivällisempi…">${S.development}</textarea>
+    </div>
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
+      <button class="btn btn-primary" onclick="saveReflection()">Tallenna ja katso tulokset →</button>
+      <button class="btn btn-ghost"   onclick="showResults()">Ohita ja katso tulokset</button>
+    </div>
+  `);
+}
+
+function saveReflection() {
+  S.reflection  = $('ref1').value;
+  S.development = $('ref2').value;
+  S.reflSaved   = true;
+  showResults();
+}
+
+function showResults() {
+  const type = bestType();
+  const td   = TYPES[type];
+  const top5 = topStrengths(5);
+
+  const strHtml = top5.length > 0
+    ? `<ul class="str-list">${top5.map(s=>`<li><span class="str-tag">${s}</span></li>`).join('')}</ul>`
+    : `<p style="color:var(--muted);font-size:0.9rem">Käy ainakin yksi reitti tai pikatesti saadaksesi vahvuudet.</p>`;
+
+  // Build teacher summary
+  const date = new Date().toLocaleDateString('fi-FI');
+  const lines = [
+    'SUPERVOIMA-ETSINTÄ – Oppilaan tulokset',
+    '==========================================',
+    `Päivämäärä: ${date}`,
+    '',
+    `TYYPPI: ${type} ${td.emoji}`,
+    td.desc,
+    '',
+    'SUPERVOIMAT (top 5):',
+    ...top5.map((s,i) => `${i+1}. ${s}`),
+  ];
+  if (S.reflection)  { lines.push('', 'OMA POHDINTA:', `"${S.reflection}"`); }
+  if (S.development) { lines.push('', 'HALUAN KEHITTÄÄ:', `"${S.development}"`); }
+  window._summary = lines.join('\n');
+
+  render(`
+    ${pb(100,'Valmis')}
+    <h1>🎉 Sinun supervoimasi</h1>
+
+    <div class="result-card">
+      <span class="bigmoji">${td.emoji}</span>
+      <div class="type-badge" style="background:${td.color}">${type}</div>
+      <p style="margin:0.8rem 0 0.4rem">${td.desc}</p>
+      <p style="color:var(--teal);font-size:0.88rem;font-style:italic;margin:0">${td.super}</p>
+    </div>
+
+    ${top5.length > 0 ? `<div class="card"><h3>⭐ Löydetyt supervoimasi</h3>${strHtml}</div>` : ''}
+
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:0.5rem">
+      <button class="btn btn-primary" onclick="showVahvuuskortti()">🌟 Luo vahvuuskortti</button>
+      <button class="btn btn-gold"    onclick="dlTxt()">📥 Lataa tulokset (TXT)</button>
+    </div>
+
+    <!-- Teacher summary -->
+    <div style="width:100%;margin-top:1.4rem">
+      <button class="btn btn-ghost" id="tToggle" onclick="toggleTeacher()">👩‍🏫 Näytä opettajan yhteenveto</button>
+      <div id="tBox" style="display:none;margin-top:0.5rem">
+        <div class="teacher-box">
+          <h4>📋 Opettajalle – kopioi tämä teksti ja liitä Classroomiin</h4>
+          <pre id="tText"></pre>
+        </div>
+        <div class="btn-group" style="max-width:360px;width:100%">
+          <button class="btn btn-teal" id="copyBtn" onclick="copyTeacher()">📋 Kopioi teksti</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
+      <button class="btn btn-ghost" onclick="resetAll()">🔄 Aloita alusta</button>
+    </div>
+  `);
+
+  // Set pre text safely (avoids HTML injection)
+  if ($('tText')) $('tText').textContent = window._summary;
+}
+
+function toggleTeacher() {
+  const box = $('tBox'), btn = $('tToggle');
+  const show = box.style.display === 'none';
+  box.style.display = show ? 'block' : 'none';
+  btn.textContent   = show ? '👩‍🏫 Piilota opettajan yhteenveto' : '👩‍🏫 Näytä opettajan yhteenveto';
+}
+
+function copyTeacher() {
+  const text = window._summary || '';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      $('copyBtn').textContent = '✅ Kopioitu!';
+      setTimeout(() => { if ($('copyBtn')) $('copyBtn').textContent = '📋 Kopioi teksti'; }, 2200);
+    });
+  } else {
+    // Fallback: select
+    const pre = $('tText');
+    const range = document.createRange();
+    range.selectNodeContents(pre);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  }
+}
+
+function dlTxt() {
+  const blob = new Blob([window._summary||''], {type:'text/plain;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'supervoimani.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showVahvuuskortti() {
+  const type  = bestType();
+  const td    = TYPES[type];
+  const top3  = topStrengths(3);
+  const date  = new Date().toLocaleDateString('fi-FI');
+  const tags  = top3.map(s=>`<span class="str-tag">${s}</span>`).join(' ');
+
+  render(`
+    <h1>⭐ Vahvuuskorttisi</h1>
+    <div class="card-info" style="text-align:center">💡 Paina <strong>Tulosta kortti</strong> tai ota kuvakaappaus!</div>
+
+    <div class="vk-card" id="vkCard">
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;color:var(--gold);margin-bottom:0.5rem">MINUN SUPERVOIMANI</div>
+      <span class="bigmoji">${td.emoji}</span>
+      <div class="type-badge" style="background:${td.color}">${type}</div>
+      <p style="font-size:0.82rem;color:var(--muted);margin:0.8rem 0 0.3rem">VAHVUUTENI:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;margin-bottom:0.8rem">${tags}</div>
+      ${S.reflection ? `<div style="background:rgba(0,212,170,0.08);border-radius:10px;padding:0.65rem;font-style:italic;font-size:0.88rem;margin-bottom:0.5rem">"${escHtml(S.reflection)}"</div>` : ''}
+      ${S.development ? `<p style="font-size:0.8rem;color:var(--muted);margin:0.2rem 0 0.1rem">HALUAN KEHITTÄÄ:</p><p style="font-size:0.88rem;margin:0">${escHtml(S.development)}</p>` : ''}
+      <p style="font-size:0.72rem;color:var(--muted);margin-top:1rem">Supervoima-etsintä • ${date}</p>
+    </div>
+
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:1.2rem">
+      <button class="btn btn-gold"    onclick="window.print()">🖨️ Tulosta kortti</button>
+      <button class="btn btn-primary" onclick="showResults()">← Takaisin tuloksiin</button>
+    </div>
+  `);
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function resetAll() {
+  S.scores = {};
+  S.types  = { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 };
+  S.done   = new Set();
+  S.reflection = ''; S.development = '';
+  S.reflSaved  = false;
+  showStart();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+showStart();
+</script>
+</body>
+</html>

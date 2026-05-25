@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiedon Temppelin Salaisuudet</title>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, orderBy, query, limit }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAqtIi_SdGLrq_EzHpzDLhiBP0Lg_UsuWQ",
+  authDomain: "tiedon-temppeli.firebaseapp.com",
+  projectId: "tiedon-temppeli",
+  storageBucket: "tiedon-temppeli.firebasestorage.app",
+  messagingSenderId: "496664294577",
+  appId: "1:496664294577:web:37807df869eeb56096de90"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function lbGet() {
+  try {
+    const q = query(collection(db, "tulostaulu_k1"), orderBy("score", "desc"), limit(5));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { console.error(e); return []; }
+}
+
+async function lbSave(playerId, name, koulu, luokka, score) {
+  try {
+    const ref = doc(db, "tulostaulu_k1", playerId);
+    const existing = await getDoc(ref);
+    if (existing.exists() && existing.data().score >= score)
+      return { saved: false, reason: "Aiempi tulos on parempi" };
+    await setDoc(ref, {
+      name, koulu, luokka: luokka || "",
+      score,
+      date: new Date().toLocaleDateString("fi-FI"),
+      updated: Date.now()
+    });
+    return { saved: true };
+  } catch(e) { console.error(e); return { saved: false, reason: "Verkkovirhe" }; }
+}
+
+window._fbLbGet = lbGet;
+window._fbLbSave = lbSave;
+window._fbReady = true;
+window.dispatchEvent(new Event("fbready"));
+</script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e2e;
+  --bg2:#1a1a4e;
+  --card:#1e1e5a;
+  --border:#3a3a8e;
+  --text:#e8e8ff;
+  --muted:#8888bb;
+  --accent:#7c6fff;
+  --green:#4ade80;
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --r:12px;
+}
+body{
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:16px;
+  gap:0;
+}
+.screen{display:none;width:100%;max-width:640px;flex-direction:column;align-items:center;gap:14px;padding-top:8px}
+.screen.on{display:flex}
+
+/* TITLE */
+.game-title{font-size:26px;font-weight:900;text-align:center;letter-spacing:-1px;line-height:1.2}
+.game-title span{color:var(--accent)}
+.game-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;width:100%}
+
+/* INPUTS */
+.inp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:5px}
+.finp{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+.finp:focus{border-color:var(--accent)}
+.finp::placeholder{color:var(--muted)}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.inp-group{display:flex;flex-direction:column}
+
+/* BUTTONS */
+.btn{padding:11px 22px;border-radius:8px;border:1px solid var(--border);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;background:rgba(255,255,255,.07);color:var(--text)}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-acc{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-acc:hover{background:#9d96ff;border-color:#9d96ff;color:#fff}
+.btn-grn{background:var(--green);color:#000;border-color:var(--green)}
+.btn-grn:hover{filter:brightness(1.1);color:#000}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
+
+/* SCORE BAR */
+.sbar{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--r);width:100%;overflow:hidden}
+.scell{flex:1;text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
+.scell:last-child{border-right:none}
+.sval{font-size:20px;font-weight:900;color:var(--accent)}
+.slbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+
+/* DOOR GRID */
+.door-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:100%}
+.door{
+  border-radius:var(--r);
+  padding:14px 6px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:700;
+  font-size:12px;
+  line-height:1.3;
+  transition:transform .15s,filter .15s,box-shadow .15s;
+  position:relative;
+  min-height:88px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,.5);
+  border:2px solid rgba(255,255,255,.25);
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+.door:hover:not(.solved){transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.4);filter:brightness(1.12)}
+.door.solved{filter:brightness(.65);cursor:default}
+.door.solved::after{content:'✓';position:absolute;top:5px;right:8px;font-size:18px;color:#4ade80;font-weight:900;text-shadow:none}
+.door-icon{font-size:24px;margin-bottom:5px}
+
+/* SOLVED DOTS */
+.sdots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.sdot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);transition:all .3s}
+.sdot.on{background:var(--green);border-color:var(--green);box-shadow:0 0 6px rgba(74,222,128,.5)}
+
+/* QUESTION */
+.q-cat{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
+.q-title{font-size:22px;font-weight:900;color:var(--accent);margin-bottom:14px}
+.q-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:18px}
+
+/* TIMER */
+.timer-row{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:16px}
+.tbar-wrap{flex:1;background:rgba(255,255,255,.1);border-radius:999px;height:7px;overflow:hidden}
+.tbar{height:100%;border-radius:999px;transition:width .1s linear,background .4s}
+.tnum{font-size:17px;font-weight:900;min-width:28px;text-align:right;transition:color .4s}
+
+/* ANSWER BUTTONS */
+.ans-btn{
+  width:100%;padding:13px 16px;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid var(--border);
+  border-radius:9px;color:var(--text);
+  font-size:14px;font-weight:600;
+  text-align:left;cursor:pointer;
+  transition:all .15s;
+  display:block;margin-bottom:9px;
+}
+.ans-btn:hover:not(:disabled){background:rgba(124,111,255,.2);border-color:var(--accent);color:#fff}
+.ans-btn.correct{background:rgba(74,222,128,.2);border-color:var(--green);color:var(--green)}
+.ans-btn.wrong{background:rgba(248,113,113,.2);border-color:var(--red);color:var(--red)}
+.ans-btn:disabled{cursor:default}
+
+/* FEEDBACK */
+.feedback{font-size:14px;font-weight:600;text-align:center;padding:10px;min-height:20px;line-height:1.5}
+.feedback.ok{color:var(--green)}
+.feedback.err{color:var(--red)}
+.feedback.time{color:var(--yellow)}
+
+/* LEADERBOARD */
+.lbwrap{width:100%;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.lbrow{display:grid;grid-template-columns:36px 1fr auto;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.lbrow:last-child{border-bottom:none}
+.lbrow.hdr{background:rgba(255,255,255,.05);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+.lbrow.me{background:rgba(124,111,255,.15);border-left:3px solid var(--accent)}
+.lbrank{font-weight:900;text-align:center}
+.r1{color:gold}.r2{color:silver}.r3{color:#cd7f32}
+.lbname{font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.lbname small{font-weight:400;color:var(--muted);font-size:11px}
+.lbpts{font-weight:900;color:var(--accent);text-align:right}
+
+/* END */
+.big-score{font-size:68px;font-weight:900;color:var(--accent);text-align:center;line-height:1}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);align-self:flex-start}
+.notice{border-radius:var(--r);padding:11px 15px;font-size:13px;width:100%}
+.code-box{font-size:34px;font-weight:900;letter-spacing:6px;color:var(--yellow);text-align:center;padding:14px;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.3);border-radius:var(--r)}
+
+/* LANDING PAGE */
+.landing-wrap{
+  width:100%;
+  max-width:560px;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+.landing-bg{
+  width:100%;
+  background:linear-gradient(160deg,#0e0e3a 0%,#1a1060 40%,#0a2040 100%);
+  border-radius:20px 20px 0 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:200px;
+}
+.landing-fallback{
+  text-align:center;
+  padding:40px 20px;
+}
+.landing-btns{
+  background:rgba(5,5,20,.95);
+  border-radius:0 0 20px 20px;
+  padding:20px 24px 22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  border-top:1px solid rgba(124,111,255,.3);
+}
+.btn-start-big{
+  background:linear-gradient(135deg,#7c6fff,#b06fff);
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  font-size:20px;
+  font-weight:900;
+  padding:16px 48px;
+  cursor:pointer;
+  letter-spacing:.5px;
+  box-shadow:0 4px 20px rgba(124,111,255,.5);
+  transition:all .2s;
+  width:100%;
+  max-width:320px;
+}
+.btn-start-big:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(124,111,255,.7);
+  background:linear-gradient(135deg,#9d90ff,#c88fff);
+}
+.btn-start-big:active{transform:scale(.97)}
+.btn-lb-small{
+  background:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  padding:8px 20px;
+  cursor:pointer;
+  transition:all .15s;
+}
+.btn-lb-small:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.anim-fade{animation:fadeUp .3s ease}
+
+/* PROGRESS */
+.pwrap{width:100%;background:var(--bg2);border-radius:999px;height:5px;overflow:hidden}
+.pbar{height:100%;background:var(--accent);border-radius:999px;transition:width .4s}
+
+@media(max-width:480px){
+  .door-grid{grid-template-columns:repeat(5,1fr);gap:6px}
+  .door{font-size:10px;padding:10px 3px;min-height:74px}
+  .door-icon{font-size:18px;margin-bottom:3px}
+  .inp-row{grid-template-columns:1fr}
+  .big-score{font-size:52px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING PAGE ═══ -->
+<div id="s-landing" class="screen on">
+  <div class="landing-wrap">
+    <div class="landing-bg" id="landing-bg">
+      <div class="landing-fallback" id="landing-fallback">
+        <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.5)">Tiedon<br>Temppeli</div>
+      </div>
+      <img id="landing-img" src="" alt="" style="display:none;width:100%;border-radius:20px 20px 0 0;">
+    </div>
+    <div class="landing-btns">
+      <button class="btn-start-big" onclick="goRegister()">▶Start</button>
+      <button class="btn-lb-small" onclick="goLb()">🏆 Tulostaulu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WELCOME / REKISTERÖINTI ═══ -->
+<div id="s-welcome" class="screen">
+  <div style="margin-top:6px;text-align:center">
+    <div style="font-size:42px;margin-bottom:6px">🏛️</div>
+    <div class="game-title">Tiedon Temppelin<br><span>Salaisuudet</span></div>
+    <div class="game-sub">Kuka pääsee nopeiten temppelin huipulle ja voittaa aarteen?</div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div style="font-size:15px;font-weight:800;margin-bottom:10px">🏆 Kierros 1 – Temppelin Portti</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:14px">
+      Edessäsi on Tiedon Temppeli – täynnä mystisiä portteja ja arvoituksia.<br>
+      Ratkaise kaikki <strong style="color:var(--text)">30 arvoitusta</strong> kolmessa kerroksessa.<br>
+      Nopein pelaaja pääsee temppelin huipulle ja voittaa <strong style="color:var(--yellow)">aarteen</strong>!<br>
+      Aarteen sisältö selviää vain voittajalle. 🏅
+    </div>
+    <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:11px;font-size:12px;color:var(--muted);line-height:1.8">
+      ⚡ K1: 100p · K2: 150p · K3: 200p per oikea &nbsp;·&nbsp; 🏆 Tulostaulu
+    </div>
+  </div>
+
+  <div style="width:100%;display:flex;flex-direction:column;gap:10px">
+    <div class="inp-group">
+      <div class="inp-lbl">Nimi *</div>
+      <input class="finp" id="inp-nimi" placeholder="Nimimerkki" maxlength="30">
+    </div>
+    <div class="inp-row">
+      <div class="inp-group">
+        <div class="inp-lbl">Koulu *</div>
+        <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40">
+      </div>
+      <div class="inp-group">
+        <div class="inp-lbl">Luokka (vapaaehtoinen)</div>
+        <input class="finp" id="inp-luokka" placeholder="7A" maxlength="10">
+      </div>
+    </div>
+  </div>
+
+  <div id="welcome-err" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita ainakin nimi ja koulu</div>
+
+  <div class="btns">
+    <button class="btn btn-acc" onclick="startGame()" style="font-size:15px;padding:13px 30px">🚀 Aloita peli!</button>
+    <button class="btn" onclick="showScreen('s-landing')">← Takaisin</button>
+  </div>
+</div>
+
+<!-- ═══ GAME MAP ═══ -->
+<div id="s-game" class="screen">
+  <div class="game-title" style="font-size:18px">🏛️ Tiedon Temppeli – <span id="round-label">Kierros 1</span></div>
+
+  <div class="sbar">
+    <div class="scell"><div class="sval" id="g-score">0</div><div class="slbl">Pisteet</div></div>
+    <div class="scell"><div class="sval" id="g-solved">0/10</div><div class="slbl">Ratkaistu</div></div>
+    <div class="scell"><div class="sval" id="g-time">0:00</div><div class="slbl">Aika</div></div>
+  </div>
+
+  <div class="card" style="padding:16px">
+    <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:12px;line-height:1.6">
+      Klikkaa portteja ja ratkaise arvoitukset. Nopein pelaaja pääsee temppelin huipulle ja voittaa aarteen – aarteen sisältö selviää vain voittajalle! 🏅
+    </div>
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">
+      Ratkaistu: <span id="g-solved2" style="color:var(--text);font-weight:700">0</span>/10
+    </div>
+    <div class="sdots" id="solved-dots"></div>
+  </div>
+
+  <div class="door-grid" id="door-grid"></div>
+</div>
+
+<!-- ═══ QUESTION ═══ -->
+<div id="s-question" class="screen">
+  <div class="card anim-fade" style="padding:22px">
+    <div class="q-cat" id="q-cat">Kategoria</div>
+    <div class="q-title" id="q-title">Otsikko</div>
+    <div class="timer-row">
+      <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%;background:var(--green)"></div></div>
+      <div class="tnum" id="tnum" style="color:var(--green)">30</div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-answers"></div>
+    <div class="feedback" id="q-feedback"></div>
+    <div id="q-btns" style="display:none;margin-top:4px">
+      <div class="btns">
+        <button class="btn btn-acc" onclick="backToMap()">← Takaisin kartalle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SIIRTYMÄ K1→K2 ═══ -->
+<div id="s-transition" class="screen">
+  <div class="card anim-fade" style="text-align:center;padding:28px">
+    <div style="font-size:56px;margin-bottom:12px">🏛️</div>
+    <div style="font-size:22px;font-weight:900;color:var(--green);margin-bottom:8px">Ensimmäinen kerros läpäisty!</div>
+    <div style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:20px">
+      Olet ratkaissut kaikki arvoitukset temppelin porteilla.<br>
+      Edessäsi siintää <strong style="color:var(--text)">Tiedon Temppelin ensimmäinen kerros</strong> –<br>
+      arvoitukset ovat vaikeampia, mutta pisteitäkin saa enemmän!<br><br>
+      <span style="color:var(--yellow)">Aarre odottaa temppelin huipulla. 🏅</span>
+    </div>
+    <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">KIERROS 1 – PISTEET</div>
+      <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans-score">0</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus</div>
+    </div>
+    <button class="btn-start-big" onclick="startRound2()" style="font-size:17px;padding:14px 36px">
+      Jatka toiselle kerrokselle →
+    </button>
+  </div>
+</div>
+
+<!-- ═══ SIIRTYMÄ K2→K3 ═══ -->
+<div id="s-transition2" class="screen">
+  <div class="card anim-fade" style="text-align:center;padding:28px">
+    <div style="font-size:56px;margin-bottom:12px">🔥</div>
+    <div style="font-size:22px;font-weight:900;color:var(--yellow);margin-bottom:8px">Toinen kerros läpäisty!</div>
+    <div style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:20px">
+      Upea suoritus – olet päässyt lähelle temppelin huippua!<br>
+      Edessäsi on <strong style="color:var(--text)">Tiedon Temppelin viimeinen kerros</strong> –<br>
+      kaikkein vaikeimmat arvoitukset odottavat, mutta<br>
+      jokainen oikea vastaus tuo <strong style="color:var(--text)">200 pistettä + aikabonus</strong>!<br><br>
+      <span style="color:var(--yellow)">Tämä on viimeinen mahdollisuus kisata aarteesta. 🏅</span>
+    </div>
+    <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">PISTEET TÄHÄN MENNESSÄ</div>
+      <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans2-score">0</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus</div>
+    </div>
+    <button class="btn-start-big" onclick="startRound3()" style="font-size:17px;padding:14px 36px">
+      Jatka kolmannelle kerrokselle →
+    </button>
+  </div>
+</div>
+
+<!-- ═══ END ═══ -->
+<div id="s-end" class="screen">
+  <div class="game-title" style="font-size:20px">🏆 Seikkailu <span>päättyi!</span></div>
+
+  <div class="card" style="text-align:center">
+    <div style="font-size:52px;margin-bottom:8px" id="end-emoji">🎉</div>
+    <div style="font-size:19px;font-weight:900;margin-bottom:6px" id="end-title">Mahtava suoritus!</div>
+    <div class="big-score" id="end-score">0</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:16px">kokonaispistettä</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px">🏅 Olet saavuttanut temppelin huipun! Näytä tämä koodi opettajallesi:</div>
+    <div class="code-box" id="end-code">--------</div>
+  </div>
+
+  <div style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:8px;padding:11px">
+        <div style="font-size:22px;font-weight:900;color:var(--accent)" id="stat-correct">0</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Oikein</div>
+      </div>
+      <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:8px;padding:11px">
+        <div style="font-size:22px;font-weight:900;color:var(--accent)" id="stat-time">0:00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Kokonaisaika</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-lbl">🏆 TULOSTAULU – TOP 5 (K1 + K2 + K3)</div>
+  <div id="end-lb-area" style="width:100%">
+    <div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Ladataan...</div>
+  </div>
+  <div id="save-notice" class="notice" style="display:none"></div>
+
+  <div class="btns">
+    <button class="btn" onclick="goPlayAgain()">🔄 Pelaa uudelleen</button>
+    <button class="btn" onclick="goLb()">🏆 Tulostaulu</button>
+  </div>
+</div>
+
+<!-- ═══ LEADERBOARD ═══ -->
+<div id="s-lb" class="screen">
+  <div class="game-title" style="font-size:20px">🏆 <span>Tulostaulu</span></div>
+  <div class="sec-lbl">TOP 5 – YHTEISPISTEET (K1 + K2 + K3)</div>
+  <div id="main-lb-area" style="width:100%">
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Ladataan...</div>
+  </div>
+  <div class="btns">
+    <button class="btn btn-acc" onclick="showScreen('s-welcome')" style="min-width:140px">← Takaisin</button>
+    <button class="btn" onclick="loadLb('main-lb-area',null)">🔄 Päivitä</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   KYSYMYKSET
+═══════════════════════════════════════ */
+const QUESTIONS = [
+  {
+    title: "Numeroiden Labyrintti",
+    color: "#e84393",
+    icon: "🔢",
+    text: "Koulun kahvilassa yksi sämpylä maksaa 2,40 €. Ella ostaa sämpylän joka koulupäivä maanantaista perjantaihin. Paljonko hän maksaa sämpylöistään kahden viikon aikana?",
+    answers: ["A) 12,00 €", "B) 24,00 €", "C) 48,00 €"],
+    correct: 1,
+    explanation: "2,40 € × 5 päivää × 2 viikkoa = 24,00 €"
+  },
+  {
+    title: "Sanojen Velhot",
+    color: "#22c55e",
+    icon: "📝",
+    text: "Opettaja kirjoitti Wilmaan näin: \"Tero jätti tehtävänsä tekemättä taas.\" Miten tämä viesti todennäköisesti vaikuttaa Teron vanhempien ajatuksiin?",
+    answers: [
+      "A) He ilahtuvat siitä, että Tero on ollut ahkera.",
+      "B) He luulevat, että Tero unohti tehtävänsä.",
+      "C) He päättävät antaa Terolle karkkia palkinnoksi."
+    ],
+    correct: 1,
+    explanation: "Viesti kertoo, että Tero on toistuvasti laiminlyönyt tehtäviään – vanhemmat huolestuvat."
+  },
+  {
+    title: "Aikamatkustajat",
+    color: "#3b82f6",
+    icon: "⏳",
+    text: "Kuvitellaan, että sinut siirretään ajassa 200 vuotta taaksepäin suoraan kouluun. Mikä asia tuntuisi siellä sinusta todennäköisesti oudolta?",
+    answers: [
+      "A) Opettaja kirjoittaa liitutaululle.",
+      "B) Kukaan ei käytä kännykkää tai tietokonetta.",
+      "C) Oppilaat istuvat pulpeteissa."
+    ],
+    correct: 1,
+    explanation: "Kännykät ja tietokoneet ovat moderneja keksintöjä – 200 vuotta sitten niitä ei ollut olemassa."
+  },
+  {
+    title: "Aineiden Alkemia",
+    color: "#eab308",
+    icon: "⚗️",
+    text: "Mikko laittoi limsapullon liian nopeasti pakastimeen, jotta se jäähtyisi. Kun hän otti sen ulos, limsa oli jäätynyt ja pullo oli hieman pullistunut. Miksi näin kävi?",
+    answers: [
+      "A) Limsaan tuli lisää sokeria jääkaapissa.",
+      "B) Neste laajenee jäätyessään, ja pullo ei kestänyt sitä.",
+      "C) Pullo alkoi hengittää ja turposi itse."
+    ],
+    correct: 1,
+    explanation: "Vesi ja vesipitoiset nesteet laajenevat jäätyessään – siksi pullo pullistui."
+  },
+  {
+    title: "Maailman Kielet",
+    color: "#ec4899",
+    icon: "🌍",
+    text: "Jani menee kahvilaan Lontoossa ja sanoo reippaasti tiskillä: \"I want to buy a big bread.\" Myyjä katsoo häntä hetken oudosti. Mikä olisi voinut olla parempi tapa sanoa se?",
+    answers: [
+      "A) I want to eat a bread right now.",
+      "B) I would like a big loaf of bread, please.",
+      "C) Give bread now, thanks."
+    ],
+    correct: 1,
+    explanation: "\"I would like...\" on kohteliaampi, ja \"loaf of bread\" on oikea ilmaisu leivälle englanniksi."
+  },
+  {
+    title: "Pohjoisen Puhe",
+    color: "#06b6d4",
+    icon: "🇸🇪",
+    text: "Sara on Ruotsissa kahvilassa ja sanoo rohkeasti: \"Jag vill ha en glass, tack!\" Mutta myyjä antaa hänelle lasin vettä. Mitä Sara ehkä sanoi vahingossa?",
+    answers: [
+      "A) Hän lausui \"glass\" kuin \"glas\", joka tarkoittaa lasia.",
+      "B) Hän sanoi liian hiljaa \"tack\", eikä myyjä kuullut.",
+      "C) Hän unohti sanoa \"hej\" ensin."
+    ],
+    correct: 0,
+    explanation: "Ruotsissa \"glas\" = lasi ja \"glass\" = jäätelö. Sara tilasi vahingossa lasin vettä!"
+  },
+  {
+    title: "Kehon Mestarit",
+    color: "#f97316",
+    icon: "💪",
+    text: "Miksi on tärkeää lämmitellä ennen urheilusuoritusta?",
+    answers: [
+      "A) Jotta ei tule kylmä ulkona.",
+      "B) Se vähentää loukkaantumisriskiä ja parantaa suorituskykyä.",
+      "C) Koska opettaja käskee niin."
+    ],
+    correct: 1,
+    explanation: "Lämmittely valmistelee lihakset ja nivelet rasitukseen, mikä vähentää loukkaantumisriskiä."
+  },
+  {
+    title: "Äänten Taikurit",
+    color: "#a855f7",
+    icon: "🎵",
+    text: "Mikä näistä on puhallinsoitin?",
+    answers: ["A) Viulu", "B) Rummut", "C) Huilu"],
+    correct: 2,
+    explanation: "Huilu on puhallinsoitin. Viulu on jousisoitin ja rummut on lyömäsoitin."
+  },
+  {
+    title: "Elämän Salaisuudet",
+    color: "#84cc16",
+    icon: "🌿",
+    text: "Mikä on yhteyttäminen?",
+    answers: [
+      "A) Prosessi, jossa kasvit muuttavat auringonvalon, veden ja hiilidioksidin energiaksi ja hapeksi.",
+      "B) Tapa, jolla eläimet kommunikoivat keskenään.",
+      "C) Menetelmä, jolla ihmiset kierrättävät jätteitä."
+    ],
+    correct: 0,
+    explanation: "Yhteyttämisessä kasvit tuottavat energiaa auringonvalolla, vedellä ja CO₂:lla vapauttaen happea."
+  },
+  {
+    title: "Maapallon Mysteerit",
+    color: "#a16207",
+    icon: "🌏",
+    text: "Mikä näistä on Suomen naapurimaa?",
+    answers: ["A) Tanska", "B) Viro", "C) Islanti"],
+    correct: 1,
+    explanation: "Viro on Suomen naapurimaa Suomenlahden eteläpuolella."
+  }
+];
+
+/* ═══════════════════════════════════════
+   KIERROS 2 – KYSYMYKSET
+═══════════════════════════════════════ */
+const QUESTIONS_K2 = [
+  {
+    title: "Numeroiden Mestari",
+    color: "#f97316",
+    icon: "🧮",
+    text: "Kaupassa on alennusmyynti: kaikki tuotteet -25%. Laukku maksaa alennuksen jälkeen 45 €. Mikä oli laukun alkuperäinen hinta?",
+    answers: ["A) 60 €", "B) 56,25 €", "C) 55 €"],
+    correct: 0,
+    explanation: "45 € on 75 % alkuperäisestä hinnasta. 45 ÷ 0,75 = 60 €."
+  },
+  {
+    title: "Sanojen Mestari",
+    color: "#22c55e",
+    icon: "📖",
+    text: "Artikkeli alkaa: \"Tutkimusten mukaan nuoret nukkuvat yhä vähemmän.\" Mitä kirjoittaja todennäköisesti haluaa viestittää?",
+    answers: [
+      "A) Nuorten unenpuute on huolestuttava yhteiskunnallinen ilmiö.",
+      "B) Nuoret ovat laiskoja ja haluavat valvoa.",
+      "C) Tutkijat ovat kiinnostuneita nuorten elämäntavoista."
+    ],
+    correct: 0,
+    explanation: "Artikkeli herättää huolta: nuorten unenpuute on kasvava ongelma, johon yhteiskunnan pitäisi reagoida."
+  },
+  {
+    title: "Teknologia & Media",
+    color: "#06b6d4",
+    icon: "💻",
+    text: "Näet somessa videon, jossa tunnettu tiedemies väittää rokotteiden aiheuttavan vakavia sairauksia. Mitä kannattaa tehdä ensin?",
+    answers: [
+      "A) Jakaa video eteenpäin, koska asiantuntija sanoo niin.",
+      "B) Uskoa väitteet, koska ne ovat somessa laajasti levinneet.",
+      "C) Tarkistaa, onko video aito, ja etsiä tietoa luotettavista lähteistä."
+    ],
+    correct: 2,
+    explanation: "Kriittinen medialukutaito: ennen jakamista kannattaa aina tarkistaa lähde ja etsiä vahvistusta luotettavista medioista."
+  },
+  {
+    title: "Ympäristö & Kestävyys",
+    color: "#84cc16",
+    icon: "🌱",
+    text: "Perhe miettii, mikä arjen teko vähentäisi eniten hiilidioksidipäästöjä. Mikä näistä on vaikutukseltaan suurin?",
+    answers: [
+      "A) Sammuttaa valot aina poistuessa huoneesta.",
+      "B) Käyttää kangaskassia muovipussin sijaan.",
+      "C) Korvata yksi lentomatka juna- tai laivamatkalla."
+    ],
+    correct: 2,
+    explanation: "Yksi lentomatka tuottaa moninkertaisesti enemmän CO₂ kuin valojen sammuttaminen tai muovipussit koko vuodelta."
+  },
+  {
+    title: "Historian Arvoitus",
+    color: "#a855f7",
+    icon: "🏰",
+    text: "Suomi itsenäistyi vuonna 1917. Mikä samanaikainen maailmantapahtuma helpotti Suomen itsenäistymistä merkittävästi?",
+    answers: [
+      "A) Ruotsi tunnusti Suomen itsenäisyyden ennen muita.",
+      "B) Venäjän vallankumous heikensi Venäjän otetta Suomesta.",
+      "C) Ensimmäinen maailmansota päättyi juuri samaan aikaan."
+    ],
+    correct: 1,
+    explanation: "Venäjän vallankumous 1917 kaatoi tsaarin vallan, jolloin Suomella oli tilaisuus julistautua itsenäiseksi."
+  },
+  {
+    title: "Aineiden Tutkija",
+    color: "#eab308",
+    icon: "🔬",
+    text: "Miksi tummiin vaatteisiin pukeutunut henkilö tuntee olonsa kuumemmaksi auringossa kuin vaaleisiin pukeutunut?",
+    answers: [
+      "A) Tummat vaatteet hengittävät huonommin kuin vaaleat.",
+      "B) Tummat vaatteet ovat yleensä paksumpia ja lämpimämpiä.",
+      "C) Tummat värit absorboivat enemmän auringon säteilyä kuin vaaleat."
+    ],
+    correct: 2,
+    explanation: "Tummat värit absorboivat lähes kaiken auringonsäteilyn, vaaleat heijastavat sen pois – siksi tummat vaatteet lämpiävät enemmän."
+  },
+  {
+    title: "Kielen Rakentaja",
+    color: "#ec4899",
+    icon: "🗣️",
+    text: "Suomalainen opiskelija kirjoittaa englanniksi: \"I am agree with you.\" Mikä on virhe lauseessa?",
+    answers: [
+      "A) \"with\" pitäisi olla \"to\" – oikein on \"I agree to you\".",
+      "B) \"am\" ei kuulu tähän – oikein on \"I agree with you\".",
+      "C) \"agree\" pitäisi olla \"agreeing\" – oikein on \"I am agreeing\"."
+    ],
+    correct: 1,
+    explanation: "\"Agree\" on verbi, jota ei voi yhdistää \"am\"-apuverbiin tässä muodossa. Oikein: \"I agree with you\"."
+  },
+  {
+    title: "Pohjoinen Mestari",
+    color: "#3b82f6",
+    icon: "🧊",
+    text: "Haluat sanoa ruotsiksi, että sinulla on kylmä. Mikä on oikein?",
+    answers: [
+      "A) Jag är kall.",
+      "B) Jag har kallt.",
+      "C) Jag är kallt."
+    ],
+    correct: 1,
+    explanation: "\"Jag är kall\" tarkoittaa \"olen kylmä/tunteeton ihmisenä\". Oikein on \"Jag har kallt\" = minulla on kylmä."
+  },
+  {
+    title: "Elämän Verkostot",
+    color: "#e84393",
+    icon: "🦋",
+    text: "Miksi luonnon monimuotoisuuden eli eri eläin- ja kasvilajien säilyttäminen on tärkeää?",
+    answers: [
+      "A) Jotta luonto näyttää kauniilta ja monipuoliselta.",
+      "B) Lajit ovat riippuvaisia toisistaan – yhden lajin häviäminen voi heikentää koko ekosysteemin toimintaa.",
+      "C) Harvinaiset lajit ovat taloudellisesti arvokkaita keräilijöille."
+    ],
+    correct: 1,
+    explanation: "Ekosysteemit ovat herkkiä verkostoja: yhden lajin katoaminen voi laukaista ketjureaktion, joka vaikuttaa kymmeniin muihin lajeihin."
+  },
+  {
+    title: "Maapallon Ilmiöt",
+    color: "#a16207",
+    icon: "🗺️",
+    text: "Miksi Suomessa on ns. yötön yö kesällä?",
+    answers: [
+      "A) Suomi sijaitsee lähellä pohjoisnapaa, ja maa on kesällä kallellaan aurinkoa kohti.",
+      "B) Suomi on lähellä päiväntasaajaa, jossa aurinko paistaa pitkään.",
+      "C) Suomen ilmasto on poikkeuksellisen lämmin, joten aurinko paistaa pidempään."
+    ],
+    correct: 0,
+    explanation: "Maan akselin kaltevuuden takia pohjoiset alueet, kuten Suomi, saavat kesällä aurinkoa lähes ympäri vuorokauden."
+  }
+];
+
+/* ═══════════════════════════════════════
+   KIERROS 3 – KYSYMYKSET
+═══════════════════════════════════════ */
+const QUESTIONS_K3 = [
+  {
+    title: "Laskujen Kuningas",
+    color: "#dc2626",
+    icon: "👑",
+    text: "Junalippu maksaa normaalisti 45 €. Opiskelijat saavat 30 % alennuksen. Mikko ostaa menopaluulipun (= 2 lippua). Paljonko hän maksaa yhteensä?",
+    answers: ["A) 63 €", "B) 56,25 €", "C) 49 €"],
+    correct: 0,
+    explanation: "45 € × 0,70 = 31,50 € per lippu. 31,50 × 2 = 63 €."
+  },
+  {
+    title: "Kielen Mestari",
+    color: "#16a34a",
+    icon: "🧠",
+    text: "Mainos väittää: \"Yhdeksän kymmenestä lääkäristä suosittelee tätä vitamiinia!\" Miksi tämä väite kannattaa kyseenalaistaa?",
+    answers: [
+      "A) Koska lääkärit eivät tunne ravitsemusta.",
+      "B) Koska emme tiedä, kuinka monta lääkäriä kysyttiin tai millä perusteella he suosittelivat.",
+      "C) Koska vitamiinit ovat aina haitallisia."
+    ],
+    correct: 1,
+    explanation: "Mainoksissa luvut voivat olla harhaanjohtavia: pieni otanta tai valikoitu ryhmä voi antaa vääristyneen kuvan."
+  },
+  {
+    title: "Digimaailman Vartija",
+    color: "#0891b2",
+    icon: "🛡️",
+    text: "Tekoäly luo videon, jossa tunnettu henkilö näyttää tekevän jotain, mitä hän ei ole koskaan tehnyt. Video leviää somessa aitona. Mikä ilmiö tämä on?",
+    answers: [
+      "A) Clickbait – houkutteleva otsikko klikkejä varten.",
+      "B) Phishing – huijaus, jolla varastetaan tietoja.",
+      "C) Deepfake – tekoälyn luoma väärennetty video tai kuva."
+    ],
+    correct: 2,
+    explanation: "Deepfake-teknologia voi luoda erittäin realistisia väärennettyjä videoita – kriittinen medialukutaito on tärkeämpää kuin koskaan."
+  },
+  {
+    title: "Planeetan Puolustaja",
+    color: "#65a30d",
+    icon: "🌍",
+    text: "Kaupassa on kaksi vaihtoehtoa: paikallinen peruna (0,80 €/kg) ja ulkomainen halpa peruna (0,50 €/kg). Mikä peruste puoltaa paikallisen valitsemista ympäristösyistä?",
+    answers: [
+      "A) Paikallinen ruoka maistuu aina paremmalta.",
+      "B) Ulkomainen kuljetus tuottaa enemmän hiilidioksidipäästöjä kuin lähiruoka.",
+      "C) Paikallisten perunoiden tuottamiseen ei tarvita lainkaan energiaa."
+    ],
+    correct: 1,
+    explanation: "Pitkät kuljetusmatkat – erityisesti lentokoneella – tuottavat huomattavasti enemmän CO₂ kuin lähellä tuotettu ruoka."
+  },
+  {
+    title: "Historian Tulkitsija",
+    color: "#7c3aed",
+    icon: "📜",
+    text: "Miksi ihmiset muuttivat maalta kaupunkeihin teollistumisen aikana 1800-luvulla?",
+    answers: [
+      "A) Kaupungeissa oli parempi ilmasto ja enemmän puistoja.",
+      "B) Maatalouskoneet vähensivät maataloustyöntekijöiden tarvetta ja tehtaat tarjosivat töitä.",
+      "C) Hallitus pakotti ihmiset muuttamaan kaupunkeihin."
+    ],
+    correct: 1,
+    explanation: "Teollistuminen muutti yhteiskunnan rakenteen: koneet korvasivat käsityöläiset, ja kasvava teollisuus tarvitsi työvoimaa kaupungeissa."
+  },
+  {
+    title: "Fysiikan Tutkija",
+    color: "#d97706",
+    icon: "⚙️",
+    text: "Miksi terässilloissa on pienet saumakohdat/raot eri osien välillä?",
+    answers: [
+      "A) Jotta sadevesi valuu pois sillalta.",
+      "B) Jotta silta näyttää esteettisemmältä.",
+      "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät sillan vääntymisen."
+    ],
+    correct: 2,
+    explanation: "Lämpölaajeneminen: ilman rakoja silta voisi vääristyä tai murtua lämpötilojen vaihtuessa."
+  },
+  {
+    title: "Englannin Ekspertti",
+    color: "#be185d",
+    icon: "🎓",
+    text: "Suomalainen kirjoittaa: \"The weather in Finland is very different than Sweden.\" Mikä on kielioppivirhe?",
+    answers: [
+      "A) \"very\" pitäisi olla \"much\" – oikein: \"much different\".",
+      "B) \"different than\" pitäisi olla \"different from\" – oikein: \"different from Sweden\".",
+      "C) \"weather\" pitäisi olla \"climate\" – oikein: \"the climate\"."
+    ],
+    correct: 1,
+    explanation: "Englanniksi oikea rakenne on \"different from\", ei \"different than\" – vaikka \"than\" on arkikielessä yleinen."
+  },
+  {
+    title: "Pohjolan Sanainen",
+    color: "#1d4ed8",
+    icon: "🌐",
+    text: "Mitä ruotsinkielinen lause \"Jag tycker om att läsa böcker\" tarkoittaa?",
+    answers: [
+      "A) Minulla on paljon kirjoja kotona.",
+      "B) Pidän kirjojen lukemisesta.",
+      "C) Annan kirjoja muille mielellään."
+    ],
+    correct: 1,
+    explanation: "\"Tycka om\" = pitää jostakin. \"Att läsa\" = lukea. \"Böcker\" = kirjat. Lause: \"Pidän kirjojen lukemisesta.\""
+  },
+  {
+    title: "Tieteen Tutkija",
+    color: "#059669",
+    icon: "🔭",
+    text: "Miksi antibiootit eivät tehoa flunssaan tai muihin virusinfektioihin?",
+    answers: [
+      "A) Antibiootit ovat liian heikkoja tappamaan viruksia.",
+      "B) Antibiootit tappavat vain bakteereita – virukset ovat rakenteeltaan erilaisia, eikä antibiootti vaikuta niihin.",
+      "C) Lääkärit eivät halua määrätä antibiootteja viruksiin, koska ne ovat kalliita."
+    ],
+    correct: 1,
+    explanation: "Bakteerit ja virukset ovat täysin eri asioita. Antibiootit häiritsevät bakteerien solurakennetta – viruksiin ne eivät tehoa lainkaan."
+  },
+  {
+    title: "Yhteiskunnan Rakentaja",
+    color: "#92400e",
+    icon: "🏛️",
+    text: "Mikä on demokratian tärkein periaate?",
+    answers: [
+      "A) Enemmistö päättää aina kaikkien puolesta ilman rajoituksia.",
+      "B) Jokaisella kansalaisella on yhtäläinen oikeus osallistua päätöksentekoon.",
+      "C) Valtio johtaa kaikkia kansalaisia tiukasti yhteisen edun nimissä."
+    ],
+    correct: 1,
+    explanation: "Demokratiassa valta kuuluu kansalle ja jokainen ääni on yhtä arvokas – enemmistön valta ei kuitenkaan saa loukata vähemmistön oikeuksia."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 2 – KIERROS 1 (100p)
+═══════════════════════════════════════ */
+const QUESTIONS_S2_K1 = [
+  {
+    title: "Lukujen Luola",
+    color: "#e84393", icon: "🔢",
+    text: "Luokassa on 28 oppilasta, joista 12 on tyttöjä. Kuinka monta prosenttia oppilaista on poikia?",
+    answers: ["A) 43 %", "B) 57 %", "C) 50 %"],
+    correct: 1,
+    explanation: "Poikia on 16 (28 − 12). 16 ÷ 28 × 100 ≈ 57 %."
+  },
+  {
+    title: "Kielten Kuningas",
+    color: "#22c55e", icon: "📝",
+    text: "Mikä seuraavista on yhdyssana?",
+    answers: ["A) talo", "B) koiranpentu", "C) kaunis"],
+    correct: 1,
+    explanation: "Yhdyssana koostuu kahdesta tai useammasta sanasta: koira + pentu = koiranpentu."
+  },
+  {
+    title: "Aikakoneen Salaisuus",
+    color: "#3b82f6", icon: "⏳",
+    text: "Mikä näistä tapahtui ensimmäisenä historiassa?",
+    answers: ["A) Ihminen laskeutui Kuulle.", "B) Toinen maailmansota alkoi.", "C) Suomi itsenäistyi."],
+    correct: 2,
+    explanation: "Suomi itsenäistyi 1917, toinen maailmansota alkoi 1939 ja ihminen laskeutui Kuulle 1969."
+  },
+  {
+    title: "Aineiden Arvoitus",
+    color: "#eab308", icon: "⚗️",
+    text: "Miksi jää kelluu vedessä?",
+    answers: ["A) Jää on kevyempää kuin sama tilavuus vettä.", "B) Jää imee itseensä vettä ja kohoaa.", "C) Jää on lämpimämpää kuin vesi."],
+    correct: 0,
+    explanation: "Vesi laajenee jäätyessään – jää on harvinaisella tavalla kevyempää kuin nestemäinen vesi, siksi se kelluu."
+  },
+  {
+    title: "Englannin Portit",
+    color: "#ec4899", icon: "🌍",
+    text: "Choose the correct sentence:",
+    answers: ["A) She don't like swimming.", "B) She doesn't like swimming.", "C) She not like swimming."],
+    correct: 1,
+    explanation: "'She doesn't' on oikein – kolmannen persoonan yksikkö tarvitsee 'does not' (doesn't)."
+  },
+  {
+    title: "Pohjoisen Äänet",
+    color: "#06b6d4", icon: "🇸🇪",
+    text: "Miten sanotaan ruotsiksi 'Hyvää huomenta'?",
+    answers: ["A) God natt", "B) God morgon", "C) God kväll"],
+    correct: 1,
+    explanation: "God morgon = hyvää huomenta. God natt = hyvää yötä. God kväll = hyvää iltaa."
+  },
+  {
+    title: "Kehon Koodi",
+    color: "#f97316", icon: "💪",
+    text: "Mikä vitamiini syntyy ihossa auringonvalossa?",
+    answers: ["A) Vitamiini C", "B) Vitamiini A", "C) Vitamiini D"],
+    correct: 2,
+    explanation: "D-vitamiinia syntyy ihossa UVB-säteilyn vaikutuksesta. Se on tärkeä luustolle ja immuunijärjestelmälle."
+  },
+  {
+    title: "Sävelten Maailma",
+    color: "#a855f7", icon: "🎵",
+    text: "Montako nuottia on diatonisessa asteikossa (do-re-mi-fa-sol-la-si)?",
+    answers: ["A) 5", "B) 7", "C) 12"],
+    correct: 1,
+    explanation: "Diatonisessa asteikossa on 7 nuottia: do, re, mi, fa, sol, la, si."
+  },
+  {
+    title: "Luonnon Lait",
+    color: "#84cc16", icon: "🌿",
+    text: "Mikä seuraavista on selkärankainen eläin?",
+    answers: ["A) Kotilo", "B) Meduusa", "C) Koira"],
+    correct: 2,
+    explanation: "Selkärankaisilla on selkäranka. Kotilo on nilviäinen, meduusa on selkärangaton – koira on selkärankainen."
+  },
+  {
+    title: "Maailman Kartta",
+    color: "#a16207", icon: "🌏",
+    text: "Mikä on Suomen pinta-alaltaan suurin kaupunki?",
+    answers: ["A) Helsinki", "B) Rovaniemi", "C) Oulu"],
+    correct: 1,
+    explanation: "Rovaniemi on pinta-alaltaan Suomen suurin kaupunki, vaikka Helsingissä asuu enemmän ihmisiä."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 2 – KIERROS 2 (150p)
+═══════════════════════════════════════ */
+const QUESTIONS_S2_K2 = [
+  {
+    title: "Numeroiden Mestari II",
+    color: "#f97316", icon: "🧮",
+    text: "Säästötilillä on 800 €. Korko on 2 % vuodessa. Paljonko tilillä on kahden vuoden kuluttua (koronkorko)?",
+    answers: ["A) 816 €", "B) 832 €", "C) 832,32 €"],
+    correct: 2,
+    explanation: "Vuosi 1: 800 × 1,02 = 816 €. Vuosi 2: 816 × 1,02 = 832,32 €. Koronkorko kasvattaa enemmän kuin yksinkertainen korko."
+  },
+  {
+    title: "Median Maailma II",
+    color: "#22c55e", icon: "📖",
+    text: "Mainos väittää: 'Yhdeksän kymmenestä lääkäristä suosittelee tätä vitamiinia!' Miksi väite kannattaa kyseenalaistaa?",
+    answers: ["A) Lääkärit eivät tunne ravitsemusta.", "B) Emme tiedä, kuinka monta lääkäriä kyselyyn osallistui tai millä perusteella he suosittelivat.", "C) Vitamiinit ovat aina haitallisia."],
+    correct: 1,
+    explanation: "Pieni tai valikoitu otanta voi antaa vääristyneen kuvan. Mainoksissa lukuja käytetään usein harhaanjohtavasti."
+  },
+  {
+    title: "Digitaalinen Maailma",
+    color: "#06b6d4", icon: "💻",
+    text: "Mitä tarkoittaa 'pilvipalvelu'?",
+    answers: ["A) Sääpalvelu, joka ennustaa pilvien liikkeen.", "B) Tiedostojen tallentaminen ja käyttäminen internetin kautta etäpalvelimilla.", "C) Kotitietokoneen lisämuisti."],
+    correct: 1,
+    explanation: "Pilvipalveluissa tiedot tallennetaan etäpalvelimille – niitä voi käyttää millä laitteella tahansa internetin kautta."
+  },
+  {
+    title: "Ympäristö & Kestävyys II",
+    color: "#84cc16", icon: "🌱",
+    text: "Mitä tarkoittaa 'hiilijalanjälki'?",
+    answers: ["A) Hiilen määrä maaperässä.", "B) Ihmisen tai tuotteen elinkaarensa aikana tuottamat kasvihuonekaasupäästöt.", "C) Tehtaiden savupiipuista tuleva noki."],
+    correct: 1,
+    explanation: "Hiilijalanjälki mittaa kaikkia kasvihuonekaasupäästöjä – liikenteestä, energiasta, ruoasta ja kulutuksesta."
+  },
+  {
+    title: "Historian Avain",
+    color: "#a855f7", icon: "🏰",
+    text: "Kuka oli Suomen ensimmäinen presidentti?",
+    answers: ["A) Urho Kekkonen", "B) K. J. Ståhlberg", "C) Lauri Relander"],
+    correct: 1,
+    explanation: "K. J. Ståhlberg toimi Suomen ensimmäisenä presidenttinä 1919–1925."
+  },
+  {
+    title: "Aineiden Tutkija II",
+    color: "#eab308", icon: "🔬",
+    text: "Mikä yksikkö mittaa sähkövirran voimakkuutta?",
+    answers: ["A) Voltti (V)", "B) Ampeeri (A)", "C) Watti (W)"],
+    correct: 1,
+    explanation: "Ampeeri mittaa sähkövirran määrää. Voltti mittaa jännitettä, watti tehoa."
+  },
+  {
+    title: "Kielen Rakentaja II",
+    color: "#ec4899", icon: "🗣️",
+    text: "Suomalainen kirjoittaa englanniksi: 'I am very boring in this lesson.' Mikä on ongelma?",
+    answers: ["A) 'Very' on väärä sana.", "B) 'Boring' tarkoittaa 'tylsää henkilöä' – oikein olisi 'bored' (minulla on tylsää).", "C) Lauseessa ei ole virhettä."],
+    correct: 1,
+    explanation: "'I am boring' = olen tylsä ihminen. 'I am bored' = minulla on tylsää. Suomalaisille hyvin yleinen virhe."
+  },
+  {
+    title: "Pohjoinen Mestari II",
+    color: "#3b82f6", icon: "🧊",
+    text: "Mitä ruotsinkielinen ilmaisu 'Det spelar ingen roll' tarkoittaa?",
+    answers: ["A) Hän pelaa tärkeää roolia.", "B) Sillä ei ole merkitystä.", "C) Peli alkaa pian."],
+    correct: 1,
+    explanation: "'Spela roll' = olla merkitystä. 'Ingen roll' = ei merkitystä. Suomeksi: 'sillä ei ole väliä'."
+  },
+  {
+    title: "Elämän Verkostot II",
+    color: "#e84393", icon: "🦋",
+    text: "Mikä on solun 'voimalaitos' – energiaa tuottava organelli?",
+    answers: ["A) Tuma", "B) Ribosomi", "C) Mitokondrio"],
+    correct: 2,
+    explanation: "Mitokondrio tuottaa solun energian hajottamalla glukoosia. Sitä kutsutaan solun voimalaitokseksi."
+  },
+  {
+    title: "Maapallon Ilmiöt II",
+    color: "#a16207", icon: "🗺️",
+    text: "Mikä manner on pinta-alaltaan maailman suurin?",
+    answers: ["A) Afrikka", "B) Aasia", "C) Pohjois-Amerikka"],
+    correct: 1,
+    explanation: "Aasia on selvästi suurin manner: noin 44 miljoonaa km². Afrikka on toiseksi suurin."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 2 – KIERROS 3 (200p)
+═══════════════════════════════════════ */
+const QUESTIONS_S2_K3 = [
+  {
+    title: "Laskujen Kuningas II",
+    color: "#dc2626", icon: "👑",
+    text: "Minna saa 15 € viikkorahaa. Lukukausi kestää 18 viikkoa. Hän säästää 40 % kaikesta saamastaan rahasta. Paljonko hän säästää lukukauden aikana?",
+    answers: ["A) 108 €", "B) 162 €", "C) 270 €"],
+    correct: 0,
+    explanation: "15 € × 18 vk = 270 € yhteensä. 40 % × 270 = 108 €."
+  },
+  {
+    title: "Huijauksen Tunnistus",
+    color: "#16a34a", icon: "🧠",
+    text: "Saat tekstiviestin: 'Pankkisi on sulkenut tilisi! Klikkaa tästä ja anna tunnuksesi.' Mitä teet?",
+    answers: ["A) Klikkaat linkkiä ja kirjaudut sisään nopeasti.", "B) Soitat pankin viralliseen numeroon tai menet pankin sivustolle suoraan selaimella.", "C) Lähetät tunnuksesi tekstiviestillä takaisin."],
+    correct: 1,
+    explanation: "Tämä on 'phishing' – huijaus. Oikeat pankit eivät koskaan pyydä tunnuksia tekstiviestillä tai sähköpostilinkissä."
+  },
+  {
+    title: "Digimaailman Vartija II",
+    color: "#0891b2", icon: "🛡️",
+    text: "Oppilas käyttää tekoälyä koko koulun esseen kirjoittamiseen. Mikä on suurin ongelma oppimisen kannalta?",
+    answers: ["A) Tekoäly voi tehdä kielioppivirheitä.", "B) Oppilas ei harjoittele itse ajattelemista ja kirjoittamista – tärkeimmät taidot jäävät kehittymättä.", "C) Tekoäly kirjoittaa liian pitkiä tekstejä."],
+    correct: 1,
+    explanation: "Tekoäly voi auttaa ideoinnissa, mutta oman ajattelun kehittäminen on koulun tärkein tavoite."
+  },
+  {
+    title: "Planeetan Puolustaja II",
+    color: "#65a30d", icon: "🌍",
+    text: "Miksi palmuöljyn kulutuksen vähentäminen voi olla ympäristöteko?",
+    answers: ["A) Palmuöljy on myrkyllistä ihmisille.", "B) Palmuöljyn viljelyyn raivataan sademetsää, mikä tuhoaa elinympäristöjä ja vapauttaa valtavasti CO₂.", "C) Palmuöljy saastuttaa Suomen vesistöjä."],
+    correct: 1,
+    explanation: "Sademetsien raivaus palmuöljyviljelmille on yksi suurimmista biodiversiteetin uhkista tropiikissa."
+  },
+  {
+    title: "Historian Tulkitsija II",
+    color: "#7c3aed", icon: "📜",
+    text: "Mitä tarkoitti 'kylmä sota' (1947–1991)?",
+    answers: ["A) Pohjoisten maiden kauppasota.", "B) USA:n ja Neuvostoliiton välinen ideologinen kilpailu ilman suoraa aseellista sotaa.", "C) Ankaran talven aiheuttama kriisi Euroopassa."],
+    correct: 1,
+    explanation: "Kylmässä sodassa USA (kapitalismi) ja Neuvostoliitto (kommunismi) kilpailivat maailmanherruudesta – suoraa sotaa ei ollut, mutta ydinsotaan oli lähellä useaan kertaan."
+  },
+  {
+    title: "Fysiikan Tutkija II",
+    color: "#d97706", icon: "⚙️",
+    text: "Miksi lentokoneessa on paineistettu matkustamo?",
+    answers: ["A) Jotta matkustajat eivät palele.", "B) Koska suurella korkeudella ilmanpaine on liian matala ihmiselle hengittää turvallisesti.", "C) Jotta koneen siivet kestävät paremmin."],
+    correct: 1,
+    explanation: "10 000 metrin korkeudessa ilmanpaine on kolmannes merenpinnan paineesta – ilman paineistusta matkustajat menettäisivät tajunnan minuuteissa."
+  },
+  {
+    title: "Englannin Ekspertti II",
+    color: "#be185d", icon: "🎓",
+    text: "Mikä on ero sanojen 'affect' ja 'effect' välillä?",
+    answers: ["A) Ne tarkoittavat täsmälleen samaa.", "B) 'Affect' on yleensä verbi (vaikuttaa johonkin), 'effect' on yleensä substantiivi (vaikutus).", "C) 'Effect' käytetään vain tieteellisissä teksteissä."],
+    correct: 1,
+    explanation: "'Stress affects health' (verbi). 'Stress has a negative effect' (substantiivi). Suomalaisille yleinen sekaannus."
+  },
+  {
+    title: "Pohjolan Sanainen II",
+    color: "#1d4ed8", icon: "🌐",
+    text: "Ruotsalaisessa ravintolassa tarjoilija kysyy: 'Vill du ha kvitto?' Mitä hän kysyy?",
+    answers: ["A) Haluatko pöytävarauksen?", "B) Haluatko kuitin?", "C) Haluatko maksaa kortilla?"],
+    correct: 1,
+    explanation: "'Kvitto' = kuitti. 'Vill du ha' = haluatko. 'Kontant' = käteinen, 'betala med kort' = maksaa kortilla."
+  },
+  {
+    title: "Tieteen Tutkija II",
+    color: "#059669", icon: "🔭",
+    text: "Miksi antibioottikuurin keskeyttäminen – kun olo jo paranee – on vaarallista?",
+    answers: ["A) Loput antibiootit menevät hukkaan.", "B) Osa bakteereista voi jäädä eloon ja kehittää resistenssin eli vastustuskyvyn antibioottia kohtaan.", "C) Lääkäri voi kieltäytyä kirjoittamasta uutta reseptiä."],
+    correct: 1,
+    explanation: "Antibioottiresistenssi on kasvava maailmanlaajuinen uhka: vajaat kurssit kasvattavat resistenttejä bakteerikantoja."
+  },
+  {
+    title: "Yhteiskunnan Rakentaja II",
+    color: "#92400e", icon: "🏛️",
+    text: "Mitä tarkoittaa 'progressiivinen verotus'?",
+    answers: ["A) Kaikki maksavat saman summan veroja.", "B) Suurempituloiset maksavat suuremman prosenttiosuuden tuloistaan veroja.", "C) Yritykset maksavat aina enemmän veroja kuin yksityishenkilöt."],
+    correct: 1,
+    explanation: "Progressiivisessa verotuksessa tulojen kasvaessa myös veroprosentti nousee. Tavoitteena on tasata yhteiskunnan tuloeroja."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 3 – KIERROS 1 (100p)
+═══════════════════════════════════════ */
+const QUESTIONS_S3_K1 = [
+  {
+    title: "Matematiikan Maagikko",
+    color: "#e84393", icon: "🔢",
+    text: "Kirjahyllyssä on 3 hyllyä. Kahdella on 24 kirjaa ja yhdellä puolet siitä. Montako kirjaa on yhteensä?",
+    answers: ["A) 72", "B) 60", "C) 48"],
+    correct: 1,
+    explanation: "24 + 24 + 12 = 60. Kolmas hylly on puolillaan: 24 ÷ 2 = 12."
+  },
+  {
+    title: "Sanaseppä",
+    color: "#22c55e", icon: "📝",
+    text: "Mikä seuraavista lauseista on kirjoitettu oikein?",
+    answers: ["A) Minulla on nälkä, mutta syönkin.", "B) Minulla on nälkä mutta syönkin.", "C) Minulla on nälkä; mutta syönkin."],
+    correct: 0,
+    explanation: "Vastakkaisia ajatuksia yhdistävän 'mutta'-sanan eteen tulee pilkku suomen kielessä."
+  },
+  {
+    title: "Ajan Arvoitus",
+    color: "#3b82f6", icon: "⏳",
+    text: "Mikä keksintö tuli ensin?",
+    answers: ["A) Televisio", "B) Radio", "C) Älypuhelin"],
+    correct: 1,
+    explanation: "Radio keksittiin 1890-luvulla, televisio 1920-luvulla ja älypuhelin vasta 1990-luvulla."
+  },
+  {
+    title: "Aineiden Arvoitus II",
+    color: "#eab308", icon: "⚗️",
+    text: "Miksi talvipakkasella hengitettäessä uloshengitys näkyy 'höyrynä'?",
+    answers: ["A) Keuhkot hengittävät ulos savua.", "B) Lämmin uloshengitysilma sisältää kosteutta, joka tiivistyy näkyviksi vesipisaroiksi kylmässä.", "C) Suu jäähtyy ja jäätyy."],
+    correct: 1,
+    explanation: "Lämmin, kostea uloshengitysilma kohtaa kylmän ilman – kosteus tiivistyy pisaroiksi. Ei savua eikä jäätä, vain vesipisaroita."
+  },
+  {
+    title: "Englannin Avaimet",
+    color: "#ec4899", icon: "🌍",
+    text: "What is the Finnish word for 'library'?",
+    answers: ["A) kirjasto", "B) kirjakauppa", "C) kirjahylly"],
+    correct: 0,
+    explanation: "Library = kirjasto. Kirjakauppa = bookshop. Kirjahylly = bookshelf."
+  },
+  {
+    title: "Pohjoisen Sanat",
+    color: "#06b6d4", icon: "🇸🇪",
+    text: "Mitä ruotsinkielinen sana 'bok' tarkoittaa?",
+    answers: ["A) Paketti", "B) Kirja", "C) Kynä"],
+    correct: 1,
+    explanation: "'Bok' = kirja. Kirja monikko = 'böcker'. 'Bok' tarkoittaa myös pyökkipuuta – konteksti ratkaisee!"
+  },
+  {
+    title: "Kehon Salaisuudet",
+    color: "#f97316", icon: "💪",
+    text: "Mikä on ihmisen suurin elin?",
+    answers: ["A) Maksa", "B) Iho", "C) Keuhkot"],
+    correct: 1,
+    explanation: "Iho on ihmisen suurin elin – se kattaa koko kehon, suojelee sisäelimiä ja säätelee lämpötilaa."
+  },
+  {
+    title: "Säveltäjän Salaisuus",
+    color: "#a855f7", icon: "🎵",
+    text: "Mikä näistä on puhallinsoitin?",
+    answers: ["A) Kitara", "B) Urut", "C) Oboe"],
+    correct: 2,
+    explanation: "Oboe on puupuhallinsoitin. Kitara on kielisoitin. Urut voivat olla pilliurut (puhallin) tai sähköiset."
+  },
+  {
+    title: "Elämän Arvoitus",
+    color: "#84cc16", icon: "🌿",
+    text: "Mikä seuraavista on hyönteinen?",
+    answers: ["A) Hämähäkki", "B) Mehiläinen", "C) Etana"],
+    correct: 1,
+    explanation: "Hyönteisellä on kuusi jalkaa ja kolmiosainen keho. Hämähäkki on 8-jalkainen hämähäkkieläin, etana on nilviäinen."
+  },
+  {
+    title: "Maan Mysteeri",
+    color: "#a16207", icon: "🌏",
+    text: "Mikä on Suomen korkein tunturi?",
+    answers: ["A) Saana", "B) Halti", "C) Pallastunturi"],
+    correct: 1,
+    explanation: "Halti (1 328 m) on Suomen korkein kohta, sijaitsee Käsivarren Lapissa lähellä Norjan rajaa."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 3 – KIERROS 2 (150p)
+═══════════════════════════════════════ */
+const QUESTIONS_S3_K2 = [
+  {
+    title: "Laskujen Haaste",
+    color: "#f97316", icon: "🧮",
+    text: "Kaupassa on kaksi tarjousta: A) 3 kpl hintaan 7,50 € tai B) 5 kpl hintaan 13,00 €. Kumpi on edullisempi kappaleelta?",
+    answers: ["A) Tarjous A (2,50 €/kpl)", "B) Tarjous B (2,60 €/kpl)", "C) Ne ovat yhtä edulliset."],
+    correct: 0,
+    explanation: "Tarjous A: 7,50 ÷ 3 = 2,50 €/kpl. Tarjous B: 13,00 ÷ 5 = 2,60 €/kpl. A on 10 senttiä halvempi per kappale."
+  },
+  {
+    title: "Median Tulkki",
+    color: "#22c55e", icon: "📖",
+    text: "Pelikonsolissa näkyy viesti: 'Olet voittanut! Lähetä nyt osoitteesi ja puhelinnumerosi.' Mitä teet?",
+    answers: ["A) Lähetät tiedot nopeasti, ettei voitto mene ohi.", "B) Epäilet huijausta – oikeat kilpailut eivät toimi tällä tavoin.", "C) Kysyt kavereilta, onko heillä sama viesti."],
+    correct: 1,
+    explanation: "Kilpailuja ei voiteta yllättäen arvaamatta. Henkilötietopyyntö pelin sisällä on lähes aina huijaus."
+  },
+  {
+    title: "Teknologian Tekijä",
+    color: "#06b6d4", icon: "💻",
+    text: "Mitä tarkoittaa 'lähdekoodi' (source code)?",
+    answers: ["A) Internetsivuston osoite (URL).", "B) Ihmisen luettavissa oleva ohjelmakoodi, josta tietokoneohjelma rakennetaan.", "C) Tietokoneen virustorjuntaohjelma."],
+    correct: 1,
+    explanation: "Lähdekoodi on ohjelmoijan kirjoittama teksti. Kääntäjä muuttaa sen tietokoneen ymmärtämäksi binaariseksi kieleksi."
+  },
+  {
+    title: "Ympäristön Puolustaja",
+    color: "#84cc16", icon: "🌱",
+    text: "Suomi sitoutui Pariisin ilmastosopimuksessa rajoittamaan lämpenemistä. Mikä on sopimuksen päätavoite?",
+    answers: ["A) Estää kaikki teollisuus kehitysmaissa.", "B) Pitää maapallon keskilämpötilan nousu alle 1,5–2 asteessa verrattuna esiteolliseen aikaan.", "C) Poistaa kaikki fossiiliset polttoaineet vuoteen 2025 mennessä."],
+    correct: 1,
+    explanation: "Pariisin sopimus (2015) tavoittelee lämpenemisen rajoittamista 1,5–2 °C:seen. Tähän tarvitaan merkittäviä päästövähennyksiä kaikissa maissa."
+  },
+  {
+    title: "Historian Haaste",
+    color: "#a855f7", icon: "🏰",
+    text: "Miksi Berliinin muuri kaadettiin vuonna 1989?",
+    answers: ["A) Se oli rakennettu huonosta materiaalista.", "B) Neuvostoliiton heikkeneminen johti Itä-Euroopan kommunististen hallitusten romahtamiseen.", "C) NATO pakotti sen purkamaan."],
+    correct: 1,
+    explanation: "Neuvostoliiton heikkeneminen ja demokratialiike johtivat muurin kaatumiseen – yksi kylmän sodan symbolisimmista käänteistä."
+  },
+  {
+    title: "Luonnon Tutkija",
+    color: "#eab308", icon: "🔬",
+    text: "Miksi tähtien valo saavuttaa meidät niin myöhässä, että jotkut tähdistä voivat olla jo sammuneet?",
+    answers: ["A) Teleskoopit hidastavat valon kulkua.", "B) Tähdet ovat niin kaukana, että niiden valo vie vuosia, vuosisatoja tai miljoonia vuosia saavuttamaan meidät.", "C) Valo katoaa matkalla pimeässä avaruudessa."],
+    correct: 1,
+    explanation: "Valo kulkee 300 000 km/s – silti tähtienvälinen matka on niin valtava, että näemme tähdet sellaisina kuin ne olivat menneisyydessä."
+  },
+  {
+    title: "Kielikuva",
+    color: "#ec4899", icon: "🗣️",
+    text: "Suomalainen kirjoittaa: 'The weather in Finland is very different than Sweden.' Mikä on virhe?",
+    answers: ["A) 'Very' pitäisi olla 'much'.", "B) 'Different than' pitäisi olla 'different from'.", "C) 'Weather' pitäisi olla 'climate'."],
+    correct: 1,
+    explanation: "Englanniksi oikea rakenne on 'different from', ei 'different than'. Täysin: 'different from Sweden's weather'."
+  },
+  {
+    title: "Pohjoisen Kieli",
+    color: "#3b82f6", icon: "🧊",
+    text: "Mitä ruotsinkielinen lause 'Jag tycker om att läsa böcker' tarkoittaa?",
+    answers: ["A) Minulla on paljon kirjoja kotona.", "B) Pidän kirjojen lukemisesta.", "C) Annan kirjoja muille mielelläni."],
+    correct: 1,
+    explanation: "'Tycka om' = pitää jostakin. 'Att läsa' = lukea. 'Böcker' = kirjat. Lause: 'Pidän kirjojen lukemisesta.'"
+  },
+  {
+    title: "Terveyden Tutkija",
+    color: "#e84393", icon: "🦋",
+    text: "Miten rokotteet toimivat?",
+    answers: ["A) Ne tappavat kaikki bakteerit kehosta.", "B) Ne opettavat immuunijärjestelmän tunnistamaan taudinaiheuttajan ilman todellista sairastumista.", "C) Ne vahvistavat sydäntä ja lihaksia."],
+    correct: 1,
+    explanation: "Rokote sisältää heikennettyjä tai tapettuja taudinaiheuttajia. Keho oppii tunnistamaan ne ja puolustautumaan tulevaisuudessa."
+  },
+  {
+    title: "Maailman Ilmiöt",
+    color: "#a16207", icon: "🗺️",
+    text: "Missä mantereessa sijaitsee Amazonin sademetsä?",
+    answers: ["A) Afrikassa", "B) Pohjois-Amerikassa", "C) Etelä-Amerikassa"],
+    correct: 2,
+    explanation: "Amazonin sademetsä sijaitsee pääosin Brasiliassa, Etelä-Amerikassa. Se on maailman suurin trooppinen sademetsä."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJA 3 – KIERROS 3 (200p)
+═══════════════════════════════════════ */
+const QUESTIONS_S3_K3 = [
+  {
+    title: "Matematiikan Kuningas III",
+    color: "#dc2626", icon: "👑",
+    text: "Kaupassa: 5 kg perunoita 4,90 € ja 10 kg perunoita 8,50 €. Mikä on järkevin valinta, jos tarvitset 10 kg?",
+    answers: ["A) Kaksi 5 kg säkkiä (9,80 €)", "B) Yksi 10 kg säkki (8,50 €)", "C) Ne ovat sama hinta."],
+    correct: 1,
+    explanation: "10 kg säkki on 1,30 € halvempi kuin kaksi 5 kg säkkiä (2 × 4,90 = 9,80 €). Suurempi pakoko on usein edullisempi."
+  },
+  {
+    title: "Kriittinen Ajattelija",
+    color: "#16a34a", icon: "🧠",
+    text: "Somessa leviää video, joka väittää kaupungin lopettavan julkisen liikenteen. Video on kerännyt miljoonia katselukertoja. Mitä teet?",
+    answers: ["A) Jaat videon kaikille ystävillesi heti.", "B) Tarkistat asian kaupungin viralliselta sivulta tai luotettavasta paikallismediasta.", "C) Uskot videon, koska se on saanut niin paljon katselukertoja."],
+    correct: 1,
+    explanation: "Katselukerrat eivät tee väitteestä totta. Uutisten levittäminen ennen tarkistamista vahvistaa disinformaatiota."
+  },
+  {
+    title: "Digimaailman Vartija III",
+    color: "#0891b2", icon: "🛡️",
+    text: "Mitä tarkoittaa 'phishing'?",
+    answers: ["A) Tietokoneen hidastaminen viruksella.", "B) Huijausyritys, jossa esiinnytään luotettavana tahona saadakseen uhri luovuttamaan salasanoja tai rahaa.", "C) Nettisivuston kaataminen liiallisella liikenteellä."],
+    correct: 1,
+    explanation: "Phishing-hyökkäyksissä rikollinen esiintyy pankkina tai viranomaisena. Tavoite on varastaa tunnuksia tai henkilötietoja."
+  },
+  {
+    title: "Planeetan Puolustaja III",
+    color: "#65a30d", icon: "🌍",
+    text: "Miksi luonnon monimuotoisuuden väheneminen uhkaa ruoantuotantoa?",
+    answers: ["A) Kasvit eivät kasva ilman muuta kasvilajistoa.", "B) Pölyttäjähyönteiset ja maaperän pieneliöt, joita ruoantuotanto tarvitsee, voivat hävitä.", "C) Peltojen maaperä muuttuu värillisenä lajien hävitessä."],
+    correct: 1,
+    explanation: "Mehiläiset ja muut pölyttäjät ovat välttämättömiä 75 %:lle maailman viljelykasveista. Niiden häviäminen romahduttaisi sadontuotannon."
+  },
+  {
+    title: "Historian Tulkitsija III",
+    color: "#7c3aed", icon: "📜",
+    text: "Mitä tarkoitti 'apartheid' Etelä-Afrikassa?",
+    answers: ["A) Perinteistä afrikkalaista musiikkia.", "B) Laillinen rotuerottelujärjestelmä, jossa mustia ja valkoisia pidettiin erillään 1948–1994.", "C) Tasavalta, jossa kaikilla oli yhtäläiset oikeudet."],
+    correct: 1,
+    explanation: "Apartheid-järjestelmässä mustilla ei ollut äänioikeutta. Nelson Mandela kamppaili sen lopettamiseksi ja toimi myöhemmin Etelä-Afrikan presidenttinä."
+  },
+  {
+    title: "Fysiikan Tutkija III",
+    color: "#d97706", icon: "⚙️",
+    text: "Miksi silloissa on pienet raot eri osien välillä?",
+    answers: ["A) Jotta sadevesi valuu pois sillalta.", "B) Jotta silta näyttää esteettisemmältä.", "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät sillan vääntymisen."],
+    correct: 2,
+    explanation: "Lämpölaajeneminen: ilman rakoja kesän kuumuus vääntäisi terässillan tai rikkoisi betonirakenteen. Sillat voivat pidentyä useita senttimetrejä kesällä."
+  },
+  {
+    title: "Englannin Ekspertti III",
+    color: "#be185d", icon: "🎓",
+    text: "What does 'nevertheless' mean in Finnish?",
+    answers: ["A) Erityisesti / varsinkin", "B) Siitä huolimatta / silti", "C) Vain sen takia"],
+    correct: 1,
+    explanation: "'Nevertheless' = silti, siitä huolimatta. Esimerkki: 'It was raining; nevertheless, we went for a walk.' (= Silti lähdimme kävelylle.)"
+  },
+  {
+    title: "Pohjolan Mestari III",
+    color: "#1d4ed8", icon: "🌐",
+    text: "Mitä ruotsin kysymys 'Förstår du?' tarkoittaa?",
+    answers: ["A) Ymmärrätkö?", "B) Pidätkö tästä?", "C) Oletko valmis?"],
+    correct: 0,
+    explanation: "'Förstå' = ymmärtää. 'Förstår du?' = Ymmärrätkö? Vertaa: 'Jag förstår' = minä ymmärrän."
+  },
+  {
+    title: "Tieteen Tutkija III",
+    color: "#059669", icon: "🔭",
+    text: "Hiukkasfysiikan 'Higgsin bosoni' löydettiin CERN:ssä 2012. Miksi se on tärkeä?",
+    answers: ["A) Se tekee aineesta radioaktiivista.", "B) Se on alkeishiukkanen, joka antaa muille hiukkasille massan – viimeinen puuttui osa Standardimallista.", "C) Se on pienin mahdollinen osa ainetta, jota ei voi jakaa."],
+    correct: 1,
+    explanation: "Higgsin bosonin löytäminen vahvisti vuosikymmenten teoreettisen työn. Peter Higgs ja François Englert saivat siitä fysiikan Nobelin palkinnon 2013."
+  },
+  {
+    title: "Yhteiskunnan Rakentaja III",
+    color: "#92400e", icon: "🏛️",
+    text: "Mitä tarkoittaa 'oikeusvaltioperiaate' (rule of law)?",
+    answers: ["A) Tuomarit voivat päättää laeista itsenäisesti ilman kansanäänestystä.", "B) Kaikki – myös hallitus ja presidentti – ovat samojen lakien alaisia, eikä kukaan ole lain yläpuolella.", "C) Vain lakimiehillä on oikeus tulkita lakeja."],
+    correct: 1,
+    explanation: "Oikeusvaltiossa laki on ylin auktoriteetti. Demokratiassa myös johtajat toimivat lakien rajoissa – ketään ei voi asettaa lain yläpuolelle."
+  }
+];
+
+/* ═══════════════════════════════════════
+   SARJAKOKOELMA (3 sarjaa)
+═══════════════════════════════════════ */
+const QUESTION_SETS = [
+  { label: "Sarja 1", k1: QUESTIONS,      k2: QUESTIONS_K2,    k3: QUESTIONS_K3    },
+  { label: "Sarja 2", k1: QUESTIONS_S2_K1, k2: QUESTIONS_S2_K2, k3: QUESTIONS_S2_K3 },
+  { label: "Sarja 3", k1: QUESTIONS_S3_K1, k2: QUESTIONS_S3_K2, k3: QUESTIONS_S3_K3 }
+];
+
+/* ═══════════════════════════════════════
+   ASETUKSET
+═══════════════════════════════════════ */
+const Q_TIME      = 30;    // sekuntia per kysymys
+const BASE_PTS    = 100;   // pistettä oikeasta vastauksesta (K1)
+const BASE_PTS_K2 = 150;   // pistettä oikeasta vastauksesta (K2)
+const BASE_PTS_K3 = 200;   // pistettä oikeasta vastauksesta (K3)
+const MAX_BONUS   = 60;    // maksimi aikabonus
+const SECRET_CODE = "TEMPPELI2025";
+
+/* ═══════════════════════════════════════
+   TILA
+═══════════════════════════════════════ */
+let S = {
+  nimi:"", koulu:"", luokka:"",
+  playerId:"",
+  score: 0,            // kumulatiivinen pisteet
+  scoreK1: 0,          // kierros 1 pisteet
+  scoreK2: 0,          // kierros 2 pisteet
+  solved: [],          // ratkaistut indeksit nykyisellä kierroksella
+  correctCount: 0,     // oikein koko pelissä
+  currentRound: 1,     // 1, 2 tai 3
+  series: 0,           // 0, 1 tai 2 – valittu sarja
+  gameStart: null,
+  gameTimer: null,
+  currentQ: -1,
+  qTimer: null,
+  qTimeLeft: 0,
+  answered: false
+};
+
+/* ═══════════════════════════════════════
+   FIREBASE
+═══════════════════════════════════════ */
+function withFb(fn) {
+  if (window._fbReady) fn();
+  else window.addEventListener("fbready", fn, { once:true });
+}
+
+function getPlayerId() {
+  let id = localStorage.getItem("temppeli-pid");
+  if (!id) {
+    id = "p_" + Date.now() + "_" + Math.random().toString(36).slice(2,8);
+    localStorage.setItem("temppeli-pid", id);
+  }
+  return id;
+}
+
+function pickSeries() {
+  // Kierrätä sarjat järjestyksessä: 1→2→3→1→...
+  const last = parseInt(localStorage.getItem("temppeli-last-series") ?? "-1");
+  const next = (last + 1) % QUESTION_SETS.length;
+  localStorage.setItem("temppeli-last-series", next);
+  return next;
+}
+
+async function loadLb(areaId, highlight) {
+  const area = document.getElementById(areaId);
+  if (!area) return;
+  area.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Ladataan...</div>';
+  withFb(async () => {
+    const lb = await window._fbLbGet();
+    renderLb(area, lb, highlight);
+  });
+}
+
+function renderLb(area, lb, highlight) {
+  if (!lb || lb.length === 0) {
+    area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Ei tuloksia vielä – ole ensimmäinen! 🎯</div>';
+    return;
+  }
+  const medals = ["🥇","🥈","🥉"];
+  let h = `<div class="lbwrap"><div class="lbrow hdr"><span>#</span><span>Pelaaja</span><span>Pisteet</span></div>`;
+  lb.forEach((e, i) => {
+    const me = (e.id === S.playerId || e.name === highlight) ? " me" : "";
+    const rc = i < 3 ? ` r${i+1}` : "";
+    const rank = medals[i] || (i+1);
+    const luokka = e.luokka ? ` / ${e.luokka}` : "";
+    const sub = e.koulu ? `<small> · ${e.koulu}${luokka}</small>` : "";
+    h += `<div class="lbrow${me}"><span class="lbrank${rc}">${rank}</span>` +
+         `<span class="lbname">${e.name}${sub}</span>` +
+         `<span class="lbpts">${e.score}</span></div>`;
+  });
+  h += "</div>";
+  area.innerHTML = h;
+}
+
+/* ═══════════════════════════════════════
+   SCREENS
+═══════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+  window.scrollTo(0, 0);
+}
+
+function goRegister() {
+  showScreen("s-welcome");
+}
+
+function loadCoverImage(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.getElementById("landing-img");
+    const fallback = document.getElementById("landing-fallback");
+    img.src = e.target.result;
+    img.style.display = "block";
+    fallback.style.display = "none";
+    // Tallennetaan localStorageen jotta pysyy tallessa
+    try { localStorage.setItem("temppeli-cover", e.target.result); } catch(err) {}
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+// Lataa tallennettu kuva automaattisesti
+(function() {
+  try {
+    const saved = localStorage.getItem("temppeli-cover");
+    if (saved) {
+      window.addEventListener("DOMContentLoaded", () => {
+        const img = document.getElementById("landing-img");
+        const fallback = document.getElementById("landing-fallback");
+        if (img && fallback) {
+          img.src = saved;
+          img.style.display = "block";
+          fallback.style.display = "none";
+        }
+      });
+    }
+  } catch(err) {}
+})();
+
+async function goLb() {
+  showScreen("s-lb");
+  await loadLb("main-lb-area", null);
+}
+
+/* ═══════════════════════════════════════
+   PELIN ALOITUS
+═══════════════════════════════════════ */
+function startGame() {
+  const nimi  = document.getElementById("inp-nimi").value.trim();
+  const koulu = document.getElementById("inp-koulu").value.trim();
+  if (!nimi || !koulu) {
+    document.getElementById("welcome-err").style.display = "block";
+    return;
+  }
+  document.getElementById("welcome-err").style.display = "none";
+  S.nimi = nimi;
+  S.koulu = koulu;
+  S.luokka = document.getElementById("inp-luokka").value.trim();
+  S.playerId = getPlayerId();
+  S.score = 0;
+  S.scoreK1 = 0;
+  S.scoreK2 = 0;
+  S.solved = [];
+  S.correctCount = 0;
+  S.currentRound = 1;
+  S.series = pickSeries();
+  S.gameStart = Date.now();
+  startGameTimer();
+  renderMap();
+  showScreen("s-game");
+}
+
+function startRound2() {
+  S.currentRound = 2;
+  S.solved = [];
+  renderMap();
+  showScreen("s-game");
+}
+
+function startRound3() {
+  S.currentRound = 3;
+  S.solved = [];
+  renderMap();
+  showScreen("s-game");
+}
+
+function startGameTimer() {
+  if (S.gameTimer) clearInterval(S.gameTimer);
+  S.gameTimer = setInterval(() => {
+    const e = Math.floor((Date.now() - S.gameStart) / 1000);
+    document.getElementById("g-time").textContent =
+      Math.floor(e/60) + ":" + String(e%60).padStart(2,"0");
+  }, 500);
+}
+
+/* ═══════════════════════════════════════
+   KARTTA
+═══════════════════════════════════════ */
+function renderMap() {
+  const qs = S.currentRound === 1 ? QUESTIONS : S.currentRound === 2 ? QUESTIONS_K2 : QUESTIONS_K3;
+  const roundLabel = S.currentRound === 1 ? "Kierros 1 – Temppelin Portti"
+    : S.currentRound === 2 ? "Kierros 2 – Ensimmäinen Kerros"
+    : "Kierros 3 – Temppelin Huippu 🔥";
+  const mapDesc = S.currentRound === 1
+    ? "Klikkaa portteja ja ratkaise arvoitukset. Nopein pelaaja pääsee temppelin huipulle ja voittaa aarteen – aarteen sisältö selviää vain voittajalle! 🏅"
+    : S.currentRound === 2
+    ? "Olet temppelin ensimmäisellä kerroksella! Arvoitukset ovat vaikeampia – mutta jokainen oikea vastaus tuo 150 pistettä. 🏆"
+    : "Temppelin huippu! Kaikkein vaikeimmat arvoitukset – mutta 200 pistettä per oikea vastaus. Nyt ratkeavat suurimmat pisteet! 👑";
+
+  document.getElementById("round-label").textContent = roundLabel + "  ·  " + QUESTION_SETS[S.series].label + "/3";
+  document.getElementById("g-score").textContent  = S.score;
+  document.getElementById("g-solved").textContent = S.solved.length + "/10";
+  document.getElementById("g-solved2").textContent = S.solved.length;
+  document.querySelector("#s-game .card div").textContent = mapDesc;
+
+  // Pisteet-indikaattorit
+  const dotsEl = document.getElementById("solved-dots");
+  dotsEl.innerHTML = "";
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement("div");
+    d.className = "sdot" + (S.solved.includes(i) ? " on" : "");
+    dotsEl.appendChild(d);
+  }
+
+  // Ovet
+  const grid = document.getElementById("door-grid");
+  grid.innerHTML = "";
+  qs.forEach((q, i) => {
+    const d = document.createElement("div");
+    d.className = "door" + (S.solved.includes(i) ? " solved" : "");
+    d.style.background = q.color;
+    d.innerHTML = `<div class="door-icon">${q.icon}</div><div>${q.title}</div>`;
+    if (!S.solved.includes(i)) d.onclick = () => openQuestion(i);
+    grid.appendChild(d);
+  });
+}
+
+/* ═══════════════════════════════════════
+   KYSYMYS
+═══════════════════════════════════════ */
+function currentQSet() {
+  const set = QUESTION_SETS[S.series];
+  return S.currentRound === 1 ? set.k1 : S.currentRound === 2 ? set.k2 : set.k3;
+}
+
+function openQuestion(idx) {
+  const q = currentQSet()[idx];
+  S.currentQ  = idx;
+  S.answered  = false;
+  S.qTimeLeft = Q_TIME;
+
+  document.getElementById("q-cat").textContent  = q.icon + " " + q.title;
+  document.getElementById("q-title").textContent = q.title;
+  document.getElementById("q-title").style.color = q.color;
+  document.getElementById("q-text").textContent  = q.text;
+  document.getElementById("q-feedback").textContent = "";
+  document.getElementById("q-feedback").className = "feedback";
+  document.getElementById("q-btns").style.display  = "none";
+
+  // Sekoita vastausvaihtoehdot satunnaisesti
+  const labels = ["A)", "B)", "C)"];
+  const indices = [0, 1, 2].sort(() => Math.random() - 0.5);
+  let shuffledCorrect = indices.indexOf(q.correct);
+
+  const answersEl = document.getElementById("q-answers");
+  answersEl.innerHTML = "";
+  indices.forEach((origIdx, newPos) => {
+    // Poista alkuperäinen kirjainmerkki (A/B/C) ja lisää uusi
+    const rawText = q.answers[origIdx].replace(/^[A-C]\)\s*/, "");
+    const btn = document.createElement("button");
+    btn.className = "ans-btn";
+    btn.textContent = labels[newPos] + " " + rawText;
+    const isCorrect = (origIdx === q.correct);
+    btn.onclick = () => answerQuestion(isCorrect, btn);
+    answersEl.appendChild(btn);
+  });
+
+  startQTimer();
+  showScreen("s-question");
+}
+
+function startQTimer() {
+  if (S.qTimer) clearInterval(S.qTimer);
+  setTimerDisplay(Q_TIME);
+  S.qTimer = setInterval(() => {
+    S.qTimeLeft--;
+    setTimerDisplay(S.qTimeLeft);
+    if (S.qTimeLeft <= 0) {
+      clearInterval(S.qTimer);
+      if (!S.answered) timeOut();
+    }
+  }, 1000);
+}
+
+function setTimerDisplay(t) {
+  const pct  = (t / Q_TIME) * 100;
+  const bar  = document.getElementById("tbar");
+  const num  = document.getElementById("tnum");
+  bar.style.width = pct + "%";
+  num.textContent = t;
+  const color = t <= 10 ? "var(--red)" : t <= 20 ? "var(--yellow)" : "var(--green)";
+  bar.style.background = color;
+  num.style.color = color;
+}
+
+function answerQuestion(isCorrect, btn) {
+  if (S.answered) return;
+
+  const q = currentQSet()[S.currentQ];
+  const fb = document.getElementById("q-feedback");
+  const basePts = S.currentRound === 1 ? BASE_PTS : S.currentRound === 2 ? BASE_PTS_K2 : BASE_PTS_K3;
+
+  if (isCorrect) {
+    // ✓ Oikein – lopeta kysymys
+    S.answered = true;
+    clearInterval(S.qTimer);
+    document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
+    btn.classList.add("correct");
+
+    const timeBonus = Math.round((S.qTimeLeft / Q_TIME) * MAX_BONUS);
+    const pts = basePts + timeBonus;
+    S.score += pts;
+    S.correctCount++;
+    S.solved.push(S.currentQ);
+    fb.textContent = `✓ Oikein! ${q.explanation} (+${basePts} + ${timeBonus} aikabonus = +${pts}p)`;
+    fb.className = "feedback ok";
+    document.getElementById("q-btns").style.display = "block";
+
+    if (S.solved.length === 10) {
+      setTimeout(endGame, 1600);
+    }
+  } else {
+    // ✗ Väärin – lukitse tämä vaihtoehto, anna yrittää uudelleen
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    fb.textContent = "✗ Väärin! Yritä uudelleen – etsi oikea vastaus.";
+    fb.className = "feedback err";
+  }
+}
+
+function timeOut() {
+  S.answered = true;
+  const q = currentQSet()[S.currentQ];
+  // Merkitse oikea nappi vihreäksi – löydetään onclick-attribuutin perusteella
+  document.querySelectorAll(".ans-btn").forEach(b => {
+    b.disabled = true;
+    // Napeissa on onclick joka kutsuu answerQuestion(true/false, ...) – oikea on se jossa true
+    if (b.onclick && b.onclick.toString().includes("true")) b.classList.add("correct");
+  });
+  const fb = document.getElementById("q-feedback");
+  fb.textContent = "⏰ Aika loppui! " + q.explanation;
+  fb.className = "feedback time";
+  document.getElementById("q-btns").style.display = "block";
+}
+
+function backToMap() {
+  clearInterval(S.qTimer);
+  renderMap();
+  showScreen("s-game");
+  if (S.solved.length === 10) {
+    setTimeout(endGame, 400);
+  }
+}
+
+/* ═══════════════════════════════════════
+   LOPPU
+═══════════════════════════════════════ */
+async function endGame() {
+  clearInterval(S.qTimer);
+
+  if (S.currentRound === 1) {
+    // K1 valmis → näytä siirtymä K1→K2
+    S.scoreK1 = S.score;
+    document.getElementById("trans-score").textContent = S.score;
+    showScreen("s-transition");
+    return;
+  }
+
+  if (S.currentRound === 2) {
+    // K2 valmis → näytä siirtymä K2→K3
+    S.scoreK2 = S.score;
+    document.getElementById("trans2-score").textContent = S.score;
+    showScreen("s-transition2");
+    return;
+  }
+
+  // K3 valmis → lopullinen tulossivu
+  clearInterval(S.gameTimer);
+  const elapsed = Math.floor((Date.now() - S.gameStart) / 1000);
+  const score   = S.score;
+
+  document.getElementById("end-score").textContent = score;
+  document.getElementById("end-emoji").textContent =
+    score >= 5000 ? "🏆" : score >= 3500 ? "🌟" : score >= 2000 ? "👍" : "💪";
+  document.getElementById("end-title").textContent =
+    score >= 5000 ? "Legendaarinen suoritus!" :
+    score >= 3500 ? "Mahtava suoritus!" :
+    score >= 2000 ? "Hyvä yritys!" : "Harjoitus tekee mestarin!";
+  document.getElementById("end-code").textContent = SECRET_CODE;
+  document.getElementById("stat-correct").textContent = S.correctCount + "/30";
+  document.getElementById("stat-time").textContent =
+    Math.floor(elapsed/60) + ":" + String(elapsed%60).padStart(2,"0");
+
+  showScreen("s-end");
+
+  // Auto-tallennus
+  const notice = document.getElementById("save-notice");
+  notice.style.display = "none";
+  withFb(async () => {
+    const res = await window._fbLbSave(S.playerId, S.nimi, S.koulu, S.luokka, score);
+    if (res.saved) {
+      notice.textContent = "✓ Tulos tallennettu tulostauluun!";
+      notice.style.cssText = "display:block;background:#1c2a1c;border:1px solid #2d4a2d;color:#7ec87e;" +
+        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+    } else if (res.reason === "Aiempi tulos on parempi") {
+      notice.textContent = "ℹ️ Sinulla on jo parempi tulos tallennettuna – sitä ei ylikirjoitettu.";
+      notice.style.cssText = "display:block;background:#1c2030;border:1px solid #2d3a4a;color:#74b9ff;" +
+        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+    } else {
+      notice.textContent = "⚠️ Tulosta ei voitu tallentaa – tarkista nettiyhteys.";
+      notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;" +
+        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+    }
+    await loadLb("end-lb-area", S.nimi);
+  });
+}
+
+function goPlayAgain() {
+  S.score = 0;
+  S.scoreK1 = 0;
+  S.scoreK2 = 0;
+  S.solved = [];
+  S.correctCount = 0;
+  S.currentRound = 1;
+  S.series = pickSeries();
+  S.gameStart = Date.now();
+  startGameTimer();
+  renderMap();
+  showScreen("s-game");
+}
+</script>
+</body>
+</html>
