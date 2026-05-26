@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Insta – Tunne omat vahvuutesi</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ig-grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    --ig-blue: #0095f6;
+    --ig-border: #dbdbdb;
+    --ig-gray: #8e8e8e;
+    --bg: #fafafa;
+    --text: #262626;
+    --radius: 14px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.10);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  /* ── Näkymät ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ════════════════════════════════
+     OPPILAAN NÄKYMÄ
+  ════════════════════════════════ */
+
+  /* Hero */
+  .hero {
+    background: var(--ig-grad);
+    color: #fff;
+    padding: 2.2rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .hero-icon { font-size: 3rem; line-height: 1; }
+  .hero h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -1px; margin-top: .3rem; }
+  .hero-sub { font-size: 1.15rem; opacity: .93; margin-top: .4rem; }
+  .hero-badges { display: flex; gap: .6rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,0.22);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    border-radius: 20px;
+    padding: .3rem 1rem;
+    font-size: .88rem;
+    font-weight: 600;
+  }
+
+  /* Johdanto */
+  .intro-wrap { max-width: 680px; margin: 0 auto; padding: 1.8rem 1.2rem .5rem; }
+  .intro-box {
+    background: #fff;
+    border: 1.5px solid var(--ig-border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    box-shadow: var(--shadow);
+    font-size: 1.02rem;
+    color: #333;
+  }
+  .intro-box p + p { margin-top: .6rem; }
+  .intro-box strong { color: var(--text); }
+
+  /* Vaiheet */
+  .steps-wrap { max-width: 680px; margin: 0 auto; padding: .5rem 1.2rem 1rem; }
+  .steps-title {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ig-gray);
+    margin: 1.2rem 0 .7rem;
+  }
+  .step {
+    background: #fff;
+    border: 1.5px solid var(--ig-border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.3rem 1.1rem 1rem;
+    margin-bottom: .85rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .step-bubble {
+    min-width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--ig-grad);
+    color: #fff;
+    font-size: 1.3rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: .15rem;
+  }
+  .step-time {
+    font-size: .8rem;
+    color: var(--ig-gray);
+    margin-bottom: .4rem;
+    display: block;
+  }
+  .step-content p { font-size: .97rem; color: #333; }
+  .step-content ul { padding-left: 1.2rem; margin-top: .35rem; }
+  .step-content ul li { font-size: .95rem; color: #333; margin-bottom: .25rem; }
+
+  /* Roolikortit */
+  .role-row { display: flex; gap: .7rem; margin-top: .6rem; flex-wrap: wrap; }
+  .role-card {
+    flex: 1; min-width: 160px;
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    font-size: .93rem;
+  }
+  .role-star { background: #fff8e1; border: 2px solid #ffd54f; }
+  .role-mgr  { background: #e8f5e9; border: 2px solid #66bb6a; }
+  .role-card .role-title { font-weight: 800; font-size: 1rem; margin-bottom: .25rem; }
+  .role-card ul { padding-left: 1.1rem; }
+  .role-card ul li { font-size: .88rem; margin-bottom: .15rem; }
+
+  /* Kysymyskortit */
+  .q-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: .6rem;
+    margin-top: .6rem;
+  }
+  .q-card {
+    background: #fff0f5;
+    border: 1.5px solid #f4a;
+    border-radius: 10px;
+    padding: .65rem .9rem;
+    font-size: .9rem;
+    color: var(--text);
+  }
+
+  /* Vihjeboksi */
+  .hint {
+    background: #e3f2fd;
+    border-left: 4px solid var(--ig-blue);
+    border-radius: 8px;
+    padding: .8rem 1rem;
+    margin-top: .7rem;
+    font-size: .92rem;
+    color: #0d47a1;
+  }
+
+  /* Footer-linkit */
+  .footer-links {
+    max-width: 680px;
+    margin: .5rem auto 2.5rem;
+    padding: 0 1.2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-link {
+    font-size: .82rem;
+    color: var(--ig-gray);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ig-border);
+    padding-bottom: 1px;
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+    transition: color .15s;
+  }
+  .footer-link:hover { color: var(--text); }
+  .footer-link:focus-visible { outline: 2px solid var(--ig-blue); outline-offset: 2px; border-radius: 2px; }
+
+  /* ════════════════════════════════
+     OPETTAJAN NÄKYMÄ
+  ════════════════════════════════ */
+  .teacher-header {
+    background: #f8f9fa;
+    border-bottom: 2px solid var(--ig-border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .7rem;
+  }
+  .teacher-header h1 { font-size: 1.1rem; font-weight: 700; }
+  .back-btn {
+    background: none; border: 1.5px solid var(--ig-border);
+    border-radius: 8px; padding: .4rem .9rem;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
+    color: var(--text); font-family: inherit;
+    transition: background .15s;
+  }
+  .back-btn:hover { background: #f0f0f0; }
+
+  .t-content { max-width: 700px; margin: 0 auto; padding: 1.5rem 1.2rem 3rem; }
+
+  .t-card {
+    background: #fff;
+    border: 1.5px solid var(--ig-border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .t-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+  .t-card p, .t-card li { font-size: .96rem; color: #333; }
+  .t-card ul { padding-left: 1.3rem; }
+  .t-card ul li { margin-bottom: .3rem; }
+
+  .t-step {
+    display: flex; gap: .9rem; align-items: flex-start;
+    background: #fff; border: 1.5px solid var(--ig-border);
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    margin-bottom: .8rem; box-shadow: var(--shadow);
+  }
+  .t-step-num {
+    min-width: 36px; height: 36px; border-radius: 50%;
+    background: var(--ig-grad); color: #fff;
+    font-weight: 800; font-size: .95rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .t-step h3 { font-size: .97rem; font-weight: 700; }
+  .t-step .t-time { font-size: .78rem; color: var(--ig-gray); margin-bottom: .3rem; display: block; }
+  .t-step p, .t-step li { font-size: .93rem; color: #333; }
+  .t-step ul { padding-left: 1.1rem; margin-top: .25rem; }
+  .t-step li { margin-bottom: .2rem; }
+  .t-hint {
+    background: #e8f5e9; border-left: 4px solid #43a047;
+    border-radius: 8px; padding: .7rem .95rem;
+    margin-top: .6rem; font-size: .9rem; color: #1b5e20;
+  }
+
+  /* ════════════════════════════════
+     PROFIILIPOHJA-NÄKYMÄ
+  ════════════════════════════════ */
+  .pohja-header {
+    background: #f8f9fa;
+    border-bottom: 2px solid var(--ig-border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .7rem;
+  }
+  .pohja-header h1 { font-size: 1.1rem; font-weight: 700; }
+  .print-btn {
+    background: var(--ig-blue); color: #fff;
+    border: none; border-radius: 8px;
+    padding: .45rem 1rem; font-size: .88rem;
+    font-weight: 600; cursor: pointer; font-family: inherit;
+    transition: opacity .15s;
+  }
+  .print-btn:hover { opacity: .85; }
+
+  .pohja-content { max-width: 500px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* Instagram-profiili */
+  .ig-phone {
+    background: #fff;
+    border: 2px solid var(--ig-border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  .ig-topbar {
+    background: #fff; border-bottom: 1px solid var(--ig-border);
+    padding: .7rem 1rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ig-topbar .uname { font-weight: 700; font-size: 1rem; }
+  .ig-topbar .icons { color: var(--ig-gray); font-size: 1.2rem; display: flex; gap: .8rem; }
+
+  .ig-profile { padding: 1rem; }
+  .ig-profile-row { display: flex; align-items: center; gap: 1.2rem; }
+  .ig-avatar-ring {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--ig-grad); padding: 3px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ig-avatar {
+    width: 74px; height: 74px; border-radius: 50%;
+    background: #f0f0f0; border: 2px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .6rem; color: var(--ig-gray);
+    text-align: center; line-height: 1.3; padding: .3rem;
+  }
+  .ig-stats { display: flex; gap: 1rem; flex: 1; justify-content: center; }
+  .ig-stat { text-align: center; }
+  .ig-stat-num { font-weight: 700; font-size: 1rem; display: block; }
+  .ig-stat-label { font-size: .7rem; color: var(--ig-gray); }
+
+  .ig-bio { margin-top: .7rem; }
+  .ig-name-input {
+    font-weight: 700; font-size: .95rem;
+    border: none; border-bottom: 1.5px dashed #ccc;
+    width: 100%; padding: .2rem 0; background: transparent;
+    font-family: inherit; color: var(--text);
+  }
+  .ig-bio-row { display: flex; align-items: baseline; gap: .3rem; margin-top: .35rem; flex-wrap: wrap; }
+  .ig-bio-lbl { font-size: .78rem; color: var(--ig-gray); white-space: nowrap; }
+  .ig-bio-input {
+    flex: 1; min-width: 100px;
+    border: none; border-bottom: 1.5px dashed #ccc;
+    background: transparent; font-family: inherit;
+    font-size: .9rem; color: var(--text); padding: .1rem 0;
+  }
+  .ig-bio-input:focus, .ig-name-input:focus { outline: none; border-bottom-color: var(--ig-blue); }
+
+  .ig-highlights {
+    padding: .7rem 1rem .5rem;
+    border-bottom: 1px solid var(--ig-border);
+  }
+  .ig-hl-label { font-size: .72rem; color: var(--ig-gray); margin-bottom: .45rem; }
+  .ig-hl-row { display: flex; gap: .9rem; overflow-x: auto; padding-bottom: .2rem; }
+  .ig-hl-item { text-align: center; flex-shrink: 0; }
+  .ig-hl-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #f0f0f0; border: 1.5px dashed #ccc;
+    margin: 0 auto .25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .ig-hl-name { font-size: .66rem; color: var(--text); }
+
+  .ig-tab-bar {
+    display: flex; border-bottom: 1px solid var(--ig-border); padding: 0 1rem;
+  }
+  .ig-tab { flex: 1; text-align: center; padding: .5rem; font-size: .78rem; color: var(--ig-gray); }
+  .ig-tab.active { color: var(--text); border-bottom: 2px solid var(--text); }
+
+  .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+  .ig-post {
+    aspect-ratio: 1; background: #f5f5f5;
+    border: 1.5px dashed #ccc;
+    display: flex; align-items: center; justify-content: center;
+    padding: .4rem; text-align: center; font-size: .6rem; color: #aaa; line-height: 1.3;
+  }
+  .ig-post span { font-size: 1.3rem; display: block; margin-bottom: .2rem; }
+
+  /* Pohja-apuohjeet */
+  .pohja-tip {
+    background: #fff; border: 1.5px solid var(--ig-border);
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    margin-top: 1rem; box-shadow: var(--shadow);
+  }
+  .pohja-tip h3 { font-size: .93rem; font-weight: 700; margin-bottom: .5rem; }
+  .pohja-tip .q-grid { margin-top: 0; }
+
+  /* ── Tulostus ── */
+  @media print {
+    .pohja-header, .pohja-tip { display: none !important; }
+    body { background: #fff; }
+    .ig-phone { box-shadow: none; border-radius: 4px; max-width: 100%; }
+    .pohja-content { padding: 0; max-width: 100%; }
+    .ig-name-input, .ig-bio-input { border-bottom-color: #999; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NÄKYMÄ 1: OPPILAILLE (taululla)
+══════════════════════════════════════ -->
+<div id="view-oppilas" class="view active">
+
+  <header class="hero">
+    <div class="hero-icon">📱</div>
+    <h1>Fake Insta</h1>
+    <p class="hero-sub">Luo someprofiiili omista vahvuuksistasi</p>
+    <div class="hero-badges">
+      <span class="badge">⏱ 25 min</span>
+      <span class="badge">👥 Pareittain</span>
+      <span class="badge">✏️ Paperi + kynä</span>
+    </div>
+  </header>
+
+  <div class="intro-wrap">
+    <div class="intro-box">
+      <p>Tiedätkö, missä olet hyvä? <strong>Omat vahvuudet eivät ole vain kouluaineita</strong> – ne voivat olla taitoja, tapoja toimia tai asioita, jotka sujuvat sinulta luonnostaan.</p>
+      <p>Tänään luot paperille oman <strong>Instagram-profiilin</strong>, jossa sinä olet tähti ja vahvuutesi ovat sisältö. Parisi auttaa sinua löytämään ne.</p>
+    </div>
+  </div>
+
+  <div class="steps-wrap">
+    <p class="steps-title">Näin tehtävä etenee</p>
+
+    <!-- Vaihe 1 -->
+    <div class="step">
+      <div class="step-bubble">🎭</div>
+      <div class="step-content">
+        <h2>Vaihe 1 – Valitse roolit</h2>
+        <span class="step-time">⏱ 2 min</span>
+        <p>Parisi kanssa sovitaan: kumpi on ensin <strong>tähti</strong> ja kumpi <strong>somemanageri</strong>.</p>
+        <div class="role-row">
+          <div class="role-card role-star">
+            <div class="role-title">⭐ Tähti</div>
+            <ul>
+              <li>Vastaat kysymyksiin</li>
+              <li>Kerrot itsestäsi rehellisesti</li>
+              <li>Et tarvitse olla vaatimaton!</li>
+            </ul>
+          </div>
+          <div class="role-card role-mgr">
+            <div class="role-title">🎙 Somemanageri</div>
+            <ul>
+              <li>Kysyt alla olevia kysymyksiä</li>
+              <li>Kuuntelet tarkkaan</li>
+              <li>Täytät profiilipohjaa tähden puolesta</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 2 -->
+    <div class="step">
+      <div class="step-bubble">💬</div>
+      <div class="step-content">
+        <h2>Vaihe 2 – Somemanageri haastattelee</h2>
+        <span class="step-time">⏱ 4 min per henkilö → sitten vaihdetaan</span>
+        <p>Somemanageri kysyy tähdeltä näitä kysymyksiä ja kirjoittaa vastaukset profiilipohjaan:</p>
+        <div class="q-grid">
+          <div class="q-card">Mihin asiaan kaverit tai perhe pyytää sinua apuun?</div>
+          <div class="q-card">Milloin viimeksi teit jotain, joka sujui tosi hyvin?</div>
+          <div class="q-card">Mikä koulutehtävä ei tuntunut raskaalta, vaikka se oli pitkä?</div>
+          <div class="q-card">Jos olisit supersankari, mikä olisi sinun supervoimasi?</div>
+          <div class="q-card">Mitä teet vapaa-ajalla ilman että kukaan pakottaa?</div>
+          <div class="q-card">Mitä haluaisit oppia lisää tai missä haluaisit kehittyä?</div>
+        </div>
+        <div class="hint">
+          💡 Vahvuus ei tarkoita vain kouluainetta. Se voi olla esim. rauhallisuus paineessa, kyky kuunnella tai luovuus.
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 3 -->
+    <div class="step">
+      <div class="step-bubble">🎨</div>
+      <div class="step-content">
+        <h2>Vaihe 3 – Viimeistele profiilisi</h2>
+        <span class="step-time">⏱ 5 min</span>
+        <p>Täydennä oma profiilisi loppuun:</p>
+        <ul>
+          <li>Piirrä profiilikuva tai symboli, joka kuvaa sinua</li>
+          <li>Lisää hashtag-vahvuudet bioon</li>
+          <li>Piirrä tai kirjoita kuvaruutuihin tilanteita, joissa olet hyvä</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Vaihe 4 -->
+    <div class="step">
+      <div class="step-bubble">🖼</div>
+      <div class="step-content">
+        <h2>Vaihe 4 – Galleria & tykkäykset</h2>
+        <span class="step-time">⏱ 5 min</span>
+        <p>Kiinnitä profiilisi seinälle. Kierrä katsomassa muiden profiileja ja jätä tarralappuja:</p>
+        <ul>
+          <li>Kirjoita lapulle yksi positiivinen kommentti tai ❤️</li>
+          <li>Esim. <em>"Tää on tosi siisti vahvuus!"</em> tai <em>"En olis arvannut, mutta sopii sulle täydellisesti"</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Vaihe 5 -->
+    <div class="step">
+      <div class="step-bubble">🧠</div>
+      <div class="step-content">
+        <h2>Vaihe 5 – Yksi lause loppuun</h2>
+        <span class="step-time">⏱ 2–3 min</span>
+        <p>Kierros: jokainen sanoo tai kirjoittaa yhden lauseen.</p>
+        <ul>
+          <li><em>"Yllätyin siitä, että minulla on vahvuus: ___"</em></li>
+          <li><em>"Haluaisin kehittää: ___"</em></li>
+          <li><em>"Parini vahvuus, jonka huomasin: ___"</em></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps-wrap -->
+
+  <!-- Piilossa olevat linkit -->
+  <div class="footer-links">
+    <button class="footer-link" onclick="showView('view-opettaja')" aria-label="Avaa opettajan ohjeet">Opettajan ohjeet</button>
+    <button class="footer-link" onclick="showView('view-pohja')" aria-label="Avaa tulostettava profiilipohja">Tulostettava profiilipohja</button>
+  </div>
+
+</div><!-- /view-oppilas -->
+
+
+<!-- ══════════════════════════════════════
+     NÄKYMÄ 2: OPETTAJAN OHJEET
+══════════════════════════════════════ -->
+<div id="view-opettaja" class="view">
+
+  <div class="teacher-header">
+    <h1>📋 Opettajan ohjeet – Fake Insta</h1>
+    <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
+  </div>
+
+  <div class="t-content">
+
+    <div class="t-card">
+      <h2>🎒 Mitä tarvitset</h2>
+      <ul>
+        <li>Tulostettu profiilipohja jokaiselle oppilaalle</li>
+        <li>Kyniä ja värikyniä</li>
+        <li>Tarralappuja galleriavaihetta varten</li>
+        <li>Teippi tai nasta profiilien kiinnitykseen</li>
+      </ul>
+    </div>
+
+    <div class="t-card">
+      <h2>🎯 Tavoitteet</h2>
+      <ul>
+        <li>Oppilas tunnistaa omia vahvuuksiaan kouluaineiden ulkopuolelta</li>
+        <li>Oppilas osaa kertoa vahvuuksistaan toiselle ihmiselle</li>
+        <li>Oppilas saa myönteistä palautetta vertaiseltaan</li>
+      </ul>
+    </div>
+
+    <p class="steps-title" style="padding: 0 0 .3rem;">Vaiheiden ohjaajan muistilista</p>
+
+    <div class="t-step">
+      <div class="t-step-num">1</div>
+      <div>
+        <h3>Lämmittely (3 min)</h3>
+        <span class="t-time">Ennen kuin oppilaat alkavat</span>
+        <p>Näytä tai piirrä itse esimerkkiprofiili taululla. Kysy koko luokalta: <em>"Mitä tietoja normaali Instagram-profiili näyttää? Entä jos kaikki tieto kertoisikin vahvuuksistasi?"</em></p>
+      </div>
+    </div>
+
+    <div class="t-step">
+      <div class="t-step-num">2</div>
+      <div>
+        <h3>Roolijako ja haastattelu (10 min)</h3>
+        <span class="t-time">Parit työskentelevät itsenäisesti</span>
+        <p>Kierrä luokassa. Muistuta oppilaita, että vahvuus ei tarkoita pelkästään kouluainetta – se voi olla esim. rauhallisuus, huumori tai kyky kannustaa muita.</p>
+        <div class="t-hint">
+          💡 Jos oppilas ei keksi mitään, pyydä somemanageria miettimään: <em>"Mitä tein viimeksi yhdessä kanssasi?"</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-step">
+      <div class="t-step-num">3</div>
+      <div>
+        <h3>Viimeistely (5 min)</h3>
+        <span class="t-time">Itsenäinen työ</span>
+        <p>Oppilaat täydentävät profiilin omin sanoin ja kuvin. Ei tarvitse olla taidetta – riittää, että se kertoo heistä jotain.</p>
+      </div>
+    </div>
+
+    <div class="t-step">
+      <div class="t-step-num">4</div>
+      <div>
+        <h3>Galleria (5 min)</h3>
+        <span class="t-time">Profiilit seinälle</span>
+        <p>Muistuta: kukaan ei ole pakko laittaa profiiliaan esille. Kirjoitetut tarrakommentit pysyvät positiivisina – voit muistuttaa siitä ennen kierrosta.</p>
+        <div class="t-hint">
+          💡 Voit ohjeistaa: "Kirjoita lapulle jokin aito positiivinen havainto, ei vain 'cool'."
+        </div>
+      </div>
+    </div>
+
+    <div class="t-step">
+      <div class="t-step-num">5</div>
+      <div>
+        <h3>Purku (2–3 min)</h3>
+        <span class="t-time">Yhteinen lopetus</span>
+        <p>Kierros: jokainen sanoo tai kirjoittaa yhden lauseen. Kenenkään ei tarvitse selittää tai perustella – yksi lause riittää.</p>
+        <div class="t-hint">
+          💡 Saavutettavuus: hiljaisempi oppilas voi kirjoittaa lauseen lapulle ja pitää sen ylhäällä, ei tarvitse puhua ääneen.
+        </div>
+      </div>
+    </div>
+
+    <div class="t-card" style="margin-top:1.2rem;">
+      <h2>♿ Saavutettavuushuomiot</h2>
+      <ul>
+        <li>Ei pakoteta julkiseen esiintymiseen missään vaiheessa</li>
+        <li>Piirtämisen voi korvata kirjoittamisella tai symboleilla</li>
+        <li>Galleriakierros on vapaaehtoinen – voi myös katsoa omia kommenttejaan paikaltaan</li>
+        <li>Pareissa voi käyttää pienryhmää (3 hlö), jos parittomia</li>
+      </ul>
+    </div>
+
+  </div>
+</div><!-- /view-opettaja -->
+
+
+<!-- ══════════════════════════════════════
+     NÄKYMÄ 3: PROFIILIPOHJA
+══════════════════════════════════════ -->
+<div id="view-pohja" class="view">
+
+  <div class="pohja-header">
+    <h1>📱 Profiilipohja – tulosta oppilaalle</h1>
+    <div style="display:flex; gap:.7rem; flex-wrap:wrap;">
+      <button class="print-btn" onclick="window.print()">🖨️ Tulosta</button>
+      <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
+    </div>
+  </div>
+
+  <div class="pohja-content">
+
+    <div class="ig-phone">
+
+      <!-- Topbar -->
+      <div class="ig-topbar">
+        <span style="font-size:1.1rem; color:#ccc;">☰</span>
+        <span class="uname">@<span contenteditable="true" style="border-bottom:2px dashed #ccc; min-width:110px; display:inline-block; padding:0 2px;" aria-label="Käyttäjänimi">vahvuus_nimi</span></span>
+        <div class="icons" aria-hidden="true">＋ ✦</div>
+      </div>
+
+      <!-- Profiili -->
+      <div class="ig-profile">
+        <div class="ig-profile-row">
+          <div class="ig-avatar-ring">
+            <div class="ig-avatar">Piirrä kasvosi tai symboli</div>
+          </div>
+          <div class="ig-stats">
+            <div class="ig-stat">
+              <span class="ig-stat-num">6</span>
+              <span class="ig-stat-label">postaukset</span>
+            </div>
+            <div class="ig-stat">
+              <span class="ig-stat-num" contenteditable="true" style="min-width:40px; display:inline-block; border-bottom:1.5px dashed #ccc;" aria-label="Seuraajien kuvaus">kaverit</span>
+              <span class="ig-stat-label">seuraajat</span>
+            </div>
+            <div class="ig-stat">
+              <span class="ig-stat-num">∞</span>
+              <span class="ig-stat-label">vahvuudet</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ig-bio">
+          <input class="ig-name-input" type="text" placeholder="Oma nimi tai lempinimi" aria-label="Oma nimi">
+          <div class="ig-bio-row">
+            <span class="ig-bio-lbl">💪 Olen hyvä:</span>
+            <input class="ig-bio-input" type="text" placeholder="kirjoita tähän" aria-label="Vahvuus 1">
+          </div>
+          <div class="ig-bio-row">
+            <span class="ig-bio-lbl">🌟 Taitoni:</span>
+            <input class="ig-bio-input" type="text" placeholder="kirjoita tähän" aria-label="Vahvuus 2">
+          </div>
+          <div class="ig-bio-row">
+            <span class="ig-bio-lbl">🎯 Tavoite:</span>
+            <input class="ig-bio-input" type="text" placeholder="kirjoita tähän" aria-label="Tavoite">
+          </div>
+          <div class="ig-bio-row">
+            <span class="ig-bio-lbl">#</span>
+            <input class="ig-bio-input" type="text" placeholder="#vahvuus1 #vahvuus2 #vahvuus3" aria-label="Hashtag-vahvuudet">
+          </div>
+        </div>
+      </div>
+
+      <!-- Highlights -->
+      <div class="ig-highlights">
+        <div class="ig-hl-label">Vahvuudet elämänpiireissä</div>
+        <div class="ig-hl-row">
+          <div class="ig-hl-item">
+            <div class="ig-hl-circle">🏫</div>
+            <div class="ig-hl-name">Koulu</div>
+          </div>
+          <div class="ig-hl-item">
+            <div class="ig-hl-circle">👫</div>
+            <div class="ig-hl-name">Kaverit</div>
+          </div>
+          <div class="ig-hl-item">
+            <div class="ig-hl-circle">⚽</div>
+            <div class="ig-hl-name">Harrastus</div>
+          </div>
+          <div class="ig-hl-item">
+            <div class="ig-hl-circle">🏠</div>
+            <div class="ig-hl-name">Koti</div>
+          </div>
+          <div class="ig-hl-item">
+            <div class="ig-hl-circle" aria-hidden="true">＋</div>
+            <div class="ig-hl-name">Oma</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Välilehdet -->
+      <div class="ig-tab-bar">
+        <div class="ig-tab active">⊞ Postaukset</div>
+        <div class="ig-tab">🏷 Merkinnät</div>
+      </div>
+
+      <!-- 6 ruutua -->
+      <div class="ig-grid">
+        <div class="ig-post"><div><span>🏆</span>Tilanne jossa onnistuit</div></div>
+        <div class="ig-post"><div><span>⭐</span>Asia josta olet ylpeä</div></div>
+        <div class="ig-post"><div><span>🤝</span>Kaveri pyytää apuasi – mihin?</div></div>
+        <div class="ig-post"><div><span>🎨</span>Vapaa-ajan taito</div></div>
+        <div class="ig-post"><div><span>💭</span>Unelmatilanne jossa taitosi loistaa</div></div>
+        <div class="ig-post"><div><span>✨</span>Vapaa ruutu – mikä vain!</div></div>
+      </div>
+
+    </div><!-- /ig-phone -->
+
+    <!-- Somemanagerin muistilista tulostusta varten -->
+    <div class="pohja-tip">
+      <h3>🎙 Somemanagerin kysymykset</h3>
+      <div class="q-grid" style="margin-top:.5rem;">
+        <div class="q-card">Mihin asiaan kaverit pyytää sinua apuun?</div>
+        <div class="q-card">Milloin viimeksi jokin sujui tosi hyvin?</div>
+        <div class="q-card">Mikä koulutehtävä ei tuntunut raskaalta?</div>
+        <div class="q-card">Jos olisit supersankari – mikä on supervoimasi?</div>
+        <div class="q-card">Mitä teet ilman pakottamista?</div>
+        <div class="q-card">Missä haluaisit kehittyä?</div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /view-pohja -->
+
+<script>
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
