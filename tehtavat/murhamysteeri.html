@@ -286,9 +286,25 @@
   .tavoite-item { border: 1.5px solid #99f6e4; border-radius: 8px; padding: .65rem .85rem; font-size: .85rem; background: #f0fdfa; }
   .tavoite-item strong { display: block; color: var(--teal-d); margin-bottom: .2rem; }
 
+  /* ── Opettajan ohjeet tulostussivulla ── */
+  .no-print {
+    border-top: 2px dashed #cbd5e1;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+  .no-print-label {
+    display: inline-block;
+    background: #fef3c7; color: #78350f;
+    border: 1.5px solid #fcd34d;
+    border-radius: 20px; padding: .2rem .9rem;
+    font-size: .75rem; font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: .04em;
+  }
+
   /* ════ TULOSTUS ════ */
   @media print {
-    .print-bar, .footer-links, #view-oppilas, #view-opettaja { display: none !important; }
+    .print-bar, .footer-links, #view-oppilas, #view-opettaja, .no-print { display: none !important; }
     #view-tulostus { display: block !important; }
     body { background: #fff; font-size: 12px; }
     .print-content { padding: 0; max-width: 100%; }
@@ -413,8 +429,7 @@
   </div><!-- /main -->
 
   <div class="footer-links">
-    <button class="footer-link" onclick="showView('view-tulostus')">Tulostettavat kortit ja lomake</button>
-    <button class="footer-link" onclick="showView('view-opettaja')">Opettajan ohjeet</button>
+    <button class="footer-link" onclick="showView('view-tulostus')">📄 Tulostettavat kortit, lomake ja ohjeet</button>
   </div>
 
 </div><!-- /view-oppilas -->
@@ -586,18 +601,10 @@
     </div>
 
   </div>
-</div><!-- /view-tulostus -->
 
-
-<!-- ════════════════════════════════
-     NÄKYMÄ 3: OPETTAJAN OHJEET
-════════════════════════════════ -->
-<div id="view-opettaja" class="view">
-  <div class="teacher-bar">
-    <h1>Opettajan ohjeet</h1>
-    <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
-  </div>
-  <div class="t-content">
+  <!-- Opettajan ohjeet – ei tulostu -->
+  <div class="no-print print-content">
+    <span class="no-print-label">🍎 OPETTAJAN OHJEET — EI TULOSTU</span>
 
     <div class="ratkaisu-box">
       <h2>✅ RATKAISU — EI OPPILAILLE</h2>
@@ -644,7 +651,7 @@
       </div>
     </div>
 
-    <div class="t-card">
+    <div class="t-card" style="margin-bottom:2rem;">
       <h2>♿ Saavutettavuus</h2>
       <ul>
         <li>Korttien lukeminen ei vaadi erityistaitoja — tiedot voidaan lukea ääneen toiselle.</li>
@@ -653,9 +660,9 @@
         <li>Hiljaisempi oppilas voi toimia "kirjurina" joka täyttää lomakkeen.</li>
       </ul>
     </div>
-
   </div>
-</div><!-- /view-opettaja -->
+
+</div><!-- /view-tulostus -->
 
 <script>
   function showView(id) {
