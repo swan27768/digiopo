@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salapoliisitehtävä – Kadonnut kultainen kello</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal:    #0d9488;
+    --teal-d:  #0f766e;
+    --navy:    #134e4a;
+    --navy-d:  #042f2e;
+    --amber:   #d97706;
+    --amber-l: #fef3c7;
+    --grad:    linear-gradient(135deg, #134e4a 0%, #0d9488 60%, #0891b2 100%);
+    --bg:      #f0fdfa;
+    --card:    #ffffff;
+    --border:  #99f6e4;
+    --text:    #0f172a;
+    --muted:   #6b7280;
+    --radius:  14px;
+    --shadow:  0 4px 20px rgba(13,148,136,0.12);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  /* ── Näkymät ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ════ HERO ════ */
+  .hero {
+    background: var(--grad);
+    color: #fff;
+    padding: 2rem 1.5rem 1.8rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "🔍";
+    position: absolute;
+    font-size: 12rem;
+    opacity: .04;
+    right: -2rem; top: -2rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-icon { font-size: 2.8rem; line-height: 1; display: block; }
+  .hero h1 { font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 900; letter-spacing: -0.5px; margin: .3rem 0 .4rem; }
+  .hero-sub { font-size: 1rem; opacity: .9; max-width: 520px; margin: 0 auto; }
+  .hero-badges { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-top: .9rem; }
+  .badge {
+    background: rgba(255,255,255,.18);
+    border: 1.5px solid rgba(255,255,255,.35);
+    border-radius: 20px; padding: .25rem .85rem;
+    font-size: .82rem; font-weight: 600;
+  }
+
+  /* ── Varoitusbanneri ── */
+  .note-bar {
+    background: #fef9c3; border-bottom: 1.5px solid #fde047;
+    padding: .55rem 1.2rem; text-align: center;
+    font-size: .83rem; color: #713f12;
+  }
+
+  /* ── Pääalue ── */
+  .main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* ── Kortit ── */
+  .card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1.1rem;
+    box-shadow: var(--shadow);
+  }
+  .card-label {
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--teal); margin-bottom: .5rem;
+  }
+
+  /* ── Tapauksen kuvaus ── */
+  .case-box {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+    border: 2px solid #6ee7b7;
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1.1rem;
+  }
+  .case-box h2 { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: .6rem; }
+  .case-box p  { font-size: .97rem; color: #1e3a3a; }
+
+  /* ── Epäillyt ── */
+  .suspects-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: .7rem; margin: .8rem 0;
+  }
+  .suspect-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    background: #fff;
+  }
+  .suspect-name { font-weight: 800; font-size: .95rem; }
+  .suspect-role { font-size: .82rem; color: var(--muted); margin-top: .1rem; }
+
+  /* ── Vaiheet ── */
+  .step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: #fff; border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    margin-bottom: .8rem; box-shadow: var(--shadow);
+  }
+  .step-num {
+    min-width: 42px; height: 42px; border-radius: 50%;
+    background: var(--grad); color: #fff;
+    font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step h3 { font-size: 1rem; font-weight: 800; margin-bottom: .2rem; }
+  .step-time { font-size: .78rem; color: var(--muted); margin-bottom: .3rem; display: block; }
+  .step p, .step li { font-size: .95rem; color: #333; }
+  .step ul { padding-left: 1.2rem; margin-top: .3rem; }
+  .step li { margin-bottom: .2rem; }
+
+  /* ── Hint ── */
+  .hint {
+    background: #ecfdf5; border-left: 3px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: .65rem .95rem; font-size: .88rem; color: var(--navy);
+    margin-top: .5rem;
+  }
+
+  /* ── Footer-linkit ── */
+  .footer-links { text-align: center; padding: .5rem 1rem 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .footer-link {
+    font-size: .82rem; color: var(--muted);
+    background: none; border: none; border-bottom: 1px solid #d1d5db;
+    padding-bottom: 1px; cursor: pointer; font-family: inherit;
+    transition: color .15s;
+  }
+  .footer-link:hover { color: var(--text); }
+  .footer-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 2px; }
+
+  /* ════ TULOSTETTAVA ════ */
+  .print-bar {
+    background: #f8fafc; border-bottom: 1.5px solid #e2e8f0;
+    padding: .9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .6rem;
+  }
+  .print-bar h1 { font-size: 1rem; font-weight: 700; }
+  .print-btn {
+    background: var(--teal); color: #fff;
+    border: none; border-radius: 8px; padding: .45rem 1rem;
+    font-size: .88rem; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .back-btn {
+    background: none; border: 1.5px solid #e2e8f0;
+    border-radius: 8px; padding: .4rem .9rem;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
+    color: var(--text); font-family: inherit;
+  }
+
+  .print-content { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* Tapausbrieffi tulostuksessa */
+  .brief-box {
+    background: #ecfdf5; border: 2px solid #6ee7b7;
+    border-radius: var(--radius); padding: 1.2rem 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+  .brief-box h2 { font-size: 1.1rem; font-weight: 900; color: var(--navy); margin-bottom: .5rem; }
+  .brief-box p  { font-size: .92rem; color: #1e3a3a; margin-bottom: .4rem; }
+  .brief-box ol { padding-left: 1.3rem; }
+  .brief-box li { font-size: .9rem; color: #1e3a3a; margin-bottom: .25rem; }
+
+  /* Vihjekortti-kehykset */
+  .cut-line {
+    border: none; border-top: 2px dashed #94a3b8;
+    margin: 1rem 0; position: relative;
+  }
+  .cut-line::before {
+    content: "✂";
+    position: absolute; left: 0; top: -11px;
+    background: var(--bg); padding: 0 4px;
+    font-size: .9rem; color: #94a3b8;
+  }
+
+  .clue-card {
+    border: 2px solid;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: .5rem;
+    page-break-inside: avoid;
+  }
+  .clue-card-header {
+    padding: .6rem 1rem;
+    font-size: .88rem; font-weight: 800;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .clue-card-body { padding: .9rem 1.1rem; font-size: .88rem; }
+  .clue-card-body ul { padding-left: 1.2rem; }
+  .clue-card-body li { margin-bottom: .3rem; line-height: 1.5; }
+  .clue-card-body strong { display: block; margin-bottom: .4rem; }
+  .clue-question {
+    margin-top: .7rem; font-size: .82rem; font-style: italic;
+    padding: .4rem .7rem;
+    border-radius: 6px;
+  }
+
+  /* Värit vihjekorteille */
+  .clue-a { border-color: #6ee7b7; }
+  .clue-a .clue-card-header { background: #ecfdf5; color: #065f46; }
+  .clue-a .clue-question { background: #d1fae5; color: #065f46; }
+
+  .clue-b { border-color: #fcd34d; }
+  .clue-b .clue-card-header { background: #fffbeb; color: #78350f; }
+  .clue-b .clue-question { background: #fef3c7; color: #78350f; }
+
+  .clue-c { border-color: #f9a8d4; }
+  .clue-c .clue-card-header { background: #fdf2f8; color: #831843; }
+  .clue-c .clue-question { background: #fce7f3; color: #831843; }
+
+  .clue-d { border-color: #93c5fd; }
+  .clue-d .clue-card-header { background: #eff6ff; color: #1e3a8a; }
+  .clue-d .clue-question { background: #dbeafe; color: #1e3a8a; }
+
+  /* Päätelmälomake */
+  .form-card {
+    background: #fff; border: 2px solid #e2e8f0;
+    border-radius: var(--radius); padding: 1.3rem 1.5rem;
+    margin-top: 1.2rem; page-break-before: always;
+  }
+  .form-card h2 { font-size: 1rem; font-weight: 800; margin-bottom: 1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: .6rem; }
+  .form-q { margin-bottom: 1.1rem; }
+  .form-q label { font-size: .9rem; font-weight: 700; display: block; margin-bottom: .4rem; }
+  .form-line { border: none; border-bottom: 1.5px solid #cbd5e1; width: 100%; margin-bottom: .4rem; display: block; height: 1.4rem; }
+  .form-line-tall { border: 1.5px solid #cbd5e1; border-radius: 6px; width: 100%; min-height: 3rem; display: block; margin-top: .3rem; }
+  .thinking-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: .5rem; margin-top: .5rem; }
+  .thinking-item { text-align: center; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: .5rem .3rem; font-size: .75rem; }
+  .thinking-item .t-icon { font-size: 1.2rem; display: block; margin-bottom: .2rem; }
+  .thinking-item .t-name { font-weight: 700; display: block; margin-bottom: .3rem; }
+  .thinking-check { display: flex; align-items: center; gap: .3rem; justify-content: center; font-size: .75rem; }
+
+  /* ════ OPETTAJA ════ */
+  .teacher-bar {
+    background: #f8fafc; border-bottom: 1.5px solid #e2e8f0;
+    padding: .9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .6rem;
+  }
+  .teacher-bar h1 { font-size: 1rem; font-weight: 700; }
+  .t-content { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .t-card {
+    background: #fff; border: 1.5px solid #e2e8f0;
+    border-radius: var(--radius); padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .t-card h2 { font-size: .98rem; font-weight: 700; margin-bottom: .6rem; }
+  .t-card p, .t-card li { font-size: .93rem; color: #333; }
+  .t-card ul { padding-left: 1.3rem; }
+  .t-card li { margin-bottom: .3rem; }
+  .ratkaisu-box {
+    background: #ecfdf5; border: 2px solid #6ee7b7;
+    border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-bottom: 1rem;
+  }
+  .ratkaisu-box h2 { font-size: .98rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; }
+  .ratkaisu-box p  { font-size: .93rem; color: #1e3a3a; margin-bottom: .3rem; }
+  .t-table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: .5rem; }
+  .t-table th { background: #f0fdfa; padding: .5rem .8rem; text-align: left; border-bottom: 2px solid #99f6e4; font-weight: 700; color: var(--navy); }
+  .t-table td { padding: .5rem .8rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  .t-table tr:last-child td { border-bottom: none; }
+  .t-vinkki { background: #fffbeb; border-left: 3px solid #fbbf24; border-radius: 0 8px 8px 0; padding: .65rem .95rem; font-size: .88rem; color: #78350f; margin-top: .6rem; }
+  .t-vinkki strong { display: block; margin-bottom: .2rem; }
+  .tavoite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .5rem; }
+  .tavoite-item { border: 1.5px solid #99f6e4; border-radius: 8px; padding: .65rem .85rem; font-size: .85rem; background: #f0fdfa; }
+  .tavoite-item strong { display: block; color: var(--teal-d); margin-bottom: .2rem; }
+
+  /* ════ TULOSTUS ════ */
+  @media print {
+    .print-bar, .footer-links, #view-oppilas, #view-opettaja { display: none !important; }
+    #view-tulostus { display: block !important; }
+    body { background: #fff; font-size: 12px; }
+    .print-content { padding: 0; max-width: 100%; }
+    .clue-card, .form-card { box-shadow: none; }
+    .form-card { page-break-before: always; }
+    .cut-line { border-top: 1.5px dashed #999; }
+  }
+
+  @media (max-width: 480px) {
+    .suspects-grid { grid-template-columns: 1fr; }
+    .thinking-grid { grid-template-columns: repeat(3,1fr); }
+    .tavoite-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     NÄKYMÄ 1: OPPILAILLE (taululla)
+════════════════════════════════ -->
+<div id="view-oppilas" class="view active">
+
+  <header class="hero">
+    <span class="hero-icon">🕵️</span>
+    <h1>Kadonnut kultainen kello</h1>
+    <p class="hero-sub">Salapoliisitehtävä · Ryhmäharjoitus · Ajattelutaidot</p>
+    <div class="hero-badges">
+      <span class="badge">⏱ 25–35 min</span>
+      <span class="badge">👥 4 oppilasta / ryhmä</span>
+      <span class="badge">🔍 Ryhmäpeli</span>
+    </div>
+  </header>
+
+
+  <div class="main">
+
+    <!-- Tapauksen kuvaus -->
+    <div class="case-box" role="region" aria-label="Tapauksen kuvaus">
+      <h2>📋 Tapauksen kuvaus</h2>
+      <p>Koulu-museo Helsingissä. <strong>Professori Erkki Virtasen arvokas kultainen taskukello on varastettu</strong> museovierailun aikana. Poliisi epäilee neljää henkilöä, jotka kaikki olivat paikalla.</p>
+      <p style="margin-top:.5rem;"><strong>Teidän ryhmänne tehtävä:</strong> Selvittäkää kuka varasti kellon, miten ja miksi.</p>
+    </div>
+
+    <!-- Epäillyt -->
+    <div class="card">
+      <div class="card-label">Epäillyt henkilöt</div>
+      <div class="suspects-grid" role="list">
+        <div class="suspect-card" role="listitem">
+          <div class="suspect-name">🔑 Hanna Lehtinen</div>
+          <div class="suspect-role">Museon vahtimestari, 42 v.</div>
+        </div>
+        <div class="suspect-card" role="listitem">
+          <div class="suspect-name">🎩 Mikko Saarinen</div>
+          <div class="suspect-role">Museon johtaja, 58 v.</div>
+        </div>
+        <div class="suspect-card" role="listitem">
+          <div class="suspect-name">📚 Liisa Korhonen</div>
+          <div class="suspect-role">Opiskelijatutkija, 24 v.</div>
+        </div>
+        <div class="suspect-card" role="listitem">
+          <div class="suspect-name">💼 Pekka Mäkinen</div>
+          <div class="suspect-role">Ulkopuolinen arvioitsija, 35 v.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaiheet -->
+    <p style="font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:.7rem;">Näin tehtävä etenee</p>
+
+    <div class="step">
+      <div class="step-num">📋</div>
+      <div>
+        <h3>Vaihe 1 – Saat oman vihjekorttisi</h3>
+        <span class="step-time">⏱ 2 min</span>
+        <p>Opettaja jakaa jokaiselle ryhmän jäsenelle oman vihjekortin (A, B, C tai D). <strong>Älä näytä korttiasi muille.</strong></p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">💬</div>
+      <div>
+        <h3>Vaihe 2 – Jakakaa tiedot puhumalla</h3>
+        <span class="step-time">⏱ 20 min</span>
+        <p>Kerro ryhmällesi mitä vihjekorttisi sisältää — <strong>omin sanoin</strong>. Korttia ei näytetä.</p>
+        <ul>
+          <li>Kirjoittakaa muistiinpanoja kynällä ja paperilla</li>
+          <li>Miettikää yhdessä: kuka, miten, miksi?</li>
+          <li>Kyseenalaistakaa alibit — kaikki ei välttämättä ole totta</li>
+        </ul>
+        <div class="hint">💡 Vihje: Ajoitukset ovat avainasemassa. Vertailkaa, mitä eri korteissa sanotaan samoista hetkistä.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">📝</div>
+      <div>
+        <h3>Vaihe 3 – Päätelmälomake</h3>
+        <span class="step-time">⏱ 5 min</span>
+        <p>Kun ryhmällä on yhteinen vastaus, täyttäkää <strong>päätelmälomake</strong> yhdessä.</p>
+        <ul>
+          <li>Kuka varasti? Miten? Miksi?</li>
+          <li>Mitkä kolme vihjettä olivat ratkaisevimmat?</li>
+          <li>Mitä ajattelutapaa käytitte eniten?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">🔓</div>
+      <div>
+        <h3>Vaihe 4 – Ratkaisu paljastetaan</h3>
+        <span class="step-time">⏱ 5–10 min</span>
+        <p>Opettaja paljastaa ratkaisun. Vertaatkaa omaa päätelmäänne oikeaan vastaukseen.</p>
+        <ul>
+          <li>Mikä vihje oli ratkaisevin?</li>
+          <li>Mitä alibia uskottiin liikaa?</li>
+          <li>Mitä ajattelutaitoja tarvittiin?</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <div class="footer-links">
+    <button class="footer-link" onclick="showView('view-tulostus')">Tulostettavat kortit ja lomake</button>
+    <button class="footer-link" onclick="showView('view-opettaja')">Opettajan ohjeet</button>
+  </div>
+
+</div><!-- /view-oppilas -->
+
+
+<!-- ════════════════════════════════
+     NÄKYMÄ 2: TULOSTETTAVAT MATERIAALIT
+════════════════════════════════ -->
+<div id="view-tulostus" class="view">
+
+  <div class="print-bar">
+    <h1>📄 Tulostettavat materiaalit</h1>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+      <button class="print-btn" onclick="window.print()">🖨️ Tulosta</button>
+      <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
+    </div>
+  </div>
+
+  <div class="print-content">
+
+    <!-- Tapauksen brieffi -->
+    <div class="brief-box">
+      <h2>🔍 SALAPOLIISITEHTÄVÄ — Kadonnut kultainen kello</h2>
+      <p>Koulu-museo Helsingissä. Professori Erkki Virtasen arvokas kultainen taskukello on varastettu museovierailun aikana. Poliisi epäilee neljää henkilöä, jotka kaikki olivat paikalla. Teidän ryhmänne on saanut tehtäväksi selvittää, kuka varasti kellon, miten ja miksi.</p>
+      <p style="margin-top:.6rem;"><strong>Epäillyt:</strong> 🔑 Hanna Lehtinen (vahtimestari, 42 v.) · 🎩 Mikko Saarinen (johtaja, 58 v.) · 📚 Liisa Korhonen (tutkija, 24 v.) · 💼 Pekka Mäkinen (arvioitsija, 35 v.)</p>
+      <ol style="margin-top:.7rem;">
+        <li>Jokainen ryhmän jäsen saa oman vihjekorttinsa (A, B, C tai D) — <strong>älä näytä sitä muille.</strong></li>
+        <li>Jakakaa tiedot <strong>puhumalla</strong>. Käyttäkää kynää ja paperia muistiinpanoihin.</li>
+        <li>Selvittäkää yhdessä: <strong>Kuka varasti kellon, miten ja miksi?</strong></li>
+        <li>Kun ryhmällä on yhteinen vastaus, täyttäkää <strong>päätelmälomake</strong>.</li>
+      </ol>
+      <p style="margin-top:.6rem;font-weight:700;color:var(--teal-d);">⏱ Aika: 25 minuuttia &nbsp;|&nbsp; 👥 Ryhmäkoko: 4 oppilasta</p>
+    </div>
+
+    <div class="cut-line" aria-hidden="true"></div>
+
+    <!-- VIHJEKORTTI A -->
+    <div class="clue-card clue-a" role="region" aria-label="Vihjekortti A">
+      <div class="clue-card-header">🔍 VIHJEKORTTI A &nbsp;<span style="font-weight:400;font-size:.82rem;">(Älä näytä tätä muille!)</span></div>
+      <div class="clue-card-body">
+        <strong>Sinulla on seuraavat tiedot tapauksen ajoituksesta:</strong>
+        <ul>
+          <li>Kello katosi klo 14:00–14:30 välillä.</li>
+          <li>Museo-salin valot sammuivat hetkeksi n. klo 14:15.</li>
+          <li>Professori Virtanen jätti kellon vitriiniin tauon ajaksi.</li>
+          <li>Siivousvaunu löydettiin myöhemmin tyhjänä.</li>
+        </ul>
+        <div class="clue-question">💬 Mieti: Mitä nämä tiedot kertovat? Mikä tuntuu epäilyttävältä?</div>
+      </div>
+    </div>
+
+    <div class="cut-line" aria-hidden="true"></div>
+
+    <!-- VIHJEKORTTI B -->
+    <div class="clue-card clue-b" role="region" aria-label="Vihjekortti B">
+      <div class="clue-card-header">🔍 VIHJEKORTTI B &nbsp;<span style="font-weight:400;font-size:.82rem;">(Älä näytä tätä muille!)</span></div>
+      <div class="clue-card-body">
+        <strong>Sinulla on seuraavat tiedot epäiltyjen liikkeistä:</strong>
+        <ul>
+          <li>Mikko Saarisen puhelin soi klo 14:10 – hän poistui salista.</li>
+          <li>Liisa Korhosen muistikirjasta löytyi kelloa koskeva piirros.</li>
+          <li>Pekka Mäkinen väitti poistuneensa rakennuksesta klo 13:50.</li>
+          <li>Virrankatkaisija on vahtimestarin huoneessa.</li>
+        </ul>
+        <div class="clue-question">💬 Mieti: Kenen alibi on heikoin? Miksi?</div>
+      </div>
+    </div>
+
+    <div class="cut-line" aria-hidden="true"></div>
+
+    <!-- VIHJEKORTTI C -->
+    <div class="clue-card clue-c" role="region" aria-label="Vihjekortti C">
+      <div class="clue-card-header">🔍 VIHJEKORTTI C &nbsp;<span style="font-weight:400;font-size:.82rem;">(Älä näytä tätä muille!)</span></div>
+      <div class="clue-card-body">
+        <strong>Sinulla on seuraavat tiedot epäiltyjen taustoista ja motiiveista:</strong>
+        <ul>
+          <li>Pekka Mäkisen käyntikortti löytyi vitriinin läheltä.</li>
+          <li>Hanna Lehtinen on ollut sairaslomalla taloushuolien takia.</li>
+          <li>Liisan tutkimusaihe on antiikkikellot – hän tietää niiden arvon.</li>
+          <li>Museon johtajalla on avain kaikkiin tiloihin.</li>
+        </ul>
+        <div class="clue-question">💬 Mieti: Kenellä olisi syy varastaa? Kuka hyötyisi eniten?</div>
+      </div>
+    </div>
+
+    <div class="cut-line" aria-hidden="true"></div>
+
+    <!-- VIHJEKORTTI D -->
+    <div class="clue-card clue-d" role="region" aria-label="Vihjekortti D">
+      <div class="clue-card-header">🔍 VIHJEKORTTI D &nbsp;<span style="font-weight:400;font-size:.82rem;">(Älä näytä tätä muille!)</span></div>
+      <div class="clue-card-body">
+        <strong>Sinulla on seuraavat tiedot teknisistä todisteista:</strong>
+        <ul>
+          <li>Kameravalvonta osoittaa: Pekka ei poistunut klo 13:50.</li>
+          <li>Hanna Lehtinen vei siivousvaunun ulos klo 14:28.</li>
+          <li>Liisa Korhosen piirros on tehty kuukausi sitten – se on tutkimusmuistiinpano.</li>
+          <li>Mikko Saarinen soitti puhelimessa mutta palasi saliin 3 min kuluessa.</li>
+        </ul>
+        <div class="clue-question">💬 Mieti: Mitä nämä todisteet kumoavat tai vahvistavat?</div>
+      </div>
+    </div>
+
+    <div class="cut-line" aria-hidden="true"></div>
+
+    <!-- PÄÄTELMÄLOMAKE -->
+    <div class="form-card" role="form" aria-label="Päätelmälomake">
+      <h2>📝 PÄÄTELMÄLOMAKE — RYHMÄ: ___________________________</h2>
+
+      <div class="form-q">
+        <label>1. Kuka varasti kellon?</label>
+        <span style="font-size:.85rem;color:var(--muted);">Epäilty:</span>
+        <span class="form-line"></span>
+      </div>
+
+      <div class="form-q">
+        <label>2. Miten se tapahtui?</label>
+        <span style="font-size:.85rem;color:var(--muted);">Tapa:</span>
+        <span class="form-line"></span>
+      </div>
+
+      <div class="form-q">
+        <label>3. Miksi? (motiivi)</label>
+        <span style="font-size:.85rem;color:var(--muted);">Motiivi:</span>
+        <span class="form-line-tall"></span>
+      </div>
+
+      <div class="form-q">
+        <label>4. Mitkä kolme vihjettä olivat ratkaisevimmat?</label>
+        <span class="form-line"></span>
+        <span class="form-line"></span>
+        <span class="form-line"></span>
+      </div>
+
+      <div class="form-q">
+        <label>5. Mitä ajattelutapaa käytitte eniten tässä tehtävässä?</label>
+        <div class="thinking-grid">
+          <div class="thinking-item">
+            <span class="t-icon">🔍</span>
+            <span class="t-name">Kriittinen</span>
+            <label class="thinking-check"><input type="checkbox" aria-label="Kriittinen ajattelu"> Kyllä</label>
+          </div>
+          <div class="thinking-item">
+            <span class="t-icon">💡</span>
+            <span class="t-name">Lateraalinen</span>
+            <label class="thinking-check"><input type="checkbox" aria-label="Lateraalinen ajattelu"> Kyllä</label>
+          </div>
+          <div class="thinking-item">
+            <span class="t-icon">🧩</span>
+            <span class="t-name">Looginen</span>
+            <label class="thinking-check"><input type="checkbox" aria-label="Looginen ajattelu"> Kyllä</label>
+          </div>
+          <div class="thinking-item">
+            <span class="t-icon">🎨</span>
+            <span class="t-name">Luova</span>
+            <label class="thinking-check"><input type="checkbox" aria-label="Luova ajattelu"> Kyllä</label>
+          </div>
+          <div class="thinking-item">
+            <span class="t-icon">🪞</span>
+            <span class="t-name">Reflektiivinen</span>
+            <label class="thinking-check"><input type="checkbox" aria-label="Reflektiivinen ajattelu"> Kyllä</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-q">
+        <label>6. Mitä opitte tästä tehtävästä?</label>
+        <span class="form-line-tall" style="min-height:4rem;"></span>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /view-tulostus -->
+
+
+<!-- ════════════════════════════════
+     NÄKYMÄ 3: OPETTAJAN OHJEET
+════════════════════════════════ -->
+<div id="view-opettaja" class="view">
+  <div class="teacher-bar">
+    <h1>Opettajan ohjeet</h1>
+    <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
+  </div>
+  <div class="t-content">
+
+    <div class="ratkaisu-box">
+      <h2>✅ RATKAISU — EI OPPILAILLE</h2>
+      <p><strong>Tekijä: Hanna Lehtinen (vahtimestari)</strong></p>
+      <p><strong>Tapa:</strong> Hanna sammutti valot klo 14:15 vahtimestarin huoneestaan, poimi kellon vitriinistä pimeässä ja piilotti sen siivousvaunuun — jonka vei ulos klo 14:28.</p>
+      <p><strong>Motiivi:</strong> Hanna oli ollut sairaslomalla taloushuolien takia — tarvitsi rahaa nopeasti. Tiesi antiikkikellon suuren arvon.</p>
+      <p style="margin-top:.5rem;"><strong>Ratkaisevat todisteet:</strong> Vihjekortti D (kamera + vaunu) + Vihjekortti A (valot) + Vihjekortti C (taloushuolet)</p>
+    </div>
+
+    <div class="t-card">
+      <h2>⏱ Rakenne ja ajoitus</h2>
+      <table class="t-table">
+        <thead><tr><th>Vaihe</th><th>Aika</th><th>Toiminta</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Johdanto</strong></td><td style="white-space:nowrap">3 min</td><td>Lue tapauksen kuvaus ääneen. Jaa vihjekortti A–D, yksi per oppilas.</td></tr>
+          <tr><td><strong>Ryhmätyö</strong></td><td style="white-space:nowrap">20 min</td><td>Oppilaat jakavat tietoa puhumalla — kortteja ei saa näyttää.</td></tr>
+          <tr><td><strong>Päätelmä</strong></td><td style="white-space:nowrap">5 min</td><td>Ryhmä täyttää päätelmälomakkeen yhdessä.</td></tr>
+          <tr><td><strong>Purku</strong></td><td style="white-space:nowrap">10 min</td><td>Paljasta ratkaisu. Keskustele: mikä vihje ratkaisi? Mitä ajattelutapaa käytettiin?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="t-card">
+      <h2>🎯 Pedagogiset tavoitteet</h2>
+      <div class="tavoite-grid">
+        <div class="tavoite-item"><strong>🔍 Kriittinen</strong>Opitaan kyseenalaistamaan alibit ja arvioimaan tiedon luotettavuutta.</div>
+        <div class="tavoite-item"><strong>🧩 Looginen</strong>Päättelyketjun rakentaminen yksittäisistä vihjeistä kokonaisuudeksi.</div>
+        <div class="tavoite-item"><strong>💡 Lateraalinen</strong>Vaihtoehtoisten selitysten keksiminen — miksi Liisan piirros ei ole todiste.</div>
+        <div class="tavoite-item"><strong>🪞 Reflektiivinen</strong>Päätelmälomakkeen kysymys 6 ohjaa prosessin arviointiin.</div>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <h2>💡 Vinkkejä</h2>
+      <ul>
+        <li>Jos ryhmä jumittuu: kehota tarkistamaan ajoitukset uudelleen — Vihjekortti A + D yhdessä ratkaisevat asian.</li>
+        <li>Lisää haastetta: piilota Vihjekortti D ja anna se vasta 10 min kuluttua, jos ryhmä ei edisty.</li>
+        <li>Isompi ryhmä: tulosta kaksi sarjaa vihjeitä, voit antaa kahdelle oppilaalle saman kortin.</li>
+        <li>Murhamysteerin jälkeen oppilaat voivat jatkaa ajattelupelissä ja tunnistaa mitä ajattelutapoja he juuri käyttivät.</li>
+      </ul>
+      <div class="t-vinkki">
+        <strong>📎 Tulostusohje</strong>
+        Tulosta yksi dokumentti per ryhmä. Leikkaa vihjekortti A, B, C ja D erilleen. Jaa yksi kortti kullekin ryhmän jäsenelle. Päätelmälomake jää ryhmälle yhteiseksi.
+      </div>
+    </div>
+
+    <div class="t-card">
+      <h2>♿ Saavutettavuus</h2>
+      <ul>
+        <li>Korttien lukeminen ei vaadi erityistaitoja — tiedot voidaan lukea ääneen toiselle.</li>
+        <li>Muistiinpanot voi tehdä myös piirtämällä tai symboleilla.</li>
+        <li>Isommalle ryhmälle sama kortti voidaan antaa kahdelle oppilaalle.</li>
+        <li>Hiljaisempi oppilas voi toimia "kirjurina" joka täyttää lomakkeen.</li>
+      </ul>
+    </div>
+
+  </div>
+</div><!-- /view-opettaja -->
+
+<script>
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
