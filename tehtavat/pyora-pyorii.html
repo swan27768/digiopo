@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyörä pyörii – satunnainen ura</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --pink:   #db2777;
+    --purple: #7c3aed;
+    --orange: #ea580c;
+    --grad:   linear-gradient(135deg, #be185d 0%, #7c3aed 100%);
+    --bg:     #fdf4ff;
+    --card:   #ffffff;
+    --border: #e9d5ff;
+    --text:   #1e1b2e;
+    --muted:  #6b7280;
+    --radius: 16px;
+    --shadow: 0 4px 20px rgba(124,58,237,0.12);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--grad);
+    color: #fff;
+    padding: 2rem 1.5rem 1.8rem;
+    text-align: center;
+  }
+  .hero-emoji { font-size: 3rem; line-height: 1; display: block; }
+  .hero h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -1px; margin: .3rem 0 .4rem; }
+  .hero p { font-size: 1.05rem; opacity: .92; max-width: 520px; margin: 0 auto; }
+  .hero-meta { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin-top: .9rem; }
+  .meta-chip {
+    background: rgba(255,255,255,.2);
+    border: 1.5px solid rgba(255,255,255,.35);
+    border-radius: 20px; padding: .25rem .85rem;
+    font-size: .83rem; font-weight: 600;
+  }
+
+  /* ── Askeleet ylhäällä ── */
+  .steps-bar {
+    background: #fff;
+    border-bottom: 1.5px solid var(--border);
+    padding: .7rem 1rem;
+    display: flex;
+    gap: .4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .step-pill {
+    display: flex; align-items: center; gap: .4rem;
+    padding: .3rem .9rem;
+    border-radius: 20px;
+    font-size: .82rem; font-weight: 700;
+    background: #f3e8ff; color: #5b21b6;
+    border: 1.5px solid #c4b5fd;
+    transition: background .2s, color .2s;
+  }
+  .step-pill.done   { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+  .step-pill.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+  .step-pill.locked { background: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; }
+
+  /* ── Pääalue ── */
+  .main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* ── Kortit ── */
+  .card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.2rem;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: .75rem; font-weight: 800;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--purple); margin-bottom: .6rem;
+  }
+
+  /* ── Pyörä ── */
+  .wheel-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .wheel-container {
+    position: relative;
+    display: inline-block;
+  }
+  .wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 26px solid #be185d;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.3));
+    z-index: 2;
+  }
+  #wheelCanvas {
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 8px 32px rgba(124,58,237,.25);
+    cursor: pointer;
+    transition: transform .1s;
+  }
+  #wheelCanvas:hover:not(.spinning) { transform: scale(1.02); }
+
+  .spin-btn {
+    background: var(--grad);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: .75rem 2rem;
+    font-size: 1rem; font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(124,58,237,.35);
+    transition: opacity .15s, transform .1s;
+    letter-spacing: .02em;
+  }
+  .spin-btn:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); }
+  .spin-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .spin-btn:focus-visible { outline: 3px solid var(--purple); outline-offset: 3px; }
+
+  /* ── Tulos ── */
+  .result-box {
+    display: none;
+    background: linear-gradient(135deg, #fdf4ff, #ede9fe);
+    border: 2px solid #c4b5fd;
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    text-align: center;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .result-box.show { display: block; }
+  @keyframes popIn {
+    from { transform: scale(.85); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .result-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--purple); margin-bottom: .3rem; }
+  .result-profession {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .result-emoji { font-size: 2.5rem; display: block; margin-bottom: .3rem; }
+
+  /* ── Esitystapa ── */
+  .esitys-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+    margin-bottom: .9rem;
+  }
+  .esitys-option {
+    border: 2.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .esitys-option:hover { border-color: var(--purple); background: #f5f3ff; }
+  .esitys-option.selected {
+    border-color: var(--purple);
+    background: #ede9fe;
+    box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+  }
+  .esitys-icon { font-size: 2rem; display: block; margin-bottom: .4rem; }
+  .esitys-name { font-weight: 800; font-size: .95rem; }
+  .esitys-desc { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+
+  .esitys-result {
+    display: none;
+    background: linear-gradient(135deg, #fff7ed, #fef3c7);
+    border: 2px solid #fcd34d;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    text-align: center;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .esitys-result.show { display: block; }
+  .esitys-big { font-size: 1.5rem; font-weight: 900; margin: .3rem 0; }
+  .esitys-sub { font-size: .9rem; color: #92400e; }
+
+  /* ── Ajastin ── */
+  .timer-section { display: none; }
+  .timer-section.show { display: block; }
+  .timer-display {
+    text-align: center;
+    padding: 1.2rem;
+    background: var(--grad);
+    border-radius: var(--radius);
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .timer-label { font-size: .82rem; font-weight: 700; opacity: .85; letter-spacing: .06em; text-transform: uppercase; }
+  .timer-clock {
+    font-size: clamp(3rem, 12vw, 5rem);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+    line-height: 1;
+    margin: .3rem 0;
+    text-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  .timer-clock.warning { animation: pulse .6s ease-in-out infinite alternate; }
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+  .timer-btn {
+    background: #fff;
+    color: var(--purple);
+    border: none;
+    border-radius: 10px;
+    padding: .65rem 1.8rem;
+    font-size: .98rem; font-weight: 800;
+    cursor: pointer;
+    transition: opacity .15s;
+    margin-top: .5rem;
+  }
+  .timer-btn:hover { opacity: .9; }
+  .timer-done-text {
+    display: none;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+    padding: .5rem;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .timer-done-text.show { display: block; }
+
+  /* ── Vinkit ── */
+  .tips-card {
+    display: none;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem 1.5rem;
+    box-shadow: var(--shadow);
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .tips-card.show { display: block; }
+  .tips-title { font-size: 1rem; font-weight: 800; margin-bottom: .8rem; }
+  .tip-step {
+    display: flex; gap: .8rem; align-items: flex-start;
+    margin-bottom: .75rem;
+  }
+  .tip-num {
+    min-width: 28px; height: 28px; border-radius: 50%;
+    background: var(--grad); color: #fff;
+    font-weight: 800; font-size: .82rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: .1rem;
+  }
+  .tip-text { font-size: .93rem; color: #333; }
+  .tip-text em { color: var(--purple); font-style: normal; font-weight: 700; }
+  .tip-hint {
+    background: #f0fdf4;
+    border-left: 3px solid #22c55e;
+    border-radius: 0 8px 8px 0;
+    padding: .65rem .9rem;
+    font-size: .88rem;
+    color: #14532d;
+    margin-top: .5rem;
+  }
+
+  /* ── Summary banner ── */
+  .summary-banner {
+    display: none;
+    background: linear-gradient(135deg, #1e1b2e, #3b0764);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.2rem;
+    box-shadow: var(--shadow);
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .summary-banner.show { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+  .summary-item { flex: 1; min-width: 160px; }
+  .summary-item-label { font-size: .72rem; opacity: .7; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
+  .summary-item-value { font-size: 1.1rem; font-weight: 800; margin-top: .15rem; }
+
+  /* ── Reset ── */
+  .reset-btn {
+    display: none;
+    width: 100%; background: none;
+    border: 1.5px dashed #c4b5fd;
+    border-radius: 10px; padding: .65rem;
+    color: var(--purple); font-weight: 700;
+    font-size: .9rem; cursor: pointer;
+    transition: background .15s;
+    font-family: inherit;
+    margin-top: .5rem;
+  }
+  .reset-btn:hover { background: #f5f3ff; }
+  .reset-btn.show { display: block; }
+
+  /* ── Footer-linkit ── */
+  .footer-links {
+    text-align: center;
+    padding: .5rem 1rem 2rem;
+  }
+  .footer-link {
+    font-size: .8rem; color: var(--muted);
+    background: none; border: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1px; cursor: pointer;
+    font-family: inherit; margin: 0 .6rem;
+    transition: color .15s;
+  }
+  .footer-link:hover { color: var(--text); }
+
+  /* ── Opettajan näkymä ── */
+  .view { display: none; }
+  .view.active { display: block; }
+  .teacher-bar {
+    background: #f9fafb; border-bottom: 1.5px solid #e5e7eb;
+    padding: .9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .6rem;
+  }
+  .teacher-bar h1 { font-size: 1rem; font-weight: 700; }
+  .back-btn {
+    background: none; border: 1.5px solid #e5e7eb;
+    border-radius: 8px; padding: .4rem .9rem;
+    font-size: .88rem; font-weight: 600;
+    cursor: pointer; color: var(--text); font-family: inherit;
+  }
+  .t-content { max-width: 680px; margin: 0 auto; padding: 1.4rem 1rem 3rem; }
+  .t-card {
+    background: #fff; border: 1.5px solid #e5e7eb;
+    border-radius: var(--radius); padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .t-card h2 { font-size: .98rem; font-weight: 700; margin-bottom: .5rem; }
+  .t-card p, .t-card li { font-size: .94rem; color: #333; }
+  .t-card ul { padding-left: 1.3rem; }
+  .t-card ul li { margin-bottom: .3rem; }
+  .t-vinkki {
+    background: #f0fdf4; border-left: 3px solid #22c55e;
+    border-radius: 0 8px 8px 0;
+    padding: .7rem .95rem; margin-top: .7rem;
+    font-size: .88rem; color: #14532d;
+  }
+  .t-vinkki strong { display: block; margin-bottom: .2rem; }
+
+  @media (max-width: 480px) {
+    .esitys-grid { grid-template-columns: 1fr; }
+    .summary-banner.show { flex-direction: column; gap: .7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════ OPPILAAN NÄKYMÄ ════ -->
+<div id="view-oppilas" class="view active">
+
+  <header class="hero">
+    <span class="hero-emoji">🎰</span>
+    <h1>Pyörä pyörii</h1>
+    <p>Sinulle arvotaan ammatti – ja esitystapa. Sinulla on 3 minuuttia vakuuttaa muut, miksi se on täydellinen juuri sinulle.</p>
+    <div class="hero-meta">
+      <span class="meta-chip">⏱ 20–25 min</span>
+      <span class="meta-chip">👥 Pari + koko luokka</span>
+      <span class="meta-chip">🎭 Täydellä vakavuudella</span>
+    </div>
+  </header>
+
+  <!-- Askeleet -->
+  <div class="steps-bar" role="list" aria-label="Tehtävän vaiheet">
+    <div class="step-pill active" id="pill-1" role="listitem">1 · Arvotaan ammatti</div>
+    <div class="step-pill locked" id="pill-2" role="listitem">2 · Arvotaan esitystapa</div>
+    <div class="step-pill locked" id="pill-3" role="listitem">3 · Valmistautuminen</div>
+    <div class="step-pill locked" id="pill-4" role="listitem">4 · Esitys</div>
+  </div>
+
+  <div class="main">
+
+    <!-- Yhteenveto (näkyy kun molemmat arvottu) -->
+    <div class="summary-banner" id="summaryBanner" role="status" aria-live="polite">
+      <div class="summary-item">
+        <div class="summary-item-label">Sinun ammattisi</div>
+        <div class="summary-item-value" id="summaryProf">–</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-label">Esitystapasi</div>
+        <div class="summary-item-value" id="summaryStyle">–</div>
+      </div>
+    </div>
+
+    <!-- Vaihe 1: Ammattipyörä -->
+    <div class="card" id="card-wheel">
+      <div class="card-title">Vaihe 1 – Arvo ammattisi</div>
+      <div class="wheel-wrap">
+        <div class="wheel-container" role="img" aria-label="Ammattipyörä">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <canvas id="wheelCanvas" width="320" height="320" tabindex="0"
+            role="button" aria-label="Paina pyörittääksesi ammattipyörää"
+            onclick="spinWheel()" onkeydown="if(event.key==='Enter'||event.key===' ')spinWheel()">
+          </canvas>
+        </div>
+        <button class="spin-btn" id="spinBtn" onclick="spinWheel()" aria-label="Pyöritä ammattipyörää">
+          🎰 Pyöritä!
+        </button>
+        <div class="result-box" id="profResult" role="status" aria-live="polite">
+          <div class="result-label">Sinun ammattisi on</div>
+          <span class="result-emoji" id="profEmoji"></span>
+          <div class="result-profession" id="profName"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 2: Esitystapa -->
+    <div class="card" id="card-esitys" style="opacity:.4; pointer-events:none;" aria-disabled="true">
+      <div class="card-title">Vaihe 2 – Arvo esitystapasi</div>
+      <p style="font-size:.93rem; color:var(--muted); margin-bottom:1rem;">
+        Miten esität perustelusi? Arvo esitystapasi alla olevalla painikkeella.
+      </p>
+      <div class="esitys-grid" role="list" aria-label="Esitystavat">
+        <div class="esitys-option" role="listitem" aria-label="Radiojuontaja: Esitä kuin suorassa radiolähetyksessä">
+          <span class="esitys-icon">📻</span>
+          <div class="esitys-name">Radiojuontaja</div>
+          <div class="esitys-desc">Suora lähetys, ei katsekontaktia</div>
+        </div>
+        <div class="esitys-option" role="listitem" aria-label="Puhelu äidille: Pari esittää äitiä">
+          <span class="esitys-icon">📞</span>
+          <div class="esitys-name">Puhelu äidille</div>
+          <div class="esitys-desc">Pari esittää äitiä, hän kyselee</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <button class="spin-btn" id="esitysBtn" onclick="spinEsitys()" aria-label="Arvo esitystapa">
+          🎲 Arvo esitystapa!
+        </button>
+      </div>
+      <div class="esitys-result" id="esitysResult" role="status" aria-live="polite">
+        <div class="result-label">Esitystapasi on</div>
+        <div class="esitys-big" id="esitysName"></div>
+        <div class="esitys-sub" id="esitysDesc"></div>
+      </div>
+    </div>
+
+    <!-- Vaihe 3: Ajastin + vinkit -->
+    <div class="timer-section" id="timerSection">
+
+      <div class="tips-card show" id="tipsCard">
+        <div class="tips-title" id="tipsTitle"></div>
+        <div id="tipsList"></div>
+      </div>
+
+      <div class="timer-display">
+        <div class="timer-label">Valmistautumisaika</div>
+        <div class="timer-clock" id="timerClock">3:00</div>
+        <div class="timer-done-text" id="timerDone">⏰ Aika on täynnä!</div>
+        <button class="timer-btn" id="timerStartBtn" onclick="startTimer()" aria-label="Käynnistä ajastin">
+          ▶ Aloita 3 min valmistautuminen
+        </button>
+      </div>
+
+    </div>
+
+    <button class="reset-btn" id="resetBtn" onclick="resetAll()" aria-label="Aloita alusta">
+      🔄 Aloita alusta – uusi arvonta
+    </button>
+
+  </div><!-- /main -->
+
+  <div class="footer-links">
+    <button class="footer-link" onclick="showView('view-opettaja')">Opettajan ohjeet</button>
+  </div>
+
+</div><!-- /view-oppilas -->
+
+
+<!-- ════ OPETTAJAN NÄKYMÄ ════ -->
+<div id="view-opettaja" class="view">
+  <div class="teacher-bar">
+    <h1>📋 Opettajan ohjeet – Pyörä pyörii</h1>
+    <button class="back-btn" onclick="showView('view-oppilas')">← Takaisin</button>
+  </div>
+  <div class="t-content">
+
+    <div class="t-card">
+      <h2>🎯 Tehtävän idea</h2>
+      <p>Jokaiselle arvotaan satunnainen, harvinainen ammatti sekä esitystapa. Oppilaalla on 3 minuuttia valmistautua ja sen jälkeen hän perustelee muulle luokalle <strong>täydellä vakavuudella</strong>, miksi hän on täydellinen kyseiseen ammattiin. Tulos on hauska, mutta samalla oppilas miettii omia vahvuuksiaan ja sitä, mitä eri ammatit oikeasti vaativat.</p>
+      <div class="t-vinkki">
+        <strong>💡 Miksi tämä toimii?</strong>
+        Tehtävä ei vaadi TET-kokemusta – kaikki pääsevät osallistumaan tasapuolisesti.
+      </div>
+    </div>
+
+    <div class="t-card">
+      <h2>🎒 Mitä tarvitset</h2>
+      <ul>
+        <li>Tämä sivu auki älytaululla tai oppilaiden laitteilla</li>
+        <li>Ei muita tarvikkeita – kaikki on digitaalista</li>
+        <li>Vaihtoehto: tulosta ammattilista ja esitystapa-kortit, jos laitteet eivät ole käytössä</li>
+      </ul>
+    </div>
+
+    <div class="t-card">
+      <h2>⏱ Rakenne (20–25 min)</h2>
+      <ul>
+        <li><strong>3 min</strong> – Esittele tehtävä, näytä pyörä</li>
+        <li><strong>2 min</strong> – Jokainen pyörittää oman ammattinsa (voidaan tehdä yksitellen taululla tai kaikki omilla laitteilla)</li>
+        <li><strong>3 min</strong> – Valmistautuminen (ajastin käynnissä)</li>
+        <li><strong>10–15 min</strong> – Esitykset, ~45 sek per oppilas</li>
+        <li><strong>2 min</strong> – Purku: mikä yllätti?</li>
+      </ul>
+    </div>
+
+    <div class="t-card">
+      <h2>🎭 Esitystavat: mitä opettajan pitää tietää</h2>
+      <p><strong>📻 Radiojuontaja:</strong> Oppilas puhuu kuin radiolähetyksessä – selkä yleisöön päin tai silmät kiinni on ok! Tämä sopii hiljaisemmille oppilaille, koska katsekontaktia ei tarvita.</p>
+      <p style="margin-top:.6rem;"><strong>📞 Puhelu äidille:</strong> Toinen oppilas (tai opettaja) esittää äitiä. Äiti saa kysyä tyhmiä kysymyksiä: <em>"Mutta millä sillä elää?"</em>, <em>"Onko se turvallista?"</em>, <em>"Mitä sukulaiset sanovat?"</em></p>
+      <div class="t-vinkki">
+        <strong>💡 Saavutettavuus</strong>
+        Hiljaisempi oppilas voi tehdä radiojuontajan kirjoitetusti: lukee tekstin ääneen paperilta. Kukaan ei ole pakko improvisoida täysin.
+      </div>
+    </div>
+
+    <div class="t-card">
+      <h2>💬 Purku-kysymyksiä</h2>
+      <ul>
+        <li>Mikä ammatti yllätti sinut eniten – omasi tai jonkun muun?</li>
+        <li>Huomasitko jotain omia vahvuuksia, kun mietit perusteluja?</li>
+        <li>Mitä kaikkia eri taitoja harvinaisissa ammateissa tarvitaan?</li>
+      </ul>
+    </div>
+
+    <div class="t-card">
+      <h2>♿ Saavutettavuus</h2>
+      <ul>
+        <li>Ei pakoteta esiintymiseen – voi lukea paperilta</li>
+        <li>Radiojuontaja-tapa ei vaadi katsekontaktia</li>
+        <li>Puhelu äidille -tehtävässä pari tukee – ei yksin lavalla</li>
+        <li>Valmistautumisaika voidaan pidentää tarvittaessa</li>
+        <li>Ammatti voidaan vaihtaa jos se tuntuu mahdottomalta (yksi vaihto per oppilas)</li>
+      </ul>
+    </div>
+
+  </div>
+</div><!-- /view-opettaja -->
+
+
+<script>
+/* ════════════════════════════════
+   DATA
+════════════════════════════════ */
+const PROFESSIONS = [
+  { name: "Apinantutkija",        emoji: "🐒" },
+  { name: "Suklaatestihenkilö",   emoji: "🍫" },
+  { name: "Vesiliukumäkitestaaja",emoji: "🌊" },
+  { name: "Ammattinukkuja",       emoji: "😴" },
+  { name: "Haisuntutkija",        emoji: "👃" },
+  { name: "Pingviinihoitaja",     emoji: "🐧" },
+  { name: "Pilvientarkkailija",   emoji: "☁️" },
+  { name: "Huvipuistotestaaja",   emoji: "🎢" },
+  { name: "Hyttystutkija",        emoji: "🦟" },
+  { name: "Jääveistäjä",          emoji: "🧊" },
+  { name: "Hainruokkija",         emoji: "🦈" },
+  { name: "Pitsanheittoartisti",  emoji: "🍕" },
+  { name: "Videopelitestaaja",    emoji: "🎮" },
+  { name: "Dinosaurustenkaivaja", emoji: "🦖" },
+  { name: "Avaruusruoanlaittaja", emoji: "🚀" },
+  { name: "Krokotiilinhoitaja",   emoji: "🐊" },
+  { name: "Vulkaanitutkija",      emoji: "🌋" },
+  { name: "Sirkusartisti",        emoji: "🎪" },
+  { name: "Elokuvastatisti",      emoji: "🎬" },
+  { name: "Hyönteiskasvattaja",   emoji: "🪲" },
+  { name: "Lumivyörynetsijä",     emoji: "🏔️" },
+  { name: "Merenneitoesiintyjä",  emoji: "🧜" },
+  { name: "Robottitanssittaja",   emoji: "🤖" },
+  { name: "Kaktustutkija",        emoji: "🌵" },
+  { name: "Flamingolaskija",      emoji: "🦩" },
+  { name: "Jäätelönmaistaja",     emoji: "🍦" },
+  { name: "Taikuriassistentti",   emoji: "🪄" },
+  { name: "Ammattikronouttaja",   emoji: "⏱️" },
+  { name: "Ufontarkkailija",      emoji: "🛸" },
+  { name: "Käärmeenmyyjä",        emoji: "🐍" },
+];
+
+const ESITYSTAVAT = [
+  {
+    id: "radio",
+    icon: "📻",
+    name: "Radiojuontaja",
+    desc: "Suora radiolähetys – ääni riittää, ei tarvitse katsoa ketään",
+    tips: [
+      { text: 'Aloita: <em>"Hei ja tervetuloa, täällä [nimesi], maailman paras [ammatti]!"</em>' },
+      { text: 'Kerro <em>yksi "fakta"</em> ammatistasi – saa keksiä.' },
+      { text: 'Selitä <em>miksi juuri sinä</em> olet täydellinen tähän. Liioittele rohkeasti!' },
+      { text: 'Lopeta: <em>"Tämä oli [nimesi], nähdään taajuudella 999.9. Hei hei!"</em>' },
+    ],
+    hint: "Vinkki: Voit puhua seinälle päin tai pitää silmät kiinni – se on radiota!"
+  },
+  {
+    id: "puhelu",
+    icon: "📞",
+    name: "Puhelu äidille",
+    desc: "Kerrot äidille uudesta unelmatyöstäsi – pari esittää äitiä",
+    tips: [
+      { text: '<em>Pari esittää äitiä</em>. Äiti saa kysyä hölmöjä kysymyksiä.' },
+      { text: 'Kerro äidille <em>innostuneena</em>: "Äiti, löysin unelmatyöni!"' },
+      { text: 'Vakuuta äiti vähintään <em>kolmella syyllä</em> miksi tämä on täydellinen sinulle.' },
+      { text: 'Esimerkkikysymyksiä äidille: <em>"Mutta millä sillä elää?", "Onko se turvallista?", "Mitä isoäiti sanoo?"</em>' },
+    ],
+    hint: "Vinkki: Mitä enemmän äiti vastustaa, sitä hauskempaa! Älä anna periksi."
+  }
+];
+
+/* ════════════════════════════════
+   TILA
+════════════════════════════════ */
+let state = {
+  profIndex: null,
+  esitysIndex: null,
+  timerInterval: null,
+  timerSeconds: 180,
+  timerRunning: false,
+};
+
+/* ════════════════════════════════
+   PYÖRÄ – Canvas
+════════════════════════════════ */
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const CX = canvas.width / 2;
+const CY = canvas.height / 2;
+const R = CX - 6;
+const N = PROFESSIONS.length;
+const SEG = (2 * Math.PI) / N;
+
+// Värit – 8 väriä kiertää
+const COLORS = [
+  '#7c3aed','#be185d','#0891b2','#b45309',
+  '#065f46','#9f1239','#1d4ed8','#7e22ce',
+];
+
+let angle = -Math.PI / 2; // pyörän rotaatio, osoitin ylhäällä
+let spinning = false;
+let spinStartAngle = 0;
+let spinEndAngle = 0;
+let spinStartTime = 0;
+const SPIN_MS = 5000;
+
+function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+function drawWheel(a) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Segmentit
+  for (let i = 0; i < N; i++) {
+    const start = a + i * SEG;
+    const end   = start + SEG;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, start, end);
+    ctx.closePath();
+    ctx.fillStyle = COLORS[i % COLORS.length];
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Teksti segmentissä
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(start + SEG / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.font = 'bold 10.5px -apple-system,sans-serif';
+    const short = PROFESSIONS[i].name.length > 14
+      ? PROFESSIONS[i].name.slice(0, 13) + '…'
+      : PROFESSIONS[i].name;
+    ctx.fillText(short, R - 10, 4);
+    ctx.restore();
+  }
+
+  // Keskiympyrä
+  ctx.beginPath();
+  ctx.arc(CX, CY, 22, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  ctx.strokeStyle = '#e9d5ff';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Keskikuvake
+  ctx.font = '18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🎰', CX, CY + 1);
+}
+
+function spinWheel() {
+  if (spinning || state.profIndex !== null) return;
+  spinning = true;
+  document.getElementById('spinBtn').disabled = true;
+
+  spinStartAngle = angle;
+  const extra = (7 + Math.random() * 6) * 2 * Math.PI;
+  const targetSeg = Math.floor(Math.random() * N);
+  // Pyöritetään niin että targetSeg pysähtyy osoittimen kohdalle
+  const segMidAngle = -angle + targetSeg * SEG + SEG / 2;
+  spinEndAngle = spinStartAngle + extra + segMidAngle;
+  spinStartTime = 0;
+
+  requestAnimationFrame(tick);
+
+  function tick(now) {
+    if (!spinStartTime) spinStartTime = now;
+    const t = Math.min((now - spinStartTime) / SPIN_MS, 1);
+    angle = spinStartAngle + (spinEndAngle - spinStartAngle) * easeOut(t);
+    drawWheel(angle);
+
+    if (t < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      spinning = false;
+      angle = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      // Laske tulos
+      const norm = (((-Math.PI / 2) - angle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+      const idx = Math.floor(norm / SEG) % N;
+      state.profIndex = idx;
+      showProfResult(idx);
+    }
+  }
+}
+
+function showProfResult(idx) {
+  const p = PROFESSIONS[idx];
+  document.getElementById('profEmoji').textContent = p.emoji;
+  document.getElementById('profName').textContent  = p.name;
+  document.getElementById('profResult').classList.add('show');
+
+  // Avaa esitystapa-kortti
+  const esitysCard = document.getElementById('card-esitys');
+  esitysCard.style.opacity = '1';
+  esitysCard.style.pointerEvents = 'auto';
+  esitysCard.removeAttribute('aria-disabled');
+  esitysCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  updatePills(2);
+}
+
+/* ════════════════════════════════
+   ESITYSTAPA
+════════════════════════════════ */
+function spinEsitys() {
+  if (state.esitysIndex !== null) return;
+  document.getElementById('esitysBtn').disabled = true;
+
+  // Animoi valinta (nopea "flip")
+  const options = document.querySelectorAll('.esitys-option');
+  let flips = 0;
+  const maxFlips = 10;
+  let interval = setInterval(() => {
+    options.forEach(o => o.classList.remove('selected'));
+    const r = Math.floor(Math.random() * ESITYSTAVAT.length);
+    options[r].classList.add('selected');
+    flips++;
+    if (flips >= maxFlips) {
+      clearInterval(interval);
+      const final = Math.floor(Math.random() * ESITYSTAVAT.length);
+      options.forEach(o => o.classList.remove('selected'));
+      options[final].classList.add('selected');
+      state.esitysIndex = final;
+      showEsitysResult(final);
+    }
+  }, 150);
+}
+
+function showEsitysResult(idx) {
+  const e = ESITYSTAVAT[idx];
+  document.getElementById('esitysName').textContent = e.icon + ' ' + e.name;
+  document.getElementById('esitysDesc').textContent = e.desc;
+  document.getElementById('esitysResult').classList.add('show');
+
+  // Summary banner
+  document.getElementById('summaryProf').textContent =
+    PROFESSIONS[state.profIndex].emoji + ' ' + PROFESSIONS[state.profIndex].name;
+  document.getElementById('summaryStyle').textContent = e.icon + ' ' + e.name;
+  document.getElementById('summaryBanner').classList.add('show');
+
+  // Vinkit
+  showTips(idx);
+
+  // Ajastin
+  document.getElementById('timerSection').classList.add('show');
+
+  updatePills(3);
+  document.getElementById('timerSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ════════════════════════════════
+   VINKIT
+════════════════════════════════ */
+function showTips(idx) {
+  const e = ESITYSTAVAT[idx];
+  document.getElementById('tipsTitle').textContent =
+    'Ohjeet: ' + e.icon + ' ' + e.name;
+
+  const list = document.getElementById('tipsList');
+  list.innerHTML = '';
+  e.tips.forEach((tip, i) => {
+    const div = document.createElement('div');
+    div.className = 'tip-step';
+    div.innerHTML = `
+      <div class="tip-num" aria-hidden="true">${i + 1}</div>
+      <div class="tip-text">${tip.text}</div>
+    `;
+    list.appendChild(div);
+  });
+
+  const hint = document.createElement('div');
+  hint.className = 'tip-hint';
+  hint.textContent = e.hint;
+  list.appendChild(hint);
+
+  document.getElementById('tipsCard').classList.add('show');
+}
+
+/* ════════════════════════════════
+   AJASTIN
+════════════════════════════════ */
+function startTimer() {
+  if (state.timerRunning) return;
+  state.timerRunning = true;
+  document.getElementById('timerStartBtn').style.display = 'none';
+  updatePills(3, true);
+
+  state.timerInterval = setInterval(() => {
+    state.timerSeconds--;
+    updateClock();
+    if (state.timerSeconds <= 0) {
+      clearInterval(state.timerInterval);
+      document.getElementById('timerClock').style.display = 'none';
+      document.getElementById('timerDone').classList.add('show');
+      document.getElementById('resetBtn').classList.add('show');
+      updatePills(4);
+    } else if (state.timerSeconds <= 30) {
+      document.getElementById('timerClock').classList.add('warning');
+    }
+  }, 1000);
+}
+
+function updateClock() {
+  const m = Math.floor(state.timerSeconds / 60);
+  const s = state.timerSeconds % 60;
+  document.getElementById('timerClock').textContent =
+    m + ':' + String(s).padStart(2, '0');
+}
+
+/* ════════════════════════════════
+   PILLER
+════════════════════════════════ */
+function updatePills(activeStep, timerStarted) {
+  const pills = [
+    document.getElementById('pill-1'),
+    document.getElementById('pill-2'),
+    document.getElementById('pill-3'),
+    document.getElementById('pill-4'),
+  ];
+  pills.forEach((p, i) => {
+    p.className = 'step-pill';
+    if (i + 1 < activeStep) p.classList.add('done');
+    else if (i + 1 === activeStep) p.classList.add('active');
+    else p.classList.add('locked');
+  });
+}
+
+/* ════════════════════════════════
+   RESET
+════════════════════════════════ */
+function resetAll() {
+  clearInterval(state.timerInterval);
+  state = { profIndex: null, esitysIndex: null,
+            timerInterval: null, timerSeconds: 180, timerRunning: false };
+
+  angle = -Math.PI / 2;
+  spinning = false;
+  drawWheel(angle);
+
+  document.getElementById('spinBtn').disabled = false;
+  document.getElementById('profResult').classList.remove('show');
+
+  const ec = document.getElementById('card-esitys');
+  ec.style.opacity = '.4'; ec.style.pointerEvents = 'none';
+  document.querySelectorAll('.esitys-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('esitysBtn').disabled = false;
+  document.getElementById('esitysResult').classList.remove('show');
+
+  document.getElementById('summaryBanner').classList.remove('show');
+  document.getElementById('timerSection').classList.remove('show');
+  document.getElementById('tipsCard').classList.remove('show');
+  document.getElementById('timerClock').style.display = '';
+  document.getElementById('timerClock').classList.remove('warning');
+  document.getElementById('timerClock').textContent = '3:00';
+  document.getElementById('timerDone').classList.remove('show');
+  document.getElementById('timerStartBtn').style.display = '';
+  document.getElementById('resetBtn').classList.remove('show');
+
+  updatePills(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════
+   NÄKYMÄT
+════════════════════════════════ */
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
+drawWheel(angle);
+</script>
+</body>
+</html>
