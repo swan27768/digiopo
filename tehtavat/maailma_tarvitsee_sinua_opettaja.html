@@ -530,13 +530,41 @@
     .print-nappi.toissijainen:hover { background: var(--vihrea-vaalea); }
 
     /* ── Print-media ── */
+    /* Kortit-tulostusnäkymä: näkymätön ruudulla, aktivoituu JS:llä */
+    #kortit-print { display: none; }
+
     @media print {
       body { background: #fff; padding: 0; }
       .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .toggle-sisalto, .haaste-sisalto { display: block !important; }
       .print-bar { display: none; }
-      .tuloskortti, .skenaariokortti { break-inside: avoid; }
+      .tuloskortti, .skenaariokortti { break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .page-break { page-break-before: always; }
+
+      /* Vain kortit -tila: piilota kaikki paitsi #kortit-print */
+      body.tulosta-kortit .container { display: none !important; }
+      body.tulosta-kortit #kortit-print {
+        display: block !important;
+        padding: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      body.tulosta-kortit #kortit-print h2 {
+        font-size: 0.95rem; font-weight: 700; color: #065f46;
+        margin: 0 0 10px; page-break-after: avoid;
+      }
+      body.tulosta-kortit #kortit-print h2.roolit-otsikko {
+        page-break-before: always; margin-top: 20px;
+      }
+      body.tulosta-kortit .skenaariot-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+      }
+      body.tulosta-kortit .kortit-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 10px !important;
+      }
     }
 
     .divider {
@@ -909,66 +937,29 @@
   </main>
 </div>
 
+<!-- Kortit-tulostusnäkymä: täytetään JS:llä, näytetään vain tulostettaessa -->
+<div id="kortit-print" aria-hidden="true"></div>
+
 <script>
   function tulostettavaOsio() {
-    const skenaariot = document.getElementById('skenaariotKortit').innerHTML;
-    const roolit     = document.getElementById('roolitKortit').innerHTML;
+    // Täytetään tulostusnäkymä korttiruudukoilla
+    const printDiv = document.getElementById('kortit-print');
+    printDiv.innerHTML =
+      '<h2>🌍 Ongelmaskenaariot — leikkaa irti, yksi per ryhmä</h2>' +
+      document.getElementById('skenaariotKortit').outerHTML +
+      '<h2 class="roolit-otsikko">👩‍💼 Roolikortit — leikkaa irti, yksi per oppilas</h2>' +
+      document.getElementById('roolitKortit').outerHTML;
 
-    const html = `<!DOCTYPE html>
-<html lang="fi">
-<head>
-<meta charset="UTF-8"/>
-<title>Tulostettavat kortit – Maailma tarvitsee sinua</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-         background: #fff; padding: 20px; color: #1a1a2e; }
-  h2 { font-size: 1rem; font-weight: 700; color: #065f46; margin: 20px 0 10px; }
-  h2:first-child { margin-top: 0; }
-  .skenaariot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .skenaariokortti { background: #fff; border: 2px solid #6ee7b7; border-radius: 12px;
-                     padding: 14px 12px; break-inside: avoid; }
-  .skenaariokortti-emoji { font-size: 1.6rem; margin-bottom: 6px; display: block; }
-  .skenaariokortti-nimi { font-size: 0.88rem; font-weight: 700; color: #065f46; margin-bottom: 4px; }
-  .skenaariokortti-kuvaus { font-size: 0.78rem; color: #064e3b; line-height: 1.5; margin-bottom: 8px; }
-  .skenaariokortti-vihjeet { font-size: 0.75rem; color: #047857; font-style: italic;
-                              border-top: 1px solid #6ee7b7; padding-top: 6px; line-height: 1.4; }
-  .kortit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .tuloskortti { background: #f0fdf9; border: 2px solid #6ee7b7; border-radius: 12px;
-                 padding: 12px 10px; text-align: center; break-inside: avoid; }
-  .tuloskortti-emoji { font-size: 1.7rem; display: block; margin-bottom: 6px; }
-  .tuloskortti-nimi { font-size: 0.85rem; font-weight: 700; color: #065f46; margin-bottom: 2px; }
-  .tuloskortti-koulutus { font-size: 0.72rem; color: #064e3b; margin-bottom: 6px; }
-  .tuloskortti-rooli { font-size: 0.72rem; font-style: italic; color: #047857;
-                       background: rgba(6,95,70,0.08); border-radius: 6px;
-                       padding: 4px 6px; line-height: 1.4; }
-  .sivunvaihto { page-break-before: always; margin-top: 30px; }
-  @media print {
-    body { padding: 10px; }
-    @page { margin: 12mm; }
-  }
-</style>
-</head>
-<body>
-  <h2>🌍 Ongelmaskenaariot — leikkaa irti, yksi per ryhmä</h2>
-  <div class="skenaariot-grid">${skenaariot}</div>
-  <div class="sivunvaihto">
-    <h2>👩‍💼 Roolikortit — leikkaa irti, yksi per oppilas</h2>
-    <div class="kortit-grid">${roolit}</div>
-  </div>
-<\/body>
-<\/html>`;
+    // Aktivoi kortit-tulostusnäkymä ja tulosta
+    document.body.classList.add('tulosta-kortit');
+    window.print();
 
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const linkki = document.createElement('a');
-    linkki.href = url;
-    linkki.target = '_blank';
-    linkki.rel = 'noopener';
-    document.body.appendChild(linkki);
-    linkki.click();
-    document.body.removeChild(linkki);
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    // Poistetaan kortit-tila tulostuksen jälkeen
+    window.addEventListener('afterprint', function poista() {
+      document.body.classList.remove('tulosta-kortit');
+      printDiv.innerHTML = '';
+      window.removeEventListener('afterprint', poista);
+    });
   }
 </script>
 </body>
