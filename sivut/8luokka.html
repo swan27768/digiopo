@@ -2406,7 +2406,7 @@
     </button>
 
     <script src="../js/tehtavat.js"></script>
-    <!-- Maskotti-ilmeet 8. luokalle — ylikirjoittaa luokka.js:n ILMEET_DEFAULT -->
+    <!-- Maskotti-ilmeet ja puhetekstit 8. luokalle — ylikirjoittaa luokka.js:n oletukset -->
     <script>
       window.maskottiIlmeet = {
         johdanto:    "kannustavana",
@@ -2415,6 +2415,14 @@
         tet:         "iloisena",
         klinikka:    "kannustavana",
         tulevaisuus: "iloisena",
+      };
+      window.maskottiPuhetekstit = {
+        johdanto:    "Tänä vuonna suunta alkaa löytyä — tervetuloa! 👋",
+        koulutus:    "Suomessa on paljon koulutuspolkuja — sinulle löytyy oma 🗺️",
+        vahvuudet:   "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään 💡",
+        tet:         "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
+        klinikka:    "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
+        tulevaisuus: "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
       };
       window.currentClassNumber = "8";
     </script>
@@ -2690,24 +2698,15 @@
         if (window.innerWidth <= 768) return;
 
         const maskotti = document.querySelector(".maskotti-laatikko");
-        const puhekupla = document.querySelector(".puhekupla");
-        const osiot = document.querySelectorAll(".aihe-osio");
+        const puhekupla  = document.querySelector(".puhekupla");
+        const osiot      = document.querySelectorAll(".aihe-osio");
 
         if (!maskotti || !puhekupla || !osiot.length) return;
 
-        const puhetekstit = {
-          johdanto:    "Tänä vuonna alkaa suuri kysymys: mikä minusta tulee? 🌟",
-          koulutus:    "Suomessa on paljon polkuja — sinulle löytyy oma 🗺️",
-          vahvuudet:   "Fake Insta? Oikeesti hauska tapa löytää oma juttu 📸",
-          tet:         "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
-          klinikka:    "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
-          tulevaisuus: "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
-        };
-
-        const prefixit = ["🙂", "👀", "💭", "✨"];
-        let viimeisin = null;
+        const puhetekstit = window.maskottiPuhetekstit || {};
+        const prefixit    = ["🙂", "👀", "💭", "✨"];
+        let viimeisin     = null;
         let piilotusAjastin = null;
-        let ylaosaLaukaisttu = false;
 
         function naytaMaskotti(teksti) {
           const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
@@ -2718,31 +2717,26 @@
           piilotusAjastin = setTimeout(() => {
             maskotti.classList.remove("nakyvissa");
             maskotti.classList.add("piilossa");
-          }, 4000);
+          }, 4500);
         }
 
+        /* Käydään kaikki osiot läpi ja otetaan viimeinen jonka yläreuna
+           on yli 70 % viewportista scrollattu ylös. Näin osio havaitaan
+           heti kun käyttäjä saapuu siihen — eikä vasta kun se on 160px
+           päässä näytön yläreunasta (mikä havaitsi tulevaisuus-osion liian myöhään). */
         function paivitaOsio() {
-          const kynnys = window.innerHeight * 0.55;
-
           if (window.scrollY < 80) {
-            if (viimeisin !== null) { viimeisin = null; ylaosaLaukaisttu = false; }
+            viimeisin = null;
             return;
           }
-
-          let loydetty = false;
-          for (const osio of osiot) {
-            const rect = osio.getBoundingClientRect();
-            if (rect.top < kynnys && rect.bottom > 0) {
-              if (viimeisin !== osio.id && puhetekstit[osio.id]) {
-                viimeisin = osio.id;
-                naytaMaskotti(puhetekstit[osio.id]);
-              }
-              loydetty = true;
-              break;
-            }
-          }
-          if (!loydetty && !ylaosaLaukaisttu) {
-            ylaosaLaukaisttu = true;
+          const kynnys = window.innerHeight * 0.7;
+          let osioId = "";
+          osiot.forEach(osio => {
+            if (osio.getBoundingClientRect().top < kynnys) osioId = osio.id;
+          });
+          if (osioId && osioId !== viimeisin && puhetekstit[osioId]) {
+            viimeisin = osioId;
+            naytaMaskotti(puhetekstit[osioId]);
           }
         }
 
@@ -2751,17 +2745,6 @@
       }
 
       window.addEventListener("load", setupMaskotti);
-
-      /* ── Scroll-to-top ── */
-      const scrollBtn = document.getElementById("scrollTopBtn");
-      if (scrollBtn) {
-        window.addEventListener("scroll", () => {
-          scrollBtn.classList.toggle("nakyvissa", window.scrollY > 400);
-        }, { passive: true });
-        scrollBtn.addEventListener("click", () =>
-          window.scrollTo({ top: 0, behavior: "smooth" })
-        );
-      }
     </script>
 </body>
 </html>
