@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tulevaisuus-osio – Opettajan materiaali</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --vihrea: #065f46;
+      --vihrea-keski: #059669;
+      --vihrea-vaalea: #d1fae5;
+      --vihrea-reuna: #6ee7b7;
+      --lila: #5b21b6;
+      --lila-vaalea: #ede9fe;
+      --lila-reuna: #ddd6fe;
+      --teksti: #1a1a2e;
+      --teksti-kevyt: #064e3b;
+      --tausta: #f0fdf9;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--tausta);
+      color: var(--teksti);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #6d28d9 100%);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      color: #fff;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 14px;
+    }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.2); margin-bottom: 8px; }
+    .hero-subtitle { font-size: 1rem; opacity: 0.9; line-height: 1.55; max-width: 540px; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .hero-chip { background: rgba(255,255,255,0.22); border-radius: 20px; padding: 4px 14px; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
+    /* ── Kortit ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1.5px solid var(--vihrea-reuna);
+      padding: 22px 22px 20px;
+      margin-bottom: 16px;
+    }
+    .card.lila-kortti { border-color: var(--lila-reuna); }
+    .card-title {
+      font-size: 1.05rem; font-weight: 700; color: var(--vihrea);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 9px;
+    }
+    .card.lila-kortti .card-title { color: var(--lila); }
+    .card p { color: var(--teksti-kevyt); font-size: 0.95rem; line-height: 1.65; margin-bottom: 10px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── Tehtäväotsake ── */
+    .tehtava-otsake {
+      display: flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, #6d28d9, #7c3aed);
+      border-radius: 14px; padding: 14px 20px; margin-bottom: 0;
+      color: white;
+    }
+    .tehtava-nro {
+      background: rgba(255,255,255,0.25); border-radius: 50%;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+    }
+    .tehtava-otsake h2 { font-size: 1.05rem; font-weight: 800; margin: 0; }
+    .tehtava-otsake p { font-size: 0.85rem; opacity: 0.88; margin: 2px 0 0; }
+
+    /* ── Tavoitelista ── */
+    .tavoite-lista { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .tavoite-lista li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.93rem; color: var(--teksti-kevyt); line-height: 1.55; }
+    .tavoite-piste {
+      flex-shrink: 0; margin-top: 3px; width: 20px; height: 20px;
+      background: var(--vihrea-keski); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 0.65rem; font-weight: 700;
+    }
+    .lila-piste { background: #7c3aed !important; }
+
+    /* ── Aikataulu ── */
+    .aikataulu { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+    .aikataulu-rivi { display: flex; gap: 0; position: relative; }
+    .aikataulu-rivi:not(:last-child) .aikataulu-viiva::after {
+      content: ''; position: absolute; top: 28px; left: 9px; width: 2px;
+      height: calc(100% + 0px); background: var(--vihrea-reuna);
+    }
+    .aikataulu-viiva { position: relative; width: 22px; flex-shrink: 0; display: flex; justify-content: center; padding-top: 4px; }
+    .aikataulu-piste { width: 20px; height: 20px; background: var(--vihrea-keski); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.6rem; font-weight: 700; z-index: 1; }
+    .aikataulu-sisalto { padding: 0 0 18px 14px; flex: 1; }
+    .aikataulu-otsikko { font-size: 0.92rem; font-weight: 700; color: var(--vihrea); margin-bottom: 4px; }
+    .aikataulu-aika { display: inline-block; background: var(--vihrea-vaalea); border-radius: 12px; padding: 2px 10px; font-size: 0.78rem; font-weight: 700; color: var(--vihrea); margin-bottom: 6px; }
+    .aikataulu-kuvaus { font-size: 0.88rem; color: var(--teksti-kevyt); line-height: 1.6; }
+    .aikataulu-vinkki { margin-top: 6px; font-size: 0.83rem; color: #065f46; font-style: italic; background: var(--vihrea-vaalea); border-left: 3px solid var(--vihrea-keski); border-radius: 0 6px 6px 0; padding: 6px 10px; }
+
+    /* ── Tarkistuslista ── */
+    .checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.93rem; color: var(--teksti-kevyt); line-height: 1.55; }
+    .checklist li input[type="checkbox"] { flex-shrink: 0; margin-top: 2px; width: 17px; height: 17px; accent-color: var(--vihrea-keski); cursor: pointer; }
+    .checklist label { cursor: pointer; }
+
+    /* ── Info / huomio ── */
+    .info-boksi { background: var(--vihrea-vaalea); border: 1.5px solid var(--vihrea-reuna); border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; color: var(--vihrea); line-height: 1.6; margin-top: 12px; }
+    .info-boksi strong { color: var(--vihrea); }
+    .lila-boksi { background: var(--lila-vaalea); border: 1.5px solid var(--lila-reuna); border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; color: var(--lila); line-height: 1.6; margin-top: 12px; }
+    .huomio-boksi { background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; padding: 14px 16px; font-size: 0.9rem; color: #78350f; line-height: 1.6; margin-top: 12px; display: flex; gap: 10px; }
+    .huomio-ikoni { flex-shrink: 0; font-size: 1.1rem; }
+
+    /* ── Vaihekortit ── */
+    .vaihe-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .vaihe-rivi { display: flex; align-items: flex-start; gap: 12px; background: #f8fafc; border: 1.5px solid var(--lila-reuna); border-radius: 12px; padding: 14px 16px; }
+    .vaihe-nro { background: #7c3aed; color: white; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .vaihe-otsikko { font-size: 0.9rem; font-weight: 700; color: #3b0764; margin-bottom: 3px; }
+    .vaihe-kuvaus { font-size: 0.83rem; color: #6b7280; line-height: 1.5; }
+    .vaihe-aika { display: inline-block; background: var(--lila-vaalea); color: var(--lila); border-radius: 10px; padding: 2px 8px; font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; }
+
+    /* ── Eriyttäminen ── */
+    .eriy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+    @media (max-width: 520px) { .eriy-grid { grid-template-columns: 1fr; } }
+    .eriy-kortti { border-radius: 12px; padding: 14px 16px; }
+    .eriy-alas { background: #eff6ff; border: 1.5px solid #bfdbfe; }
+    .eriy-ylos { background: #fdf2f8; border: 1.5px solid #f9a8d4; }
+    .eriy-otsikko { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
+    .eriy-alas .eriy-otsikko { color: #1d4ed8; }
+    .eriy-ylos .eriy-otsikko { color: #be185d; }
+    .eriy-lista { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .eriy-lista li { font-size: 0.85rem; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+    .eriy-alas .eriy-lista li { color: #1e40af; }
+    .eriy-ylos .eriy-lista li { color: #9d174d; }
+
+    /* ── Arviointitaulukko ── */
+    .arviointi-grid { display: grid; gap: 10px; margin-top: 6px; }
+    .arviointi-rivi { background: linear-gradient(160deg, #f0fdf9, #d1fae5); border: 1.5px solid var(--vihrea-reuna); border-radius: 12px; padding: 14px 16px; }
+    .arviointi-kriteeri { font-size: 0.88rem; font-weight: 700; color: var(--vihrea); margin-bottom: 4px; }
+    .arviointi-kuvaus { font-size: 0.85rem; color: var(--teksti-kevyt); line-height: 1.55; }
+
+    /* ── OPO-vinkki ── */
+    .opovinkki { background: linear-gradient(135deg, #064e3b, #065f46); border-radius: 14px; padding: 18px 20px; color: #fff; margin-top: 14px; position: relative; }
+    .opovinkki::before { content: '"'; position: absolute; top: -6px; left: 14px; font-size: 4rem; line-height: 1; color: rgba(255,255,255,0.2); font-family: Georgia, serif; }
+    .opovinkki-teksti { font-size: 0.93rem; line-height: 1.65; padding-left: 6px; font-style: italic; }
+    .opovinkki-lahde { font-size: 0.78rem; opacity: 0.8; margin-top: 8px; padding-left: 6px; }
+
+    /* ── Materiaalivaihtoehdot ── */
+    .materiaali-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+    .materiaali-rivi { display: flex; align-items: flex-start; gap: 12px; background: var(--lila-vaalea); border: 1.5px solid var(--lila-reuna); border-radius: 12px; padding: 14px 16px; }
+    .materiaali-emoji { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .materiaali-nimi { font-size: 0.9rem; font-weight: 700; color: #3b0764; margin-bottom: 3px; }
+    .materiaali-kuvaus { font-size: 0.82rem; color: #6b7280; line-height: 1.5; }
+
+    /* ── Print-nappi ── */
+    .print-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .print-nappi { display: inline-flex; align-items: center; gap: 7px; background: var(--vihrea-keski); color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.15s; font-family: inherit; text-decoration: none; }
+    .print-nappi:hover { background: var(--vihrea); transform: translateY(-1px); }
+    .print-nappi:focus-visible { outline: 3px solid var(--vihrea); outline-offset: 3px; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--vihrea-reuna); margin: 22px 0; opacity: 0.5; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .print-bar { display: none; }
+      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .tehtava-otsake { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="hero">
+      <div class="hero-badge">
+        <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
+        Opettajan materiaali
+      </div>
+      <h1><span aria-hidden="true">🚀 </span>Tulevaisuus-osio</h1>
+      <p class="hero-subtitle">Kaksi tehtävää samassa osiossa: <strong>Tulevaisuuden koulu</strong> ja <strong>Tulevaisuuden työpaikka</strong>. Tässä ohjeessa käydään läpi molemmat — voit toteuttaa ne peräkkäin tai valita vain toisen.</p>
+      <div class="hero-chips" aria-label="Tehtävän tiedot">
+        <span class="hero-chip"><i class="fa-solid fa-users" aria-hidden="true"></i> 3–5 hengen ryhmät</span>
+        <span class="hero-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> 35–90 min (yksi tai molemmat)</span>
+        <span class="hero-chip"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> 8. luokka</span>
+        <span class="hero-chip"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Luova tiimityö</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="print-bar">
+    <button class="print-nappi" onclick="window.print()">
+      <i class="fa-solid fa-print" aria-hidden="true"></i> Tulosta tämä ohje
+    </button>
+  </div>
+
+  <main>
+
+    <!-- 1. Oppimistavoitteet -->
+    <section class="card" aria-labelledby="tavoitteet-otsikko">
+      <h2 class="card-title" id="tavoitteet-otsikko">
+        <span aria-hidden="true">🎯</span> Oppimistavoitteet
+      </h2>
+      <ul class="tavoite-lista">
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span><span>Oppilas harjoittelee tulevaisuuden kuvittelua avoimesti — ilman oikeaa tai väärää vastausta</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span><span>Oppilas yhdistää koulutuksen ja ammatit konkreettisiin tulevaisuuden skenaarioihin</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span><span>Ryhmä harjoittelee yhteistä ideointia, päätöksentekoa ja esittämistä</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span><span>Oppilas reflektoi omia arvojaan ja toiveitaan: millainen koulu tai työ tuntuisi hyvältä?</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span><span>Epävarmuus tulevaisuudesta normalisoituu — "en tiedä vielä" on hyväksyttävä lähtökohta</span></li>
+      </ul>
+      <div class="info-boksi" role="note">
+        <strong>OPS-kytkennät:</strong> Oppilaanohjaus (tulevaisuuden suunnittelu, itseohjautuvuus), laaja-alainen osaaminen L1 (ajattelu ja oppimaan oppiminen), L4 (monilukutaito), L6 (työelämätaidot ja yrittäjyys). Vahvistaa myös luovaa ongelmanratkaisua ja ryhmätyötaitoja.
+      </div>
+    </section>
+
+    <!-- 2. Valmistelu -->
+    <section class="card" aria-labelledby="valmistelu-otsikko">
+      <h2 class="card-title" id="valmistelu-otsikko">
+        <span aria-hidden="true">📋</span> Valmistautuminen ennen tuntia
+      </h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1" /><label for="c1">Päätä teetkö yhden vai molemmat tehtävät — katso alla aikataulu-suositukset</label></li>
+        <li><input type="checkbox" id="c2" /><label for="c2">Jaa oppilaat 3–5 hengen ryhmiin etukäteen tai anna 2 min tunnin alussa</label></li>
+        <li><input type="checkbox" id="c3" /><label for="c3"><strong>Tulevaisuuden koulu:</strong> Varmista, että oppilaat pääsevät Canvaan (canva.com) tai Google Slidesiin — tai varaa paperia ja kyniä käsinpiirtämistä varten</label></li>
+        <li><input type="checkbox" id="c4" /><label for="c4"><strong>Tulevaisuuden koulu:</strong> Tarkista, miten palautus tapahtuu (Classroom, sähköposti, kuvakaappaus) ja kerro se oppilaille etukäteen</label></li>
+        <li><input type="checkbox" id="c5" /><label for="c5"><strong>Tulevaisuuden työpaikka:</strong> Jos haluaa käyttää LEGO-osiota, tarkista onko niitä saatavilla (ne ovat valinnainen lisä — ei pakollinen)</label></li>
+        <li><input type="checkbox" id="c6" /><label for="c6"><strong>Tulevaisuuden työpaikka:</strong> Varaa ryhmille Post-it-lappuja tai paperia tarrakarttaa varten, jos LEGO tai Canva ei onnistu</label></li>
+        
+      </ul>
+    </section>
+
+    <!-- 3. Tehtävä 1: Tulevaisuuden koulu -->
+    <div style="margin-bottom: 16px;">
+      <div class="tehtava-otsake" role="heading" aria-level="2">
+        <span class="tehtava-nro" aria-hidden="true">1</span>
+        <div>
+          <h2>🏫 Tulevaisuuden koulu</h2>
+          <p>Tiimityö · 3 vaihetta · 25–35 min</p>
+        </div>
+      </div>
+
+      <section class="card lila-kortti" style="border-top-left-radius:0; border-top-right-radius:0; border-top: none; margin-top: 0; padding-top: 20px;" aria-labelledby="koulu-rakenne">
+        <h3 class="card-title" id="koulu-rakenne" style="font-size:0.95rem;">
+          <span aria-hidden="true">📐</span> Tehtävän rakenne
+        </h3>
+        <div class="vaihe-grid">
+          <div class="vaihe-rivi">
+            <span class="vaihe-nro" aria-hidden="true">1</span>
+            <div>
+              <span class="vaihe-aika">5–8 min</span>
+              <div class="vaihe-otsikko">Onnenpyörä — "Mitä jos…" (yksin)</div>
+              <div class="vaihe-kuvaus">Jokainen pyörittää oman kysymyksen ja vastaa siihen mielessään. Sitten kerrotaan lyhyesti ryhmälle, mitä sai. Kysymykset ovat konkreettisia ja hieman provosoivia: "Mitä jos koulu ei olisikaan rakennus?" tai "Mitä jos arvosanat poistuisivat kokonaan?"</div>
+            </div>
+          </div>
+          <div class="vaihe-rivi">
+            <span class="vaihe-nro" aria-hidden="true">2</span>
+            <div>
+              <span class="vaihe-aika">15–20 min</span>
+              <div class="vaihe-otsikko">Tulevaisuuden koulu — tiimi rakentaa</div>
+              <div class="vaihe-kuvaus">Ryhmä suunnittelee yhdessä oman koulunsa viiden kysymyksen kautta: <strong>Missä?</strong> (sijainti, ympäristö) → <strong>Mitä?</strong> (oppiaineet, taidot) → <strong>Miten?</strong> (oppimistapa) → <strong>Kuka opettaa?</strong> → <strong>Miksi koulu on olemassa?</strong> Palautusmuoto vapaa: Canva-posteri, käsinpiirretty tai Google Slides.</div>
+            </div>
+          </div>
+          <div class="vaihe-rivi">
+            <span class="vaihe-nro" aria-hidden="true">3</span>
+            <div>
+              <span class="vaihe-aika">5 min</span>
+              <div class="vaihe-otsikko">Koonti ja palautus</div>
+              <div class="vaihe-kuvaus">Ryhmä valitsee palautusmuodon ja palauttaa Classroomiin. Jos aikaa jää, jokainen ryhmä esittelee koulunsa 1–2 lauseella muulle luokalle.</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size:0.95rem; margin-top: 18px;"><span aria-hidden="true">🎨</span> Palautusmuodot</h3>
+        <div class="materiaali-grid">
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">🖥️</span>
+            <div>
+              <div class="materiaali-nimi">Canva-posteri</div>
+              <div class="materiaali-kuvaus">canva.com → Posteri tai Esitys → tekstiä, kuvia, värejä. Palautetaan PDF:nä tai kuvakaappauksena Classroomiin. Toimii myös puhelimella.</div>
+            </div>
+          </div>
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">✏️</span>
+            <div>
+              <div class="materiaali-nimi">Käsinpiirretty posteri</div>
+              <div class="materiaali-kuvaus">Pohjapiirros tai miellekartta paperille. Selkeä kuva puhelimella → lähetetään Classroomiin. Nopein vaihtoehto, toimii aina.</div>
+            </div>
+          </div>
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">📊</span>
+            <div>
+              <div class="materiaali-nimi">Google Slides</div>
+              <div class="materiaali-kuvaus">3–5 diaa, yksi per kysymys (Missä? Mitä? Miten? Kuka? Miksi?). Linkki tai PDF Classroomiin. Hyvä vaihtoehto jos ryhmä haluaa kirjoittaa paljon.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="huomio-boksi" role="note" style="margin-top: 14px;">
+          <span class="huomio-ikoni" aria-hidden="true">⚠️</span>
+          <span><strong>Tärkeintä ei ole ulkonäkö.</strong> Muistuta oppilaita: "Tärkeintä on, että koulu saa äänen ja ideat näkyvät — yhdellä lauseella per kysymys riittää täysin."</span>
+        </div>
+
+        <h3 class="card-title" style="font-size:0.95rem; margin-top: 18px;"><span aria-hidden="true">🤫</span> Kun ryhmä jumiutuu</h3>
+        <p>Tehtäväsivulla on valmis "Ryhmä jumissa? Apua tähän!" -osio, josta oppilaat löytävät vinkit itse. Ohjaa ryhmä avaamaan se. Vinkkien järjestys sivulla: <strong>Roolijako → Aloitusvirkkeet → Yksi kysymys kerrallaan → Hätävaihtoehto.</strong></p>
+        <p>Jos ryhmä ei löydä mitään, käytä tätä: "Sopikaa ensin vain yksi asia — <strong>missä</strong> teidän koulunne on. Sen jälkeen seuraava." Yksittäinen konkreettinen kysymys purkaa useimmiten lukon.</p>
+
+        <div class="opovinkki" role="complementary">
+          <p class="opovinkki-teksti">Parasta tässä tehtävässä ei ole se, mitä ryhmät lopulta palauttavat — vaan ne ääneen sanotut lauseet kesken suunnittelun: "Hei, mutta miksi meillä edes on kokeita?" Se on sen tunnin pedagoginen ydin.</p>
+          <p class="opovinkki-lahde">— OPO-vinkeistä</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 4. Tehtävä 2: Tulevaisuuden työpaikka -->
+    <div style="margin-bottom: 16px;">
+      <div class="tehtava-otsake" role="heading" aria-level="2">
+        <span class="tehtava-nro" aria-hidden="true">2</span>
+        <div>
+          <h2>💼 Tulevaisuuden työpaikka</h2>
+          <p>Yksin → Tiimi · 2 vaihetta · 25–30 min</p>
+        </div>
+      </div>
+
+      <section class="card lila-kortti" style="border-top-left-radius:0; border-top-right-radius:0; border-top: none; margin-top: 0; padding-top: 20px;" aria-labelledby="tyopaikka-rakenne">
+        <h3 class="card-title" id="tyopaikka-rakenne" style="font-size:0.95rem;">
+          <span aria-hidden="true">📐</span> Tehtävän rakenne
+        </h3>
+        <div class="vaihe-grid">
+          <div class="vaihe-rivi">
+            <span class="vaihe-nro" aria-hidden="true">1</span>
+            <div>
+              <span class="vaihe-aika">5 min · yksin</span>
+              <div class="vaihe-otsikko">Onnenpyörä — "Entäs jos…"</div>
+              <div class="vaihe-kuvaus">Jokainen pyörittää vuorollaan oman kysymyksen (esim. "Entäs jos autot ajaisivat itse?" tai "Entäs jos robottikaverit auttaisivat yksinäisiä ihmisiä?"). Mieti 30 sekuntia: <em>millainen yritys tai paikka vastaisi tähän tilanteeseen?</em> Kerro ryhmälle.</div>
+            </div>
+          </div>
+          <div class="vaihe-rivi">
+            <span class="vaihe-nro" aria-hidden="true">2</span>
+            <div>
+              <span class="vaihe-aika">15–20 min · tiimi</span>
+              <div class="vaihe-otsikko">Rakenna tulevaisuuden työpaikka</div>
+              <div class="vaihe-kuvaus">Ryhmä valitsee yhden "Entäs jos" -tilanteen ja rakentaa sen pohjalta tulevaisuuden työpaikan. Ei tarvitse olla täydellinen — tärkeintä on pystyä kertomaan, <em>mitä siellä tehdään</em> ja <em>miksi se on olemassa</em>.</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size:0.95rem; margin-top: 18px;"><span aria-hidden="true">🧱</span> Rakentamistavat</h3>
+        <div class="materiaali-grid">
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">🧱</span>
+            <div>
+              <div class="materiaali-nimi">LEGO-palikat (jos saatavilla)</div>
+              <div class="materiaali-kuvaus">Rakennetaan palikoista: rakennus, laite, ajoneuvo tai mikä tahansa. Ei tarvitse näyttää oikealta — tärkeää on, että ryhmä pystyy selittämään sen. Konkreettisuus käynnistää puheen.</div>
+            </div>
+          </div>
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">✏️</span>
+            <div>
+              <div class="materiaali-nimi">Pohjapiirros</div>
+              <div class="materiaali-kuvaus">Paperille ylhäältä kuvattu pohjapiirros: missä tehdään töitä, missä levätään, mikä on tärkein kone tai juttu. Nopea ja toimii aina.</div>
+            </div>
+          </div>
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">📦</span>
+            <div>
+              <div class="materiaali-nimi">Prototyyppi kierrätysmateriaaleista</div>
+              <div class="materiaali-kuvaus">Pahvilaatikoita, kyniä, paperia, teippiä, kumeja — mitä löytyy. Jotain konkreettista, joka edustaa paikkaa.</div>
+            </div>
+          </div>
+          <div class="materiaali-rivi">
+            <span class="materiaali-emoji" aria-hidden="true">🗒️</span>
+            <div>
+              <div class="materiaali-nimi">Tarrakartta (Post-it)</div>
+              <div class="materiaali-kuvaus">Kirjoitetaan lapuille: nimi, mitä tehdään, ketkä työskentelevät, mitä välineitä tarvitaan. Järjestetään pöydälle tai seinälle. Toimii myös paperilappuina.</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size:0.95rem; margin-top: 18px;"><span aria-hidden="true">📣</span> Esittely muulle luokalle (Mission)</h3>
+        <p>Kun rakentaminen on valmis, jokainen ryhmä esittelee työpaikkansa neljän kohdan kautta:</p>
+        <ul class="tavoite-lista" style="margin-top: 8px;">
+          <li><span class="tavoite-piste lila-piste" aria-hidden="true">1</span><span><strong>Tilanne:</strong> Mikä "Entäs jos" -kysymys teillä oli?</span></li>
+          <li><span class="tavoite-piste lila-piste" aria-hidden="true">2</span><span><strong>Nimi ja paikka:</strong> Mikä teidän työpaikka on ja missä se sijaitsee?</span></li>
+          <li><span class="tavoite-piste lila-piste" aria-hidden="true">3</span><span><strong>Työ:</strong> Mitä siellä tehdään?</span></li>
+          <li><span class="tavoite-piste lila-piste" aria-hidden="true">4</span><span><strong>Luokka äänestää:</strong> Mihin paikkaan haluaisit itse mennä töihin?</span></li>
+        </ul>
+        <div class="lila-boksi" role="note">
+          <strong>⏱ Esittelyaika:</strong> 10–15 min koko luokalle. Jos ryhmiä on paljon, voi käyttää Gallery Walk -muotoa: ryhmät kiertävät katsomassa toistensa tuotoksia 3 min kierroksilla.
+        </div>
+      </section>
+    </div>
+
+    <!-- 5. Aikataulu -->
+    <section class="card" aria-labelledby="aikataulu-otsikko">
+      <h2 class="card-title" id="aikataulu-otsikko">
+        <span aria-hidden="true">⏱️</span> Aikataulusuositukset
+      </h2>
+
+      <p style="margin-bottom: 14px;"><strong>Yksi tehtävä (45 min):</strong></p>
+      <div class="aikataulu" role="list">
+        <div class="aikataulu-rivi" role="listitem">
+          <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">1</div></div>
+          <div class="aikataulu-sisalto">
+            <div class="aikataulu-otsikko">Orientointi</div>
+            <span class="aikataulu-aika">0–5 min</span>
+            <div class="aikataulu-kuvaus">Esittele tehtävä lyhyesti: "Tänään kuvitellaan tulevaisuutta — ei ole oikeita vastauksia." Muodosta ryhmät.</div>
+            <div class="aikataulu-vinkki">💡 Aloita kysymyksellä koko luokalle: "Jos saisitte rakentaa oman koulun — mitä ensimmäisenä muuttaisitte?" Saa ajatukset liikkeelle heti.</div>
+          </div>
+        </div>
+        <div class="aikataulu-rivi" role="listitem">
+          <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">2</div></div>
+          <div class="aikataulu-sisalto">
+            <div class="aikataulu-otsikko">Onnenpyörä (yksin)</div>
+            <span class="aikataulu-aika">5–12 min</span>
+            <div class="aikataulu-kuvaus">Jokainen pyörittää vuorollaan ja vastaa mielessään. Kierrä luokkaa — ohjaa hiljaisimpia ääneen.</div>
+          </div>
+        </div>
+        <div class="aikataulu-rivi" role="listitem">
+          <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">3</div></div>
+          <div class="aikataulu-sisalto">
+            <div class="aikataulu-otsikko">Rakentaminen (tiimi)</div>
+            <span class="aikataulu-aika">12–35 min</span>
+            <div class="aikataulu-kuvaus">Ryhmät työskentelevät itsenäisesti. Kierrä ja esitä kysymyksiä: "Miten teidän koulu eroaa nykyisestä?" tai "Kuka haluaa opiskella teidän koulussanne?"</div>
+            <div class="aikataulu-vinkki">💡 Ilmoita ajasta: "5 minuuttia jäljellä — aloittakaa koontia." Se auttaa ryhmiä priorisoimaan.</div>
+          </div>
+        </div>
+        <div class="aikataulu-rivi" role="listitem">
+          <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">4</div></div>
+          <div class="aikataulu-sisalto">
+            <div class="aikataulu-otsikko">Esittely ja reflektointi</div>
+            <span class="aikataulu-aika">35–45 min</span>
+            <div class="aikataulu-kuvaus">Jokainen ryhmä esittelee lyhyesti (1–2 lausetta tai täysi esittely aikaresurssista riippuen). Lopuksi yhteiskysymys: "Mikä yllätyksenä?"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p style="margin-bottom: 14px;"><strong>Molemmat tehtävät (75–90 min / kaksi tuntia):</strong></p>
+      <div class="info-boksi" role="note">
+        Suositeltava järjestys: <strong>Tulevaisuuden koulu ensin</strong> (tutumpi konteksti, oppilaat ovat kokeneet koulun) → <strong>Tulevaisuuden työpaikka toisena</strong> (avartuu työelämään, kytkeytyy TET-osioon). Onnenpyörä on molemmissa sama — sen voi tehdä vain kerran ensimmäisellä tunnilla ja viitata siihen toisella.
+      </div>
+    </section>
+
+    <!-- 6. Eriyttäminen -->
+    <section class="card" aria-labelledby="eriy-otsikko">
+      <h2 class="card-title" id="eriy-otsikko">
+        <span aria-hidden="true">🎛️</span> Eriyttäminen
+      </h2>
+      <div class="eriy-grid">
+        <div class="eriy-kortti eriy-alas">
+          <div class="eriy-otsikko">⬇️ Tuki tarvitseville</div>
+          <ul class="eriy-lista">
+            <li><span aria-hidden="true">→</span><span>Anna yksi konkreettinen lähtökohta: "Teidän koulunne on metsässä" — ja jatkakaa siitä</span></li>
+            <li><span aria-hidden="true">→</span><span>Rajaa viisi kysymystä kolmeen: Missä? Mitä opitaan? Miksi?</span></li>
+            <li><span aria-hidden="true">→</span><span>Salli piirtäminen tekstin sijaan — kuva kertoo yhtä paljon</span></li>
+            <li><span aria-hidden="true">→</span><span>Käytä "Ryhmä jumissa?" -vinkkiosio tehtäväsivulla — se on suunniteltu juuri tähän</span></li>
+          </ul>
+        </div>
+        <div class="eriy-kortti eriy-ylos">
+          <div class="eriy-otsikko">⬆️ Haaste edistyneille</div>
+          <ul class="eriy-lista">
+            <li><span aria-hidden="true">→</span><span>Suunnittele koulun tai työpaikan päiväjärjestys — miltä yksi päivä näyttää?</span></li>
+            <li><span aria-hidden="true">→</span><span>Miksi teidän koulu tai työpaikka on parempi kuin nykyinen? Argumentoi 3 perusteella</span></li>
+            <li><span aria-hidden="true">→</span><span>Mitä ammatteja teidän tulevaisuuden koulu tai työpaikka luo — joita ei vielä ole?</span></li>
+            <li><span aria-hidden="true">→</span><span>Vertaa: mitä yhteistä teidän idealla on jonkin jo olemassaolevan innovaation kanssa?</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 8. Kytkennät -->
+    <section class="card" aria-labelledby="jatko-otsikko">
+      <h2 class="card-title" id="jatko-otsikko">
+        <span aria-hidden="true">🔗</span> Kytkennät muihin osioihin
+      </h2>
+      <ul class="tavoite-lista">
+        <li><span class="tavoite-piste" aria-hidden="true">→</span><span><strong>TET-osio:</strong> "Millainen TET-paikka liittyisi teidän tulevaisuuden työpaikkaan?" — luonteva silta TET-kokemukseen</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">→</span><span><strong>Maailma tarvitsee sinua:</strong> Molemmat tehtävät käsittelevät tulevaisuutta — voidaan toteuttaa samalla viikolla ja verrata: "Mitä ammatteja teidän koulu tai työpaikka tarvitsisi?"</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">→</span><span><strong>Vahvuudet-osio:</strong> "Mitä vahvuuttasi tarvitaan eniten siinä tulevaisuuden koulussa tai paikassa, jonka suunnittelitte?"</span></li>
+        <li><span class="tavoite-piste" aria-hidden="true">→</span><span><strong>Koulutusalakaruselli:</strong> Tulevaisuuden työpaikka -tehtävä voi paljastaa kiinnostuksen alan — ohjaa oppilas katsomaan karusellistä lisää</span></li>
+      </ul>
+      <div class="info-boksi" role="note" style="margin-top: 14px;">
+        <strong>Jatkotyöskentely:</strong> Ryhmien tuotokset (posterit, kuvat) voi tulostaa tai heijastaa seinälle seuraavaan tuntiin. "Missä ollaan 10 vuoden päästä — onko jotain näistä ideoista jo olemassa?" on hyvä aloituskysymys jatkotunnille.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Tulosta-nappi on ainoa toiminnallisuus — ei popup-ongelmia
+</script>
+</body>
+</html>

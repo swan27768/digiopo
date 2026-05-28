@@ -1,975 +1,2602 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Maailma tarvitsee sinua – Opettajan materiaali</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="DigiOpo – 8. luokan oppilaanohjaus. Tutustu koulutusvaihtoehtoihin, työelämään ja omiin mahdollisuuksiisi."
+    />
+    <title>8. luokka – DigiOpo</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- DigiOpo CSS -->
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/aihe.css" />
+    <link rel="stylesheet" href="../css/maskotti.css" />
+    <link rel="stylesheet" href="../css/utils.css" />
+    <link rel="stylesheet" href="../css/koulutusalakaruselli.css" />
+    <link rel="stylesheet" href="../css/pinkkiteema.css" />
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --vihrea: #065f46;
-      --vihrea-keski: #059669;
-      --vihrea-vaalea: #d1fae5;
-      --vihrea-reuna: #6ee7b7;
-      --teksti: #1a1a2e;
-      --teksti-kevyt: #064e3b;
-      --tausta: #f0fdf9;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--tausta);
-      color: var(--teksti);
-      min-height: 100vh;
-      padding: 24px 16px 60px;
-    }
-
-    .container { max-width: 760px; margin: 0 auto; }
-
-    /* ── Hero ── */
-    .hero {
-      background: linear-gradient(135deg, #064e3b 0%, #059669 60%, #34d399 100%);
-      border-radius: 20px;
-      padding: 32px 28px 28px;
-      color: #fff;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .hero-badge {
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      margin-bottom: 14px;
+      gap: 3px;
     }
-    .hero h1 {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 800;
-      line-height: 1.2;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    .nav-logo span {
+      color: #f0c040;
+      font-style: italic;
+    }
+
+    /* ── Haaste ylöspäin eriyttäminen ── */
+    .haaste-osio {
+      margin-top: 12px;
       margin-bottom: 8px;
     }
-    .hero-subtitle {
-      font-size: 1rem;
-      opacity: 0.9;
-      line-height: 1.55;
-      max-width: 520px;
-    }
-    .hero-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
-    }
-    .hero-chip {
-      background: rgba(255,255,255,0.22);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* ── Kortit ── */
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1.5px solid var(--vihrea-reuna);
-      padding: 22px 22px 20px;
-      margin-bottom: 16px;
-    }
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-    .card p {
-      color: var(--teksti-kevyt);
-      font-size: 0.95rem;
-      line-height: 1.65;
-      margin-bottom: 10px;
-    }
-    .card p:last-child { margin-bottom: 0; }
-
-    /* ── Oppimistaveotteet-lista ── */
-    .tavoite-lista {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-    }
-    .tavoite-lista li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.93rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.55;
-    }
-    .tavoite-piste {
-      flex-shrink: 0;
-      margin-top: 3px;
-      width: 20px;
-      height: 20px;
-      background: var(--vihrea-keski);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-    }
-
-    /* ── Aikataulu ── */
-    .aikataulu {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin-top: 4px;
-    }
-    .aikataulu-rivi {
-      display: flex;
-      gap: 0;
-      position: relative;
-    }
-    .aikataulu-rivi:not(:last-child) .aikataulu-viiva::after {
-      content: '';
-      position: absolute;
-      top: 28px;
-      left: 9px;
-      width: 2px;
-      height: calc(100% + 0px);
-      background: var(--vihrea-reuna);
-    }
-    .aikataulu-viiva {
-      position: relative;
-      width: 22px;
-      flex-shrink: 0;
-      display: flex;
-      justify-content: center;
-      padding-top: 4px;
-    }
-    .aikataulu-piste {
-      width: 20px;
-      height: 20px;
-      background: var(--vihrea-keski);
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 0.6rem;
-      font-weight: 700;
-      z-index: 1;
-    }
-    .aikataulu-sisalto {
-      padding: 0 0 18px 14px;
-      flex: 1;
-    }
-    .aikataulu-otsikko {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 4px;
-    }
-    .aikataulu-aika {
-      display: inline-block;
-      background: var(--vihrea-vaalea);
-      border-radius: 12px;
-      padding: 2px 10px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 6px;
-    }
-    .aikataulu-kuvaus {
-      font-size: 0.88rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.6;
-    }
-    .aikataulu-vinkki {
-      margin-top: 6px;
-      font-size: 0.83rem;
-      color: #065f46;
-      font-style: italic;
-      background: var(--vihrea-vaalea);
-      border-left: 3px solid var(--vihrea-keski);
-      border-radius: 0 6px 6px 0;
-      padding: 6px 10px;
-    }
-
-    /* ── Tarkistuslista ── */
-    .checklist {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .checklist li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.93rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.55;
-    }
-    .checklist li input[type="checkbox"] {
-      flex-shrink: 0;
-      margin-top: 2px;
-      width: 17px;
-      height: 17px;
-      accent-color: var(--vihrea-keski);
-      cursor: pointer;
-    }
-    .checklist label { cursor: pointer; }
-
-    /* ── Info-boksi ── */
-    .info-boksi {
-      background: var(--vihrea-vaalea);
-      border: 1.5px solid var(--vihrea-reuna);
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-size: 0.9rem;
-      color: var(--vihrea);
-      line-height: 1.6;
-      margin-top: 12px;
-    }
-    .info-boksi strong { color: var(--vihrea); }
-
-    /* ── Varoitus / huomio ── */
-    .huomio-boksi {
-      background: #fffbeb;
-      border: 1.5px solid #fcd34d;
-      border-radius: 12px;
-      padding: 14px 16px;
-      font-size: 0.9rem;
-      color: #78350f;
-      line-height: 1.6;
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-    }
-    .huomio-ikoni { flex-shrink: 0; font-size: 1.1rem; }
-
-    /* ── Arviointitaulukko ── */
-    .arviointi-grid {
-      display: grid;
-      gap: 10px;
-      margin-top: 6px;
-    }
-    .arviointi-rivi {
-      background: linear-gradient(160deg, #f0fdf9, #d1fae5);
-      border: 1.5px solid var(--vihrea-reuna);
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-    .arviointi-kriteeri {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 4px;
-    }
-    .arviointi-kuvaus {
-      font-size: 0.85rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.55;
-    }
-
-    /* ── Toggle ── */
-    .toggle-btn {
+    .haaste-toggle {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: linear-gradient(135deg, #059669, #34d399);
+      background: linear-gradient(135deg, #be185d, #db2777);
       color: #fff;
-      border: none;
+      border: 2px solid #db2777;
       border-radius: 12px;
-      padding: 12px 20px;
+      padding: 11px 20px;
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       transition: opacity 0.15s, transform 0.15s;
       text-align: left;
-      font-family: inherit;
     }
-    .toggle-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .toggle-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-    .toggle-nuoli {
+    .haaste-toggle:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #9d174d, #be185d);
+    }
+    .haaste-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .haaste-pollo-kuva {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+    }
+    .haaste-nuoli {
       font-size: 0.85rem;
       transition: transform 0.3s;
       flex-shrink: 0;
+      color: #fff;
     }
-    .toggle-btn[aria-expanded="true"] .toggle-nuoli { transform: rotate(180deg); }
-    .toggle-sisalto {
-      background: #fff;
-      border: 1.5px solid var(--vihrea-reuna);
+    .haaste-toggle[aria-expanded="true"] .haaste-nuoli {
+      transform: rotate(180deg);
+    }
+    .haaste-sisalto {
+      background: linear-gradient(160deg, #fdf2f8 0%, #fce7f3 100%);
+      border: 1.5px solid #f9a8d4;
       border-top: none;
       border-radius: 0 0 12px 12px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
+      padding: 18px 20px 16px;
+      margin-top: -4px;
+      color: #500724;
+    }
+    .haaste-ohje {
+      color: #500724;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin: 0 0 10px;
+    }
+    .haaste-ohje strong {
+      color: #9d174d;
+    }
+    .haaste-vihje {
+      color: #9d174d;
+      font-size: 0.83rem;
+      font-style: italic;
+      margin: 0;
+      padding: 8px 12px;
+      background: rgba(249, 168, 212, 0.3);
+      border-left: 3px solid #db2777;
+      border-radius: 0 6px 6px 0;
     }
 
-    /* ── Tulostettavat kortit ── */
-    .kortit-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-top: 8px;
+    /* ── tasks-section: poistetaan ulompi boksiefekti ── */
+    .tasks-section {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      margin-bottom: 12px !important;
     }
-    .tuloskortti {
-      background: linear-gradient(160deg, #f0fdf9, #d1fae5);
-      border: 2px solid var(--vihrea-reuna);
-      border-radius: 14px;
-      padding: 16px 14px;
+
+    /* ── Tehtäväkortit: yhtenäinen leveys ── */
+    .keskustelu-kortti,
+    .vihko-kortti {
+      box-sizing: border-box !important;
+      width: 100% !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* ── mission-card: väli seuraavaan ── */
+    .mission-card {
+      margin-bottom: 12px !important;
+    }
+
+    /* ══════════════════════════════════════
+       TET-polku – interaktiivinen prosessi
+       ══════════════════════════════════════ */
+    .tet-polku-osio {
+      margin: 24px -4px 24px;
+      background: linear-gradient(160deg, #fdf2f8 0%, #fce7f3 100%);
+      border: 1.5px solid #f9a8d4;
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+    }
+    .tet-polku-ohje {
+      font-size: 0.95rem;
+      color: #500724;
+      margin: 0 0 20px;
+      font-style: italic;
       text-align: center;
     }
-    .tuloskortti-emoji {
-      font-size: 2rem;
-      display: block;
-      margin-bottom: 8px;
-    }
-    .tuloskortti-nimi {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 3px;
-    }
-    .tuloskortti-koulutus {
-      font-size: 0.78rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.4;
-      margin-bottom: 10px;
-    }
-    .tuloskortti-rooli {
-      font-size: 0.78rem;
-      font-style: italic;
-      color: #047857;
-      background: rgba(6,95,70,0.08);
-      border-radius: 8px;
-      padding: 4px 8px;
-      line-height: 1.45;
-    }
 
-    .skenaariot-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 8px;
+    /* Polkunoodien rivi */
+    .tet-polku {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0;
+      flex-wrap: wrap;
+      row-gap: 16px;
     }
-    .skenaariokortti {
-      background: #fff;
-      border: 2px solid var(--vihrea-reuna);
-      border-radius: 14px;
-      padding: 16px 14px;
-    }
-    .skenaariokortti-emoji {
-      font-size: 1.8rem;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .skenaariokortti-nimi {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--vihrea);
-      margin-bottom: 5px;
-    }
-    .skenaariokortti-kuvaus {
-      font-size: 0.82rem;
-      color: var(--teksti-kevyt);
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-    .skenaariokortti-vihjeet {
-      font-size: 0.8rem;
-      color: #047857;
-      font-style: italic;
-      border-top: 1px solid var(--vihrea-reuna);
-      padding-top: 8px;
-      line-height: 1.5;
-    }
-
-    /* ── Osio: eriyttäminen ── */
-    .eriy-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    @media (max-width: 520px) {
-      .eriy-grid { grid-template-columns: 1fr; }
-    }
-    .eriy-kortti {
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-    .eriy-alas {
-      background: #eff6ff;
-      border: 1.5px solid #bfdbfe;
-    }
-    .eriy-ylos {
-      background: #fdf2f8;
-      border: 1.5px solid #f9a8d4;
-    }
-    .eriy-otsikko {
-      font-size: 0.88rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .eriy-alas .eriy-otsikko { color: #1d4ed8; }
-    .eriy-ylos .eriy-otsikko { color: #be185d; }
-    .eriy-lista {
-      list-style: none;
-      padding: 0;
+    .tet-vaihe-wrap {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-    .eriy-lista li {
-      font-size: 0.85rem;
-      line-height: 1.5;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-    .eriy-alas .eriy-lista li { color: #1e40af; }
-    .eriy-ylos .eriy-lista li { color: #9d174d; }
-    .eriy-bullet { flex-shrink: 0; margin-top: 1px; }
-
-    /* ── Lainaus / opettajan vinkki ── */
-    .opovinkki {
-      background: linear-gradient(135deg, #064e3b, #065f46);
-      border-radius: 14px;
-      padding: 18px 20px;
-      color: #fff;
-      margin-top: 14px;
-      position: relative;
-    }
-    .opovinkki::before {
-      content: '"';
-      position: absolute;
-      top: -6px;
-      left: 14px;
-      font-size: 4rem;
-      line-height: 1;
-      color: rgba(255,255,255,0.2);
-      font-family: Georgia, serif;
-    }
-    .opovinkki-teksti {
-      font-size: 0.93rem;
-      line-height: 1.65;
-      padding-left: 6px;
-      font-style: italic;
-    }
-    .opovinkki-lahde {
-      font-size: 0.78rem;
-      opacity: 0.8;
-      margin-top: 8px;
-      padding-left: 6px;
-    }
-
-    /* ── Print-nappi ── */
-    .print-bar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .print-nappi {
-      display: inline-flex;
       align-items: center;
-      gap: 7px;
-      background: var(--vihrea-keski);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 0.88rem;
-      font-weight: 700;
+      gap: 8px;
+      flex: 1;
+    }
+    .tet-nuoli {
+      font-size: 1.5rem;
+      color: #9d174d;
+      padding: 0 2px;
+      margin-top: 26px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    /* Noodipainike */
+    .tet-noodi {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
-      font-family: inherit;
-      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      padding: 0;
+      background: none;
     }
-    .print-nappi:hover { background: var(--vihrea); transform: translateY(-1px); }
-    .print-nappi:focus-visible { outline: 3px solid var(--vihrea); outline-offset: 3px; }
-    .print-nappi.toissijainen {
-      background: #fff;
-      color: var(--vihrea);
-      border: 2px solid var(--vihrea-reuna);
+    .tet-noodi:hover,
+    .tet-noodi:focus-visible {
+      transform: scale(1.12);
+      outline: 3px solid #db2777;
+      outline-offset: 3px;
     }
-    .print-nappi.toissijainen:hover { background: var(--vihrea-vaalea); }
+    .tet-noodi[aria-expanded="true"] {
+      box-shadow: 0 0 0 4px #db2777;
+      transform: scale(1.08);
+    }
+    .tet-ikoni {
+      font-size: 2rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .tet-vaihenro {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #db2777;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .tet-noodi-label {
+      font-size: 0.82rem;
+      color: #500724;
+      text-align: center;
+      max-width: 76px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
 
-    /* ── Print-media ── */
-    @media print {
-      body { background: #fff; padding: 0; }
-      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-      .toggle-sisalto, .haaste-sisalto { display: block !important; }
-      .print-bar { display: none; }
-      .tuloskortti, .skenaariokortti { break-inside: avoid; }
-      .page-break { page-break-before: always; }
+    /* Noodivärit */
+    .tet-noodi--violetti  { background: #EEEDFE; border-color: #534AB7; }
+    .tet-noodi--vihrea    { background: #E1F5EE; border-color: #0F6E56; }
+    .tet-noodi--sinivihrea{ background: #EAF3DE; border-color: #3B6D11; }
+    .tet-noodi--sininen   { background: #E6F1FB; border-color: #185FA5; }
+    .tet-noodi--oranssi   { background: #FAECE7; border-color: #993C1D; }
+    .tet-noodi--keltainen { background: #FAEEDA; border-color: #854F0B; }
+
+    /* Selityspaneelit */
+    .tet-paneeli {
+      margin-top: 14px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1.5px solid #f9a8d4;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      animation: tetSlideIn 0.2s ease;
+    }
+    .tet-paneeli p { margin: 0 0 8px; }
+    .tet-paneeli ul { margin: 6px 0 10px 18px; padding: 0; }
+    .tet-paneeli li { margin-bottom: 4px; }
+    .tet-paneeli-otsikko {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    .tet-paneeli-vihje {
+      font-size: 0.83rem;
+      font-style: italic;
+      padding: 7px 12px;
+      border-radius: 0 6px 6px 0;
+      margin: 8px 0 0;
+      display: block;
     }
 
-    .divider {
-      height: 1px;
-      background: var(--vihrea-reuna);
-      margin: 20px 0;
-      opacity: 0.5;
+    /* Paneelien värit */
+    .tet-paneeli--violetti   { background: #EEEDFE; border-color: #AFA9EC; color: #26215C; }
+    .tet-paneeli--violetti   .tet-paneeli-otsikko { color: #3C3489; }
+    .tet-paneeli--violetti   .tet-paneeli-vihje   { background: rgba(175,169,236,0.25); border-left: 3px solid #534AB7; color: #3C3489; }
+
+    .tet-paneeli--vihrea     { background: #E1F5EE; border-color: #5DCAA5; color: #04342C; }
+    .tet-paneeli--vihrea     .tet-paneeli-otsikko { color: #085041; }
+    .tet-paneeli--vihrea     .tet-paneeli-vihje   { background: rgba(93,202,165,0.2); border-left: 3px solid #0F6E56; color: #085041; }
+
+    .tet-paneeli--sinivihrea { background: #EAF3DE; border-color: #97C459; color: #173404; }
+    .tet-paneeli--sinivihrea .tet-paneeli-otsikko { color: #27500A; }
+    .tet-paneeli--sinivihrea .tet-paneeli-vihje   { background: rgba(151,196,89,0.2); border-left: 3px solid #3B6D11; color: #27500A; }
+
+    .tet-paneeli--sininen    { background: #E6F1FB; border-color: #85B7EB; color: #042C53; }
+    .tet-paneeli--sininen    .tet-paneeli-otsikko { color: #0C447C; }
+    .tet-paneeli--sininen    .tet-paneeli-vihje   { background: rgba(133,183,235,0.2); border-left: 3px solid #185FA5; color: #0C447C; }
+
+    .tet-paneeli--oranssi    { background: #FAECE7; border-color: #F0997B; color: #4A1B0C; }
+    .tet-paneeli--oranssi    .tet-paneeli-otsikko { color: #712B13; }
+    .tet-paneeli--oranssi    .tet-paneeli-vihje   { background: rgba(240,153,123,0.2); border-left: 3px solid #993C1D; color: #712B13; }
+
+    .tet-paneeli--keltainen  { background: #FAEEDA; border-color: #EF9F27; color: #412402; }
+    .tet-paneeli--keltainen  .tet-paneeli-otsikko { color: #633806; }
+    .tet-paneeli--keltainen  .tet-paneeli-vihje   { background: rgba(239,159,39,0.2); border-left: 3px solid #854F0B; color: #633806; }
+
+    @keyframes tetSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* Mobiilioptimoinit */
+    @media (max-width: 540px) {
+      .tet-polku { gap: 0; }
+      .tet-nuoli { font-size: 1.1rem; padding: 0 1px; margin-top: 20px; }
+      .tet-noodi { width: 58px; height: 58px; }
+      .tet-ikoni { font-size: 1.5rem; }
+      .tet-noodi-label { font-size: 0.72rem; max-width: 58px; }
+    }
+    @media (max-width: 400px) {
+      .tet-nuoli { display: none; }
+      .tet-polku {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px 4px;
+        justify-items: center;
+      }
+    }
+
+
+    /* ── Maskotti: energinen ilme ── */
+    @keyframes maskottiSisaan {
+      0%   { transform: translateY(20px) scale(0.85) rotate(-6deg); opacity: 0; }
+      50%  { transform: translateY(-10px) scale(1.08) rotate(4deg); opacity: 1; }
+      70%  { transform: translateY(4px) scale(0.97) rotate(-2deg); }
+      85%  { transform: translateY(-5px) scale(1.03) rotate(1deg); }
+      100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes maskottiHyppely {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      30%  { transform: translateY(-12px) rotate(-4deg); }
+      60%  { transform: translateY(-6px) rotate(3deg); }
+    }
+    .maskotti-laatikko.nakyvissa .maskotti {
+      animation:
+        maskottiSisaan 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        maskottiHyppely 1.8s ease-in-out 0.6s 2;
+      transform-origin: bottom center;
+    }
+    /* Puhekupla kimpahtaa sisään */
+    @keyframes kupláSisaan {
+      0%   { transform: scale(0.7) translateY(8px); opacity: 0; }
+      70%  { transform: scale(1.05) translateY(-2px); opacity: 1; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .maskotti-laatikko.nakyvissa .puhekupla {
+      animation: kupláSisaan 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
   </style>
-</head>
-<body>
-<div class="container">
+  </head>
 
-  <!-- Hero -->
-  <header>
-    <div class="hero">
-      <div class="hero-badge">
-        <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
-        Opettajan materiaali
+  <body>
+    <!-- Navigaatio -->
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="../index.html" class="logo nav-logo" aria-label="Takaisin DigiOpon etusivulle">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true" style="font-size:16px; margin-right:6px;"></i>Digi<span>opo</span>
+        </a>
       </div>
-      <h1><span aria-hidden="true">🌍 </span>Maailma tarvitsee sinua</h1>
-      <p class="hero-subtitle">Toiminnallinen ryhmätehtävä koulutusalavalintojen ja tulevaisuuden pohtimiseen. Tämä ohje on sinulle — oppilaat käyttävät omaa tehtäväkorttiaan.</p>
-      <div class="hero-chips" aria-label="Tehtävän tiedot">
-        <span class="hero-chip"><i class="fa-solid fa-users" aria-hidden="true"></i> 3–5 hengen ryhmät</span>
-        <span class="hero-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> 35–50 min</span>
-        <span class="hero-chip"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> 8. luokka</span>
-        <span class="hero-chip"><i class="fa-solid fa-person-walking" aria-hidden="true"></i> Toiminnallinen</span>
+      <div class="nav-right">
+        <div class="header-search" role="search">
+          <label for="taskSearch" class="sr-only">Hae tehtävää</label>
+          <input
+            id="taskSearch"
+            type="search"
+            placeholder="Hae tehtävää..."
+            autocomplete="off"
+            aria-label="Hae tehtävää"
+            aria-controls="searchResults"
+            aria-autocomplete="list"
+          />
+          <i class="fa-solid fa-search search-icon" aria-hidden="true"></i>
+          <div
+            id="searchResults"
+            role="listbox"
+            aria-label="Hakutulokset"
+          ></div>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- Tulosta-napit -->
-  <div class="print-bar" role="group" aria-label="Tulostustoiminnot">
-    <button class="print-nappi" onclick="window.print()">
-      <i class="fa-solid fa-print" aria-hidden="true"></i> Tulosta tämä ohje
-    </button>
-    <button class="print-nappi toissijainen" onclick="tulostettavaOsio()">
-      <i class="fa-solid fa-id-card" aria-hidden="true"></i> Tulosta vain kortit
-    </button>
-  </div>
+    <a href="#main-content" class="sr-only sr-only-focusable"
+      >Siirry pääsisältöön</a
+    >
 
-  <main>
+    <div class="book-spread">
+      <!-- Vasen sivu: navigaatio -->
+      <aside class="book-page-left" aria-label="Aiheet">
+        <h3>Sun polku</h3>
 
-    <!-- 1. Tavoitteet -->
-    <section class="card" aria-labelledby="tavoitteet-otsikko">
-      <h2 class="card-title" id="tavoitteet-otsikko">
-        <span aria-hidden="true">🎯</span> Oppimistavoitteet
-      </h2>
-      <ul class="tavoite-lista" aria-label="Oppimistavoitteet">
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">✓</span>
-          Oppilas hahmottaa, että yhteiskunnalliset ongelmat vaativat useiden eri alojen osaamista
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">✓</span>
-          Oppilas tutustuu konkreettisesti eri ammatteihin ja niihin johtaviin koulutuspolkuihin
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">✓</span>
-          Oppilas harjoittelee ottamaan toisen ihmisen roolin ja perustelemaan näkemystä ammatin perspektiivistä
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">✓</span>
-          Oppilas reflektoi omia kiinnostuksiaan suhteessa eri ammattialoihin
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">✓</span>
-          Ryhmä harjoittelee yhteisöllisen ongelmanratkaisun ja suullisen esittämisen taitoja
-        </li>
-      </ul>
-      <div class="info-boksi" role="note">
-        <strong>OPS-kytkennät:</strong> Oppilaanohjaus (itseohjautuvuus, tulevaisuuden suunnittelu), yhteiskuntaoppi (yhteiskunnalliset haasteet), äidinkieli (suullinen viestintä ja esiintyminen), laaja-alainen osaaminen L2 (kulttuurinen osaaminen) ja L6 (työelämätaidot ja yrittäjyys).
-      </div>
-    </section>
+        <nav class="aihelista" aria-label="Sivun aiheet">
+          <a href="#johdanto">Tänä vuonna otat suunnan</a>
 
-    <!-- 2. Valmistelu -->
-    <section class="card" aria-labelledby="valmistelu-otsikko">
-      <h2 class="card-title" id="valmistelu-otsikko">
-        <span aria-hidden="true">📋</span> Valmistautuminen ennen tuntia
-      </h2>
-      <ul class="checklist" aria-label="Valmistelulista">
-        <li>
-          <input type="checkbox" id="c1" />
-          <label for="c1">Jaa oppilaat 3–5 hengen ryhmiin etukäteen tai anna ryhmäytymiseen 2 min tunnin alussa</label>
-        </li>
-        
-        <li>
-          <input type="checkbox" id="c3" />
-          <label for="c3">Vaihtoehto: tulosta roolikortit ja skenaariot etukäteen (sivut 3–4 tästä tiedostosta)</label>
-        </li>
-        <li>
-          <input type="checkbox" id="c4" />
-          <label for="c4">Varaa jokaiselle ryhmälle paperia tai Post-it-lappuja suunnitteluvaihetta varten</label>
-        </li>
-        <li>
-          <input type="checkbox" id="c5" />
-          <label for="c5">Mieti etukäteen, miten esitykset toteutetaan</label>
-        </li>
-        <li>
-          <input type="checkbox" id="c6" />
-          <label for="c6">Jos aikaa on alle 40 min, voit jättää kirjallisen suunnitteluvaiheen pois — suullinen ideointi riittää</label>
-        </li>
-      </ul>
-    </section>
+          <a href="#koulutus">Suomen koulutusjärjestelmä</a>
+          <a href="#koulutus-mission" class="sub-link mission-link">Maailma tarvitsee sinua</a>
 
-    <!-- 3. Aikataulu -->
-    <section class="card" aria-labelledby="aikataulu-otsikko">
-      <h2 class="card-title" id="aikataulu-otsikko">
-        <span aria-hidden="true">⏱️</span> Aikataulusuositus (45 min tunti)
-      </h2>
-      <div class="aikataulu" role="list">
+          <a href="#vahvuudet">Mitä osaan – mitä haluan?</a>
+          <a href="#vahvuudet-mission" class="sub-link mission-link"
+            >Fake Insta</a
+          >
 
-        <div class="aikataulu-rivi" role="listitem">
-          <div class="aikataulu-viiva" aria-hidden="true">
-            <div class="aikataulu-piste">1</div>
-          </div>
-          <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Orientointi ja ryhmäytyminen</div>
-            <span class="aikataulu-aika">0–5 min</span>
-            <div class="aikataulu-kuvaus">Kerro tehtävän idea lyhyesti: "Tänään olette ratkaisemassa oikeaa maailman ongelmaa eri alojen ammattilaisina." Muodosta ryhmät tai vahvista etukäteen muodostetut. Anna oppilaille hetki avata tehtäväkortti.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Ei tarvitse selittää kaikkia vaiheita ensin — oppilaat löytävät ne kortilta itse. Jännityksen säilyttäminen motivoi.</div>
-          </div>
+          <a href="#tet">Kurkistus työelämään</a>
+          <a href="#tet-mission" class="sub-link mission-link">Pyörä pyörii</a>
+
+          <a href="#klinikka">Oppimaan oppimisen klinikka</a>
+         
+
+          <a href="#tulevaisuus">Mitä jos?</a>
+          
+        </nav>
+      </aside>
+
+      <!-- Oikea sivu: sisältö -->
+      <main class="book-page-right" id="main-content">
+        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">
+          <a href="../index.html">Etusivu</a> → 8. luokka
         </div>
 
-        <div class="aikataulu-rivi" role="listitem">
-          <div class="aikataulu-viiva" aria-hidden="true">
-            <div class="aikataulu-piste">2</div>
-          </div>
-          <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Vaihe 1–2: Ongelma ja roolit</div>
-            <span class="aikataulu-aika">5–12 min</span>
-            <div class="aikataulu-kuvaus">Ryhmät valitsevat ongelmansa ja jakavat roolit. Kierrä luokkaa ja tarkista, ettei kukaan jää ilman roolia. Jos ryhmässä on vain 3 henkilöä, yksi voi ottaa kaksi roolia — tai laajentaa rooliaan.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Jos kaksi ryhmää valitsee saman skenaarion, se on täysin okei — eri tiimi, eri ratkaisu. Voidaan vertailla lopussa.</div>
-          </div>
-        </div>
+        <h1>8. luokka – suunta löytyy</h1>
 
-        <div class="aikataulu-rivi" role="listitem">
-          <div class="aikataulu-viiva" aria-hidden="true">
-            <div class="aikataulu-piste">3</div>
+        <!-- 0. Johdanto -->
+        <section
+          id="johdanto"
+          class="aihe-osio"
+          aria-labelledby="otsikko-johdanto"
+        >
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-johdanto">Tänä vuonna otat suunnan</h2>
+            <p>Et tiedä vielä minne — mutta alat selvittää sitä.</p>
           </div>
-          <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Vaihe 3: Suunnittelu</div>
-            <span class="aikataulu-aika">12–27 min</span>
-            <div class="aikataulu-kuvaus">
-              Oppilaat suunnittelevat ratkaisunsa kolmessa vaiheessa:<br>
-              <strong>5 min</strong> — yksilöllinen pohdinta (mitä minun ammattilaiseni tekisi?)<br>
-              <strong>5 min</strong> — ideoiden kokoaminen ryhmässä<br>
-              <strong>5 min</strong> — näytelmäkohtauksen harjoittelu
+
+          <!-- Intro-kuva suurennustoiminnolla -->
+          <div style="position:relative; border-radius:14px; overflow:hidden; margin-top:4px;">
+            <img
+              src="../images/8luokka_johdanto.png"
+              alt="8. luokan opo-tunnit — kaavio"
+              style="width:100%; display:block; border-radius:14px;"
+            />
+            <span style="
+              position:absolute; bottom:12px; right:12px;
+              background:rgba(0,0,0,0.55); color:white;
+              border-radius:8px; padding:5px 12px;
+              font-size:0.78rem; font-weight:600;
+              pointer-events:none;
+            ">🔍 Suurenna</span>
+          </div>
+        </section>
+
+        <!-- 1. Koulutus -->
+        <section
+          id="koulutus"
+          class="aihe-osio"
+          aria-labelledby="otsikko-koulutus"
+        >
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-koulutus">Suomen koulutusjärjestelmä</h2>
+            <p>Mitä vaihtoehtoja sulla on peruskoulun jälkeen?</p>
+          </div>
+
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                Suomessa voit valita erilaisia polkuja peruskoulun jälkeen.
+                Lukio, ammatillinen koulutus ja muut vaihtoehdot tarjoavat eri
+                tapoja oppia ja kehittyä.
+              </p>
+              <p><strong>Ei ole vain yhtä oikeaa reittiä.</strong></p>
+              <button
+                onclick="avaaKjLightbox()"
+                style="margin-top:14px; display:inline-flex; align-items:center; gap:8px; background:#fce7f3; border:1.5px solid #f9a8d4; border-radius:8px; padding:9px 16px; font-size:0.85rem; font-weight:600; color:#9d174d; cursor:pointer;"
+              >🔍 Katso koulutusjärjestelmä-kaavio</button>
             </div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Ilmoita ajat ääneen ("teillä on nyt 5 minuuttia yksilöpohdintaan") — se auttaa ryhmää pysymään aikataulussa. Jotkut ryhmät tarvitsevat lupa-sanaa sille, että voi aloittaa improvisoinnin.</div>
+            <div class="theory-image" role="button" tabindex="0" onclick="avaaKjLightbox()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();avaaKjLightbox();}" aria-label="Suurenna koulutusjärjestelmä-kaavio" style="cursor:pointer;">
+              <img
+                src="../images/koulutus.png"
+                alt="Suomen koulutusvaihtoehtoja — klikkaa suurentaaksesi"
+                loading="lazy"
+              />
+            </div>
           </div>
-        </div>
 
-        <div class="aikataulu-rivi" role="listitem">
-          <div class="aikataulu-viiva" aria-hidden="true">
-            <div class="aikataulu-piste">4</div>
-          </div>
-          <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Vaihe 4: Esitykset</div>
-            <span class="aikataulu-aika">27–40 min</span>
-            <div class="aikataulu-kuvaus">Jokainen ryhmä esittää 2 minuutin kohtauksensa. Muut ryhmät kuuntelevat ja saavat esittää yhden kysymyksen. Laske esityksiin noin 3 min per ryhmä (esitys + kysymys). 4 ryhmän luokassa tähän kuluu noin 12 min.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Muistuta ennen esityksiä: "Puhu ammattilaisena — mitä minä osaan, mitä minä teen." Tämä auttaa ujompia oppilaita: heillä on rooli, ei tarvitse olla oma itsensä.</div>
-          </div>
-        </div>
+          <!-- Koulutusalakaruselli -->
+          <div class="ala-karuselli-wrapper" aria-label="Koulutusalojen esittely">
+            <h3 class="ala-karuselli-otsikko">
+              <i class="fa-solid fa-images" aria-hidden="true"></i>
+              Tutustu koulutusaloihin
+            </h3>
+            <p class="ala-karuselli-kuvaus">Klikkaa kuvaa suurentaaksesi sen koko näytölle.</p>
 
-        <div class="aikataulu-rivi" role="listitem">
-          <div class="aikataulu-viiva" aria-hidden="true">
-            <div class="aikataulu-piste">5</div>
-          </div>
-          <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Vaihe 5: Reflektointi</div>
-            <span class="aikataulu-aika">40–45 min</span>
-            <div class="aikataulu-kuvaus">Yhteinen purkukeskustelu tehtäväkortin neljän reflektiokysymyksen pohjalta. Voit valita 1–2 kysymystä ajan mukaan. Tärkeintä on saada jokainen oppilas sanomaan ääneen jotain omasta ammattikokemuksestaan.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Hyvä avauskysymys koko luokalle: "Kenen ammatissa yllätti jotain sellaista, mitä et odottanut?"</div>
-          </div>
-        </div>
+            <div class="ala-karuselli" id="alaKaruselli" role="region" aria-label="Koulutusalakaruselli">
+              <div class="ala-karuselli-track" id="alaKaruselliTrack">
 
-      </div>
+                <div class="ala-slide" data-index="0">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Kaupan ala" onclick="avaaLightbox(0)">
+                    <img src="../images/koulutusalat/kaupan-ala.png" alt="Kaupan ala – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Kaupan ala</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-      <div class="huomio-boksi" role="note">
-        <span class="huomio-ikoni" aria-hidden="true">⚠️</span>
-        <span><strong>Jos tuntia on vähemmän (35 min):</strong> Lyhennä suunnitteluvaihetta yhdistämällä yksilö- ja ryhmävaihe (yht. 7 min). Pyydä vain 2–3 ryhmää esittämään, muut kertovat sanallisesti ilman esitystä.</span>
-      </div>
-    </section>
-    
+                <div class="ala-slide" data-index="1">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Elintarvikeala" onclick="avaaLightbox(1)">
+                    <img src="../images/koulutusalat/elintarvikeala-iso.png" alt="Elintarvikeala – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Elintarvikeala</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
+                <div class="ala-slide" data-index="2">
+                  <button class="ala-slide-btn" aria-label="Suurenna: IT-ala" onclick="avaaLightbox(2)">
+                    <img src="../images/koulutusalat/it-ala-iso.png" alt="IT-ala – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">IT-ala</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-    <!-- 6. Eriyttäminen -->
-    <section class="card" aria-labelledby="eriy-otsikko">
-      <h2 class="card-title" id="eriy-otsikko">
-        <span aria-hidden="true">🎛️</span> Eriyttäminen
-      </h2>
-      <div class="eriy-grid">
-        <div class="eriy-kortti eriy-alas">
-          <div class="eriy-otsikko">⬇️ Tuki tarvitseville oppilaille</div>
-          <ul class="eriy-lista">
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Anna rooli, joka tuntuu tutulta (esim. opettaja tai lääkäri)</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Anna kirjallinen apu: "Sinä olet [ammatti]. Sinä osaat [asia]. Sinä voisit auttaa [tällä tavalla]."</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Salli kirjoitettu puheenvuoro esityksen sijaan</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Pari voi jakaa roolin ja puhua yhdessä</span></li>
-          </ul>
-        </div>
-        <div class="eriy-kortti eriy-ylos">
-          <div class="eriy-otsikko">⬆️ Haaste edistyneille</div>
-          <ul class="eriy-lista">
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Selvitä ammattisi koulutuspolku opintopolku.fi:stä</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Kirjoita "rekrytointi-ilmoitus": miksi tiimi tarvitsee juuri sinua?</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Mieti: mitä tapahtuu, jos tätä ammattilaista ei ole tiimissä?</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Tehtäväkortin haaste-osiossa on lisää — muistuta avaamaan se</span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
+                <div class="ala-slide" data-index="3">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Luonto- ja ympäristöalat" onclick="avaaLightbox(3)">
+                    <img src="../images/koulutusalat/luonto-ymparisto-ala.png" alt="Luonto- ja ympäristöalat – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Luonto- ja ympäristöalat</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-    <!-- 7. Tulostettavat kortit -->
-    <section class="card" aria-labelledby="kortit-otsikko">
-      <h2 class="card-title" id="kortit-otsikko">
-        <span aria-hidden="true">🖨️</span> Tulostettavat kortit
-      </h2>
-      <p>Tulosta nämä, jos oppilaat eivät käytä digitaalista tehtäväkorttia. Leikkaa kortit irti. Skenaariot: yksi per ryhmä. Roolikortit: jaa niin, että jokainen saa yhden.</p>
+                <div class="ala-slide" data-index="4">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Palvelualat" onclick="avaaLightbox(4)">
+                    <img src="../images/koulutusalat/palvelu-ala.png" alt="Palvelualat – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Palvelualat</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-        <!-- Skenaariot -->
-        <h3 style="font-size:0.95rem; font-weight:700; color: var(--vihrea); margin: 14px 0 10px;">🌍 Ongelmaskenaariot (1 per ryhmä)</h3>
-        <div class="skenaariot-grid" id="skenaariotKortit">
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">🏫</span>
-            <div class="skenaariokortti-nimi">Kylän viimeinen koulu</div>
-            <div class="skenaariokortti-kuvaus">Pikkukaupungin ainoa koulu on sulkemisuhan alla. Lapset joutuvat muuttamaan pois.</div>
-            <div class="skenaariokortti-vihjeet">Keitä tarvitaan? Poliitikko, opettaja, sosiaalityöntekijä, talousasiantuntija…</div>
-          </div>
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">🌊</span>
-            <div class="skenaariokortti-nimi">Meri täyttyy muovista</div>
-            <div class="skenaariokortti-kuvaus">Itämeren rannoille kasautuu muovia. Kalat, linnut ja ihmiset kärsivät.</div>
-            <div class="skenaariokortti-vihjeet">Keitä tarvitaan? Ympäristötutkija, insinööri, toimittaja, poliitikko…</div>
-          </div>
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">👴</span>
-            <div class="skenaariokortti-nimi">Vanhusten yksinäisyys</div>
-            <div class="skenaariokortti-kuvaus">Sadat vanhukset asuvat yksin. Heillä ei ole ketään, jonka kanssa puhua.</div>
-            <div class="skenaariokortti-vihjeet">Keitä tarvitaan? Sosiaalityöntekijä, ohjelmoija, lääkäri, taiteilija…</div>
-          </div>
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">🌡️</span>
-            <div class="skenaariokortti-nimi">Kaupunki kuumenee</div>
-            <div class="skenaariokortti-kuvaus">Kesäiset helleaallot tekevät kaupungeista vaarallisia. Puistot ovat kadonneet.</div>
-            <div class="skenaariokortti-vihjeet">Keitä tarvitaan? Arkkitehti, ympäristötutkija, poliitikko, insinööri…</div>
-          </div>
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">🧠</span>
-            <div class="skenaariokortti-nimi">Nuorten pahoinvointi</div>
-            <div class="skenaariokortti-kuvaus">Yhä useampi nuori kärsii ahdistuksesta. Apua ei saa tarpeeksi nopeasti.</div>
-            <div class="skenaariokortti-vihjeet">Keitä tarvitaan? Lääkäri, sosiaalityöntekijä, toimittaja, ohjelmoija…</div>
-          </div>
-          <div class="skenaariokortti">
-            <span class="skenaariokortti-emoji" aria-hidden="true">💡</span>
-            <div class="skenaariokortti-nimi">Oma idea</div>
-            <div class="skenaariokortti-kuvaus">Keksikää itse ongelma, jonka haluaisitte ratkaista!</div>
-            <div class="skenaariokortti-vihjeet">Kirjoittakaa ongelmanne tähän: ___________________________</div>
-          </div>
-        </div>
+                <div class="ala-slide" data-index="5">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Tekniikan alat" onclick="avaaLightbox(5)">
+                    <img src="../images/koulutusalat/tekniikan-ala.png" alt="Tekniikan alat – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Tekniikan alat</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-        <div class="divider"></div>
+                <div class="ala-slide" data-index="6">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Taide- ja humanistinen ala" onclick="avaaLightbox(6)">
+                    <img src="../images/koulutusalat/taide-ja-humanistinen-ala.png" alt="Taide- ja humanistinen ala – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Taide- ja humanistinen ala</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-        <!-- Roolikortit -->
-        <h3 style="font-size:0.95rem; font-weight:700; color: var(--vihrea); margin: 0 0 10px;">👩‍💼 Roolikortit (1 per oppilas)</h3>
-        <div class="kortit-grid" id="roolitKortit">
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">👩‍⚕️</span>
-            <div class="tuloskortti-nimi">Lääkäri</div>
-            <div class="tuloskortti-koulutus">Yliopisto · 6 vuotta</div>
-            <div class="tuloskortti-rooli">Hoidan ihmisiä, tutkin sairauksia ja suosittelen terveystoimia</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🏗️</span>
-            <div class="tuloskortti-nimi">Arkkitehti</div>
-            <div class="tuloskortti-koulutus">Yliopisto · 5–6 vuotta</div>
-            <div class="tuloskortti-rooli">Suunnittelen tiloja ja rakennuksia, jotka ovat kestäviä ja ihmisystävällisiä</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">💻</span>
-            <div class="tuloskortti-nimi">Ohjelmoija</div>
-            <div class="tuloskortti-koulutus">AMK tai yliopisto · 3–5 vuotta</div>
-            <div class="tuloskortti-rooli">Rakennan digitaalisia ratkaisuja ja automaatiota ongelmien ratkaisemiseksi</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🌿</span>
-            <div class="tuloskortti-nimi">Ympäristötutkija</div>
-            <div class="tuloskortti-koulutus">Yliopisto · 5 vuotta</div>
-            <div class="tuloskortti-rooli">Tutkin luontoa ja ilmastoa, annan tietoa päätöksenteon pohjaksi</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🎨</span>
-            <div class="tuloskortti-nimi">Taiteilija</div>
-            <div class="tuloskortti-koulutus">Taideyliopisto · 3–5 vuotta</div>
-            <div class="tuloskortti-rooli">Herätän tunteita ja ajatuksia — teen näkymättömistä ongelmista näkyviä</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">📰</span>
-            <div class="tuloskortti-nimi">Toimittaja</div>
-            <div class="tuloskortti-koulutus">AMK tai yliopisto · 3–4 vuotta</div>
-            <div class="tuloskortti-rooli">Kerron ihmisille tärkeistä asioista, nostan epäkohdat esiin julkisuuteen</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🔧</span>
-            <div class="tuloskortti-nimi">Insinööri</div>
-            <div class="tuloskortti-koulutus">AMK tai yliopisto · 3–5 vuotta</div>
-            <div class="tuloskortti-rooli">Suunnittelen käytännön ratkaisuja — rakennan sen, mikä pitää toimia</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🧑‍🏫</span>
-            <div class="tuloskortti-nimi">Opettaja</div>
-            <div class="tuloskortti-koulutus">Yliopisto · 5–6 vuotta</div>
-            <div class="tuloskortti-rooli">Koulutan uusia sukupolvia — ratkaisu alkaa aina tiedosta ja taidosta</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">💰</span>
-            <div class="tuloskortti-nimi">Talousasiantuntija</div>
-            <div class="tuloskortti-koulutus">AMK tai yliopisto · 3–5 vuotta</div>
-            <div class="tuloskortti-rooli">Selvitän, mistä rahat tulevat ja miten niitä käytetään viisaasti</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🏋️</span>
-            <div class="tuloskortti-nimi">Sosiaalityöntekijä</div>
-            <div class="tuloskortti-koulutus">Yliopisto · 4–5 vuotta</div>
-            <div class="tuloskortti-rooli">Autan ihmisiä, joilla on vaikeaa — kuuntelen, ohjaan, tuen arjessa</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🌐</span>
-            <div class="tuloskortti-nimi">Poliitikko</div>
-            <div class="tuloskortti-koulutus">Useimmiten yliopisto</div>
-            <div class="tuloskortti-rooli">Teen päätöksiä, jotka vaikuttavat kaikkiin — muutan lait ja resurssit toiminnaksi</div>
-          </div>
-          <div class="tuloskortti">
-            <span class="tuloskortti-emoji" aria-hidden="true">🚀</span>
-            <div class="tuloskortti-nimi">Yrittäjä</div>
-            <div class="tuloskortti-koulutus">Koulutus vaihtelee</div>
-            <div class="tuloskortti-rooli">Kehitän uusia tuotteita ja palveluita — uskon, että parempi tapa on mahdollinen</div>
-          </div>
-        </div>
+                <div class="ala-slide" data-index="7">
+                  <button class="ala-slide-btn" aria-label="Suurenna: Terveys- ja hyvinvointiala" onclick="avaaLightbox(7)">
+                    <img src="../images/koulutusalat/sote-ala-iso.png" alt="Terveys- ja hyvinvointiala – infograafi" loading="lazy" />
+                    <div class="ala-slide-overlay">
+                      <span class="ala-slide-nimi">Terveys- ja hyvinvointiala</span>
+                      <i class="fa-solid fa-expand" aria-hidden="true"></i>
+                    </div>
+                  </button>
+                </div>
 
-    </section>
+              </div>
+            </div>
 
-    <!-- 8. Jatkotehtävät -->
-    <section class="card" aria-labelledby="jatko-otsikko">
-      <h2 class="card-title" id="jatko-otsikko">
-        <span aria-hidden="true">🔗</span> Kytkennät muihin osioihin
-      </h2>
-      <p>Tämä tehtävä toimii luontevana siltana muihin 8. luokan DigiOpo-osioihin:</p>
-      <ul class="tavoite-lista" style="margin-top: 6px;">
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Koulutusalakaruselli:</strong> Esityksen jälkeen voi katsoa karusellistä, mitä koulutusalaa oma rooli edustaa — "löydätkö oman ammattisi?"</span>
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Vahvuudet-osio:</strong> "Mikä vahvuutesi sopii parhaiten siihen ammattiin, jonka valitsit?" — hyvä reflektiokysymys tunnin päätteeksi</span>
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>TET-osio:</strong> Onko oppilas jo miettinyt TET-paikkaa? Tässä tehtävässä valittu ammatti voi toimia inspiraationa TET-paikan hakemiselle</span>
-        </li>
-        <li>
-          <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Tulevaisuus-osio:</strong> "Mitä jos?" -pyörä ja tämä tehtävä täydentävät toisiaan: molemmat käsittelevät tulevaisuuden epävarmuutta rohkaisevasti</span>
-        </li>
-      </ul>
-    </section>
+            <!-- Nuolipainikkeet -->
+            <button class="ala-karuselli-nuoli vasen" id="alaEdellinen" aria-label="Edellinen ala" onclick="siirraKaruselli(-1)">
+              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button class="ala-karuselli-nuoli oikea" id="alaSeuraava" aria-label="Seuraava ala" onclick="siirraKaruselli(1)">
+              <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
 
-  </main>
-</div>
+            <!-- Pisteindikaattorit -->
+            <div class="ala-karuselli-dots" id="alaKaruselliDots" role="tablist" aria-label="Karusellin sijainti"></div>
+          </div>
 
-<script>
-  function tulostettavaOsio() {
-    const skenaariot = document.getElementById('skenaariotKortit').innerHTML;
-    const roolit     = document.getElementById('roolitKortit').innerHTML;
+          <div
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 20px 0;
+              min-height: 220px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(219, 39, 119, 0.25);
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background-image:
+                  linear-gradient(
+                    135deg,
+                    rgba(157, 23, 77, 0.82) 0%,
+                    rgba(219, 39, 119, 0.65) 100%
+                  ),
+                  url(&quot;../images/koulutusalat.png&quot;);
+                background-size: cover;
+                background-position: center;
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: relative;
+                z-index: 1;
+                padding: 28px 32px;
+                color: #fff;
+                width: 100%;
+              "
+            >
+              <div class="hero-badge" style="margin-bottom: 12px">
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                Interaktiivinen tehtävä
+              </div>
+              <h3
+                style="
+                  margin: 0 0 8px;
+                  font-size: clamp(1.2rem, 3vw, 1.6rem);
+                  font-weight: 800;
+                  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+                "
+              >
+                Mikä koulutusala voisi olla sun juttu?
+              </h3>
+              <p
+                style="
+                  margin: 0 0 20px;
+                  font-size: 15px;
+                  line-height: 1.6;
+                  opacity: 0.92;
+                  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                  max-width: 480px;
+                "
+              >
+                Tee valintoja, tutustu eri aloihin ja löydä vaihtoehtoja, jotka
+                voisivat sopia sulle.
+              </p>
+              <a href="../pelit/koulutusalat.html" class="btn-hero"
+                >Löydä oma juttu!</a
+              >
+              <p style="margin: 10px 0 0; font-size: 13px; opacity: 0.75">
+                Vinkki: kokeile eri valintoja uudestaan
+              </p>
+            </div>
+          </div>
 
-    const html = `<!DOCTYPE html>
-<html lang="fi">
-<head>
-<meta charset="UTF-8"/>
-<title>Tulostettavat kortit – Maailma tarvitsee sinua</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-         background: #fff; padding: 20px; color: #1a1a2e; }
-  h2 { font-size: 1rem; font-weight: 700; color: #065f46; margin: 20px 0 10px; }
-  h2:first-child { margin-top: 0; }
-  .skenaariot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .skenaariokortti { background: #fff; border: 2px solid #6ee7b7; border-radius: 12px;
-                     padding: 14px 12px; break-inside: avoid; }
-  .skenaariokortti-emoji { font-size: 1.6rem; margin-bottom: 6px; display: block; }
-  .skenaariokortti-nimi { font-size: 0.88rem; font-weight: 700; color: #065f46; margin-bottom: 4px; }
-  .skenaariokortti-kuvaus { font-size: 0.78rem; color: #064e3b; line-height: 1.5; margin-bottom: 8px; }
-  .skenaariokortti-vihjeet { font-size: 0.75rem; color: #047857; font-style: italic;
-                              border-top: 1px solid #6ee7b7; padding-top: 6px; line-height: 1.4; }
-  .kortit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .tuloskortti { background: #f0fdf9; border: 2px solid #6ee7b7; border-radius: 12px;
-                 padding: 12px 10px; text-align: center; break-inside: avoid; }
-  .tuloskortti-emoji { font-size: 1.7rem; display: block; margin-bottom: 6px; }
-  .tuloskortti-nimi { font-size: 0.85rem; font-weight: 700; color: #065f46; margin-bottom: 2px; }
-  .tuloskortti-koulutus { font-size: 0.72rem; color: #064e3b; margin-bottom: 6px; }
-  .tuloskortti-rooli { font-size: 0.72rem; font-style: italic; color: #047857;
-                       background: rgba(6,95,70,0.08); border-radius: 6px;
-                       padding: 4px 6px; line-height: 1.4; }
-  .sivunvaihto { page-break-before: always; margin-top: 30px; }
-  @media print {
-    body { padding: 10px; }
-    @page { margin: 12mm; }
-  }
-</style>
-</head>
-<body>
-  <h2>🌍 Ongelmaskenaariot — leikkaa irti, yksi per ryhmä</h2>
-  <div class="skenaariot-grid">${skenaariot}</div>
-  <div class="sivunvaihto">
-    <h2>👩‍💼 Roolikortit — leikkaa irti, yksi per oppilas</h2>
-    <div class="kortit-grid">${roolit}</div>
-  </div>
-<\/body>
-<\/html>`;
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-koulutus" aria-live="polite"></div>
+          </div>
 
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const linkki = document.createElement('a');
-    linkki.href = url;
-    linkki.target = '_blank';
-    linkki.rel = 'noopener';
-    document.body.appendChild(linkki);
-    linkki.click();
-    document.body.removeChild(linkki);
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  }
-</script>
+          <!-- MAAILMA TARVITSEE SINUA -tehtävä -->
+          <div
+            id="koulutus-mission"
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 8px 0 0;
+              min-height: 220px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(219, 39, 119, 0.25);
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(131,24,67,0.92) 0%, rgba(219,39,119,0.75) 100%);
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: relative;
+                z-index: 1;
+                padding: 28px 32px;
+                color: #fff;
+                width: 100%;
+              "
+            >
+              <div class="hero-badge" style="margin-bottom: 12px">
+                <i class="fa-solid fa-earth-europe" aria-hidden="true"></i>
+                Toiminnallinen ryhmätehtävä
+              </div>
+              <h3
+                style="
+                  margin: 0 0 8px;
+                  font-size: clamp(1.2rem, 3vw, 1.6rem);
+                  font-weight: 800;
+                  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                "
+              >
+                🌍 Maailma tarvitsee sinua
+              </h3>
+              <p
+                style="
+                  margin: 0 0 20px;
+                  font-size: 15px;
+                  line-height: 1.6;
+                  opacity: 0.92;
+                  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                  max-width: 480px;
+                "
+              >
+                Valitse oikea ongelma, kokoa unelmatyöryhmä eri aloilta ja esitä ratkaisunne elävänä kohtauksena.
+              </p>
+              <button
+                onclick="toggleMaailma(this)"
+                class="btn-hero"
+                style="cursor: pointer; border: none; font-size: 1rem;"
+                aria-expanded="false"
+                aria-controls="maailma-wrapper"
+              >Avaa tehtävä</button>
+            </div>
+          </div>
+
+          <div id="maailma-wrapper" style="display: none; margin-top: 8px;">
+            <iframe
+              src="../tehtavat/maailma_tarvitsee_sinua.html"
+              style="
+                width: 100%;
+                height: 90vh;
+                min-height: 680px;
+                border: none;
+                border-radius: 14px;
+                box-shadow: 0 4px 20px rgba(219,39,119,0.15);
+              "
+              title="Maailma tarvitsee sinua -tehtävä"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <!-- Opettajan materiaali: Maailma tarvitsee sinua -->
+          <div class="opettaja-osio">
+            <button
+              class="opettaja-toggle"
+              onclick="toggleOpettaja(this)"
+              aria-expanded="false"
+              aria-controls="opettaja-sisalto-maailma"
+            >
+              <span class="opettaja-toggle-left">
+                <span aria-hidden="true">🖨️</span>
+                <span>Opettajan materiaali – Maailma tarvitsee sinua</span>
+              </span>
+              <span class="opettaja-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div id="opettaja-sisalto-maailma" class="opettaja-sisalto" hidden>
+              <a
+                class="opettaja-lataus"
+                href="../tehtavat/maailma_tarvitsee_sinua_opettaja.html"
+                target="_blank"
+                rel="noopener"
+              >
+                <span aria-hidden="true">↗</span> Avaa opettajan ohje
+              </a>
+              <p class="opettaja-kuvaus">
+                Sisältää oppimistavoitteet, aikataulusuosituksen (35–45 min), vaiheistetunohjauksen, toteutusvinkit, arviointikriteerit, eriyttämisideat sekä tulostettavat rooli- ja skenaariot. Avaa selaimessa ja tulosta tarvittaessa.
+              </p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- 2. Vahvuudet -->
+        <section
+          id="vahvuudet"
+          class="aihe-osio"
+          aria-labelledby="otsikko-vahvuudet"
+        >
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-vahvuudet">Mitä osaan – mitä haluan?</h2>
+            <p>Vahvuudet ja kiinnostukset ohjaavat valintoja.</p>
+          </div>
+
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                Tiedätkö jo, missä olet hyvä? Entä mitä haluaisit oppia lisää?
+                Omat vahvuudet eivät ole vain kouluaineita – ne voivat olla
+                taitoja, tapoja toimia tai asioita, jotka sujuvat sinulta
+                luonnostaan.
+              </p>
+              <p>
+                <strong
+                  >Kun tunnet omat vahvuutesi, osaat paremmin valita suunnan
+                  joka sopii juuri sinulle.</strong
+                >
+              </p>
+            </div>
+            <div class="theory-image">
+              <img
+                src="../images/vahvuudet.png"
+                alt="Omat vahvuudet ja kiinnostukset"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <div
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 20px 0;
+              min-height: 220px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(219, 39, 119, 0.25);
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background-image:
+                  linear-gradient(
+                    135deg,
+                    rgba(30, 27, 75, 0.7) 0%,
+                    rgba(109, 40, 217, 0.55) 100%
+                  ),
+                  url(&quot;../images/vahvuusmatka_kansikuva.png&quot;);
+                background-size: cover;
+                background-position: center;
+              "
+              aria-hidden="true"
+            ></div>
+            <div
+              style="
+                position: relative;
+                z-index: 1;
+                padding: 28px 32px;
+                color: #fff;
+                width: 100%;
+              "
+            >
+              <div class="hero-badge" style="margin-bottom: 12px">
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                Interaktiivinen tarina
+              </div>
+              <h3
+                style="
+                  margin: 0 0 8px;
+                  font-size: clamp(1.2rem, 3vw, 1.6rem);
+                  font-weight: 800;
+                  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+                "
+              >
+                Vahvuusmatka
+              </h3>
+              <p
+                style="
+                  margin: 0 0 20px;
+                  font-size: 15px;
+                  line-height: 1.6;
+                  opacity: 0.92;
+                  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+                  max-width: 480px;
+                "
+              >
+                Lähde matkalle omiin vahvuuksiisi. Tee valintoja ja löydä, missä
+                sinä loistat.
+              </p>
+              <button
+                class="btn-hero"
+                onclick="avaaVahvuusmatka()"
+                aria-haspopup="dialog"
+              >
+                Aloita matka
+              </button>
+              <p style="margin: 10px 0 0; font-size: 13px; opacity: 0.75">
+                Vinkki: kokeile eri valintoja uudestaan
+              </p>
+            </div>
+          </div>
+
+          <div
+            id="vahvuusmatkaContainer"
+            class="interactive-wrapper"
+            style="display: none"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 12px;
+                margin-bottom: 8px;
+              "
+            >
+              <button
+                onclick="suljeVahvuusmatka()"
+                style="
+                  background: #db2777;
+                  color: white;
+                  border: none;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje
+                tarina
+              </button>
+            </div>
+            <iframe
+              src="../pelit/vahvuusmatka.html"
+              style="
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                border: none;
+                border-radius: 14px;
+              "
+              title="Vahvuusmatka-tarina"
+            ></iframe>
+          </div>
+
+          <div class="tasks-section">
+            <div
+              class="task-list"
+              id="tasks-vahvuudet"
+              aria-live="polite"
+            ></div>
+          </div>
+
+          <!-- Fake Insta – hero-kortti -->
+          <div id="vahvuudet-mission"
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 8px 0 16px;
+              min-height: 200px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(188,24,136,0.30);
+            "
+          >
+            <!-- Tausta: Instagram-gradi + kuvio -->
+            <div style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(135deg,
+                rgba(240,148,51,0.92) 0%,
+                rgba(220,39,67,0.88) 40%,
+                rgba(188,24,136,0.92) 100%);
+            " aria-hidden="true"></div>
+
+            <!-- Koristeltu taustakuvio -->
+            <div style="
+              position: absolute;
+              inset: 0;
+              opacity: 0.08;
+              background-image: repeating-linear-gradient(
+                45deg,
+                #fff 0px, #fff 2px,
+                transparent 2px, transparent 18px
+              );
+            " aria-hidden="true"></div>
+
+            <!-- Sisältö -->
+            <div style="
+              position: relative;
+              z-index: 1;
+              padding: 28px 32px;
+              color: #fff;
+              width: 100%;
+            ">
+              <div class="hero-badge" style="margin-bottom: 10px; background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4);">
+                <i class="fa-solid fa-mobile-screen" aria-hidden="true"></i>
+                Toiminnallinen parikuhtäävä
+              </div>
+              <h3 style="
+                margin: 0 0 8px;
+                font-size: clamp(1.2rem, 3vw, 1.6rem);
+                font-weight: 900;
+                letter-spacing: -0.5px;
+                text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+              ">
+                📱 Fake Insta
+              </h3>
+              <p style="
+                margin: 0 0 20px;
+                font-size: 15px;
+                line-height: 1.6;
+                opacity: 0.95;
+                text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                max-width: 460px;
+              ">
+                Luo paperille someprofiiili, jonka kaikki sisältö ovat sinun vahvuutesi.
+                Parisi toimii somemanagerinasi ja auttaa löytämään ne.
+              </p>
+              <div style="display:flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button
+                  class="btn-hero"
+                  onclick="toggleFakeInsta(this)"
+                  aria-expanded="false"
+                  aria-controls="fake-insta-wrapper"
+                  style="background: #fff; color: #dc2743; border: none;"
+                >
+                  Avaa tehtävä
+                </button>
+                <span style="font-size:13px; opacity:0.8;">
+                  ⏱ 25 min &nbsp;·&nbsp; 👥 Pareittain &nbsp;·&nbsp; ✏️ Paperi + kynä
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fake Insta -tehtävä (piilotettu, avautuu painikkeesta) -->
+          <div id="fake-insta-wrapper" style="display: none; margin-top: 8px;">
+            <div style="
+              display: flex;
+              justify-content: flex-end;
+              margin-bottom: 8px;
+            ">
+              <button
+                onclick="toggleFakeInsta(document.querySelector('[aria-controls=fake-insta-wrapper]'))"
+                style="
+                  background: #dc2743;
+                  color: white;
+                  border: none;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
+              </button>
+            </div>
+            <iframe
+              src="../tehtavat/fake-insta.html"
+              style="
+                width: 100%;
+                height: 90vh;
+                min-height: 680px;
+                border: none;
+                border-radius: 14px;
+                box-shadow: 0 4px 20px rgba(188,24,136,0.18);
+              "
+              title="Fake Insta – Tunne omat vahvuutesi"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Luo oma <strong>vahvuuskartta</strong>: kirjoita itsellesi tärkeät vahvuudet, mihin tilanteisiin ne sopivat ja missä haluaisit kehittyä. Perustele jokainen valinta yhdellä konkreettisella esimerkillä omasta elämästäsi.</p>
+              <p class="haaste-vihje">💡 Vinkki: Pohdi myös ns. piilossa olevia vahvuuksia — asioita, jotka sujuvat sinulta niin luontevasti, ettet edes huomaa niitä</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. TET -->
+        <section id="tet" class="aihe-osio" aria-labelledby="otsikko-tet">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-tet">Kurkistus työelämään</h2>
+            <p>Millaista työ oikeasti on?</p>
+          </div>
+
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                TET-jakso on mahdollisuus nähdä työelämää oikeasti. Saat
+                kokemusta, opit uutta ja huomaat, mikä kiinnostaa – tai ei.
+              </p>
+              <p><strong>Kokemus auttaa valinnoissa.</strong></p>
+            </div>
+            <div class="theory-image">
+              <img src="../images/tet.png" alt="TET-jakso työpaikalla" loading="lazy" />
+            </div>
+          </div>
+
+          <!-- TET-polku: interaktiivinen harjoitteluprosessi -->
+          <div class="tet-polku-osio" aria-label="TET-harjoittelun vaiheet">
+            <p class="tet-polku-ohje">Näin TET-harjoittelu etenee – klikkaa vaihetta nähdäksesi lisätietoja:</p>
+
+            <!-- Polkunoodit -->
+            <div class="tet-polku" role="list">
+
+              <!-- Vaihe 1: Koulu -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--violetti"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-1"
+                  id="tet-btn-1"
+                  onclick="tetToggle(this, 'tet-paneeli-1')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">🏫</span>
+                  <span class="tet-vaihenro" aria-hidden="true">1</span>
+                </button>
+                <span class="tet-noodi-label">Koulu</span>
+              </div>
+
+              <div class="tet-nuoli" aria-hidden="true">→</div>
+
+              <!-- Vaihe 2: Työpaikka -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--vihrea"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-2"
+                  id="tet-btn-2"
+                  onclick="tetToggle(this, 'tet-paneeli-2')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">🏢</span>
+                  <span class="tet-vaihenro" aria-hidden="true">2</span>
+                </button>
+                <span class="tet-noodi-label">Työpaikka</span>
+              </div>
+
+              <div class="tet-nuoli" aria-hidden="true">→</div>
+
+              <!-- Vaihe 3: Työsopimus -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--sinivihrea"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-3"
+                  id="tet-btn-3"
+                  onclick="tetToggle(this, 'tet-paneeli-3')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">📄</span>
+                  <span class="tet-vaihenro" aria-hidden="true">3</span>
+                </button>
+                <span class="tet-noodi-label">Työsopimus</span>
+              </div>
+
+              <div class="tet-nuoli" aria-hidden="true">→</div>
+
+              <!-- Vaihe 4: Opo -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--sininen"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-4"
+                  id="tet-btn-4"
+                  onclick="tetToggle(this, 'tet-paneeli-4')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">👩‍🏫</span>
+                  <span class="tet-vaihenro" aria-hidden="true">4</span>
+                </button>
+                <span class="tet-noodi-label">Opo</span>
+              </div>
+
+              <div class="tet-nuoli" aria-hidden="true">→</div>
+
+              <!-- Vaihe 5: TET-viikko -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--oranssi"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-5"
+                  id="tet-btn-5"
+                  onclick="tetToggle(this, 'tet-paneeli-5')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">💼</span>
+                  <span class="tet-vaihenro" aria-hidden="true">5</span>
+                </button>
+                <span class="tet-noodi-label">TET-viikko</span>
+              </div>
+
+              <div class="tet-nuoli" aria-hidden="true">→</div>
+
+              <!-- Vaihe 6: Työtodistus -->
+              <div class="tet-vaihe-wrap" role="listitem">
+                <button
+                  class="tet-noodi tet-noodi--keltainen"
+                  aria-expanded="false"
+                  aria-controls="tet-paneeli-6"
+                  id="tet-btn-6"
+                  onclick="tetToggle(this, 'tet-paneeli-6')"
+                >
+                  <span class="tet-ikoni" aria-hidden="true">🏅</span>
+                  <span class="tet-vaihenro" aria-hidden="true">6</span>
+                </button>
+                <span class="tet-noodi-label">Työtodistus</span>
+              </div>
+
+            </div><!-- /.tet-polku -->
+
+            <!-- Selityspaneelit -->
+            <div
+              id="tet-paneeli-1"
+              class="tet-paneeli tet-paneeli--violetti"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-1"
+            >
+              <h3 class="tet-paneeli-otsikko">1. Koulu antaa työsopimus­lomakkeen</h3>
+              <p>Ennen TET-harjoittelua oppilas saa opolta tyhjän työsopimus­lomakkeen. Lomake on virallinen asiakirja, joka pitää toimittaa tulevalle TET-työpaikalle.</p>
+              <p class="tet-paneeli-vihje">📋 Pidä lomake tallessa ja siistinä!</p>
+            </div>
+
+            <div
+              id="tet-paneeli-2"
+              class="tet-paneeli tet-paneeli--vihrea"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-2"
+            >
+              <h3 class="tet-paneeli-otsikko">2. Oppilas käy kysymässä TET-paikkaa</h3>
+              <p>Oppilas menee lomakkeen kanssa haluamiinsa työpaikkoihin ja kysyy: <strong>„Voinko päästä teille TETtiin?"</strong></p>
+              <ul>
+                <li>Jos vastaus on <strong>kyllä</strong> → siirry seuraavaan vaiheeseen</li>
+                <li>Jos vastaus on <strong>ei</strong> → kokeile seuraavaa työpaikkaa</li>
+              </ul>
+              <p class="tet-paneeli-vihje">💡 Älä lannistu – useimmat löytävät paikan muutaman yrityksen jälkeen!</p>
+            </div>
+
+            <div
+              id="tet-paneeli-3"
+              class="tet-paneeli tet-paneeli--sinivihrea"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-3"
+            >
+              <h3 class="tet-paneeli-otsikko">3. Työnantaja täyttää lomakkeen</h3>
+              <p>Kun työnantaja suostuu, hän täyttää työsopimus­lomakkeen ja allekirjoittaa sen. Oppilas saa täytetyn lomakkeen itselleen.</p>
+              <p>Oppilas vie lomakkeen opolle mahdollisimman pian.</p>
+              <p class="tet-paneeli-vihje">📄 Asiakirja: työsopimus­lomake (täytetty) → toimitetaan opolle</p>
+            </div>
+
+            <div
+              id="tet-paneeli-4"
+              class="tet-paneeli tet-paneeli--sininen"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-4"
+            >
+              <h3 class="tet-paneeli-otsikko">4. Opo säilyttää – ja palauttaa ennen TETiä</h3>
+              <p>Opo ottaa sopimuksen talteen ja tarkistaa sen. Vähän ennen TET-viikon alkua opo antaa sopimuksen oppilaalle takaisin.</p>
+              <p>Tarvittaessa opo antaa myös matkaliput TET-paikkaan kulkemista varten.</p>
+              <p class="tet-paneeli-vihje">🎫 Muista: kysy opolta matkaliput jos tarvitset!</p>
+            </div>
+
+            <div
+              id="tet-paneeli-5"
+              class="tet-paneeli tet-paneeli--oranssi"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-5"
+            >
+              <h3 class="tet-paneeli-otsikko">5. TET-harjoittelu­viikko</h3>
+              <p>Oppilas menee TET-paikkaan työsopimuksen ja mahdollisten matkalippujen kanssa. Harjoittelu alkaa!</p>
+              <p class="tet-paneeli-vihje">💼 Tee töitä ahkerasti, ole ajoissa ja käyttäydy asiallisesti.</p>
+            </div>
+
+            <div
+              id="tet-paneeli-6"
+              class="tet-paneeli tet-paneeli--keltainen"
+              hidden
+              role="region"
+              aria-labelledby="tet-btn-6"
+            >
+              <h3 class="tet-paneeli-otsikko">6. Työtodistus opolle</h3>
+              <p>TET-harjoittelun päätyttyä työnantaja kirjoittaa oppilaalle työtodistuksen. Oppilas toimittaa työtodistuksen opolle.</p>
+              <p class="tet-paneeli-vihje">🏅 TET-harjoittelu on nyt suoritettu – hienoa työtä!</p>
+            </div>
+
+          </div><!-- /.tet-polku-osio -->
+
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-tet" aria-live="polite"></div>
+          </div>
+
+          <!-- Pyörä pyörii – hero-kortti -->
+          <div id="tet-mission"
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 8px 0 16px;
+              min-height: 200px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(124,58,237,0.30);
+            "
+          >
+            <!-- Tausta: violetti-to-pinkki gradi -->
+            <div style="
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(135deg,
+                rgba(124,58,237,0.95) 0%,
+                rgba(109,40,217,0.90) 45%,
+                rgba(190,24,93,0.92) 100%);
+            " aria-hidden="true"></div>
+
+            <!-- Koristeltu taustakuvio (pisteet) -->
+            <div style="
+              position: absolute;
+              inset: 0;
+              opacity: 0.07;
+              background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+              background-size: 22px 22px;
+            " aria-hidden="true"></div>
+
+            <!-- Sisältö -->
+            <div style="
+              position: relative;
+              z-index: 1;
+              padding: 28px 32px;
+              color: #fff;
+              width: 100%;
+            ">
+              <div class="hero-badge" style="margin-bottom: 10px; background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.38);">
+                <i class="fa-solid fa-dice" aria-hidden="true"></i>
+                Toiminnallinen tehtävä
+              </div>
+              <h3 style="
+                margin: 0 0 8px;
+                font-size: clamp(1.2rem, 3vw, 1.6rem);
+                font-weight: 900;
+                letter-spacing: -0.5px;
+                text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+              ">
+                🎰 Pyörä pyörii – satunnainen ura
+              </h3>
+              <p style="
+                margin: 0 0 20px;
+                font-size: 15px;
+                line-height: 1.6;
+                opacity: 0.95;
+                text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+                max-width: 460px;
+              ">
+                Saat satunnaisen, harvinaisen ammatin. Sinulla on 3 minuuttia valmistautua –
+                ja sitten vakuutat muut täydellä vakavuudella, miksi se on täydellinen juuri sinulle.
+              </p>
+              <div style="display:flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button
+                  class="btn-hero"
+                  onclick="togglePyora(this)"
+                  aria-expanded="false"
+                  aria-controls="pyora-wrapper"
+                  style="background: #fff; color: #7c3aed; border: none;"
+                >
+                  Avaa tehtävä
+                </button>
+                <span style="font-size:13px; opacity:0.82;">
+                  ⏱ 20–25 min &nbsp;·&nbsp; 🎭 Koko luokka &nbsp;·&nbsp; 🎰 Arvonta
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pyörä pyörii -tehtävä (piilotettu, avautuu painikkeesta) -->
+          <div id="pyora-wrapper" style="display: none; margin-top: 8px;">
+            <div style="
+              display: flex;
+              justify-content: flex-end;
+              margin-bottom: 8px;
+            ">
+              <button
+                onclick="togglePyora(document.querySelector('[aria-controls=pyora-wrapper]'))"
+                style="
+                  background: #7c3aed;
+                  color: white;
+                  border: none;
+                  padding: 8px 18px;
+                  border-radius: 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
+              </button>
+            </div>
+            <iframe
+              src="../tehtavat/pyora-pyorii.html"
+              style="
+                width: 100%;
+                height: 90vh;
+                min-height: 680px;
+                border: none;
+                border-radius: 14px;
+                box-shadow: 0 4px 20px rgba(124,58,237,0.18);
+              "
+              title="Pyörä pyörii – satunnainen ura"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          
+
+          
+        </section>
+
+        <!-- 3. Oppimaan oppimisen klinikka -->
+        <section id="klinikka" class="aihe-osio" aria-labelledby="otsikko-klinikka">
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-klinikka">Oppimaan oppimisen klinikka</h2>
+            <p>Mikä opiskelu tyssää? Valitse aihe ja saat pikaohjeen.</p>
+          </div>
+
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                Oppiminen on taito, jota voi harjoitella. Täältä löydät käytännön vinkkejä muistin treenaamiseen, lukemisen taitojen vahvistamiseen ja ajanhallintaan.
+              </p>
+              <p><strong>Ei luentoja, vaan työkaluja.</strong></p>
+            </div>
+            <div class="theory-image">
+              <img src="../images/opo-kliniikka.png" alt="Oppimisen keinoja" loading="lazy" />
+            </div>
+          </div>
+
+          <!-- Käyttöohje opettajalle ja oppilaalle -->
+          <div style="
+            background: #fdf2f8;
+            border: 1.5px solid #f9a8d4;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin: 12px 0;
+          ">
+            <p style="
+              font-size: 0.85rem;
+              font-weight: 700;
+              color: #500724;
+              margin: 0 0 12px;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            ">
+              <i class="fa-solid fa-circle-info" aria-hidden="true" style="color: #be185d;"></i>
+              Näin käytät klinikkaa
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid #f9a8d4;">
+                <span style="
+                  display: inline-block;
+                  background: #fce7f3;
+                  color: #9d174d;
+                  font-size: 11px;
+                  font-weight: 700;
+                  padding: 3px 10px;
+                  border-radius: 999px;
+                  white-space: nowrap;
+                  flex-shrink: 0;
+                  margin-top: 1px;
+                ">⏱ Tunnilla</span>
+                <p style="font-size: 0.85rem; color: #500724; margin: 0; line-height: 1.55;">
+                  Jokainen valitsee <strong style="color: #9d174d;">yhden kortin</strong>, joka tuntuu juuri nyt ajankohtaisimmalta. Lue se läpi ja siirry Klinikkapäivystys-tehtävään.
+                </p>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 0 0;">
+                <span style="
+                  display: inline-block;
+                  background: #fce7f3;
+                  color: #9d174d;
+                  font-size: 11px;
+                  font-weight: 700;
+                  padding: 3px 10px;
+                  border-radius: 999px;
+                  white-space: nowrap;
+                  flex-shrink: 0;
+                  margin-top: 1px;
+                ">📚 Itsenäisesti</span>
+                <p style="font-size: 0.85rem; color: #500724; margin: 0; line-height: 1.55;">
+                  Kaikki neljä korttia ovat käytettävissä — palaa niihin silloin, kun tilanne vaatii. <strong style="color: #9d174d;">Ei tarvitse käydä kaikkia läpi kerralla.</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Klinikkakortti 1: Kertaustekniikka -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+              style="background: linear-gradient(135deg, #1d4ed8, #2563eb); border-color: #2563eb;"
+            >
+              <span class="haaste-toggle-left">
+                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">🔁</span>
+                <span>Kertaustekniikka — miten muistan paremmin?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden style="border-color: #93c5fd; background: linear-gradient(160deg, #eff6ff 0%, #dbeafe 100%); color: #1e3a5f;">
+              <p class="haaste-ohje" style="color: #1e3a5f;">
+                <strong style="color: #1d4ed8;">Hajautettu kertaus</strong> toimii paremmin kuin yön yli lukeminen.
+                Kerraatko aineen heti saman päivän iltana (5 min), sitten 3 päivän päästä ja viikon päästä — muisti jää kiinni paljon lujemmin.
+              </p>
+              <p class="haaste-ohje" style="color: #1e3a5f;">
+                <strong style="color: #1d4ed8;">Active recall</strong>: älä vain lue — sulje kirja ja kerro ääneen tai kirjoita ylös mitä muistat. Tämä on tutkitusti tehokkain tapa oppia.
+              </p>
+              <p class="haaste-vihje" style="border-left-color: #2563eb; color: #1d4ed8;">
+                💡 Kokeile: tee aiheesta 5 kysymystä itse, vastaa niihin seuraavana päivänä katsomatta muistiinpanoja
+              </p>
+            </div>
+          </div>
+
+          <!-- Klinikkakortti 2: Kokeeseen valmistautuminen -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+              style="background: linear-gradient(135deg, #15803d, #16a34a); border-color: #16a34a;"
+            >
+              <span class="haaste-toggle-left">
+                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">📝</span>
+                <span>Kokeeseen valmistautuminen — mistä aloitan?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden style="border-color: #86efac; background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 100%); color: #14532d;">
+              <p class="haaste-ohje" style="color: #14532d;">
+                <strong style="color: #15803d;">3 päivää ennen koetta:</strong> Lue läpi koko aihe. Merkitse, mikä on epäselvää.
+              </p>
+              <p class="haaste-ohje" style="color: #14532d;">
+                <strong style="color: #15803d;">2 päivää ennen:</strong> Tee muistiinpanoista tiivistelmä omin sanoin — lauseet, ei listoja. Kirjoita vaikeat kohdat uudestaan.
+              </p>
+              <p class="haaste-ohje" style="color: #14532d;">
+                <strong style="color: #15803d;">Edellisenä iltana:</strong> Lue tiivistelmä kerran. Sen jälkeen lopeta — yliväsyneenä oppiminen ei onnistu.
+              </p>
+              <p class="haaste-vihje" style="border-left-color: #16a34a; color: #15803d;">
+                💡 Tee itsellesi koeharjoitus: keksi 5 kysymystä opettajan näkökulmasta ja vastaa niihin
+              </p>
+            </div>
+          </div>
+
+          <!-- Klinikkakortti 3: Ahdistuksesta selviytyminen -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+              style="background: linear-gradient(135deg, #b45309, #d97706); border-color: #d97706;"
+            >
+              <span class="haaste-toggle-left">
+                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">😰</span>
+                <span>Ahdistuksesta selviytyminen — jännitys kaataa minut</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden style="border-color: #fcd34d; background: linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%); color: #451a03;">
+              <p class="haaste-ohje" style="color: #451a03;">
+                <strong style="color: #b45309;">Jännitys on normaalia</strong> — se tarkoittaa, että välität. Mutta kun se kaataa, aivot tarvitsevat rauhoittumissignaalin.
+              </p>
+              <p class="haaste-ohje" style="color: #451a03;">
+                <strong style="color: #b45309;">4-7-8 -hengitys:</strong> Hengitä sisään 4 sekuntia, pidätä 7 sekuntia, puhalla ulos 8 sekuntia. Toista 3 kertaa. Tämä aktivoi parasympaattisen hermoston — keho rauhoittuu fyysisesti.
+              </p>
+              <p class="haaste-ohje" style="color: #451a03;">
+                <strong style="color: #b45309;">Pahin skenaario -tekniikka:</strong> Mitä oikeasti tapahtuisi, jos menisi huonosti? Useimmiten vastaus on: ei mitään peruuttamatonta.
+              </p>
+              <p class="haaste-vihje" style="border-left-color: #d97706; color: #b45309;">
+                💡 Jos ahdistus on jatkuvaa ja se haittaa arkea, siitä kannattaa jutella aikuisen kanssa — se on rohkea teko, ei heikkous
+              </p>
+            </div>
+          </div>
+
+          <!-- Klinikkakortti 4: Oikea asenne -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+              style="background: linear-gradient(135deg, #6d28d9, #7c3aed); border-color: #7c3aed;"
+            >
+              <span class="haaste-toggle-left">
+                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">💪</span>
+                <span>Oikea asenne — motivaatio on hukassa</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden style="border-color: #c4b5fd; background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 100%); color: #2e1065;">
+              <p class="haaste-ohje" style="color: #2e1065;">
+                <strong style="color: #6d28d9;">Motivaatio ei tule ensin</strong> — aloittaminen tulee ensin. Sano itsellesi: "Teen tätä vain 10 minuuttia." Useimmiten jatkat sen jälkeen.
+              </p>
+              <p class="haaste-ohje" style="color: #2e1065;">
+                <strong style="color: #6d28d9;">Growth mindset:</strong> "En osaa tätä vielä" on eri asia kuin "en osaa tätä". Aivot muuttuvat harjoituksen myötä — tämä on tutkittua tiedettä.
+              </p>
+              <p class="haaste-ohje" style="color: #2e1065;">
+                <strong style="color: #6d28d9;">Miksi tämä asia voisi olla hyödyllinen?</strong> Edes yksi järkevä syy riittää käynnistämään motivaation.
+              </p>
+              <p class="haaste-vihje" style="border-left-color: #7c3aed; color: #6d28d9;">
+                💡 Kirjoita ylös yksi asia, jonka opit tänään — pienikin edistys on edistystä
+              </p>
+            </div>
+          </div>
+
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-klinikka" aria-live="polite"></div>
+          </div>
+
+          <div id="klinikka-mission" class="mission-card">
+            <div class="mission-header">
+              <h4>Klinikkapäivystys</h4>
+              <span class="mission-badge">Paritehtävä</span>
+            </div>
+            <p>Jokainen valitsee kortin, joka tuntuu ajankohtaisimmalta — ja opettaa sen parin minuutin vinkin kaverille.</p>
+            <ul class="mission-list">
+              <li>Valitse yksi neljästä kortista</li>
+              <li>Lue se läpi ja tiivistä tärkein neuvo omin sanoin</li>
+              <li>Kerro se parillesi — ilman paperia</li>
+              <li>Vaihda roolit: kaveri opettaa omansa sinulle</li>
+            </ul>
+            <p class="mission-hint">⏱ Aika: 10 min</p>
+          </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Suunnittele itsellesi <strong>oppimissuunnitelma seuraavaan kokeeseen</strong>: milloin kerrastat, mitä tekniikkaa käytät, miten hallitset jännitystä ja mistä löydät motivaation, jos se katoaa. Kirjoita se ylös konkreettisesti — päivämäärät ja ajat mukaan.</p>
+              <p class="haaste-vihje">💡 Vinkki: Paras suunnitelma on se, jonka oikeasti toteuttaa. Tee siitä realistinen, ei täydellinen.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- TULEVAISUUS — Rakenna huomisen koulu -->
+        <section
+          id="tulevaisuus"
+          class="aihe-osio"
+          aria-labelledby="otsikko-tulevaisuus"
+        >
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-tulevaisuus">Mitä jos?</h2>
+            <p>Tulevaisuus alkaa yhdestä kysymyksestä.</p>
+          </div>
+
+          <!-- Johdantoteksti -->
+          <div class="theory-card">
+            <div class="theory-text">
+              <p>
+                Suurin osa töistä, joihin sinä työllistyt, ei ole vielä olemassa.
+                Kukaan ei tiedä tarkalleen, millainen maailma odottaa — ei tutkijat,
+                ei opettajat, <strong>ei edes tekoäly.</strong>
+              </p>
+              <p style="margin-top: 12px;">
+                Mutta se ei tarkoita, että tulevaisuus tapahtuu sinulle ilman sinua.
+                Tässä osiossa me kuvitellaan, rakennetaan ja pohditaan — mitä koulu
+                voisi olla, millainen työpaikka sinua odottaa, ja kuka sinä olet
+                siinä kaikessa.
+              </p>
+            </div>
+            <div class="theory-image">
+              <img
+                src="../images/tulevaisuus.png"
+                alt="Tulevaisuuden koulu"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <!-- Tehtävä 1: Rakenna huomisen koulu -->
+          <div style="display:flex; align-items:center; gap:12px; margin: 28px 0 4px;">
+            <span style="background:#7c3aed; color:white; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; flex-shrink:0;">1</span>
+            <h3 style="color:#3b0764; font-size:1.05rem; font-weight:700; margin:0;">Rakenna huomisen koulu</h3>
+            <span style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#7c3aed; background:#ede9fe; padding:3px 10px; border-radius:50px;">Tiimityö</span>
+          </div>
+          <p style="font-size:0.88rem; color:#6b7280; margin:0 0 12px 42px;">Millainen koulu voisi olla — jos saisit päättää?</p>
+
+          <!-- Klikkaa auki -->
+          <div class="tasks-section">
+            <div class="task-list" id="tasks-tulevaisuus" aria-live="polite"></div>
+
+            <div style="margin-top: 24px;">
+              <button
+                onclick="toggleTulevaisuus8()"
+                id="tulevaisuus8-btn"
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+                  color: white;
+                  border: none;
+                  border-radius: 12px;
+                  padding: 14px 24px;
+                  font-size: 1rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                  width: 100%;
+                  justify-content: space-between;
+                  transition: all 0.2s;
+                "
+                aria-expanded="false"
+                aria-controls="tulevaisuus8-sisalto"
+              >
+                <span>🏫 Avaa Tulevaisuuden koulu -tehtävä</span>
+                <span id="tulevaisuus8-ikoni" style="font-size:1.2rem; transition: transform 0.3s;">▼</span>
+              </button>
+
+              <div
+                id="tulevaisuus8-sisalto"
+                style="display:none; margin-top: 16px;"
+              >
+                <!-- Tehtävänanto-kortti -->
+                <div style="
+                  background: #faf5ff;
+                  border: 1.5px solid #e9d5ff;
+                  border-radius: 14px;
+                  padding: 24px;
+                  margin-bottom: 16px;
+                ">
+                  <div style="
+                    display: inline-block;
+                    background: #ede9fe;
+                    color: #5b21b6;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    padding: 4px 12px;
+                    border-radius: 50px;
+                    margin-bottom: 14px;
+                  ">Tehtäväkokonaisuus · 3 vaihetta · Tiimityö</div>
+
+                  <h3 style="color: #3b0764; font-size: 1.1rem; margin-bottom: 12px;">Miten tehtävä etenee?</h3>
+
+                  <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1px solid #e9d5ff; border-radius:10px; padding:14px;">
+                      <span style="background:#7c3aed; color:white; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">1</span>
+                      <div>
+                        <div style="font-weight:600; color:#3b0764; font-size:0.9rem;">Onnenpyörä — Mitä jos... · Yksin · 5–8 min</div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:3px;">Jokainen pyörittää oman kysymyksen ja vastaa siihen. Sitten kerrotaan ryhmälle.</div>
+                      </div>
+                    </div>
+                    <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1px solid #e9d5ff; border-radius:10px; padding:14px;">
+                      <span style="background:#7c3aed; color:white; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">2</span>
+                      <div>
+                        <div style="font-weight:600; color:#3b0764; font-size:0.9rem;">Tulevaisuuden koulu — Tiimi · 15–20 min</div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:3px;">Ryhmä rakentaa koulun: Missä? Mitä? Miten? Kuka? Miksi?</div>
+                      </div>
+                    </div>
+                    <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1px solid #e9d5ff; border-radius:10px; padding:14px;">
+                      <span style="background:#7c3aed; color:white; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">3</span>
+                      <div>
+                        <div style="font-weight:600; color:#3b0764; font-size:0.9rem;">Koonti ja palautus · 5 min</div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:3px;">Ryhmä valitsee palautusmuodon: posteri (Canva / käsinpiirretty) tai diaesitys — palautetaan kuvakaappauksena tai tiedostona Classroomin kautta.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ── Visuaalinen palautusformaatti ── -->
+                  <div style="
+                    margin-top: 18px;
+                    background: #f5f3ff;
+                    border: 1.5px solid #ddd6fe;
+                    border-radius: 14px;
+                    padding: 20px;
+                  ">
+                    <div style="
+                      font-size: 0.7rem;
+                      font-weight: 700;
+                      letter-spacing: 0.1em;
+                      text-transform: uppercase;
+                      color: #6d28d9;
+                      margin-bottom: 10px;
+                    ">🎨 Valitse palautusmuoto</div>
+                    <p style="font-size:0.85rem; color:#4b5563; margin:0 0 14px;">
+                      Ryhmä päättää yhdessä, miten esittelee koulunsa. Kaikki vaihtoehdot käyvät.
+                    </p>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+
+                      <!-- Canva-posteri -->
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1.5px solid #ddd6fe; border-radius:10px; padding:13px;">
+                        <span style="font-size:1.5rem; flex-shrink:0;">🖥️</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Canva-posteri</div>
+                          <div style="font-size:0.8rem; color:#6b7280; margin-top:2px;">Avaa <a href="https://www.canva.com" target="_blank" style="color:#7c3aed;">canva.com</a> → valitse "Posteri" tai "Esitys" → lisää tekstiä, kuvia ja värejä. Lataa PDF tai kuvakaappaus Classroomiin.</div>
+                        </div>
+                      </div>
+
+                      <!-- Käsinpiirretty posteri -->
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1.5px solid #ddd6fe; border-radius:10px; padding:13px;">
+                        <span style="font-size:1.5rem; flex-shrink:0;">✏️</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Käsinpiirretty posteri</div>
+                          <div style="font-size:0.8rem; color:#6b7280; margin-top:2px;">Piirrä koulun pohjapiirros tai miellekartta paperille. Ota siitä selkeä kuva puhelimella ja lähetä Classroomiin.</div>
+                        </div>
+                      </div>
+
+                      <!-- Google Slides -->
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1.5px solid #ddd6fe; border-radius:10px; padding:13px;">
+                        <span style="font-size:1.5rem; flex-shrink:0;">📊</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Google Slides</div>
+                          <div style="font-size:0.8rem; color:#6b7280; margin-top:2px;">Luo 3–5 diaa: yksi per kysymys (Missä? Mitä? Miten? Kuka? Miksi?). Jaa linkki tai palauta PDF Classroomiin.</div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div style="
+                      margin-top: 12px;
+                      background: #ede9fe;
+                      border-left: 3px solid #7c3aed;
+                      border-radius: 0 8px 8px 0;
+                      padding: 8px 12px;
+                      font-size: 0.8rem;
+                      color: #5b21b6;
+                      font-style: italic;
+                    ">💡 Tärkeintä ei ole ulkonäkö — tärkeintä on, että koulu saa äänen ja ideat näkyvät.</div>
+                  </div>
+
+                </div>
+
+                <!-- ── Avaa tehtävä -nappi ── -->
+                <a
+                  href="../sivut/Tulevaisuus_8lk.html"
+                  target="_blank"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    background: linear-gradient(135deg, #6d28d9, #7c3aed);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 12px;
+                    padding: 16px 24px;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    margin-top: 16px;
+                    transition: opacity 0.2s;
+                  "
+                  onmouseover="this.style.opacity='0.88'"
+                  onmouseout="this.style.opacity='1'"
+                >
+                  🚀 Avaa tehtävä uuteen välilehteen
+                </a>
+
+                <!-- ── Varasuunnitelma hiljaisille ryhmille ── -->
+                <div style="margin-top: 14px;">
+                  <button
+                    onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='true' ? 'false' : 'true'); var s=document.getElementById('vara-sisalto'); s.hidden=!s.hidden; var n=document.getElementById('vara-nuoli'); n.style.transform=s.hidden?'rotate(0deg)':'rotate(180deg)';"
+                    aria-expanded="false"
+                    aria-controls="vara-sisalto"
+                    style="
+                      width: 100%;
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      gap: 10px;
+                      background: linear-gradient(135deg, #d97706, #f59e0b);
+                      color: white;
+                      border: none;
+                      border-radius: 12px;
+                      padding: 13px 20px;
+                      font-size: 0.95rem;
+                      font-weight: 700;
+                      cursor: pointer;
+                      text-align: left;
+                      transition: opacity 0.15s;
+                    "
+                  >
+                    <span style="display:flex; align-items:center; gap:10px;">
+                      <span style="font-size:1.3rem;">🤫</span>
+                      <span>Ryhmä jumissa? Apua tähän!</span>
+                    </span>
+                    <span id="vara-nuoli" style="font-size:0.85rem; transition: transform 0.3s;">▼</span>
+                  </button>
+
+                  <div id="vara-sisalto" hidden style="
+                    background: #fffbeb;
+                    border: 1.5px solid #fcd34d;
+                    border-top: none;
+                    border-radius: 0 0 12px 12px;
+                    padding: 20px;
+                    margin-top: -4px;
+                  ">
+                    <p style="font-size:0.88rem; color:#78350f; margin:0 0 16px; font-style:italic;">
+                      Ei idea tule? Se on ihan ok. Kokeile näitä järjestyksessä — jokin niistä toimii.
+                    </p>
+
+                    <!-- Vinkki 1: Roolijako -->
+                    <div style="margin-bottom: 14px;">
+                      <div style="font-weight:700; color:#92400e; font-size:0.88rem; margin-bottom:8px;">⚙️ Vinkki 1 — Jakakaa roolit</div>
+                      <p style="font-size:0.82rem; color:#78350f; margin:0 0 8px;">Päättäkää kuka tekee mitä — se helpottaa alkuun pääsemistä.</p>
+                      <div style="display:flex; flex-direction:column; gap:6px;">
+                        <div style="background:white; border:1px solid #fcd34d; border-radius:8px; padding:10px 12px; font-size:0.82rem; color:#44403c;">
+                          <strong>Puheenjohtaja</strong> — huolehtii, että kaikki pääsevät ääneen
+                        </div>
+                        <div style="background:white; border:1px solid #fcd34d; border-radius:8px; padding:10px 12px; font-size:0.82rem; color:#44403c;">
+                          <strong>Kirjuri</strong> — kirjoittaa ideat ylös ilman, että arvostelee niitä
+                        </div>
+                        <div style="background:white; border:1px solid #fcd34d; border-radius:8px; padding:10px 12px; font-size:0.82rem; color:#44403c;">
+                          <strong>Esittelijä</strong> — kertoo muulle luokalle, mitä keksittiin
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Vinkki 2: Aloitusvirkkeet -->
+                    <div style="margin-bottom: 14px;">
+                      <div style="font-weight:700; color:#92400e; font-size:0.88rem; margin-bottom:8px;">💬 Vinkki 2 — Valitse yksi lause ja jatka sitä</div>
+                      <p style="font-size:0.82rem; color:#78350f; margin:0 0 8px;">Jokainen sanoo ääneen, miten jatkaisi lausetta. Kirjuri kirjoittaa.</p>
+                      <div style="display:flex; flex-direction:column; gap:6px;">
+                        <div style="background:white; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:9px 12px; font-size:0.82rem; color:#44403c; font-style:italic;">
+                          "Mitä jos koulu ei olisikaan rakennus? Se voisi olla..."
+                        </div>
+                        <div style="background:white; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:9px 12px; font-size:0.82rem; color:#44403c; font-style:italic;">
+                          "Mikä koulussa ärsyttää eniten meitä? Mitä jos poistetaan juuri se?"
+                        </div>
+                        <div style="background:white; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:9px 12px; font-size:0.82rem; color:#44403c; font-style:italic;">
+                          "Mikä koulussa on parasta? Miten tehtäisiin siitä vielä parempi?"
+                        </div>
+                        <div style="background:white; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:9px 12px; font-size:0.82rem; color:#44403c; font-style:italic;">
+                          "Jos ei olisi lainkaan kokeita, mitä opiskelisimme sen sijaan?"
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Vinkki 3: Yksi kysymys kerrallaan -->
+                    <div style="margin-bottom: 14px;">
+                      <div style="font-weight:700; color:#92400e; font-size:0.88rem; margin-bottom:8px;">🎯 Vinkki 3 — Yksi kysymys kerrallaan, ei kaikkia yhtä aikaa</div>
+                      <p style="font-size:0.82rem; color:#78350f; margin:0 0 8px;">Sopikaa ensin vain yksi asia: <strong>Missä teidän koulunne on?</strong> Sitten seuraava.</p>
+                      <div style="background:#fef3c7; border:1px solid #fcd34d; border-radius:8px; padding:10px 12px; font-size:0.82rem; color:#44403c;">
+                        Järjestys: <strong>Missä?</strong> → <strong>Mitä opitaan?</strong> → <strong>Miten?</strong> → <strong>Kuka opettaa?</strong> → <strong>Miksi koulu on olemassa?</strong>
+                      </div>
+                    </div>
+
+                    <!-- Vinkki 4: Hätävaihtoehto -->
+                    <div>
+                      <div style="font-weight:700; color:#92400e; font-size:0.88rem; margin-bottom:8px;">🆘 Vinkki 4 — Jos mikään ei auta, tehdään näin</div>
+                      <div style="background:white; border:1px solid #fcd34d; border-radius:8px; padding:12px; font-size:0.82rem; color:#44403c;">
+                        Jokainen kirjoittaa <em>yksin</em> paperille kolme sanaa: mitä teidän koulussanne <strong>olisi</strong> — ja kolme sanaa mitä siellä <strong>ei olisi</strong>. Kirjuri kokoaa sanat yhteen. Siitä syntyy koulu.
+                      </div>
+                    </div>
+
+                    <div style="
+                      margin-top: 14px;
+                      background: #fef3c7;
+                      border-left: 3px solid #f59e0b;
+                      border-radius: 0 8px 8px 0;
+                      padding: 8px 12px;
+                      font-size: 0.8rem;
+                      color: #92400e;
+                      font-style: italic;
+                    ">💡 Hiljaisuus ei tarkoita, että ideoita ei ole — se tarkoittaa usein, että ne odottavat lupaa tulla ulos.</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div id="tulevaisuus-mission" class="mission-card">
+              <div class="mission-header">
+                <h4>Tulevaisuuden koulu -esittely</h4>
+                <span class="mission-badge">Luokkatehtävä</span>
+              </div>
+              <p>Jokainen ryhmä esittelee oman koulunsa muulle luokalle.</p>
+              <ul class="mission-list">
+                <li>Esittelijä kertoo: missä koulu on ja miksi se on olemassa</li>
+                <li>Luokka äänestää: mikä idea yllätti eniten?</li>
+                <li>Yhteinen purku: mitä jokaisessa koulussa oli yhteistä?</li>
+              </ul>
+              <p class="mission-hint">⏱ Aika: 10–15 min</p>
+          </div>
+
+          <!-- ══════════════════════════════
+               Tehtävä 2: Tulevaisuuden työpaikka
+               ══════════════════════════════ -->
+          <div style="display:flex; align-items:center; gap:12px; margin: 36px 0 4px;">
+            <span aria-hidden="true" style="background:#7c3aed; color:white; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; flex-shrink:0;">2</span>
+            <h3 id="otsikko-tyopaikka" style="color:#3b0764; font-size:1.05rem; font-weight:700; margin:0;">Tulevaisuuden työpaikka</h3>
+            <span aria-hidden="true" style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#7c3aed; background:#ede9fe; padding:3px 10px; border-radius:50px;">Tiimityö</span>
+          </div>
+
+          <div class="tasks-section">
+            <div style="margin-top: 8px;">
+
+              <!-- Avaa-nappi -->
+              <button
+                onclick="toggleTyopaikka8()"
+                id="tyopaikka8-btn"
+                aria-expanded="false"
+                aria-controls="tyopaikka8-sisalto"
+                style="display:flex; align-items:center; gap:10px; background:linear-gradient(135deg, #6d28d9, #7c3aed); color:white; border:none; border-radius:12px; padding:14px 24px; font-size:1rem; font-weight:600; cursor:pointer; width:100%; justify-content:space-between; transition:opacity 0.2s;"
+              >
+                <span>💼 Avaa Tulevaisuuden työpaikka -tehtävä</span>
+                <span id="tyopaikka8-ikoni" aria-hidden="true" style="font-size:1.2rem; transition:transform 0.3s;">▼</span>
+              </button>
+
+              <!-- Avattava sisältö -->
+              <div id="tyopaikka8-sisalto" style="display:none; margin-top:16px;">
+
+                <!-- Tehtävänanto-kortti -->
+                <div style="background:#faf5ff; border:1.5px solid #e9d5ff; border-radius:14px; padding:22px; margin-bottom:16px;">
+                  <div style="display:inline-block; background:#ede9fe; color:#5b21b6; font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:4px 12px; border-radius:50px; margin-bottom:12px;">2 vaihetta · Yksin → Tiimi</div>
+                  <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1px solid #e9d5ff; border-radius:10px; padding:13px;">
+                      <span aria-hidden="true" style="background:#7c3aed; color:white; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">1</span>
+                      <div>
+                        <div style="font-weight:600; color:#3b0764; font-size:0.9rem;">Onnenpyörä: Entäs jos… · Yksin · 5 min</div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:3px;">Jokainen pyörittää oman kysymyksen. Mieti hetki — sitten kerro ryhmälle, mitä sait.</div>
+                      </div>
+                    </div>
+                    <div style="display:flex; align-items:flex-start; gap:12px; background:white; border:1px solid #e9d5ff; border-radius:10px; padding:13px;">
+                      <span aria-hidden="true" style="background:#7c3aed; color:white; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0;">2</span>
+                      <div>
+                        <div style="font-weight:600; color:#3b0764; font-size:0.9rem;">Rakenna tulevaisuuden työpaikka · Tiimi · 15–20 min</div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:3px;">Valitse ryhmänä yksi kysymys ja rakentakaa sen pohjalta tulevaisuuden työpaikka.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ── Vaihe 1: Onnenpyörä ── -->
+                <div style="background:#faf5ff; border:1.5px solid #e9d5ff; border-radius:14px; padding:24px; margin-bottom:16px; text-align:center;">
+                  <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6d28d9; margin-bottom:6px; text-align:left;">Vaihe 1 — Onnenpyörä</div>
+                  <p style="font-size:0.88rem; color:#4b5563; margin:0 0 20px; text-align:left;">Jokainen pyörittää vuorollaan. Mieti 30 sekuntia: <strong>millainen yritys tai paikka vastaisi tähän tilanteeseen?</strong> Kerro ryhmälle.</p>
+
+                  <!-- Pyörä -->
+                  <div style="position:relative; width:220px; height:220px; margin:0 auto 20px;" aria-hidden="true">
+                    <div id="tp-pyora" style="
+                      width:220px; height:220px; border-radius:50%;
+                      background: conic-gradient(
+                        #7c3aed 0deg 30deg, #9333ea 30deg 60deg,
+                        #6d28d9 60deg 90deg, #a855f7 90deg 120deg,
+                        #7c3aed 120deg 150deg, #8b5cf6 150deg 180deg,
+                        #6d28d9 180deg 210deg, #9333ea 210deg 240deg,
+                        #7c3aed 240deg 270deg, #a855f7 270deg 300deg,
+                        #8b5cf6 300deg 330deg, #6d28d9 330deg 360deg
+                      );
+                      box-shadow: 0 4px 24px rgba(124,58,237,0.3);
+                      position:relative;
+                    "></div>
+                    <!-- Keskipiste -->
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:36px; height:36px; background:white; border-radius:50%; border:3px solid #7c3aed; z-index:2;"></div>
+                    <!-- Osoitin -->
+                    <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:1.6rem; line-height:1; z-index:3; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));">▼</div>
+                  </div>
+
+                  <!-- Tulos-kortti -->
+                  <div id="tp-tulos" style="display:none; background:white; border:2px solid #7c3aed; border-radius:12px; padding:18px 20px; margin:0 auto 20px; max-width:380px; text-align:left;">
+                    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7c3aed; margin-bottom:8px;">Sinun kysymyksesi 🎯</div>
+                    <p id="tp-tulos-teksti" style="font-size:1rem; font-weight:700; color:#3b0764; margin:0; line-height:1.5;"></p>
+                  </div>
+
+                  <!-- Pyöräytä-nappi -->
+                  <button
+                    onclick="pyoritaTyopaikka()"
+                    id="tp-pyora-btn"
+                    aria-live="polite"
+                    style="
+                      background: linear-gradient(135deg, #7c3aed, #9333ea);
+                      color: white;
+                      border: none;
+                      border-radius: 50px;
+                      padding: 14px 32px;
+                      font-size: 1rem;
+                      font-weight: 700;
+                      cursor: pointer;
+                      transition: opacity 0.2s, transform 0.1s;
+                      font-family: inherit;
+                    "
+                    onmouseover="this.style.opacity='0.88'"
+                    onmouseout="this.style.opacity='1'"
+                    onmousedown="this.style.transform='scale(0.97)'"
+                    onmouseup="this.style.transform='scale(1)'"
+                  >🎡 Pyöräytä!</button>
+
+                  <p style="font-size:0.78rem; color:#9ca3af; margin:12px 0 0;">Jokainen pyörittää vuorollaan — sitten kerrotaan koko ryhmälle</p>
+                </div>
+
+                <!-- ── Vaihe 2: Rakenna ── -->
+                <div style="background:#faf5ff; border:1.5px solid #e9d5ff; border-radius:14px; padding:24px; margin-bottom:16px;">
+                  <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6d28d9; margin-bottom:6px;">Vaihe 2 — Nyt rakennetaan! 🔨</div>
+                  <p style="font-size:0.88rem; color:#4b5563; margin:0 0 18px;">Valitse ryhmänä yksi "Entäs jos" -tilanne ja rakentakaa sen pohjalta tulevaisuuden työpaikka. Ei tarvitse olla täydellinen — tärkeintä on, että pystytte kertomaan, mitä siellä tehdään.</p>
+
+                  <!-- LEGO-vaihtoehto -->
+                  <div style="background:white; border:2px solid #7c3aed; border-radius:12px; padding:18px; margin-bottom:12px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                      <span style="font-size:1.6rem;" aria-hidden="true">🧱</span>
+                      <strong style="color:#3b0764; font-size:0.95rem;">Jos koulussanne on LEGO-palikoita</strong>
+                    </div>
+                    <p style="font-size:0.85rem; color:#4b5563; margin:0;">Rakentakaa palikoista teidän työpaikka — rakennus, laite, ajoneuvo tai mikä tahansa muu. Ei tarvitse näyttää oikealta. Tärkeintä on, että pystytte selittämään, <em>mitä siellä tehdään</em> ja <em>miksi se on olemassa.</em></p>
+                  </div>
+
+                  <!-- Vaihtoehto jos ei legoja -->
+                  <div style="background:white; border:1.5px solid #ddd6fe; border-radius:12px; padding:18px;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                      <span style="font-size:1.6rem;" aria-hidden="true">💡</span>
+                      <strong style="color:#3b0764; font-size:0.95rem;">Jos legoja ei löydy — valitse yksi näistä</strong>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:#faf5ff; border-radius:8px; padding:12px;">
+                        <span style="font-size:1.3rem; flex-shrink:0;" aria-hidden="true">✏️</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Piirrä pohjapiirros</div>
+                          <div style="font-size:0.82rem; color:#6b7280; margin-top:2px;">Piirtäkää paperille, miltä työpaikka näyttää ylhäältä. Merkitkää tilat: missä tehdään töitä, missä levätään, mikä on tärkein kone tai juttu.</div>
+                        </div>
+                      </div>
+
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:#faf5ff; border-radius:8px; padding:12px;">
+                        <span style="font-size:1.3rem; flex-shrink:0;" aria-hidden="true">📦</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Rakenna prototyyppi</div>
+                          <div style="font-size:0.82rem; color:#6b7280; margin-top:2px;">Käyttäkää mitä löytyy: pahvilaatikoita, kyniä, paperia, teippiä, kumeja. Rakentakaa jotain konkreettista, joka edustaa teidän paikkaa.</div>
+                        </div>
+                      </div>
+
+                      <div style="display:flex; align-items:flex-start; gap:12px; background:#faf5ff; border-radius:8px; padding:12px;">
+                        <span style="font-size:1.3rem; flex-shrink:0;" aria-hidden="true">🗒️</span>
+                        <div>
+                          <div style="font-weight:700; color:#3b0764; font-size:0.88rem;">Tee tarrakartta</div>
+                          <div style="font-size:0.82rem; color:#6b7280; margin-top:2px;">Kirjoittakaa Post-it-lapuille tai paperilapuille: nimi, mitä tehdään, ketkä työskentelevät, mitä välineitä tarvitaan. Järjestäkää laput pöydälle tai seinälle.</div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div style="margin-top:14px; background:#ede9fe; border-left:3px solid #7c3aed; border-radius:0 8px 8px 0; padding:9px 13px; font-size:0.8rem; color:#5b21b6; font-style:italic;">
+                    💡 Ottakaa lopuksi kuva tai kuvakaappaus — palautetaan Classroomiin. Ja valmistautukaa esittelemään muulle luokalle!
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Mission: Tulevaisuuden työpaikka -esittely -->
+          <div id="tulevaisuus2-mission" class="mission-card" style="margin-top:12px;padding:1.25rem 1.5rem;">
+            <div class="mission-header">
+              <h4>Tulevaisuuden työpaikka -esittely</h4>
+              <span class="mission-badge">Luokkatehtävä</span>
+            </div>
+            <p>Jokainen ryhmä esittelee oman työpaikkansa — käy läpi neljä kohtaa, muut kuuntelevat ja äänestävät lopuksi.</p>
+            <ul class="mission-list">
+              <li><strong>Tilanne:</strong> Mikä "Entäs jos" -kysymys teillä oli?</li>
+              <li><strong>Nimi & paikka:</strong> Mikä teidän työpaikka on ja missä se sijaitsee?</li>
+              <li><strong>Työ:</strong> Mitä siellä tehdään?</li>
+              <li><strong>Luokka äänestää:</strong> Mihin paikkaan haluaisit itse mennä töihin?</li>
+            </ul>
+            <p class="mission-hint">⏱ Aika: 10–15 min</p>
+          </div>
+
+          <!-- Haaste: eriyttäminen ylöspäin -->
+          <div class="haaste-osio">
+            <button
+              class="haaste-toggle"
+              onclick="toggleHaaste(this)"
+              aria-expanded="false"
+            >
+              <span class="haaste-toggle-left">
+                <span class="haaste-pollo-kuva" style="font-size:2rem;line-height:1;display:flex;align-items:center;">⭐</span>
+                <span>Haluatko lisää haastetta?</span>
+              </span>
+              <span class="haaste-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div class="haaste-sisalto" hidden>
+              <p class="haaste-ohje">Kirjoita <strong>koulutusjärjestelmän manifesti</strong>: mitkä kolme asiaa haluaisit ehdottomasti muuttaa nykyisessä koulussa, ja miksi? Perustele jokainen muutos oppimistutkimuksella tai omalla kokemuksella. Mitä hyötyä tai haittaa muutoksista voisi olla?</p>
+              <p class="haaste-vihje">💡 Vinkki: Parhaat ideat syntyvät, kun pohdit sekä opiskelijan että opettajan näkökulmaa</p>
+            </div>
+          </div>
+
+          <!-- Opettajan materiaali: Tulevaisuus-osio -->
+          <div class="opettaja-osio">
+            <button
+              class="opettaja-toggle"
+              onclick="toggleOpettaja(this)"
+              aria-expanded="false"
+              aria-controls="opettaja-sisalto-tulevaisuus"
+            >
+              <span class="opettaja-toggle-left">
+                <span aria-hidden="true">🖨️</span>
+                <span>Opettajan materiaali – Tulevaisuus-osio</span>
+              </span>
+              <span class="opettaja-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div id="opettaja-sisalto-tulevaisuus" class="opettaja-sisalto" hidden>
+              <a
+                class="opettaja-lataus"
+                href="../tehtavat/tulevaisuus_opettaja.html"
+                target="_blank"
+                rel="noopener"
+              >
+                <span aria-hidden="true">↗</span> Avaa opettajan ohje
+              </a>
+              <p class="opettaja-kuvaus">
+                Sisältää molemmat tehtävät (Tulevaisuuden koulu ja Tulevaisuuden työpaikka), oppimistavoitteet, aikataulusuosituksen (45 min tai 2 tuntia), vaiheistetun ohjauksen, palautusmuodot ja LEGO-vaihtoehdot, eriyttämisideat sekä kytkennät muihin osioihin.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Maskotti -->
+    <div
+      class="maskotti-laatikko piilossa"
+      aria-live="polite"
+      aria-label="Maskotti-vihje"
+    >
+      <div class="puhekupla" role="status">Moi! Aloita tästä 👇</div>
+      <img
+        src="../images/tikku_maskotti_kannustaa.png"
+        class="maskotti"
+        alt="DigiOpon tikkumaskotti"
+      />
+    </div>
+
+    <!-- Scroll to top -->
+    <button id="scrollTopBtn" aria-label="Takaisin sivun alkuun">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <script src="../js/tehtavat.js"></script>
+    <!-- Maskotti-ilmeet 8. luokalle — ylikirjoittaa luokka.js:n ILMEET_DEFAULT -->
+    <script>
+      window.maskottiIlmeet = {
+        johdanto:    "kannustavana",
+        koulutus:    "kannustavana",
+        vahvuudet:   "kannustavana",
+        tet:         "iloisena",
+        klinikka:    "kannustavana",
+        tulevaisuus: "iloisena",
+      };
+      window.currentClassNumber = "8";
+    </script>
+    <script src="../js/luokka.js"></script>
+    <script src="../js/koulutusalakaruselli.js"></script>
+    <script>
+      /* ── Opettajan materiaali: avaa/sulje ── */
+      function toggleOpettaja(btn) {
+        var sisalto = btn.nextElementSibling;
+        var auki = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+        if (auki) {
+          sisalto.hidden = true;
+        } else {
+          sisalto.hidden = false;
+          sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      /* ── Tehtäväikkunat: avaa/sulje ── */
+      function toggleMaailma(btn) {
+        var wrapper = document.getElementById('maailma-wrapper');
+        var open = wrapper.style.display === 'block';
+        wrapper.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      }
+
+      function toggleFakeInsta(btn) {
+        var wrapper = document.getElementById('fake-insta-wrapper');
+        var open = wrapper.style.display === 'block';
+        wrapper.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        if (!open) wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function togglePyora(btn) {
+        var wrapper = document.getElementById('pyora-wrapper');
+        var open = wrapper.style.display === 'block';
+        wrapper.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        if (!open) wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      /* ── Haaste (eriyttäminen ylöspäin) ── */
+      function toggleHaaste(btn) {
+        var sisalto = btn.nextElementSibling;
+        var auki = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
+        if (auki) {
+          sisalto.hidden = true;
+        } else {
+          sisalto.hidden = false;
+          sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      /* ── TET-polku: avaa/sulje paneeli, sulje muut ── */
+      function tetToggle(btn, paneliId) {
+        var auki = btn.getAttribute('aria-expanded') === 'true';
+        document.querySelectorAll('.tet-noodi').forEach(function(b) {
+          b.setAttribute('aria-expanded', 'false');
+        });
+        document.querySelectorAll('.tet-paneeli').forEach(function(p) {
+          p.hidden = true;
+        });
+        if (!auki) {
+          btn.setAttribute('aria-expanded', 'true');
+          var paneeli = document.getElementById(paneliId);
+          if (paneeli) {
+            paneeli.hidden = false;
+            paneeli.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      }
+
+      /* ── Vahvuusmatka-peli ── */
+      function avaaVahvuusmatka() {
+        const c = document.getElementById("vahvuusmatkaContainer");
+        c.style.display = "block";
+        c.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      function suljeVahvuusmatka() {
+        const c = document.getElementById("vahvuusmatkaContainer");
+        const iframe = c.querySelector("iframe");
+        if (iframe) {
+          const src = iframe.getAttribute("src");
+          iframe.src = "about:blank";
+          setTimeout(function () { iframe.src = src; c.style.display = "none"; }, 120);
+        } else {
+          c.style.display = "none";
+        }
+        document.getElementById("vahvuudet").scrollIntoView({ behavior: "smooth" });
+      }
+
+      /* ── Valinta-nappien tyyli ── */
+      (function() {
+        var style = document.createElement('style');
+        style.textContent = `
+          .valinta-nappi {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: white; color: #3b0764;
+            border: 1.5px solid #ddd6fe; border-radius: 8px;
+            padding: 8px 14px; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+          }
+          .valinta-nappi:hover { border-color: #7c3aed; background: #f5f3ff; }
+          .valinta-nappi:focus-visible { outline: 3px solid #7c3aed; outline-offset: 2px; }
+          .valinta-nappi[aria-pressed="true"] { background: #7c3aed; color: white; border-color: #7c3aed; }
+        `;
+        document.head.appendChild(style);
+      })();
+
+      /* ── Tulevaisuuden työpaikka: onnenpyörä ── */
+      var tpSpins = 0;
+      var tpKysymykset = [
+        'Entäs jos lihaa voisi tulostaa kotona 3D-tulostimella?',
+        'Entäs jos robotit siivoaisivat kaikki kodit?',
+        'Entäs jos asuisimme veden alla?',
+        'Entäs jos roskasta voisi tehdä ruokaa?',
+        'Entäs jos jääkaapin voisi yhdistää kauppaan ja se tilaisi ruoan itse?',
+        'Entäs jos robottikaverit auttaisivat yksinäisiä ihmisiä?',
+        'Entäs jos jokainen voisi puhua mitä tahansa kieltä automaattisesti?',
+        'Entäs jos kaikki autot ajaisivat itse — ilman kuljettajaa?',
+        'Entäs jos droonilla voisi lentää töihin tai kouluun?',
+        'Entäs jos ostoskeskusten tilalle rakennettaisiin metsiä?',
+        'Entäs jos ihmiseen voisi kiinnittää robottikäsiä tai -jalkoja?',
+        'Entäs jos ilmassa ei olisi lainkaan saasteita?'
+      ];
+
+      function pyoritaTyopaikka() {
+        var pyora  = document.getElementById('tp-pyora');
+        var tulos  = document.getElementById('tp-tulos');
+        var teksti = document.getElementById('tp-tulos-teksti');
+        var nappi  = document.getElementById('tp-pyora-btn');
+        if (!pyora) return;
+        var i = Math.floor(Math.random() * tpKysymykset.length);
+        var segDeg = 360 / tpKysymykset.length;
+        tpSpins += 5;
+        var kohde = tpSpins * 360 + (360 - i * segDeg - segDeg / 2);
+        pyora.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+        pyora.style.transform  = 'rotate(' + kohde + 'deg)';
+        nappi.disabled = true;
+        nappi.textContent = '⏳ Pyörii...';
+        tulos.style.display = 'none';
+        setTimeout(function () {
+          teksti.textContent = tpKysymykset[i];
+          tulos.style.display = 'block';
+          nappi.disabled = false;
+          nappi.textContent = '🎡 Pyöräytä uudelleen!';
+          nappi.setAttribute('aria-label', 'Pyöräytä uudelleen. Edellinen kysymys: ' + tpKysymykset[i]);
+        }, 3200);
+      }
+
+      function vaihdaValinta(nappi) {
+        nappi.setAttribute('aria-pressed',
+          nappi.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'
+        );
+      }
+
+      /* ── Tulevaisuus-togglet ── */
+      function toggleTulevaisuus8() {
+        var sisalto = document.getElementById('tulevaisuus8-sisalto');
+        var ikoni   = document.getElementById('tulevaisuus8-ikoni');
+        var nappi   = document.getElementById('tulevaisuus8-btn');
+        var auki = sisalto.style.display === 'none' || sisalto.style.display === '';
+        if (auki) {
+          sisalto.style.display = 'block';
+          ikoni.style.transform = 'rotate(180deg)';
+          nappi.setAttribute('aria-expanded', 'true');
+          nappi.querySelector('span').textContent = '🏫 Sulje Tulevaisuuden koulu -tehtävä';
+        } else {
+          sisalto.style.display = 'none';
+          ikoni.style.transform = 'rotate(0deg)';
+          nappi.setAttribute('aria-expanded', 'false');
+          nappi.querySelector('span').textContent = '🏫 Avaa Tulevaisuuden koulu -tehtävä';
+        }
+      }
+
+      function toggleTyopaikka8() {
+        var sisalto = document.getElementById('tyopaikka8-sisalto');
+        var ikoni   = document.getElementById('tyopaikka8-ikoni');
+        var nappi   = document.getElementById('tyopaikka8-btn');
+        var auki = sisalto.style.display === 'none' || sisalto.style.display === '';
+        if (auki) {
+          sisalto.style.display = 'block';
+          ikoni.style.transform = 'rotate(180deg)';
+          nappi.setAttribute('aria-expanded', 'true');
+          nappi.querySelector('span').textContent = '💼 Sulje Tulevaisuuden työpaikka -tehtävä';
+        } else {
+          sisalto.style.display = 'none';
+          ikoni.style.transform = 'rotate(0deg)';
+          nappi.setAttribute('aria-expanded', 'false');
+          nappi.querySelector('span').textContent = '💼 Avaa Tulevaisuuden työpaikka -tehtävä';
+        }
+      }
+
+      /* ── KJ-lightbox: koulutusjärjestelmä-kaavio ── */
+      (function() {
+        var IMG = "../images/8luokka_koulutusjarjestelma.png";
+
+        function open() {
+          var old = document.getElementById('kjLb');
+          if (old) old.parentNode.removeChild(old);
+          var lb = document.createElement('div');
+          lb.id = 'kjLb';
+          lb.setAttribute('style',
+            'position:fixed;top:0;left:0;right:0;bottom:0;' +
+            'background:rgba(0,0,0,0.88);z-index:2147483647;' +
+            'display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;'
+          );
+          var inner = document.createElement('div');
+          inner.setAttribute('style',
+            'position:relative;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;border-radius:14px;background:white;'
+          );
+          var closeBtn = document.createElement('button');
+          closeBtn.textContent = '✕';
+          closeBtn.setAttribute('style',
+            'position:sticky;top:8px;float:right;margin:8px 8px 0 0;' +
+            'background:white;border:1px solid #ccc;border-radius:50%;' +
+            'width:36px;height:36px;font-size:1.1rem;cursor:pointer;z-index:10;'
+          );
+          closeBtn.addEventListener('click', close);
+          var img = document.createElement('img');
+          img.src = IMG;
+          img.alt = 'Suomen koulutusjärjestelmä';
+          img.setAttribute('style', 'width:100%;display:block;border-radius:14px;');
+          inner.appendChild(closeBtn);
+          inner.appendChild(img);
+          lb.appendChild(inner);
+          document.documentElement.appendChild(lb);
+          document.body.style.overflow = 'hidden';
+          lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+        }
+
+        function close() {
+          var lb = document.getElementById('kjLb');
+          if (lb) lb.parentNode.removeChild(lb);
+          document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+        window.avaaKjLightbox = open;
+      })();
+
+      /* ── Maskotti ── */
+      function setupMaskotti() {
+        if (window.innerWidth <= 768) return;
+
+        const maskotti = document.querySelector(".maskotti-laatikko");
+        const puhekupla = document.querySelector(".puhekupla");
+        const osiot = document.querySelectorAll(".aihe-osio");
+
+        if (!maskotti || !puhekupla || !osiot.length) return;
+
+        const puhetekstit = {
+          johdanto:    "Tänä vuonna alkaa suuri kysymys: mikä minusta tulee? 🌟",
+          koulutus:    "Suomessa on paljon polkuja — sinulle löytyy oma 🗺️",
+          vahvuudet:   "Fake Insta? Oikeesti hauska tapa löytää oma juttu 📸",
+          tet:         "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
+          klinikka:    "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
+          tulevaisuus: "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
+        };
+
+        const prefixit = ["🙂", "👀", "💭", "✨"];
+        let viimeisin = null;
+        let piilotusAjastin = null;
+        let ylaosaLaukaisttu = false;
+
+        function naytaMaskotti(teksti) {
+          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
+          puhekupla.textContent = `${prefix} ${teksti}`;
+          maskotti.classList.remove("piilossa");
+          maskotti.classList.add("nakyvissa");
+          clearTimeout(piilotusAjastin);
+          piilotusAjastin = setTimeout(() => {
+            maskotti.classList.remove("nakyvissa");
+            maskotti.classList.add("piilossa");
+          }, 4000);
+        }
+
+        function paivitaOsio() {
+          const kynnys = window.innerHeight * 0.55;
+
+          if (window.scrollY < 80) {
+            if (viimeisin !== null) { viimeisin = null; ylaosaLaukaisttu = false; }
+            return;
+          }
+
+          let loydetty = false;
+          for (const osio of osiot) {
+            const rect = osio.getBoundingClientRect();
+            if (rect.top < kynnys && rect.bottom > 0) {
+              if (viimeisin !== osio.id && puhetekstit[osio.id]) {
+                viimeisin = osio.id;
+                naytaMaskotti(puhetekstit[osio.id]);
+              }
+              loydetty = true;
+              break;
+            }
+          }
+          if (!loydetty && !ylaosaLaukaisttu) {
+            ylaosaLaukaisttu = true;
+          }
+        }
+
+        setTimeout(() => naytaMaskotti("Moi! Tänä vuonna otat suunnan 🧭"), 800);
+        window.addEventListener("scroll", paivitaOsio, { passive: true });
+      }
+
+      window.addEventListener("load", setupMaskotti);
+
+      /* ── Scroll-to-top ── */
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      if (scrollBtn) {
+        window.addEventListener("scroll", () => {
+          scrollBtn.classList.toggle("nakyvissa", window.scrollY > 400);
+        }, { passive: true });
+        scrollBtn.addEventListener("click", () =>
+          window.scrollTo({ top: 0, behavior: "smooth" })
+        );
+      }
+    </script>
 </body>
 </html>
