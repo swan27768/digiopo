@@ -13,6 +13,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
 
     <!-- DigiOpo CSS -->
     <link rel="stylesheet" href="../css/base.css" />
@@ -353,6 +356,155 @@
       animation: kupláSisaan 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
+    /* ── Johdanto: maskottitarina ── */
+    .johdanto-maskotti {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 14px;
+      margin-bottom: 12px;
+    }
+    .johdanto-maskotti-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #9ca3af;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .johdanto-maskotti-teksti {
+      font-size: 0.93rem;
+      line-height: 1.75;
+      color: #374151;
+    }
+
+    
+
+    /* ── Klinikkakortti: muistilappudesign ── */
+    .klinikka-taulu {
+      background: #f5efe6;
+      border-radius: 18px;
+      padding: 20px 18px 18px;
+      margin: 14px 0;
+    }
+    .klinikka-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .klinikka-lappu {
+      padding: 18px 14px 26px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      position: relative;
+      min-height: 132px;
+      border: none;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 3px 10px rgba(0,0,0,0.13);
+    }
+    .klinikka-lappu:hover {
+      transform: scale(1.04) rotate(0deg) !important;
+      box-shadow: 4px 6px 18px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+    .klinikka-lappu:focus-visible {
+      outline: 3px solid rgba(0,0,0,0.35);
+      outline-offset: 3px;
+    }
+    .klinikka-lappu.lappu--auki {
+      outline: 3px solid rgba(0,0,0,0.3);
+      outline-offset: 3px;
+    }
+    .klinikka-lappu::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      background: rgba(0,0,0,0.12);
+      clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    }
+    .lappu-ikoni {
+      font-size: 2.1rem;
+      line-height: 1;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .lappu-otsikko {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.25;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .lappu-kysymys {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      font-weight: 500;
+      font-style: italic;
+      opacity: 0.72;
+      display: block;
+    }
+    .lappu-keltainen { background: #fef3c7; transform: rotate(-1.8deg); }
+    .lappu-keltainen .lappu-otsikko { color: #451a03; }
+    .lappu-keltainen .lappu-kysymys { color: #92400e; }
+    .lappu-sininen  { background: #dbeafe; transform: rotate(1.2deg); }
+    .lappu-sininen  .lappu-otsikko { color: #1e3a5f; }
+    .lappu-sininen  .lappu-kysymys { color: #1d4ed8; }
+    .lappu-pinkki   { background: #fce7f3; transform: rotate(0.7deg); }
+    .lappu-pinkki   .lappu-otsikko { color: #4a0020; }
+    .lappu-pinkki   .lappu-kysymys { color: #9d174d; }
+    .lappu-lila     { background: #ede9fe; transform: rotate(-1deg); }
+    .lappu-lila     .lappu-otsikko { color: #2e1065; }
+    .lappu-lila     .lappu-kysymys { color: #6d28d9; }
+
+    /* Avoimena oleva kortti */
+    .klinikka-expanded {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px 22px;
+      animation: klkAuki 0.2s ease;
+    }
+    @keyframes klkAuki {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .klinikka-exp-otsikko {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 14px;
+    }
+    .klinikka-expanded p {
+      font-size: 0.92rem;
+      color: #374151;
+      line-height: 1.72;
+      margin-bottom: 10px;
+    }
+    .klinikka-expanded p:last-child { margin-bottom: 0; }
+    .klinikka-vinkki {
+      background: #f9fafb;
+      border-left: 3px solid #d1d5db;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 6px !important;
+    }
+    @media (max-width: 480px) {
+      .klinikka-grid { grid-template-columns: 1fr; }
+    }
+
   </style>
   </head>
 
@@ -412,7 +564,7 @@
           <a href="#klinikka">Oppimaan oppimisen klinikka</a>
          
 
-          <a href="#tulevaisuus">Mitä jos?</a>
+          <a href="#tulevaisuus">Mitä jos? - tulevaisuustuumailua</a>
           
         </nav>
       </aside>
@@ -435,6 +587,17 @@
             <h2 id="otsikko-johdanto">Tänä vuonna otat suunnan</h2>
             <p>Et tiedä vielä minne — mutta alat selvittää sitä.</p>
           </div>
+
+          <!-- Maskottitarina -->
+          <div class="johdanto-maskotti" role="note">
+            <div class="johdanto-maskotti-label">Tänä vuonna</div>
+            <p class="johdanto-maskotti-teksti">
+              Tänä vuonna tutustut koulutusaloihin ja alat hahmottaa, mikä sinua kiinnostaa — ja miksi.
+              Ei tarvitse tietää vielä. Mutta tänä vuonna suunta alkaa löytyä.
+            </p>
+          </div>
+
+          
 
           <!-- Intro-kuva suurennustoiminnolla -->
           <div style="position:relative; border-radius:14px; overflow:hidden; margin-top:4px;">
@@ -1444,16 +1607,13 @@
             <p>Mikä opiskelu tyssää? Valitse aihe ja saat pikaohjeen.</p>
           </div>
 
-          <div class="theory-card">
-            <div class="theory-text">
-              <p>
-                Oppiminen on taito, jota voi harjoitella. Täältä löydät käytännön vinkkejä muistin treenaamiseen, lukemisen taitojen vahvistamiseen ja ajanhallintaan.
-              </p>
-              <p><strong>Ei luentoja, vaan työkaluja.</strong></p>
-            </div>
-            <div class="theory-image">
-              <img src="../images/opo-kliniikka.png" alt="Oppimisen keinoja" loading="lazy" />
-            </div>
+          <div style="padding: 8px 2px 4px;">
+            <p style="font-size: clamp(1rem, 3.2vw, 1.35rem); font-weight: 700; color: #1a1a2e; line-height: 1.3; margin: 0 0 8px; white-space: nowrap;">
+              Oppiminen on taito — ja taitoa voi harjoitella.
+            </p>
+            <p style="font-size: 0.95rem; color: #6b7280; margin: 0;">
+              Valitse kortti, joka puhuttelee sinua juuri nyt.
+            </p>
           </div>
 
           <!-- Käyttöohje opettajalle ja oppilaalle -->
@@ -1514,121 +1674,89 @@
             </div>
           </div>
 
-          <!-- Klinikkakortti 1: Kertaustekniikka -->
-          <div class="haaste-osio">
-            <button
-              class="haaste-toggle"
-              onclick="toggleHaaste(this)"
-              aria-expanded="false"
-              style="background: linear-gradient(135deg, #1d4ed8, #2563eb); border-color: #2563eb;"
-            >
-              <span class="haaste-toggle-left">
-                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">🔁</span>
-                <span>Kertaustekniikka — miten muistan paremmin?</span>
-              </span>
-              <span class="haaste-nuoli" aria-hidden="true">▼</span>
-            </button>
-            <div class="haaste-sisalto" hidden style="border-color: #93c5fd; background: linear-gradient(160deg, #eff6ff 0%, #dbeafe 100%); color: #1e3a5f;">
-              <p class="haaste-ohje" style="color: #1e3a5f;">
-                <strong style="color: #1d4ed8;">Hajautettu kertaus</strong> toimii paremmin kuin yön yli lukeminen.
-                Kerraatko aineen heti saman päivän iltana (5 min), sitten 3 päivän päästä ja viikon päästä — muisti jää kiinni paljon lujemmin.
-              </p>
-              <p class="haaste-ohje" style="color: #1e3a5f;">
-                <strong style="color: #1d4ed8;">Active recall</strong>: älä vain lue — sulje kirja ja kerro ääneen tai kirjoita ylös mitä muistat. Tämä on tutkitusti tehokkain tapa oppia.
-              </p>
-              <p class="haaste-vihje" style="border-left-color: #2563eb; color: #1d4ed8;">
-                💡 Kokeile: tee aiheesta 5 kysymystä itse, vastaa niihin seuraavana päivänä katsomatta muistiinpanoja
-              </p>
-            </div>
-          </div>
+          <!-- Klinikkakortti-taulu: muistilappudesign -->
+          <div class="klinikka-taulu">
+            <div class="klinikka-grid" role="list">
 
-          <!-- Klinikkakortti 2: Kokeeseen valmistautuminen -->
-          <div class="haaste-osio">
-            <button
-              class="haaste-toggle"
-              onclick="toggleHaaste(this)"
-              aria-expanded="false"
-              style="background: linear-gradient(135deg, #15803d, #16a34a); border-color: #16a34a;"
-            >
-              <span class="haaste-toggle-left">
-                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">📝</span>
-                <span>Kokeeseen valmistautuminen — mistä aloitan?</span>
-              </span>
-              <span class="haaste-nuoli" aria-hidden="true">▼</span>
-            </button>
-            <div class="haaste-sisalto" hidden style="border-color: #86efac; background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 100%); color: #14532d;">
-              <p class="haaste-ohje" style="color: #14532d;">
-                <strong style="color: #15803d;">3 päivää ennen koetta:</strong> Lue läpi koko aihe. Merkitse, mikä on epäselvää.
-              </p>
-              <p class="haaste-ohje" style="color: #14532d;">
-                <strong style="color: #15803d;">2 päivää ennen:</strong> Tee muistiinpanoista tiivistelmä omin sanoin — lauseet, ei listoja. Kirjoita vaikeat kohdat uudestaan.
-              </p>
-              <p class="haaste-ohje" style="color: #14532d;">
-                <strong style="color: #15803d;">Edellisenä iltana:</strong> Lue tiivistelmä kerran. Sen jälkeen lopeta — yliväsyneenä oppiminen ei onnistu.
-              </p>
-              <p class="haaste-vihje" style="border-left-color: #16a34a; color: #15803d;">
-                💡 Tee itsellesi koeharjoitus: keksi 5 kysymystä opettajan näkökulmasta ja vastaa niihin
-              </p>
-            </div>
-          </div>
+              <button
+                class="klinikka-lappu lappu-keltainen"
+                onclick="toggleKlinikkaLappu(this, 'klk-1')"
+                aria-expanded="false"
+                aria-controls="klk-1"
+                role="listitem"
+              >
+                <span class="lappu-ikoni" aria-hidden="true">🔁</span>
+                <span class="lappu-otsikko">Kertaustekniikka</span>
+                <span class="lappu-kysymys">miten muistan paremmin?</span>
+              </button>
 
-          <!-- Klinikkakortti 3: Ahdistuksesta selviytyminen -->
-          <div class="haaste-osio">
-            <button
-              class="haaste-toggle"
-              onclick="toggleHaaste(this)"
-              aria-expanded="false"
-              style="background: linear-gradient(135deg, #b45309, #d97706); border-color: #d97706;"
-            >
-              <span class="haaste-toggle-left">
-                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">😰</span>
-                <span>Ahdistuksesta selviytyminen — jännitys kaataa minut</span>
-              </span>
-              <span class="haaste-nuoli" aria-hidden="true">▼</span>
-            </button>
-            <div class="haaste-sisalto" hidden style="border-color: #fcd34d; background: linear-gradient(160deg, #fffbeb 0%, #fef3c7 100%); color: #451a03;">
-              <p class="haaste-ohje" style="color: #451a03;">
-                <strong style="color: #b45309;">Jännitys on normaalia</strong> — se tarkoittaa, että välität. Mutta kun se kaataa, aivot tarvitsevat rauhoittumissignaalin.
-              </p>
-              <p class="haaste-ohje" style="color: #451a03;">
-                <strong style="color: #b45309;">4-7-8 -hengitys:</strong> Hengitä sisään 4 sekuntia, pidätä 7 sekuntia, puhalla ulos 8 sekuntia. Toista 3 kertaa. Tämä aktivoi parasympaattisen hermoston — keho rauhoittuu fyysisesti.
-              </p>
-              <p class="haaste-ohje" style="color: #451a03;">
-                <strong style="color: #b45309;">Pahin skenaario -tekniikka:</strong> Mitä oikeasti tapahtuisi, jos menisi huonosti? Useimmiten vastaus on: ei mitään peruuttamatonta.
-              </p>
-              <p class="haaste-vihje" style="border-left-color: #d97706; color: #b45309;">
-                💡 Jos ahdistus on jatkuvaa ja se haittaa arkea, siitä kannattaa jutella aikuisen kanssa — se on rohkea teko, ei heikkous
-              </p>
-            </div>
-          </div>
+              <button
+                class="klinikka-lappu lappu-sininen"
+                onclick="toggleKlinikkaLappu(this, 'klk-2')"
+                aria-expanded="false"
+                aria-controls="klk-2"
+                role="listitem"
+              >
+                <span class="lappu-ikoni" aria-hidden="true">📝</span>
+                <span class="lappu-otsikko">Kokeeseen valmistautuminen</span>
+                <span class="lappu-kysymys">mistä aloitan?</span>
+              </button>
 
-          <!-- Klinikkakortti 4: Oikea asenne -->
-          <div class="haaste-osio">
-            <button
-              class="haaste-toggle"
-              onclick="toggleHaaste(this)"
-              aria-expanded="false"
-              style="background: linear-gradient(135deg, #6d28d9, #7c3aed); border-color: #7c3aed;"
-            >
-              <span class="haaste-toggle-left">
-                <span style="font-size:1.7rem;line-height:1;display:flex;align-items:center;">💪</span>
-                <span>Oikea asenne — motivaatio on hukassa</span>
-              </span>
-              <span class="haaste-nuoli" aria-hidden="true">▼</span>
-            </button>
-            <div class="haaste-sisalto" hidden style="border-color: #c4b5fd; background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 100%); color: #2e1065;">
-              <p class="haaste-ohje" style="color: #2e1065;">
-                <strong style="color: #6d28d9;">Motivaatio ei tule ensin</strong> — aloittaminen tulee ensin. Sano itsellesi: "Teen tätä vain 10 minuuttia." Useimmiten jatkat sen jälkeen.
-              </p>
-              <p class="haaste-ohje" style="color: #2e1065;">
-                <strong style="color: #6d28d9;">Growth mindset:</strong> "En osaa tätä vielä" on eri asia kuin "en osaa tätä". Aivot muuttuvat harjoituksen myötä — tämä on tutkittua tiedettä.
-              </p>
-              <p class="haaste-ohje" style="color: #2e1065;">
-                <strong style="color: #6d28d9;">Miksi tämä asia voisi olla hyödyllinen?</strong> Edes yksi järkevä syy riittää käynnistämään motivaation.
-              </p>
-              <p class="haaste-vihje" style="border-left-color: #7c3aed; color: #6d28d9;">
-                💡 Kirjoita ylös yksi asia, jonka opit tänään — pienikin edistys on edistystä
-              </p>
+              <button
+                class="klinikka-lappu lappu-pinkki"
+                onclick="toggleKlinikkaLappu(this, 'klk-3')"
+                aria-expanded="false"
+                aria-controls="klk-3"
+                role="listitem"
+              >
+                <span class="lappu-ikoni" aria-hidden="true">😰</span>
+                <span class="lappu-otsikko">Ahdistuksesta selviytyminen</span>
+                <span class="lappu-kysymys">jännitys kaataa minut</span>
+              </button>
+
+              <button
+                class="klinikka-lappu lappu-lila"
+                onclick="toggleKlinikkaLappu(this, 'klk-4')"
+                aria-expanded="false"
+                aria-controls="klk-4"
+                role="listitem"
+              >
+                <span class="lappu-ikoni" aria-hidden="true">💪</span>
+                <span class="lappu-otsikko">Oikea asenne</span>
+                <span class="lappu-kysymys">motivaatio on hukassa</span>
+              </button>
+            </div>
+
+            <!-- Avoimena näkyvä sisältö -->
+            <div id="klk-1" class="klinikka-expanded" hidden>
+              <h4 class="klinikka-exp-otsikko">🔁 Kertaustekniikka — miten muistan paremmin?</h4>
+              <p><strong>Hajautettu kertaus</strong> toimii paremmin kuin yön yli lukeminen. Kerraatko aineen heti saman päivän iltana (5 min), sitten 3 päivän päästä ja viikon päästä — muisti jää kiinni paljon lujemmin.</p>
+              <p><strong>Active recall:</strong> älä vain lue — sulje kirja ja kerro ääneen tai kirjoita ylös mitä muistat. Tämä on tutkitusti tehokkain tapa oppia.</p>
+              <p class="klinikka-vinkki">💡 Kokeile: tee aiheesta 5 kysymystä itse ja vastaa niihin seuraavana päivänä katsomatta muistiinpanoja</p>
+            </div>
+
+            <div id="klk-2" class="klinikka-expanded" hidden>
+              <h4 class="klinikka-exp-otsikko">📝 Kokeeseen valmistautuminen — mistä aloitan?</h4>
+              <p><strong>3 päivää ennen koetta:</strong> Lue läpi koko aihe. Merkitse, mikä on epäselvää.</p>
+              <p><strong>2 päivää ennen:</strong> Tee muistiinpanoista tiivistelmä omin sanoin — lauseet, ei listoja. Kirjoita vaikeat kohdat uudestaan.</p>
+              <p><strong>Edellisenä iltana:</strong> Lue tiivistelmä kerran. Sen jälkeen lopeta — yliväsyneenä oppiminen ei onnistu.</p>
+              <p class="klinikka-vinkki">💡 Tee itsellesi koeharjoitus: keksi 5 kysymystä opettajan näkökulmasta ja vastaa niihin</p>
+            </div>
+
+            <div id="klk-3" class="klinikka-expanded" hidden>
+              <h4 class="klinikka-exp-otsikko">😰 Ahdistuksesta selviytyminen — jännitys kaataa minut</h4>
+              <p><strong>Jännitys on normaalia</strong> — se tarkoittaa, että välität. Mutta kun se kaataa, aivot tarvitsevat rauhoittumissignaalin.</p>
+              <p><strong>4-7-8 -hengitys:</strong> Hengitä sisään 4 sekuntia, pidätä 7 sekuntia, puhalla ulos 8 sekuntia. Toista 3 kertaa. Tämä aktivoi parasympaattisen hermoston — keho rauhoittuu fyysisesti.</p>
+              <p><strong>Pahin skenaario -tekniikka:</strong> Mitä oikeasti tapahtuisi, jos menisi huonosti? Useimmiten vastaus on: ei mitään peruuttamatonta.</p>
+              <p class="klinikka-vinkki">💡 Jos ahdistus on jatkuvaa ja se haittaa arkea, siitä kannattaa jutella aikuisen kanssa — se on rohkea teko, ei heikkous</p>
+            </div>
+
+            <div id="klk-4" class="klinikka-expanded" hidden>
+              <h4 class="klinikka-exp-otsikko">💪 Oikea asenne — motivaatio on hukassa</h4>
+              <p><strong>Motivaatio ei tule ensin</strong> — aloittaminen tulee ensin. Sano itsellesi: "Teen tätä vain 10 minuuttia." Useimmiten jatkat sen jälkeen.</p>
+              <p><strong>Growth mindset:</strong> "En osaa tätä vielä" on eri asia kuin "en osaa tätä". Aivot muuttuvat harjoituksen myötä — tämä on tutkittua tiedettä.</p>
+              <p><strong>Miksi tämä asia voisi olla hyödyllinen?</strong> Edes yksi järkevä syy riittää käynnistämään motivaation.</p>
+              <p class="klinikka-vinkki">💡 Kirjoita ylös yksi asia, jonka opit tänään — pienikin edistys on edistystä</p>
             </div>
           </div>
 
@@ -1678,7 +1806,7 @@
           aria-labelledby="otsikko-tulevaisuus"
         >
           <div class="aihe-otsikko">
-            <h2 id="otsikko-tulevaisuus">Mitä jos?</h2>
+            <h2 id="otsikko-tulevaisuus">Mitä jos? - tulevaisuustuumailua</h2>
             <p>Tulevaisuus alkaa yhdestä kysymyksestä.</p>
           </div>
 
@@ -2279,6 +2407,29 @@
     <script src="../js/luokka.js"></script>
     <script src="../js/koulutusalakaruselli.js"></script>
     <script>
+      /* ── Klinikkakortti: muistilappu avaa/sulje ── */
+      function toggleKlinikkaLappu(btn, id) {
+        var oliauki = btn.getAttribute('aria-expanded') === 'true';
+        // Sulje kaikki
+        document.querySelectorAll('.klinikka-lappu').forEach(function(b) {
+          b.setAttribute('aria-expanded', 'false');
+          b.classList.remove('lappu--auki');
+        });
+        document.querySelectorAll('.klinikka-expanded').forEach(function(d) {
+          d.hidden = true;
+        });
+        // Avaa klikattu jos oli kiinni
+        if (!oliauki) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.classList.add('lappu--auki');
+          var sisalto = document.getElementById(id);
+          sisalto.hidden = false;
+          setTimeout(function() {
+            sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 40);
+        }
+      }
+
       /* ── Opettajan materiaali: avaa/sulje ── */
       function toggleOpettaja(btn) {
         var sisalto = btn.nextElementSibling;
