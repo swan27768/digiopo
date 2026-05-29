@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opettajan ohje – Mikä ajattelija sinä olet?</title>
+  <style>
+    :root {
+      --violetti: #6d28d9;
+      --vio-vl:   #ede9fe;
+      --tumma:    #1e1b4b;
+      --tausta:   #faf9ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--tausta); color: #1e293b; line-height: 1.6; }
+
+    .hero { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 55%, #7c3aed 100%); color: white; padding: 32px 24px 28px; }
+    .hero-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+    .hero h1 { font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 800; line-height: 1.25; margin-bottom: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 3px 11px; font-size: 0.77rem; font-weight: 600; }
+
+    .sisalto { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+
+    .kortti { background: white; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .kortti-otsikko { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--violetti); margin-bottom: 10px; }
+
+    /* Tehtäväkortit */
+    .tehtava { border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+    .tehtava-header { padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
+    .t1 .tehtava-header { background: linear-gradient(135deg, #312e81, #6d28d9); }
+    .t2 .tehtava-header { background: linear-gradient(135deg, #1e3a8a, #4f46e5); }
+    .t-nro { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .t-nimi { font-weight: 700; font-size: 0.95rem; color: white; }
+    .t-meta { font-size: 0.76rem; color: rgba(255,255,255,0.75); margin-top: 1px; }
+    .tehtava-body { background: white; padding: 16px 18px; }
+    .tehtava-body p { font-size: 0.88rem; color: #374151; margin-bottom: 8px; }
+    .tehtava-body p:last-child { margin-bottom: 0; }
+
+    .ajattelutyypit { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0; }
+    .tyyppi { background: var(--vio-vl); border-radius: 8px; padding: 8px 4px; text-align: center; }
+    .tyyppi-ikoni { font-size: 1.1rem; display: block; }
+    .tyyppi-nimi { font-size: 0.68rem; font-weight: 700; color: var(--tumma); margin-top: 3px; display: block; }
+
+    .kysymykset { list-style: none; padding: 0; margin-top: 10px; }
+    .kysymykset li { background: var(--vio-vl); border-radius: 7px; padding: 7px 11px; font-size: 0.86rem; color: var(--tumma); font-style: italic; margin-bottom: 5px; }
+
+    .roolit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+    .rooli { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 10px 12px; font-size: 0.84rem; }
+    .rooli strong { display: block; color: #0369a1; font-size: 0.78rem; margin-bottom: 3px; }
+
+    .huomio { background: #fef3c7; border-left: 3px solid #d97706; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 0.86rem; color: #78350f; margin-top: 10px; }
+
+    .aikataulu { list-style: none; }
+    .aika-rivi { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 0.88rem; color: #374151; align-items: flex-start; }
+    .aika-rivi:last-child { border-bottom: none; }
+    .aika-badge { background: var(--vio-vl); color: var(--tumma); border-radius: 6px; padding: 2px 7px; font-size: 0.76rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; min-width: 48px; text-align: center; margin-top: 2px; }
+
+    .tulosta { display: block; width: 100%; background: var(--violetti); color: white; border: none; border-radius: 9px; padding: 12px; font-size: 0.92rem; font-weight: 700; cursor: pointer; margin-bottom: 20px; text-align: center; }
+    @media print { .tulosta { display: none; } .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-label">Opettajan ohje · 9. luokka</div>
+    <h1>Mikä ajattelija sinä olet?</h1>
+    <div class="chips">
+      <span class="chip">Yksin + ryhmä</span>
+      <span class="chip">45–55 min</span>
+      <span class="chip">2 tehtävää</span>
+    </div>
+  </div>
+
+  <div class="sisalto">
+
+    <button class="tulosta" onclick="window.print()">🖨️ Tulosta ohje</button>
+
+    <!-- Tavoitteet -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Oppimistavoitteet</div>
+      <p style="font-size:0.9rem; color:#374151;">Oppilas tunnistaa viisi eri ajattelutapaa ja harjoittelee niitä käytännön tehtävillä. Ryhmäpelissä oppilas oppii jakamaan tietoa ja tekemään johtopäätöksiä yhdessä — taitoja, joita tarvitaan sekä opiskelussa että työelämässä.</p>
+    </div>
+
+    <!-- Tehtävä 1 -->
+    <div class="tehtava t1">
+      <div class="tehtava-header">
+        <div class="t-nro">1</div>
+        <div>
+          <div class="t-nimi">Ajattelupeli — viisi tapaa ajatella</div>
+          <div class="t-meta">Yksin tai parin kanssa · 15–20 min</div>
+        </div>
+      </div>
+      <div class="tehtava-body">
+        <div class="ajattelutyypit">
+          <div class="tyyppi"><span class="tyyppi-ikoni">🔍</span><span class="tyyppi-nimi">Kriittinen</span></div>
+          <div class="tyyppi"><span class="tyyppi-ikoni">💡</span><span class="tyyppi-nimi">Lateraalinen</span></div>
+          <div class="tyyppi"><span class="tyyppi-ikoni">🧩</span><span class="tyyppi-nimi">Looginen</span></div>
+          <div class="tyyppi"><span class="tyyppi-ikoni">🎨</span><span class="tyyppi-nimi">Luova</span></div>
+          <div class="tyyppi"><span class="tyyppi-ikoni">🪞</span><span class="tyyppi-nimi">Reflektiivinen</span></div>
+        </div>
+        <p>Oppilas käy pelin läpi — jokainen osio harjoittaa yhtä ajattelutapaa käytännön tehtävillä.</p>
+        <ul class="kysymykset">
+          <li>"Mikä ajattelutapa tuntui luontevimmalta — ja mikä vaikeimmalta?"</li>
+          <li>"Missä tilanteissa elämässä olet käyttänyt näitä tapoja?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tehtävä 2 -->
+    <div class="tehtava t2">
+      <div class="tehtava-header">
+        <div class="t-nro">2</div>
+        <div>
+          <div class="t-nimi">Salapoliisitehtävä — Kadonnut kultainen kello</div>
+          <div class="t-meta">Ryhmä (4 opp.) · 25–35 min · Tulostettavat kortit</div>
+        </div>
+      </div>
+      <div class="tehtava-body">
+        <p>Professori Virtasen taskukello on varastettu. Neljä epäiltyä. Jokaisella ryhmänjäsenellä on omat vihjekorttinsa — yhdessä selvitettävä: kuka, miten, miksi.</p>
+
+        <div class="roolit">
+          <div class="rooli"><strong>Ennen tehtävää</strong>Tulosta vihjekorttipakka — 1 pakka per 4 oppilaan ryhmä. Sekoita kortit valmiiksi.</div>
+          <div class="rooli"><strong>Opettajan rooli</strong>Kierrä ja kuuntele — älä anna vihjeitä. Huomioi ryhmät jotka jumittuvat: "Mitä tiedätte varmasti?"</div>
+          <div class="rooli"><strong>Purku</strong>Jokainen ryhmä kertoo ratkaisunsa. Vertailkaa: löysikö kaikki saman vastauksen?</div>
+          <div class="rooli"><strong>Jatkokysymys</strong>"Mitä ajattelutapaa (Tehtävä 1) käytitte eniten — tiesittekö sen?"</div>
+        </div>
+
+        <ul class="kysymykset">
+          <li>"Kuka ryhmässä johteli? Kuka kuunteli? Kuka kyseenalaisti?"</li>
+          <li>"Mikä tieto osoittautui ratkaisevaksi — ja miten se löytyi?"</li>
+        </ul>
+
+        <div class="huomio">
+          💡 Tehtävät toimivat hyvin peräkkäin: Tehtävä 1 opettaa käsitteet, Tehtävä 2 soveltaa niitä ryhmässä — oppilas voi tunnistaa jälkikäteen mitä ajattelutapoja käytti.
+        </div>
+      </div>
+    </div>
+
+    <!-- Aikataulu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Aikataulusuositus — 45–55 min</div>
+      <ul class="aikataulu">
+        <li class="aika-rivi"><span class="aika-badge">0–2 min</span>Johdanto: "Ongelmanratkaisuun on monta tapaa — tänään harjoittelemme niitä"</li>
+        <li class="aika-rivi"><span class="aika-badge">2–20 min</span>Tehtävä 1: Ajattelupeli — yksin tai parin kanssa</li>
+        <li class="aika-rivi"><span class="aika-badge">20–22 min</span>Lyhyt jako: mikä tapa tuntui omimmalta?</li>
+        <li class="aika-rivi"><span class="aika-badge">22–50 min</span>Tehtävä 2: Salapoliisitehtävä ryhmissä</li>
+        <li class="aika-rivi"><span class="aika-badge">50–55 min</span>Purku: ratkaisu + mitä ajattelutapoja käytitte?</li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>
