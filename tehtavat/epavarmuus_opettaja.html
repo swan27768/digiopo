@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opettajan ohje – Mitä jos suunnitelma ei toimi?</title>
+  <style>
+    :root {
+      --tumma:      #134e4a;
+      --teal:       #0d9488;
+      --teal-keski: #0f766e;
+      --teal-vl:    #ccfbf1;
+      --tausta-vl:  #f0fdfa;
+      --oranssi:    #d97706;
+      --oranssi-vl: #fef3c7;
+      --puna:       #be123c;
+      --puna-vl:    #ffe4e6;
+      --tausta:     #f5fffe;
+      --teksti:     #1e293b;
+      --harmaa:     #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--tausta);
+      color: var(--teksti);
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #042f2e 0%, #0f766e 55%, #0891b2 100%);
+      color: white;
+      padding: 36px 24px 32px;
+    }
+    .hero-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; }
+    .hero h1 { font-size: clamp(1.25rem, 4vw, 1.7rem); font-weight: 800; line-height: 1.25; margin-bottom: 14px; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 4px 12px; font-size: 0.78rem; font-weight: 600; }
+
+    .sisalto { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    .kortti { background: white; border-radius: 14px; padding: 20px 22px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .kortti-otsikko { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .kortti p { font-size: 0.92rem; color: #374151; margin-bottom: 8px; }
+    .kortti p:last-child { margin-bottom: 0; }
+
+    .tavoite-lista { list-style: none; }
+    .tavoite-lista li { display: flex; gap: 10px; align-items: flex-start; font-size: 0.92rem; color: #374151; padding: 6px 0; border-bottom: 1px solid #f3f4f6; }
+    .tavoite-lista li:last-child { border-bottom: none; }
+    .tavoite-lista .ikoni { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    .check-lista { list-style: none; }
+    .check-lista li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: #374151; padding: 7px 0; border-bottom: 1px solid #f3f4f6; }
+    .check-lista li:last-child { border-bottom: none; }
+    .check-box { width: 18px; height: 18px; border: 2px solid #99f6e4; border-radius: 4px; flex-shrink: 0; margin-top: 2px; background: white; }
+
+    /* Vaihekortit */
+    .vaihe-kortti { border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+    .vaihe-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+    .vaihe-nro { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; color: white; }
+    .vaihe-nimi { font-weight: 700; font-size: 1rem; color: white; }
+    .vaihe-meta { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 2px; }
+    .vaihe-sisalto { background: white; padding: 18px 20px; }
+    .vaihe-sisalto h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--harmaa); margin: 14px 0 6px; }
+    .vaihe-sisalto h4:first-child { margin-top: 0; }
+    .vaihe-sisalto ul { list-style: none; padding: 0; }
+    .vaihe-sisalto ul li { font-size: 0.9rem; color: #374151; padding: 4px 0 4px 18px; position: relative; }
+    .vaihe-sisalto ul li::before { content: '›'; position: absolute; left: 4px; color: var(--teal); font-weight: 700; }
+    .kysymys-lista { list-style: none; padding: 0; }
+    .kysymys-lista li { background: var(--teal-vl); border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; color: var(--tumma); font-style: italic; margin-bottom: 6px; }
+
+    .v1 .vaihe-header { background: linear-gradient(135deg, #134e4a, #0d9488); }
+    .v2 .vaihe-header { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+    .v3 .vaihe-header { background: linear-gradient(135deg, #065f46, #059669); }
+    .v4 .vaihe-header { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
+
+    /* Varoituslaatikko */
+    .varoitus {
+      background: #fff1f2;
+      border-left: 4px solid #e11d48;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #9f1239;
+      margin-top: 12px;
+    }
+    .varoitus strong { color: #be123c; }
+
+    .huomio {
+      background: var(--oranssi-vl);
+      border-left: 4px solid var(--oranssi);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #78350f;
+      margin-top: 12px;
+    }
+
+    .vihrea-huomio {
+      background: var(--teal-vl);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: var(--tumma);
+      margin-top: 12px;
+    }
+
+    .aikataulu { list-style: none; }
+    .aika-rivi { display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+    .aika-rivi:last-child { border-bottom: none; }
+    .aika-badge { background: var(--teal-vl); color: var(--tumma); border-radius: 6px; padding: 3px 8px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; min-width: 58px; text-align: center; margin-top: 2px; }
+    .aika-rivi-teksti { font-size: 0.9rem; color: #374151; }
+
+    .eriyttaminen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+    .eriyttaminen-kortti { border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; }
+    .eriyttaminen-kortti strong { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .eriyttaminen-kortti ul { list-style: none; padding: 0; }
+    .eriyttaminen-kortti li { padding: 2px 0; }
+    .eriyttaminen-kortti li::before { content: '· '; }
+    .tuki { background: #fef3c7; color: #78350f; }
+    .tuki strong { color: #92400e; }
+    .laajennus { background: var(--teal-vl); color: var(--tumma); }
+    .laajennus strong { color: var(--teal-keski); }
+
+    .arviointi-lista { list-style: none; }
+    .arviointi-rivi { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-size: 0.9rem; color: #374151; }
+    .arviointi-rivi:last-child { border-bottom: none; }
+    .arviointi-nro { width: 24px; height: 24px; background: var(--teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+
+    .kytkenta-lista { list-style: none; }
+    .kytkenta-rivi { display: flex; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid #f3f4f6; font-size: 0.88rem; color: #374151; }
+    .kytkenta-rivi:last-child { border-bottom: none; }
+    .kytkenta-pill { background: var(--teal-vl); color: var(--tumma); border-radius: 999px; padding: 2px 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+
+    .tulosta-nappi { display: block; width: 100%; background: var(--teal); color: white; border: none; border-radius: 10px; padding: 14px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-bottom: 24px; text-align: center; }
+    .tulosta-nappi:hover { background: var(--teal-keski); }
+
+    @media print {
+      .tulosta-nappi { display: none; }
+      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-label">Opettajan ohje · 9. luokka</div>
+    <h1>Mitä jos suunnitelma ei toimi?</h1>
+    <div class="hero-chips">
+      <span class="chip">Yksin + pari + luokka</span>
+      <span class="chip">45–55 min</span>
+      <span class="chip">9. luokka</span>
+      <span class="chip">4 vaihetta</span>
+      <span class="chip">⚠️ Herkkä sisältö</span>
+    </div>
+  </div>
+
+  <div class="sisalto">
+
+    <button class="tulosta-nappi" onclick="window.print()">🖨️ Tulosta ohje</button>
+
+    <!-- Pedagoginen huomio -->
+    <div class="varoitus">
+      <strong>⚠️ Pedagoginen erityishuomio</strong><br>
+      Tämä osio käsittelee epävarmuutta, rakenteellista eriarvoisuutta ja henkilökohtaisia selviytymiskeinoja. Joillakin oppilailla voi olla herkkiä kokemuksia liittyen perheen tilanteeseen, taloudellisiin vaikeuksiin tai epäonnistumisiin. Luo turvallinen ilmapiiri ennen aloittamista — muistuta, että jakaminen on aina vapaaehtoista.
+    </div>
+
+    <!-- Oppimistavoitteet -->
+    <div class="kortti" style="margin-top:16px;">
+      <div class="kortti-otsikko">Oppimistavoitteet</div>
+      <ul class="tavoite-lista">
+        <li><span class="ikoni">🗺️</span>Oppilas tunnistaa, miltä epävarmuus tuntuu hänelle, ja osaa nimetä omat selviytymiskeinonsa</li>
+        <li><span class="ikoni">🤝</span>Oppilas ymmärtää, että ihmisten lähtökohdat vaihtelevat — ja että se ei johdu ihmisistä itsestään</li>
+        <li><span class="ikoni">💪</span>Oppilas kokoaa oman resilienssipakkansa: konkreettisia keinoja epävarmuuden kohtaamiseen</li>
+        <li><span class="ikoni">🪜</span>Oppilas tunnistaa omia lähtökohtaetujaan ("näkymättömiä askelmia") ja pohtii mitä niistä seuraa</li>
+      </ul>
+    </div>
+
+    <!-- Valmistelu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Valmistelu ennen tuntia</div>
+      <ul class="check-lista">
+        <li><span class="check-box"></span>Lue Miljan ja Ronin tarinat (Vaihe 2) etukäteen — mieti miten ohjaat arkaluonteisen keskustelun</li>
+        <li><span class="check-box"></span>Täytä oma resilienssipakkisi (Vaihe 3) — olet valmis jakamaan oman esimerkin tarvittaessa</li>
+        <li><span class="check-box"></span>Mieti: onko luokassasi oppilaita, joiden tilanne resonoi erityisesti Ronin kanssa? Varmista, ettei kukaan joudu tunnistautumaan</li>
+        <li><span class="check-box"></span>Päätä etukäteen: teetkö kaikki 4 vaihetta (55 min) vai valikoituja (min. Vaiheet 1 + 3 = 25 min)</li>
+        <li><span class="check-box"></span>Varaa liitutaulu tai fläppitaulu Vaiheen 3 luokkaosuutta varten</li>
+      </ul>
+    </div>
+
+    <!-- Vaihe 1 -->
+    <div class="vaihe-kortti v1">
+      <div class="vaihe-header">
+        <div class="vaihe-nro">1</div>
+        <div>
+          <div class="vaihe-nimi">Kartta epävarmuuteen</div>
+          <div class="vaihe-meta">10–12 min · Yksin</div>
+        </div>
+      </div>
+      <div class="vaihe-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>A: Oppilas valitsee sanoja tai kirjoittaa, miltä tulevaisuus tuntuu juuri nyt</li>
+          <li>B: Listaa 2–3 asiaa, joita ei vielä tiedä tulevaisuudestaan</li>
+          <li>C: Muistelee tilannetta, jossa jokin ei mennyt suunnitelman mukaan — miten selvisi?</li>
+          <li>D: Nimeää, mitä taitoa tai ominaisuutta tuo tilanne vaati häneltä</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Onko epätietoisuus aina huono asia — vai voisiko se olla myös jotain muuta?"</li>
+          <li>"Mikä on sinun tapasi selviytyä — erilainen kuin kaverilla, ja se on ok?"</li>
+          <li>"D-kohdassa: voisiko samaa taitoa tarvita hakutilanteessa?"</li>
+        </ul>
+
+        <div class="vihrea-huomio">
+          💡 Kohta C voi nostaa pintaan kipeitäkin muistoja. Anna oppilaille lupa kirjoittaa yleisellä tasolla — ei tarvitse kertoa yksityiskohtia.
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 2 -->
+    <div class="vaihe-kortti v2">
+      <div class="vaihe-header">
+        <div class="vaihe-nro">2</div>
+        <div>
+          <div class="vaihe-nimi">Kaksi polkua — sama tavoite</div>
+          <div class="vaihe-meta">15–20 min · Parin kanssa</div>
+        </div>
+      </div>
+      <div class="vaihe-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Luetaan Miljan ja Ronin tarinat — sama haave (lukio), eri lähtökohdat</li>
+          <li>Pari pohtii 5 kysymystä: eroista, haastavuudesta, vaihtoehdoista ja omasta tilanteesta</li>
+          <li>Kysymys 5 on henkilökohtainen — ei vaadi ääneen vastausta</li>
+        </ul>
+
+        <h4>Tarinat tiivistetysti</h4>
+        <ul>
+          <li><strong>Milja</strong> — vanhemmat akateemisia, lukio on "itsestään selvä", hyvät numerot. Pohtii: haluanko tätä itse?</li>
+          <li><strong>Roni</strong> — perheessä ei lukiotaustaa, ei käytännön tietoa, selvitettävä kaikki itse. Sama tavoite, enemmän työtä.</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Mitkä tekijät Ronin tilanteessa eivät johdu hänestä itsestään — eli mitä hän ei voinut valita?"</li>
+          <li>"Miten koulu tai OPO voisi tasata lähtökohtia? Onko teillä ideoita?"</li>
+          <li>"Onko reilu, että samaan paikkaan pääseminen vaatii eri ihmisiltä eri määrän työtä?"</li>
+        </ul>
+
+        <div class="varoitus">
+          <strong>⚠️ Erittäin herkkä vaihe.</strong> Jotkut oppilaat voivat tunnistaa itsensä Roniksi — tai tietävät luokassa jonkun joka tunnistuu. Älä pyydä oppilaita kertomaan avoimesti omasta tilanteestaan. Kysymys 5 on tarkoituksella muotoiltu yksityiseksi. Jos luokassa syntyy hankalia tunteita, anna tilaa — ei tarvitse ratkoa heti.
+        </div>
+
+        <div class="huomio" style="margin-top:10px;">
+          📌 <strong>Opettajan rooli Vaiheessa 2:</strong> Et ole ratkaisija — olet välittäjä. Riittää, että sanot ääneen: "Tämä on epäreilu tilanne — ja se on totuus. Se ei kuitenkaan tarkoita, että jokin polku on suljettu."
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 3 -->
+    <div class="vaihe-kortti v3">
+      <div class="vaihe-header">
+        <div class="vaihe-nro">3</div>
+        <div>
+          <div class="vaihe-nimi">Oma resilienssipakki</div>
+          <div class="vaihe-meta">10–15 min · Yksin → luokka</div>
+        </div>
+      </div>
+      <div class="vaihe-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Jokainen täyttää 5 kohtaa omista selviytymiskeinoistaan omin sanoin</li>
+          <li>Luokkaosuus (vapaaehtoinen): jokainen jakaa yhden kohdan — opettaja kokoaa taululle yhteisen listan</li>
+        </ul>
+
+        <h4>Viisi kohtaa</h4>
+        <ul>
+          <li>"Kun olen epävarma, teen yleensä..."</li>
+          <li>"Asia, joka auttaa minua rauhoittumaan, on..."</li>
+          <li>"Ihminen, jolta voin pyytää apua, on..."</li>
+          <li>"Viime kerralla selvisin vaikeasta tilanteesta, kun..."</li>
+          <li>"Asia, jonka olen oppinut epäonnistumisesta, on..."</li>
+        </ul>
+
+        <h4>Ohjauskysymykset luokkaosuuteen</h4>
+        <ul class="kysymys-lista">
+          <li>"Onko listassa keinoja, joita et ollut ajatellut? Mitä opit luokkakavereilta?"</li>
+          <li>"Onko jokin keino, jota haluaisit kokeilla — mutta et ole vielä kokeillut?"</li>
+        </ul>
+
+        <div class="vihrea-huomio">
+          💡 Kirjoita taululle otsikko "Luokkamme keinoja epävarmuuden kohtaamiseen" — lista jää näkyviin tunnin loppuun. Se vahvistaa tunnetta, että keinoja on ja luokka osaa yhdessä enemmän kuin yksin.
+        </div>
+      </div>
+    </div>
+
+    <!-- Vaihe 4 -->
+    <div class="vaihe-kortti v4">
+      <div class="vaihe-header">
+        <div class="vaihe-nro">4</div>
+        <div>
+          <div class="vaihe-nimi">Näkymättömät askelmat</div>
+          <div class="vaihe-meta">10 min · Yksilö</div>
+        </div>
+      </div>
+      <div class="vaihe-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Oppilas rastittaa mitkä elämän "helpottavat askelmat" pätevät häneen (esim. kotona puhuttu hakemisesta, harrastus, läksyapu)</li>
+          <li>Pohtii: mikä rastittu kohta on tärkein? Mitä tekisi jos jokin puuttuu?</li>
+        </ul>
+
+        <h4>Kytkentä Vaiheen 2 teemaan</h4>
+        <p style="font-size:0.88rem;color:#374151;margin-top:6px;">Vaihe 4 konkretisoi Miljan ja Ronin tarinan henkilökohtaiseksi — ilman, että oppilaan täytyy puhua asiasta ääneen. Se siirtää kysymyksen "miksi he ovat eri tilanteissa?" → "mitä minun tilanteestani löytyy?"</p>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Jos jokin kohta puuttuu — onko se asia, jota voidaan muuttaa? Miten?"</li>
+          <li>"Tietäätkö, mistä voisit hakea apua, jos jokin askelma puuttuu? (OPO, opettaja, kunta)"</li>
+        </ul>
+
+        <div class="varoitus">
+          <strong>⚠️ Ei ääneen vertailua.</strong> Tätä ei tehdä pareittain eikä julkisesti — jokainen tekee yksin. Älä pyydä oppilaita kertomaan, montako kohtaa heillä on rastissa. Tämä on yksityinen reflektio.
+        </div>
+
+        <div class="huomio" style="margin-top:10px;">
+          📌 Muistuta oppilaille: "Nämä askelmat eivät kerro, kuka sinä olet. Ne ovat vain lähtökohtia. Ja sinulla on oikeus saada apua, jos jokin puuttuu — se on OPOn ja muiden aikuisten tehtävä."
+        </div>
+      </div>
+    </div>
+
+    <!-- Aikataulu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Aikataulusuositus</div>
+      <ul class="aikataulu">
+        <li class="aika-rivi">
+          <span class="aika-badge">0–3 min</span>
+          <span class="aika-rivi-teksti">Johdanto: "Tänään harjoitellaan jotain, mitä ei opeteta tarpeeksi — miten toimia kun asiat eivät mene suunnitelman mukaan." Muistuta vapaaehtoisuudesta.</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">3–15 min</span>
+          <span class="aika-rivi-teksti">Vaihe 1: Kartta epävarmuuteen — yksin, hiljaa</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">15–35 min</span>
+          <span class="aika-rivi-teksti">Vaihe 2: Milja ja Roni — pareittain, opettaja kiertää</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">35–50 min</span>
+          <span class="aika-rivi-teksti">Vaihe 3: Resilienssipakki — yksin (10 min) + vapaaehtoinen jako (5 min)</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">50–55 min</span>
+          <span class="aika-rivi-teksti">Vaihe 4: Näkymättömät askelmat — yksin, yksityinen</span>
+        </li>
+      </ul>
+      <div class="huomio" style="margin-top:14px;">
+        📌 <strong>Lyhennetty versio (25 min):</strong> Vaiheet 1 + 3. Nämä toimivat itsenäisesti ilman Vaiheiden 2 ja 4 arkaluonteista sisältöä.
+      </div>
+    </div>
+
+    <!-- Eriyttäminen -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Eriyttäminen</div>
+      <div class="eriyttaminen-grid">
+        <div class="eriyttaminen-kortti tuki">
+          <strong>Tuki</strong>
+          <ul>
+            <li>Vaihe 1: anna esimerkkilista selviytymiskeinoista (valittavana, ei tyhjää paperia)</li>
+            <li>Vaihe 2: opettaja lukee tarinat ääneen koko luokalle</li>
+            <li>Jätä Vaihe 4 pois tai tee suullisesti kahdestaan OPO:n kanssa</li>
+            <li>Resilienssipakki voidaan täyttää pienryhmässä</li>
+          </ul>
+        </div>
+        <div class="eriyttaminen-kortti laajennus">
+          <strong>Laajennus</strong>
+          <ul>
+            <li>Vaihe 2: kirjoita jatkotarina — mitä Roni tekee seuraavaksi konkreettisesti?</li>
+            <li>Vaihe 3: lisää kuudes kohta — "Asia, jota haluan oppia epävarmuuden kohtaamisessa"</li>
+            <li>Vaihe 4: vertaa tilannettasi Miljan/Ronin tilanteeseen — kirjallisesti, yksityisesti</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  
+
+    <!-- Kytkennät -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Kytkennät muihin osioihin</div>
+      <ul class="kytkenta-lista">
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Hakustrategia</span>
+          Vaiheen 1 D-kohta (mitä taitoa tarvitsin) kytkeytyy suoraan hakuprosessiin — sinnikkyys, tiedonhankinta, avun pyytäminen
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Valinnat ratkaisee</span>
+          Arvopohjainen valinta (Valinnat-osio) ja rakenteelliset lähtökohdat (Vaihe 2) tukevat toisiaan — arvot vs. olosuhteet
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Tulevaisuus</span>
+          Resilienssipakki (Vaihe 3) valmistaa Tulevaisuus-osion "Passiivisesta proaktiiviseksi" -tehtävään
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Jatko-osio</span>
+          "Näkymättömät askelmat" (Vaihe 4) jatkaa Jatko-osion lähtökohtien pohdintaa konkreettisemmalla tasolla
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>

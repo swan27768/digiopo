@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opettajan ohje – Tulevaisuus: todennäköinen, toivottava ja yllättävä</title>
+  <style>
+    :root {
+      --tumma:        #0f172a;
+      --indigo:       #3730a3;
+      --indigo-keski: #4f46e5;
+      --indigo-vaalea:#e0e7ff;
+      --kulta:        #d97706;
+      --kulta-vaalea: #fef3c7;
+      --tausta:       #f5f7ff;
+      --teksti:       #1e293b;
+      --harmaa:       #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--tausta);
+      color: var(--teksti);
+      line-height: 1.6;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #4f46e5 100%);
+      color: white;
+      padding: 36px 24px 32px;
+    }
+    .hero-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: clamp(1.25rem, 4vw, 1.7rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .chip {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* ── Sisältö ── */
+    .sisalto {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* ── Kortit ── */
+    .kortti {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .kortti-otsikko {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--indigo-keski);
+      margin-bottom: 12px;
+    }
+    .kortti p { font-size: 0.92rem; color: #374151; margin-bottom: 8px; }
+    .kortti p:last-child { margin-bottom: 0; }
+
+    /* ── Tavoitelista ── */
+    .tavoite-lista { list-style: none; }
+    .tavoite-lista li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      color: #374151;
+      padding: 6px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .tavoite-lista li:last-child { border-bottom: none; }
+    .tavoite-lista .ikoni { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Valmistelu checkboxes ── */
+    .check-lista { list-style: none; }
+    .check-lista li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #374151;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .check-lista li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px; height: 18px;
+      border: 2px solid #c7d2fe;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: white;
+    }
+
+    /* ── Tehtäväkortit ── */
+    .tehtava-kortti {
+      border-radius: 14px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .tehtava-header {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tehtava-numero {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .tehtava-header-teksti { flex: 1; }
+    .tehtava-nimi { font-weight: 700; font-size: 1rem; color: white; }
+    .tehtava-meta { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 2px; }
+    .tehtava-sisalto { background: white; padding: 18px 20px; }
+    .tehtava-sisalto h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--harmaa);
+      margin: 14px 0 6px;
+    }
+    .tehtava-sisalto h4:first-child { margin-top: 0; }
+    .tehtava-sisalto ul {
+      list-style: none;
+      padding: 0;
+    }
+    .tehtava-sisalto ul li {
+      font-size: 0.9rem;
+      color: #374151;
+      padding: 4px 0 4px 18px;
+      position: relative;
+    }
+    .tehtava-sisalto ul li::before {
+      content: '›';
+      position: absolute;
+      left: 4px;
+      color: var(--indigo-keski);
+      font-weight: 700;
+    }
+    .kysymys-lista { list-style: none; padding: 0; }
+    .kysymys-lista li {
+      background: var(--indigo-vaalea);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      color: #1e1b4b;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    /* Tehtävävärit */
+    .t1 .tehtava-header { background: linear-gradient(135deg, #312e81, #4338ca); }
+    .t2 .tehtava-header { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+    .t3 .tehtava-header { background: linear-gradient(135deg, #065f46, #059669); }
+
+    /* ── Aikataulu ── */
+    .aikataulu { list-style: none; }
+    .aika-rivi {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .aika-rivi:last-child { border-bottom: none; }
+    .aika-badge {
+      background: var(--indigo-vaalea);
+      color: var(--indigo);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 52px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .aika-rivi-teksti { font-size: 0.9rem; color: #374151; }
+
+    /* ── Eriyttäminen ── */
+    .eriyttaminen-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .eriyttaminen-kortti {
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+    }
+    .eriyttaminen-kortti strong {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+    .eriyttaminen-kortti ul { list-style: none; padding: 0; }
+    .eriyttaminen-kortti li { padding: 2px 0; }
+    .eriyttaminen-kortti li::before { content: '· '; }
+    .tuki { background: #fef3c7; color: #78350f; }
+    .tuki strong { color: #92400e; }
+    .laajennus { background: #e0e7ff; color: #1e1b4b; }
+    .laajennus strong { color: #3730a3; }
+
+    /* ── Arviointi ── */
+    .arviointi-lista { list-style: none; }
+    .arviointi-rivi {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    .arviointi-rivi:last-child { border-bottom: none; }
+    .arviointi-nro {
+      width: 24px; height: 24px;
+      background: var(--indigo-keski);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Huomiolaatikko ── */
+    .huomio {
+      background: var(--kulta-vaalea);
+      border-left: 4px solid var(--kulta);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #78350f;
+      margin-top: 12px;
+    }
+
+    /* ── Kytkennät ── */
+    .kytkenta-lista { list-style: none; }
+    .kytkenta-rivi {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.88rem;
+      color: #374151;
+    }
+    .kytkenta-rivi:last-child { border-bottom: none; }
+    .kytkenta-pill {
+      background: var(--indigo-vaalea);
+      color: var(--indigo);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Print ── */
+    .tulosta-nappi {
+      display: block;
+      width: 100%;
+      background: var(--indigo-keski);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .tulosta-nappi:hover { background: var(--indigo); }
+
+    @media print {
+      .tulosta-nappi { display: none; }
+      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-label">Opettajan ohje · 9. luokka</div>
+    <h1>Tulevaisuus: todennäköinen,<br>toivottava ja yllättävä</h1>
+    <div class="hero-chips">
+      <span class="chip">Yksin + pari</span>
+      <span class="chip">40 min</span>
+      <span class="chip">9. luokka</span>
+      <span class="chip">3 tehtävää</span>
+    </div>
+  </div>
+
+  <div class="sisalto">
+
+    <button class="tulosta-nappi" onclick="window.print()">🖨️ Tulosta ohje</button>
+
+    <!-- Oppimistavoitteet -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Oppimistavoitteet</div>
+      <ul class="tavoite-lista">
+        <li><span class="ikoni">🔭</span>Oppilas osaa hahmottaa omaa tulevaisuuttaan kolmesta eri näkökulmasta (todennäköinen, toivottava, yllättävä)</li>
+        <li><span class="ikoni">🎯</span>Oppilas tunnistaa, mihin asioihin hän voi itse vaikuttaa ja mihin ei</li>
+        <li><span class="ikoni">🚀</span>Oppilas tunnistaa oman tapansa suhtautua tulevaisuuteen ja pohtii, haluaisiko toimia toisin</li>
+        <li><span class="ikoni">💬</span>Oppilas kykenee jakamaan yhden oivalluksensa luokan kanssa</li>
+      </ul>
+    </div>
+
+    <!-- Valmistelu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Valmistelu ennen tuntia</div>
+      <ul class="check-lista">
+        
+        <li><span class="check-box"></span>Kokeile Tehtävä 2:n korttien klikkaaminen toimii (kyllä/ei vaikuttaa)</li>
+        <li><span class="check-box"></span>Kokeile Tehtävä 3:n tilannevaihtoehdot (4 tilannetta)</li>
+        <li><span class="check-box"></span>Mieti oma vastauksesi: mikä sinun tulevaisuutesi tyyppi on?</li>
+        <li><span class="check-box"></span>Varaa paperia ja kynää Tehtävä 1:lle (vaihtoehto digitaaliselle)</li>
+      </ul>
+    </div>
+
+    <!-- Tehtävä 1 -->
+    <div class="tehtava-kortti t1">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">1</div>
+        <div class="tehtava-header-teksti">
+          <div class="tehtava-nimi">Kolme minua tulevaisuudessa</div>
+          <div class="tehtava-meta">15 min · Yksin</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Oppilas kirjoittaa kolme lyhyttä kuvausta itsestään viiden vuoden päästä: todennäköinen, toivottava ja villimpi tulevaisuus</li>
+          <li>Jokaiseen kuvaukseen vastataan: Missä olet? Mitä teet? Miltä se tuntuu?</li>
+          <li>Lopuksi oppilas valitsee, mikä kolmesta tuntuu tärkeimmältä — ja kirjoittaa miksi</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Mikä tekee todennäköisestä tulevaisuudestasi todennäköisen — mitä valintoja olet jo tehnyt?"</li>
+          <li>"Miten toivottava tulevaisuutesi eroaa todennäköisestä? Mitä pitäisi tapahtua, että pääsisit sinne?"</li>
+          <li>"Villimmässä vaihtoehdossasi — mikä siinä houkuttaa, vaikka se tuntuu epätodennäköiseltä?"</li>
+          <li>"Kumpi tuntuu pelottavammalta: se, ettei unelma toteudu, vai se, ettei unelmaa ole?"</li>
+        </ul>
+
+        <h4>Opettajan huomio</h4>
+        <p style="font-size:0.88rem; color:#374151;">Tehtävä voi nostaa pintaan tunteita epävarmuudesta tai paineesta. Muistuta, että "todennäköinen" ei tarkoita "toivottavaa" — ja että villimpi vaihtoehto on täysin sallittu leikkiä ajatuksella. Ei arvioida.</p>
+      </div>
+    </div>
+
+    <!-- Tehtävä 2 -->
+    <div class="tehtava-kortti t2">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">2</div>
+        <div class="tehtava-header-teksti">
+          <div class="tehtava-nimi">Mitä voin itse päättää?</div>
+          <div class="tehtava-meta">10 min · Yksin tai parin kanssa</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Oppilas klikkaa väittämiäkortteja ja luokittelee ne: "Tähän voin vaikuttaa" / "Tähän en juuri voi vaikuttaa"</li>
+          <li>Mieltä voi muuttaa klikkaamalla uudelleen</li>
+          <li>Lopuksi pohditaan: mikä oli yllättävää?</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Oliko jokin kortti yllättävän helppo tai vaikea luokitella?"</li>
+          <li>"Missä menee raja oman vastuun ja ulkoisten olosuhteiden välillä?"</li>
+          <li>"Onko jokin asia, johon luulit, ettet voi vaikuttaa — mutta ehkä voitkin?"</li>
+        </ul>
+
+        <h4>Vinkki parityöskentelyyn</h4>
+        <p style="font-size:0.88rem; color:#374151;">Jos oppilaat tekevät pareittain, pyydä heitä ensin vastaamaan yksin ja sitten vertaamaan vastauksia. Erimielisyydet ovat pedagogisesti arvokkaita — ne paljastavat erilaisia uskomuksia toimijuudesta.</p>
+      </div>
+    </div>
+
+    <!-- Tehtävä 3 -->
+    <div class="tehtava-kortti t3">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">3</div>
+        <div class="tehtava-header-teksti">
+          <div class="tehtava-nimi">Passiivisesta proaktiiviseksi</div>
+          <div class="tehtava-meta">10 min · Yksin</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Oppilas tutustuu neljään tulevaisuuden suhtautumistapaaan: passiivinen, reaktiivinen, preaktiivinen, proaktiivinen</li>
+          <li>Lukee neljä tilannetta ja valitsee kuhunkin itselle sopivin vaihtoehto</li>
+          <li>Kirjoittaa pohdintansa: missä tilanteissa haluaisi toimia toisin?</li>
+        </ul>
+
+        <h4>Neljä tyyppiä lyhyesti</h4>
+        <ul>
+          <li><strong>Passiivinen</strong> — ei mieti asiaa, odottaa että pakko tulee</li>
+          <li><strong>Reaktiivinen</strong> — reagoi vasta kun jokin pakottaa</li>
+          <li><strong>Preaktiivinen</strong> — kerää tietoa ja suunnittelee etukäteen</li>
+          <li><strong>Proaktiivinen</strong> — toimii suunnitelmallisesti ennen kuin ongelma syntyy</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Onko eri tilanteissa eri tyyppi? Missä olet proaktiivisin — missä passiivisin?"</li>
+          <li>"Mikä estää proaktiivisuutta? Onko se tieto, energia, rohkeus vai jokin muu?"</li>
+          <li>"Miten yhteishakuun valmistautuminen liittyy näihin tyyppeihin?"</li>
+        </ul>
+
+        <div class="huomio">
+          💡 <strong>Ei ole oikeaa tyyppiä.</strong> Tavoite on tunnistaa oma tapa — ei arvottaa. Muistuta, että eri konteksteissa on järkevää toimia eri tavoin.
+        </div>
+      </div>
+    </div>
+
+    <!-- Yhteinen hetki -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Yhteinen hetki — luokka yhdessä (5 min)</div>
+      <p>Kutsu oppilaita jakamaan <strong>yksi asia, jonka oppi itsestään</strong> — vapaaehtoisesti. Älä pyydä jakamaan tulevaisuudensuunnitelmia (ne voivat olla arkaluonteisia), vaan prosessioivalluksia.</p>
+      <p style="margin-top:8px;">Hyvä kehys: <em>"Jokin asia yllätti minut tänään. Se oli…"</em></p>
+      <div class="huomio">
+        Ei paine jakaa — mutta muistuta, että muiden ajatuksista oppii usein enemmän kuin yksin pohtimalla.
+      </div>
+    </div>
+
+    <!-- Aikataulu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Aikataulusuositus — 40 min</div>
+      <ul class="aikataulu">
+        <li class="aika-rivi">
+          <span class="aika-badge">0–2 min</span>
+          <span class="aika-rivi-teksti">Johdanto: "Tänä vuonna teette tärkeitä valintoja — nyt katsotaan niitä tulevaisuudesta käsin"</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">2–17 min</span>
+          <span class="aika-rivi-teksti">Tehtävä 1: Kolme minua tulevaisuudessa (yksin, hiljaa)</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">17–27 min</span>
+          <span class="aika-rivi-teksti">Tehtävä 2: Mitä voin päättää? (yksin tai parin kanssa)</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">27–37 min</span>
+          <span class="aika-rivi-teksti">Tehtävä 3: Passiivisesta proaktiiviseksi</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">37–40 min</span>
+          <span class="aika-rivi-teksti">Yhteinen hetki: vapaaehtoinen jakaminen</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Eriyttäminen -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Eriyttäminen</div>
+      <div class="eriyttaminen-grid">
+        <div class="eriyttaminen-kortti tuki">
+          <strong>Tuki</strong>
+          <ul>
+            <li>Anna valmis lauserakenne: "Viiden vuoden päästä olen…"</li>
+            <li>Tehtävä 1 voidaan tehdä suullisesti parin kanssa</li>
+            <li>Tehtävä 2: opettaja voi lukea kortit ääneen</li>
+            <li>Rajaa Tehtävä 3 kahteen tilanteeseen neljän sijaan</li>
+          </ul>
+        </div>
+        <div class="eriyttaminen-kortti laajennus">
+          <strong>Laajennus</strong>
+          <ul>
+            <li>Tehtävä 1: kirjoita konkreettiset askeleet todennäköisestä toivottavaan</li>
+            <li>Tehtävä 2: perustele jokainen valinta lauseella</li>
+            <li>Lisäkysymys: miten voisit siirtyä reaktiivisesta proaktiiviseksi yhteishaussa?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+   
+
+    <!-- Kytkennät -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Kytkennät muihin osioihin</div>
+      <ul class="kytkenta-lista">
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Yhteishaku</span>
+          Tehtävä 3:n proaktiivisuus kytkeytyy suoraan hakuprosessiin: milloin haet tietoa, milloin jätät viime tippaan?
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Hakustrategia</span>
+          Toivottava tulevaisuus (Tehtävä 1) voi toimia lähtökohtana hakustrategian rakentamiselle
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Epävarmuus</span>
+          Villimpi tulevaisuus ja reaktiivisuus linkittyvät luontevasti Mitä jos suunnitelma ei toimi? -osioon
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Case: Vesi 2045</span>
+          Tehtävät valmistavat ajattelua seuraavaan osioon, jossa tulevaisuutta pohditaan yhteiskunnallisesta näkökulmasta
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /.sisalto -->
+
+</body>
+</html>

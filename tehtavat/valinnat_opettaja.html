@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opettajan ohje – Valinnat ratkaisee</title>
+  <style>
+    :root {
+      --tumma:       #1e1b4b;
+      --violetti:    #4f46e5;
+      --vio-keski:   #6d28d9;
+      --vio-vaalea:  #ede9fe;
+      --oranssi:     #d97706;
+      --oranssi-vl:  #fef3c7;
+      --tausta:      #f8f7ff;
+      --teksti:      #1e293b;
+      --harmaa:      #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--tausta);
+      color: var(--teksti);
+      line-height: 1.6;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7c3aed 100%);
+      color: white;
+      padding: 36px 24px 32px;
+    }
+    .hero-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      opacity: 0.6; margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: clamp(1.3rem, 4vw, 1.75rem);
+      font-weight: 800; line-height: 1.2; margin-bottom: 14px;
+    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .chip {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px; padding: 4px 12px;
+      font-size: 0.78rem; font-weight: 600;
+    }
+
+    /* ── Layout ── */
+    .sisalto { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    /* ── Peruskortti ── */
+    .kortti {
+      background: white; border-radius: 14px;
+      padding: 20px 22px; margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .kortti-otsikko {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--violetti); margin-bottom: 12px;
+    }
+    .kortti p { font-size: 0.92rem; color: #374151; margin-bottom: 8px; }
+    .kortti p:last-child { margin-bottom: 0; }
+
+    /* ── Tavoitelista ── */
+    .tavoite-lista { list-style: none; }
+    .tavoite-lista li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 0.92rem; color: #374151;
+      padding: 6px 0; border-bottom: 1px solid #f3f4f6;
+    }
+    .tavoite-lista li:last-child { border-bottom: none; }
+    .tavoite-lista .ikoni { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Check-lista ── */
+    .check-lista { list-style: none; }
+    .check-lista li {
+      display: flex; align-items: flex-start;
+      gap: 10px; font-size: 0.9rem; color: #374151;
+      padding: 7px 0; border-bottom: 1px solid #f3f4f6;
+    }
+    .check-lista li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px; height: 18px;
+      border: 2px solid #c4b5fd; border-radius: 4px;
+      flex-shrink: 0; margin-top: 2px; background: white;
+    }
+
+    /* ── Tehtäväkortit ── */
+    .tehtava-kortti { border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+    .tehtava-header {
+      padding: 14px 20px; display: flex;
+      align-items: center; gap: 12px;
+    }
+    .tehtava-numero {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+    }
+    .tehtava-nimi { font-weight: 700; font-size: 1rem; color: white; }
+    .tehtava-meta { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 2px; }
+    .tehtava-sisalto { background: white; padding: 18px 20px; }
+    .tehtava-sisalto h4 {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--harmaa); margin: 14px 0 6px;
+    }
+    .tehtava-sisalto h4:first-child { margin-top: 0; }
+    .tehtava-sisalto ul { list-style: none; padding: 0; }
+    .tehtava-sisalto ul li {
+      font-size: 0.9rem; color: #374151;
+      padding: 4px 0 4px 18px; position: relative;
+    }
+    .tehtava-sisalto ul li::before {
+      content: '›'; position: absolute; left: 4px;
+      color: var(--violetti); font-weight: 700;
+    }
+    .kysymys-lista { list-style: none; padding: 0; }
+    .kysymys-lista li {
+      background: var(--vio-vaalea); border-radius: 8px;
+      padding: 8px 12px; font-size: 0.88rem;
+      color: #1e1b4b; font-style: italic; margin-bottom: 6px;
+    }
+
+    /* Tehtävävärit */
+    .t0 .tehtava-header { background: linear-gradient(135deg, #1e1b4b, #4338ca); }
+    .t1 .tehtava-header { background: linear-gradient(135deg, #4c1d95, #6d28d9); }
+    .t2 .tehtava-header { background: linear-gradient(135deg, #312e81, #4f46e5); }
+    .t3 .tehtava-header { background: linear-gradient(135deg, #065f46, #059669); }
+
+    /* ── Aikataulu ── */
+    .aikataulu { list-style: none; }
+    .aika-rivi {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+    }
+    .aika-rivi:last-child { border-bottom: none; }
+    .aika-badge {
+      background: var(--vio-vaalea); color: var(--tumma);
+      border-radius: 6px; padding: 3px 8px;
+      font-size: 0.78rem; font-weight: 700;
+      white-space: nowrap; flex-shrink: 0;
+      min-width: 58px; text-align: center; margin-top: 2px;
+    }
+    .aika-rivi-teksti { font-size: 0.9rem; color: #374151; }
+
+    /* ── Eriyttäminen ── */
+    .eriyttaminen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .eriyttaminen-kortti { border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; }
+    .eriyttaminen-kortti strong {
+      display: block; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px;
+    }
+    .eriyttaminen-kortti ul { list-style: none; padding: 0; }
+    .eriyttaminen-kortti li { padding: 2px 0; }
+    .eriyttaminen-kortti li::before { content: '· '; }
+    .tuki { background: #fef3c7; color: #78350f; }
+    .tuki strong { color: #92400e; }
+    .laajennus { background: var(--vio-vaalea); color: #1e1b4b; }
+    .laajennus strong { color: #4c1d95; }
+
+    /* ── Arviointi ── */
+    .arviointi-lista { list-style: none; }
+    .arviointi-rivi {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+      font-size: 0.9rem; color: #374151;
+    }
+    .arviointi-rivi:last-child { border-bottom: none; }
+    .arviointi-nro {
+      width: 24px; height: 24px; background: var(--violetti);
+      color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── Huomiolaatikko ── */
+    .huomio {
+      background: var(--oranssi-vl);
+      border-left: 4px solid var(--oranssi);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px; font-size: 0.88rem;
+      color: #78350f; margin-top: 12px;
+    }
+
+    /* ── Kytkennät ── */
+    .kytkenta-lista { list-style: none; }
+    .kytkenta-rivi {
+      display: flex; gap: 10px; align-items: center;
+      padding: 7px 0; border-bottom: 1px solid #f3f4f6;
+      font-size: 0.88rem; color: #374151;
+    }
+    .kytkenta-rivi:last-child { border-bottom: none; }
+    .kytkenta-pill {
+      background: var(--vio-vaalea); color: var(--tumma);
+      border-radius: 999px; padding: 2px 10px;
+      font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    }
+
+    /* ── Print ── */
+    .tulosta-nappi {
+      display: block; width: 100%;
+      background: var(--violetti); color: white;
+      border: none; border-radius: 10px; padding: 14px;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; margin-bottom: 24px; text-align: center;
+    }
+    .tulosta-nappi:hover { background: var(--vio-keski); }
+
+    @media print {
+      .tulosta-nappi { display: none; }
+      .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-label">Opettajan ohje · 9. luokka</div>
+    <h1>Valinnat ratkaisee</h1>
+    <div class="hero-chips">
+      <span class="chip">Yksin + pareittain + ryhmä</span>
+      <span class="chip">50 min</span>
+      <span class="chip">9. luokka</span>
+      <span class="chip">4 tehtävää</span>
+    </div>
+  </div>
+
+  <div class="sisalto">
+
+    <button class="tulosta-nappi" onclick="window.print()">🖨️ Tulosta ohje</button>
+
+    <!-- Oppimistavoitteet -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Oppimistavoitteet</div>
+      <ul class="tavoite-lista">
+        <li><span class="ikoni">🎮</span>Oppilas harjoittelee valintojen tekemistä turvallisessa fiktiivisessä ympäristössä ja tunnistaa, miten pienet valinnat kasautuvat</li>
+        <li><span class="ikoni">🃏</span>Oppilas osaa perustella valintansa toiselle — ei vain tehdä valintaa</li>
+        <li><span class="ikoni">⚖️</span>Oppilas tunnistaa omat keskeisimmät arvonsa ja osaa asettaa ne tärkeysjärjestykseen</li>
+        <li><span class="ikoni">🌱</span>Oppilas pohtii, mistä hänen arvonsa tulevat ja miten ne näkyvät arjessa</li>
+      </ul>
+    </div>
+
+    <!-- Valmistelu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Valmistelu ennen tuntia</div>
+      <ul class="check-lista">
+        <li><span class="check-box"></span>Avaa Valinnat ratkaisee -osio ja kokeile Elämänvalintapeli läpi itse</li>
+        <li><span class="check-box"></span>Kokeile korttipakan toiminta (Harjoitus 1 — sekoita ja selaa kortit)</li>
+        <li><span class="check-box"></span>Kokeile arvotyökalun vaiheet 1–3 (Harjoitus 2)</li>
+        <li><span class="check-box"></span>Mieti oma arvohierarkiasi — olet valmis jakamaan sen halutessasi</li>
+        <li><span class="check-box"></span>Päätä etukäteen: teetkö kaikkia neljä tehtävää vai vain valikoituja (50 min vs. 35 min)</li>
+      </ul>
+    </div>
+
+    <!-- Elämänvalintapeli -->
+    <div class="tehtava-kortti t0">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">🎮</div>
+        <div>
+          <div class="tehtava-nimi">Elämänvalintapeli — Mitä sitten?</div>
+          <div class="tehtava-meta">10 min · Yksin</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Oppilas pelaa itsenäisesti — tekee valintoja koulussa, kaveripiirissä ja kotona</li>
+          <li>Peli näyttää lopussa "mihin suuntaan olet menossa" — ei tuomita, vain havainnollistaa</li>
+          <li>Haaste-osio: oppilas analysoi pelin kolme merkittävintä valintaansa</li>
+        </ul>
+
+        <h4>Ohjauskysymykset purussa</h4>
+        <ul class="kysymys-lista">
+          <li>"Mikä valinta yllätti sinut — itsesi reaktio tai seuraus?"</li>
+          <li>"Onko sinulla elämässä 'oletusvalinta' — mihin päädyt miettimättä?"</li>
+          <li>"Mitä peli ei osannut ottaa huomioon oikeista valinnoistasi?"</li>
+        </ul>
+
+        <div class="huomio">
+          💡 Peli on tarkoituksella yksinkertaistettu. Se on ponnahduslauta keskustelulle — ei totuus siitä, mihin oppilas on menossa.
+        </div>
+      </div>
+    </div>
+
+    <!-- Harjoitus 1 -->
+    <div class="tehtava-kortti t1">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">1</div>
+        <div>
+          <div class="tehtava-nimi">Kumpi valitsisit?</div>
+          <div class="tehtava-meta">10–15 min · Pareittain</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Mitä tapahtuu</h4>
+        <ul>
+          <li>Parit vuorotellen nostavat kortit ja lukevat kaksi vaihtoehtoa ääneen</li>
+          <li>Molemmat miettivät ensin itse — sitten kumpikin perustelee ääneen</li>
+          <li>Parit voivat kysyä toisiltaan: "Miksi juuri se?"</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Onko jokin valinta, josta olitte täysin eri mieltä? Mikä siinä on kiinnostavaa?"</li>
+          <li>"Huomasitteko, että perustelut olivat tärkeämpiä kuin itse valinta?"</li>
+          <li>"Muuttuiko mielipiteesi, kun kuulit parin perustelut?"</li>
+        </ul>
+
+        <h4>Opettajan rooli</h4>
+        <p style="font-size:0.88rem;color:#374151;">Kierrä luokkaa ja kuuntele perusteluita — älä kommentoi valintoja. Nosta lopussa esiin yllättäviä perusteluita (anonymisoi tarvittaessa): "Joku sanoi tänään jotain, joka sai minut ajattelemaan..."</p>
+      </div>
+    </div>
+
+    <!-- Harjoitus 2 -->
+    <div class="tehtava-kortti t2">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">2</div>
+        <div>
+          <div class="tehtava-nimi">Arvopohjainen valinta</div>
+          <div class="tehtava-meta">15–20 min · Yksin + ryhmä</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Kolme vaihetta</h4>
+        <ul>
+          <li><strong>Vaihe 1:</strong> Oppilas valitsee viisi tärkeintä arvoaan listasta</li>
+          <li><strong>Vaihe 2:</strong> Laittaa ne tärkeysjärjestykseen (1 = tärkein)</li>
+          <li><strong>Vaihe 3:</strong> Lukee dilemman (kaverin pyytämä valehtelu) ja pohtii, miten omat arvot ohjaavat päätöstä</li>
+        </ul>
+
+        <h4>Dilemma lyhyesti</h4>
+        <p style="font-size:0.88rem;color:#374151;margin-top:6px;">Paras kaveri pyytää valehtelemaan opettajalle — muuten kaveri saa vakavan merkinnän. Jos valehtelee ja se paljastuu, molemmat kärsivät.</p>
+
+        <h4>Ohjauskysymykset ryhmäkeskusteluun</h4>
+        <ul class="kysymys-lista">
+          <li>"Johtiko eri arvojärjestys erilaiseen päätökseen? Miten?"</li>
+          <li>"Onko arvojen välillä ristiriita tässä tilanteessa — esim. rehellisyys vs. uskollisuus?"</li>
+          <li>"Voiko kaksi ihmistä, joilla on samat arvot, tehdä eri päätöksen? Miksi?"</li>
+        </ul>
+
+        <div class="huomio">
+          ⚠️ Dilemma voi tuntua läheiseltä joillekin oppilaille. Muistuta, että kyseessä on harjoitus — ei tunnustus eikä tuomio.
+        </div>
+      </div>
+    </div>
+
+    <!-- Lisätehtävä -->
+    <div class="tehtava-kortti t3">
+      <div class="tehtava-header">
+        <div class="tehtava-numero">+</div>
+        <div>
+          <div class="tehtava-nimi">Mistä arvojeni tulevat?</div>
+          <div class="tehtava-meta">8–10 min · Yksin · Lisätehtävä</div>
+        </div>
+      </div>
+      <div class="tehtava-sisalto">
+        <h4>Kolme pohdintakysymystä</h4>
+        <ul>
+          <li>Kuka tai mikä on vaikuttanut siihen, mitä pidät tärkeänä?</li>
+          <li>Onko jokin arvo, jota haluaisit noudattaa enemmän — mutta se tuntuu vaikealta?</li>
+          <li>Miten arvosi näkyvät arjessa? Anna konkreettinen esimerkki.</li>
+        </ul>
+
+        <h4>Ohjauskysymykset</h4>
+        <ul class="kysymys-lista">
+          <li>"Ovatko arvosi muuttuneet viime vuosina? Mikä muutti niitä?"</li>
+          <li>"Onko sinulla arvo, josta et kerro muille — miksi?"</li>
+        </ul>
+
+        <h4>Milloin käyttää</h4>
+        <p style="font-size:0.88rem;color:#374151;">Sopii erityisesti oppilaille, jotka valmistuvat nopeasti muita harjoituksia tai haluavat syventää Harjoitus 2:n antia. Voidaan myös antaa kotitehtäväksi.</p>
+      </div>
+    </div>
+
+    <!-- Aikataulu -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Aikataulusuositus — 50 min (täysi) / 35 min (tiivistetty)</div>
+      <ul class="aikataulu">
+        <li class="aika-rivi">
+          <span class="aika-badge">0–2 min</span>
+          <span class="aika-rivi-teksti">Johdanto: "Tänään harjoitellaan valitsemista — ja mikä tärkeämpää, perustelemista"</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">2–12 min</span>
+          <span class="aika-rivi-teksti">Elämänvalintapeli yksin (voi jättää pois tiivistetyssä versiossa)</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">12–27 min</span>
+          <span class="aika-rivi-teksti">Harjoitus 1: Kumpi valitsisit? — pareittain</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">27–45 min</span>
+          <span class="aika-rivi-teksti">Harjoitus 2: Arvopohjainen valinta — yksin + ryhmäkeskustelu</span>
+        </li>
+        <li class="aika-rivi">
+          <span class="aika-badge">45–50 min</span>
+          <span class="aika-rivi-teksti">Purku: "Mikä tänään yllätti sinut — itsestäsi?" (vapaaehtoinen jako)</span>
+        </li>
+      </ul>
+      <div class="huomio" style="margin-top:14px;">
+        📌 <strong>Tiivistetty versio (35 min):</strong> Jätä Elämänvalintapeli pois ja tee Harjoitus 1 ja 2. Lisätehtävä kotiin.
+      </div>
+    </div>
+
+    <!-- Eriyttäminen -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Eriyttäminen</div>
+      <div class="eriyttaminen-grid">
+        <div class="eriyttaminen-kortti tuki">
+          <strong>Tuki</strong>
+          <ul>
+            <li>Harjoitus 1: opettaja lukee kortit koko luokalle, parit äänestävät kädet ylös</li>
+            <li>Harjoitus 2: rajaa arvovalinta kolmeen (ei viisi)</li>
+            <li>Dilemman voi käydä opettajajohtoisesti ääneen</li>
+            <li>Lisätehtävä jätetään pois tai annetaan suullisesti</li>
+          </ul>
+        </div>
+        <div class="eriyttaminen-kortti laajennus">
+          <strong>Laajennus</strong>
+          <ul>
+            <li>Harjoitus 1: kirjoita oma kortti ja testaa parin kanssa</li>
+            <li>Harjoitus 2: kirjoita vastaargumentti — miksi eri arvohierarkia voisi johtaa parempaan päätökseen?</li>
+            <li>Lisätehtävä + luo oma dilemma seuraavaa ryhmää varten</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arviointi -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Arviointikriteerit</div>
+      <ul class="arviointi-lista">
+        <li class="arviointi-rivi">
+          <span class="arviointi-nro">1</span>
+          <span>Oppilas on osallistunut korttipakkaan ja perustellut valintansa ääneen (ei pelkkä "en tiedä")</span>
+        </li>
+        <li class="arviointi-rivi">
+          <span class="arviointi-nro">2</span>
+          <span>Oppilas on valinnut ja järjestänyt viisi arvoaan sekä kirjoittanut pohdintansa dilemman ratkaisusta</span>
+        </li>
+        <li class="arviointi-rivi">
+          <span class="arviointi-nro">3</span>
+          <span>Oppilas osaa nimetä yhden konkreettisen esimerkin siitä, miten hänen arvonsa näkyvät arjessa</span>
+        </li>
+      </ul>
+      <div class="huomio">
+        🚫 Ei arvioida numerolla — arvovalinnat ovat henkilökohtaisia. Arvioi prosessiin osallistuminen ja pohdinnan syvyys.
+      </div>
+    </div>
+
+    <!-- Kytkennät -->
+    <div class="kortti">
+      <div class="kortti-otsikko">Kytkennät muihin osioihin</div>
+      <ul class="kytkenta-lista">
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Hakustrategia</span>
+          Arvot ohjaavat hakukohdetta — oppilas jolla on selvät arvot tekee helpommin päätöksen hakukohteesta
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Epävarmuus</span>
+          Arvopohjainen päätöksenteko auttaa, kun suunnitelma ei toteudu — arvoihin voi palata epävarmuuden keskellä
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Tulevaisuus</span>
+          Toivottava tulevaisuus (Kolme minua -tehtävä) rakentuu arvojen pohjalle — kytkentä luonteva
+        </li>
+        <li class="kytkenta-rivi">
+          <span class="kytkenta-pill">Ajattelu</span>
+          Kumpi valitsisit? -harjoituksessa näkyy selvästi, minkä tyyppisellä ajattelulla oppilas ratkaisee ongelmia
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>
