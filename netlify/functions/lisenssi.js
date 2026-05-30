@@ -29,14 +29,19 @@ function tarkistaRateLimit(ip) {
 }
 
 async function haeSupabasesta(koodi) {
-  const url = `${SUPABASE_URL}/rest/v1/lisenssit?koodi=eq.${encodeURIComponent(koodi.toUpperCase())}&select=koodi,koulu,tyyppi,voimassa_asti,aktiivinen`;
+  const baseUrl = SUPABASE_URL.replace(/\/$/, ''); // poista mahdollinen loppukauttaviiva
+  const url = `${baseUrl}/rest/v1/lisenssit?koodi=eq.${encodeURIComponent(koodi.toUpperCase())}&select=koodi,koulu,tyyppi,voimassa_asti,aktiivinen`;
   const vastaus = await fetch(url, {
     headers: {
       apikey: SUPABASE_SERVICE_KEY,
       Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
     },
   });
-  if (!vastaus.ok) throw new Error("Tietokantavirhe");
+  if (!vastaus.ok) {
+    const teksti = await vastaus.text();
+    throw new Error(`Tietokantavirhe: ${vastaus.status} – ${teksti}`);
+  }
   const data = await vastaus.json();
   return data[0] || null;
 }
