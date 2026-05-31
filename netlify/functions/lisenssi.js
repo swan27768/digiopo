@@ -36,6 +36,8 @@ async function haeSupabasesta(koodi) {
       apikey: SUPABASE_SERVICE_KEY,
       Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Prefer': 'return=representation',
     },
   });
   if (!vastaus.ok) {
