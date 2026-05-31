@@ -52,33 +52,16 @@ export const handler = async (event) => {
 
   try {
     const baseUrl = SUPABASE_URL.replace(/\/$/, "");
-    // UPSERT: lisää rivi tai kasvata olemassa olevaa
-    const vastaus = await fetch(`${baseUrl}/rest/v1/page_views`, {
+    // Kutsutaan aina kasvata_laskuri-funktiota – se tekee UPSERT atomisesti
+    await fetch(`${baseUrl}/rest/v1/rpc/kasvata_laskuri`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_SERVICE_KEY,
         Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "resolution=merge-duplicates",
       },
-      body: JSON.stringify({ sivu, maara: 1 }),
+      body: JSON.stringify({ p_sivu: sivu }),
     });
-
-    // Jos rivi on jo olemassa, kasvatetaan laskuria
-    if (vastaus.status === 409 || !vastaus.ok) {
-      await fetch(
-        `${baseUrl}/rest/v1/rpc/kasvata_laskuri`,
-        {
-          method: "POST",
-          headers: {
-            apikey: SUPABASE_SERVICE_KEY,
-            Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ p_sivu: sivu }),
-        }
-      );
-    }
   } catch {
     // Virhe ei saa kaataa sivustoa – laskuri on toissijainen toiminto
   }
