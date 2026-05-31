@@ -52,8 +52,7 @@ export const handler = async (event) => {
 
   try {
     const baseUrl = SUPABASE_URL.replace(/\/$/, "");
-    // Kutsutaan aina kasvata_laskuri-funktiota – se tekee UPSERT atomisesti
-    await fetch(`${baseUrl}/rest/v1/rpc/kasvata_laskuri`, {
+    const vastaus = await fetch(`${baseUrl}/rest/v1/rpc/kasvata_laskuri`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_SERVICE_KEY,
@@ -62,8 +61,14 @@ export const handler = async (event) => {
       },
       body: JSON.stringify({ p_sivu: sivu }),
     });
-  } catch {
-    // Virhe ei saa kaataa sivustoa – laskuri on toissijainen toiminto
+    if (!vastaus.ok) {
+      const teksti = await vastaus.text();
+      console.error(`ping virhe [${sivu}]: ${vastaus.status} – ${teksti}`);
+    } else {
+      console.log(`ping ok [${sivu}]`);
+    }
+  } catch (err) {
+    console.error(`ping catch [${sivu}]:`, err.message);
   }
 
   return { statusCode: 200, body: "" };
