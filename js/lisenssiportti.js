@@ -37,7 +37,7 @@
   const API = "/api/lisenssi";
 
   // Poikkeukset: nämä sivut eivät tarvitse lisenssiä
-  const VAPAAT_POLUT = ["/404.html"];
+  const VAPAAT_POLUT = ["/404.html", "/kayttoehdot.html"];
 
   function nykyinenPolku() {
     return window.location.pathname;
