@@ -131,9 +131,6 @@
           </button>
         </form>
         <div id="portti-viesti" class="portti-viesti" role="alert" aria-live="polite"></div>
-        <div class="portti-linkki">
-          Ei koodia? <a href="https://digiopo.fi/testilisenssi" target="_blank" rel="noopener">Pyydä ilmainen testilisenssi</a>
-        </div>
         <p class="portti-ehdot">
           Kirjautumalla hyväksyt <a href="/kayttoehdot.html" target="_blank" rel="noopener">käyttöehdot</a>.
         </p>
