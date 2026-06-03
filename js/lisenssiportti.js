@@ -5,6 +5,33 @@
 (function () {
   "use strict";
 
+  // ─── Tulostussuojaus ─────────────────────────────────────────────────────
+  // Lisätään @media print -sääntö dynaamisesti, jotta se kattaa myös sivut
+  // joilla ei ole base.css:ää (tehtavat/, pelit/ jne.)
+  (function lisaaTulostussuoja() {
+    // Opettajan ohjeet saa tulostaa vapaasti
+    const polku = window.location.pathname;
+    if (polku.includes("_ope") || polku.includes("_opettaja")) return;
+
+    const style = document.createElement("style");
+    style.textContent = [
+      "@media print {",
+      "  body::before {",
+      "    content: '© DigiOpo – sisältö on tarkoitettu vain digitaaliseen käyttöön';",
+      "    display: block;",
+      "    font-size: 16px;",
+      "    color: #aaa;",
+      "    text-align: center;",
+      "    padding: 48px 24px;",
+      "    letter-spacing: 0.02em;",
+      "  }",
+      "  body > * { opacity: 0.08 !important; }",
+      "  body::before { opacity: 1 !important; }",
+      "}",
+    ].join("\n");
+    document.head.appendChild(style);
+  })();
+
   const AVAIN = "digiopo_lisenssi";
   const TARKISTUS_VALI_MS = 24 * 60 * 60 * 1000; // 24 tuntia
   const API = "/api/lisenssi";

@@ -101,6 +101,26 @@ input:focus-visible,
   outline-offset: 2px;
 }
 
+/* Tulostussuojaus — vesileima */
+
+@media print {
+  body::before {
+    content: "© DigiOpo – sisältö on tarkoitettu vain digitaaliseen käyttöön";
+    display: block;
+    font-size: 16px;
+    color: #aaa;
+    text-align: center;
+    padding: 48px 24px;
+    letter-spacing: 0.02em;
+  }
+  body > * {
+    opacity: 0.08 !important;
+  }
+  body::before {
+    opacity: 1 !important;
+  }
+}
+
 /* Liikeherkkyys — poistaa kaikki animaatiot tarvittaessa */
 
 @media (prefers-reduced-motion: reduce) {
