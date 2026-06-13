@@ -77,65 +77,73 @@ window.addEventListener("load", async function () {
     if (instructions) {
       instructions.innerHTML = "";
 
-      // ── Kuva ──────────────────────────────────────────────────────────────
-      if (task.kuva) {
-        const kuvaKehys = document.createElement("div");
-        kuvaKehys.style.cssText =
-          "border-radius:16px;overflow:hidden;margin-bottom:20px;" +
-          "max-width:180px;background:white;";
-        const kuva = document.createElement("img");
-        kuva.src = task.kuva;
-        kuva.alt = task.kuvaAlt || "";
-        kuva.style.cssText =
-          "width:100%;display:block;mix-blend-mode:multiply;";
-        kuvaKehys.appendChild(kuva);
-        instructions.appendChild(kuvaKehys);
-      }
+      // ── Kuva + Aihekortti rinnakkain ──────────────────────────────────────
+      if (task.kuva || task.taustaOtsikko || task.taustateksti) {
+        const rivi = document.createElement("div");
+        rivi.style.cssText =
+          "display:flex;gap:20px;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;";
 
-      // ── Aihekortti ────────────────────────────────────────────────────────
-      if (task.taustaOtsikko || task.taustateksti) {
-        const aihekortti = document.createElement("div");
-        aihekortti.setAttribute("role", "region");
-        aihekortti.setAttribute("aria-label", "Keskustelun aihe");
-        aihekortti.style.cssText =
-          "background:#fff;border-left:5px solid #7c3aed;" +
-          "border-radius:0 16px 16px 0;padding:20px 22px;" +
-          "margin-bottom:24px;box-shadow:0 2px 12px rgba(124,58,237,0.08);";
-
-        const aiheLabel = document.createElement("div");
-        aiheLabel.textContent = "📖 Keskustelun aihe";
-        aiheLabel.style.cssText =
-          "font-size:0.72rem;font-weight:800;letter-spacing:0.09em;" +
-          "text-transform:uppercase;color:#7c3aed;margin-bottom:8px;";
-        aihekortti.appendChild(aiheLabel);
-
-        if (task.taustaOtsikko) {
-          const aiheH = document.createElement("h3");
-          aiheH.textContent = task.taustaOtsikko;
-          aiheH.style.cssText =
-            "font-size:1.05rem;font-weight:900;color:#4c1d95;margin:0 0 10px;";
-          aihekortti.appendChild(aiheH);
+        // Kuva
+        if (task.kuva) {
+          const kuvaKehys = document.createElement("div");
+          kuvaKehys.style.cssText =
+            "border-radius:16px;overflow:hidden;flex-shrink:0;" +
+            "width:160px;background:white;";
+          const kuva = document.createElement("img");
+          kuva.src = task.kuva;
+          kuva.alt = task.kuvaAlt || "";
+          kuva.style.cssText = "width:100%;display:block;mix-blend-mode:multiply;";
+          kuvaKehys.appendChild(kuva);
+          rivi.appendChild(kuvaKehys);
         }
 
-        if (task.taustateksti) {
-          task.taustateksti.split("\n\n").forEach(function (kappale) {
-            const p = document.createElement("p");
-            p.textContent = kappale.trim();
-            p.style.cssText =
-              "font-size:0.92rem;color:#374151;line-height:1.65;margin:0 0 8px;";
-            aihekortti.appendChild(p);
-          });
+        // Aihekortti
+        if (task.taustaOtsikko || task.taustateksti) {
+          const aihekortti = document.createElement("div");
+          aihekortti.setAttribute("role", "region");
+          aihekortti.setAttribute("aria-label", "Keskustelun aihe");
+          aihekortti.style.cssText =
+            "background:#fff;border-left:5px solid #7c3aed;" +
+            "border-radius:0 16px 16px 0;padding:20px 22px;flex:1;min-width:200px;" +
+            "box-shadow:0 2px 12px rgba(124,58,237,0.08);";
+
+          const aiheLabel = document.createElement("div");
+          aiheLabel.textContent = "📖 Keskustelun aihe";
+          aiheLabel.style.cssText =
+            "font-size:0.72rem;font-weight:800;letter-spacing:0.09em;" +
+            "text-transform:uppercase;color:#7c3aed;margin-bottom:8px;";
+          aihekortti.appendChild(aiheLabel);
+
+          if (task.taustaOtsikko) {
+            const aiheH = document.createElement("h3");
+            aiheH.textContent = task.taustaOtsikko;
+            aiheH.style.cssText =
+              "font-size:1.05rem;font-weight:900;color:#4c1d95;margin:0 0 10px;";
+            aihekortti.appendChild(aiheH);
+          }
+
+          if (task.taustateksti) {
+            task.taustateksti.split("\n\n").forEach(function (kappale) {
+              const p = document.createElement("p");
+              p.textContent = kappale.trim();
+              p.style.cssText =
+                "font-size:0.92rem;color:#374151;line-height:1.65;margin:0 0 8px;";
+              aihekortti.appendChild(p);
+            });
+          }
+
+          if (task.taustaLahde) {
+            const lahde = document.createElement("p");
+            lahde.textContent = "Lähde: " + task.taustaLahde;
+            lahde.style.cssText =
+              "font-size:0.78rem;color:#9ca3af;font-style:italic;margin:10px 0 0;";
+            aihekortti.appendChild(lahde);
+          }
+
+          rivi.appendChild(aihekortti);
         }
 
-        if (task.taustaLahde) {
-          const lahde = document.createElement("p");
-          lahde.textContent = "Lähde: " + task.taustaLahde;
-          lahde.style.cssText =
-            "font-size:0.78rem;color:#9ca3af;font-style:italic;margin:10px 0 0;";
-          aihekortti.appendChild(lahde);
-        }
-
-        instructions.appendChild(aihekortti);
+        instructions.appendChild(rivi);
       }
 
       // ── Kolme vaihetta ────────────────────────────────────────────────────
