@@ -49,18 +49,21 @@ window.OSIO_DATA = {
         "Aloitus: mitä odotat TET-jaksolta? (5 min)",
         "Duuniin! — opas työelämään (15 min)",
         "TET-jakson jälkeen: mitä opit? -reflektio (15 min)",
-        "DuuniMinä-tehtävä (15 min)"
+        "DuuniMinä-tehtävä (15 min)",
+        "Reppu + CV: pakkaa vahvuudet reppuusi ja kirjoita oma CV (20 min)"
       ],
       tavoitteet: [
         "Tiedät työelämän pelisäännöt: ajat, käytöstavat, oma-aloitteisuus",
         "Osaat purkaa TET-kokemuksesi opiksi: mikä sopi minulle, mikä ei",
-        "Yhdistät työelämäkokemuksen yhteishakuvalintaasi"
+        "Yhdistät työelämäkokemuksen yhteishakuvalintaasi",
+        "Kokoat 7.–9. luokan vahvuutesi yhteen ja osaat kertoa niistä CV:ssäsi"
       ],
       miksi: "Kokemus ilman reflektiota jää irralliseksi — oppiminen syntyy vasta, kun kokemusta tarkastellaan jälkikäteen. Siksi TET-jakson purku on yhtä tärkeä kuin itse jakso. TET-kokemus on myös konkreettisin tietosi siitä, miltä jokin ala oikeasti tuntuu, ja sitä kannattaa käyttää yhteishakupäätöksessä.",
       yhteenveto: [
         "Osaat kertoa, mitä opit TET-jaksolla itsestäsi ja työelämästä",
         "Tiedät, vahvistiko vai heikensikö kokemus kiinnostustasi alaan",
-        "Sinulla on työtodistus ja sanat kuvata osaamistasi"
+        "Sinulla on työtodistus ja sanat kuvata osaamistasi",
+        "Sinulla on ensimmäinen oma CV — ja tiedät, miten sitä päivitetään"
       ]
     },
 
