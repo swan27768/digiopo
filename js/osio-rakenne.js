@@ -47,7 +47,7 @@
       if (d.tavoitteet) {
         var alku = el("details", "osio-info osio-tavoitteet");
         alku.innerHTML =
-          summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet — ja miksi tämä kannattaa",
+          summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet",
             "Avaa ja katso, mitä tällä tunnilla tehdään") +
           '<div class="osio-info-sisalto">' +
           (d.rakenne ? "<h4>Tunnin rakenne</h4><ul>" + lista(d.rakenne) + "</ul>" : "") +
