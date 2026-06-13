@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reppu – 9. luokka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0f0f1a;
+      --card:   #16213e;
+      --accent: #e94560;
+      --gold:   #f5a623;
+      --teal:   #00d4aa;
+      --purple: #7c5cbf;
+      --blue:   #00a8ff;
+      --text:   #e8e8f0;
+      --muted:  #a8a8c0;
+      --border: rgba(233,69,96,0.3);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+      font-family:'Nunito',sans-serif; min-height:100vh; }
+    #app { display:flex; justify-content:center; min-height:100vh; padding:1rem; }
+    .screen { width:100%; max-width:700px; padding:1.5rem 1rem 5rem;
+      display:flex; flex-direction:column; align-items:center; }
+
+    /* Progress */
+    .pbar { width:100%; max-width:500px; height:8px;
+      background:rgba(255,255,255,0.08); border-radius:99px; margin-bottom:1.5rem; overflow:hidden; }
+    .pfill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold));
+      border-radius:99px; transition:width .4s ease; }
+    .step-label { font-size:.8rem; color:var(--muted); text-align:center;
+      margin-bottom:.4rem; letter-spacing:.04em; text-transform:uppercase; }
+
+    /* Typography */
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:2rem; font-weight:700;
+      color:var(--accent); text-align:center; margin:.4rem 0 .8rem; }
+    h2 { font-family:'Space Grotesk',sans-serif; font-size:1.3rem; font-weight:700;
+      color:var(--gold); text-align:center; margin:.4rem 0 .6rem; }
+    h3 { font-size:1rem; font-weight:700; color:var(--text); text-align:center; margin:.4rem 0 .5rem; }
+
+    /* Cards */
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px;
+      padding:1rem 1.2rem; margin:.4rem 0; width:100%; line-height:1.7; }
+    .card-info { background:rgba(0,212,170,.07); border:1px solid rgba(0,212,170,.25);
+      border-radius:12px; padding:.7rem 1rem; font-size:.9rem; color:var(--teal);
+      margin:.4rem 0; width:100%; }
+
+    /* Buttons */
+    .btn { display:block; width:100%; padding:.75rem 1rem;
+      background:var(--card); border:2px solid var(--border); border-radius:14px;
+      color:var(--text); font-family:'Nunito',sans-serif; font-size:.97rem; font-weight:600;
+      text-align:left; cursor:pointer; transition:border-color .15s,background .15s,transform .15s; line-height:1.4; }
+    .btn:hover { border-color:var(--accent); background:rgba(233,69,96,.1); transform:translateX(3px); }
+    .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff;
+      text-align:center; font-weight:800; font-size:1rem; }
+    .btn-primary:hover { background:#c73a52; border-color:#c73a52; transform:translateY(-2px); }
+    .btn-ghost { background:transparent; border-color:rgba(255,255,255,.12);
+      color:var(--muted); text-align:center; }
+    .btn-ghost:hover { border-color:var(--teal); color:var(--teal); transform:none; }
+    .btn-group { display:flex; flex-direction:column; gap:.5rem; width:100%; margin:.8rem 0; }
+
+    /* Cover */
+    .cover { text-align:center; padding:2rem 0 1rem; width:100%; }
+    .cover-logo { font-family:'Space Grotesk',sans-serif; font-size:2.5rem; font-weight:700;
+      color:var(--accent); line-height:1.1; }
+    .cover-sub { color:var(--muted); font-size:1rem; margin:.8rem 0 1.5rem; line-height:1.6; }
+
+    /* Phase badge */
+    .phase-badge { display:inline-block; background:rgba(124,92,191,.2);
+      border:1px solid var(--purple); color:#a78fd4; border-radius:99px;
+      padding:.2rem .9rem; font-size:.8rem; font-weight:700;
+      letter-spacing:.04em; margin-bottom:.8rem; }
+
+    /* Type grid */
+    .type-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.55rem; width:100%; margin:.8rem 0; }
+    @media(max-width:520px){ .type-grid { grid-template-columns:1fr 1fr; } }
+    .type-card { background:var(--card); border:2px solid var(--border); border-radius:14px;
+      padding:.85rem .6rem; cursor:pointer; text-align:center;
+      font-family:'Nunito',sans-serif; font-weight:700; font-size:.88rem; color:var(--text);
+      transition:border-color .15s,background .15s; user-select:none; }
+    .type-card:hover { border-color:var(--gold); background:rgba(245,166,35,.08); }
+    .type-card.selected { border-color:var(--teal); background:rgba(0,212,170,.1); color:var(--teal); }
+    .type-card .tc-emoji { font-size:1.6rem; display:block; margin-bottom:.3rem; }
+
+    /* Strength chips (selectable) */
+    .chips-wrap { display:flex; flex-wrap:wrap; gap:.45rem; margin:.5rem 0; width:100%; }
+    .chip { display:inline-flex; align-items:center; gap:.3rem;
+      background:rgba(245,166,35,.1); border:1.5px solid rgba(245,166,35,.35);
+      color:var(--gold); border-radius:99px; padding:.25rem .75rem;
+      font-size:.85rem; font-weight:700; cursor:pointer;
+      transition:background .15s,border-color .15s,transform .1s; user-select:none; }
+    .chip:hover { background:rgba(245,166,35,.2); transform:scale(1.04); }
+    .chip.on { background:var(--gold); color:#1a1200; border-color:var(--gold); }
+    .chip.teal { background:rgba(0,212,170,.1); border-color:rgba(0,212,170,.35); color:var(--teal); }
+    .chip.teal.on { background:var(--teal); color:#002b22; border-color:var(--teal); }
+
+    /* Area sections (vahvuusmatka) */
+    .area-section { width:100%; background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:.9rem 1.1rem; margin:.4rem 0; }
+    .area-title { font-size:.85rem; font-weight:800; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.06em; margin-bottom:.6rem; }
+
+    /* ── REPPU SCREEN ── */
+    .reppu-layout { display:flex; gap:1.2rem; width:100%; margin-top:.5rem; align-items:flex-start; }
+    @media(max-width:580px){ .reppu-layout { flex-direction:column; } }
+
+    .pool-panel { flex:1; min-width:0; }
+    .pool-panel h3 { text-align:left; color:var(--gold); font-size:.9rem;
+      text-transform:uppercase; letter-spacing:.05em; margin-bottom:.6rem; }
+    .pool-chip { display:inline-flex; align-items:center;
+      background:rgba(245,166,35,.12); border:1.5px solid var(--gold);
+      color:var(--gold); border-radius:10px; padding:.4rem .85rem;
+      font-size:.87rem; font-weight:700; margin:.25rem .2rem;
+      cursor:grab; user-select:none; transition:opacity .15s,transform .1s; }
+    .pool-chip:active { cursor:grabbing; transform:scale(1.06); }
+    .pool-chip.used { opacity:.3; cursor:default; pointer-events:none; }
+    .pool-chip.dragging { opacity:.4; }
+
+    /* Backpack */
+    .bag-panel { flex:0 0 240px; display:flex; flex-direction:column; align-items:center; }
+    @media(max-width:580px){ .bag-panel { flex:none; width:100%; } }
+
+    .bag-svg-wrap { position:relative; width:200px; margin:0 auto; }
+    .bag-svg-wrap svg { width:100%; height:auto; display:block; }
+
+    .bag-counter { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700;
+      color:var(--text); text-align:center; margin:.5rem 0 .3rem; }
+    .bag-counter span { color:var(--gold); }
+
+    .slots-list { display:flex; flex-direction:column; gap:.4rem; width:100%; margin-top:.4rem; }
+    .slot { min-height:46px; border:2px dashed rgba(245,166,35,.35); border-radius:12px;
+      padding:.35rem .7rem; display:flex; align-items:center; justify-content:space-between;
+      background:rgba(245,166,35,.04); transition:background .2s,border-color .2s; position:relative; }
+    .slot.over { border-color:var(--teal); background:rgba(0,212,170,.1); }
+    .slot.filled { border-style:solid; border-color:var(--gold); background:rgba(245,166,35,.12); }
+    .slot-num { font-size:.75rem; color:var(--muted); font-weight:700; margin-right:.5rem; flex-shrink:0; }
+    .slot-content { font-size:.88rem; font-weight:700; color:var(--gold); flex:1; }
+    .slot-remove { background:none; border:none; color:var(--muted); font-size:1rem;
+      cursor:pointer; padding:0 .2rem; line-height:1; border-radius:4px; }
+    .slot-remove:hover { color:var(--accent); }
+    .slot-remove:focus-visible { outline:2px solid var(--accent); }
+
+    /* Focus styles for keyboard nav */
+    .type-card:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+    .chip:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+    .pool-chip:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+    .btn:focus-visible { outline:2px solid var(--teal); outline-offset:2px; }
+
+    /* PDF Preview Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75);
+      display:flex; align-items:center; justify-content:center; z-index:1000;
+      padding:1rem; }
+    .modal-box { background:#fff; color:#1a1a2e; border-radius:16px;
+      width:100%; max-width:660px; max-height:85vh; overflow-y:auto;
+      padding:2rem 2.5rem; position:relative; }
+    .modal-close { position:absolute; top:1rem; right:1rem; background:none;
+      border:1px solid #ccc; border-radius:8px; font-size:1rem; cursor:pointer;
+      padding:.3rem .7rem; color:#555; }
+    .modal-close:hover { background:#f0f0f0; }
+    .modal-actions { display:flex; gap:.7rem; margin-top:1.5rem; justify-content:flex-end; }
+    .modal-btn { padding:.6rem 1.3rem; border-radius:10px; font-family:'Nunito',sans-serif;
+      font-weight:700; font-size:.95rem; cursor:pointer; border:none; }
+    .modal-btn-print { background:#e94560; color:#fff; }
+    .modal-btn-print:hover { background:#c73a52; }
+    .modal-btn-cancel { background:#eee; color:#333; }
+    .modal-btn-cancel:hover { background:#ddd; }
+
+    /* CV preview styles (inside modal) */
+    .cv-preview h1 { font-family:Georgia,serif; font-size:1.8rem; color:#1a1a2e;
+      margin-bottom:.15rem; text-align:left; }
+    .cv-preview .cv-sub { color:#666; font-size:.88rem; margin-bottom:1.2rem; }
+    .cv-preview h2 { font-family:Georgia,serif; font-size:.9rem; text-transform:uppercase;
+      letter-spacing:.08em; color:#c87c20; border-bottom:2px solid #c87c20;
+      padding-bottom:.2rem; margin:1.2rem 0 .4rem; text-align:left; }
+    .cv-preview p { font-family:Georgia,serif; font-size:.95rem; line-height:1.65;
+      color:#1a1a2e; margin:.2rem 0; }
+    .cv-preview .cv-chip { display:inline-block; background:#fff3d9;
+      border:1.5px solid #c87c20; color:#7c5010; border-radius:99px;
+      padding:.1rem .65rem; font-size:.82rem; font-weight:700; margin:.15rem .1rem; }
+    .slot-empty { font-size:.8rem; color:rgba(255,255,255,.2); font-style:italic; }
+
+    /* Completion */
+    .bag-done { text-align:center; }
+    .bag-done .bigmoji { font-size:3.5rem; display:block; margin:.5rem 0; }
+    .packed-list { display:flex; flex-wrap:wrap; gap:.4rem; justify-content:center;
+      margin:.8rem 0; }
+    .packed-tag { background:var(--gold); color:#1a1200; border-radius:99px;
+      padding:.3rem .9rem; font-size:.9rem; font-weight:800; }
+
+    /* CV screen */
+    .cv-step { background:var(--card); border:1px solid var(--border); border-radius:16px;
+      padding:1rem 1.2rem; margin:.4rem 0; width:100%; }
+    .cv-step-num { display:inline-block; background:var(--accent); color:#fff;
+      border-radius:99px; width:1.6rem; height:1.6rem; line-height:1.6rem;
+      text-align:center; font-weight:800; font-size:.85rem; margin-right:.5rem; flex-shrink:0; }
+    .cv-step-title { font-weight:800; color:var(--text); font-size:.98rem; }
+    .cv-step-body { color:var(--muted); font-size:.9rem; margin:.4rem 0 0 2.1rem; line-height:1.6; }
+    .cv-header { display:flex; align-items:center; margin-bottom:.1rem; }
+
+    .bigmoji { font-size:3rem; display:block; text-align:center; margin:.5rem 0; }
+    textarea { width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.13);
+      border-radius:10px; color:var(--text); font-family:'Nunito',sans-serif;
+      font-size:.92rem; padding:.6rem .8rem; resize:vertical; min-height:80px; line-height:1.5; }
+    textarea:focus { outline:2px solid var(--teal); border-color:var(--teal); }
+    textarea::placeholder { color:var(--muted); }
+
+    .example-box { background:rgba(124,92,191,.08); border:1px solid rgba(124,92,191,.25);
+      border-radius:10px; padding:.6rem .9rem; font-size:.85rem; color:#c0a8f0;
+      margin:.4rem 0; font-style:italic; }
+
+    /* Brand logo */
+    .brand-bar { position:fixed; top:0; left:0; right:0; z-index:100;
+      padding:.5rem 1rem; display:flex; align-items:center; gap:.4rem;
+      background:rgba(15,15,26,.85); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.05); pointer-events:none; }
+    .brand-digi { font-family:'Space Grotesk',sans-serif; font-size:.85rem;
+      font-weight:800; color:#a78fd4; letter-spacing:-.02em; }
+    .brand-opo  { font-family:'Space Grotesk',sans-serif; font-size:.85rem;
+      font-weight:400; color:rgba(167,143,212,.5); }
+    .brand-dot  { color:rgba(167,143,212,.25); font-size:.8rem; margin:0 .2rem; }
+    .brand-label { font-size:.72rem; color:rgba(167,143,212,.45);
+      letter-spacing:.1em; text-transform:uppercase; font-weight:500; }
+    .brand-year { font-size:.72rem; color:rgba(167,143,212,.3);
+      letter-spacing:.06em; font-weight:500; }
+    /* push content below fixed bar */
+    #app { padding-top:3rem; }
+  </style>
+</head>
+<body>
+<div class="brand-bar" aria-hidden="true">
+  <span class="brand-digi">digi</span><span class="brand-opo">opo</span>
+  <span class="brand-dot">·</span>
+  <span class="brand-label">Omilla Jäljillä</span>
+  <span class="brand-year">2026</span>
+</div>
+<div id="app"><div class="screen" id="screen"></div></div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const S = {
+  // Phase 1 – Supervoimat
+  sv_type: null,
+  sv_chips: new Set(),
+  // Phase 2 – Vahvuusmatka
+  vm_chips: new Set(),
+  // Phase 3 – Reppu
+  slots: [null,null,null,null,null], // 5 slots
+  dragItem: null,
+  // Phase 4 – CV
+  cv_text: {}
+};
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const SV_TYPES = {
+  'Tekijä':     { emoji:'🔨', color:'#e94560', chips:['Toimelias','Sinnikäs','Ahkera','Sitkeä','Tavoitteellinen','Päättäväinen'] },
+  'Ajattelija': { emoji:'🔬', color:'#00a8ff', chips:['Analyyttinen','Järjestelmällinen','Utelias','Harkitseva','Ratkaisuhakuinen','Tarkkaavainen'] },
+  'Auttaja':    { emoji:'🤝', color:'#00d4aa', chips:['Avulias','Empaattinen','Kuunteleva','Yhteisöllinen','Yhteistyökykyinen','Luotettava'] },
+  'Luova':      { emoji:'🎨', color:'#f5a623', chips:['Luova','Idearikas','Mielikuvituksellinen','Rohkea','Innostuva','Omaperäinen'] },
+  'Seikkailija':{ emoji:'🗺️', color:'#e05fff', chips:['Rohkea','Ennakkoluuloton','Joustava','Energinen','Sopeutuva','Utelias'] },
+  'Johtaja':    { emoji:'⭐', color:'#7c5cbf', chips:['Aloitteellinen','Vastuullinen','Motivoiva','Ilmaisukykyinen','Organisoiva','Johtava'] }
+};
+
+const VM_AREAS = [
+  { id:'innostus',       label:'😊 Kun olen innostunut', chips:['Innostuva','Energinen','Sitkeä','Luova','Rohkea','Sinnikäs'] },
+  { id:'selviytyminen',  label:'💪 Kun selvitän vaikeita tilanteita', chips:['Sinnikäs','Rauhallinen','Joustava','Sitkeä','Ratkaisukeskeinen','Optimistinen'] },
+  { id:'oppiminen',      label:'📚 Kun opin uutta', chips:['Utelias','Tarkkaavainen','Oppimishaluinen','Järjestelmällinen','Kärsivällinen','Muistava'] },
+  { id:'tulevaisuus',    label:'🔭 Tulevaisuuden taidot', chips:['Päämäärätietoinen','Suunnitelmallinen','Tavoitteellinen','Unelmoiva','Rohkea','Itseohjautuva'] },
+  { id:'kaveritaidot',   label:'🫂 Ihmiset ja tunteet', chips:['Sosiaalinen','Empaattinen','Ystävällinen','Hyvä kuuntelija','Yhteistyökykyinen','Rehellinen'] }
+];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); }
+function pb(pct, label){
+  return `<div class="step-label">${label}</div>
+  <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>`;
+}
+function allChips(){
+  return [...S.sv_chips, ...S.vm_chips];
+}
+
+// ── SCREEN 0: START ───────────────────────────────────────────────────────────
+function showStart(){
+  render(`
+    <div class="cover">
+      <span style="font-size:4rem;display:block">🎒</span>
+      <div class="cover-logo">Reppu tulevaisuutta<br>varten</div>
+      <p class="cover-sub">
+        9. luokka · Vahvuudet matkaasi<br>
+        Kokoat tähän kaiken, mitä olet oppinut itsestäsi.
+      </p>
+    </div>
+    <div class="card-info">
+      💡 Muistatko supervoimasi 7. luokalta ja vahvuusmatkasi 8. luokalta? Käyt ne nyt pikaisesti läpi – ja valitset sitten 5 tärkeintä vahvuuttasi reppuusi tulevaisuuden matkalle.
+    </div>
+    <div class="btn-group" style="max-width:360px;width:100%">
+      <button class="btn btn-primary" onclick="showSV()">Aloita</button>
+    </div>
+    <p style="color:var(--muted);font-size:.85rem;text-align:center;margin-top:.8rem">Kesto: noin 10–15 minuuttia</p>
+  `);
+}
+
+// ── SCREEN 1: SUPERVOIMAT MUISTUTUS ──────────────────────────────────────────
+function showSV(){
+  const typeCards = Object.entries(SV_TYPES).map(([name,t]) => `
+    <div class="type-card${S.sv_type===name?' selected':''}"
+      onclick="selectSVType('${name}')"
+      onkeydown="if(event.key==='Enter'||event.key===' ')selectSVType('${name}')"
+      tabindex="0" role="radio" aria-checked="${S.sv_type===name?'true':'false'}"
+      aria-label="${name} ${t.emoji}">
+      <span class="tc-emoji" aria-hidden="true">${t.emoji}</span>
+      ${name}
+    </div>`).join('');
+
+  const chipHtml = S.sv_type ? SV_TYPES[S.sv_type].chips.map(c =>
+    `<span class="chip${S.sv_chips.has(c)?' on':''}"
+      onclick="toggleSV('${c}')"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSV('${c}')}"
+      tabindex="0" role="checkbox" aria-checked="${S.sv_chips.has(c)?'true':'false'}"
+      aria-label="Vahvuus: ${c}">${c}</span>`
+  ).join('') : '';
+
+  render(`
+    ${pb(15,'Vaihe 1 / 3 – Supervoimat')}
+    <div class="phase-badge">7. LUOKKA · SUPERVOIMAT</div>
+    <h1>Mikä on sinun supertyyppisi?</h1>
+    <div class="card">
+      Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>
+      Valitse alta tyyppi, joka tuntuu sinulta. Jos et muista, valitse se, joka tuntuu nyt oikeimmalta.
+    </div>
+    <div class="type-grid">${typeCards}</div>
+
+    ${S.sv_type ? `
+      <div class="card" style="margin-top:.8rem">
+        <h3 style="text-align:left;color:var(--teal);margin-bottom:.6rem">
+          ${SV_TYPES[S.sv_type].emoji} ${S.sv_type} – valitse vahvuudet, jotka ovat sinulle tuttuja
+        </h3>
+        <div class="chips-wrap">${chipHtml}</div>
+      </div>
+      <div style="width:100%;margin-top:.3rem">
+        <div style="font-size:.85rem;color:var(--muted);margin-bottom:.4rem">Tai kirjoita oma vahvuus:</div>
+        <div style="display:flex;gap:.5rem">
+          <input id="svCustom" type="text" placeholder="Esim. Humoristinen"
+            style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.13);
+            border-radius:10px;color:var(--text);font-family:Nunito,sans-serif;font-size:.92rem;
+            padding:.55rem .8rem;" onkeydown="if(event.key==='Enter')addSVCustom()">
+          <button onclick="addSVCustom()" style="background:var(--accent);border:none;border-radius:10px;
+            color:#fff;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;
+            padding:.55rem 1rem;cursor:pointer;">+ Lisää</button>
+        </div>
+        ${[...S.sv_chips].filter(c => !SV_TYPES[S.sv_type]?.chips.includes(c)).length > 0 ?
+          `<div class="chips-wrap" style="margin-top:.5rem">
+            ${[...S.sv_chips].filter(c => !SV_TYPES[S.sv_type].chips.includes(c)).map(c =>
+              `<span class="chip on" onclick="toggleSV('${c}')">${c} ✕</span>`
+            ).join('')}
+          </div>` : ''}
+      </div>
+    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">👆 Valitse ensin tyyppi ylhäältä</div>`}
+
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
+      ${S.sv_type && S.sv_chips.size > 0 ?
+        `<button class="btn btn-primary" onclick="showVM()">Seuraava: Vahvuusmatka →</button>` :
+        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse tyyppi ja vähintään 1 vahvuus</button>`}
+    </div>
+  `);
+}
+
+function selectSVType(name){
+  S.sv_type = name;
+  showSV();
+}
+function toggleSV(c){
+  if(S.sv_chips.has(c)) S.sv_chips.delete(c);
+  else S.sv_chips.add(c);
+  showSV();
+  // scroll to chips section
+  setTimeout(()=>{
+    const el = document.querySelector('.chips-wrap');
+    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+}
+function addSVCustom(){
+  const inp = $('svCustom');
+  const val = (inp?.value||'').trim();
+  if(val){ S.sv_chips.add(val); showSV(); }
+}
+
+// ── SCREEN 2: VAHVUUSMATKA MUISTUTUS ─────────────────────────────────────────
+function showVM(){
+  const areaSections = VM_AREAS.map(area => `
+    <div class="area-section">
+      <div class="area-title">${area.label}</div>
+      <div class="chips-wrap">
+        ${area.chips.map(c =>
+          `<span class="chip teal${S.vm_chips.has(c)?' on':''}" onclick="toggleVM('${c}','${area.id}')">${c}</span>`
+        ).join('')}
+      </div>
+      <div style="display:flex;gap:.4rem;margin-top:.5rem">
+        <input id="vm_${area.id}" type="text" placeholder="Oma vahvuus…"
+          style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+          border-radius:8px;color:var(--text);font-family:Nunito,sans-serif;font-size:.85rem;padding:.4rem .7rem;"
+          onkeydown="if(event.key==='Enter')addVMCustom('${area.id}')">
+        <button onclick="addVMCustom('${area.id}')" style="background:rgba(0,212,170,.2);border:1px solid var(--teal);
+          border-radius:8px;color:var(--teal);font-family:Nunito,sans-serif;font-weight:700;font-size:.82rem;
+          padding:.4rem .7rem;cursor:pointer;white-space:nowrap;">+ Lisää</button>
+      </div>
+    </div>`
+  ).join('');
+
+  render(`
+    ${pb(45,'Vaihe 2 / 3 – Vahvuusmatka')}
+    <div class="phase-badge">8. LUOKKA · VAHVUUSMATKA</div>
+    <h1>Vahvuusmatkan saldo</h1>
+    <div class="card">
+      Muistatko 8. luokalla tekemäsi Vahvuusmatkan? Käyt nyt läpi samat aiheet nopeasti.<br>
+      Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.
+    </div>
+    ${areaSections}
+
+    <div style="margin-top:.8rem;width:100%;text-align:center">
+      <span style="font-size:.9rem;color:var(--muted)">Valittu yhteensä: </span>
+      <span style="font-size:.9rem;color:var(--teal);font-weight:700">${S.vm_chips.size} vahvuutta</span>
+    </div>
+
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
+      ${S.vm_chips.size > 0 ?
+        `<button class="btn btn-primary" onclick="showReppu()">Pakkaa reppu →</button>` :
+        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse vähintään 1 vahvuus</button>`}
+      <button class="btn btn-ghost" onclick="showSV()">← Takaisin</button>
+    </div>
+  `);
+}
+
+function toggleVM(c){
+  if(S.vm_chips.has(c)) S.vm_chips.delete(c);
+  else S.vm_chips.add(c);
+  showVM();
+}
+function addVMCustom(areaId){
+  const inp = $(`vm_${areaId}`);
+  const val = (inp?.value||'').trim();
+  if(val){ S.vm_chips.add(val); showVM(); }
+}
+
+// ── SCREEN 3: REPPU ───────────────────────────────────────────────────────────
+function showReppu(){
+  const chips = allChips();
+  const usedSet = new Set(S.slots.filter(Boolean));
+  const packed = S.slots.filter(Boolean).length;
+
+  const poolHtml = chips.map((c,i) =>
+    `<span class="pool-chip${usedSet.has(c)?' used':''}"
+      draggable="true"
+      id="chip_${i}"
+      data-chip="${c}"
+      ondragstart="onDragStart(event,'${c.replace(/'/g,"\\'")}')">
+      ${c}
+    </span>`
+  ).join('');
+
+  const slotsHtml = S.slots.map((v,i) => `
+    <div class="slot${v?' filled':''}" id="slot_${i}"
+      ondragover="onDragOver(event)" ondrop="onDrop(event,${i})"
+      ondragleave="onDragLeave(event)">
+      <span class="slot-num">${i+1}</span>
+      ${v
+        ? `<span class="slot-content">${v}</span>
+           <button class="slot-remove" onclick="removeSlot(${i})" title="Poista">✕</button>`
+        : `<span class="slot-empty">Vedä tähän…</span>`}
+    </div>`
+  ).join('');
+
+  render(`
+    ${pb(75,'Vaihe 3 / 3 – Reppu')}
+    <div class="phase-badge">9. LUOKKA · REPPU</div>
+    <h1>Pakkaa reppusi 🎒</h1>
+    <div class="card-info">
+      💡 Vedä vasemmalta omat tärkeimmät vahvuutesi reppuun – <strong>valitse 5</strong>. Nämä ovat ne, jotka otat mukaan tulevaisuuden matkalle!
+    </div>
+
+    <div class="reppu-layout">
+      <!-- POOL -->
+      <div class="pool-panel">
+        <h3>Kaikki vahvuutesi</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem">${poolHtml}</div>
+      </div>
+
+      <!-- BACKPACK -->
+      <div class="bag-panel">
+        <!-- Backpack SVG -->
+        <div class="bag-svg-wrap">
+          <svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg">
+            <!-- Strap top -->
+            <rect x="85" y="10" width="30" height="18" rx="8" fill="#c87c20" />
+            <!-- Body -->
+            <rect x="20" y="28" width="160" height="160" rx="28" fill="#f5a623" />
+            <!-- Pocket -->
+            <rect x="40" y="120" width="120" height="55" rx="16" fill="#d4891e" />
+            <!-- Pocket zipper line -->
+            <line x1="50" y1="142" x2="150" y2="142" stroke="#a86a10" stroke-width="3" stroke-linecap="round" stroke-dasharray="5,4"/>
+            <!-- Zipper pull -->
+            <circle cx="100" cy="142" r="5" fill="#7c5010"/>
+            <!-- Main zipper -->
+            <path d="M40 64 Q100 55 160 64" stroke="#d4891e" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Side straps -->
+            <rect x="15" y="60" width="12" height="90" rx="6" fill="#d4891e"/>
+            <rect x="173" y="60" width="12" height="90" rx="6" fill="#d4891e"/>
+            <!-- Lock badge -->
+            <circle cx="100" cy="195" r="14" fill="#d4891e"/>
+            <text x="100" y="200" text-anchor="middle" font-size="14" fill="#7c3d00">🎒</text>
+            <!-- Count badge -->
+            <circle cx="160" cy="35" r="18" fill="${packed===5?'#00d4aa':'#e94560'}"/>
+            <text x="160" y="41" text-anchor="middle" font-family="Space Grotesk,sans-serif"
+              font-size="14" font-weight="700" fill="#fff">${packed}/5</text>
+          </svg>
+        </div>
+
+        <div class="bag-counter">
+          <span>${packed}</span> / 5 pakattu
+        </div>
+
+        <div class="slots-list">${slotsHtml}</div>
+
+        ${packed === 5
+          ? `<div class="btn-group" style="margin-top:1rem">
+              <button class="btn btn-primary" onclick="showDone()">Reppu täynnä! →</button>
+             </div>`
+          : ''}
+      </div>
+    </div>
+
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:1.5rem">
+      <button class="btn btn-ghost" onclick="showVM()">← Muokkaa vahvuuksia</button>
+    </div>
+  `);
+
+  // Touch drag support
+  setupTouchDrag();
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────────
+function onDragStart(e, chip){
+  S.dragItem = chip;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', chip);
+  setTimeout(()=>{ if(e.target) e.target.classList.add('dragging'); },0);
+}
+function onDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('over');
+}
+function onDragLeave(e){
+  e.currentTarget.classList.remove('over');
+}
+function onDrop(e, slotIdx){
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  const chip = e.dataTransfer.getData('text/plain') || S.dragItem;
+  if(!chip) return;
+  if(S.slots.includes(chip)) return; // already packed
+  if(S.slots[slotIdx] === null){
+    S.slots[slotIdx] = chip;
+    showReppu();
+  } else {
+    // swap: put what was in slot back to pool, place new
+    S.slots[slotIdx] = chip;
+    showReppu();
+  }
+}
+function removeSlot(i){
+  S.slots[i] = null;
+  showReppu();
+}
+
+// ── TOUCH DRAG ────────────────────────────────────────────────────────────────
+function setupTouchDrag(){
+  let dragChip = null, ghost = null;
+
+  document.querySelectorAll('.pool-chip:not(.used)').forEach(el => {
+    el.addEventListener('touchstart', e => {
+      dragChip = el.dataset.chip;
+      ghost = el.cloneNode(true);
+      ghost.style.cssText = `position:fixed;opacity:.75;pointer-events:none;z-index:9999;
+        background:#f5a623;color:#1a1200;border-radius:10px;padding:.4rem .85rem;
+        font-family:Nunito,sans-serif;font-weight:700;font-size:.87rem;`;
+      document.body.appendChild(ghost);
+      const t = e.touches[0];
+      ghost.style.left = (t.clientX - 40)+'px';
+      ghost.style.top  = (t.clientY - 20)+'px';
+      e.preventDefault();
+    },{passive:false});
+
+    el.addEventListener('touchmove', e => {
+      if(!ghost) return;
+      const t = e.touches[0];
+      ghost.style.left = (t.clientX - 40)+'px';
+      ghost.style.top  = (t.clientY - 20)+'px';
+      e.preventDefault();
+    },{passive:false});
+
+    el.addEventListener('touchend', e => {
+      if(ghost){ ghost.remove(); ghost = null; }
+      if(!dragChip) return;
+      const t = e.changedTouches[0];
+      const target = document.elementFromPoint(t.clientX, t.clientY);
+      const slot = target?.closest('.slot');
+      if(slot){
+        const idx = parseInt(slot.id.replace('slot_',''));
+        if(!isNaN(idx) && !S.slots.includes(dragChip)){
+          S.slots[idx] = dragChip;
+          showReppu();
+        }
+      }
+      dragChip = null;
+    });
+  });
+}
+
+// ── SCREEN 4: DONE ───────────────────────────────────────────────────────────
+function showDone(){
+  const packed = S.slots.filter(Boolean);
+  const tagsHtml = packed.map(c=>`<span class="packed-tag">${c}</span>`).join('');
+
+  render(`
+    ${pb(100,'Valmis!')}
+    <div class="bag-done">
+      <span class="bigmoji">🎒</span>
+      <h1 style="color:var(--teal)">Reppu on pakattu!</h1>
+      <div class="card-info" style="text-align:center;font-size:1rem;padding:1rem">
+        Otat nämä vahvuudet mukaan tulevaisuuden matkalle:
+      </div>
+      <div class="packed-list">${tagsHtml}</div>
+      <p style="color:var(--muted);font-size:.9rem;margin:.5rem 0 1.5rem">
+        ${S.sv_type ? `Supertyyppisi: ${SV_TYPES[S.sv_type].emoji} <strong style="color:var(--text)">${S.sv_type}</strong> · ` : ''}
+        Yhteensä ${allChips().length} vahvuutta tunnistit itsessäsi.
+      </p>
+    </div>
+
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:.5rem">
+      <button class="btn btn-primary" onclick="showCV()">✍️ Kirjoita oma CV →</button>
+      <button class="btn btn-ghost" onclick="showReppu()">← Muokkaa reppua</button>
+    </div>
+  `);
+}
+
+// ── SCREEN 5: CV ─────────────────────────────────────────────────────────────
+function showCV(){
+  const packed = S.slots.filter(Boolean);
+  const type   = S.sv_type;
+  const typeStr = type ? `${SV_TYPES[type].emoji} ${type}` : '';
+
+  render(`
+    ${pb(100,'CV-ohjeet')}
+    <span class="bigmoji">📄</span>
+    <h1>Oma CV</h1>
+    <div class="card-info">
+      CV eli ansioluettelo kertoo muille, kuka olet ja mitä osaat. Sinulla on jo paras mahdollinen pohja – oma reppusi!
+    </div>
+
+    <div class="card" style="margin:.4rem 0">
+      <strong style="color:var(--gold)">Reppusi vahvuudet:</strong><br>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
+        ${packed.map(c=>`<span class="chip on" style="cursor:default">${c}</span>`).join('')}
+      </div>
+    </div>
+
+    <!-- CV Step 1 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">1</span>
+        <span class="cv-step-title">Yhteystiedot</span>
+      </div>
+      <div class="cv-step-body">Nimi, paikkakunta, sähköposti ja puhelinnumero.<br>
+        <em>Et tarvitse osoitetta – pelkkä paikkakunta riittää.</em>
+      </div>
+    </div>
+
+    <!-- CV Step 2 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">2</span>
+        <span class="cv-step-title">Minä lyhyesti – oma esittely</span>
+      </div>
+      <div class="cv-step-body">
+        2–3 lausetta siitä, kuka olet. Käytä reppusi vahvuuksia!
+      </div>
+      <div class="example-box">
+        Esimerkki: "Olen ${type?typeStr+'-tyyppinen ':''}yhdeksäsluokkalainen, joka on ${packed[0]||'sinnikäs'} ja ${packed[1]||'luova'}. Pidän työskentelystä ihmisten kanssa ja haluaisin tulevaisuudessa tehdä töitä, joissa voin auttaa muita."
+      </div>
+      <textarea id="cv_esittely" placeholder="Kirjoita oma esittelysi tähän…"
+        oninput="S.cv_text.esittely=this.value">${S.cv_text.esittely||''}</textarea>
+    </div>
+
+    <!-- CV Step 3 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">3</span>
+        <span class="cv-step-title">Koulutus</span>
+      </div>
+      <div class="cv-step-body">
+        Perusopetus, koulu ja kaupunki. Valmistumisvuosi tai "parhaillaan".
+      </div>
+      <div class="example-box">Esimerkki: "Perusopetus · Esimerkkikoulu, Tampere · 2025"</div>
+      <textarea id="cv_koulutus" placeholder="Koulutuksesi tähän…" rows="2"
+        oninput="S.cv_text.koulutus=this.value">${S.cv_text.koulutus||''}</textarea>
+    </div>
+
+    <!-- CV Step 4 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">4</span>
+        <span class="cv-step-title">Vahvuudet ja taidot</span>
+      </div>
+      <div class="cv-step-body">
+        Tässä käytät suoraan reppusi vahvuuksia! Voit myös lisätä kielitaidon ja muut taidot.
+      </div>
+      <div class="example-box">Esimerkki: "${packed.slice(0,3).join(', ')}, suomi (äidinkieli), englanti (hyvä)"</div>
+      <textarea id="cv_vahvuudet" placeholder="Vahvuutesi ja taitosi…"
+        oninput="S.cv_text.vahvuudet=this.value">${S.cv_text.vahvuudet||(packed.join(', '))}</textarea>
+    </div>
+
+    <!-- CV Step 5 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">5</span>
+        <span class="cv-step-title">Harrastukset ja kokemus</span>
+      </div>
+      <div class="cv-step-body">
+        Harrastukset kertovat paljon sinusta. Lisää myös vapaaehtoistyö, kesätyö tai muut kokemukset jos sinulla on sellaisia.
+      </div>
+      <textarea id="cv_harrastukset" placeholder="Harrastuksesi ja kokemuksesi…"
+        oninput="S.cv_text.harrastukset=this.value">${S.cv_text.harrastukset||''}</textarea>
+    </div>
+
+    <!-- Print button -->
+    <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
+      <button class="btn btn-primary" onclick="previewCV()">👁️ Esikatsele CV ennen tulostusta</button>
+      <button class="btn btn-ghost" onclick="showDone()">← Takaisin</button>
+    </div>
+  `);
+}
+
+// ── CV HELPERS ────────────────────────────────────────────────────────────────
+function saveCVFields(){
+  ['esittely','koulutus','vahvuudet','harrastukset'].forEach(k=>{
+    const el = $('cv_'+k);
+    if(el) S.cv_text[k] = el.value;
+  });
+}
+
+function cvHTML(forPrint){
+  const packed = S.slots.filter(Boolean);
+  const type   = S.sv_type;
+  const chips  = packed.map(c=>`<span class="cv-chip">${c}</span>`).join(' ');
+  const extra  = S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
+    ? `<p>${(S.cv_text.vahvuudet||'').replace(/\n/g,'<br>')}</p>` : '';
+  return `
+    <div class="cv-preview">
+      <h1>Oma CV</h1>
+      <p class="cv-sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</p>
+      <h2>Esittely</h2>
+      <p>${(S.cv_text.esittely||'–').replace(/\n/g,'<br>')}</p>
+      <h2>Koulutus</h2>
+      <p>${(S.cv_text.koulutus||'–').replace(/\n/g,'<br>')}</p>
+      <h2>Vahvuudet ja taidot</h2>
+      <p>${chips}</p>${extra}
+      <h2>Harrastukset ja kokemus</h2>
+      <p>${(S.cv_text.harrastukset||'–').replace(/\n/g,'<br>')}</p>
+    </div>`;
+}
+
+// ── PREVIEW CV ────────────────────────────────────────────────────────────────
+function previewCV(){
+  saveCVFields();
+
+  // Build modal
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.setAttribute('role','dialog');
+  modal.setAttribute('aria-modal','true');
+  modal.setAttribute('aria-label','CV-esikatselu');
+  modal.innerHTML = `
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()" aria-label="Sulje esikatselu">✕ Sulje</button>
+      <h2 style="font-family:'Space Grotesk',sans-serif;color:#c87c20;font-size:1rem;
+        text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;border:none">
+        📄 CV-esikatselu
+      </h2>
+      ${cvHTML(false)}
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">← Muokkaa vielä</button>
+        <button class="modal-btn modal-btn-print" onclick="printCV()">🖨️ Tulosta / tallenna PDF</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.id = 'cvModal';
+  // Close on backdrop click
+  modal.addEventListener('click', e => { if(e.target===modal) closeModal(); });
+  // Focus trap: close btn
+  modal.querySelector('.modal-close').focus();
+}
+
+function closeModal(){
+  const m = $('cvModal');
+  if(m) m.remove();
+}
+
+// ── PRINT CV ─────────────────────────────────────────────────────────────────
+function printCV(){
+  saveCVFields();
+  const packed = S.slots.filter(Boolean);
+  const type   = S.sv_type;
+
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html lang="fi"><head><meta charset="UTF-8">
+  <title>Oma CV</title>
+  <style>
+    body { font-family:Georgia,serif; max-width:680px; margin:40px auto; color:#1a1a2e; padding:0 20px; }
+    h1 { font-size:2rem; margin-bottom:.2rem; color:#1a1a2e; }
+    .sub { color:#555; font-size:.88rem; margin-bottom:1.5rem; }
+    h2 { font-size:.9rem; text-transform:uppercase; letter-spacing:.08em; color:#c87c20;
+      border-bottom:2px solid #c87c20; padding-bottom:.2rem; margin:1.2rem 0 .4rem; }
+    p { line-height:1.65; font-size:.97rem; }
+    .chip { display:inline-block; background:#fff3d9; border:1.5px solid #c87c20;
+      color:#7c5010; border-radius:99px; padding:.1rem .65rem; font-size:.85rem;
+      font-weight:700; margin:.15rem .1rem; }
+    .brand { font-family:Arial,sans-serif; font-size:.78rem; color:#9b7fd4;
+      letter-spacing:.04em; margin-bottom:1.5rem; }
+    .brand b { font-weight:800; }
+    @media print { body { margin:0; } }
+  </style></head><body>
+  <div class="brand"><b>digi</b>opo · Omilla Jäljillä 2026</div>
+  <h1>Oma CV</h1>
+  <div class="sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</div>
+  <h2>Esittely</h2>
+  <p>${(S.cv_text.esittely||'–').replace(/\n/g,'<br>')}</p>
+  <h2>Koulutus</h2>
+  <p>${(S.cv_text.koulutus||'–').replace(/\n/g,'<br>')}</p>
+  <h2>Vahvuudet ja taidot</h2>
+  <p>${packed.map(c=>`<span class="chip">${c}</span>`).join(' ')}</p>
+  ${S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
+    ? `<p>${S.cv_text.vahvuudet.replace(/\n/g,'<br>')}</p>` : ''}
+  <h2>Harrastukset ja kokemus</h2>
+  <p>${(S.cv_text.harrastukset||'–').replace(/\n/g,'<br>')}</p>
+
+  <div style="margin-top:2rem;border-top:1px solid #ddd;padding-top:1.2rem;
+    background:#fafafa;border-radius:8px;padding:1rem 1.2rem;border:1px solid #e0d8f0;">
+    <p style="font-size:.82rem;color:#7c5cbf;font-weight:800;margin:0 0 .4rem;
+      text-transform:uppercase;letter-spacing:.06em;">📌 Muistutus itselleni</p>
+    <p style="font-size:.88rem;color:#444;line-height:1.7;margin:0;font-style:italic;">
+      Tämä on harjoitus-CV – ei valmis hakemus. CV elää ja kasvaa sinun mukanasi.
+      Päivitä sitä aina kun opit jotain uutta, saat uusia kokemuksia tai huomaat
+      uuden vahvuuden itsessäsi. Lisää kesätöitä, harrastuksia, kursseja ja muita
+      juttuja sitä mukaan kun elämäsi täyttyy.<br><br>
+      Kun lähdet hakemaan ensimmäistä työpaikkaa tai opiskelupaikkaa, muokkaa CV
+      aina juuri kyseiseen paikkaan sopivaksi – eri hakemuksiin voi korostaa eri
+      asioita. Tärkeintä on, että se on aito sinä.
+    </p>
+  </div>
+  </body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(()=>win.print(), 400);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+showStart();
+</script>
+</body>
+</html>
