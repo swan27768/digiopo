@@ -148,12 +148,12 @@ window.addEventListener("load", async function () {
 
       // ── Vaiheet: ympyräkaavio ──────────────────────────────────────────────
       const vaiheet = task.vaiheet || [
-        { otsikko: "Mieti itse",    aika: "2 min", ikoni: "🤔", vari: "#7c3aed",
-          teksti: "Sulje kirja tai laite. Mieti hiljaa: mitä juuri opit? Mikä jäi erityisesti mieleen?" },
-        { otsikko: "Kerro parille", aika: "5 min", ikoni: "👥", vari: "#0891b2",
-          teksti: "Kerro vuorotellen: mitä muistit? Kuuntele toista. Mitä teillä oli samaa — mitä eri?" },
-        { otsikko: "Jaa luokalle", aika: "3 min", ikoni: "🙋", vari: "#059669",
-          teksti: "Yksi asia ryhmästänne: mikä yllätti tai jäi parhaiten mieleen?" },
+        { otsikko: "Mieti itse",              aika: "2 min", ikoni: "🤔", vari: "#7c3aed",
+          teksti: "Lue teksti rauhassa. Mieti sitten: mitä ajattelet tästä? Oletko samaa vai eri mieltä? Voit tehdä lyhyen muistiinpanon itsellesi." },
+        { otsikko: "Keskustele parin kanssa", aika: "5 min", ikoni: "👥", vari: "#0891b2",
+          teksti: "Keskustelkaa yhdessä. Kerro oma mielipiteesi: \"Olen itse sitä mieltä, että...\". Kuuntele toista – älä keskeytä. Kysy, jos et ymmärrä. Ei tarvitse olla samaa mieltä." },
+        { otsikko: "Jaa luokalle",            aika: "3 min", ikoni: "🙋", vari: "#059669",
+          teksti: "Vaihtakaa ajatuksia koko luokan kanssa. Yksi asia pariltanne: mitä ajattelitte tai mistä olitte eri mieltä? Perustele lyhyesti." },
       ];
 
       // Wrapper
