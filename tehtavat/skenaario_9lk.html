@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Valitse oma skenaariosi</title>
+<style>
+  :root {
+    --mint:       #4EE1A0;
+    --mint-dark:  #1a7a52;
+    --mint-light: #DFF3E6;
+    --violet:     #5B2C6F;
+    --violet-light: #F3EAF8;
+    --pastel:     #C9A9E1;
+    --text:       #222;
+    --muted:      #555;
+    --white:      #fff;
+    --beige:      #DFF3E6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--beige);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px 16px 40px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .preamble {
+    background: var(--white);
+    border-radius: 14px;
+    border-top: 4px solid var(--mint);
+    box-shadow: 0 4px 18px rgba(91,44,111,0.10);
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+  .preamble-badge {
+    display: inline-block;
+    background: var(--mint-light);
+    color: var(--mint-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin-bottom: 10px;
+  }
+  .preamble h2 {
+    font-size: 1.2rem;
+    color: var(--violet);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .preamble p {
+    font-size: 0.93rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .preamble strong {
+    color: var(--violet);
+  }
+
+  /* ── SCENARIO PICKER ── */
+  .scenario-picker {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .scenario-tab {
+    flex: 1;
+    min-width: 140px;
+    background: var(--white);
+    border: 2px solid var(--pastel);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s, background 0.18s;
+    font-family: inherit;
+  }
+  .scenario-tab:hover {
+    border-color: var(--violet);
+    background: var(--violet-light);
+  }
+  .scenario-tab.active {
+    border-color: var(--violet);
+    background: var(--violet-light);
+    box-shadow: 0 0 0 3px rgba(91,44,111,0.15);
+  }
+  .scenario-tab-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--violet);
+    margin-bottom: 4px;
+  }
+  .scenario-tab-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  /* ── SCENARIO CARD ── */
+  .scenario-card {
+    display: none;
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(91,44,111,0.10);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .scenario-card.visible { display: block; }
+
+  .scenario-header {
+    background: var(--violet);
+    color: var(--white);
+    padding: 16px 22px;
+  }
+  .scenario-header-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+  .scenario-header h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .scenario-body {
+    padding: 18px 22px;
+  }
+
+  .scenario-narrative {
+    background: var(--mint-light);
+    border-left: 4px solid var(--mint);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .scenario-narrative p {
+    font-size: 0.93rem;
+    line-height: 1.7;
+    color: #1a3a28;
+  }
+  .scenario-narrative p + p { margin-top: 8px; }
+
+  .choices-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    margin-bottom: 12px;
+  }
+
+  /* ── CHOICE BUTTONS ── */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .choice-btn {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: #fafafa;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.91rem;
+    color: var(--text);
+    line-height: 1.55;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .choice-btn:hover {
+    border-color: var(--pastel);
+    background: var(--violet-light);
+  }
+  .choice-btn.selected {
+    border-color: var(--violet);
+    background: var(--violet-light);
+    box-shadow: 0 0 0 3px rgba(91,44,111,0.12);
+  }
+  .choice-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--pastel);
+    color: var(--violet);
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .choice-btn.selected .choice-letter {
+    background: var(--violet);
+    color: var(--white);
+  }
+
+  /* ── REFLECTION ── */
+  .reflection-section {
+    display: none;
+    background: var(--white);
+    border-radius: 14px;
+    border-top: 4px solid var(--pastel);
+    box-shadow: 0 4px 18px rgba(91,44,111,0.10);
+    padding: 20px 22px;
+    margin-bottom: 18px;
+  }
+  .reflection-section.visible { display: block; }
+
+  .reflection-section h3 {
+    font-size: 1rem;
+    color: var(--violet);
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .reflection-q {
+    margin-bottom: 14px;
+  }
+  .reflection-q label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--violet);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .reflection-q textarea {
+    width: 100%;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 72px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .reflection-q textarea:focus {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(91,44,111,0.18);
+  }
+  .reflection-q textarea::placeholder { color: #aaa; }
+
+  /* ── FOOTER NOTE ── */
+  .footer-note {
+    background: var(--mint-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.87rem;
+    color: var(--mint-dark);
+    line-height: 1.6;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* ── REVEAL BUTTON ── */
+  .btn-reveal {
+    display: none;
+    width: 100%;
+    background: var(--violet);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 18px;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .btn-reveal:hover { opacity: 0.88; }
+  .btn-reveal.visible { display: block; }
+
+  /* ── SAVE BUTTON ── */
+  .btn-save {
+    width: 100%;
+    background: linear-gradient(135deg, var(--mint), #22c55e);
+    color: #064e3b;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  .btn-save:hover { opacity: 0.88; }
+
+  @media (max-width: 480px) {
+    body { padding: 14px 12px 36px; }
+    .scenario-picker { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- JOHDANTO -->
+<div class="preamble">
+  <div class="preamble-badge">🧭 Yksilötehtävä · 10–15 min</div>
+  <h2>Valitse oma skenaariosi</h2>
+  <p>
+    Lue molemmat tilanteet. Valitse se, joka tuntuu sinulle
+    <strong>läheisemmältä</strong>. Kukaan muu ei näe valintaasi —
+    tärkeintä on, että pohdit oikeasti.
+  </p>
+</div>
+
+<!-- SKENAARION VALINTA -->
+<div class="scenario-picker" role="group" aria-label="Valitse skenaario">
+  <button class="scenario-tab active"
+    onclick="valitseSkenaario('A', this)"
+    aria-pressed="true"
+    id="tab-A">
+    <div class="scenario-tab-label">Skenaario A</div>
+    <div class="scenario-tab-title">Näit jotain mitä et olisi pitänyt</div>
+  </button>
+  <button class="scenario-tab"
+    onclick="valitseSkenaario('B', this)"
+    aria-pressed="false"
+    id="tab-B">
+    <div class="scenario-tab-label">Skenaario B</div>
+    <div class="scenario-tab-title">Somevideon kiusaus</div>
+  </button>
+</div>
+
+<!-- SKENAARIO A -->
+<div class="scenario-card visible" id="scenario-A" role="region" aria-label="Skenaario A: Näit jotain mitä et olisi pitänyt">
+  <div class="scenario-header">
+    <div class="scenario-header-eyebrow">Skenaario A</div>
+    <h3>Näit jotain mitä et olisi pitänyt</h3>
+  </div>
+  <div class="scenario-body">
+    <div class="scenario-narrative">
+      <p>Olet jäänyt luokkaan välitunnin ajaksi. Opettajan tietokone on auki
+        ja näytöllä on sähköposti. Et tarkoittanut lukea toisten viestejä,
+        mutta ehdit nähdä: yhdelle luokkalaisellesi on järjestetty tukea
+        mielenterveyden takia.</p>
+      <p>Et tiedä, oliko se tarkoitettu sinulle nähtäväksi. Tiedät nyt
+        jotain, mitä et ehkä olisi pitänyt tietää.</p>
+    </div>
+
+    <div class="choices-label" aria-hidden="true">Mitä teet?</div>
+    <div class="choices" role="group" aria-label="Valitse toimintatapa skenaariossa A">
+      <button class="choice-btn" onclick="valitseVaihtoehto('A', 'a', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">A</span>
+        <span>Pidät tiedon itselläsi. Se ei kuulu sinulle, eikä sinun tarvitse puuttua.</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('A', 'b', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">B</span>
+        <span>Kerrot jollekin aikuiselle — rehtorille, terveydenhoitajalle tai vanhemmallesi.</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('A', 'c', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">C</span>
+        <span>Menet luokkalaisen luo ja kysyt suoraan: voitko hyvin?</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('A', 'd', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">D</span>
+        <span>Et tee mitään heti, mutta alat seurata onko hän kunnossa.</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SKENAARIO B -->
+<div class="scenario-card" id="scenario-B" role="region" aria-label="Skenaario B: Somevideon kiusaus">
+  <div class="scenario-header">
+    <div class="scenario-header-eyebrow">Skenaario B</div>
+    <h3>Somevideon kiusaus</h3>
+  </div>
+  <div class="scenario-body">
+    <div class="scenario-narrative">
+      <p>Kaverisi lähettää teidän ryhmäänne videon, jossa nauretaan
+        luokkalaisen virheelle. Video leviää jo muihinkin ryhmiin.
+        Tiedät kenen video on ja kuka sen kuvasi.</p>
+    </div>
+
+    <div class="choices-label" aria-hidden="true">Mitä teet?</div>
+    <div class="choices" role="group" aria-label="Valitse toimintatapa skenaariossa B">
+      <button class="choice-btn" onclick="valitseVaihtoehto('B', 'a', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">A</span>
+        <span>Et tee mitään — et kuvannut etkä lähettänyt, joten se ei ole sinun ongelmasi.</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('B', 'b', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">B</span>
+        <span>Kirjoitat ryhmään, että tämä ei ole okei, ja pyydät poistamaan videon.</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('B', 'c', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">C</span>
+        <span>Kerrot asiasta aikuiselle — opettajalle tai vanhemmalle.</span>
+      </button>
+      <button class="choice-btn" onclick="valitseVaihtoehto('B', 'd', this)" aria-pressed="false">
+        <span class="choice-letter" aria-hidden="true">D</span>
+        <span>Otat yhteyttä siihen, josta video on, ja kerrot mitä on tapahtunut.</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AVAA POHDINTAKYSYMYKSET -->
+<button class="btn-reveal" id="btn-reveal"
+  onclick="avaaPohdinta()"
+  aria-controls="reflection"
+  aria-label="Avaa pohdintakysymykset valintasi jälkeen">
+  Pohdi valintaasi →
+</button>
+
+<!-- POHDINTAKYSYMYKSET -->
+<div class="reflection-section" id="reflection" role="region" aria-label="Pohdintakysymykset">
+  <h3>✏️ Pohdi valintasi jälkeen</h3>
+
+  <div class="reflection-q">
+    <label for="q1">1. Miksi valitsit juuri sen vaihtoehdon?</label>
+    <textarea id="q1" placeholder="Kirjoita omin sanoin…" aria-label="Kysymys 1: Miksi valitsit juuri sen vaihtoehdon?"></textarea>
+  </div>
+
+  <div class="reflection-q">
+    <label for="q2">2. Kenen etu ohjasi päätöstäsi — omasi, kaverin vai jonkun muun?</label>
+    <textarea id="q2" placeholder="Kirjoita omin sanoin…" aria-label="Kysymys 2: Kenen etu ohjasi päätöstäsi?"></textarea>
+  </div>
+
+  <div class="reflection-q">
+    <label for="q3">3. Jos roolit olisivat toisin päin, toivoisitko että joku toimisi sinun kohdallasi samoin?</label>
+    <textarea id="q3" placeholder="Kirjoita omin sanoin…" aria-label="Kysymys 3: Jos roolit olisivat toisin päin?"></textarea>
+  </div>
+
+  <div class="reflection-q">
+    <label for="q4">4. Onko jokin vaihtoehto, jonka haluaisit tehdä mutta et uskalla? Miksi?</label>
+    <textarea id="q4" placeholder="Kirjoita omin sanoin…" aria-label="Kysymys 4: Onko vaihtoehto, jonka haluaisit tehdä mutta et uskalla?"></textarea>
+  </div>
+
+  <button class="btn-save" onclick="tallenna()" aria-label="Tallenna vastauksesi tekstitiedostona omalle koneelle">
+    ⬇ Tallenna omat vastaukseni
+  </button>
+
+  <div class="footer-note" role="note" aria-live="polite" id="tallenna-ilmoitus" style="display:none; margin-top:12px;">
+    Tiedosto tallennettu! Voit palauttaa sen opettajalle Classroomin kautta.
+  </div>
+</div>
+
+<!-- LOPPUHUOMIO -->
+<div class="footer-note" id="footer-perm">
+  Ei ole oikeaa vastausta. On vain sinun vastauksesi — ja syyt sen takana.
+</div>
+
+<script>
+  var aktiviinenSkenaario = 'A';
+  var valinnat = { A: null, B: null };
+
+  function valitseSkenaario(tunnus, nappi) {
+    aktiviinenSkenaario = tunnus;
+
+    // Vaihda kortit
+    document.querySelectorAll('.scenario-card').forEach(function(k) {
+      k.classList.remove('visible');
+    });
+    document.getElementById('scenario-' + tunnus).classList.add('visible');
+
+    // Vaihda napit
+    document.querySelectorAll('.scenario-tab').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-pressed', 'false');
+    });
+    nappi.classList.add('active');
+    nappi.setAttribute('aria-pressed', 'true');
+
+    // Tarkista pitääkö pohdinta-nappi näyttää
+    paivitaNappi();
+  }
+
+  function valitseVaihtoehto(skenaario, vaihtoehto, nappi) {
+    valinnat[skenaario] = vaihtoehto;
+
+    // Päivitä napit ko. skenaarion sisällä
+    var kortti = document.getElementById('scenario-' + skenaario);
+    kortti.querySelectorAll('.choice-btn').forEach(function(b) {
+      b.classList.remove('selected');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    nappi.classList.add('selected');
+    nappi.setAttribute('aria-pressed', 'true');
+
+    paivitaNappi();
+  }
+
+  function paivitaNappi() {
+    var nakyy = valinnat[aktiviinenSkenaario] !== null;
+    var btn = document.getElementById('btn-reveal');
+    // Näytä vain jos ei vielä pohdinnan auki
+    if (nakyy && !document.getElementById('reflection').classList.contains('visible')) {
+      btn.classList.add('visible');
+    }
+  }
+
+  function avaaPohdinta() {
+    document.getElementById('reflection').classList.add('visible');
+    document.getElementById('btn-reveal').classList.remove('visible');
+    document.getElementById('reflection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function tallenna() {
+    var skenaarioTeksti = aktiviinenSkenaario === 'A'
+      ? 'Skenaario A: Näit jotain mitä et olisi pitänyt'
+      : 'Skenaario B: Somevideon kiusaus';
+
+    var valintaTeksti = valinnat[aktiviinenSkenaario]
+      ? 'Valitsin vaihtoehdon: ' + valinnat[aktiviinenSkenaario].toUpperCase()
+      : '';
+
+    var rivit = [
+      'PÄÄTÖKSENTEKO – Valitse oma skenaariosi',
+      '==========================================',
+      skenaarioTeksti,
+      valintaTeksti,
+      '',
+      '1. Miksi valitsit juuri sen vaihtoehdon?',
+      document.getElementById('q1').value || '(ei vastausta)',
+      '',
+      '2. Kenen etu ohjasi päätöstäsi?',
+      document.getElementById('q2').value || '(ei vastausta)',
+      '',
+      '3. Jos roolit olisivat toisin päin?',
+      document.getElementById('q3').value || '(ei vastausta)',
+      '',
+      '4. Onko vaihtoehto, jonka haluaisit tehdä mutta et uskalla?',
+      document.getElementById('q4').value || '(ei vastausta)',
+    ];
+
+    var blob = new Blob([rivit.join('\n')], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'skenaario_pohdinta.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+
+    var ilm = document.getElementById('tallenna-ilmoitus');
+    ilm.style.display = 'block';
+    setTimeout(function() { ilm.style.display = 'none'; }, 4000);
+  }
+
+  // Tallenna muutokset localStorageen automaattisesti
+  ['q1','q2','q3','q4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    var saved = localStorage.getItem('skenaario_' + id);
+    if (saved) el.value = saved;
+    el.addEventListener('input', function() {
+      localStorage.setItem('skenaario_' + id, el.value);
+    });
+  });
+</script>
+
+</body>
+</html>
