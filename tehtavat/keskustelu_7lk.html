@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kirja kiinni – mitä muistat?</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-dark: #4c1d95;
+    --purple-light: #ede9fe;
+    --pink: #ec4899;
+    --green: #10b981;
+    --bg: #faf5ff;
+    --text: #1e1b4b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: #ede9fe;
+    color: var(--text);
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    min-height: 280px;
+    overflow: hidden;
+  }
+  .hero-image-side {
+    background: #1a1a1a;
+    overflow: hidden;
+  }
+  .hero-image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-text-side {
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+  .hero-grade {
+    display: inline-block;
+    background: #ddd6fe;
+    color: var(--purple);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    width: fit-content;
+    margin-bottom: 4px;
+  }
+  .hero h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--purple-dark);
+  }
+  .hero-sub {
+    font-size: 0.97rem;
+    color: #5b21b6;
+    max-width: 360px;
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-image-side { min-height: 180px; }
+    .hero-text-side { padding: 24px 20px; }
+  }
+
+  /* ── MAIN CONTENT ── */
+  .content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+  }
+
+  /* ── TOPIC CARD ── */
+  .topic-card {
+    background: white;
+    border-left: 5px solid var(--purple);
+    border-radius: 0 16px 16px 0;
+    padding: 20px 22px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 12px rgba(124,58,237,0.08);
+  }
+  .topic-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 8px;
+  }
+  .topic-card h2 {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--purple-dark);
+    margin-bottom: 10px;
+  }
+  .topic-card p {
+    font-size: 0.92rem;
+    color: #374151;
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .topic-card p:last-of-type { margin-bottom: 0; }
+  .topic-source {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* ── STEPS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: white;
+    border-radius: 16px;
+    padding: 18px 20px;
+    border: 2px solid #e9d5ff;
+  }
+  .step-num {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), #a855f7);
+    color: white;
+    font-size: 1rem;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-body { flex: 1; }
+  .step-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--purple-dark);
+    margin-bottom: 4px;
+  }
+  .step-time {
+    font-size: 0.75rem;
+    color: #7c3aed;
+    font-weight: 700;
+    background: #ede9fe;
+    border-radius: 10px;
+    padding: 1px 8px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .step-text {
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.6;
+  }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: white;
+    border: 2px solid #a7f3d0;
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .summary-box h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #065f46;
+    margin-bottom: 6px;
+  }
+  .summary-box p {
+    font-size: 0.88rem;
+    color: #374151;
+    margin-bottom: 14px;
+  }
+  .summary-box textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 2px solid #d1fae5;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .summary-box textarea:focus { border-color: var(--green); }
+  .summary-box textarea::placeholder { color: #9ca3af; }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-download {
+    background: linear-gradient(135deg, var(--green), #059669);
+    color: white;
+  }
+  .btn-classroom {
+    background: var(--purple-light);
+    color: var(--purple);
+  }
+  .classroom-note {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-image-side">
+    <img src="../img/tikkuhahmot_keskustelemassa.png" alt="Tikkuhahmot pyöreän pöydän ääressä"/>
+  </div>
+  <div class="hero-text-side">
+    <div class="hero-grade">Ryhmäkeskustelu</div>
+    <h1>Kirja kiinni – mitä muistat?</h1>
+    <p class="hero-sub">Keskustellaan erilaisista oppimistavoista ja siitä, mikä toimii kenellekin.</p>
+  </div>
+</header>
+
+<!-- ═══ TEHTÄVÄ ═══ -->
+<main class="content">
+
+  <!-- Keskustelun aihe -->
+  <div class="topic-card" role="region" aria-label="Keskustelun aihe">
+    <div class="topic-label">📖 Keskustelun aihe</div>
+    <h2>Aktiivinen muisteleminen</h2>
+    <p>Passiivinen lukeminen ja alleviivaaminen on todettu tehottomaksi oppimisen kannalta.</p>
+    <p>Parempi tapa on <strong>laittaa kirja kiinni</strong>: lue kappale, piilota kirja ja kirjoita tai sano ääneen kaikki, mitä muistat.</p>
+    <p class="topic-source">Lähde: Nuortennetti / Mannerheimin Lastensuojeluliitto (2026)</p>
+  </div>
+
+  <!-- Ohjeet kolmessa vaiheessa -->
+  <div class="steps" role="list">
+
+    <div class="step" role="listitem">
+      <div class="step-num" aria-hidden="true">1</div>
+      <div class="step-body">
+        <div class="step-title">Mieti ensin itse</div>
+        <span class="step-time">⏱ 2 min</span>
+        <p class="step-text">Sulje kirja tai laite. Mieti hiljaa: <strong>mitä juuri opit?</strong> Mikä jäi erityisesti mieleen?</p>
+      </div>
+    </div>
+
+    <div class="step" role="listitem">
+      <div class="step-num" aria-hidden="true">2</div>
+      <div class="step-body">
+        <div class="step-title">Kerro parille tai pienryhmälle</div>
+        <span class="step-time">⏱ 5 min</span>
+        <p class="step-text">Kerro vuorotellen: mitä muistit? Kuuntele toista. Mitä teillä oli samaa — mitä eri?</p>
+      </div>
+    </div>
+
+    <div class="step" role="listitem">
+      <div class="step-num" aria-hidden="true">3</div>
+      <div class="step-body">
+        <div class="step-title">Jaa koko luokalle</div>
+        <span class="step-time">⏱ 3 min</span>
+        <p class="step-text">Yksi asia ryhmästänne: <strong>mikä yllätti tai jäi parhaiten mieleen?</strong></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Yhteenveto + palautus -->
+  <div class="summary-box">
+    <h3>✏️ Kirjoita lyhyt yhteenveto</h3>
+    <p>Mitä opit tänään? Kirjoita 2–3 lausetta omin sanoin.</p>
+    <textarea
+      id="summary"
+      aria-label="Kirjoita yhteenveto tähän"
+      placeholder="Tänään opin, että…"
+    ></textarea>
+    <div class="btn-row">
+      <button class="btn btn-download" onclick="tallenna()" aria-label="Tallenna yhteenveto tekstitiedostona omalle koneelle">
+        ⬇ Tallenna omalle koneelle
+      </button>
+      <button class="btn btn-classroom" onclick="avaaClassroom()" aria-label="Avaa Google Classroom palauttaaksesi tehtävän">
+        📤 Palauta Classroomiin
+      </button>
+    </div>
+    <p class="classroom-note" role="note">
+      <span aria-hidden="true">ℹ️</span>
+      Tallenna ensin tiedosto, sitten liitä se Classroomin palautukseen.
+    </p>
+  </div>
+
+</main>
+
+<script>
+  function tallenna() {
+    const text = document.getElementById('summary').value.trim();
+    if (!text) {
+      alert('Kirjoita ensin yhteenveto!');
+      return;
+    }
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'yhteenveto_kirja-kiinni.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function avaaClassroom() {
+    window.open('https://classroom.google.com', '_blank', 'noopener');
+  }
+</script>
+
+</body>
+</html>
