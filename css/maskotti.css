@@ -8,9 +8,10 @@
 .maskotti-laatikko {
   position: fixed;
   top: 100px;
-  /* Lasketaan sijainti: puolet viewportista miinus puolet book-spread-leveydestä (max 1200px)
-     + sivupalkin leveys (320px). Näin maskotti pysyy sivupalkin reunassa myös leveillä näytöillä. */
-  left: calc(max(0px, (100vw - 1200px) / 2) + var(--sidebar-width));
+  /* Asemoi maskotti sivupalkin sisään oikeaan reunaan.
+     Puhekupla on 220px leveä — vähennetään 220px jotta oikea reuna osuu
+     täsmälleen sivupalkin/sisältöalueen rajalle leveillä näytöillä. */
+  left: calc(max(0px, (100vw - 1200px) / 2) + var(--sidebar-width) - 220px);
   z-index: 500;
   opacity: 0;
   transform: translateY(10px);
