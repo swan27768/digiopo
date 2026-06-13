@@ -146,67 +146,143 @@ window.addEventListener("load", async function () {
         instructions.appendChild(rivi);
       }
 
-      // ── Kolme vaihetta ────────────────────────────────────────────────────
+      // ── Vaiheet: ympyräkaavio ──────────────────────────────────────────────
       const vaiheet = task.vaiheet || [
-        { otsikko: "Mieti ensin itse",               aika: "2 min",
+        { otsikko: "Mieti itse",    aika: "2 min", ikoni: "🤔", vari: "#7c3aed",
           teksti: "Sulje kirja tai laite. Mieti hiljaa: mitä juuri opit? Mikä jäi erityisesti mieleen?" },
-        { otsikko: "Kerro parille tai pienryhmälle", aika: "5 min",
+        { otsikko: "Kerro parille", aika: "5 min", ikoni: "👥", vari: "#0891b2",
           teksti: "Kerro vuorotellen: mitä muistit? Kuuntele toista. Mitä teillä oli samaa — mitä eri?" },
-        { otsikko: "Jaa koko luokalle",              aika: "3 min",
+        { otsikko: "Jaa luokalle", aika: "3 min", ikoni: "🙋", vari: "#059669",
           teksti: "Yksi asia ryhmästänne: mikä yllätti tai jäi parhaiten mieleen?" },
       ];
 
-      const stepLista = document.createElement("div");
-      stepLista.setAttribute("role", "list");
-      stepLista.style.cssText = "display:flex;flex-direction:column;gap:12px;margin-bottom:24px;";
+      // Wrapper
+      const kaavioWrap = document.createElement("div");
+      kaavioWrap.style.cssText =
+        "background:#fdf4ff;border:2px solid #e9d5ff;border-radius:16px;" +
+        "padding:24px 20px 20px;margin-bottom:24px;";
+
+      const kaavioOhje = document.createElement("p");
+      kaavioOhje.textContent = "Näin keskustelu etenee – klikkaa vaihetta nähdäksesi ohjeen:";
+      kaavioOhje.style.cssText =
+        "text-align:center;font-style:italic;font-size:0.85rem;" +
+        "color:#6b7280;margin:0 0 20px;";
+      kaavioWrap.appendChild(kaavioOhje);
+
+      // Ympyrärivi
+      const ympyraRivi = document.createElement("div");
+      ympyraRivi.setAttribute("role", "list");
+      ympyraRivi.style.cssText =
+        "display:flex;align-items:flex-start;justify-content:center;" +
+        "gap:0;flex-wrap:wrap;";
+
+      // Detaljiboksi
+      const detalji = document.createElement("div");
+      detalji.setAttribute("role", "region");
+      detalji.setAttribute("aria-live", "polite");
+      detalji.style.cssText =
+        "margin-top:18px;min-height:48px;background:#fff;" +
+        "border-radius:12px;padding:14px 18px;font-size:0.9rem;" +
+        "color:#374151;line-height:1.6;display:none;" +
+        "border-left:4px solid #7c3aed;";
 
       vaiheet.forEach(function (v, i) {
-        const step = document.createElement("div");
-        step.setAttribute("role", "listitem");
-        step.style.cssText =
-          "display:flex;gap:14px;align-items:flex-start;background:#fff;" +
-          "border-radius:14px;padding:16px 18px;border:2px solid #e9d5ff;";
+        // Ympyrä + label + nuoli
+        const item = document.createElement("div");
+        item.setAttribute("role", "listitem");
+        item.style.cssText =
+          "display:flex;align-items:center;gap:0;";
 
-        const num = document.createElement("div");
-        num.setAttribute("aria-hidden", "true");
-        num.textContent = i + 1;
-        num.style.cssText =
-          "width:36px;height:36px;border-radius:50%;" +
-          "background:linear-gradient(135deg,#7c3aed,#a855f7);" +
-          "color:#fff;font-size:1rem;font-weight:900;" +
-          "display:flex;align-items:center;justify-content:center;flex-shrink:0;";
+        // Ympyrä-nappi
+        const btn = document.createElement("button");
+        btn.setAttribute("type", "button");
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("aria-label", "Vaihe " + (i+1) + ": " + v.otsikko);
+        btn.style.cssText =
+          "display:flex;flex-direction:column;align-items:center;gap:8px;" +
+          "background:none;border:none;cursor:pointer;padding:0;outline-offset:4px;";
 
-        const body = document.createElement("div");
-        body.style.cssText = "flex:1;";
+        const ymWrapper = document.createElement("div");
+        ymWrapper.style.cssText = "position:relative;";
 
-        const stepTitle = document.createElement("div");
-        stepTitle.textContent = v.otsikko;
-        stepTitle.style.cssText =
-          "font-size:0.98rem;font-weight:800;color:#4c1d95;margin-bottom:4px;";
-        body.appendChild(stepTitle);
+        const ympyra = document.createElement("div");
+        ympyra.setAttribute("aria-hidden", "true");
+        ympyra.style.cssText =
+          "width:72px;height:72px;border-radius:50%;" +
+          "border:3px solid " + (v.vari || "#7c3aed") + ";" +
+          "background:#fff;display:flex;align-items:center;justify-content:center;" +
+          "font-size:2rem;transition:background 0.18s,transform 0.18s;";
+        ympyra.textContent = v.ikoni || "💬";
 
-        if (v.aika) {
-          const aika = document.createElement("span");
-          aika.textContent = "⏱ " + v.aika;
-          aika.style.cssText =
-            "font-size:0.72rem;font-weight:700;color:#7c3aed;" +
-            "background:#ede9fe;border-radius:10px;padding:1px 8px;" +
-            "display:inline-block;margin-bottom:8px;";
-          body.appendChild(aika);
+        const badge = document.createElement("div");
+        badge.setAttribute("aria-hidden", "true");
+        badge.textContent = i + 1;
+        badge.style.cssText =
+          "position:absolute;top:-6px;right:-6px;" +
+          "width:22px;height:22px;border-radius:50%;" +
+          "background:#ec4899;color:#fff;" +
+          "font-size:0.72rem;font-weight:900;" +
+          "display:flex;align-items:center;justify-content:center;";
+
+        ymWrapper.appendChild(ympyra);
+        ymWrapper.appendChild(badge);
+
+        const label = document.createElement("div");
+        label.textContent = v.otsikko;
+        label.style.cssText =
+          "font-size:0.78rem;font-weight:700;color:#1e1b4b;text-align:center;max-width:80px;";
+
+        const aikaTag = document.createElement("div");
+        aikaTag.textContent = v.aika || "";
+        aikaTag.style.cssText =
+          "font-size:0.7rem;color:" + (v.vari || "#7c3aed") + ";font-weight:600;";
+
+        btn.appendChild(ymWrapper);
+        btn.appendChild(label);
+        if (v.aika) btn.appendChild(aikaTag);
+
+        // Klikkaus: näytä detalji
+        btn.addEventListener("click", function () {
+          const isOpen = btn.getAttribute("aria-expanded") === "true";
+          // Resetoi kaikki
+          ympyraRivi.querySelectorAll("button").forEach(function (b) {
+            b.setAttribute("aria-expanded", "false");
+            b.querySelector("div > div").style.background = "#fff";
+            b.querySelector("div > div").style.transform = "";
+          });
+          if (isOpen) {
+            detalji.style.display = "none";
+          } else {
+            btn.setAttribute("aria-expanded", "true");
+            ympyra.style.background = (v.vari || "#7c3aed") + "22";
+            ympyra.style.transform = "scale(1.08)";
+            detalji.style.borderLeftColor = v.vari || "#7c3aed";
+            detalji.innerHTML =
+              "<strong style='color:" + (v.vari||"#7c3aed") + ";'>Vaihe " + (i+1) + ": " + v.otsikko + "</strong><br>" +
+              "<span style='font-size:0.78rem;color:#6b7280;'>⏱ " + (v.aika||"") + "</span><br><br>" +
+              v.teksti;
+            detalji.style.display = "block";
+          }
+        });
+
+        item.appendChild(btn);
+
+        // Nuoli (ei viimeisen jälkeen)
+        if (i < vaiheet.length - 1) {
+          const nuoli = document.createElement("div");
+          nuoli.setAttribute("aria-hidden", "true");
+          nuoli.textContent = "→";
+          nuoli.style.cssText =
+            "font-size:1.4rem;color:#d1d5db;padding:0 6px;margin-top:24px;flex-shrink:0;";
+          item.appendChild(nuoli);
         }
 
-        const teksti = document.createElement("p");
-        teksti.textContent = v.teksti;
-        teksti.style.cssText =
-          "font-size:0.9rem;color:#374151;line-height:1.6;margin:0;";
-        body.appendChild(teksti);
-
-        step.appendChild(num);
-        step.appendChild(body);
-        stepLista.appendChild(step);
+        ympyraRivi.appendChild(item);
       });
 
-      instructions.appendChild(stepLista);
+      kaavioWrap.appendChild(ympyraRivi);
+      kaavioWrap.appendChild(detalji);
+      instructions.appendChild(kaavioWrap);
 
       // ── Yhteenveto-kenttä ─────────────────────────────────────────────────
       const summaryId = "yhteenveto-" + id;
