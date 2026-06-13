@@ -895,7 +895,7 @@
                 Valitse oikea ongelma, kokoa unelmatyöryhmä eri aloilta ja esitä ratkaisunne elävänä kohtauksena.
               </p>
               <button
-                onclick="toggleMaailma(this)"
+                onclick="avaaMAailma()"
                 class="btn-hero"
                 style="cursor: pointer; border: none; font-size: 1rem;"
                 aria-expanded="false"
@@ -911,7 +911,7 @@
               margin-bottom: 8px;
             ">
               <button
-                onclick="toggleMaailma(document.querySelector('[aria-controls=maailma-wrapper]'))"
+                onclick="suljeMaailma()"
                 style="
                   background: #db2777;
                   color: white;
@@ -2337,6 +2337,15 @@
       }
 
       /* ── Tehtäväikkunat: avaa/sulje ── */
+      function avaaMAailma() {
+        var wrapper = document.getElementById('maailma-wrapper');
+        wrapper.style.display = 'block';
+        wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      function suljeMaailma() {
+        var wrapper = document.getElementById('maailma-wrapper');
+        wrapper.style.display = 'none';
+      }
       function toggleMaailma(btn) {
         var wrapper = document.getElementById('maailma-wrapper');
         var open = wrapper.style.display === 'block';
