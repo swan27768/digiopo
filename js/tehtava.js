@@ -302,8 +302,10 @@ window.addEventListener("load", async function () {
       summaryBox.appendChild(nappiRivi);
       instructions.appendChild(summaryBox);
 
-      // Piilota alkuperäinen notes-alue
-      if (notes) notes.style.display = "none";
+      // Piilota alkuperäinen notes-alue kokonaan
+      const notesWrapper = notes && notes.closest(".task-notes-wrapper");
+      if (notesWrapper) notesWrapper.style.display = "none";
+      else if (notes) notes.style.display = "none";
       if (downloadBtn) downloadBtn.style.display = "none";
       if (clearBtn)    clearBtn.style.display    = "none";
       if (saveStatus)  saveStatus.style.display  = "none";
