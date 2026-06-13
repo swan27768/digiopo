@@ -1,0 +1,187 @@
+/* ============================================================
+   KIRJA-POHJA.CSS — DigiOpo yhteinen kirja-estetiikka
+   Jaettu pohja kaikille luokkasivuille (Vaihtoehto 1).
+   Luokkakohtaiset aksenttivärit asetetaan grade-css-tiedostossa.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap');
+
+/* Luokkakohtaiset oletusvärit (ylikirjoitetaan grade-tiedostossa) */
+:root {
+  --grade-accent:       #9b3cf7;
+  --grade-accent-dark:  #6d28d9;
+  --grade-accent-light: rgba(155,60,247,0.22);
+  --grade-text-nav:     #c084fc;
+  --grade-pill-bg:      #f3e8ff;
+  --grade-pill-text:    #6d28d9;
+  --grade-section-bg:   #faf5ff;
+  --grade-section-border: #e9d5ff;
+}
+
+/* ── Tausta — akvarelliliukuväri ── */
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background-color: #f0ecf8;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 520px 380px at 15% 25%, rgba(192,132,252,0.28) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 80% 15%, rgba(244,114,182,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 460px 340px at 70% 75%, rgba(96,165,250,0.16) 0%, transparent 68%),
+    radial-gradient(ellipse 320px 260px at 30% 80%, rgba(52,211,153,0.12) 0%, transparent 60%);
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: linear-gradient(90deg, #1a0a3a 0%, #2d1060 60%, #1a0a3a 100%);
+  border-bottom: 1px solid rgba(200,160,48,0.2);
+  position: relative;
+  z-index: 100;
+}
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: white;
+}
+.nav-logo span {
+  color: #e8c85a;
+  font-style: italic;
+}
+
+/* ── Book-spread ── */
+.book-spread {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 14px;
+  overflow: visible;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
+}
+
+/* ── Vasen palkki — tumma selkäranka (sama kaikille luokille) ── */
+.book-page-left {
+  background: linear-gradient(160deg, #1a0a3a 0%, #2d1060 60%, #1a0a3a 100%) !important;
+  border-right: none !important;
+  border-radius: 14px 0 0 14px;
+  box-shadow: inset -6px 0 18px rgba(0,0,0,0.25);
+  position: relative;
+}
+.book-page-left::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(200,160,48,0.15);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.book-page-left h3 {
+  color: rgba(240,208,112,0.75) !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+}
+
+/* Navigointilinkit — luokkaväri aksentissa */
+.aihelista a {
+  color: rgba(220,210,255,0.70) !important;
+  background: transparent !important;
+  border-left: 3px solid transparent !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.aihelista a:hover {
+  background: rgba(255,255,255,0.07) !important;
+  color: rgba(255,255,255,0.90) !important;
+  border-left-color: rgba(255,255,255,0.2) !important;
+}
+.aihelista a.active {
+  background: var(--grade-accent-light) !important;
+  color: var(--grade-text-nav) !important;
+  border-left-color: var(--grade-accent) !important;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+.sub-link {
+  color: rgba(180,155,230,0.55) !important;
+  font-size: 0.82rem;
+}
+.sub-link:hover { color: rgba(210,190,255,0.80) !important; }
+
+/* ── Oikea sivu — paperin tuntu ── */
+.book-page-right {
+  background: linear-gradient(to left, #ede8dc 0%, #fffef8 70%);
+  border-radius: 0 14px 14px 0;
+  box-shadow: inset 4px 0 12px rgba(0,0,0,0.05);
+}
+
+/* ── Typografia ── */
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+}
+h1 {
+  color: #1a0a3a;
+  font-size: clamp(1.5rem, 2.8vw, 1.9rem);
+  font-weight: 700;
+}
+h2 { color: #2d1060; }
+h3 { color: #3b1080; }
+
+/* ── Breadcrumb ── */
+.breadcrumb { color: #7c6f96; }
+.breadcrumb a { color: var(--grade-accent) !important; }
+.breadcrumb a:hover { color: var(--grade-accent-dark) !important; }
+
+/* ── Aihe-osiot ── */
+.aihe-otsikko { border-bottom-color: var(--grade-accent) !important; }
+.aihe-otsikko h2 { color: #1a0a3a !important; }
+
+.aihe-osio {
+  background: rgba(255,254,250,0.88) !important;
+  border-color: rgba(200,160,48,0.12) !important;
+  border-top-color: var(--grade-accent) !important;
+  box-shadow: 0 4px 20px rgba(26,10,58,0.08) !important;
+}
+
+/* Osiolaatikot luokkavärillä */
+.theory-card {
+  background: var(--grade-section-bg) !important;
+  border-color: var(--grade-section-border) !important;
+}
+
+/* ── Grade-pill (luokkatunniste) ── */
+.grade-pill-auto {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--grade-pill-bg);
+  color: var(--grade-pill-text);
+  margin-bottom: 10px;
+}
+
+/* ── Scroll top btn ── */
+#scrollTopBtn { background: var(--grade-accent) !important; }
+#scrollTopBtn:hover { background: var(--grade-accent-dark) !important; }
+
+/* ── Mobiili ── */
+@media (max-width: 900px) {
+  .book-page-left { border-radius: 14px 14px 0 0; }
+  .book-page-right { border-radius: 0 0 14px 14px; }
+  .book-spread { filter: drop-shadow(0 10px 24px rgba(0,0,0,0.18)); }
+}

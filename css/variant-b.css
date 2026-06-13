@@ -1,0 +1,116 @@
+/* ============================================================
+   VARIANT B — Tunnelmajatkumo
+   Säilyttää nykyisen rakenteen mutta vie etusivun tunnelman
+   sisälle: pehmeä violettitausta, Lora otsikot, lämpimämpi
+   vasen palkki, Space Grotesk body
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap');
+
+/* Body — pehmeä violetti tausta */
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background: #f0ecf8;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 600px 400px at 10% 20%, rgba(192,132,252,0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 350px at 85% 70%, rgba(96,165,250,0.14) 0%, transparent 65%),
+    radial-gradient(ellipse 300px 250px at 50% 90%, rgba(244,114,182,0.12) 0%, transparent 60%);
+}
+
+/* Navbar — tumma violetti, kultainen logoaksentti */
+.navbar {
+  background: #1e0a42;
+  border-bottom: 2px solid rgba(200,160,48,0.3);
+  position: relative; z-index: 100;
+}
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+}
+.nav-logo span { color: #e8c85a; font-style: italic; }
+
+/* Book spread — näkyvä kirjakortti, mutta läpinäkyvä */
+.book-spread {
+  position: relative; z-index: 1;
+  background: rgba(255,252,255,0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(155,60,247,0.18) !important;
+  box-shadow: 0 16px 48px rgba(26,10,58,0.18), 0 0 0 1px rgba(255,255,255,0.6) inset !important;
+  border-radius: 18px !important;
+}
+
+/* Vasen palkki — syvävioletti mutta ei musta */
+.book-page-left {
+  background: linear-gradient(160deg, #2d1060 0%, #3b0764 70%, #1a0a3a 100%) !important;
+  border-right: none !important;
+  border-radius: 18px 0 0 18px;
+}
+.book-page-left h3 {
+  color: rgba(230,200,255,0.8) !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.aihelista a {
+  color: rgba(210,190,255,0.78) !important;
+  background: transparent !important;
+  border-left-color: transparent !important;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.aihelista a:hover {
+  background: rgba(255,255,255,0.10) !important;
+  color: rgba(255,255,255,0.95) !important;
+}
+.aihelista a.active {
+  background: rgba(155,60,247,0.25) !important;
+  color: white !important;
+  border-left-color: #c084fc !important;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+.sub-link { color: rgba(180,150,240,0.6) !important; font-size: 0.82rem; }
+.sub-link:hover { color: rgba(210,180,255,0.85) !important; }
+
+/* Oikea sivu — vaalea, ilmava */
+.book-page-right {
+  background: rgba(255,253,255,0.88);
+  border-radius: 0 18px 18px 0;
+}
+
+/* Otsikot — Lora */
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+}
+h1 { color: #1e0a42; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; }
+h2 { color: #2d1060; }
+h3 { color: #3b0764; }
+
+/* Aihe-otsikot */
+.aihe-otsikko h2 { color: #2d1060 !important; }
+.aihe-otsikko { border-bottom-color: #9b3cf7 !important; }
+
+/* Osiolaatikot */
+.aihe-osio {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(155,60,247,0.15) !important;
+  box-shadow: 0 6px 20px rgba(45,16,96,0.08) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb a { color: #7b2bcb !important; }
+
+/* Mission card */
+.mission-card {
+  background: linear-gradient(135deg, #faf5ff, #f5f0ff) !important;
+}

@@ -1,0 +1,141 @@
+/* ============================================================
+   VARIANT A — Täysi kirja-estetiikka
+   Tuo etusivun visuaalinen DNA sisäsivuille:
+   akvarellitausta, tumma vasen palkki, Lora + Space Grotesk
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap');
+
+/* Tausta — sama akvarelliliukuväri kuin etusivulla */
+body {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background-color: #f0ecf8;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 520px 380px at 15% 25%,  rgba(192,132,252,0.32) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 80% 15%,  rgba(244,114,182,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 460px 340px at 70% 75%,  rgba(96,165,250,0.20) 0%, transparent 68%),
+    radial-gradient(ellipse 320px 260px at 30% 80%,  rgba(52,211,153,0.16) 0%, transparent 60%);
+}
+
+/* Navbar — tumma, etusivun kansiväri */
+.navbar {
+  background: linear-gradient(90deg, #1a0a3a 0%, #2d1060 60%, #1a0a3a 100%);
+  position: relative;
+  z-index: 100;
+}
+.nav-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.nav-logo span { color: #f0c040; font-style: normal; }
+
+/* Book-spread — kirjamainen, läpinäkyvä */
+.book-spread {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 0;
+  border-radius: 14px;
+  overflow: visible;
+  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.28));
+}
+
+/* Vasen palkki — etusivun tumma vasen sivu */
+.book-page-left {
+  background: linear-gradient(160deg, #1a0a3a 0%, #2d1060 60%, #1a0a3a 100%) !important;
+  border-right: none !important;
+  border-radius: 14px 0 0 14px;
+  box-shadow: inset -8px 0 20px rgba(0,0,0,0.25);
+  position: relative;
+}
+.book-page-left::before {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(200,160,48,0.18);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.book-page-left h3 {
+  color: rgba(240,208,112,0.85) !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Navigointilinkit vasemmalla */
+.aihelista a {
+  color: rgba(220,210,255,0.75) !important;
+  background: transparent !important;
+  border-left: 3px solid transparent !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+}
+.aihelista a:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: rgba(240,208,112,0.9) !important;
+  border-left-color: rgba(240,208,112,0.5) !important;
+}
+.aihelista a.active {
+  background: rgba(255,255,255,0.10) !important;
+  color: #f0d870 !important;
+  border-left-color: #c8a030 !important;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+.sub-link {
+  color: rgba(180,160,240,0.65) !important;
+  font-size: 0.82rem;
+}
+.sub-link:hover { color: rgba(220,200,255,0.85) !important; }
+
+/* Oikea sivu — paperin tuntu */
+.book-page-right {
+  background: linear-gradient(to left, #ede8dc 0%, #fffef8 70%);
+  border-radius: 0 14px 14px 0;
+  box-shadow: inset 6px 0 16px rgba(0,0,0,0.06);
+}
+
+/* Otsikot — Lora */
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+}
+h1 { color: #1a0a3a; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; }
+h2 { color: #2d1060; }
+h3 { color: #3b1080; }
+
+/* Breadcrumb */
+.breadcrumb { color: #7c6f96; }
+.breadcrumb a { color: #7b2bcb !important; }
+
+/* Aihe-otsikko */
+.aihe-otsikko { border-bottom-color: #c8a030 !important; }
+.aihe-otsikko h2 { color: #1a0a3a !important; }
+
+/* Osiolaatikot — hillitty */
+.aihe-osio {
+  background: rgba(255,254,250,0.9) !important;
+  border-color: rgba(200,160,48,0.18) !important;
+  border-top-color: #7b2bcb !important;
+  box-shadow: 0 6px 24px rgba(26,10,58,0.10) !important;
+}
+
+/* Mission-kortit */
+.mission-card {
+  background: linear-gradient(135deg, #faf5ff, #fff9f0) !important;
+  border-color: rgba(200,160,48,0.35) !important;
+}
