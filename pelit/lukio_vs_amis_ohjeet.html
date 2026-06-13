@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Lukio vs. Amis – Ohjeet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Lato',sans-serif;background:#fafaf8;color:#1a1a2e;line-height:1.6;}
+
+    /* PRINT */
+    @media print {
+      .no-print{display:none!important;}
+      .page-break{page-break-before:always;}
+      body{background:#fff;}
+      .sheet{box-shadow:none!important;border:1px solid #ddd!important;}
+    }
+
+    .top-bar{background:#0f172a;color:#f1f5f9;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .top-bar h1{font-family:"Playfair Display",serif;font-size:1.2rem;color:#f59e0b;}
+    .top-bar p{font-size:0.8rem;color:#94a3b8;}
+    .btn-print{background:#f59e0b;border:none;border-radius:8px;padding:8px 18px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.82rem;color:#1a1a2e;cursor:pointer;transition:all .12s;}
+    .btn-print:hover{background:#e18a00;}
+
+    .tabs{display:flex;gap:0;border-bottom:3px solid #1a2e4a;margin:24px 24px 0;max-width:860px;width:calc(100% - 48px);}
+    .tab-btn{font-family:"Lato",sans-serif;font-weight:700;font-size:0.88rem;padding:10px 24px;border:none;background:transparent;cursor:pointer;color:#888;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;}
+    .tab-btn.active{color:#1a2e4a;border-bottom-color:#1a2e4a;}
+    .tab-btn:hover:not(.active){color:#1a2e4a;}
+
+    .content{max-width:860px;margin:0 auto;padding:24px;}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    /* SHEET */
+    .sheet{background:#fff;border-radius:12px;border:2px solid #e5e7eb;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden;margin-bottom:24px;}
+    .sheet-header{padding:20px 24px 16px;border-bottom:2px solid #f0f0f0;}
+    .sheet-header .eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+    .sheet-header h2{font-family:"Playfair Display",serif;font-size:1.6rem;font-weight:700;margin-bottom:4px;}
+    .sheet-header p{font-size:0.88rem;color:#666;line-height:1.5;}
+    .sheet-body{padding:20px 24px;}
+
+    /* SECTION */
+    .section{margin-bottom:22px;}
+    .section:last-child{margin-bottom:0;}
+    .section-title{font-size:0.95rem;font-weight:700;color:#1a1a2e;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .section-title .icon{font-size:1.1rem;}
+
+    /* STEP LIST */
+    .steps{display:flex;flex-direction:column;gap:10px;}
+    .step{display:flex;gap:12px;align-items:flex-start;}
+    .step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.82rem;flex-shrink:0;margin-top:2px;}
+    .step-num.blue{background:#dbeafe;color:#1e3a5f;}
+    .step-num.orange{background:#ffedd5;color:#7c2d12;}
+    .step-num.gold{background:#fef3c7;color:#92400e;}
+    .step-text{font-size:0.88rem;color:#333;line-height:1.55;}
+    .step-text strong{color:#1a1a2e;}
+
+    /* CARDS PREVIEW */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:10px;}
+    .mini-card{border-radius:10px;padding:12px;border:2px solid;}
+    .mini-card.lukio{background:#eff6ff;border-color:#93c5fd;}
+    .mini-card.amis{background:#fff7ed;border-color:#fdba74;}
+    .mini-card .mc-icon{font-size:1.3rem;margin-bottom:4px;}
+    .mini-card .mc-term{font-family:"Playfair Display",serif;font-size:0.82rem;font-weight:700;margin-bottom:2px;}
+    .mini-card.lukio .mc-term{color:#1e3a5f;}
+    .mini-card.amis .mc-term{color:#7c2d12;}
+    .mini-card .mc-pts{font-size:0.7rem;font-weight:700;color:#f59e0b;}
+    .mini-card .mc-type{font-size:0.65rem;text-transform:uppercase;letter-spacing:.5px;color:#999;margin-bottom:2px;}
+
+    /* SCORE TABLE */
+    .score-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+    .score-table th{background:#f8f9fa;padding:8px 12px;text-align:left;font-size:0.75rem;text-transform:uppercase;letter-spacing:.5px;color:#666;border-bottom:2px solid #e5e7eb;}
+    .score-table td{padding:9px 12px;border-bottom:1px solid #f0f0f0;color:#333;}
+    .score-table tr:last-child td{border-bottom:none;}
+    .badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:0.7rem;font-weight:700;}
+    .badge-win{background:#dcfce7;color:#166534;}
+    .badge-lose{background:#fee2e2;color:#991b1b;}
+    .badge-neutral{background:#fef9c3;color:#713f12;}
+
+    /* TIPS BOX */
+    .tip-box{border-radius:10px;padding:14px 16px;margin-top:10px;border-left:4px solid;}
+    .tip-box.blue{background:#eff6ff;border-color:#3b82f6;}
+    .tip-box.orange{background:#fff7ed;border-color:#f97316;}
+    .tip-box.green{background:#f0fdf4;border-color:#22c55e;}
+    .tip-box.gold{background:#fffbeb;border-color:#f59e0b;}
+    .tip-box .tb-title{font-weight:700;font-size:0.82rem;margin-bottom:4px;}
+    .tip-box .tb-title.blue{color:#1e3a5f;}
+    .tip-box .tb-title.orange{color:#7c2d12;}
+    .tip-box .tb-title.green{color:#14532d;}
+    .tip-box .tb-title.gold{color:#78350f;}
+    .tip-box p{font-size:0.82rem;color:#555;line-height:1.55;}
+
+    /* TWO-COL */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    /* LEARNING GOALS */
+    .goal-list{display:flex;flex-direction:column;gap:8px;}
+    .goal{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#f8f9fa;border-radius:8px;}
+    .goal-icon{font-size:1.1rem;flex-shrink:0;}
+    .goal-text{font-size:0.85rem;color:#333;line-height:1.4;}
+
+    /* TIMING TABLE */
+    .timing{display:flex;flex-direction:column;gap:6px;}
+    .timing-row{display:flex;gap:10px;align-items:center;font-size:0.85rem;}
+    .timing-time{background:#1a2e4a;color:#f59e0b;border-radius:6px;padding:3px 10px;font-weight:700;font-size:0.75rem;min-width:60px;text-align:center;flex-shrink:0;}
+    .timing-desc{color:#444;}
+
+    /* DISCUSSION */
+    .discussion-list{display:flex;flex-direction:column;gap:8px;}
+    .dq{background:#f8f9fa;border-radius:8px;padding:10px 12px;font-size:0.85rem;color:#333;display:flex;gap:8px;}
+    .dq-num{font-weight:700;color:#6366f1;flex-shrink:0;}
+
+    /* VARIANTS */
+    .variant-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .variant{border-radius:10px;padding:14px;border:2px solid #e5e7eb;}
+    .variant-title{font-weight:700;font-size:0.85rem;margin-bottom:6px;color:#1a1a2e;}
+    .variant-desc{font-size:0.8rem;color:#555;line-height:1.5;}
+
+    @media(max-width:620px){
+      .two-col,.variant-grid,.cards-grid{grid-template-columns:1fr;}
+      .tabs{margin:16px 12px 0;width:calc(100% - 24px);}
+      .content{padding:16px;}
+      .sheet-header{padding:16px 16px 12px;}
+      .sheet-body{padding:14px 16px;}
+    }
+
+    /* COPYRIGHT */
+    @media print {
+      body::after {
+        content: '\00A9 DigiOpo Omilla J\00E4ljill\00E4 2026 – Lukio vs. Amis';
+        position: fixed;
+        bottom: 10px;
+        left: 0; right: 0;
+        text-align: center;
+        font-size: 8.5pt;
+        color: #999;
+        font-family: Lato, sans-serif;
+        letter-spacing: 0.5px;
+      }
+      @page {
+        margin: 18mm 15mm 24mm 15mm;
+      }
+    }
+    .copyright-bar {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #bbb;
+      padding: 14px 0 6px;
+      letter-spacing: 0.4px;
+      border-top: 1px solid #f0f0f0;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar no-print">
+  <div>
+    <h1>Lukio vs. Amis – ohjeet</h1>
+    <p>Lukio vs Amis -strategiapeli</p>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨 Tulosta ohjeet</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs no-print">
+  <button class="tab-btn active" onclick="switchTab('player')">🎮 Pelaajan ohjeet</button>
+  <button class="tab-btn" onclick="switchTab('teacher')">👩‍🏫 Opettajan ohjeet</button>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════════════
+     PELAAJAN OHJEET
+═══════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-player">
+
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="eyebrow" style="color:#f59e0b;">Strategiapeli</div>
+      <h2>🃏 Lukio vs. Amis</h2>
+      <p>Lukio vs Amis – haasta vastustajasi, puolusta valintasi ja rakenna oma opintopolkusi kortti kerrallaan.</p>
+    </div>
+    <div class="sheet-body">
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🎯</span> Pelin idea</div>
+        <p style="font-size:.88rem;color:#444;line-height:1.6;margin-bottom:12px;">
+          Kaksi pelaajaa ottaa vastakkain lukiolaisen ja amislaisen roolit. Kumpikin rakentaa omaa opintopolkuaan pelaamalla kortteja — mutta vastustaja voi haastaa jokaisen pelatun kortin. Jos haaste onnistuu, kortti torjutaan. Jos epäonnistuu, kortista saa bonuspisteitä!
+        </p>
+        <div class="two-col">
+          <div class="tip-box blue">
+            <div class="tb-title blue">📚 Lukiolainen</div>
+            <p>Teoria, yo-kokeet ja laaja yleissivistys. Kortit kertovat lukion rakenteesta ja tutkinnoista.</p>
+          </div>
+          <div class="tip-box orange">
+            <div class="tb-title orange">🔧 Amislainen</div>
+            <p>Käytännön taidot, näytöt ja työelämä. Kortit kertovat ammatillisesta koulutuksesta.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🚀</span> Näin aloitat</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num gold">1</div>
+            <div class="step-text">Valitse pelimoodi: <strong>Kaksi pelaajaa</strong> (haasta kaveria) tai <strong>Vs. tietokone</strong> (pelaa yksin).</div>
+          </div>
+          <div class="step">
+            <div class="step-num gold">2</div>
+            <div class="step-text">Valitse puolesi: <strong>Lukiolainen 📚</strong> vai <strong>Amislainen 🔧</strong>. Vastustaja saa automaattisesti toisen puolen.</div>
+          </div>
+          <div class="step">
+            <div class="step-num gold">3</div>
+            <div class="step-text">Molemmat saavat <strong>4 korttia käteensä</strong>. Lukiolainen aloittaa aina ensimmäisenä.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🔄</span> Kierroksen kulku</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num blue">1</div>
+            <div class="step-text"><strong>Valitse kortti</strong> kädestäsi klikkaamalla sitä. Kortti nousee esiin ja näet sen termin ja selityksen.</div>
+          </div>
+          <div class="step">
+            <div class="step-num blue">2</div>
+            <div class="step-text">Klikkaa <strong>"▶ Pelaa tämä kortti"</strong> lisätäksesi sen omalle polullesi.</div>
+          </div>
+          <div class="step">
+            <div class="step-num blue">3</div>
+            <div class="step-text"><strong>Vastustaja päättää:</strong> hyväksyykö kortin vai haastaa sen. Hänellä on kaksi nappia: ⚔️ Haasta tai ✓ Hyväksy.</div>
+          </div>
+          <div class="step">
+            <div class="step-num blue">4</div>
+            <div class="step-text">Vuorot vaihtuvat. Peli kestää <strong>8 kierrosta</strong>. Jokaisen kierroksen jälkeen nostetaan uusi kortti pakasta (jos pakkaa on jäljellä).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">⚔️</span> Haaste-mekaniikka</div>
+        <p style="font-size:.85rem;color:#555;margin-bottom:10px;">Kun vastustaja klikkaa "Haasta", ruudulle tulee monivalintakysymys. Haastajan täytyy tunnistaa <strong>pelatun kortin oikea selitys</strong> neljästä vaihtoehdosta.</p>
+        <table class="score-table">
+          <thead>
+            <tr><th>Tilanne</th><th>Tulos</th><th>Pisteet</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Haaste onnistuu <span class="badge badge-win">oikea vastaus</span></td>
+              <td>Kortti torjutaan – ei päädy polkuun</td>
+              <td><strong>+15 p haastajalle</strong></td>
+            </tr>
+            <tr>
+              <td>Haaste epäonnistuu <span class="badge badge-lose">väärä vastaus</span></td>
+              <td>Kortti menee läpi bonuksella</td>
+              <td><strong>+kortin pisteet +10 p bonus</strong></td>
+            </tr>
+            <tr>
+              <td>Hyväksytty <span class="badge badge-neutral">ei haastetta</span></td>
+              <td>Kortti lisätään polkuun normaalisti</td>
+              <td><strong>+kortin pisteet</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tip-box gold" style="margin-top:10px;">
+          <div class="tb-title gold">💡 Taktinen vinkki</div>
+          <p>Haasta vain jos olet melko varma vastauksesta — epäonnistunut haaste antaa vastustajalle bonuspisteet! Toisaalta onnistunut haaste voi torjua vastustajan arvokkaimman kortin.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🏆</span> Pisteet ja voitto</div>
+        <div class="cards-grid">
+          <div class="mini-card lukio">
+            <div class="mc-type">Esimerkki lukio</div>
+            <div class="mc-icon">🎓</div>
+            <div class="mc-term">Ylioppilastutkinto</div>
+            <div class="mc-pts">+30 pistettä</div>
+          </div>
+          <div class="mini-card lukio">
+            <div class="mc-type">Esimerkki lukio</div>
+            <div class="mc-icon">📅</div>
+            <div class="mc-term">Periodi</div>
+            <div class="mc-pts">+10 pistettä</div>
+          </div>
+          <div class="mini-card amis">
+            <div class="mc-type">Esimerkki amis</div>
+            <div class="mc-icon">🔨</div>
+            <div class="mc-term">Näyttö</div>
+            <div class="mc-pts">+30 pistettä</div>
+          </div>
+          <div class="mini-card amis">
+            <div class="mc-type">Esimerkki amis</div>
+            <div class="mc-icon">📏</div>
+            <div class="mc-term">Lähtötaso</div>
+            <div class="mc-pts">+10 pistettä</div>
+          </div>
+        </div>
+        <p style="font-size:.82rem;color:#666;margin-top:10px;line-height:1.5;">Korttien arvo vaihtelee 10–30 pisteeseen. Arvokkaammat kortit (tutkinnot, arvosanat) ovat houkuttelevampia haastaa. Eniten pisteitä kerännyt voittaa 8 kierroksen jälkeen.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">✨</span> Pelin lopussa</div>
+        <p style="font-size:.88rem;color:#444;line-height:1.6;">Lopussa näet kummankin pelaajan <strong>tulevaisuuspolun</strong> — mitä kortteja polkuun kertyi ja mitä ne tarkoittavat käytännössä. Lopussa on myös <strong>"Mitä yhteistä teillä on?"</strong> -osio, joka muistuttaa, että molemmat polut johtavat hyvään tulevaisuuteen.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end player tab -->
+
+
+<!-- ═══════════════════════════════════════════════
+     OPETTAJAN OHJEET
+═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-teacher">
+
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="eyebrow" style="color:#6366f1;">Opettajan opas</div>
+      <h2>👩‍🏫 Lukio vs. Amis – opettajalle</h2>
+      <p>Ohjeet pelin käyttöön opetuksessa, pedagogiset tavoitteet ja vinkit ohjaamiseen.</p>
+    </div>
+    <div class="sheet-body">
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🎓</span> Pedagogiset tavoitteet</div>
+        <div class="goal-list">
+          <div class="goal">
+            <span class="goal-icon">📖</span>
+            <div class="goal-text"><strong>Sanaston oppiminen:</strong> Oppilas oppii sekä lukion että ammatillisen koulutuksen keskeisen sanaston pelaamisen kautta — ei ulkoa lukemalla.</div>
+          </div>
+          <div class="goal">
+            <span class="goal-icon">🤔</span>
+            <div class="goal-text"><strong>Kriittinen ajattelu:</strong> Haaste-mekaniikka pakottaa pelaajat arvioimaan, osaavatko he selittää termin ennen kuin päättävät haastaa.</div>
+          </div>
+          <div class="goal">
+            <span class="goal-icon">🔄</span>
+            <div class="goal-text"><strong>Molemminpuolinen ymmärrys:</strong> Kumpikin pelaaja oppii myös vastustajansa sanaston, koska haaste-vastaukset koskevat aina vastustajan kortteja.</div>
+          </div>
+          <div class="goal">
+            <span class="goal-icon">💬</span>
+            <div class="goal-text"><strong>Keskustelun herättäminen:</strong> Peli luo luontevan tilaisuuden pohtia jatko-opintojen eroja ja yhtäläisyyksiä — ilman saarnaamista.</div>
+          </div>
+          <div class="goal">
+            <span class="goal-icon">🏫</span>
+            <div class="goal-text"><strong>Opinto-ohjauksen tuki:</strong> Sopii erityisesti 9.-luokkalaisten opinto-ohjaukseen, jossa nuori pohtii omaa polkuaan peruskoulun jälkeen.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">⏱️</span> Aikataulutus</div>
+        <div class="timing">
+          <div class="timing-row"><span class="timing-time">5 min</span><span class="timing-desc">Johdanto: mistä pelissä on kyse ja mitä termejä se sisältää</span></div>
+          <div class="timing-row"><span class="timing-time">3 min</span><span class="timing-desc">Parijako tai ryhmäjako — kuka pelaa ketä vastaan</span></div>
+          <div class="timing-row"><span class="timing-time">15 min</span><span class="timing-desc">Itse peli (8 kierrosta, yksi pelisessio kestää noin 10–15 min)</span></div>
+          <div class="timing-row"><span class="timing-time">10 min</span><span class="timing-desc">Yhteinen purku: mitä jäi mieleen, mitä yllättyi</span></div>
+          <div class="timing-row"><span class="timing-time">+ 5 min</span><span class="timing-desc">Valinnainen: toinen kierros rooleilla vaihdettuina</span></div>
+        </div>
+        <p style="font-size:.8rem;color:#888;margin-top:8px;">Kokonaisaika: noin 35–40 minuuttia. Sopii yhteen oppituntiin.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🏗️</span> Käyttötavat</div>
+        <div class="variant-grid">
+          <div class="variant">
+            <div class="variant-title">👥 Pareittain, yksi laite</div>
+            <div class="variant-desc">Pelaajat istuvat vierekkäin. Kun vuoro vaihtuu, laite käännetään tai siirretään toiselle. Toimii hyvin tabletilla.</div>
+          </div>
+          <div class="variant">
+            <div class="variant-title">💻 Yksin vs. tekoäly</div>
+            <div class="variant-desc">Kukin oppilas pelaa omalla laitteellaan tekoälyvastustajaa vastaan. Hyvä itsenäiseen harjoitteluun tai kotiläksynä.</div>
+          </div>
+          <div class="variant">
+            <div class="variant-title">📺 Luokkahuone yhdessä</div>
+            <div class="variant-desc">Opettaja jakaa luokan kahteen joukkueeseen. Peli heijastetaan taululle, joukkueet neuvottelevat äänestä yhdessä vuorostaan.</div>
+          </div>
+          <div class="variant">
+            <div class="variant-title">🔁 Rooleilla vaihdettuina</div>
+            <div class="variant-desc">Pelaa kaksi kierrosta: ensin omalla roolilla, sitten vaihdetaan. Näin molemmat oppivat molemmat sanastot syvemmin.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">💡</span> Vinkit ohjaamiseen</div>
+        <div class="tip-box green">
+          <div class="tb-title green">✅ Ennen peliä</div>
+          <p>Kysy oppilailta aluksi: "Mitä eroa on lukiolla ja amiksen?" Kirjaa vastaukset taululle. Palaa niihin pelin jälkeen — mitkä käsitykset muuttuivat?</p>
+        </div>
+        <div class="tip-box blue" style="margin-top:8px;">
+          <div class="tb-title blue">🎮 Pelin aikana</div>
+          <p>Kannusta haastamaan rohkeasti — virheetkin ovat oppimista. Muistuta, että kortin selitys näytetään aina haasteen jälkeen riippumatta tuloksesta.</p>
+        </div>
+        <div class="tip-box gold" style="margin-top:8px;">
+          <div class="tb-title gold">💬 Pelin jälkeen</div>
+          <p>Katso yhdessä tulevaisuuspolku-näkymä. Huomauttakaa, että molemmat polut johtavat AMK-opintoihin ja hyviin tulevaisuudenmahdollisuuksiin.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">❓</span> Keskustelukysymyksiä purkuun</div>
+        <div class="discussion-list">
+          <div class="dq"><span class="dq-num">1.</span><span>Mitkä termit olivat sinulle uusia? Mitkä jo tuttuja?</span></div>
+          <div class="dq"><span class="dq-num">2.</span><span>Oliko jokin termi yllättävä tai hankala selittää? Miksi?</span></div>
+          <div class="dq"><span class="dq-num">3.</span><span>Kumpi tuntui tutummalta — lukion vai amiksen sanasto? Mitä se kertoo sinusta?</span></div>
+          <div class="dq"><span class="dq-num">4.</span><span>Oliko jokin kortti sellainen, jonka olisit halunnut omalle polullesi? Miksi juuri se?</span></div>
+          <div class="dq"><span class="dq-num">5.</span><span>Mitä uutta opit toisen polusta, jota et tiennyt ennen peliä?</span></div>
+          <div class="dq"><span class="dq-num">6.</span><span>Mitä yhteistä molemmilla poluilla oli pelin lopussa?</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">📋</span> Pelissä olevat termit</div>
+        <div class="two-col">
+          <div>
+            <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:8px;">📚 Lukio (12 korttia)</p>
+            <div style="display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:#444;">
+              <span>🎓 Ylioppilastutkinto (30 p)</span>
+              <span>⭐ Laudatur (25 p)</span>
+              <span>📝 Ainereaalikoe (20 p)</span>
+              <span>🏆 Lukiodiplomi (20 p)</span>
+              <span>🌍 IB-tutkinto (25 p)</span>
+              <span>🏫 Lukion oppimäärä (20 p)</span>
+              <span>🗺️ Opintotarjotin (15 p)</span>
+              <span>🧭 Opinto-ohjaaja (15 p)</span>
+              <span>📚 Opintojakso (10 p)</span>
+              <span>📊 Opintopiste (10 p)</span>
+              <span>📅 Periodi (10 p)</span>
+              <span>✅ Approbatur (10 p)</span>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7c2d12;margin-bottom:8px;">🔧 Amis (12 korttia)</p>
+            <div style="display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:#444;">
+              <span>🔨 Näyttö (30 p)</span>
+              <span>⚙️ Ammattitutkinto (25 p)</span>
+              <span>🌟 Erikoisammattitutkinto (30 p)</span>
+              <span>🤝 Oppisopimus (25 p)</span>
+              <span>🧩 YTO-opinnot (20 p)</span>
+              <span>📋 HOKS (20 p)</span>
+              <span>🏭 Koulutussopimus (20 p)</span>
+              <span>📖 Tutkinnon perusteet (15 p)</span>
+              <span>🎯 Osaamisala (15 p)</span>
+              <span>💯 Osaamispiste (15 p)</span>
+              <span>📏 Lähtötaso (10 p)</span>
+              <span>💬 Palaute (10 p)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="icon">🔗</span> Kytkennät muihin tehtäviin</div>
+        <p style="font-size:.88rem;color:#444;line-height:1.6;">Tämä peli toimii hyvin yhdessä muiden DigiOpon tehtävien kanssa:</p>
+        <ul style="font-size:.85rem;color:#444;line-height:2;margin-top:8px;margin-left:18px;">
+          <li><strong>Lukion sanastopeli</strong> — opettele termit ensin paripelillä, sitten haasta ne tässä</li>
+          <li><strong>Ammatillisen koulutuksen sanastopeli</strong> — sama idea amisnäkökulmasta</li>
+          <li><strong>Lukion ristikko</strong> — syvennä lukion termejä ristikkotehtävällä</li>
+          <li><strong>Amisristikko</strong> — syvennä amiksen termejä ristikkotehtävällä</li>
+          <li><strong>Muistipeli</strong> — kerää molemmat sanastot yhteen ennen tätä peliä</li>
+        </ul>
+        <div class="tip-box green" style="margin-top:12px;">
+          <div class="tb-title green">📌 Suositeltu järjestys</div>
+          <p>Sanastopeli (opettele) → Muistipeli (kertaa) → Lukio vs. Amis (sovella ja vertaa) → Ristikko (syvennä). Noin 2–3 oppituntia kokonaisuutena.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end teacher tab -->
+
+</div><!-- end content -->
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector('[onclick="switchTab(\'' + name + '\')"]').classList.add('active');
+}
+</script>
+
+<div class="copyright-bar no-print">© DigiOpo Omilla Jäljillä 2026 – Lukio vs. Amis</div>
+</body>
+</html>

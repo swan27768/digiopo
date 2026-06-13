@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lukion ristikko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #f8f5ef;
+      font-family: 'Lato', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    h1.game-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 1;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-pill {
+      background: #fff;
+      border: 2px solid #1a1a2e;
+      border-radius: 50px;
+      padding: 6px 18px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #1a1a2e;
+      box-shadow: 3px 3px 0 #1a1a2e;
+    }
+    .stat-pill span { font-weight: 400; opacity: 0.6; margin-right: 4px; }
+    #timer-pill { background: #fef3c7; }
+    #score-pill { background: #dcfce7; }
+    .building-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 980px;
+      z-index: 1;
+    }
+    .hat-area { display: flex; justify-content: center; margin-bottom: -2px; }
+    .hat-area svg { width: 160px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+    .roof {
+      width: 100%;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 60px solid #1a1a2e;
+      position: relative;
+    }
+    .roof::after {
+      content: '';
+      position: absolute;
+      top: 6px; left: -24px; right: -24px;
+      height: 0;
+      border-left: 24px solid transparent;
+      border-right: 24px solid transparent;
+      border-bottom: 54px solid #2d2d4e;
+    }
+    .building-body {
+      background: #fff;
+      border: 3px solid #1a1a2e;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 6px 6px 0 #1a1a2e;
+      padding: 24px 20px 28px;
+    }
+    .game-layout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    /* GRID */
+    .crossword-grid {
+      display: grid;
+      gap: 2px;
+      background: #1a1a2e;
+      border: 3px solid #1a1a2e;
+      border-radius: 4px;
+      padding: 3px;
+    }
+    .cell {
+      width: 32px;
+      height: 32px;
+      position: relative;
+      background: #1a1a2e;
+    }
+    .cell.white { background: #f0f4ff; }
+    .cell.black { background: #1a1a2e; }
+    .cell input {
+      width: 100%; height: 100%;
+      border: none; outline: none;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      background: transparent;
+      text-transform: uppercase;
+      cursor: pointer;
+      caret-color: transparent;
+      padding: 0;
+    }
+    .cell.white:hover input { background: #e0e7ff; }
+    .cell.active-word input { background: #dbeafe !important; }
+    .cell.active-cell input { background: #fef9c3 !important; }
+    .cell.correct input { background: #dcfce7 !important; color: #166534; }
+    .cell.wrong input { background: #fee2e2 !important; color: #991b1b; animation: shake .3s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+    .cell-number {
+      position: absolute;
+      top: 1px; left: 2px;
+      font-size: 0.48rem;
+      font-weight: 700;
+      color: #6366f1;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 2;
+    }
+    /* CLUES */
+    .clues-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .clues-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      color: #fff;
+      background: #1a1a2e;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      position: sticky;
+      top: 0;
+    }
+    .clue-item {
+      display: flex;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      border: 1.5px solid transparent;
+      transition: background 0.1s;
+    }
+    .clue-item:hover { background: #f0f4ff; border-color: #c7d2fe; }
+    .clue-item.active { background: #fef9c3; border-color: #f59e0b; }
+    .clue-item.solved { opacity: 0.4; text-decoration: line-through; }
+    .clue-num { font-weight: 700; color: #6366f1; min-width: 20px; flex-shrink: 0; }
+    /* PROGRESS */
+    .progress-wrap { margin-top: 16px; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg,#6366f1,#22c55e); border-radius: 4px; transition: width .4s; }
+    /* ACTIVE CLUE DISPLAY */
+    .active-clue-bar {
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      background: #fef9c3;
+      border: 2px solid #f59e0b;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #1a1a2e;
+      min-height: 38px;
+    }
+    .active-clue-bar .acb-num { font-weight: 700; color: #6366f1; margin-right: 6px; }
+    /* ACTIONS */
+    .actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .btn {
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 2px solid #1a1a2e;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #1a1a2e;
+      transition: all .12s;
+    }
+    .btn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 #1a1a2e; }
+    .btn:active { transform: translate(3px,3px); box-shadow: none; }
+    .btn-check { background: #dcfce7; }
+    .btn-hint  { background: #fef3c7; }
+    .btn-reveal { background: #fee2e2; }
+    .btn-restart { background: #f0fdf4; }
+    /* TOAST */
+    #feedback {
+      position: fixed; bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a2e; color: #fff;
+      padding: 12px 24px; border-radius: 50px;
+      font-weight: 700; font-size: 0.9rem;
+      opacity: 0; transition: all .3s; pointer-events: none; z-index: 100;
+    }
+    #feedback.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,26,46,.7); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal-card {
+      background: #fff; border: 3px solid #1a1a2e; border-radius: 12px;
+      box-shadow: 8px 8px 0 #1a1a2e; padding: 36px 40px;
+      text-align: center; max-width: 380px; width: 90%;
+      transform: scale(.9); transition: transform .3s;
+    }
+    .modal-overlay.show .modal-card { transform: scale(1); }
+    .modal-card h2 { font-family:'Playfair Display',serif; font-size:2rem; color:#1a1a2e; margin-bottom:8px; }
+    .modal-card p { color:#555; margin-bottom:24px; }
+    .modal-stats { display:flex; justify-content:center; gap:30px; margin-bottom:28px; }
+    .modal-stat strong { display:block; font-size:2rem; font-family:'Playfair Display',serif; color:#1a1a2e; }
+    .modal-stat span { font-size:.8rem; color:#888; }
+    .btn-play-again { background:#1a1a2e; color:#fff; border-color:#1a1a2e; font-size:1rem; padding:12px 30px; }
+
+    @media (max-width: 700px) {
+      .game-layout { grid-template-columns: 1fr; }
+      .crossword-grid { margin: 0 auto; }
+      .cell { width: 24px; height: 24px; }
+      .cell input { font-size: 0.72rem; }
+      .cell-number { font-size: 0.38rem; }
+    }
+
+    /* INSTRUCTIONS */
+    .instructions {
+      width: 100%;
+      max-width: 860px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    details.instr-details summary {
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: #6366f1;
+      font-weight: 700;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+      list-style: none;
+    }
+    details.instr-details summary::before { content: "▶"; font-size: 0.6rem; transition: transform 0.2s; }
+    details.instr-details[open] summary::before { transform: rotate(90deg); }
+    .instr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .instr-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: #444;
+      line-height: 1.4;
+    }
+    kbd {
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: "Lato", sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="game-title">Lukion ristikko</h1>
+<p class="subtitle">Täytä ristikko lukion käsitteillä. Klikkaa ruutua tai vihjettä aloittaaksesi.</p>
+
+
+<div class="instructions">
+  <details class="instr-details">
+    <summary>Näytä peliohjeet</summary>
+    <div class="instr-grid">
+      <div class="instr-item"><kbd>Klikkaa ruutua</kbd><span>Valitsee sanan. Klikkaa uudelleen vaihtaaksesi suuntaa.</span></div>
+      <div class="instr-item"><kbd>Kirjoita</kbd><span>Kirjain täyttää ruudun ja kursori etenee automaattisesti.</span></div>
+      <div class="instr-item"><kbd>⌫ Backspace</kbd><span>Poistaa kirjaimen tai siirtyy edelliseen ruutuun.</span></div>
+      <div class="instr-item"><kbd>Tab / Shift+Tab</kbd><span>Hyppää seuraavaan tai edelliseen sanaan.</span></div>
+      <div class="instr-item"><kbd>← → ↑ ↓</kbd><span>Liikkuu ruudusta toiseen, vaihtaa suuntaa tarvittaessa.</span></div>
+      <div class="instr-item"><kbd>Klikkaa vihjettä</kbd><span>Aktivoi sanan ja hyppää ensimmäiseen tyhjään ruutuun.</span></div>
+    </div>
+  </details>
+</div>
+<div class="stats-bar">
+  <div class="stat-pill" id="timer-pill"><span>Aika</span><span id="timer-val">0s</span></div>
+  <div class="stat-pill" id="score-pill"><span>Pisteet</span><span id="score-val">0</span></div>
+</div>
+
+<div class="building-wrapper">
+  <div class="hat-area">
+    <svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="28" width="180" height="52" rx="4" fill="#f9f9f9" stroke="#1a1a2e" stroke-width="2.5"/>
+      <rect x="10" y="64" width="180" height="16" fill="#1a1a2e"/>
+      <path d="M14 80 Q100 100 186 80 L186 84 Q100 106 14 84 Z" fill="#111"/>
+      <path d="M18 80 Q100 96 182 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+      <circle cx="100" cy="72" r="7" fill="#f59e0b" stroke="#b45309" stroke-width="1"/>
+      <text x="100" y="76" text-anchor="middle" font-size="8" fill="#7c2d12" font-family="serif">♦</text>
+      <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd" stroke-width="1"/>
+      <line x1="100" y1="28" x2="100" y2="64" stroke="#ddd" stroke-width="1"/>
+      <circle cx="100" cy="28" r="8" fill="#1a1a2e"/>
+      <path d="M100 36 Q130 50 148 68" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+      <line x1="148" y1="68" x2="144" y2="84" stroke="#1a1a2e" stroke-width="1.5"/>
+      <line x1="148" y1="68" x2="150" y2="85" stroke="#1a1a2e" stroke-width="1.5"/>
+      <line x1="148" y1="68" x2="155" y2="82" stroke="#1a1a2e" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="roof"></div>
+  <div class="building-body">
+    <div class="active-clue-bar" id="active-clue-bar">
+      <span class="acb-num" id="acb-num"></span><span id="acb-text">Valitse ruutu tai vihje aloittaaksesi.</span>
+    </div>
+    <div class="game-layout">
+      <div id="crossword-grid" class="crossword-grid"></div>
+      <div class="clues-panel">
+        <div class="clues-section">
+          <h3>→ Vaakasuoraan</h3>
+          <div id="across-clues"></div>
+        </div>
+        <div class="clues-section">
+          <h3>↓ Pystysuoraan</h3>
+          <div id="down-clues"></div>
+        </div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-check"   id="check-btn">✓ Tarkista</button>
+      <button class="btn btn-hint"    id="hint-btn">💡 Vinkki</button>
+      <button class="btn btn-reveal"  id="reveal-btn">👁 Paljasta sana</button>
+      <button class="btn btn-restart" id="restart-btn">↺ Aloita alusta</button>
+    </div>
+  </div>
+</div>
+
+<div id="feedback"></div>
+
+<div class="modal-overlay" id="victory-modal">
+  <div class="modal-card">
+    <h2>🎓 Valmis!</h2>
+    <p>Ristikko täytetty onnistuneesti!</p>
+    <div class="modal-stats">
+      <div class="modal-stat"><strong id="final-score">0</strong><span>Pisteet</span></div>
+      <div class="modal-stat"><strong id="final-time">0s</strong><span>Aika</span></div>
+    </div>
+    <button class="btn btn-play-again" id="play-again-btn">🔁 Pelaa uudelleen</button>
+  </div>
+</div>
+
+<script>
+// ── WORD DATA (verified conflict-free) ──────────────────────────────────────
+const WORDS = [
+  {id:1, word:'AINEREAALIKOE',  row:0,  col:0,  dir:'down',   clue:'Yo-tutkinnon koe, jossa testataan yksittäisen oppiaineen osaaminen'},
+  {id:2, word:'ABITURIENTI',    row:0,  col:0,  dir:'across', clue:'Lukion viimeistä vuotta käyvä opiskelija'},
+  {id:3, word:'LAUDATUR',       row:3,  col:2,  dir:'across', clue:'Ylioppilastutkinnon korkein arvosana'},
+  {id:4, word:'PERIODI',        row:4,  col:1,  dir:'across', clue:'Lukuvuoden jakso, jonka aikana opiskellaan tiettyjä opintojaksoja'},
+  {id:5, word:'APPROBATUR',     row:6,  col:0,  dir:'across', clue:'Ylioppilastutkinnon alin hyväksytty arvosana'},
+  {id:6, word:'LUKIODIPLOMI',   row:8,  col:0,  dir:'across', clue:'Tunnustus erityisosaamisesta taito- ja taideaineissa'},
+  {id:7, word:'OPINTOPISTE',    row:10, col:1,  dir:'across', clue:'Opintosuoritusten laajuuden mittayksikkö lukiossa'},
+  {id:8, word:'OPINTOJAKSO',    row:11, col:0,  dir:'across', clue:'Lukion opintoyksikkö, joka korvasi kurssin'},
+  {id:9, word:'OPINTOTARJOTIN', row:12, col:1,  dir:'across', clue:'Lukion kurssivalikoima, josta opiskelija valitsee opintonsa'},
+];
+
+const ROWS = 14, COLS = 15;
+
+// ── BUILD SOLUTION GRID ─────────────────────────────────────────────────────
+function buildSolution() {
+  const g = Array.from({length:ROWS}, () => Array(COLS).fill(null));
+  for (const w of WORDS) {
+    for (let i = 0; i < w.word.length; i++) {
+      const r = w.dir==='across' ? w.row : w.row+i;
+      const c = w.dir==='across' ? w.col+i : w.col;
+      g[r][c] = w.word[i];
+    }
+  }
+  return g;
+}
+
+// ── ASSIGN CLUE NUMBERS ─────────────────────────────────────────────────────
+function assignNumbers() {
+  const nums = {}; // wordId -> number
+  const cellNums = {}; // "r,c" -> number
+  let n = 1;
+  // Sort by reading order (top-to-bottom, left-to-right) by start cell
+  const sorted = [...WORDS].sort((a,b) => a.row!==b.row ? a.row-b.row : a.col-b.col);
+  for (const w of sorted) {
+    const key = `${w.row},${w.col}`;
+    if (!cellNums[key]) cellNums[key] = n++;
+    nums[w.id] = cellNums[key];
+  }
+  return nums;
+}
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+let solution, userGrid, cellEls, wordNums;
+let activeWordId = null, activeCellR = -1, activeCellC = -1;
+let solvedWords, score, timerInterval, elapsed, gameActive;
+
+function initGame() {
+  solution  = buildSolution();
+  wordNums  = assignNumbers();
+  userGrid  = Array.from({length:ROWS}, () => Array(COLS).fill(''));
+  solvedWords = new Set();
+  score     = 0; elapsed = 0; gameActive = true;
+  activeWordId = null; activeCellR = -1; activeCellC = -1;
+
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('timer-val').textContent = '0s';
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('victory-modal').classList.remove('show');
+  document.getElementById('acb-num').textContent = '';
+  document.getElementById('acb-text').textContent = 'Valitse ruutu tai vihje aloittaaksesi.';
+
+  renderGrid();
+  renderClues();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    elapsed++;
+    document.getElementById('timer-val').textContent = elapsed + 's';
+  }, 1000);
+}
+
+// ── RENDER GRID ─────────────────────────────────────────────────────────────
+function renderGrid() {
+  const container = document.getElementById('crossword-grid');
+  container.innerHTML = '';
+  container.style.gridTemplateColumns = `repeat(${COLS}, auto)`;
+  cellEls = [];
+
+  const cellNumber = {}; // "r,c" -> display num
+  for (const [wid, num] of Object.entries(wordNums)) {
+    const w = WORDS.find(x => x.id == wid);
+    cellNumber[`${w.row},${w.col}`] = num;
+  }
+
+  for (let r = 0; r < ROWS; r++) {
+    cellEls[r] = [];
+    for (let c = 0; c < COLS; c++) {
+      const div = document.createElement('div');
+      div.className = 'cell';
+      if (solution[r][c]) {
+        div.classList.add('white');
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.maxLength = 2; // allow 1 char + prevent accidental double
+        inp.autocomplete = 'off';
+        inp.spellcheck = false;
+        inp.dataset.r = r; inp.dataset.c = c;
+        inp.addEventListener('mousedown', e => { e.preventDefault(); onCellClick(r, c); });
+        inp.addEventListener('keydown', onKeyDown);
+        inp.addEventListener('input', onInput);
+        div.appendChild(inp);
+        if (cellNumber[`${r},${c}`]) {
+          const span = document.createElement('span');
+          span.className = 'cell-number';
+          span.textContent = cellNumber[`${r},${c}`];
+          div.appendChild(span);
+        }
+      } else {
+        div.classList.add('black');
+      }
+      container.appendChild(div);
+      cellEls[r][c] = div;
+    }
+  }
+}
+
+// ── RENDER CLUES ─────────────────────────────────────────────────────────────
+function renderClues() {
+  const ac = document.getElementById('across-clues');
+  const dc = document.getElementById('down-clues');
+  ac.innerHTML = ''; dc.innerHTML = '';
+  const across = WORDS.filter(w=>w.dir==='across').sort((a,b)=>wordNums[a.id]-wordNums[b.id]);
+  const down   = WORDS.filter(w=>w.dir==='down').sort((a,b)=>wordNums[a.id]-wordNums[b.id]);
+  across.forEach(w => renderClueEl(ac, w));
+  down.forEach(w   => renderClueEl(dc, w));
+}
+function renderClueEl(container, w) {
+  const div = document.createElement('div');
+  div.className = 'clue-item';
+  div.id = 'clue-' + w.id;
+  div.innerHTML = `<span class="clue-num">${wordNums[w.id]}.</span><span>${w.clue}</span>`;
+  div.addEventListener('click', () => activateWord(w.id, true));
+  container.appendChild(div);
+}
+
+// ── CELL CLICK ───────────────────────────────────────────────────────────────
+function onCellClick(r, c) {
+  if (!gameActive) return;
+  if (!solution[r][c]) return;
+  // Find words covering this cell
+  const covering = WORDS.filter(w => covers(w, r, c));
+  if (!covering.length) return;
+
+  if (activeWordId) {
+    const cur = covering.find(w => w.id === activeWordId);
+    if (cur) {
+      // Toggle to the other direction if available
+      const other = covering.find(w => w.id !== activeWordId);
+      if (other) { activateWord(other.id, false, r, c); return; }
+      // Same word, just move focus
+      setActiveCell(r, c);
+      return;
+    }
+  }
+  activateWord(covering[0].id, false, r, c);
+}
+
+function covers(w, r, c) {
+  for (let i = 0; i < w.word.length; i++) {
+    const wr = w.dir==='across' ? w.row : w.row+i;
+    const wc = w.dir==='across' ? w.col+i : w.col;
+    if (wr===r && wc===c) return true;
+  }
+  return false;
+}
+
+// ── ACTIVATE WORD ────────────────────────────────────────────────────────────
+function activateWord(id, focusFirst=false, preferR=-1, preferC=-1) {
+  activeWordId = id;
+  const w = WORDS.find(x => x.id===id);
+
+  // Update clue display
+  document.getElementById('acb-num').textContent = wordNums[id] + (w.dir==='across' ? '→' : '↓') + ' ';
+  document.getElementById('acb-text').textContent = w.clue;
+
+  // Highlight cells
+  clearHighlights();
+  for (let i = 0; i < w.word.length; i++) {
+    const r = w.dir==='across' ? w.row : w.row+i;
+    const c = w.dir==='across' ? w.col+i : w.col;
+    if (!cellEls[r][c].classList.contains('correct')) {
+      cellEls[r][c].classList.add('active-word');
+    }
+  }
+
+  // Find cell to focus
+  let fr = preferR>=0 ? preferR : w.row;
+  let fc = preferC>=0 ? preferC : w.col;
+  if (focusFirst) {
+    // Find first empty cell
+    fr = w.row; fc = w.col;
+    for (let i = 0; i < w.word.length; i++) {
+      const r = w.dir==='across' ? w.row : w.row+i;
+      const c = w.dir==='across' ? w.col+i : w.col;
+      if (!userGrid[r][c]) { fr=r; fc=c; break; }
+    }
+  }
+  setActiveCell(fr, fc);
+
+  // Highlight clue
+  document.querySelectorAll('.clue-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('clue-'+id)?.classList.add('active');
+  document.getElementById('clue-'+id)?.scrollIntoView({block:'nearest'});
+}
+
+function setActiveCell(r, c) {
+  if (activeCellR>=0 && activeCellC>=0 && cellEls[activeCellR]?.[activeCellC]) {
+    cellEls[activeCellR][activeCellC].classList.remove('active-cell');
+  }
+  activeCellR = r; activeCellC = c;
+  if (cellEls[r]?.[c]) {
+    cellEls[r][c].classList.add('active-cell');
+    const inp = cellEls[r][c].querySelector('input');
+    if (inp) { inp.focus(); inp.select(); }
+  }
+}
+
+function clearHighlights() {
+  for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
+    if (cellEls[r]?.[c]) cellEls[r][c].classList.remove('active-word','active-cell');
+  }
+}
+
+// ── INPUT HANDLING ───────────────────────────────────────────────────────────
+function onInput(e) {
+  if (!gameActive) return;
+  const r = parseInt(e.target.dataset.r), c = parseInt(e.target.dataset.c);
+  let val = e.target.value.toUpperCase().replace(/[^A-ZÄÖÅ]/g,'');
+  if (val.length > 1) val = val.slice(-1);
+  e.target.value = val;
+  userGrid[r][c] = val;
+  cellEls[r][c].classList.remove('wrong','correct');
+  if (val) advanceCursor(r, c);
+  updateProgress();
+}
+
+function onKeyDown(e) {
+  if (!gameActive) return;
+  const r = parseInt(e.target.dataset.r), c = parseInt(e.target.dataset.c);
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (userGrid[r][c]) {
+      userGrid[r][c] = '';
+      e.target.value = '';
+      cellEls[r][c].classList.remove('wrong','correct');
+    } else {
+      moveCursorBack(r, c);
+    }
+    updateProgress();
+  } else if (e.key === 'ArrowRight') { e.preventDefault(); moveCursorDir(r,c,0,1); }
+  else if (e.key === 'ArrowLeft')  { e.preventDefault(); moveCursorDir(r,c,0,-1); }
+  else if (e.key === 'ArrowDown')  { e.preventDefault(); moveCursorDir(r,c,1,0); }
+  else if (e.key === 'ArrowUp')    { e.preventDefault(); moveCursorDir(r,c,-1,0); }
+  else if (e.key === 'Tab') {
+    e.preventDefault();
+    const idx = WORDS.findIndex(w=>w.id===activeWordId);
+    const next = WORDS[(idx + (e.shiftKey?-1:1) + WORDS.length) % WORDS.length];
+    activateWord(next.id, true);
+  }
+}
+
+function advanceCursor(r, c) {
+  if (!activeWordId) return;
+  const w = WORDS.find(x=>x.id===activeWordId);
+  const nr = r + (w.dir==='down'?1:0);
+  const nc = c + (w.dir==='across'?1:0);
+  if (nr<ROWS && nc<COLS && solution[nr][nc]) setActiveCell(nr, nc);
+}
+
+function moveCursorBack(r, c) {
+  if (!activeWordId) return;
+  const w = WORDS.find(x=>x.id===activeWordId);
+  const nr = r - (w.dir==='down'?1:0);
+  const nc = c - (w.dir==='across'?1:0);
+  if (nr>=0 && nc>=0 && solution[nr][nc]) {
+    setActiveCell(nr, nc);
+    userGrid[nr][nc] = '';
+    const inp = cellEls[nr][nc]?.querySelector('input');
+    if (inp) inp.value = '';
+    cellEls[nr][nc]?.classList.remove('wrong','correct');
+  }
+}
+
+function moveCursorDir(r, c, dr, dc) {
+  const nr=r+dr, nc=c+dc;
+  if (nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&solution[nr][nc]) {
+    const dirNeeded = dr!==0 ? 'down' : 'across';
+    const w = WORDS.find(ww=>ww.dir===dirNeeded && covers(ww,nr,nc));
+    if (w && w.id!==activeWordId) activateWord(w.id, false, nr, nc);
+    else setActiveCell(nr, nc);
+  }
+}
+
+// ── CHECK ────────────────────────────────────────────────────────────────────
+document.getElementById('check-btn').addEventListener('click', () => {
+  let correct=0, wrong=0;
+  for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
+    if (!solution[r][c] || !userGrid[r][c]) continue;
+    cellEls[r][c].classList.remove('correct','wrong');
+    if (userGrid[r][c]===solution[r][c]) { cellEls[r][c].classList.add('correct'); correct++; }
+    else { cellEls[r][c].classList.add('wrong'); wrong++; }
+  }
+  score = Math.max(0, score - wrong*5);
+  document.getElementById('score-val').textContent = score;
+  showFeedback(`✓ Oikein: ${correct}  ✗ Väärin: ${wrong}`, wrong>0?'#f59e0b':'#22c55e');
+  checkSolved();
+  updateProgress();
+});
+
+// ── HINT ─────────────────────────────────────────────────────────────────────
+document.getElementById('hint-btn').addEventListener('click', () => {
+  if (!activeWordId) { showFeedback('Valitse ensin sana!'); return; }
+  const w = WORDS.find(x=>x.id===activeWordId);
+  for (let i=0;i<w.word.length;i++) {
+    const r = w.dir==='across'?w.row:w.row+i;
+    const c = w.dir==='across'?w.col+i:w.col;
+    if (userGrid[r][c]!==w.word[i]) {
+      userGrid[r][c]=w.word[i];
+      const inp = cellEls[r][c].querySelector('input');
+      if (inp) { inp.value=w.word[i]; inp.blur(); }
+      cellEls[r][c].classList.add('correct');
+      cellEls[r][c].classList.remove('wrong','active-cell');
+      score = Math.max(0,score-20);
+      document.getElementById('score-val').textContent=score;
+      showFeedback('💡 Vinkki: "'+w.word[i]+'"  -20 pistettä','#f59e0b');
+      checkSolved(); updateProgress(); return;
+    }
+  }
+  showFeedback('Sana on jo oikein! 🎉','#22c55e');
+});
+
+// ── REVEAL WORD ──────────────────────────────────────────────────────────────
+document.getElementById('reveal-btn').addEventListener('click', () => {
+  if (!activeWordId) { showFeedback('Valitse ensin sana!'); return; }
+  const w = WORDS.find(x=>x.id===activeWordId);
+  for (let i=0;i<w.word.length;i++) {
+    const r=w.dir==='across'?w.row:w.row+i;
+    const c=w.dir==='across'?w.col+i:w.col;
+    userGrid[r][c]=w.word[i];
+    const inp=cellEls[r][c].querySelector('input');
+    if (inp) { inp.value=w.word[i]; inp.blur(); }
+    cellEls[r][c].classList.add('correct');
+    cellEls[r][c].classList.remove('wrong','active-cell');
+  }
+  activeCellR=-1; activeCellC=-1;
+  score=Math.max(0,score-40);
+  document.getElementById('score-val').textContent=score;
+  showFeedback('👁 '+w.word+'  (-40 p)','#ef4444');
+  checkSolved(); updateProgress();
+});
+
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
+function checkSolved() {
+  for (const w of WORDS) {
+    if (solvedWords.has(w.id)) continue;
+    let ok=true;
+    for (let i=0;i<w.word.length;i++) {
+      const r=w.dir==='across'?w.row:w.row+i;
+      const c=w.dir==='across'?w.col+i:w.col;
+      if (userGrid[r][c]!==w.word[i]) { ok=false; break; }
+    }
+    if (ok) {
+      solvedWords.add(w.id);
+      score+=100;
+      document.getElementById('score-val').textContent=score;
+      document.getElementById('clue-'+w.id)?.classList.add('solved');
+    }
+  }
+  if (solvedWords.size===WORDS.length) setTimeout(showVictory,400);
+}
+
+function updateProgress() {
+  let total=0, correct=0;
+  for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
+    if (!solution[r][c]) continue;
+    total++;
+    if (userGrid[r][c]===solution[r][c]) correct++;
+  }
+  document.getElementById('progress-bar').style.width=(correct/total*100)+'%';
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+let fbT;
+function showFeedback(msg,color) {
+  const el=document.getElementById('feedback');
+  el.textContent=msg; el.style.background=color||'#1a1a2e';
+  el.classList.add('show'); clearTimeout(fbT);
+  fbT=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+// ── VICTORY ──────────────────────────────────────────────────────────────────
+function showVictory() {
+  clearInterval(timerInterval); gameActive=false;
+  document.getElementById('final-score').textContent=score;
+  document.getElementById('final-time').textContent=elapsed+'s';
+  document.getElementById('victory-modal').classList.add('show');
+}
+
+document.getElementById('restart-btn').addEventListener('click',initGame);
+document.getElementById('play-again-btn').addEventListener('click',initGame);
+
+initGame();
+</script>
+</body>
+</html>

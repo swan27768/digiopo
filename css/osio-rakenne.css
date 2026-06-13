@@ -1,0 +1,379 @@
+/* ============================================================
+   OSIO-RAKENNE — yhtenäinen osiorakenne kaikille luokkatasoille
+   1) Tunnin tavoitteet -paneeli osion alussa
+   2) Yhteenveto-paneeli osion lopussa
+   3) Pyöreä opettaja-nappi (korvaa harmaan palkin)
+   4) Työtapa- ja tehtävätyyppibadget hero-korteissa
+   5) Teoria-modal (ℹ️ hero-otsikossa)
+   ============================================================ */
+
+:root {
+  --osio-accent: #7c3aed;
+  --osio-accent-dk: #5b21b6;
+  --osio-accent-bg: #f5f3ff;
+  --osio-accent-bd: #ddd6fe;
+}
+body[data-luokka="7"] {
+  --osio-accent: #7c3aed;
+  --osio-accent-dk: #5b21b6;
+  --osio-accent-bg: #f5f3ff;
+  --osio-accent-bd: #ddd6fe;
+}
+body[data-luokka="8"] {
+  --osio-accent: #db2777;
+  --osio-accent-dk: #9d174d;
+  --osio-accent-bg: #fce7f3;
+  --osio-accent-bd: #f9a8d4;
+}
+body[data-luokka="9"] {
+  --osio-accent: #0d9488;
+  --osio-accent-dk: #0f766e;
+  --osio-accent-bg: #f0fdfa;
+  --osio-accent-bd: #99f6e4;
+}
+
+/* ---- 1 & 2: avattavat info-paneelit ------------------------ */
+.osio-info {
+  margin: 14px 0 18px;
+}
+.osio-info > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  background: var(--osio-accent-bg);
+  border: 1.5px solid var(--osio-accent-bd);
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.18s, border-color 0.18s;
+}
+.osio-info > summary::-webkit-details-marker {
+  display: none;
+}
+.osio-info > summary:hover {
+  border-color: var(--osio-accent);
+}
+.osio-info-ikoni {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--osio-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+.osio-info-tekstit {
+  flex: 1;
+  min-width: 0;
+}
+.osio-info-otsikko {
+  display: block;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--osio-accent-dk);
+  line-height: 1.3;
+}
+.osio-info-alaotsikko {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--osio-accent-dk);
+  opacity: 0.75;
+  line-height: 1.35;
+}
+.osio-info-nuoli {
+  flex: 0 0 auto;
+  color: var(--osio-accent);
+  font-size: 0.8rem;
+  transition: transform 0.22s;
+}
+.osio-info[open] > summary {
+  border-radius: 12px 12px 0 0;
+}
+.osio-info[open] .osio-info-nuoli {
+  transform: rotate(180deg);
+}
+.osio-info-sisalto {
+  border: 1.5px solid var(--osio-accent-bd);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: #fff;
+  padding: 16px 20px 18px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #1f2937;
+}
+.osio-info-sisalto h4 {
+  margin: 14px 0 6px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--osio-accent-dk);
+}
+.osio-info-sisalto h4:first-child {
+  margin-top: 0;
+}
+.osio-info-sisalto ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.osio-info-sisalto li {
+  margin: 3px 0;
+}
+.osio-miksi {
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  background: var(--osio-accent-bg);
+  border-left: 3px solid var(--osio-accent);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+}
+
+/* ---- 3: pyöreä opettaja-nappi ------------------------------ */
+.ope-osio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 14px 0 4px;
+}
+.ope-nappi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--osio-accent);
+  color: var(--osio-accent-dk);
+  font-size: 1.05rem;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.ope-nappi:hover,
+.ope-nappi:focus-visible {
+  background: var(--osio-accent-bg);
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.ope-nappi[aria-expanded="true"] {
+  background: var(--osio-accent);
+  color: #fff;
+}
+.ope-vihje {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--osio-accent-dk);
+  opacity: 0.7;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+.ope-paneeli {
+  width: 100%;
+  max-width: 460px;
+  margin-top: 10px;
+  background: #f8fafc;
+  border: 1.5px solid var(--osio-accent-bd);
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #334155;
+  text-align: left;
+}
+.ope-paneeli[hidden] {
+  display: none;
+}
+.ope-paneeli-otsikko {
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--osio-accent-dk);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ope-paneeli .opettaja-lataus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: var(--osio-accent);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+.ope-paneeli .opettaja-lataus:hover {
+  background: var(--osio-accent-dk);
+}
+.ope-paneeli .opettaja-kuvaus {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+/* ---- 4: työtapa- ja tehtävätyyppibadget -------------------- */
+.tehtava-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.tehtava-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+.tehtava-badge i {
+  font-size: 0.85rem;
+}
+.tehtava-badge--tapa {
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e293b;
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
+/* ---- 5: teoria-nappi ja -modal ------------------------------ */
+.teoria-nappi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-style: italic;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 10px;
+  transition: background 0.15s, transform 0.15s;
+}
+.teoria-nappi:hover,
+.teoria-nappi:focus-visible {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.1);
+}
+.teoria-nappi--osio {
+  border-color: var(--osio-accent);
+  background: var(--osio-accent-bg);
+  color: var(--osio-accent-dk);
+}
+.teoria-nappi--osio:hover,
+.teoria-nappi--osio:focus-visible {
+  background: var(--osio-accent-bd);
+}
+.teoria-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+.teoria-modal[hidden] {
+  display: none;
+}
+.teoria-modal-box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 84vh;
+  overflow-y: auto;
+  padding: 26px 28px 24px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.teoria-modal-box h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  color: var(--osio-accent-dk);
+  padding-right: 36px;
+}
+.teoria-modal-laji {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--osio-accent);
+  margin: 0 0 12px;
+}
+.teoria-modal-box p {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #1f2937;
+  margin: 0 0 12px;
+}
+.teoria-modal-box h3 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--osio-accent-dk);
+  margin: 16px 0 6px;
+}
+.teoria-lahteet {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #475569;
+}
+.teoria-lahteet li {
+  margin: 4px 0;
+}
+.teoria-sulje {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.teoria-sulje:hover {
+  background: #e2e8f0;
+}
+
+@media (max-width: 640px) {
+  .osio-info > summary {
+    padding: 10px 12px;
+  }
+  .ope-paneeli {
+    max-width: 100%;
+  }
+  .teoria-modal-box {
+    padding: 20px 18px;
+  }
+}

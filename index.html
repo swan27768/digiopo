@@ -1,119 +1,985 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="DigiOpo – Omilla jäljillä. Opas oman suunnan löytämiseen. Yläkoulun oppilaanohjaus."
-    />
-    <title>DigiOpo – Omilla jäljillä</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/navbar.css" />
-    <link rel="stylesheet" href="css/layout.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/maskotti.css" />
-    <link rel="stylesheet" href="css/home.css" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#7c3aed" />
-    <script src="js/lisenssiportti.js"></script>
-    <script src="js/seuranta.js" defer></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigiOpo — Omilla Jäljillä</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
 
+    body {
+      background-color: #f0ecf8;
+      position: relative;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    /* CSS-akvarelli: väriläiskät pseudo-elementeissä */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 520px 380px at 15% 25%,  rgba(192, 132, 252, 0.38) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 80% 15%,  rgba(244, 114, 182, 0.30) 0%, transparent 65%),
+        radial-gradient(ellipse 460px 340px at 70% 75%,  rgba(96,  165, 250, 0.28) 0%, transparent 68%),
+        radial-gradient(ellipse 320px 260px at 30% 80%,  rgba(52,  211, 153, 0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 280px 200px at 55% 45%,  rgba(167, 139, 250, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 350px 280px at 90% 55%,  rgba(232,  24, 106, 0.14) 0%, transparent 60%);
+    }
 
+    #root {
+      position: relative;
+      z-index: 1;
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 16px 80px;
+    }
 
-    
-  </head>
-  <body>
-    <header class="navbar">
-      <div class="nav-left">
-        <a href="index.html" class="logo nav-logo" aria-label="DigiOpo — etusivu">Digi<span>opo</span></a>
-      </div>
-      <div class="nav-right">
-        
-      </div>
-    </header>
+    /* ─────────────────────────────────────────
+       KIRJA-LAYOUT (desktop, ≥ 700px)
+    ───────────────────────────────────────── */
+    .book-outer {
+      position: relative;
+    }
 
-    <a href="#main-content" class="sr-only sr-only-focusable"
-      >Siirry pääsisältöön</a
-    >
+    .book {
+      display: flex;
+      filter: drop-shadow(0 32px 64px rgba(0,0,0,0.5));
+      animation: fadeUp 0.5s ease both;
+    }
 
-    <div class="book-spread">
-      <aside class="book-page-left" aria-label="Luokkavalinta">
-        <h2 class="section-title">Aloita tästä:</h2>
-        <nav class="class-grid" aria-label="Luokat">
-          <a class="class-card class-7" href="sivut/7luokka.html">
-            <h3>7. luokka</h3>
-            <p>Tutustu omiin vahvuuksiisi ja opi opiskelutaitoja.</p>
-          </a>
-          <a class="class-card class-8" href="sivut/8luokka.html">
-            <h3>8. luokka</h3>
-            <p>Tutustu työelämään ja eri koulutusvaihtoehtoihin.</p>
-          </a>
-          <a class="class-card class-9" href="sivut/9luokka.html">
-            <h3>9. luokka</h3>
-            <p>Valmistaudu yhteishakuun ja suunnittele tulevaisuutta.</p>
-          </a>
-        </nav>
-      </aside>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-      <main class="book-page-right" id="main-content">
-        <div class="breadcrumb" aria-label="Sijaintisi sivustolla">Etusivu</div>
-        <h1 class="book-title">Omilla jäljillä</h1>
-        <p class="book-title-en">On My Own Tracks</p>
-        <p class="book-subtitle">Opas oman suunnan löytämiseen &nbsp;·&nbsp; Yläkoulun oppilaanohjaus</p>
+    .page {
+      width: 400px;
+      min-height: 560px;
+      position: relative;
+      overflow: hidden;
+    }
 
-        <div class="intro-text">
-          <div class="hero animated-intro">
-            <div class="hero-bubble">
-              <p class="intro-step intro-cta delay-2">
-                Tässä opokirjassa pohdit itseäsi ja omaa suuntaasi:
-              </p>
-              <ul class="intro-step intro-list delay-3">
-                <li>opit tekemään omia valintoja</li>
-                <li>tunnistat omat vahvuutesi</li>
-                <li>uskallat kokeilla ja löytää omat juttusi</li>
-              </ul>
-              <p class="intro-step intro-cta delay-4">
-                Kaikkea et voi ennustaa – mutta voit vaikuttaa siihen, mihin
-                suuntaan lähdet.
-              </p>
-              <p class="intro-step intro-cta delay-5">
-                Aloita nyt ja ota ensimmäinen askel kohti omaa tulevaisuuttasi.
-              </p>
-            </div>
+    .page::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        transparent, transparent 27px,
+        rgba(160,148,120,0.07) 27px, rgba(160,148,120,0.07) 28px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+    .page-left::after {
+      background-image: repeating-linear-gradient(
+        transparent, transparent 27px,
+        rgba(255,255,255,0.03) 27px, rgba(255,255,255,0.03) 28px
+      );
+    }
+    .page-left::before {
+      content: '';
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(200,160,48,0.22);
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-            <img
-              src="images/tikku_maskotti.png"
-              alt="DigiOpon tikkumaskotti kurkistaa robon takaa"
-              class="hero-mascot hero-mascot-tikku"
-            />
-            <img
-              src="images/robo_maskotti.png"
-              alt="DigiOpon robottimaskotti kurkistaa oikeasta reunasta"
-              class="hero-mascot hero-mascot-robo"
-            />
+    .page-left {
+      border-radius: 4px 0 0 4px;
+      background: linear-gradient(135deg, #1a0a3a 0%, #2d1060 60%, #1a0a3a 100%);
+      box-shadow: inset -10px 0 24px rgba(0,0,0,0.3), inset 2px 0 8px rgba(255,255,255,0.04);
+      padding: 40px 32px 40px 40px;
+    }
+
+    .page-right {
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(to left, #ede8dc 0%, #fffef8 60%);
+      box-shadow: inset 10px 0 20px rgba(0,0,0,0.08);
+      padding: 40px 40px 40px 32px;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spine {
+      width: 24px;
+      min-height: 560px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: stretch;
+    }
+    .spine svg {
+      width: 24px;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      overflow: visible;
+    }
+
+    .page-num {
+      position: absolute;
+      bottom: 18px;
+      font-size: 11px;
+      color: #7c765d;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      z-index: 1;
+    }
+    .page-left .page-num  { right: 32px; }
+    .page-right .page-num { left:  32px; }
+
+    /* Mascots */
+    .mascot {
+      position: absolute;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,0.4));
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+    .mascot:hover { transform: scale(1.06) translateY(-6px); }
+    .mascot-left  { bottom: -28px; left: -10px; width: 82px; }
+    .mascot-right { bottom: -22px; right: -10px; width: 70px; }
+
+    /* ─────────────────────────────────────────
+       YHTEINEN: värit, typografia, komponentit
+    ───────────────────────────────────────── */
+    .color-bars { display: flex; gap: 5px; margin-bottom: 24px; }
+    .color-bar  { flex: 1; height: 3px; border-radius: 2px; }
+
+    .brand { display: flex; align-items: center; gap: 6px; margin-bottom: 18px; }
+    .brand-digi  { font-size: 13px; font-weight: 800; color: #7b2bcb; }
+    .brand-opo   { font-size: 13px; font-weight: 400; color: #7c6f96; }
+    .brand-dot   { color: #d0c8e8; font-size: 12px; margin: 0 2px; }
+    .brand-label { font-size: 10px; color: #7c6f96; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+
+    .main-title {
+      font-family: 'Lora', serif;
+      font-size: 50px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: #1a0a3a;
+      margin-bottom: 24px;
+    }
+    .main-title em { font-style: italic; display: block; }
+
+    .divider { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, #c0b8d8, transparent); }
+    .divider-line.rev { background: linear-gradient(to left, #c0b8d8, transparent); }
+    .divider-star { font-size: 13px; color: #c0b8d8; }
+
+    .intro-text {
+      font-family: 'Lora', serif;
+      font-size: 14.5px;
+      color: #4a3a6a;
+      line-height: 1.85;
+      font-style: italic;
+      margin-bottom: 22px;
+    }
+
+    .tags { display: flex; flex-direction: column; gap: 7px; margin-bottom: 24px; }
+    .tag  { display: flex; align-items: center; gap: 8px; }
+    .tag-dot   { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .tag-label { font-size: 13px; color: #7a6a8a; font-weight: 500; }
+
+    .quote-box {
+      margin-top: auto;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: rgba(123,43,203,0.05);
+      border: 1px solid rgba(123,43,203,0.15);
+    }
+    .quote-box p {
+      font-size: 12px;
+      color: #7a6a9a;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    .chapter-label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #7c765d;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .chapter-bar { width: 32px; height: 2px; background: #7b2bcb; border-radius: 1px; margin-bottom: 20px; }
+    .chapter-title {
+      font-family: 'Lora', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a0a3a;
+      margin-bottom: 4px;
+      font-style: italic;
+    }
+    .chapter-sub {
+      font-size: 11px;
+      color: #7c6f96;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      line-height: 1.6;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .grade-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .grade-btn:hover { transform: translateX(3px); }
+
+    .grade-num   { font-family: 'Lora', serif; font-size: 32px; font-weight: 700; line-height: 1; min-width: 32px; transition: color 0.18s; }
+    .grade-label { font-size: 15px; font-weight: 600; color: #2a1a4a; margin-bottom: 2px; }
+    .grade-desc  { font-size: 12.5px; color: #7a6a8a; line-height: 1.4; }
+    .grade-arrow { margin-left: auto; font-size: 14px; transition: color 0.18s; opacity: 0.6; }
+
+    .info-box {
+      margin-top: 8px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f8f4ff 0%, #fff8f0 100%);
+      border: 1px solid #e0d8f0;
+    }
+    .info-box p { font-size: 12px; color: #7c765d; font-family: 'Lora', serif; font-style: italic; line-height: 1.7; }
+
+    .footer-note {
+      margin-top: auto;
+      font-size: 10px;
+      color: #7b755f;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    :focus-visible { outline: 2px solid #7b2bcb; outline-offset: 3px; border-radius: 8px; }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ─────────────────────────────────────────
+       MOBIILI-LAYOUT (< 700px) — korttimainen
+    ───────────────────────────────────────── */
+    /* ── MOBIILI: alle 700px ── */
+    @media (max-width: 699px) {
+      #root { padding: 24px 16px 64px; align-items: center; justify-content: flex-start; }
+
+      /* Piilota kirjarakenteet */
+      .book-outer { display: none; }
+
+      /* Näytä mobiilikortti */
+      .mobile-card {
+        display: flex !important;
+        flex-direction: column;
+        background: rgba(255, 252, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(155, 60, 247, 0.15);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.8) inset;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 440px;
+        overflow: hidden;
+        animation: fadeUp 0.4s ease both;
+      }
+
+      .mobile-header { padding: 32px 24px 18px; }
+      .mobile-brand { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+
+      .mobile-title {
+        font-family: 'Lora', serif;
+        font-size: 44px;
+        font-weight: 700;
+        line-height: 0.92;
+        letter-spacing: -0.02em;
+        color: #1a0a3a;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .mobile-title em { font-style: italic; display: block; }
+
+      .mobile-intro {
+        font-family: 'Lora', serif;
+        font-size: 13px;
+        color: #4a3a6a;
+        line-height: 1.8;
+        font-style: italic;
+        margin-bottom: 14px;
+      }
+
+      .mobile-tags { display: flex; gap: 14px; flex-wrap: wrap; }
+      .mobile-tag  { display: flex; align-items: center; gap: 6px; }
+      .mobile-tag-dot   { width: 7px; height: 7px; border-radius: 50%; }
+      .mobile-tag-label { font-size: 12px; color: #7a6a8a; font-weight: 500; }
+
+      .mobile-divider { height: 1px; background: #ede8f4; margin: 0 24px; }
+
+      .mobile-cards { padding: 18px 24px 28px; display: flex; flex-direction: column; gap: 0; }
+
+      .mobile-section-label {
+        font-size: 10px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #7c6f96;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .mobile-cards .grade-btn { padding: 13px 14px; border-radius: 12px; margin-bottom: 9px; }
+      .mobile-cards .grade-num  { font-size: 30px; min-width: 38px; }
+      .mobile-cards .grade-label { font-size: 14px; }
+      .mobile-cards .grade-desc  { font-size: 12px; }
+      .mobile-cards .grade-arrow { font-size: 15px; }
+
+      .mobile-footer {
+        padding: 0 24px 24px;
+        font-size: 11px;
+        color: #7c6f96;
+        text-align: center;
+        font-family: 'Lora', serif;
+        font-style: italic;
+      }
+    }
+
+    /* ── TABLETTI kapea: 700–860px — skaalaa kirja pienemmäksi ── */
+    @media (min-width: 700px) and (max-width: 1060px) {
+      .mobile-card { display: none; }
+      .book-outer { transform: scale(0.82); transform-origin: center top; }
+      #root { padding-top: 24px; padding-bottom: 40px; }
+    }
+
+    /* ── TABLETTI / DESKTOP: yli 860px ── */
+    @media (min-width: 1061px) {
+      .mobile-card { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div id="root">
+
+  <!-- ══════════════════════════════════════
+       DESKTOP: kirja-layout
+  ══════════════════════════════════════ -->
+  <div class="book-outer">
+    <img src="images/tikku_maskotti_kannustaa.png" alt="" aria-hidden="true" class="mascot mascot-left">
+
+    <div class="book" role="main" aria-label="DigiOpo – Omilla Jäljillä">
+
+      <!-- VASEN SIVU -->
+      <div class="page page-left">
+        <div class="page-content">
+          <div class="color-bars">
+            <div class="color-bar" style="background:#c8a030;opacity:.8"></div>
+            <div class="color-bar" style="background:#e8c860;opacity:.6"></div>
+            <div class="color-bar" style="background:#c8a030;opacity:.8"></div>
           </div>
+          <div class="brand">
+            <span class="brand-digi" style="color:#e8d070;">digi</span><span class="brand-opo" style="color:rgba(232,208,112,0.6);">opo</span>
+            <span class="brand-dot" style="color:rgba(232,208,112,0.3);">·</span>
+            <span class="brand-label" style="color:rgba(232,208,112,0.55);">Oppilaanohjaus</span>
+          </div>
+          <h1 class="main-title" style="color:#f0d870;"><em>Omilla</em>Jäljillä</h1>
+          <div class="divider">
+            <div class="divider-line" style="background:linear-gradient(to right,rgba(200,160,48,0),rgba(200,160,48,0.5))"></div>
+            <span class="divider-star" style="color:rgba(200,160,48,0.6);">✦</span>
+            <div class="divider-line rev" style="background:linear-gradient(to left,rgba(200,160,48,0),rgba(200,160,48,0.5))"></div>
+          </div>
+          <p class="intro-text" style="color:rgba(220,210,255,0.75);">Tässä opokirjassa pohdit itseäsi ja omaa suuntaasi. Kaikkea et voi ennustaa – mutta voit vaikuttaa siihen, mihin suuntaan lähdet.</p>
+          <div class="tags">
+            <div class="tag"><div class="tag-dot" style="background:#9b3cf7"></div><span class="tag-label" style="color:rgba(220,210,255,0.7);">Valinnat</span></div>
+            <div class="tag"><div class="tag-dot" style="background:#e8186a"></div><span class="tag-label" style="color:rgba(220,210,255,0.7);">Vahvuudet</span></div>
+            <div class="tag"><div class="tag-dot" style="background:#1aaa5e"></div><span class="tag-label" style="color:rgba(220,210,255,0.7);">Omat jutut</span></div>
+          </div>
+          <div class="quote-box" style="background:rgba(200,160,48,0.08);border-color:rgba(200,160,48,0.25);"><p style="color:rgba(232,208,112,0.75);">"Kukaan ei synny osaavana — kaikki opitaan tekemällä."<br><span style="font-style:normal;font-size:10px;color:rgba(200,160,48,0.55);letter-spacing:0.05em;">— Albert Camus</span></p></div>
         </div>
-      </main>
+        <span class="page-num" style="color:rgba(200,160,48,0.45);">1</span>
+      </div>
+
+      <!-- SELKÄ -->
+      <div class="spine">
+        <svg viewBox="0 0 24 560" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" id="spine-svg" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+          <defs>
+            <linearGradient id="ringGold" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#7a5a10"/>
+              <stop offset="25%"  stop-color="#c8960a"/>
+              <stop offset="50%"  stop-color="#f0d060"/>
+              <stop offset="75%"  stop-color="#c8960a"/>
+              <stop offset="100%" stop-color="#7a5a10"/>
+            </linearGradient>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#5a5a6a"/>
+              <stop offset="20%"  stop-color="#9a9aaa"/>
+              <stop offset="45%"  stop-color="#d8d8e8"/>
+              <stop offset="60%"  stop-color="#f0f0f8"/>
+              <stop offset="75%"  stop-color="#b0b0c8"/>
+              <stop offset="100%" stop-color="#6a6a7a"/>
+            </linearGradient>
+            <linearGradient id="ringGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#3a3a4a"/>
+              <stop offset="30%"  stop-color="#7a7a8a"/>
+              <stop offset="55%"  stop-color="#c0c0d0"/>
+              <stop offset="100%" stop-color="#4a4a5a"/>
+            </linearGradient>
+            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="rgba(184,176,152,0)"/>
+              <stop offset="20%"  stop-color="#c8bea8"/>
+              <stop offset="50%"  stop-color="#e8e2d4"/>
+              <stop offset="80%"  stop-color="#c8bea8"/>
+              <stop offset="100%" stop-color="rgba(176,168,144,0)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Selän pohja -->
+          <rect x="0" y="0" width="24" height="560" fill="url(#bgGrad)"/>
+
+          <!-- Rengas 1 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="24" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,24 A 8,4.5 0 0 1 20,24" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,24 A 8,4.5 0 0 0 20,24" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,23 A 6,3 0 0 0 18,23" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="24" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="24" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 2 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="50" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,50 A 8,4.5 0 0 1 20,50" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,50 A 8,4.5 0 0 0 20,50" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,49 A 6,3 0 0 0 18,49" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="50" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="50" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 3 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="76" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,76 A 8,4.5 0 0 1 20,76" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,76 A 8,4.5 0 0 0 20,76" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,75 A 6,3 0 0 0 18,75" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="76" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="76" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 4 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="102" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,102 A 8,4.5 0 0 1 20,102" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,102 A 8,4.5 0 0 0 20,102" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,101 A 6,3 0 0 0 18,101" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="102" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="102" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 5 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="128" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,128 A 8,4.5 0 0 1 20,128" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,128 A 8,4.5 0 0 0 20,128" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,127 A 6,3 0 0 0 18,127" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="128" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="128" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 6 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="154" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,154 A 8,4.5 0 0 1 20,154" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,154 A 8,4.5 0 0 0 20,154" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,153 A 6,3 0 0 0 18,153" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="154" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="154" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 7 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="180" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,180 A 8,4.5 0 0 1 20,180" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,180 A 8,4.5 0 0 0 20,180" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,179 A 6,3 0 0 0 18,179" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="180" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="180" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 8 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="206" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,206 A 8,4.5 0 0 1 20,206" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,206 A 8,4.5 0 0 0 20,206" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,205 A 6,3 0 0 0 18,205" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="206" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="206" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 9 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="232" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,232 A 8,4.5 0 0 1 20,232" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,232 A 8,4.5 0 0 0 20,232" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,231 A 6,3 0 0 0 18,231" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="232" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="232" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 10 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="258" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,258 A 8,4.5 0 0 1 20,258" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,258 A 8,4.5 0 0 0 20,258" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,257 A 6,3 0 0 0 18,257" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="258" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="258" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 11 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="284" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,284 A 8,4.5 0 0 1 20,284" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,284 A 8,4.5 0 0 0 20,284" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,283 A 6,3 0 0 0 18,283" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="284" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="284" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 12 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="310" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,310 A 8,4.5 0 0 1 20,310" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,310 A 8,4.5 0 0 0 20,310" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,309 A 6,3 0 0 0 18,309" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="310" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="310" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 13 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="336" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,336 A 8,4.5 0 0 1 20,336" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,336 A 8,4.5 0 0 0 20,336" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,335 A 6,3 0 0 0 18,335" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="336" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="336" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 14 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="362" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,362 A 8,4.5 0 0 1 20,362" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,362 A 8,4.5 0 0 0 20,362" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,361 A 6,3 0 0 0 18,361" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="362" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="362" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 15 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="388" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,388 A 8,4.5 0 0 1 20,388" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,388 A 8,4.5 0 0 0 20,388" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,387 A 6,3 0 0 0 18,387" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="388" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="388" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 16 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="414" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,414 A 8,4.5 0 0 1 20,414" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,414 A 8,4.5 0 0 0 20,414" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,413 A 6,3 0 0 0 18,413" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="414" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="414" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 17 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="440" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,440 A 8,4.5 0 0 1 20,440" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,440 A 8,4.5 0 0 0 20,440" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,439 A 6,3 0 0 0 18,439" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="440" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="440" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 18 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="466" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,466 A 8,4.5 0 0 1 20,466" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,466 A 8,4.5 0 0 0 20,466" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,465 A 6,3 0 0 0 18,465" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="466" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="466" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 19 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="492" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,492 A 8,4.5 0 0 1 20,492" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,492 A 8,4.5 0 0 0 20,492" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,491 A 6,3 0 0 0 18,491" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="492" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="492" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+
+          <!-- Rengas 20 -->
+          <!-- Varjo taustalla -->
+          <ellipse cx="12" cy="518" rx="8" ry="4.5" fill="rgba(0,0,0,0.18)" transform="translate(0,1)"/>
+
+          <!-- Renkaan takaosa (tumma, takana) -->
+          <path d="M 4,518 A 8,4.5 0 0 1 20,518" 
+                fill="none" stroke="#3a3a4a" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Renkaan etuosa (metallinen liukuväri) -->
+          <path d="M 4,518 A 8,4.5 0 0 0 20,518" 
+                fill="none" stroke="url(#ringGold)" stroke-width="5.5" stroke-linecap="round"/>
+
+          <!-- Kiilto yläreunassa -->
+          <path d="M 6,517 A 6,3 0 0 0 18,517" 
+                fill="none" stroke="rgba(255,220,120,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Pienen sisäaukon varjo -->
+          <ellipse cx="12" cy="518" rx="4.5" ry="2.2" fill="rgba(20,20,30,0.35)"/>
+          <ellipse cx="12" cy="518" rx="3.5" ry="1.5" fill="rgba(30,30,45,0.6)"/>
+        </svg>
+      </div>
+
+      <!-- OIKEA SIVU -->
+      <div class="page page-right">
+        <div class="page-content" style="justify-content:center;">
+          <div class="chapter-label">Sisällys</div>
+          <div class="chapter-bar"></div>
+          <h2 class="chapter-title" style="margin-bottom:18px;">Valitse luokkasi</h2>
+
+          <a href="sivut/7luokka.html" class="grade-btn"
+            style="background:rgba(155,60,247,0.06);border-color:rgba(155,60,247,0.3)"
+            onmouseover="this.style.background='rgba(123,43,203,0.12)';this.style.borderColor='#9b3cf7';this.querySelector('.grade-num').style.color='#7b2bcb'"
+            onmouseout="this.style.background='rgba(155,60,247,0.06)';this.style.borderColor='rgba(155,60,247,0.3)';this.querySelector('.grade-num').style.color='#9b3cf7'">
+            <span class="grade-num" style="color:#9b3cf7">7</span>
+            <div><div class="grade-label">7. luokka</div><div class="grade-desc">Tutustu omiin vahvuuksiisi ja opi opiskelutaitoja.</div></div>
+            <span class="grade-arrow" style="color:#9b3cf7">→</span>
+          </a>
+
+          <a href="sivut/8luokka.html" class="grade-btn"
+            style="background:rgba(232,24,106,0.06);border-color:rgba(232,24,106,0.3)"
+            onmouseover="this.style.background='rgba(184,20,90,0.12)';this.style.borderColor='#e8186a';this.querySelector('.grade-num').style.color='#b8145a'"
+            onmouseout="this.style.background='rgba(232,24,106,0.06)';this.style.borderColor='rgba(232,24,106,0.3)';this.querySelector('.grade-num').style.color='#e8186a'">
+            <span class="grade-num" style="color:#e8186a">8</span>
+            <div><div class="grade-label">8. luokka</div><div class="grade-desc">Tutustu työelämään ja eri koulutusvaihtoehtoihin.</div></div>
+            <span class="grade-arrow" style="color:#e8186a">→</span>
+          </a>
+
+          <a href="sivut/9luokka.html" class="grade-btn"
+            style="background:rgba(26,170,94,0.06);border-color:rgba(26,170,94,0.3)"
+            onmouseover="this.style.background='rgba(16,136,70,0.12)';this.style.borderColor='#1aaa5e';this.querySelector('.grade-num').style.color='#108846'"
+            onmouseout="this.style.background='rgba(26,170,94,0.06)';this.style.borderColor='rgba(26,170,94,0.3)';this.querySelector('.grade-num').style.color='#1aaa5e'">
+            <span class="grade-num" style="color:#19a85d">9</span>
+            <div><div class="grade-label">9. luokka</div><div class="grade-desc">Valmistaudu yhteishakuun ja suunnittele tulevaisuutta.</div></div>
+            <span class="grade-arrow" style="color:#19a85d">→</span>
+          </a>
+
+          <div class="info-box" style="margin-top:20px;"><p>Käytä tätä kirjaa tietokoneella tai tabletilla — puhelimen näyttö on liian pieni.</p></div>
+          
+        </div>
+        <span class="page-num">2</span>
+      </div>
+
+    </div><!-- .book -->
+
+    <img src="images/robo_maskotti.png" alt="" aria-hidden="true" class="mascot mascot-right">
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MOBIILI: kortti-layout
+  ══════════════════════════════════════ -->
+  <div class="mobile-card" aria-hidden="true" style="display:none">
+
+    <div class="mobile-header">
+      <div class="mobile-brand">
+        <span class="brand-digi">digi</span><span class="brand-opo">opo</span>
+        <span class="brand-dot">·</span>
+        <span class="brand-label">Oppilaanohjaus</span>
+      </div>
+      <h1 class="mobile-title"><em>Omilla</em>Jäljillä</h1>
+      <p class="mobile-intro">Tässä opokirjassa pohdit itseäsi ja omaa suuntaasi. Kaikkea et voi ennustaa – mutta voit vaikuttaa siihen, mihin suuntaan lähdet.</p>
+      <div class="mobile-tags">
+        <div class="mobile-tag"><div class="mobile-tag-dot" style="background:#9b3cf7"></div><span class="mobile-tag-label">Valinnat</span></div>
+        <div class="mobile-tag"><div class="mobile-tag-dot" style="background:#e8186a"></div><span class="mobile-tag-label">Vahvuudet</span></div>
+        <div class="mobile-tag"><div class="mobile-tag-dot" style="background:#1aaa5e"></div><span class="mobile-tag-label">Omat jutut</span></div>
+      </div>
     </div>
 
-    <footer class="site-footer" aria-label="Sivuston alatunniste">
-      <div class="site-footer-left">
-        <p class="site-footer-brand">DigiOpo</p>
-        <p class="site-footer-meta">Digitaalinen oppilaanohjauspalvelu &nbsp;·&nbsp; <a href="https://digiopo.fi">digiopo.fi</a></p>
-      </div>
-      <div class="site-footer-right">
-        <p class="site-footer-book">Omilla jäljillä</p>
-        <p class="site-footer-bookmeta">Yläkoulun oppilaanohjaus &nbsp;·&nbsp; 2026</p>
-        <p class="site-footer-bookmeta"><a href="/kayttoehdot.html" style="color:inherit;opacity:0.7;text-decoration:underline;">Käyttöehdot</a></p>
-      </div>
-    </footer>
-    <script src="js/kortit.js"></script>
-    <script src="js/haku.js"></script>
-  </body>
+    <div class="mobile-divider"></div>
+
+    <div class="mobile-cards">
+      <div class="mobile-section-label">Valitse luokkasi</div>
+
+      <a href="sivut/7luokka.html" class="grade-btn"
+        style="background:rgba(155,60,247,0.08);border-color:rgba(155,60,247,0.35)"
+        onmouseover="this.style.background='rgba(123,43,203,0.14)';this.style.borderColor='#9b3cf7'"
+        onmouseout="this.style.background='rgba(155,60,247,0.08)';this.style.borderColor='rgba(155,60,247,0.35)'">
+        <span class="grade-num" style="color:#9b3cf7">7</span>
+        <div><div class="grade-label">7. luokka</div><div class="grade-desc">Tutustu omiin vahvuuksiisi ja opi opiskelutaitoja.</div></div>
+        <span class="grade-arrow" style="color:#9b3cf7">→</span>
+      </a>
+
+      <a href="sivut/8luokka.html" class="grade-btn"
+        style="background:rgba(232,24,106,0.08);border-color:rgba(232,24,106,0.35)"
+        onmouseover="this.style.background='rgba(184,20,90,0.14)';this.style.borderColor='#e8186a'"
+        onmouseout="this.style.background='rgba(232,24,106,0.08)';this.style.borderColor='rgba(232,24,106,0.35)'">
+        <span class="grade-num" style="color:#e8186a">8</span>
+        <div><div class="grade-label">8. luokka</div><div class="grade-desc">Tutustu työelämään ja eri koulutusvaihtoehtoihin.</div></div>
+        <span class="grade-arrow" style="color:#e8186a">→</span>
+      </a>
+
+      <a href="sivut/9luokka.html" class="grade-btn"
+        style="background:rgba(26,170,94,0.08);border-color:rgba(26,170,94,0.35)"
+        onmouseover="this.style.background='rgba(16,136,70,0.14)';this.style.borderColor='#1aaa5e'"
+        onmouseout="this.style.background='rgba(26,170,94,0.08)';this.style.borderColor='rgba(26,170,94,0.35)'">
+        <span class="grade-num" style="color:#1aaa5e">9</span>
+        <div><div class="grade-label">9. luokka</div><div class="grade-desc">Valmistaudu yhteishakuun ja suunnittele tulevaisuutta.</div></div>
+        <span class="grade-arrow" style="color:#1aaa5e">→</span>
+      </a>
+    </div>
+
+    
+  </div>
+
+</div>
+</body>
+<script>
+  function updateAriaVisibility() {
+    const isMobile = window.innerWidth < 700;
+    const bookOuter = document.querySelector('.book-outer');
+    const mobileCard = document.querySelector('.mobile-card');
+    if (isMobile) {
+      bookOuter.setAttribute('aria-hidden', 'true');
+      mobileCard.removeAttribute('aria-hidden');
+    } else {
+      bookOuter.removeAttribute('aria-hidden');
+      mobileCard.setAttribute('aria-hidden', 'true');
+    }
+  }
+  updateAriaVisibility();
+  window.addEventListener('resize', updateAriaVisibility);
+</script>
 </html>

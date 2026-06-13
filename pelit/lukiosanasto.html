@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lukion sanastopeli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #f8f5ef;
+      font-family: 'Lato', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* subtle paper texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    h1.game-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- STATS BAR ---- */
+    .stats-bar {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-pill {
+      background: #fff;
+      border: 2px solid #1a1a2e;
+      border-radius: 50px;
+      padding: 6px 18px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #1a1a2e;
+      box-shadow: 3px 3px 0 #1a1a2e;
+    }
+    .stat-pill span { font-weight: 400; opacity: 0.6; margin-right: 4px; }
+    #timer-pill { background: #fef3c7; }
+    #score-pill { background: #dcfce7; }
+
+    /* ---- BUILDING WRAPPER ---- */
+    .building-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 860px;
+      z-index: 1;
+    }
+
+    /* HAT SVG */
+    .hat-area {
+      display: flex;
+      justify-content: center;
+      margin-bottom: -2px;
+    }
+    .hat-area svg {
+      width: 160px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    /* ROOF */
+    .roof {
+      width: 100%;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 60px solid #1a1a2e;
+      position: relative;
+    }
+    .roof::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: -24px;
+      right: -24px;
+      height: 0;
+      border-left: 24px solid transparent;
+      border-right: 24px solid transparent;
+      border-bottom: 54px solid #2d2d4e;
+    }
+
+    /* BUILDING BODY */
+    .building-body {
+      background: #ffffff;
+      border: 3px solid #1a1a2e;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 6px 6px 0 #1a1a2e;
+      padding: 24px 20px 24px;
+      position: relative;
+    }
+
+    /* COLUMNS HEADER */
+    .columns-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .col-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-align: center;
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 4px;
+      padding: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* GAME BOARD */
+    .game-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* CARDS = windows */
+    .card {
+      background: #f0f4ff;
+      border: 2px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-size: 0.88rem;
+      color: #1a1a2e;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      line-height: 1.4;
+      user-select: none;
+    }
+    /* window pane lines */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(199,210,254,0.6);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(199,210,254,0.6);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .card:hover:not(.matched):not(.wrong-flash) {
+      background: #e0e7ff;
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.2);
+    }
+
+    .card.selected {
+      background: #fef9c3;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245,158,11,0.3);
+      transform: translateY(-2px);
+    }
+
+    .card.matched {
+      background: #dcfce7;
+      border-color: #22c55e;
+      cursor: default;
+      opacity: 0.7;
+    }
+    .card.matched::before, .card.matched::after { display: none; }
+
+    .card.wrong-flash {
+      background: #fee2e2;
+      border-color: #ef4444;
+      animation: shake 0.35s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* PROGRESS */
+    .progress-wrap {
+      margin-top: 16px;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #22c55e);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* ACTIONS */
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .btn {
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 9px 20px;
+      border-radius: 6px;
+      border: 2px solid #1a1a2e;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #1a1a2e;
+      transition: all 0.12s;
+    }
+    .btn:hover { transform: translate(1px,1px); box-shadow: 2px 2px 0 #1a1a2e; }
+    .btn:active { transform: translate(3px,3px); box-shadow: none; }
+    .btn-hint { background: #fef3c7; }
+    .btn-shuffle { background: #e0e7ff; }
+    .btn-restart { background: #f0fdf4; }
+
+    /* FEEDBACK TOAST */
+    #feedback {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a2e;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    #feedback.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* VICTORY MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,46,0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal-card {
+      background: #fff;
+      border: 3px solid #1a1a2e;
+      border-radius: 12px;
+      box-shadow: 8px 8px 0 #1a1a2e;
+      padding: 36px 40px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.show .modal-card { transform: scale(1); }
+    .modal-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .modal-card p { color: #555; margin-bottom: 24px; }
+    .modal-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 28px;
+    }
+    .modal-stat strong {
+      display: block;
+      font-size: 2rem;
+      font-family: 'Playfair Display', serif;
+      color: #1a1a2e;
+    }
+    .modal-stat span { font-size: 0.8rem; color: #888; }
+    .btn-play-again {
+      background: #1a1a2e;
+      color: #fff;
+      border-color: #1a1a2e;
+      font-size: 1rem;
+      padding: 12px 30px;
+    }
+    .btn-play-again:hover { background: #2d2d4e; }
+
+    /* HINT OVERLAY on card */
+    .hint-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(245,158,11,0.15);
+      border-radius: 4px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 560px) {
+      .card { font-size: 0.78rem; padding: 9px 10px; }
+      .building-body { padding: 14px 10px 18px; }
+      .roof { border-left-width: 15px; border-right-width: 15px; border-bottom-width: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="game-title">Lukion sanastopeli</h1>
+  <p class="subtitle">Yhdistä kaikki 16 termiä oikeaan määritelmään. Mitä nopeammin – sitä enemmän pisteitä!</p>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-pill" id="timer-pill"><span>Aika</span><span id="timer-val">0s</span></div>
+    <div class="stat-pill" id="score-pill"><span>Pisteet</span><span id="score-val">0</span></div>
+    <div class="stat-pill"><span>Vinkit</span><span id="hints-val">3</span></div>
+    <div class="stat-pill"><span>Tarkkuus</span><span id="acc-val">–</span></div>
+  </div>
+
+  <!-- Building -->
+  <div class="building-wrapper">
+
+    <!-- Ylioppilashattu -->
+    <div class="hat-area">
+      <svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cap body (white top) -->
+        <rect x="10" y="28" width="180" height="52" rx="4" fill="#f9f9f9" stroke="#1a1a2e" stroke-width="2.5"/>
+        <!-- Black band -->
+        <rect x="10" y="64" width="180" height="16" fill="#1a1a2e"/>
+        <!-- Shiny peak/visor -->
+        <path d="M14 80 Q100 100 186 80 L186 84 Q100 106 14 84 Z" fill="#111" />
+        <path d="M18 80 Q100 96 182 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+        <!-- Gold badge -->
+        <circle cx="100" cy="72" r="7" fill="#f59e0b" stroke="#b45309" stroke-width="1"/>
+        <text x="100" y="76" text-anchor="middle" font-size="8" fill="#7c2d12" font-family="serif">♦</text>
+        <!-- White crown seams -->
+        <line x1="10" y1="44" x2="190" y2="44" stroke="#ddd" stroke-width="1"/>
+        <line x1="100" y1="28" x2="100" y2="64" stroke="#ddd" stroke-width="1"/>
+        <!-- Pom on top -->
+        <circle cx="100" cy="28" r="8" fill="#1a1a2e"/>
+        <!-- String from pom -->
+        <path d="M100 36 Q130 50 148 68" fill="none" stroke="#1a1a2e" stroke-width="2" stroke-linecap="round"/>
+        <!-- Tassel -->
+        <line x1="148" y1="68" x2="144" y2="84" stroke="#1a1a2e" stroke-width="1.5"/>
+        <line x1="148" y1="68" x2="150" y2="85" stroke="#1a1a2e" stroke-width="1.5"/>
+        <line x1="148" y1="68" x2="155" y2="82" stroke="#1a1a2e" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- Roof triangle -->
+    <div class="roof"></div>
+
+    <!-- Building body -->
+    <div class="building-body">
+      <div class="columns-header">
+        <div class="col-label">Termit</div>
+        <div class="col-label">Määritelmät</div>
+      </div>
+
+      <div class="game-board">
+        <div class="card-column" id="terms-col"></div>
+        <div class="card-column" id="defs-col"></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-hint" id="hint-btn">💡 Vinkki</button>
+        <button class="btn btn-shuffle" id="shuffle-btn">🔀 Sekoita</button>
+        <button class="btn btn-restart" id="restart-btn">↺ Aloita alusta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="feedback"></div>
+
+  <!-- Victory Modal -->
+  <div class="modal-overlay" id="victory-modal" aria-hidden="true">
+    <div class="modal-card">
+      <h2>🎓 Loistavaa!</h2>
+      <p>Löysit kaikki parit!</p>
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <strong id="final-score">0</strong>
+          <span>Pisteet</span>
+        </div>
+        <div class="modal-stat">
+          <strong id="final-time">0s</strong>
+          <span>Aika</span>
+        </div>
+        <div class="modal-stat">
+          <strong id="final-acc">0%</strong>
+          <span>Tarkkuus</span>
+        </div>
+      </div>
+      <button class="btn btn-play-again" id="play-again-btn">🔁 Uusi peli</button>
+    </div>
+  </div>
+
+<script>
+// ---- DATA ----
+const ALL_PAIRS = [
+  { term: "Ylioppilastutkinto", def: "Lukion päättökoe, jolla osoitetaan lukio-opetuksen hallinta" },
+  { term: "Opintojakso", def: "Lukion opintoyksikkö, joka korvasi vanhan kurssin käsitteen" },
+  { term: "Pakollinen opintojakso", def: "Opintojakso, joka kaikkien lukiolaisten on suoritettava" },
+  { term: "Syventävä opintojakso", def: "Vapaaehtoinen lisäopintojakso, joka syventää pakollisten opintojaksojen tietoja" },
+  { term: "Abiturienti", def: "Lukion viimeistä vuotta käyvä opiskelija" },
+  { term: "Ainereaalikoe", def: "Yo-tutkinnon koe, jossa testataan yksittäisen oppiaineen osaaminen" },
+  { term: "Laudatur", def: "Ylioppilastutkinnon korkein arvosana" },
+  { term: "Approbatur", def: "Ylioppilastutkinnon alin hyväksytty arvosana" },
+  { term: "Opinto-ohjaaja", def: "Henkilö, joka ohjaa opiskelijaa opintovalinnoissa ja jatko-opinnoissa" },
+  { term: "IB-tutkinto", def: "Kansainvälinen ylioppilastutkinto, joka suoritetaan englanniksi" },
+  { term: "Lukujärjestys", def: "Opiskelijan henkilökohtainen viikkotuntien aikataulu" },
+  { term: "Periodi", def: "Lukuvuoden jakso, jonka aikana opiskellaan tiettyjä opintojaksoja" },
+  { term: "Opintopiste", def: "Lukiossa käytetty opintosuoritusten laajuuden mittayksikkö" },
+  { term: "Lukion oppimäärä", def: "Lukiokoulutuksen koko opintokokonaisuus, jonka suorittaminen oikeuttaa yo-kokeeseen" },
+  { term: "Opintotarjotin", def: "Lukion kurssitarjonta, josta opiskelija valitsee omat opintonsa" },
+  { term: "Lukiodiplomi", def: "Tunnustus erityisosaamisesta taito- ja taideaineissa lukion aikana" },
+];
+
+// Use all pairs, shuffled once
+function pickPairs() {
+  return [...ALL_PAIRS].sort(() => Math.random() - 0.5);
+}
+
+// ---- STATE ----
+let pairs = [];
+let selectedTerm = null;
+let selectedDef = null;
+let matchedCount = 0;
+let attempts = 0;
+let score = 0;
+let hintsLeft = 3;
+let timerInterval = null;
+let elapsedSeconds = 0;
+let gameActive = false;
+
+// ---- DOM ----
+const termsCol = document.getElementById('terms-col');
+const defsCol = document.getElementById('defs-col');
+const progressBar = document.getElementById('progress-bar');
+const feedbackEl = document.getElementById('feedback');
+const scoreVal = document.getElementById('score-val');
+const timerVal = document.getElementById('timer-val');
+const hintsVal = document.getElementById('hints-val');
+const accVal = document.getElementById('acc-val');
+const hintBtn = document.getElementById('hint-btn');
+const shuffleBtn = document.getElementById('shuffle-btn');
+const restartBtn = document.getElementById('restart-btn');
+const victoryModal = document.getElementById('victory-modal');
+const playAgainBtn = document.getElementById('play-again-btn');
+
+// ---- TIMER ----
+function startTimer() {
+  clearInterval(timerInterval);
+  elapsedSeconds = 0;
+  timerInterval = setInterval(() => {
+    elapsedSeconds++;
+    timerVal.textContent = elapsedSeconds + 's';
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerInterval); }
+
+// ---- SCORE CALC ----
+function calcMatchScore() {
+  // Base 100 pts + time bonus (up to +50, decays over 3 minutes)
+  const timeBonus = Math.max(0, 50 - Math.floor(elapsedSeconds / 3.6));
+  return 100 + timeBonus;
+}
+
+// ---- RENDER ----
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function initGame() {
+  pairs = pickPairs();
+  selectedTerm = null;
+  selectedDef = null;
+  matchedCount = 0;
+  attempts = 0;
+  score = 0;
+  hintsLeft = 3;
+  gameActive = true;
+
+  scoreVal.textContent = '0';
+  timerVal.textContent = '0s';
+  hintsVal.textContent = '3';
+  accVal.textContent = '–';
+  progressBar.style.width = '0%';
+  victoryModal.classList.remove('show');
+  victoryModal.setAttribute('aria-hidden', 'true');
+
+  renderCards();
+  startTimer();
+}
+
+function renderCards() {
+  termsCol.innerHTML = '';
+  defsCol.innerHTML = '';
+
+  const termOrder = shuffle(pairs);
+  const defOrder = shuffle(pairs);
+
+  termOrder.forEach(p => {
+    const card = makeCard(p.term, 'term', p);
+    termsCol.appendChild(card);
+  });
+
+  defOrder.forEach(p => {
+    const card = makeCard(p.def, 'def', p);
+    defsCol.appendChild(card);
+  });
+}
+
+function makeCard(text, type, pair) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.textContent = text;
+  card.dataset.type = type;
+  card.dataset.pairTerm = pair.term;
+  card.addEventListener('click', () => onCardClick(card, type, pair));
+  return card;
+}
+
+// ---- INTERACTION ----
+function onCardClick(card, type, pair) {
+  if (!gameActive) return;
+  if (card.classList.contains('matched')) return;
+
+  if (type === 'term') {
+    // Deselect previous term
+    if (selectedTerm) selectedTerm.classList.remove('selected');
+    if (selectedTerm === card) { selectedTerm = null; return; }
+    selectedTerm = card;
+    card.classList.add('selected');
+  } else {
+    if (selectedDef) selectedDef.classList.remove('selected');
+    if (selectedDef === card) { selectedDef = null; return; }
+    selectedDef = card;
+    card.classList.add('selected');
+  }
+
+  // If both selected, check match
+  if (selectedTerm && selectedDef) {
+    checkMatch();
+  }
+}
+
+function checkMatch() {
+  attempts++;
+  const termPair = selectedTerm.dataset.pairTerm;
+  const defPair = selectedDef.dataset.pairTerm;
+
+  if (termPair === defPair) {
+    // MATCH!
+    const pts = calcMatchScore();
+    score += pts;
+    matchedCount++;
+    scoreVal.textContent = score;
+
+    selectedTerm.classList.remove('selected');
+    selectedDef.classList.remove('selected');
+    selectedTerm.classList.add('matched');
+    selectedDef.classList.add('matched');
+    selectedTerm.style.pointerEvents = 'none';
+    selectedDef.style.pointerEvents = 'none';
+
+    updateAccuracy();
+    updateProgress();
+    showFeedback('✅ Oikein! +' + pts + ' pistettä', '#22c55e');
+
+    selectedTerm = null;
+    selectedDef = null;
+
+    if (matchedCount === pairs.length) {
+      setTimeout(showVictory, 500);
+    }
+  } else {
+    // WRONG
+    selectedTerm.classList.add('wrong-flash');
+    selectedDef.classList.add('wrong-flash');
+    score = Math.max(0, score - 20);
+    scoreVal.textContent = score;
+    updateAccuracy();
+    showFeedback('❌ Väärä pari! -20 pistettä', '#ef4444');
+
+    setTimeout(() => {
+      if (selectedTerm) { selectedTerm.classList.remove('wrong-flash', 'selected'); }
+      if (selectedDef) { selectedDef.classList.remove('wrong-flash', 'selected'); }
+      selectedTerm = null;
+      selectedDef = null;
+    }, 600);
+  }
+}
+
+function updateAccuracy() {
+  const acc = attempts > 0 ? Math.round((matchedCount / attempts) * 100) : 100;
+  accVal.textContent = acc + '%';
+}
+
+function updateProgress() {
+  const pct = (matchedCount / pairs.length) * 100;
+  progressBar.style.width = pct + '%';
+}
+
+// ---- FEEDBACK TOAST ----
+let feedbackTimeout;
+function showFeedback(msg, color) {
+  feedbackEl.textContent = msg;
+  feedbackEl.style.background = color || '#1a1a2e';
+  feedbackEl.classList.add('show');
+  clearTimeout(feedbackTimeout);
+  feedbackTimeout = setTimeout(() => feedbackEl.classList.remove('show'), 1800);
+}
+
+// ---- HINT ----
+hintBtn.addEventListener('click', () => {
+  if (hintsLeft <= 0) { showFeedback('Vinkit loppu!'); return; }
+  if (!gameActive) return;
+
+  // Find unmatched pairs
+  const unmatched = pairs.filter(p => {
+    const tCard = [...termsCol.querySelectorAll('.card')].find(c => c.dataset.pairTerm === p.term && !c.classList.contains('matched'));
+    return tCard;
+  });
+  if (unmatched.length === 0) return;
+
+  const target = unmatched[Math.floor(Math.random() * unmatched.length)];
+  const tCard = [...termsCol.querySelectorAll('.card')].find(c => c.dataset.pairTerm === target.term && !c.classList.contains('matched'));
+  const dCard = [...defsCol.querySelectorAll('.card')].find(c => c.dataset.pairTerm === target.term && !c.classList.contains('matched'));
+
+  if (tCard && dCard) {
+    [tCard, dCard].forEach(c => {
+      c.style.background = 'rgba(245,158,11,0.15)';
+      c.style.borderColor = '#f59e0b';
+      setTimeout(() => {
+        if (!c.classList.contains('matched')) {
+          c.style.background = '';
+          c.style.borderColor = '';
+        }
+      }, 2000);
+    });
+    hintsLeft--;
+    hintsVal.textContent = hintsLeft;
+    score = Math.max(0, score - 30);
+    scoreVal.textContent = score;
+    showFeedback('💡 Vinkki käytetty! -30 pistettä', '#f59e0b');
+  }
+});
+
+// ---- SHUFFLE ----
+shuffleBtn.addEventListener('click', () => {
+  if (!gameActive) return;
+  // Re-shuffle only definition cards
+  const defCards = [...defsCol.querySelectorAll('.card:not(.matched)')];
+  const positions = defCards.map(c => ({ top: c.offsetTop }));
+  defCards.sort(() => Math.random() - 0.5);
+  defsCol.querySelectorAll('.card:not(.matched)').forEach((slot, i) => {
+    slot.parentNode.insertBefore(defCards[i], slot);
+  });
+  showFeedback('🔀 Määritelmät sekoitettu!');
+});
+
+// ---- RESTART ----
+restartBtn.addEventListener('click', initGame);
+playAgainBtn.addEventListener('click', initGame);
+
+// ---- VICTORY ----
+function showVictory() {
+  stopTimer();
+  gameActive = false;
+  const acc = attempts > 0 ? Math.round((matchedCount / attempts) * 100) : 100;
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-time').textContent = elapsedSeconds + 's';
+  document.getElementById('final-acc').textContent = acc + '%';
+  victoryModal.classList.add('show');
+  victoryModal.setAttribute('aria-hidden', 'false');
+}
+
+// ---- START ----
+initGame();
+</script>
+</body>
+</html>

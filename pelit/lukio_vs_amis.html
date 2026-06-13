@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Lukio vs. Amis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --lukio:#1e3a5f;--lukio-light:#dbeafe;--lukio-mid:#3b82f6;--lukio-accent:#60a5fa;
+      --amis:#7c2d12;--amis-light:#ffedd5;--amis-mid:#f97316;--amis-accent:#fb923c;
+      --gold:#f59e0b;--green:#22c55e;--bg:#0f172a;--surface:#1e293b;--surface2:#334155;
+      --text:#f1f5f9;--muted:#94a3b8;
+    }
+    body{min-height:100vh;background:var(--bg);font-family:'Lato',sans-serif;color:var(--text);overflow-x:hidden;}
+
+    /* ── SCREENS ── */
+    .screen{display:none;min-height:100vh;}
+    .screen.active{display:flex;flex-direction:column;}
+
+    /* ── INTRO SCREEN ── */
+    #intro-screen{align-items:center;justify-content:center;padding:24px 16px;background:radial-gradient(ellipse at 20% 50%,#1e3a5f44 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,#7c2d1244 0%,transparent 60%),var(--bg);}
+    .intro-content{max-width:700px;width:100%;text-align:center;}
+    .intro-vs{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:28px;}
+    .intro-side{padding:20px 28px;border-radius:16px;border:3px solid;cursor:pointer;transition:all .2s;flex:1;max-width:240px;}
+    .intro-side.lukio{border-color:var(--lukio-mid);background:rgba(59,130,246,.1);}
+    .intro-side.amis{border-color:var(--amis-mid);background:rgba(249,115,22,.1);}
+    .intro-side:hover{transform:translateY(-4px);}
+    .intro-side .side-emoji{font-size:3rem;display:block;margin-bottom:8px;}
+    .intro-side .side-name{font-family:"Playfair Display",serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+    .intro-side.lukio .side-name{color:var(--lukio-accent);}
+    .intro-side.amis .side-name{color:var(--amis-accent);}
+    .intro-side .side-desc{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+    .vs-badge{font-family:"Playfair Display",serif;font-size:2.5rem;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(245,158,11,.5);}
+    .intro-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--text);margin-bottom:10px;line-height:1.2;}
+    .intro-sub{color:var(--muted);font-size:0.92rem;margin-bottom:32px;line-height:1.6;}
+    .intro-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;}
+    .mode-btn{background:var(--surface);border:2px solid var(--surface2);border-radius:12px;padding:16px;cursor:pointer;transition:all .18s;font-family:"Lato",sans-serif;color:var(--text);}
+    .mode-btn:hover{border-color:var(--gold);background:var(--surface2);}
+    .mode-btn .mode-icon{font-size:1.8rem;display:block;margin-bottom:6px;}
+    .mode-btn .mode-name{font-weight:700;font-size:0.92rem;display:block;margin-bottom:4px;}
+    .mode-btn .mode-desc{font-size:0.75rem;color:var(--muted);}
+
+    /* ── ROLE SELECT ── */
+    #role-screen{align-items:center;justify-content:center;padding:24px 16px;background:var(--bg);}
+    .role-content{max-width:600px;width:100%;text-align:center;}
+    .role-title{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--text);margin-bottom:8px;}
+    .role-sub{color:var(--muted);font-size:0.88rem;margin-bottom:32px;}
+    .role-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+    .role-card{border-radius:14px;border:3px solid;padding:24px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+    .role-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;}
+    .role-card:hover::before{opacity:1;}
+    .role-card.lukio{border-color:var(--lukio-mid);background:rgba(59,130,246,.08);}
+    .role-card.lukio::before{background:rgba(59,130,246,.08);}
+    .role-card.amis{border-color:var(--amis-mid);background:rgba(249,115,22,.08);}
+    .role-card.amis::before{background:rgba(249,115,22,.08);}
+    .role-card .rc-emoji{font-size:3.5rem;display:block;margin-bottom:12px;}
+    .role-card .rc-name{font-family:"Playfair Display",serif;font-size:1.4rem;font-weight:700;margin-bottom:8px;}
+    .role-card.lukio .rc-name{color:var(--lukio-accent);}
+    .role-card.amis .rc-name{color:var(--amis-accent);}
+    .role-card .rc-flavor{font-size:0.8rem;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+    .role-card .rc-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+    .tag{font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:50px;letter-spacing:.5px;}
+    .tag-blue{background:rgba(96,165,250,.2);color:var(--lukio-accent);border:1px solid rgba(96,165,250,.3);}
+    .tag-orange{background:rgba(251,146,60,.2);color:var(--amis-accent);border:1px solid rgba(251,146,60,.3);}
+
+    /* ── GAME SCREEN ── */
+    #game-screen{flex-direction:column;}
+    .game-header{background:var(--surface);border-bottom:1px solid var(--surface2);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .score-area{display:flex;gap:10px;align-items:center;}
+    .score-pill{padding:6px 14px;border-radius:50px;font-size:0.82rem;font-weight:700;border:2px solid;}
+    .score-pill.lukio{border-color:var(--lukio-mid);background:rgba(59,130,246,.15);color:var(--lukio-accent);}
+    .score-pill.amis{border-color:var(--amis-mid);background:rgba(249,115,22,.15);color:var(--amis-accent);}
+    .turn-badge{font-family:"Playfair Display",serif;font-size:0.9rem;font-weight:700;color:var(--gold);text-align:center;}
+    .round-info{font-size:0.78rem;color:var(--muted);}
+    .btn-quit{background:transparent;border:1px solid var(--surface2);border-radius:6px;padding:5px 12px;color:var(--muted);font-size:0.78rem;cursor:pointer;font-family:"Lato",sans-serif;transition:all .12s;}
+    .btn-quit:hover{border-color:var(--text);color:var(--text);}
+
+    .game-body{flex:1;display:flex;flex-direction:column;padding:12px 12px 0;max-width:960px;width:100%;margin:0 auto;}
+
+    /* PATH AREA */
+    .paths-area{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+    .path-lane{background:var(--surface);border-radius:12px;border:2px solid var(--surface2);padding:10px;min-height:110px;}
+    .path-lane.lukio{border-color:rgba(59,130,246,.4);}
+    .path-lane.amis{border-color:rgba(249,115,22,.4);}
+    .path-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;opacity:.7;}
+    .path-lane.lukio .path-label{color:var(--lukio-accent);}
+    .path-lane.amis .path-label{color:var(--amis-accent);}
+    .path-cards{display:flex;flex-wrap:wrap;gap:6px;}
+    .path-mini-card{border-radius:6px;padding:4px 8px;font-size:0.7rem;font-weight:700;border:1px solid;line-height:1.3;max-width:120px;}
+    .path-mini-card.lukio{background:rgba(59,130,246,.15);border-color:var(--lukio-mid);color:var(--lukio-accent);}
+    .path-mini-card.amis{background:rgba(249,115,22,.15);border-color:var(--amis-mid);color:var(--amis-accent);}
+    .path-mini-card.challenged{opacity:.4;text-decoration:line-through;}
+
+    /* CENTER STAGE */
+    .center-stage{background:var(--surface);border-radius:14px;border:2px solid var(--surface2);padding:16px;margin-bottom:12px;text-align:center;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .stage-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+    .stage-card{background:var(--surface2);border-radius:10px;padding:12px 18px;max-width:400px;width:100%;border:2px solid var(--gold);}
+    .stage-card .sc-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px;opacity:.7;}
+    .stage-card.lukio .sc-label{color:var(--lukio-accent);}
+    .stage-card.amis .sc-label{color:var(--amis-accent);}
+    .stage-card .sc-term{font-family:"Playfair Display",serif;font-size:1.1rem;font-weight:700;margin-bottom:4px;}
+    .stage-card.lukio .sc-term{color:var(--lukio-accent);}
+    .stage-card.amis .sc-term{color:var(--amis-accent);}
+    .stage-card .sc-def{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+    .stage-empty{color:var(--muted);font-size:0.88rem;}
+    .stage-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;justify-content:center;}
+    .btn-challenge{background:rgba(239,68,68,.15);border:2px solid #ef4444;color:#fca5a5;border-radius:8px;padding:8px 18px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .15s;}
+    .btn-challenge:hover{background:rgba(239,68,68,.3);}
+    .btn-accept{background:rgba(34,197,94,.15);border:2px solid var(--green);color:#86efac;border-radius:8px;padding:8px 18px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .15s;}
+    .btn-accept:hover{background:rgba(34,197,94,.3);}
+    .btn-action{background:var(--surface2);border:2px solid var(--surface2);color:var(--text);border-radius:8px;padding:8px 18px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .15s;}
+    .btn-action:hover{border-color:var(--gold);color:var(--gold);}
+    .btn-action:disabled{opacity:.4;cursor:default;}
+
+    /* HAND */
+    .hand-area{padding-bottom:16px;}
+    .hand-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+    .hand-cards{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+
+    /* PLAY CARDS */
+    .play-card{width:130px;border-radius:12px;border:2px solid;padding:12px 10px;cursor:pointer;transition:all .2s;position:relative;background:var(--surface);display:flex;flex-direction:column;align-items:center;text-align:center;}
+    .play-card.lukio{border-color:rgba(59,130,246,.5);}
+    .play-card.amis{border-color:rgba(249,115,22,.5);}
+    .play-card:hover{transform:translateY(-6px);}
+    .play-card.lukio:hover{border-color:var(--lukio-mid);box-shadow:0 8px 24px rgba(59,130,246,.3);}
+    .play-card.amis:hover{border-color:var(--amis-mid);box-shadow:0 8px 24px rgba(249,115,22,.3);}
+    .play-card .pc-type{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px;opacity:.7;}
+    .play-card.lukio .pc-type{color:var(--lukio-accent);}
+    .play-card.amis .pc-type{color:var(--amis-accent);}
+    .play-card .pc-icon{font-size:1.4rem;margin-bottom:6px;}
+    .play-card .pc-term{font-family:"Playfair Display",serif;font-size:0.78rem;font-weight:700;margin-bottom:4px;line-height:1.3;}
+    .play-card.lukio .pc-term{color:var(--lukio-accent);}
+    .play-card.amis .pc-term{color:var(--amis-accent);}
+    .play-card .pc-pts{font-size:0.65rem;color:var(--gold);font-weight:700;}
+    .play-card.selected{transform:translateY(-10px);}
+    .play-card.lukio.selected{border-color:var(--lukio-accent);box-shadow:0 10px 28px rgba(59,130,246,.4);}
+    .play-card.amis.selected{border-color:var(--amis-accent);box-shadow:0 10px 28px rgba(249,115,22,.4);}
+
+    /* CHALLENGE OVERLAY */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;}
+    .overlay.show{opacity:1;pointer-events:all;}
+    .overlay-card{background:var(--surface);border-radius:16px;border:2px solid var(--gold);padding:28px 24px;max-width:480px;width:100%;text-align:center;transform:scale(.9);transition:transform .2s;}
+    .overlay.show .overlay-card{transform:scale(1);}
+    .ov-title{font-family:"Playfair Display",serif;font-size:1.5rem;color:var(--gold);margin-bottom:8px;}
+    .ov-sub{font-size:0.88rem;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+    .ov-term{font-family:"Playfair Display",serif;font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:8px;}
+    .ov-def{font-size:0.88rem;color:var(--muted);margin-bottom:20px;padding:10px 14px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;line-height:1.6;display:none;}
+    .ov-def.show{display:block;}
+    .ov-options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .ov-option{background:var(--surface2);border:2px solid var(--surface2);border-radius:8px;padding:12px 16px;cursor:pointer;font-family:"Lato",sans-serif;font-size:0.85rem;color:var(--text);text-align:left;transition:all .15s;}
+    .ov-option:hover{border-color:var(--gold);color:var(--gold);}
+    .ov-option.correct{border-color:var(--green);background:rgba(34,197,94,.15);color:#86efac;}
+    .ov-option.wrong{border-color:#ef4444;background:rgba(239,68,68,.15);color:#fca5a5;}
+    .ov-btn{border-radius:8px;padding:10px 24px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all .15s;border:2px solid;margin:4px;}
+    .ov-btn-primary{background:var(--gold);border-color:var(--gold);color:#1a1a2e;}
+    .ov-btn-secondary{background:transparent;border-color:var(--surface2);color:var(--muted);}
+    .ov-btn-secondary:hover{border-color:var(--text);color:var(--text);}
+    .ov-result{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
+    .ov-result.win{color:var(--green);}
+    .ov-result.lose{color:#ef4444;}
+
+    /* END SCREEN */
+    #end-screen{align-items:center;justify-content:flex-start;padding:24px 16px;background:radial-gradient(ellipse at 50% 0%,#1e3a5f33 0%,transparent 50%),var(--bg);}
+    .end-content{max-width:700px;width:100%;}
+    .end-title{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,5vw,2.6rem);color:var(--text);margin-bottom:6px;text-align:center;}
+    .end-sub{color:var(--muted);font-size:0.9rem;text-align:center;margin-bottom:28px;}
+    .end-scores{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+    .end-score-card{border-radius:14px;border:3px solid;padding:20px 16px;text-align:center;}
+    .end-score-card.lukio{border-color:var(--lukio-mid);background:rgba(59,130,246,.08);}
+    .end-score-card.amis{border-color:var(--amis-mid);background:rgba(249,115,22,.08);}
+    .esc-emoji{font-size:2.5rem;display:block;margin-bottom:8px;}
+    .esc-name{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;margin-bottom:4px;}
+    .end-score-card.lukio .esc-name{color:var(--lukio-accent);}
+    .end-score-card.amis .esc-name{color:var(--amis-accent);}
+    .esc-score{font-size:2.4rem;font-family:"Playfair Display",serif;font-weight:900;margin-bottom:4px;}
+    .end-score-card.lukio .esc-score{color:var(--lukio-accent);}
+    .end-score-card.amis .esc-score{color:var(--amis-accent);}
+    .esc-cards{font-size:0.78rem;color:var(--muted);}
+    .winner-banner{background:linear-gradient(90deg,rgba(245,158,11,.1),rgba(245,158,11,.2),rgba(245,158,11,.1));border:2px solid var(--gold);border-radius:12px;padding:14px 20px;text-align:center;margin-bottom:24px;}
+    .winner-banner .wb-title{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--gold);font-weight:700;}
+    .winner-banner .wb-sub{font-size:0.85rem;color:var(--muted);margin-top:4px;}
+
+    /* FUTURE PATH */
+    .future-section{margin-bottom:24px;}
+    .future-title{font-family:"Playfair Display",serif;font-size:1.2rem;color:var(--gold);margin-bottom:14px;text-align:center;}
+    .future-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+    .future-path{background:var(--surface);border-radius:12px;padding:14px;border:2px solid var(--surface2);}
+    .future-path.lukio{border-color:rgba(59,130,246,.4);}
+    .future-path.amis{border-color:rgba(249,115,22,.4);}
+    .fp-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .future-path.lukio .fp-title{color:var(--lukio-accent);}
+    .future-path.amis .fp-title{color:var(--amis-accent);}
+    .fp-items{display:flex;flex-direction:column;gap:6px;}
+    .fp-item{font-size:0.78rem;color:var(--text);display:flex;gap:6px;align-items:flex-start;line-height:1.4;}
+    .fp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+    .future-path.lukio .fp-dot{background:var(--lukio-accent);}
+    .future-path.amis .fp-dot{background:var(--amis-accent);}
+    .future-union{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(249,115,22,.1));border:2px solid var(--surface2);border-radius:12px;padding:14px 18px;text-align:center;}
+    .fu-title{font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+    .fu-desc{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+    .end-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+    .btn-end-primary{background:var(--gold);border:2px solid var(--gold);color:#1a1a2e;border-radius:10px;padding:12px 28px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.92rem;cursor:pointer;transition:all .15s;}
+    .btn-end-primary:hover{transform:translateY(-2px);}
+    .btn-end-secondary{background:transparent;border:2px solid var(--surface2);color:var(--muted);border-radius:10px;padding:12px 24px;font-family:"Lato",sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all .15s;}
+    .btn-end-secondary:hover{border-color:var(--text);color:var(--text);}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 24px;border-radius:50px;font-weight:700;font-size:0.88rem;opacity:0;transition:all .3s;pointer-events:none;z-index:200;white-space:nowrap;color:#fff;}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* AI turn indicator */
+    .ai-thinking{display:none;align-items:center;gap:8px;color:var(--muted);font-size:0.82rem;justify-content:center;padding:8px;}
+    .ai-thinking.show{display:flex;}
+    .dot-pulse{display:flex;gap:4px;}
+    .dot-pulse span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:pulse .9s ease-in-out infinite;}
+    .dot-pulse span:nth-child(2){animation-delay:.2s;}
+    .dot-pulse span:nth-child(3){animation-delay:.4s;}
+    @keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+    @media(max-width:560px){
+      .paths-area,.future-paths,.end-scores,.role-cards{grid-template-columns:1fr;}
+      .play-card{width:110px;}
+      .intro-modes{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- INTRO SCREEN -->
+<div class="screen active" id="intro-screen">
+  <div class="intro-content">
+    <p style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Interaktiivinen strategiapeli</p>
+    <h1 class="intro-title">Lukio vs. Amis</h1>
+    <p class="intro-sub">Lukio vai amis? Haasta vastustajasi, puolusta valintasi ja rakenna oma opintopolkusi kortti kerrallaan.</p>
+    <div class="intro-vs">
+      <div class="intro-side lukio">
+        <span class="side-emoji">📚</span>
+        <div class="side-name">Lukiolainen</div>
+        <div class="side-desc">Teoria, yo-kokeet ja laaja-alainen sivistys</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="intro-side amis">
+        <span class="side-emoji">🔧</span>
+        <div class="side-name">Amislainen</div>
+        <div class="side-desc">Käytännön taidot, näytöt ja työelämä</div>
+      </div>
+    </div>
+    <div class="intro-modes">
+      <button class="mode-btn" onclick="chooseMode('vs')">
+        <span class="mode-icon">👥</span>
+        <span class="mode-name">Kaksi pelaajaa</span>
+        <span class="mode-desc">Haasta kaveria samalla laitteella</span>
+      </button>
+      <button class="mode-btn" onclick="chooseMode('ai')">
+        <span class="mode-icon">🤖</span>
+        <span class="mode-name">Vs. tietokone</span>
+        <span class="mode-desc">Pelaa yksin tekoälyvastustajaa vastaan</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ROLE SELECT -->
+<div class="screen" id="role-screen">
+  <div class="role-content">
+    <p style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Valitse puolesi</p>
+    <h2 class="role-title">Kumpi olet sinä?</h2>
+    <p class="role-sub" id="role-sub">Valitse oma roolisi. Vastustaja saa toisen puolen.</p>
+    <div class="role-cards">
+      <div class="role-card lukio" onclick="chooseRole('lukio')">
+        <span class="rc-emoji">📚</span>
+        <div class="rc-name">Lukiolainen</div>
+        <div class="rc-flavor">Sinulla on laaja yleissivistys, teoriaosaamista ja hyvät jatko-opintomahdollisuudet.</div>
+        <div class="rc-tags">
+          <span class="tag tag-blue">Teoria</span>
+          <span class="tag tag-blue">Yo-kokeet</span>
+          <span class="tag tag-blue">Sivistys</span>
+          <span class="tag tag-blue">AMK & Yliopisto</span>
+        </div>
+      </div>
+      <div class="role-card amis" onclick="chooseRole('amis')">
+        <span class="rc-emoji">🔧</span>
+        <div class="rc-name">Amislainen</div>
+        <div class="rc-flavor">Sinulla on käytännön taidot, ammattiosaaminen ja suora polku työelämään.</div>
+        <div class="rc-tags">
+          <span class="tag tag-orange">Käytäntö</span>
+          <span class="tag tag-orange">Näyttö</span>
+          <span class="tag tag-orange">Työelämä</span>
+          <span class="tag tag-orange">Ammatti</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-quit" onclick="showScreen('intro-screen')">← Takaisin</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="game-screen">
+  <div class="game-header">
+    <div class="score-area">
+      <div class="score-pill lukio">📚 <span id="score-lukio">0</span> p</div>
+      <div class="score-pill amis">🔧 <span id="score-amis">0</span> p</div>
+    </div>
+    <div class="turn-badge" id="turn-badge">Lukiolaisen vuoro</div>
+    <div class="round-info">Kierros <span id="round-num">1</span>/8</div>
+    <button class="btn-quit" onclick="if(confirm('Lopeta peli?')) showScreen('intro-screen')">✕ Lopeta</button>
+  </div>
+
+  <div class="game-body">
+    <!-- Paths built so far -->
+    <div class="paths-area">
+      <div class="path-lane lukio">
+        <div class="path-label">📚 Lukion polku</div>
+        <div class="path-cards" id="path-lukio"></div>
+      </div>
+      <div class="path-lane amis">
+        <div class="path-label">🔧 Amiksen polku</div>
+        <div class="path-cards" id="path-amis"></div>
+      </div>
+    </div>
+
+    <!-- Center stage: played card -->
+    <div class="center-stage" id="center-stage">
+      <div class="stage-empty" id="stage-empty">Pelaa kortti kädestäsi rakentaaksesi polkuasi →</div>
+      <div id="stage-content" style="display:none;width:100%;display:none;flex-direction:column;align-items:center;">
+        <div class="stage-label">Pelattu kortti</div>
+        <div class="stage-card" id="stage-card">
+          <div class="sc-label" id="sc-label">Termi</div>
+          <div class="sc-term" id="sc-term">–</div>
+          <div class="sc-def" id="sc-def">–</div>
+        </div>
+        <div class="stage-actions" id="stage-actions"></div>
+      </div>
+    </div>
+
+    <!-- AI thinking -->
+    <div class="ai-thinking" id="ai-thinking">
+      <span>Tietokone miettii</span>
+      <div class="dot-pulse"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- Hand -->
+    <div class="hand-area">
+      <div class="hand-label" id="hand-label">Sinun kätesi</div>
+      <div class="hand-cards" id="hand-cards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div class="screen" id="end-screen">
+  <div class="end-content">
+    <h2 class="end-title" id="end-title">Peli päättyi!</h2>
+    <p class="end-sub" id="end-sub">Katso kumman polku rakentui vahvemmaksi</p>
+
+    <div class="winner-banner" id="winner-banner">
+      <div class="wb-title" id="wb-title">🏆 Voittaja</div>
+      <div class="wb-sub" id="wb-sub">Tasapeli!</div>
+    </div>
+
+    <div class="end-scores">
+      <div class="end-score-card lukio">
+        <span class="esc-emoji">📚</span>
+        <div class="esc-name">Lukiolainen</div>
+        <div class="esc-score" id="end-score-lukio">0</div>
+        <div class="esc-cards" id="end-cards-lukio">0 korttia</div>
+      </div>
+      <div class="end-score-card amis">
+        <span class="esc-emoji">🔧</span>
+        <div class="esc-name">Amislainen</div>
+        <div class="esc-score" id="end-score-amis">0</div>
+        <div class="esc-cards" id="end-cards-amis">0 korttia</div>
+      </div>
+    </div>
+
+    <div class="future-section">
+      <div class="future-title">✨ Tulevaisuuspolkusi</div>
+      <div class="future-paths">
+        <div class="future-path lukio">
+          <div class="fp-title">📚 Lukiolaisen tulevaisuus</div>
+          <div class="fp-items" id="fp-lukio"></div>
+        </div>
+        <div class="future-path amis">
+          <div class="fp-title">🔧 Amislaisen tulevaisuus</div>
+          <div class="fp-items" id="fp-amis"></div>
+        </div>
+      </div>
+      <div class="future-union">
+        <div class="fu-title">🤝 Mitä yhteistä teillä on?</div>
+        <div class="fu-desc" id="fu-desc">Molemmat polut johtavat hyvään tulevaisuuteen – eri reittejä pitkin!</div>
+      </div>
+    </div>
+
+    <div class="end-actions">
+      <button class="btn-end-primary" onclick="restartGame()">🔁 Pelaa uudelleen</button>
+      <button class="btn-end-secondary" onclick="showScreen('intro-screen')">🏠 Alkuun</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHALLENGE OVERLAY -->
+<div class="overlay" id="challenge-overlay">
+  <div class="overlay-card">
+    <div class="ov-title" id="ov-title">⚔️ Haaste!</div>
+    <p class="ov-sub" id="ov-sub">Tiedätkö mitä tämä tarkoittaa?</p>
+    <div class="ov-term" id="ov-term">–</div>
+    <div class="ov-options" id="ov-options"></div>
+    <div class="ov-def" id="ov-def"></div>
+    <div id="ov-result-area" style="display:none;">
+      <div class="ov-result" id="ov-result"></div>
+      <button class="ov-btn ov-btn-primary" onclick="closeChallenge()">Jatka →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── ALL CARDS ──────────────────────────────────────────────────────────────
+const LUKIO_CARDS = [
+  {id:"L1",  side:"lukio", icon:"🎓", term:"Ylioppilastutkinto", def:"Lukion päättökoe, jolla osoitat lukio-opetuksen hallinta", pts:30, type:"Tutkinto"},
+  {id:"L2",  side:"lukio", icon:"⭐", term:"Laudatur",            def:"Ylioppilastutkinnon korkein arvosana – harvinaisin ja arvokkain", pts:25, type:"Arvosana"},
+  {id:"L3",  side:"lukio", icon:"📝", term:"Ainereaalikoe",       def:"Yo-tutkinnon koe, jossa testataan yksittäisen oppiaineen osaaminen", pts:20, type:"Koe"},
+  {id:"L4",  side:"lukio", icon:"📅", term:"Periodi",             def:"Lukuvuoden jakso, jonka aikana opiskellaan tiettyjä opintojaksoja", pts:10, type:"Rakenne"},
+  {id:"L5",  side:"lukio", icon:"📚", term:"Opintojakso",         def:"Lukion opintoyksikkö, joka korvasi vanhan kurssin käsitteen", pts:10, type:"Rakenne"},
+  {id:"L6",  side:"lukio", icon:"🏆", term:"Lukiodiplomi",        def:"Tunnustus erityisosaamisesta taito- ja taideaineissa", pts:20, type:"Tunnustus"},
+  {id:"L7",  side:"lukio", icon:"🌍", term:"IB-tutkinto",         def:"Kansainvälinen ylioppilastutkinto, joka suoritetaan englanniksi", pts:25, type:"Tutkinto"},
+  {id:"L8",  side:"lukio", icon:"📊", term:"Opintopiste",         def:"Opintosuoritusten laajuuden mittayksikkö lukiossa", pts:10, type:"Rakenne"},
+  {id:"L9",  side:"lukio", icon:"🗺️", term:"Opintotarjotin",     def:"Lukion kurssivalikoima, josta opiskelija valitsee opintonsa", pts:15, type:"Suunnittelu"},
+  {id:"L10", side:"lukio", icon:"🧭", term:"Opinto-ohjaaja",     def:"Ohjaa opiskelijaa opintovalinnoissa ja jatko-opinnoissa", pts:15, type:"Tuki"},
+  {id:"L11", side:"lukio", icon:"✅", term:"Approbatur",          def:"Ylioppilastutkinnon alin hyväksytty arvosana", pts:10, type:"Arvosana"},
+  {id:"L12", side:"lukio", icon:"🏫", term:"Lukion oppimäärä",   def:"Koko lukiokoulutuksen opintokokonaisuus, joka oikeuttaa yo-kokeeseen", pts:20, type:"Tutkinto"},
+];
+const AMIS_CARDS = [
+  {id:"A1",  side:"amis", icon:"🔨", term:"Näyttö",              def:"Osoitat työtä tekemällä, mitä osaat ammatillisessa tutkinnon osassa", pts:30, type:"Arviointi"},
+  {id:"A2",  side:"amis", icon:"📋", term:"HOKS",                def:"Henkilökohtainen osaamisen kehittämissuunnitelma – oma opiskelusuunnitelmasi", pts:20, type:"Suunnittelu"},
+  {id:"A3",  side:"amis", icon:"🤝", term:"Oppisopimus",         def:"Opiskelet ammatin työpaikalla ja saat siitä palkkaa", pts:25, type:"Sopimus"},
+  {id:"A4",  side:"amis", icon:"🏭", term:"Koulutussopimus",     def:"Teet työtä työpaikalla osana opiskelua ilman palkkaa", pts:20, type:"Sopimus"},
+  {id:"A5",  side:"amis", icon:"💯", term:"Osaamispiste",        def:"Kertoo kuinka iso opinto on – ammatillinen perustutkinto on 180 osp", pts:15, type:"Rakenne"},
+  {id:"A6",  side:"amis", icon:"⚙️", term:"Ammattitutkinto",     def:"Sopii ihmisille, joilla on työkokemusta omalta alalta ainakin 3 vuotta", pts:25, type:"Tutkinto"},
+  {id:"A7",  side:"amis", icon:"🌟", term:"Erikoisammattitutkinto", def:"Korkein ammatillinen tutkinto – vaatii paljon työkokemusta ja osaamista", pts:30, type:"Tutkinto"},
+  {id:"A8",  side:"amis", icon:"📏", term:"Lähtötaso",           def:"Osaaminen, joka sinulla on opiskelun alussa – selvitetään testillä", pts:10, type:"Arviointi"},
+  {id:"A9",  side:"amis", icon:"💬", term:"Palaute",             def:"Ohjaaja kertoo mitä osaat hyvin ja mitä pitää vielä harjoitella", pts:10, type:"Oppiminen"},
+  {id:"A10", side:"amis", icon:"📖", term:"Tutkinnon perusteet", def:"Kertovat mitä kuuluu tutkintoon – samat kaikille Suomessa", pts:15, type:"Rakenne"},
+  {id:"A11", side:"amis", icon:"🧩", term:"YTO-opinnot",         def:"Yhteiset tutkinnon osat: kielet, matematiikka, yhteiskuntatieto", pts:20, type:"Opinnot"},
+  {id:"A12", side:"amis", icon:"🎯", term:"Osaamisala",          def:"Tutkinnon osat, joissa lisäät ja syvennät oman alan osaamista", pts:15, type:"Opinnot"},
+];
+
+// ── GAME STATE ─────────────────────────────────────────────────────────────
+let gameMode = 'ai'; // 'ai' | 'vs'
+let playerRole = 'lukio'; // player 1 role
+let currentTurn = 'lukio'; // whose turn
+let scores = {lukio:0, amis:0};
+let paths = {lukio:[], amis:[]};
+let hands = {lukio:[], amis:[]};
+let decks = {lukio:[], amis:[]};
+let round = 0;
+let totalRounds = 8;
+let playedCard = null;
+let pendingChallengeResult = null;
+let gameOver = false;
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+// ── SCREEN FLOW ────────────────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function chooseMode(mode){
+  gameMode = mode;
+  if(mode==='vs'){
+    document.getElementById('role-sub').textContent='Pelaaja 1 valitsee puolensa. Pelaaja 2 saa toisen.';
+  } else {
+    document.getElementById('role-sub').textContent='Sinä pelaat ihmistä, tietokone pelaa toista puolta.';
+  }
+  showScreen('role-screen');
+}
+function chooseRole(role){
+  playerRole = role;
+  initGame();
+  showScreen('game-screen');
+}
+
+// ── GAME INIT ──────────────────────────────────────────────────────────────
+function initGame(){
+  scores={lukio:0,amis:0};
+  paths={lukio:[],amis:[]};
+  round=0; gameOver=false; playedCard=null;
+  currentTurn = 'lukio'; // lukio always starts
+
+  decks={
+    lukio: shuffle([...LUKIO_CARDS]),
+    amis:  shuffle([...AMIS_CARDS])
+  };
+  hands={
+    lukio: decks.lukio.splice(0,4),
+    amis:  decks.amis.splice(0,4)
+  };
+
+  updateHeader();
+  renderPaths();
+  renderHand();
+  clearStage();
+}
+
+function restartGame(){
+  initGame();
+  showScreen('game-screen');
+}
+
+// ── HEADER ─────────────────────────────────────────────────────────────────
+function updateHeader(){
+  document.getElementById('score-lukio').textContent=scores.lukio;
+  document.getElementById('score-amis').textContent=scores.amis;
+  document.getElementById('round-num').textContent=round+1;
+  const turnName = currentTurn==='lukio'?'Lukiolaisen vuoro':'Amislaisen vuoro';
+  document.getElementById('turn-badge').textContent=turnName;
+  document.getElementById('turn-badge').style.color = currentTurn==='lukio'?'var(--lukio-accent)':'var(--amis-accent)';
+}
+
+// ── RENDER PATHS ──────────────────────────────────────────────────────────
+function renderPaths(){
+  ['lukio','amis'].forEach(side=>{
+    const el=document.getElementById('path-'+side);
+    el.innerHTML='';
+    paths[side].forEach(c=>{
+      const div=document.createElement('div');
+      div.className='path-mini-card '+side+(c.challenged?' challenged':'');
+      div.textContent=(c.challenged?'✗ ':'')+''+c.icon+' '+c.term;
+      div.title=c.def;
+      el.appendChild(div);
+    });
+    if(!paths[side].length) el.innerHTML='<span style="font-size:.75rem;color:var(--muted);font-style:italic;">Ei vielä kortteja...</span>';
+  });
+}
+
+// ── RENDER HAND ───────────────────────────────────────────────────────────
+function renderHand(){
+  const container=document.getElementById('hand-cards');
+  container.innerHTML='';
+  const isPlayerTurn = isHumanTurn();
+
+  document.getElementById('hand-label').textContent = isPlayerTurn
+    ? (gameMode==='vs'?(currentTurn==='lukio'?'Pelaaja 1':'Pelaaja 2')+' – pelaa kortti':'Sinun vuorosi – pelaa kortti')
+    : 'Odota – vastustajan vuoro...';
+
+  const hand = hands[currentTurn];
+  hand.forEach((card,i)=>{
+    const div=document.createElement('div');
+    div.className='play-card '+card.side;
+    div.innerHTML=`
+      <div class="pc-type">${card.type}</div>
+      <div class="pc-icon">${card.icon}</div>
+      <div class="pc-term">${card.term}</div>
+      <div class="pc-pts">+${card.pts} p</div>`;
+    if(isPlayerTurn){
+      div.addEventListener('click',()=>selectCard(card,div,i));
+    } else {
+      div.style.opacity='.4';
+    }
+    container.appendChild(div);
+  });
+}
+
+// ── SELECT + PLAY CARD ────────────────────────────────────────────────────
+let selectedCard=null, selectedEl=null, selectedIdx=-1;
+function selectCard(card,el,idx){
+  // Deselect previous
+  if(selectedEl) selectedEl.classList.remove('selected');
+  if(selectedCard===card){ selectedCard=null; selectedEl=null; selectedIdx=-1; clearStage(); return; }
+  selectedCard=card; selectedEl=el; selectedIdx=idx;
+  el.classList.add('selected');
+  showPlayStage(card);
+}
+
+function showPlayStage(card){
+  document.getElementById('stage-empty').style.display='none';
+  const sc=document.getElementById('stage-content');
+  sc.style.display='flex';
+  const stageCard=document.getElementById('stage-card');
+  stageCard.className='stage-card '+card.side;
+  document.getElementById('sc-label').textContent=card.type+' · '+card.side.toUpperCase();
+  document.getElementById('sc-term').textContent=card.icon+' '+card.term;
+  document.getElementById('sc-def').textContent=card.def;
+
+  // Actions
+  const acts=document.getElementById('stage-actions');
+  acts.innerHTML='';
+  const playBtn=document.createElement('button');
+  playBtn.className='btn-accept';
+  playBtn.textContent='▶ Pelaa tämä kortti';
+  playBtn.onclick=()=>playSelectedCard();
+  acts.appendChild(playBtn);
+  const cancelBtn=document.createElement('button');
+  cancelBtn.className='btn-action';
+  cancelBtn.textContent='✕ Peru';
+  cancelBtn.onclick=()=>{ if(selectedEl) selectedEl.classList.remove('selected'); selectedCard=null; selectedEl=null; clearStage(); };
+  acts.appendChild(cancelBtn);
+}
+
+function clearStage(){
+  document.getElementById('stage-empty').style.display='block';
+  document.getElementById('stage-content').style.display='none';
+  document.getElementById('stage-actions').innerHTML='';
+  selectedCard=null; selectedEl=null; selectedIdx=-1;
+}
+
+function playSelectedCard(){
+  if(!selectedCard) return;
+  playCard(selectedCard, selectedIdx, currentTurn);
+}
+
+function playCard(card, idx, side){
+  // Remove from hand
+  hands[side].splice(idx,1);
+  // Draw new card if deck has cards
+  if(decks[side].length>0) hands[side].push(decks[side].shift());
+
+  playedCard = card;
+  clearStage();
+
+  // Show played card in stage with challenge option for opponent
+  document.getElementById('stage-empty').style.display='none';
+  const sc=document.getElementById('stage-content');
+  sc.style.display='flex';
+  const stageCard=document.getElementById('stage-card');
+  stageCard.className='stage-card '+card.side;
+  document.getElementById('sc-label').textContent=card.type;
+  document.getElementById('sc-term').textContent=card.icon+' '+card.term;
+  document.getElementById('sc-def').textContent=card.def;
+
+  const acts=document.getElementById('stage-actions');
+  acts.innerHTML='';
+
+  const opponentSide = side==='lukio'?'amis':'lukio';
+  const isOpponentHuman = (gameMode==='vs') || (side!==playerRole);
+
+  if(isOpponentHuman){
+    // Human opponent decides to challenge or accept
+    const whoName = side==='lukio'?'Lukiolainen':'Amislainen';
+    acts.innerHTML=`<div style="font-size:.8rem;color:var(--muted);margin-bottom:6px;">${whoName} pelasi – Haluatko haastaa?</div>`;
+    const challengeBtn=document.createElement('button');
+    challengeBtn.className='btn-challenge';
+    challengeBtn.innerHTML='⚔️ Haasta! (Tiedät mitä tämä tarkoittaa?)';
+    challengeBtn.onclick=()=>triggerChallenge(card, side, 'human');
+    acts.appendChild(challengeBtn);
+    const acceptBtn=document.createElement('button');
+    acceptBtn.className='btn-accept';
+    acceptBtn.innerHTML='✓ Hyväksy – lisää polkuun';
+    acceptBtn.onclick=()=>resolveCard(card, side, false, false);
+    acts.appendChild(acceptBtn);
+  } else {
+    // AI opponent auto-decides (30% chance to challenge)
+    setTimeout(()=>aiDecideChallenge(card, side),900);
+  }
+}
+
+// ── AI LOGIC ──────────────────────────────────────────────────────────────
+function aiDecideChallenge(card, side){
+  document.getElementById('ai-thinking').classList.add('show');
+  setTimeout(()=>{
+    document.getElementById('ai-thinking').classList.remove('show');
+    const willChallenge = Math.random() < 0.4;
+    if(willChallenge){
+      showToast('🤖 Tietokone haastaa!','#ef4444');
+      setTimeout(()=>triggerChallenge(card, side, 'ai'), 400);
+    } else {
+      showToast('🤖 Tietokone hyväksyy kortin','#22c55e');
+      setTimeout(()=>resolveCard(card, side, false, false),500);
+    }
+  },1200);
+}
+
+function aiPlayCard(){
+  const aiSide = playerRole==='lukio'?'amis':'lukio';
+  if(hands[aiSide].length===0){ endGame(); return; }
+  document.getElementById('ai-thinking').classList.add('show');
+  const label=document.getElementById('hand-label');
+  label.textContent='Tietokone miettii...';
+  setTimeout(()=>{
+    document.getElementById('ai-thinking').classList.remove('show');
+    const idx = Math.floor(Math.random()*hands[aiSide].length);
+    const card = hands[aiSide][idx];
+    playCard(card, idx, aiSide);
+    renderHand();
+  },1500);
+}
+
+// ── CHALLENGE ─────────────────────────────────────────────────────────────
+function triggerChallenge(card, playedSide, challengerType){
+  const ov=document.getElementById('challenge-overlay');
+  const challengerSide=playedSide==='lukio'?'amis':'lukio';
+
+  document.getElementById('ov-title').textContent='⚔️ Haaste!';
+  document.getElementById('ov-sub').textContent=
+    challengerType==='ai'
+    ? 'Tietokone haastaa! Selitä mitä tämä termi tarkoittaa.'
+    : (gameMode==='vs'?(challengerSide==='lukio'?'Pelaaja 1 (Lukiolainen)':'Pelaaja 2 (Amislainen)')+' haastaa!':'Sinä haastit!') + ' Valitse oikea selitys.';
+
+  document.getElementById('ov-term').textContent=card.icon+' '+card.term;
+  document.getElementById('ov-def').textContent=card.def;
+  document.getElementById('ov-def').classList.remove('show');
+  document.getElementById('ov-result-area').style.display='none';
+
+  // Build multiple choice: correct + 3 distractors
+  const allCards=[...LUKIO_CARDS,...AMIS_CARDS];
+  const distractors=shuffle(allCards.filter(c=>c.id!==card.id)).slice(0,3);
+  const options=shuffle([card,...distractors]);
+
+  const optContainer=document.getElementById('ov-options');
+  optContainer.innerHTML='';
+  options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='ov-option';
+    btn.textContent=opt.def;
+    btn.onclick=()=>answerChallenge(opt.id===card.id, btn, card, playedSide, challengerType, optContainer, card.def);
+    optContainer.appendChild(btn);
+  });
+
+  ov.classList.add('show');
+}
+
+function answerChallenge(isCorrect, btn, card, playedSide, challengerType, container, correctDef){
+  // Disable all options
+  container.querySelectorAll('.ov-option').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===correctDef) b.classList.add('correct');
+  });
+  if(!isCorrect) btn.classList.add('wrong');
+
+  const resultEl=document.getElementById('ov-result');
+  const resultArea=document.getElementById('ov-result-area');
+  document.getElementById('ov-def').classList.add('show');
+
+  // Challenger wins (correct answer) = card is blocked
+  // Challenger fails (wrong answer) = card goes through with bonus
+  if(isCorrect){
+    resultEl.className='ov-result win';
+    resultEl.textContent='⚔️ Haaste onnistui! Kortti torjuttu!';
+    // Challenger gets points, played card blocked
+    const challengerSide=playedSide==='lukio'?'amis':'lukio';
+    scores[challengerSide]+=15;
+    pendingChallengeResult={card, playedSide, blocked:true};
+  } else {
+    resultEl.className='ov-result lose';
+    resultEl.textContent='🛡 Haaste epäonnistui! Kortti menee läpi bonuksella!';
+    pendingChallengeResult={card, playedSide, blocked:false, bonus:10};
+  }
+  updateHeader();
+  resultArea.style.display='block';
+}
+
+function closeChallenge(){
+  document.getElementById('challenge-overlay').classList.remove('show');
+  if(pendingChallengeResult){
+    const {card,playedSide,blocked,bonus}=pendingChallengeResult;
+    pendingChallengeResult=null;
+    resolveCard(card, playedSide, blocked, bonus||0);
+  }
+}
+
+function resolveCard(card, side, blocked, bonus){
+  if(!blocked){
+    paths[side].push({...card, challenged:false});
+    scores[side]+= card.pts + (bonus||0);
+    if(bonus) showToast('🛡 Bonus! +'+( card.pts + bonus)+' pistettä','var(--gold)');
+    else showToast(card.icon+' '+card.term+' lisätty polkuun! +'+card.pts+' p',side==='lukio'?'var(--lukio-mid)':'var(--amis-mid)');
+  } else {
+    showToast('⚔️ Kortti torjuttu! +15 p haastajalle','#ef4444');
+  }
+
+  renderPaths();
+  updateHeader();
+  clearStage();
+  round++;
+
+  if(round>=totalRounds || (hands.lukio.length===0 && hands.amis.length===0)){
+    setTimeout(endGame,600);
+    return;
+  }
+
+  // Switch turns
+  currentTurn = currentTurn==='lukio'?'amis':'lukio';
+  updateHeader();
+  renderHand();
+
+  // If AI's turn, play automatically
+  if(!isHumanTurn()){
+    setTimeout(aiPlayCard,800);
+  }
+}
+
+function isHumanTurn(){
+  if(gameMode==='vs') return true;
+  return currentTurn===playerRole;
+}
+
+// ── END GAME ──────────────────────────────────────────────────────────────
+function endGame(){
+  gameOver=true;
+  clearInterval(null);
+
+  document.getElementById('end-score-lukio').textContent=scores.lukio;
+  document.getElementById('end-score-amis').textContent=scores.amis;
+  document.getElementById('end-cards-lukio').textContent=paths.lukio.length+' korttia polulla';
+  document.getElementById('end-cards-amis').textContent=paths.amis.length+' korttia polulla';
+
+  // Winner
+  const wb=document.getElementById('winner-banner');
+  const wbt=document.getElementById('wb-title');
+  const wbs=document.getElementById('wb-sub');
+  if(scores.lukio>scores.amis){
+    wbt.textContent='🏆 Lukiolainen voittaa!';
+    wbs.textContent='Teoriatieto vei voiton tällä kertaa – '+scores.lukio+' vs '+scores.amis+' pistettä';
+    wb.style.borderColor='var(--lukio-mid)';
+  } else if(scores.amis>scores.lukio){
+    wbt.textContent='🏆 Amislainen voittaa!';
+    wbs.textContent='Käytännön osaaminen vei voiton – '+scores.amis+' vs '+scores.lukio+' pistettä';
+    wb.style.borderColor='var(--amis-mid)';
+  } else {
+    wbt.textContent='🤝 Tasapeli!';
+    wbs.textContent='Molemmat polut ovat yhtä vahvoja – '+scores.lukio+' pistettä kummallakin!';
+  }
+
+  // Future paths
+  buildFuturePaths();
+  showScreen('end-screen');
+}
+
+function buildFuturePaths(){
+  const lukioItems=[
+    'Ylioppilaskirjoitukset → todistus',
+    'Ammattikorkeakoulu tai yliopisto',
+    'Laaja yleissivistys kaikille aloille',
+    'Kansainvälisen IB-tutkinnon mahdollisuus',
+  ];
+  const amisItems=[
+    'Ammattitutkinto ja erikoisammattitutkinto',
+    'Suora polku työelämään',
+    'Oppisopimuskoulutus',
+    'AMK-opinnot ammatillisella taustalla',
+  ];
+  const lfp=document.getElementById('fp-lukio');
+  const afp=document.getElementById('fp-amis');
+  lfp.innerHTML=''; afp.innerHTML='';
+  const playedLukio=paths.lukio.map(c=>c.term);
+  const playedAmis=paths.amis.map(c=>c.term);
+
+  [...new Set([...lukioItems,...playedLukio.slice(0,2)])].slice(0,5).forEach(t=>{
+    lfp.innerHTML+=`<div class="fp-item"><div class="fp-dot"></div><span>${t}</span></div>`;
+  });
+  [...new Set([...amisItems,...playedAmis.slice(0,2)])].slice(0,5).forEach(t=>{
+    afp.innerHTML+=`<div class="fp-item"><div class="fp-dot"></div><span>${t}</span></div>`;
+  });
+
+  const common=['Molemmista poluista pääsee AMK-opintoihin','Molemmat tarjoavat hyvän pohjan tulevaisuuteen','Elinikäinen oppiminen kuuluu molempiin'];
+  document.getElementById('fu-desc').textContent=rand(common)+' – mutta eri reittejä pitkin!';
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+let toastT;
+function showToast(msg,color){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.style.background=color||'var(--surface2)';
+  el.classList.add('show'); clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('show'),2000);
+}
+</script>
+</body>
+</html>

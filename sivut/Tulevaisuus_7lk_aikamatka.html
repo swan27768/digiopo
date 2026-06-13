@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aikamatka tulevaisuuteen — 7. luokka | DigiOpo</title>
+<meta name="description" content="Selkokielinen aikamatka-seikkailu Robon kanssa. Matkaa tulevaisuuteen, tee valintoja ja kirjoita omista unelmistasi.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#5B2C6F" />
+<style>
+  /* =============================================
+     AIKAMATKA TULEVAISUUTEEN — Tulevaisuus 7lk
+     Teema lainattu "Kadonnut motivaatio" -pelistä.
+     Saavutettavuus:
+     - Selkokieli: lyhyet lauseet, tutut sanat
+     - Kontrasti: violetti teksti/valkoinen 8:1+, napit tarkistettu
+     - prefers-reduced-motion huomioitu
+     - Selkeät otsikot, alt-tekstit, fokusreunat, näppäinkäyttö
+     ============================================= */
+
+  :root {
+    --mint:        #4EE1A0;
+    --mint-text:   #0b3b2a;   /* tumma teksti mintulla — vahva kontrasti */
+    --violet:      #5B2C6F;
+    --violet-dark: #3d1a4f;
+    --beige:       #DFF3E6;   /* vaalea minttuvihreä tausta */
+    --text:        #2b2b2b;
+    --pastel:      #C9A9E1;
+    --white:       #FFFFFF;
+    --amber-bg:    #FFF7E6;
+    --amber-line:  #F0B429;
+    --focus:       #1a73c0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--beige);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem 0.9rem 3rem;
+  }
+
+  /* ---- Edistymispalkki ---- */
+  .edistys {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--beige);
+    padding: 0.5rem 0 0.4rem;
+  }
+  .edistys-rivi {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .edistys-pala {
+    flex: 1;
+    height: 8px;
+    border-radius: 50px;
+    background: rgba(91,44,111,0.18);
+  }
+  .edistys-pala.tehty { background: var(--mint); }
+  .edistys-pala.nyt   { background: var(--violet); }
+  .edistys-teksti {
+    font-size: 0.85rem;
+    color: var(--violet);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ---- Otsikot ---- */
+  h1 { color: var(--violet); font-size: 1.7rem; text-align: center; margin: 0.4rem 0 0.2rem; }
+  h2 { color: var(--violet); font-size: 1.3rem; margin: 0 0 0.6rem; }
+
+  /* ---- Sisältökortti ---- */
+  .kortti {
+    background: var(--white);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(91,44,111,0.12);
+    padding: 1.1rem 1.2rem;
+    margin: 0 auto 1rem;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .ruutu { display: none; }
+  .ruutu.nakyy { display: block; }
+
+  /* ---- Robo + puhekupla ---- */
+  .robo-rivi {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+  }
+  .robo-kuva {
+    width: 130px;
+    height: auto;
+    flex-shrink: 0;
+    filter: drop-shadow(0 6px 14px rgba(91,44,111,0.22));
+  }
+  .puhekupla {
+    flex: 1;
+    min-width: 220px;
+    background: var(--beige);
+    border: 2px solid var(--pastel);
+    border-radius: 0 1rem 1rem 1rem;
+    padding: 0.8rem 1rem;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+  .puhekupla .nimi {
+    display: block;
+    font-weight: 700;
+    color: var(--violet);
+    margin-bottom: 0.2rem;
+    font-size: 0.95rem;
+  }
+
+  /* ---- Tapahtuma- ja vihjekortit ---- */
+  .tapahtuma {
+    background: rgba(223,243,230,0.7);
+    border-top: 4px solid var(--mint);
+    border-radius: 0.75rem;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+  }
+  .vinkki {
+    background: var(--amber-bg);
+    border-left: 4px solid var(--amber-line);
+    border-radius: 0 0.6rem 0.6rem 0;
+    padding: 0.7rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 1rem;
+  }
+  .vinkki strong { color: #8a5a00; }
+
+  /* ---- Valintanapit ---- */
+  .valinnat { display: flex; flex-direction: column; gap: 0.6rem; margin: 0.9rem 0 0.2rem; }
+  .valinta {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--white);
+    border: 2px solid var(--pastel);
+    border-radius: 0.8rem;
+    padding: 0.8rem 1rem;
+    font-size: 1.05rem;
+    font-family: inherit;
+    color: var(--violet-dark);
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.2s, background 0.2s;
+  }
+  .valinta:hover { border-color: var(--violet); background: #faf5ff; transform: translateY(-2px); }
+  .valinta.valittu { border-color: var(--violet); background: var(--pastel); color: var(--violet-dark); font-weight: 700; }
+
+  /* ---- Kirjoituskenttä ---- */
+  label.kentta-otsikko {
+    display: block;
+    font-weight: 700;
+    color: var(--violet);
+    margin: 0.9rem 0 0.4rem;
+    font-size: 1.02rem;
+  }
+  textarea {
+    width: 100%;
+    border: 2px solid var(--pastel);
+    border-radius: 0.7rem;
+    padding: 0.8rem 0.9rem;
+    font-family: inherit;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--text);
+    background: var(--white);
+    resize: vertical;
+    min-height: 90px;
+  }
+  textarea::placeholder { color: #9a9a9a; }
+
+  /* ---- Napit ---- */
+  .nappi {
+    background: var(--violet);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    padding: 0.8rem 1.6rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(91,44,111,0.22);
+    transition: background 0.2s, transform 0.12s;
+  }
+  .nappi:hover { background: var(--violet-dark); transform: translateY(-2px); }
+  .nappi.minttu { background: var(--mint); color: var(--mint-text); box-shadow: 0 4px 14px rgba(78,225,160,0.4); }
+  .nappi.minttu:hover { background: #2fcf8a; }
+  .nappi-takaisin {
+    background: transparent;
+    color: var(--violet);
+    box-shadow: none;
+    text-decoration: underline;
+    padding: 0.8rem 0.6rem;
+  }
+  .nappi-takaisin:hover { background: transparent; color: var(--violet-dark); }
+  .nappi-rivi {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* ---- Aloitusruutu ---- */
+  .aloitus { text-align: center; }
+  .aloitus .robo-kuva { width: 180px; margin: 0.4rem auto 0; display: block; }
+  .aloitus p { font-size: 1.1rem; }
+  .merkki {
+    display: inline-block;
+    background: var(--pastel);
+    color: var(--violet-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 50px;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ---- Koonti ---- */
+  .koonti-rivi {
+    border-bottom: 1px solid rgba(91,44,111,0.15);
+    padding: 0.7rem 0;
+  }
+  .koonti-rivi:last-child { border-bottom: none; }
+  .koonti-otsikko {
+    display: block;
+    font-weight: 700;
+    color: var(--violet);
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+  .koonti-teksti { white-space: pre-wrap; }
+
+  .vahvistus {
+    display: none;
+    text-align: center;
+    color: var(--mint-text);
+    background: var(--mint);
+    border-radius: 0.6rem;
+    padding: 0.6rem;
+    font-weight: 700;
+    margin-top: 0.8rem;
+  }
+
+  /* ---- Saavutettavuus: fokus ---- */
+  a:focus-visible, button:focus-visible, textarea:focus-visible, .valinta:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Ruudunlukijan teksti */
+  .vain-lukija {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, .kortti { animation: none !important; transition: none !important; }
+    .valinta:hover, .nappi:hover { transform: none; }
+  }
+
+  @media (max-width: 480px) {
+    .robo-kuva { width: 100px; }
+    .aloitus .robo-kuva { width: 140px; }
+    h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Edistymispalkki -->
+  <div class="edistys" role="group" aria-label="Tehtävän edistyminen">
+    <div class="edistys-rivi" id="edistys-palat" aria-hidden="true"></div>
+    <div class="edistys-teksti" id="edistys-teksti" aria-live="polite">Aloitus</div>
+  </div>
+
+  <!-- ===== RUUTU 0: ALOITUS ===== -->
+  <section class="kortti ruutu nakyy aloitus" id="ruutu-0" aria-labelledby="otsikko-0">
+    <span class="merkki">Tulevaisuus · 7. luokka</span>
+    <h1 id="otsikko-0">Aikamatka tulevaisuuteen</h1>
+    <img class="robo-kuva" src="../images/robo_maskotti_yllattyy.png"
+         alt="Robo-robotti, jolla on isot silmät ja kohotetut kädet. Robo näyttää yllättyneeltä.">
+    <p>Hei! Minä olen <strong>Robo</strong>.</p>
+    <p>Löysin vanhan aikakoneen. Se vie meidät tulevaisuuteen.<br>
+       Tuletko mukaan? Matkalla mietit, millainen sinun oma tulevaisuutesi voisi olla.</p>
+    <div class="vinkki">
+      <strong>Näin teet tehtävän:</strong> Lue tarina. Tee valintoja. Kirjoita omat ajatuksesi.
+      Lopuksi voit tallentaa vastaukset ja palauttaa ne opolle.
+    </div>
+    <div class="nappi-rivi" style="justify-content:center;">
+      <button class="nappi minttu" onclick="mene(1)">🚀 Lähde matkaan</button>
+    </div>
+  </section>
+
+  <!-- ===== RUUTU 1: KONE KÄYNNISTYY ===== -->
+  <section class="kortti ruutu" id="ruutu-1" aria-labelledby="otsikko-1" hidden>
+    <h2 id="otsikko-1">Aikakone käynnistyy</h2>
+    <div class="robo-rivi">
+      <img class="robo-kuva" src="../images/robo_maskotti_yllattyy.png"
+           alt="Robo näyttää innostuneelta ja kädet ylhäällä.">
+      <div class="puhekupla">
+        <span class="nimi">Robo sanoo:</span>
+        Paina nappia! Me hypätään vuoteen <strong>2045</strong>.
+        Se on noin 20 vuoden päässä. Sinä olet silloin aikuinen.
+      </div>
+    </div>
+    <p>Aikakone surisee. Valot vilkkuvat. Sitten kaikki on hetken hiljaa.</p>
+    <p>Ennen kuin lähdetään, mieti yksi asia:</p>
+
+    <label class="kentta-otsikko" for="k_nyt">Mikä on sinulle tärkeää juuri nyt? (Esimerkiksi kaverit, harrastus, lemmikki, koulu.)</label>
+    <textarea id="k_nyt" placeholder="Kirjoita 1–2 asiaa. Oikeaa tai väärää vastausta ei ole."></textarea>
+
+    <div class="nappi-rivi">
+      <button class="nappi-takaisin nappi" onclick="mene(0)">← Takaisin</button>
+      <button class="nappi" onclick="mene(2)">Matka alkaa →</button>
+    </div>
+  </section>
+
+  <!-- ===== RUUTU 2: PYSÄHDYS 1 — TULEVAISUUDEN ARKI ===== -->
+  <section class="kortti ruutu" id="ruutu-2" aria-labelledby="otsikko-2" hidden>
+    <h2 id="otsikko-2">Pysähdys 1: Tulevaisuuden arki</h2>
+    <div class="robo-rivi">
+      <img class="robo-kuva" src="../images/robo_maskotti_yllattyy.png"
+           alt="Robo näyttää hyvin yllättyneeltä.">
+      <div class="puhekupla">
+        <span class="nimi">Robo huudahtaa:</span>
+        Vau! Katso ympärillesi! Kaikki on muuttunut.
+        Bussit lentävät. Robotit auttavat kaupassa. Mutta ihmiset näyttävät ihan samalta. 😮
+      </div>
+    </div>
+    <div class="tapahtuma">
+      <p>Te kävelette kadulla vuonna 2045. Moni asia on uutta.
+         Silti ihmiset tekevät tuttuja asioita: he syövät, nauravat ja tapaavat kavereita.</p>
+    </div>
+
+    <p><strong>Valitse:</strong> Mikä uusi asia tulevaisuudessa kiinnostaa sinua eniten?</p>
+    <div class="valinnat" role="group" aria-label="Valitse yksi asia">
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🤖 Robotit, jotka auttavat ihmisiä</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🌍 Puhtaampi luonto ja uusi energia</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🚀 Matkat avaruuteen</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🎮 Uudet pelit ja virtuaalimaailmat</button>
+    </div>
+
+    <label class="kentta-otsikko" for="k_arki">Miksi valitsit juuri sen? Kirjoita lyhyesti.</label>
+    <textarea id="k_arki" placeholder="Esimerkiksi: Valitsin robotit, koska..."></textarea>
+
+    <div class="nappi-rivi">
+      <button class="nappi-takaisin nappi" onclick="mene(1)">← Takaisin</button>
+      <button class="nappi" onclick="mene(3)">Jatka matkaa →</button>
+    </div>
+  </section>
+
+  <!-- ===== RUUTU 3: PYSÄHDYS 2 — TULEVAISUUDEN TYÖT ===== -->
+  <section class="kortti ruutu" id="ruutu-3" aria-labelledby="otsikko-3" hidden>
+    <h2 id="otsikko-3">Pysähdys 2: Tulevaisuuden työt</h2>
+    <div class="robo-rivi">
+      <img class="robo-kuva" src="../images/robo_selaa_kannykaa.png"
+           alt="Robo katsoo puhelinta kädessään ja selaa sitä.">
+      <div class="puhekupla">
+        <span class="nimi">Robo selaa puhelinta:</span>
+        Katso! Täällä on outoja ammatteja.
+        Avaruusoppaita. Robottien hoitajia. Merilevän viljelijöitä.
+        Moni näistä töistä ei ollut olemassa, kun sinä synnyit. 📱
+      </div>
+    </div>
+    <div class="tapahtuma">
+      <p>Tutkijat sanovat näin: suuri osa tulevaisuuden töistä on vielä keksimättä.
+         Se kuulostaa pelottavalta. Mutta se on myös hyvä uutinen.</p>
+      <p><strong>Sinä voit itse keksiä uuden työn.</strong></p>
+    </div>
+
+    <p><strong>Valitse:</strong> Millaista työtä haluaisit kokeilla tulevaisuudessa?</p>
+    <div class="valinnat" role="group" aria-label="Valitse yksi työ">
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🛠️ Työ, jossa rakennan tai korjaan asioita</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🎨 Työ, jossa luon ja keksin uutta</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🤝 Työ, jossa autan muita ihmisiä</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🔬 Työ, jossa tutkin ja ratkaisen ongelmia</button>
+    </div>
+
+    <label class="kentta-otsikko" for="k_tyo">Keksi oma tulevaisuuden ammatti. Sen ei tarvitse olla vielä olemassa.</label>
+    <textarea id="k_tyo" placeholder="Esimerkiksi: Olen unelmarobottien suunnittelija. Minä..."></textarea>
+
+    <div class="vinkki">
+      <strong>Hyvä muistaa:</strong> Sinun ei tarvitse tietää vielä, mikä sinusta tulee.
+      Riittää, että kokeilet ja mietit. Se on jo tärkeä taito.
+    </div>
+
+    <div class="nappi-rivi">
+      <button class="nappi-takaisin nappi" onclick="mene(2)">← Takaisin</button>
+      <button class="nappi" onclick="mene(4)">Viimeinen pysähdys →</button>
+    </div>
+  </section>
+
+  <!-- ===== RUUTU 4: PYSÄHDYS 3 — OMA UNELMA ===== -->
+  <section class="kortti ruutu" id="ruutu-4" aria-labelledby="otsikko-4" hidden>
+    <h2 id="otsikko-4">Pysähdys 3: Sinun unelmasi</h2>
+    <div class="robo-rivi">
+      <img class="robo-kuva" src="../images/robo_selaa_kannykaa.png"
+           alt="Robo katsoo puhelinta ja hymyilee.">
+      <div class="puhekupla">
+        <span class="nimi">Robo kysyy:</span>
+        Nyt sinä olet nähnyt tulevaisuuden.
+        Mitä sinä haluat siellä tehdä? Kerro minulle yksi unelma.
+      </div>
+    </div>
+    <p>Unelma ei ole lupaus. Se voi muuttua monta kertaa.
+       Unelma on vain suunta, jota kohti kuljet.</p>
+
+    <label class="kentta-otsikko" for="k_unelma">Yksi unelmani tulevaisuudessa on…</label>
+    <textarea id="k_unelma" placeholder="Esimerkiksi: Haluan matkustaa, oppia uuden kielen tai..."></textarea>
+
+    <label class="kentta-otsikko" for="k_askel">Yksi pieni asia, jonka voin tehdä jo nyt sitä kohti, on…</label>
+    <textarea id="k_askel" placeholder="Esimerkiksi: Harjoittelen, kysyn neuvoa tai kokeilen..."></textarea>
+
+    <div class="nappi-rivi">
+      <button class="nappi-takaisin nappi" onclick="mene(3)">← Takaisin</button>
+      <button class="nappi minttu" onclick="mene(5)">Katso koonti ✓</button>
+    </div>
+  </section>
+
+  <!-- ===== RUUTU 5: KOONTI ===== -->
+  <section class="kortti ruutu" id="ruutu-5" aria-labelledby="otsikko-5" hidden>
+    <h2 id="otsikko-5">Matka on valmis 🎉</h2>
+    <div class="robo-rivi">
+      <img class="robo-kuva" src="../images/robo_maskotti_yllattyy.png"
+           alt="Robo näyttää iloiselta ja yllättyneeltä, kädet ylhäällä.">
+      <div class="puhekupla">
+        <span class="nimi">Robo sanoo:</span>
+        Hienoa! Sinä mietit omaa tulevaisuuttasi rohkeasti.
+        Tässä on koonti matkasta. Voit tallentaa sen ja näyttää opolle.
+      </div>
+    </div>
+
+    <div class="tapahtuma" aria-label="Koonti vastauksistasi">
+      <div class="koonti-rivi"><span class="koonti-otsikko">Minulle on nyt tärkeää:</span><span class="koonti-teksti" id="n_nyt"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Tulevaisuudessa kiinnostaa:</span><span class="koonti-teksti" id="n_arki"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Haluamani työ ja oma ammatti-idea:</span><span class="koonti-teksti" id="n_tyo"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Unelmani:</span><span class="koonti-teksti" id="n_unelma"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Pieni askel jo nyt:</span><span class="koonti-teksti" id="n_askel"></span></div>
+    </div>
+
+    <div class="nappi-rivi" style="justify-content:center;">
+      <button class="nappi minttu" onclick="lataaKoonti()">💾 Tallenna koonti</button>
+    </div>
+    <p class="vahvistus" id="vahvistus" role="status">✓ Tiedosto on tallennettu. Muista palauttaa se opolle (esimerkiksi Classroomiin).</p>
+
+    <div class="nappi-rivi">
+      <button class="nappi-takaisin nappi" onclick="mene(4)">← Takaisin</button>
+      <button class="nappi-takaisin nappi" onclick="aloitaAlusta()">🔄 Aloita alusta</button>
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+
+<script>
+"use strict";
+var RUUDUT = 6;            // 0..5
+var VAIHE_NIMET = ["Aloitus","Aikakone","Pysähdys 1","Pysähdys 2","Pysähdys 3","Koonti"];
+var nykyinen = 0;
+
+// Rakenna edistymispalkki
+(function () {
+  var palat = document.getElementById("edistys-palat");
+  for (var i = 0; i < RUUDUT; i++) {
+    var d = document.createElement("div");
+    d.className = "edistys-pala";
+    palat.appendChild(d);
+  }
+  paivitaEdistys();
+})();
+
+function paivitaEdistys() {
+  var palat = document.querySelectorAll(".edistys-pala");
+  for (var i = 0; i < palat.length; i++) {
+    palat[i].className = "edistys-pala" + (i < nykyinen ? " tehty" : (i === nykyinen ? " nyt" : ""));
+  }
+  document.getElementById("edistys-teksti").textContent =
+    VAIHE_NIMET[nykyinen] + " — vaihe " + (nykyinen + 1) + " / " + RUUDUT;
+}
+
+function mene(n) {
+  if (n < 0 || n >= RUUDUT) return;
+  document.getElementById("ruutu-" + nykyinen).classList.remove("nakyy");
+  document.getElementById("ruutu-" + nykyinen).hidden = true;
+  nykyinen = n;
+  var r = document.getElementById("ruutu-" + nykyinen);
+  r.hidden = false;
+  r.classList.add("nakyy");
+  if (nykyinen === 5) rakennaKoonti();
+  paivitaEdistys();
+  // Siirrä fokus uuden ruudun otsikkoon (ruudunlukija + näppäimistö)
+  var otsikko = r.querySelector("h1, h2");
+  if (otsikko) { otsikko.setAttribute("tabindex", "-1"); otsikko.focus(); }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function valitse(el, ryhma) {
+  var napit = document.querySelectorAll('.valinta[data-ryhma="' + ryhma + '"]');
+  for (var i = 0; i < napit.length; i++) {
+    napit[i].classList.remove("valittu");
+    napit[i].setAttribute("aria-pressed", "false");
+  }
+  el.classList.add("valittu");
+  el.setAttribute("aria-pressed", "true");
+}
+
+function arvo(id) {
+  var el = document.getElementById(id);
+  var v = el ? (el.value || "").trim() : "";
+  return v || "(ei vielä vastausta)";
+}
+function valittuTeksti(ryhma) {
+  var el = document.querySelector('.valinta.valittu[data-ryhma="' + ryhma + '"]');
+  return el ? el.textContent.trim() : "(ei valintaa)";
+}
+
+function rakennaKoonti() {
+  document.getElementById("n_nyt").textContent    = arvo("k_nyt");
+  document.getElementById("n_arki").textContent   = valittuTeksti("arki") + " — " + arvo("k_arki");
+  document.getElementById("n_tyo").textContent    = valittuTeksti("tyo") + " — " + arvo("k_tyo");
+  document.getElementById("n_unelma").textContent = arvo("k_unelma");
+  document.getElementById("n_askel").textContent  = arvo("k_askel");
+}
+
+function lataaKoonti() {
+  rakennaKoonti();
+  var pvm = new Date().toLocaleDateString("fi-FI");
+  var teksti =
+"DIGIOPO — AIKAMATKA TULEVAISUUTEEN\n" +
+"7. luokka · Tulevaisuus-tehtävä\n" +
+"Päivämäärä: " + pvm + "\n" +
+"==========================================\n\n" +
+"Minulle on nyt tärkeää:\n" + arvo("k_nyt") + "\n\n" +
+"Tulevaisuudessa kiinnostaa:\n" + valittuTeksti("arki") + "\nMiksi: " + arvo("k_arki") + "\n\n" +
+"Haluamani työ:\n" + valittuTeksti("tyo") + "\nOma ammatti-idea: " + arvo("k_tyo") + "\n\n" +
+"Unelmani:\n" + arvo("k_unelma") + "\n\n" +
+"Pieni askel jo nyt:\n" + arvo("k_askel") + "\n\n" +
+"==========================================\n" +
+"DigiOpo · Tulevaisuus · 7. luokka\n";
+
+  var blob = new Blob([teksti], { type: "text/plain;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "aikamatka_tulevaisuuteen.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  document.getElementById("vahvistus").style.display = "block";
+}
+
+function aloitaAlusta() {
+  ["k_nyt","k_arki","k_tyo","k_unelma","k_askel"].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.value = "";
+  });
+  document.querySelectorAll(".valinta.valittu").forEach(function (el) {
+    el.classList.remove("valittu"); el.setAttribute("aria-pressed", "false");
+  });
+  document.getElementById("vahvistus").style.display = "none";
+  mene(0);
+}
+</script>
+</body>
+</html>
