@@ -82,12 +82,12 @@ window.addEventListener("load", async function () {
         const kuvaKehys = document.createElement("div");
         kuvaKehys.style.cssText =
           "border-radius:16px;overflow:hidden;margin-bottom:20px;" +
-          "max-height:260px;background:#111;";
+          "max-width:180px;background:white;";
         const kuva = document.createElement("img");
         kuva.src = task.kuva;
         kuva.alt = task.kuvaAlt || "";
         kuva.style.cssText =
-          "width:100%;height:260px;object-fit:cover;display:block;";
+          "width:100%;display:block;mix-blend-mode:multiply;";
         kuvaKehys.appendChild(kuva);
         instructions.appendChild(kuvaKehys);
       }
