@@ -77,6 +77,21 @@ window.addEventListener("load", async function () {
     if (instructions) {
       instructions.innerHTML = "";
 
+      // ── Kuva ──────────────────────────────────────────────────────────────
+      if (task.kuva) {
+        const kuvaKehys = document.createElement("div");
+        kuvaKehys.style.cssText =
+          "border-radius:16px;overflow:hidden;margin-bottom:20px;" +
+          "max-height:260px;background:#111;";
+        const kuva = document.createElement("img");
+        kuva.src = task.kuva;
+        kuva.alt = task.kuvaAlt || "";
+        kuva.style.cssText =
+          "width:100%;height:260px;object-fit:cover;display:block;";
+        kuvaKehys.appendChild(kuva);
+        instructions.appendChild(kuvaKehys);
+      }
+
       // ── Aihekortti ────────────────────────────────────────────────────────
       if (task.taustaOtsikko || task.taustateksti) {
         const aihekortti = document.createElement("div");
