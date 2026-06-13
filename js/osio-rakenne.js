@@ -62,9 +62,9 @@
       if (d.yhteenveto) {
         var loppu = el("details", "osio-info osio-yhteenveto");
         loppu.innerHTML =
-          summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tästä osiosta",
-            "Avaa, kun olet tehnyt osion tehtävät") +
-          '<div class="osio-info-sisalto"><h4>Tämän osion jälkeen</h4><ul>' +
+          summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tällä oppitunnilla",
+            "Avaa, kun olet tehnyt oppitunnin tehtävät") +
+          '<div class="osio-info-sisalto"><h4>Tämän oppitunnin jälkeen</h4><ul>' +
           lista(d.yhteenveto) + "</ul></div>";
         var opeOsiot = osio.querySelectorAll(":scope .opettaja-osio, :scope .ope-osio");
         if (opeOsiot.length) {
