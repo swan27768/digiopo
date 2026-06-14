@@ -68,7 +68,7 @@
           lista(d.yhteenveto) + "</ul></div>";
         var opeOsiot = osio.querySelectorAll(":scope .opettaja-osio, :scope .ope-osio");
         if (opeOsiot.length) {
-          opeOsiot[opeOsiot.length - 1].insertAdjacentElement("beforebegin", loppu);
+          opeOsiot[opeOsiot.length - 1].insertAdjacentElement("afterend", loppu);
         } else {
           osio.appendChild(loppu);
         }
