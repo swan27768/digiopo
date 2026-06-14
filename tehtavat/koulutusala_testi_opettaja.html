@@ -30,147 +30,113 @@
     .container { max-width: 760px; margin: 0 auto; }
     .hero {
       background: linear-gradient(135deg, #831843 0%, #db2777 60%, #f472b6 100%);
-      border-radius: 20px;
-      padding: 32px 28px 28px;
-      color: #fff;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
+      border-radius: 20px; padding: 32px 28px 28px; color: #fff;
+      margin-bottom: 24px; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 60%);
       pointer-events: none;
     }
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; font-weight: 600; margin-bottom: 14px;
     }
     .hero h1 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
     .hero-subtitle { font-size: 1rem; opacity: 0.9; line-height: 1.55; max-width: 520px; }
     .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
     .hero-chip {
-      background: rgba(255,255,255,0.22);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: rgba(255,255,255,0.22); border-radius: 20px; padding: 4px 14px;
+      font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
     }
     .card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1.5px solid var(--pinkki-reuna);
-      padding: 22px 22px 20px;
-      margin-bottom: 16px;
+      background: #fff; border-radius: 16px; border: 1.5px solid var(--pinkki-reuna);
+      padding: 22px 22px 20px; margin-bottom: 16px;
     }
     .card-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--pinkki);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
+      font-size: 1.05rem; font-weight: 700; color: var(--pinkki);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 9px;
     }
     .card p { color: var(--teksti-kevyt); font-size: 0.95rem; line-height: 1.65; margin-bottom: 10px; }
     .card p:last-child { margin-bottom: 0; }
     .tavoite-lista { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
     .tavoite-lista li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.93rem; color: var(--teksti-kevyt); line-height: 1.55; }
     .tavoite-piste {
-      flex-shrink: 0; margin-top: 3px;
-      width: 20px; height: 20px;
-      background: var(--pinkki-keski);
-      border-radius: 50%;
+      flex-shrink: 0; margin-top: 3px; width: 20px; height: 20px;
+      background: var(--pinkki-keski); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       color: #fff; font-size: 0.65rem; font-weight: 700;
     }
+
+    /* Vaihe-polku */
+    .vaihepolku { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+    .vaihe-rivi { display: flex; gap: 0; position: relative; }
+    .vaihe-rivi:not(:last-child) .vaihe-viiva::after {
+      content: ''; position: absolute; top: 30px; left: 11px;
+      width: 2px; height: calc(100% + 0px); background: var(--pinkki-reuna);
+    }
+    .vaihe-viiva { position: relative; width: 24px; flex-shrink: 0; display: flex; justify-content: center; padding-top: 4px; }
+    .vaihe-nro {
+      width: 24px; height: 24px; background: var(--pinkki-keski); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; z-index: 1;
+    }
+    .vaihe-sisalto { padding: 0 0 20px 14px; flex: 1; }
+    .vaihe-otsikko { font-size: 0.95rem; font-weight: 700; color: var(--pinkki); margin-bottom: 5px; }
+    .vaihe-teksti { font-size: 0.88rem; color: var(--teksti-kevyt); line-height: 1.6; }
+    .vaihe-esimerkki {
+      margin-top: 7px; font-size: 0.83rem; font-style: italic;
+      color: var(--pinkki); background: var(--pinkki-vaalea);
+      border-left: 3px solid var(--pinkki-keski); border-radius: 0 6px 6px 0;
+      padding: 6px 10px;
+    }
+
     .aikataulu { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
     .aikataulu-rivi { display: flex; gap: 0; position: relative; }
     .aikataulu-rivi:not(:last-child) .aikataulu-viiva::after {
-      content: '';
-      position: absolute;
-      top: 28px; left: 9px;
-      width: 2px; height: calc(100% + 0px);
-      background: var(--pinkki-reuna);
+      content: ''; position: absolute; top: 28px; left: 9px;
+      width: 2px; height: calc(100% + 0px); background: var(--pinkki-reuna);
     }
     .aikataulu-viiva { position: relative; width: 22px; flex-shrink: 0; display: flex; justify-content: center; padding-top: 4px; }
     .aikataulu-piste {
-      width: 20px; height: 20px;
-      background: var(--pinkki-keski);
-      border-radius: 50%; flex-shrink: 0;
+      width: 20px; height: 20px; background: var(--pinkki-keski); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       color: #fff; font-size: 0.6rem; font-weight: 700; z-index: 1;
     }
     .aikataulu-sisalto { padding: 0 0 18px 14px; flex: 1; }
     .aikataulu-otsikko { font-size: 0.92rem; font-weight: 700; color: var(--pinkki); margin-bottom: 4px; }
     .aikataulu-aika {
-      display: inline-block;
-      background: var(--pinkki-vaalea);
-      border-radius: 12px; padding: 2px 10px;
-      font-size: 0.78rem; font-weight: 700; color: var(--pinkki); margin-bottom: 6px;
+      display: inline-block; background: var(--pinkki-vaalea); border-radius: 12px;
+      padding: 2px 10px; font-size: 0.78rem; font-weight: 700; color: var(--pinkki); margin-bottom: 6px;
     }
     .aikataulu-kuvaus { font-size: 0.88rem; color: var(--teksti-kevyt); line-height: 1.6; }
     .aikataulu-vinkki {
-      margin-top: 6px; font-size: 0.83rem; color: var(--pinkki);
-      font-style: italic;
-      background: var(--pinkki-vaalea);
-      border-left: 3px solid var(--pinkki-keski);
-      border-radius: 0 6px 6px 0;
-      padding: 6px 10px;
+      margin-top: 6px; font-size: 0.83rem; color: var(--pinkki); font-style: italic;
+      background: var(--pinkki-vaalea); border-left: 3px solid var(--pinkki-keski);
+      border-radius: 0 6px 6px 0; padding: 6px 10px;
     }
     .info-boksi {
-      background: var(--pinkki-vaalea);
-      border: 1.5px solid var(--pinkki-reuna);
+      background: var(--pinkki-vaalea); border: 1.5px solid var(--pinkki-reuna);
       border-radius: 12px; padding: 14px 16px;
       font-size: 0.9rem; color: var(--pinkki); line-height: 1.6; margin-top: 12px;
     }
     .info-boksi strong { color: var(--pinkki); }
     .huomio-boksi {
-      background: #fffbeb; border: 1.5px solid #fcd34d;
-      border-radius: 12px; padding: 14px 16px;
-      font-size: 0.9rem; color: #78350f; line-height: 1.6;
+      background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px;
+      padding: 14px 16px; font-size: 0.9rem; color: #78350f; line-height: 1.6;
       margin-top: 12px; display: flex; gap: 10px;
     }
     .huomio-ikoni { flex-shrink: 0; font-size: 1.1rem; }
-    .eriy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
-    @media (max-width: 520px) { .eriy-grid { grid-template-columns: 1fr; } }
-    .eriy-kortti { border-radius: 12px; padding: 14px 16px; }
-    .eriy-alas { background: #eff6ff; border: 1.5px solid #bfdbfe; }
-    .eriy-ylos { background: #fdf2f8; border: 1.5px solid #f9a8d4; }
-    .eriy-otsikko { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
-    .eriy-alas .eriy-otsikko { color: #1d4ed8; }
-    .eriy-ylos .eriy-otsikko { color: #be185d; }
-    .eriy-lista { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-    .eriy-lista li { font-size: 0.85rem; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
-    .eriy-alas .eriy-lista li { color: #1e40af; }
-    .eriy-ylos .eriy-lista li { color: #9d174d; }
-    .eriy-bullet { flex-shrink: 0; margin-top: 1px; }
     .print-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
     .print-nappi {
       display: inline-flex; align-items: center; gap: 7px;
-      background: var(--pinkki-keski); color: #fff;
-      border: none; border-radius: 10px; padding: 10px 18px;
-      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      background: var(--pinkki-keski); color: #fff; border: none; border-radius: 10px;
+      padding: 10px 18px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
       transition: background 0.15s; font-family: inherit; text-decoration: none;
     }
     .print-nappi:hover { background: var(--pinkki); }
-    @media print {
-      body { background: #fff; padding: 0; }
-      .print-bar { display: none; }
-    }
+    @media print { body { background: #fff; padding: 0; } .print-bar { display: none; } }
   </style>
 </head>
 <body>
@@ -183,12 +149,12 @@
         Opettajan materiaali
       </div>
       <h1><span aria-hidden="true">🧭 </span>Mikä koulutusala voisi olla sun juttu?</h1>
-      <p class="hero-subtitle">Interaktiivinen kiinnostustesti, joka auttaa oppilasta hahmottamaan omia kiinnostuksiaan suhteessa koulutusaloihin. Tämä ohje on sinulle — oppilaat käyttävät tehtävää itsenäisesti.</p>
+      <p class="hero-subtitle">Kahdeksan interaktiivista tarinapeliä eri koulutusaloilta. Oppilas valitsee itseään kiinnostavan alan ja tutustuu siihen testin ja tehtävien kautta omaan tahtiinsa.</p>
       <div class="hero-chips" aria-label="Tehtävän tiedot">
         <span class="hero-chip"><i class="fa-solid fa-user" aria-hidden="true"></i> Yksin</span>
-        <span class="hero-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> 10–20 min</span>
+        <span class="hero-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> 15–45 min</span>
         <span class="hero-chip"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> 8. luokka</span>
-        <span class="hero-chip"><i class="fa-solid fa-compass" aria-hidden="true"></i> Interaktiivinen testi</span>
+        <span class="hero-chip"><i class="fa-solid fa-compass" aria-hidden="true"></i> Tarinapeli</span>
       </div>
     </div>
   </header>
@@ -201,15 +167,67 @@
 
   <main>
 
-    <!-- 1. Tieteellinen perusta -->
-    <section class="card" aria-labelledby="teoria-otsikko">
-      <h2 class="card-title" id="teoria-otsikko">
-        <span aria-hidden="true">🔬</span> Tieteellinen perusta
+    <!-- 1. Miten tehtävä toimii -->
+    <section class="card" aria-labelledby="rakenne-otsikko">
+      <h2 class="card-title" id="rakenne-otsikko">
+        <span aria-hidden="true">🎮</span> Miten tehtävä toimii?
       </h2>
-      <p>Testi perustuu <strong>kiinnostuspohjaiseen uraohjaukseen</strong>: John Hollandin RIASEC-teorian mukaan ihmiset viihtyvät ja menestyvät parhaiten ympäristöissä, jotka vastaavat heidän kiinnostustyyppiään. Kiinnostus ennustaa opinnoissa pysymistä paremmin kuin pelkkä menestys.</p>
-      <p>Tehtävä ei anna valmista vastausta vaan avaa vaihtoehtoja — tavoitteena on <strong>laajentaa harkintajoukkoa ennen yhteishakua</strong>, ei kaventaa sitä.</p>
-      <div class="info-boksi" role="note">
-        <strong>OPS-kytkennät:</strong> Oppilaanohjaus (itseohjautuvuus, tulevaisuuden suunnittelu, koulutusvalintoihin tutustuminen), laaja-alainen osaaminen L6 (työelämätaidot ja yrittäjyys), L1 (ajattelu ja oppimaan oppiminen).
+      <p>Tehtävässä on kahdeksan eri koulutusalan tarinapeliä: sote, kauppa, IT, luonto, taide, tekniikka, elintarvike ja palvelu. <strong>Oppilas valitsee itse</strong> aluksi sen alan, joka kiinnostaa eniten — tai josta haluaa oppia lisää.</p>
+      <p>Jokainen peli etenee samalla rakenteella, mutta alan omat ammatit, tehtävät ja vaatimukset ovat erilaisia.</p>
+
+      <div class="vaihepolku" style="margin-top: 16px;" role="list">
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">1</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Oppilas valitsee kiinnostavan alan</div>
+            <div class="vaihe-teksti">Oppilas avaa yhden kahdeksasta koulutusalan pelistä koulutusalakarusellin alta. Valinta on täysin vapaa — ei ole oikeaa tai väärää valintatapaa.</div>
+            <div class="vaihe-esimerkki">Esim. "Kaupan ala" tai "Terveys- ja hyvinvointiala (sote)"</div>
+          </div>
+        </div>
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">2</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Sopiiko tämä ala minulle? -testi</div>
+            <div class="vaihe-teksti">Oppilas vastaa noin 10 kysymykseen, jotka koskevat valitun alan ominaisuuksia ja vaatimuksia — ei yleisiä kiinnostuksia. Kysymykset auttavat oppilasta pohtimaan omia vahvuuksiaan ja arvojaan suhteessa alan arkeen.</div>
+            <div class="vaihe-esimerkki">Sote: "Oletko valmis kantamaan vastuuta toisten ihmisten hyvinvoinnista?" — Kauppa: "Pidätkö asiakaspalvelusta ja ihmisten kohtaamisesta?"</div>
+          </div>
+        </div>
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">3</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Testin tulos</div>
+            <div class="vaihe-teksti">Testi kertoo, kuinka hyvin valittu ala vastaa oppilaan vastauksia. Tulos ei ole tuomio — se avaa keskustelun. Oppilas voi jatkaa pelissä eteenpäin riippumatta tuloksesta.</div>
+          </div>
+        </div>
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">4</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Tutustuminen alan ammatteihin</div>
+            <div class="vaihe-teksti">Oppilas tekee tietokilpailun, jossa selvitetään, mitä eri ammatit alalla tekevät. Tämä vaihe opettaa alan rakenteen ja eri roolien erot konkreettisesti.</div>
+            <div class="vaihe-esimerkki">Sote: "Kuka työskentelee ambulanssissa?" — Kauppa: "Mitä tekee visuaalinen myynninedistäjä?"</div>
+          </div>
+        </div>
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">5</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Koulutuspolut</div>
+            <div class="vaihe-teksti">Oppilas tutustuu alan toisen asteen ja korkeakoulutuksen vaihtoehtoihin. Tiedot pohjautuvat opintopolku.fi-sisältöihin.</div>
+          </div>
+        </div>
+
+        <div class="vaihe-rivi" role="listitem">
+          <div class="vaihe-viiva" aria-hidden="true"><div class="vaihe-nro">6</div></div>
+          <div class="vaihe-sisalto">
+            <div class="vaihe-otsikko">Ammatin valinta ja lopputehtävä</div>
+            <div class="vaihe-teksti">Oppilas valitsee yhden alan ammatin ja tekee siitä joko <strong>päiväkirjamerkinnän</strong> (kuvitteellinen työpäivä ammattilaisena) tai <strong>rekrytointipostauksen</strong> (alan houkutteleva some-ilmoitus). Molemmissa käytetään oikeita lähteitä.</div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -219,17 +237,20 @@
         <span aria-hidden="true">🎯</span> Oppimistavoitteet
       </h2>
       <ul class="tavoite-lista">
-        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas tunnistaa omat kiinnostuksensa ja yhdistää ne koulutusalan valintoihin</li>
-        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas tutustuu eri koulutusaloihin ja niihin liittyviin ammatteihin konkreettisesti</li>
-        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas harjoittelee itsearviointia ja reflektiota omista vahvuuksistaan</li>
-        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas laajentaa käsitystään ammattivaihtoehdoista ennen yhteishakua</li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas tutustuu valitsemansa koulutusalan ammatteihin, vaatimuksiin ja koulutuspolkuihin konkreettisesti</li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas pohtii omia arvojaan ja vahvuuksiaan suhteessa alan arkeen</li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas harjoittelee tiedon hakemista oikeista lähteistä (tyomarkkinatori.fi, opintopolku.fi)</li>
+        <li><span class="tavoite-piste" aria-hidden="true">✓</span>Oppilas tuottaa luovan tekstin valitun ammatin näkökulmasta</li>
       </ul>
+      <div class="info-boksi" role="note">
+        <strong>OPS-kytkennät:</strong> Oppilaanohjaus (koulutusvalinnat, itseohjautuvuus, tulevaisuuden suunnittelu), äidinkieli (kirjoittaminen), laaja-alainen osaaminen L6 (työelämätaidot), L1 (ajattelu ja oppimaan oppiminen).
+      </div>
     </section>
 
-    <!-- 3. Aikataulu -->
+    <!-- 3. Tunnin rakenne -->
     <section class="card" aria-labelledby="aikataulu-otsikko">
       <h2 class="card-title" id="aikataulu-otsikko">
-        <span aria-hidden="true">⏱️</span> Aikataulusuositus
+        <span aria-hidden="true">⏱️</span> Tunnin rakenne
       </h2>
       <div class="aikataulu" role="list">
 
@@ -237,62 +258,63 @@
           <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">1</div></div>
           <div class="aikataulu-sisalto">
             <div class="aikataulu-otsikko">Orientointi</div>
-            <span class="aikataulu-aika">0–3 min</span>
-            <div class="aikataulu-kuvaus">Kerro oppilaille lyhyesti: "Tänään tutustutaan eri koulutusaloihin tekemällä valintoja — ei ole oikeita tai vääriä vastauksia." Avatkaa tehtävä DigiOpo-sivulta.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Korosta, että testi on suuntaa-antava, ei sitova. Sama oppilas voi saada eri tuloksen eri päivinä — se on tarkoituksellista.</div>
+            <span class="aikataulu-aika">0–5 min</span>
+            <div class="aikataulu-kuvaus">Kerro lyhyesti: "Tänään tutustutaan koulutusaloihin — jokainen valitsee itseään kiinnostavan alan ja etenee omaan tahtiinsa. Ei ole oikeita tai vääriä vastauksia." Avatkaa DigiOpo-sivu ja siirry koulutusosion kohtaan.</div>
+            <div class="aikataulu-vinkki">💡 Vinkki: Ei tarvitse selittää pelejä etukäteen — oppilaat löytävät ohjeet itse pelin sisältä. Vapaus valita motivoi aloittamaan.</div>
           </div>
         </div>
 
         <div class="aikataulu-rivi" role="listitem">
           <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">2</div></div>
           <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Itsenäinen testaaminen</div>
-            <span class="aikataulu-aika">3–13 min</span>
-            <div class="aikataulu-kuvaus">Oppilaat tekevät testin itsenäisesti. Kannusta kokeilemaan eri valintoja uudelleen — testi on suunniteltu toistettavaksi. Kierrä luokkaa ja huomaa, jos joku tarvitsee tukea.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Jos oppilas sanoo "en tiedä mitä valita", ohjeista: "Valitse se, joka tuntuu ensin paremmalta — älä mieti liikaa."</div>
+            <div class="aikataulu-otsikko">Itsenäinen työskentely</div>
+            <span class="aikataulu-aika">5–35 min</span>
+            <div class="aikataulu-kuvaus">Oppilaat pelaavat ja tekevät tehtäviä omaan tahtiinsa. Nopeimmat ehtivät kokeilla useampaa alaa, rauhallisemmat pääsevät syvälle yhteen. Molemmat ovat hyviä tapoja. Kierrä luokkaa ja huomaa, jos joku tarvitsee tukea.</div>
+            <div class="aikataulu-vinkki">💡 Vinkki: Jos oppilas ei osaa valita alaa, kysy: "Onko jokin ala, josta olet kuullut tai nähnyt jotain?" — lähtökohta voi olla hyvin pieni.</div>
           </div>
         </div>
 
         <div class="aikataulu-rivi" role="listitem">
           <div class="aikataulu-viiva" aria-hidden="true"><div class="aikataulu-piste">3</div></div>
           <div class="aikataulu-sisalto">
-            <div class="aikataulu-otsikko">Tulosten purku parissa tai pienryhmässä</div>
-            <span class="aikataulu-aika">13–20 min</span>
-            <div class="aikataulu-kuvaus">Pyydä oppilaita kertomaan vierustoverilleen: "Mitä koulutusaloja testi ehdotti? Yllätti se sinut?" Noin 5 min riittää — ei tarvita pitkää esittelyä.</div>
-            <div class="aikataulu-vinkki">💡 Vinkki: Hyvä avauskysymys koko luokalle: "Kenen tulos yllätti positiivisesti — sai ehdotuksen, jota et ollut ajatellut?"</div>
+            <div class="aikataulu-otsikko">Lyhyt purku</div>
+            <span class="aikataulu-aika">35–45 min</span>
+            <div class="aikataulu-kuvaus">Kysy muutamalta oppilaalta: "Mitä alaa kokeilit? Yllätti jokin asia?" Ei tarvita esitelmiä — riittää, että jokainen saa sanoa yhden asian ääneen.</div>
+            <div class="aikataulu-vinkki">💡 Vinkki: Hyvä avauskysymys: "Kenen testin tulos yllätti — sopiko ala enemmän tai vähemmän kuin odotit?"</div>
           </div>
         </div>
 
       </div>
+
       <div class="huomio-boksi" role="note">
-        <span class="huomio-ikoni" aria-hidden="true">⚠️</span>
-        <span><strong>Jos aikaa on vähän (5–10 min):</strong> Testi toimii myös lyhyenä virittäjänä — oppilaat tekevät sen kerran, eivät purkua. Tulokset voivat toimia pohjana seuraavalla tunnilla.</span>
+        <span class="huomio-ikoni" aria-hidden="true">💡</span>
+        <span><strong>Eteneminen omaan tahtiin on tarkoituksellista.</strong> Tehtävässä ei ole tavoitteena käydä kaikki alat tai vaiheet läpi. Syvällinen tutustuminen yhteen alaan on yhtä arvokas kuin pintaraapaisu kolmeen.</span>
       </div>
     </section>
 
-    <!-- 4. Eriyttäminen -->
-    <section class="card" aria-labelledby="eriy-otsikko">
-      <h2 class="card-title" id="eriy-otsikko">
-        <span aria-hidden="true">🎛️</span> Eriyttäminen
+    <!-- 4. Käytännön vinkkejä -->
+    <section class="card" aria-labelledby="vinkit-otsikko">
+      <h2 class="card-title" id="vinkit-otsikko">
+        <span aria-hidden="true">💬</span> Käytännön vinkkejä
       </h2>
-      <div class="eriy-grid">
-        <div class="eriy-kortti eriy-alas">
-          <div class="eriy-otsikko">⬇️ Tuki tarvitseville</div>
-          <ul class="eriy-lista">
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Salli, että oppilas tekee testin parin kanssa ääneen pohtimalla</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Kerro etukäteen, mitä koulutusaloja testissä on — vähentää epävarmuutta</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Kysy testin jälkeen: "Mikä tulos tuntui sinulle tutulta?" — ei vaadi laajaa pohdintaa</span></li>
-          </ul>
-        </div>
-        <div class="eriy-kortti eriy-ylos">
-          <div class="eriy-otsikko">⬆️ Haaste edistyneille</div>
-          <ul class="eriy-lista">
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Tee testi kolmesti eri valinnoilla — vertaile tuloksia: muuttuuko ala?</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Etsi opintopolku.fi:stä yksi ehdotetun alan koulutus ja kirjaa mitä opit</span></li>
-            <li><span class="eriy-bullet" aria-hidden="true">→</span><span>Kirjoita 3 lausetta: "Tämä ala yllätti minut, koska…"</span></li>
-          </ul>
-        </div>
-      </div>
+      <ul class="tavoite-lista">
+        <li>
+          <span class="tavoite-piste" aria-hidden="true">→</span>
+          <span>Testin tulos ("sopii / ei sovi") ei ole arvosana eikä ennuste — korosta tätä oppilaille ennen aloitusta</span>
+        </li>
+        <li>
+          <span class="tavoite-piste" aria-hidden="true">→</span>
+          <span>Oppilas voi kokeilla useampaa alaa saman tunnin aikana — kannusta siihen, jos aika riittää</span>
+        </li>
+        <li>
+          <span class="tavoite-piste" aria-hidden="true">→</span>
+          <span>Lopputehtävään (päiväkirja tai rekrytointipostaus) voi käyttää joko saman tunnin loppuajan tai seuraavaa tuntia</span>
+        </li>
+        <li>
+          <span class="tavoite-piste" aria-hidden="true">→</span>
+          <span>Oppilaat voivat myös jakaa oman rekrytointipostauksen luokan kanssa — hyvä virittäjä yhteishakukeskustelulle</span>
+        </li>
+      </ul>
     </section>
 
     <!-- 5. Kytkennät -->
@@ -303,19 +325,19 @@
       <ul class="tavoite-lista">
         <li>
           <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Ala-set -peli:</strong> Luonteva jatko — oppilas voi kokeilla, tunnistaako testin ehdottaman alan ammatit pelissä</span>
+          <span><strong>Ala-set -peli:</strong> Hyvä pari — Ala-set vahvistaa peleissä opittuja alan käsitteitä nopeana korttipelinä</span>
         </li>
         <li>
           <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Koulutusalakaruselli:</strong> Testin jälkeen oppilas voi etsiä karusellistä lisätietoa ehdotetusta alasta</span>
+          <span><strong>Maailma tarvitsee sinua:</strong> Pelissä valittu ammatti voi toimia roolihenkilönä ryhmätehtävässä</span>
         </li>
         <li>
           <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>Vahvuudet-osio:</strong> Yhdistä testin tulos vahvuuspohdintaan — "Sopivatko tunnistamasi vahvuudet sille alalle?"</span>
+          <span><strong>Vahvuudet-osio:</strong> "Sopiiko valittu ala sinulle?" -testin tulos voi avata vahvuuspohdinnan — "Mitkä vahvuuksistasi tukisivat tätä alaa?"</span>
         </li>
         <li>
           <span class="tavoite-piste" aria-hidden="true">→</span>
-          <span><strong>TET:</strong> Tulos voi toimia inspiraationa TET-paikan hakemiselle — "Löytyisikö tältä alalta TET-paikka?"</span>
+          <span><strong>TET:</strong> Pelissä tutuksi tullut ammatti voi inspiroida TET-paikan hakemista kyseiseltä alalta</span>
         </li>
       </ul>
     </section>
