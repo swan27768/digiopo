@@ -130,17 +130,9 @@ window.OSIO_DATA = {
     },
 
     "koulun-jalkeen": {
-      tavoitteet: [
-        "Löydät mielekästä tekemistä vapaa-ajalle",
-        "Huomaat, että harrastuksissa opitut taidot ovat oikeaa osaamista",
-        "Tiedät, mistä löydät oman alueesi harrastusmahdollisuudet"
-      ],
-      miksi: "Vapaa-ajalla opitut taidot — ryhmässä toimiminen, sitkeys, luovuus — näkyvät tutkitusti hyvinvoinnissa ja kelpaavat myöhemmin myös TET-hauissa ja työhaastatteluissa. Harrastus on usein myös ensimmäinen vihje siitä, mikä ala voisi kiinnostaa isompana.",
-      yhteenveto: [
-        "Sinulla on vähintään yksi idea uudesta vapaa-ajan tekemisestä",
-        "Osaat nimetä taitoja, joita opit koulun ulkopuolella",
-        "Tiedät, mistä etsiä harrastuksia omalla alueellasi"
-      ]
+      tavoitteet: [],
+      miksi: "",
+      yhteenveto: []
     }
   },
 

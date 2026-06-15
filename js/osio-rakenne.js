@@ -44,7 +44,7 @@
         }
       }
 
-      if (d.tavoitteet) {
+      if (d.tavoitteet && d.tavoitteet.length) {
         var alku = el("details", "osio-info osio-tavoitteet");
         alku.innerHTML =
           summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet",
@@ -59,7 +59,7 @@
         else osio.insertAdjacentElement("afterbegin", alku);
       }
 
-      if (d.yhteenveto) {
+      if (d.yhteenveto && d.yhteenveto.length) {
         var loppu = el("details", "osio-info osio-yhteenveto");
         loppu.innerHTML =
           summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tällä oppitunnilla",
