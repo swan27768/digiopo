@@ -152,8 +152,8 @@ window.OSIO_DATA = {
     "pakopeli": {
       otsikko: "Yläkoulun pakopeli: opi oppimaan",
       teksti: [
-        "Pakopelin tehtävät harjoittavat oppimaan oppimisen ydintaitoja. Tutkimusnäyttö on vahvinta kahdesta tekniikasta: itsensä testaaminen (testivaikutus) ja kertauksen hajauttaminen usealle päivälle. Molemmat päihittävät pelkän uudelleenlukemisen selvästi.",
-        "Pelimuoto perustuu pelillistämisen tutkimukseen: pisteet, aikapaine ja eteneminen lisäävät sitoutumista ja tekevät harjoittelusta houkuttelevampaa."
+        "Pakopelin tehtävät harjoittavat oppimaan oppimisen ydintaitoja. Tutkimusnäyttö on vahvinta kahdesta tekniikasta: itsensä testaaminen (testivaikutus) ja kertauksen hajauttaminen usealle päivälle. Molemmat osoittautuvat selvästi tehokkaammiksi kuin pelkkä uudelleenlukeminen.",
+        "Pelimuoto perustuu pelillistämisen tutkimukseen: pisteet, aikapaine ja eteneminen lisäävät sitoutumista ja tekevät harjoittelusta motivoivampaa."
       ],
       lahteet: [
         "Dunlosky, J. ym. (2013). Improving students' learning with effective learning techniques. <em>Psychological Science in the Public Interest</em>.",
