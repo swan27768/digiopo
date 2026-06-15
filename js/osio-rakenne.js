@@ -32,48 +32,70 @@
 
   /* ---- 1 & 2: tavoite- ja yhteenvetopaneelit ---------------- */
   function rakennaOsioPaneelit() {
+    // Tavalliset osiot (id vastaa osio-dataa)
     Object.keys(DATA.osiot || {}).forEach(function (id) {
       var osio = document.getElementById(id);
       var d = DATA.osiot[id];
       if (!osio || !d) return;
-
-      if (d.teoria && DATA.teoriat && DATA.teoriat[d.teoria]) {
-        var h2 = osio.querySelector(".aihe-otsikko h2, h2");
-        if (h2 && !h2.querySelector(".teoria-nappi")) {
-          h2.appendChild(teoriaNappi(d.teoria, true));
-        }
-      }
-
-      if (d.tavoitteet && d.tavoitteet.length) {
-        var alku = el("details", "osio-info osio-tavoitteet");
-        alku.innerHTML =
-          summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet",
-            "Avaa ja katso, mitä tällä tunnilla tehdään") +
-          '<div class="osio-info-sisalto">' +
-          (d.rakenne ? "<h4>Tunnin rakenne</h4><ul>" + lista(d.rakenne) + "</ul>" : "") +
-          "<h4>Tavoitteet</h4><ul>" + lista(d.tavoitteet) + "</ul>" +
-          (d.miksi ? '<div class="osio-miksi"><strong>Miksi tämä kannattaa?</strong><br>' + d.miksi + "</div>" : "") +
-          "</div>";
-        var otsikko = osio.querySelector(".aihe-otsikko");
-        if (otsikko) otsikko.insertAdjacentElement("afterend", alku);
-        else osio.insertAdjacentElement("afterbegin", alku);
-      }
-
-      if (d.yhteenveto && d.yhteenveto.length) {
-        var loppu = el("details", "osio-info osio-yhteenveto");
-        loppu.innerHTML =
-          summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tällä oppitunnilla",
-            "Avaa, kun olet tehnyt oppitunnin tehtävät") +
-          '<div class="osio-info-sisalto"><h4>Tämän oppitunnin jälkeen</h4><ul>' +
-          lista(d.yhteenveto) + "</ul></div>";
-        var opeOsiot = osio.querySelectorAll(":scope .opettaja-osio, :scope .ope-osio");
-        if (opeOsiot.length) {
-          opeOsiot[opeOsiot.length - 1].insertAdjacentElement("afterend", loppu);
-        } else {
-          osio.appendChild(loppu);
-        }
-      }
+      kasitteleOsio(osio, d, false);
     });
+    // Ala-osiot: yhdistetyn osion sisällä olevat erilliset aktiviteetit
+    document.querySelectorAll("[data-osio]").forEach(function (osio) {
+      var d = DATA.osiot[osio.getAttribute("data-osio")];
+      if (d) kasitteleOsio(osio, d, true);
+    });
+  }
+
+  // Lisää teoria-napin sekä tavoite-/yhteenvetopaneelit yhteen osioon.
+  // ala=true → ala-osio (otsikko h3, ope-/yhteenvetohaku rajataan tähän lohkoon).
+  function kasitteleOsio(osio, d, ala) {
+    if (d.teoria && DATA.teoriat && DATA.teoriat[d.teoria]) {
+      var h = osio.querySelector(ala ? "h3, h2" : ".aihe-otsikko h2, h2");
+      if (h && !h.querySelector(".teoria-nappi")) {
+        h.appendChild(teoriaNappi(d.teoria, true));
+      }
+    }
+
+    if (d.tavoitteet && d.tavoitteet.length) {
+      var alku = el("details", "osio-info osio-tavoitteet");
+      alku.innerHTML =
+        summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet",
+          "Avaa ja katso, mitä tällä tunnilla tehdään") +
+        '<div class="osio-info-sisalto">' +
+        (d.rakenne ? "<h4>Tunnin rakenne</h4><ul>" + lista(d.rakenne) + "</ul>" : "") +
+        "<h4>Tavoitteet</h4><ul>" + lista(d.tavoitteet) + "</ul>" +
+        (d.miksi ? '<div class="osio-miksi"><strong>Miksi tämä kannattaa?</strong><br>' + d.miksi + "</div>" : "") +
+        "</div>";
+      var otsikko = osio.querySelector(".aihe-otsikko") || osio.querySelector("h2, h3");
+      if (otsikko) otsikko.insertAdjacentElement("afterend", alku);
+      else osio.insertAdjacentElement("afterbegin", alku);
+    }
+
+    if (d.yhteenveto && d.yhteenveto.length) {
+      var loppu = el("details", "osio-info osio-yhteenveto");
+      loppu.innerHTML =
+        summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tällä oppitunnilla",
+          "Avaa, kun olet tehnyt oppitunnin tehtävät") +
+        '<div class="osio-info-sisalto"><h4>Tämän oppitunnin jälkeen</h4><ul>' +
+        lista(d.yhteenveto) + "</ul></div>";
+      // Rajaa ope-osioiden haku: pääosio ei nappaa ala-osion lohkoja eikä toisinpäin.
+      var opeOsiot = Array.prototype.filter.call(
+        osio.querySelectorAll(":scope .opettaja-osio, :scope .ope-osio"),
+        function (o) {
+          var p = o.closest("[data-osio]");
+          return ala ? p === osio : p === null;
+        });
+      if (opeOsiot.length) {
+        opeOsiot[opeOsiot.length - 1].insertAdjacentElement("afterend", loppu);
+      } else if (ala) {
+        osio.appendChild(loppu);
+      } else {
+        // Pääosio: sijoita yhteenveto ennen mahdollista ala-osiota.
+        var ala1 = osio.querySelector(":scope [data-osio]");
+        if (ala1) ala1.insertAdjacentElement("beforebegin", loppu);
+        else osio.appendChild(loppu);
+      }
+    }
   }
 
   function summaryHTML(ikoni, otsikko, alaotsikko) {

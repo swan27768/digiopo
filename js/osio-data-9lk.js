@@ -144,7 +144,7 @@ window.OSIO_DATA = {
       ]
     },
 
-    "tulevaisuus-mina": {
+    "tulevaisuus": {
       teoria: "kolme-minua",
       rakenne: [
         "Tehtävä 1: Kolme minua tulevaisuudessa — yksin (15 min)",
@@ -163,7 +163,7 @@ window.OSIO_DATA = {
       ]
     },
 
-    "tulevaisuus": {
+    "tulevaisuus-vesi": {
       teoria: "vesi2045",
       rakenne: [
         "Vaihe 1: Onnenpyörä — Mitä jos... (yksin, 5–8 min)",
