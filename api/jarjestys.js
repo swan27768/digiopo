@@ -149,6 +149,17 @@ export default async function handler(req, res) {
       return res.status(500).json({ ok: false, virhe: 'koodin_luonti_epaonnistui' });
     }
 
+    // ── TARKISTA: vahvista avain avaamatta/kirjoittamatta mitään ──
+    if (toiminto === 'tarkista') {
+      const ryhma = String(body.ryhma || '').trim().toUpperCase();
+      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
+        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+      }
+      const rivi = await haeRyhma(ryhma);
+      const tasmaa = !!rivi && rivi.avain_hash === hashAvain(avain);
+      return res.status(200).json(tasmaa ? { ok: true } : { ok: false, virhe: 'avain_ei_tasmaa' });
+    }
+
     // ── TALLENNA: päivitä ryhmän järjestys (vaatii oikean avaimen) ──
     if (toiminto === 'tallenna') {
       const ryhma = String(body.ryhma || '').trim().toUpperCase();
