@@ -5,7 +5,6 @@ window.OSIO_DATA = {
 
   osiot: {
     "johdanto": {
-      teoria: "selviytymisopas",
       rakenne: [
         "Aloitus: Uudet aineet yläkoulussa – lukujärjestys muuttuu (5 min)",
         "Mitä on oppilaanohjaus? – infograafi ja lyhyt esittely (5 min)",
@@ -30,7 +29,7 @@ window.OSIO_DATA = {
       ]
     },
 
-    "tervetuloa": {},
+    "tervetuloa": { teoria: "selviytymisopas" },
 
     "opiskelutaidot": {
       rakenne: [
