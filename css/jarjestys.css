@@ -188,3 +188,58 @@ body.ope-muokkaustila .jarjestys-opelinkki { display: none; }
   color: #4b416b;
 }
 .portti-laheta { color: #1f1147; }
+
+/* ============================================================
+   OSIOIDEN LUKITUS
+   ============================================================ */
+
+/* --- Oppilasnäkymä: lukittu osio --- */
+.osio-lukittu { position: relative; }
+/* Piilota kaikki paitsi otsikko ja lukkoviesti (myös pelit ja paneelit) */
+.osio-lukittu > :not(.aihe-otsikko):not(.osio-lukko) { display: none !important; }
+.osio-lukittu > .aihe-otsikko { opacity: 0.6; }
+
+.osio-lukko {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0 0.5rem;
+  padding: 0.9rem 1.1rem;
+  background: #f5f3ff;
+  border: 1px dashed #c4b5fd;
+  border-radius: 0.7rem;
+  color: #5b21b6;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.osio-lukko-ikoni { font-size: 1.2rem; }
+
+/* --- Muokkaustila: lukko-painike --- */
+.jarjestys-lukko-nappi { display: none; }
+body.ope-muokkaustila .jarjestys-lukko-nappi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0.75rem;
+  right: 3.4rem; /* kahvan vasemmalla puolella */
+  z-index: 5;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  background: #f5f3ff;
+  border: 2px solid #ddd6fe;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+body.ope-muokkaustila .jarjestys-lukko-nappi.lukittu {
+  background: #ede9fe;
+  border-color: #a78bfa;
+}
+/* Opettajalle merkki lukitusta osiosta (sisältö pysyy näkyvissä) */
+body.ope-muokkaustila section.ope-osio-lukittu {
+  outline-color: #a78bfa;
+  background: rgba(237, 233, 254, 0.35);
+}

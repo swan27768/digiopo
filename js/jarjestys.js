@@ -24,6 +24,8 @@
   var LS_RYHMA = "digiopo-ryhma";                     // oppilaan liittymä
   var LS_OPE_R = "digiopo-ope-ryhma";                 // opettajan jakoryhmä (laite)
   var LS_OPE_A = "digiopo-ope-avain";                 // opettajan avain (laite)
+  var LS_LOCK = "digiopo-lukitut-" + LUOKKA;          // opettajan lukot (työversio)
+  var LS_LOCK_CACHE = "digiopo-lukitut-cache-" + LUOKKA; // oppilaan välimuisti
 
   // ---- apurit ----
   function osiot() {
@@ -72,6 +74,34 @@
     }
   }
 
+  // ---- lukot ----
+  function lueLukot() { var a = lue(LS_LOCK); return Array.isArray(a) ? a : []; }
+  function tallennaLukot(a) { kirjoita(LS_LOCK, a); }
+
+  // Oppilasnäkymä: merkitse lukitut osiot (CSS piilottaa sisällön + pelit)
+  function applyLukot(lukitut) {
+    lukitut = Array.isArray(lukitut) ? lukitut : [];
+    osiot().forEach(function (sec) {
+      var on = lukitut.indexOf(sec.id) !== -1;
+      var viesti = sec.querySelector(":scope > .osio-lukko");
+      if (on) {
+        sec.classList.add("osio-lukittu");
+        if (!viesti) {
+          var m = document.createElement("div");
+          m.className = "osio-lukko";
+          m.innerHTML = '<span class="osio-lukko-ikoni" aria-hidden="true">🔒</span> ' +
+            'Opettaja avaa tämän osion myöhemmin.';
+          var ots = sec.querySelector(":scope > .aihe-otsikko");
+          if (ots) ots.insertAdjacentElement("afterend", m);
+          else sec.insertAdjacentElement("afterbegin", m);
+        }
+      } else {
+        sec.classList.remove("osio-lukittu");
+        if (viesti) viesti.remove();
+      }
+    });
+  }
+
   // ---- API ----
   function haeServer(ryhma) {
     return fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
@@ -99,8 +129,14 @@
   } else if (liittymaRyhma) {
     // Oppilas: välimuisti heti, sitten palvelimelta
     sovella(yhdista(lue(LS_CACHE)) || yhdista(lue(LS_LOCAL)));
+    applyLukot(lue(LS_LOCK_CACHE) || []);
     haeServer(liittymaRyhma).then(function (v) {
-      if (v && v.ok && v.jarjestys) { kirjoita(LS_CACHE, v.jarjestys); sovella(yhdista(v.jarjestys)); }
+      if (v && v.ok) {
+        if (v.jarjestys) { kirjoita(LS_CACHE, v.jarjestys); sovella(yhdista(v.jarjestys)); }
+        var luk = v.lukitut || [];
+        kirjoita(LS_LOCK_CACHE, luk);
+        applyLukot(luk);
+      }
     });
   } else {
     sovella(yhdista(lue(LS_LOCAL)));
@@ -252,13 +288,48 @@
   }
 
   function lisaaKahvat() {
+    var lukot = lueLukot();
     osiot().forEach(function (sec) {
-      if (sec.querySelector(":scope > .jarjestys-kahva")) return;
-      var k = document.createElement("button");
-      k.type = "button"; k.className = "jarjestys-kahva";
-      k.title = "Raahaa osiota järjestääksesi"; k.setAttribute("aria-label", "Raahaa osiota");
-      k.innerHTML = "⠿";
-      sec.insertAdjacentElement("afterbegin", k);
+      var locked = lukot.indexOf(sec.id) !== -1;
+      if (!sec.querySelector(":scope > .jarjestys-kahva")) {
+        var k = document.createElement("button");
+        k.type = "button"; k.className = "jarjestys-kahva";
+        k.title = "Raahaa osiota järjestääksesi"; k.setAttribute("aria-label", "Raahaa osiota");
+        k.innerHTML = "⠿";
+        sec.insertAdjacentElement("afterbegin", k);
+      }
+      if (!sec.querySelector(":scope > .jarjestys-lukko-nappi")) {
+        var L = document.createElement("button");
+        L.type = "button"; L.className = "jarjestys-lukko-nappi";
+        paivitaLukkoNappi(L, locked);
+        L.addEventListener("click", function () {
+          var lk = lueLukot(); var i = lk.indexOf(sec.id); var nyt;
+          if (i === -1) { lk.push(sec.id); nyt = true; } else { lk.splice(i, 1); nyt = false; }
+          tallennaLukot(lk);
+          paivitaLukkoNappi(L, nyt);
+          sec.classList.toggle("ope-osio-lukittu", nyt);
+          if (julkaisuTila) { julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila odottaa"; }
+        });
+        sec.insertAdjacentElement("afterbegin", L);
+      }
+      sec.classList.toggle("ope-osio-lukittu", locked);
+    });
+  }
+
+  function paivitaLukkoNappi(btn, locked) {
+    btn.innerHTML = locked ? "🔒" : "🔓";
+    btn.title = locked ? "Lukittu oppilailta — klikkaa avataksesi" : "Avoin — klikkaa lukitaksesi oppilailta";
+    btn.setAttribute("aria-label", btn.title);
+    btn.classList.toggle("lukittu", locked);
+  }
+
+  function paivitaKaikkiLukot() {
+    var lukot = lueLukot();
+    osiot().forEach(function (sec) {
+      var L = sec.querySelector(":scope > .jarjestys-lukko-nappi");
+      var locked = lukot.indexOf(sec.id) !== -1;
+      if (L) paivitaLukkoNappi(L, locked);
+      sec.classList.toggle("ope-osio-lukittu", locked);
     });
   }
 
@@ -292,7 +363,7 @@
     b.className = "jarjestys-banneri";
     b.innerHTML =
       '<div class="jarjestys-rivi">' +
-        '<span class="jarjestys-teksti">👩‍🏫 <strong>Muokkaustila</strong> — raahaa osioita kahvasta (⠿).</span>' +
+        '<span class="jarjestys-teksti">👩‍🏫 <strong>Muokkaustila</strong> — raahaa osioita kahvasta (⠿), lukitse/avaa lukolla (🔒).</span>' +
         '<button type="button" class="jarjestys-nappi jarjestys-palauta">Palauta oletus</button>' +
         '<button type="button" class="jarjestys-nappi jarjestys-sulje">Sulje</button>' +
       '</div>' +
@@ -305,8 +376,9 @@
     document.body.appendChild(b);
     b.querySelector(".jarjestys-sulje").addEventListener("click", lopetaMuokkaus);
     b.querySelector(".jarjestys-palauta").addEventListener("click", function () {
-      try { localStorage.removeItem(LS_LOCAL); } catch (e) {}
+      try { localStorage.removeItem(LS_LOCAL); localStorage.removeItem(LS_LOCK); } catch (e) {}
       sovella(OLETUS);
+      paivitaKaikkiLukot();
     });
     b.querySelector(".jarjestys-julkaise").addEventListener("click", julkaise);
     julkaisuTila = b.querySelector(".jarjestys-tila");
@@ -316,7 +388,7 @@
     var ryhma = lueRaaka(LS_OPE_R), avain = lueRaaka(LS_OPE_A);
     if (!ryhma || !avain) return;
     if (julkaisuTila) { julkaisuTila.textContent = "Tallennetaan…"; julkaisuTila.className = "jarjestys-tila"; }
-    postServer({ toiminto: "tallenna", ryhma: ryhma, avain: avain, luokka: LUOKKA, jarjestys: jarjestysNyt() })
+    postServer({ toiminto: "tallenna", ryhma: ryhma, avain: avain, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() })
       .then(function (v) {
         if (!julkaisuTila) return;
         if (v && v.ok) { julkaisuTila.textContent = "✓ Julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila ok"; }

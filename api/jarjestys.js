@@ -90,10 +90,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
     }
     try {
-      const r = await sb(`jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=jarjestys`);
+      const r = await sb(`jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=jarjestys,lukitut`);
       if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
       const rivi = (await r.json())[0];
-      return res.status(200).json({ ok: true, jarjestys: rivi ? rivi.jarjestys : null });
+      return res.status(200).json({
+        ok: true,
+        jarjestys: rivi ? rivi.jarjestys : null,
+        lukitut: rivi ? (rivi.lukitut || []) : [],
+      });
     } catch (err) {
       console.error('jarjestys GET:', err);
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
@@ -165,10 +169,11 @@ export default async function handler(req, res) {
       const ryhma = String(body.ryhma || '').trim().toUpperCase();
       const luokka = String(body.luokka || '').trim();
       const jarjestys = body.jarjestys;
+      const lukitut = body.lukitut == null ? [] : body.lukitut;
       if (!/^[A-Z0-9-]{4,16}$/.test(ryhma) || !SALLITUT_LUOKAT.includes(luokka)) {
         return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
       }
-      if (!validiJarjestys(jarjestys)) {
+      if (!validiJarjestys(jarjestys) || !validiJarjestys(lukitut)) {
         return res.status(400).json({ ok: false, virhe: 'jarjestys_virheellinen' });
       }
 
@@ -180,7 +185,7 @@ export default async function handler(req, res) {
       const r = await sb('jarjestykset?on_conflict=ryhmakoodi,luokka', {
         method: 'POST',
         headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-        body: JSON.stringify({ ryhmakoodi: ryhma, luokka, jarjestys }),
+        body: JSON.stringify({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut }),
       });
       if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
       return res.status(200).json({ ok: true });
