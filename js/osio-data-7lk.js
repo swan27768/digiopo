@@ -4,22 +4,29 @@ window.OSIO_DATA = {
   luokka: "7",
 
   osiot: {
+    "johdanto": {
+      teoria: "selviytymisopas"
+    },
+
     "tervetuloa": {
       rakenne: [
-        "Aloitus: mikä yläkoulussa on uutta? (5 min)",
+        "Aloitus: Yläkoulun selviytymisopas – mitä neljää keinoa tarvitset? (5 min)",
+        "Mitä on oppilaanohjaus? – infograafi ja lyhyt esittely (5 min)",
         "Interaktiivinen tarina: Robo saapuu yläkouluun (20–25 min)",
-        "Yhteinen purku: mikä tarinassa tuntui tutulta? (10 min)"
+        "Operaatio Yläkoulu – ryhmätehtävä rastiradalla (20–25 min)"
       ],
       tavoitteet: [
-        "Tiedät, mikä yläkoulussa muuttuu ja keneltä saat apua",
+        "Tiedät, mitä neljää selviytymiskeinoa yläkoulussa tarvitset",
+        "Tiedät, mikä oppilaanohjaus on ja keneltä saat apua",
         "Tunnistat, että jännittäminen uudessa tilanteessa on normaalia",
-        "Löydät omat keinosi selviytyä arjen yllätyksistä"
+        "Olet tutustunut Roboon ja kirjoittanut ajatuksia itsellesi tulevaisuuteen"
       ],
-      miksi: "Siirtymä alakoulusta yläkouluun on tutkitusti yksi koulupolun herkimmistä vaiheista: hyvä alku vahvistaa kouluun kiinnittymistä, mikä ennustaa sekä oppimistuloksia että hyvinvointia koko yläkoulun ajan. Tarvitset näitä taitoja heti ensimmäisinä viikkoina — ja samat keinot toimivat myöhemmin aina, kun aloitat jossain uudessa paikassa.",
+      miksi: "Siirtymä alakoulusta yläkouluun on tutkitusti yksi koulupolun herkimmistä vaiheista: hyvä alku vahvistaa kouluun kiinnittymistä, mikä ennustaa sekä oppimistuloksia että hyvinvointia koko yläkoulun ajan. Selviytymisoppaan neljä keinoa antavat konkreettisen kehyksen koko yläkouluvuosille – tarvitset näitä taitoja heti ensimmäisinä viikkoina.",
       yhteenveto: [
-        "Tiedät, miten yläkoulun arki toimii: lukujärjestys, vaihtuvat opettajat ja luokat",
-        "Osaat nimetä ainakin kolme aikuista, joilta voit pyytää apua",
-        "Tunnistat omia tapojasi suhtautua uusiin ja jännittäviin tilanteisiin"
+        "Osaat nimetä Yläkoulun selviytymisoppaan neljä keinoa",
+        "Tiedät, mitä oppilaanohjaus tarkoittaa ja kuka on oposi",
+        "Olet kirjoittanut kirjeen itsellesi – ajatukset tallennettu tulevaisuuteen",
+        "Osaat nimetä ainakin kolme aikuista yläkoulussa, joilta voit pyytää apua"
       ]
     },
 
@@ -137,6 +144,22 @@ window.OSIO_DATA = {
   },
 
   teoriat: {
+    "selviytymisopas": {
+      otsikko: "Yläkoulun selviytymisopas – tieteellinen tausta",
+      teksti: [
+        "Yläkouluun siirtyminen on yksi koulupolun herkimmistä kehitysvaiheista. Tutkimukset osoittavat, että <strong>kouluun kiinnittyminen</strong> (school engagement) – tunne siitä, että kuuluu joukkoon ja pärjää – muovautuu erityisesti ensimmäisinä yläkouluviikkoina ja ennustaa hyvinvointia sekä oppimistuloksia koko yläkouluajan.",
+        "Selviytymisoppaan neljä keinoa perustuvat tutkittuihin tekijöihin: <strong>opiskelutaidot</strong> (oppimisstrategiat, Dunlosky ym. 2013), <strong>motivaatio</strong> (itseohjautuvuusteoria, Deci & Ryan 2000), <strong>vahvuudet</strong> (positiivinen psykologia, Seligman 2011) ja <strong>tulevaisuuden suunnittelu</strong> (mahdollisten minuuksien teoria, Oyserman ym. 2006). Yhdessä ne muodostavat kokonaisuuden, joka tukee nuoren kasvua koko yläkoulun ajan.",
+        "Koulusiirtymän tutkimus korostaa myös <strong>sosiaalisen tuen</strong> merkitystä: nuoret, jotka tietävät keneltä pyytää apua, selviytyvät paremmin vastoinkäymisistä. Siksi oppilaanohjaus esitellään heti ensimmäisellä tunnilla – ei byrokraattisena rakenteena, vaan konkreettisena verkostona."
+      ],
+      lahteet: [
+        "Wang, M.-T. & Degol, J. (2016). School climate: a review of the construct, measurement, and impact on student outcomes. <em>Educational Psychology Review</em>.",
+        "Symonds, J. (2015). <em>Understanding School Transition: What Happens to Children and How to Help Them</em>. Routledge.",
+        "Eccles, J. & Roeser, R. (2011). Schools as developmental contexts during adolescence. <em>Journal of Research on Adolescence</em>.",
+        "Deci, E. & Ryan, R. (2000). The 'what' and 'why' of goal pursuits. <em>Psychological Inquiry</em>.",
+        "Dunlosky, J. ym. (2013). Improving students' learning with effective learning techniques. <em>Psychological Science in the Public Interest</em>."
+      ]
+    },
+
     "robo-tarina": {
       otsikko: "Robo saapuu yläkouluun",
       teksti: [

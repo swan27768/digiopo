@@ -68,7 +68,6 @@ window.OSIO_DATA = {
     },
 
     "yhteishaku": {
-      teoria: "hakustrategia",
       rakenne: [
         "Aloitus: miten yhteishaku toimii Opintopolussa? (10 min)",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet (20 min)",
