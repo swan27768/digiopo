@@ -28,12 +28,14 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä vahvuuksia muistat 7. luokalta? (5 min)",
         "Interaktiivinen tarina: Vahvuusmatka (20 min)",
-        "Paritehtävä: Fake Insta — ammatti-identiteetti somessa (20 min)"
+        "Paritehtävä: Fake Insta — ammatti-identiteetti somessa (20 min)",
+        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen? (10–15 min)"
       ],
       tavoitteet: [
         "Syvennät kuvaa omista vahvuuksistasi ja kiinnostuksistasi",
         "Yhdistät vahvuutesi koulutusaloihin ja ammatteihin",
-        "Harjoittelet esittelemään osaamistasi muille"
+        "Harjoittelet esittelemään osaamistasi muille",
+        "Pohdit ja perustelet oman mielipiteesi – onko sometyö oikeaa työtä?"
       ],
       miksi: "Yhteishakuvalinta kannattaa perustaa siihen, mitä osaat ja mistä innostut — ei siihen, minne kaverit menevät. Vahvuuksien tunteminen on tutkitusti yhteydessä hyvinvointiin, ja käytännössä tarvitset tätä ensi vuonna: yhteishaun perusteluissa, pääsy- ja soveltuvuuskokeissa sekä TET- ja kesätyöhauissa.",
       yhteenveto: [
@@ -47,12 +49,14 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään? (5 min)",
         "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen (15 min)",
-        "Toiminnallinen tehtävä: Pyörä pyörii — satunnainen ura (20 min)"
+        "Toiminnallinen tehtävä: Pyörä pyörii — satunnainen ura (20 min)",
+        "Keskustelutehtävä: Mitä työ oikeasti on? (10 min)"
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
         "Uskallat ottaa yhteyttä työnantajaan",
-        "Huomaat, että yllättäväkin työ voi opettaa ja kiinnostaa"
+        "Huomaat, että yllättäväkin työ voi opettaa ja kiinnostaa",
+        "Pohdit yhdessä: mitä työ oikeasti on – ja mitä siitä ei opita koulussa?"
       ],
       miksi: "TET on useimmille ensimmäinen oma kosketus työelämään, ja kokemuksellisen oppimisen tutkimus osoittaa: itse tekeminen ja kokeminen opettaa työelämästä asioita, joita ei voi oppia kirjasta. Urateorioissa korostetaan myös sattuman roolia — moni löytää uransa yllättävän kokemuksen kautta. Siksi kannattaa kokeilla avoimin mielin.",
       yhteenveto: [
