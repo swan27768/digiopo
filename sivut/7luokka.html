@@ -133,7 +133,7 @@
           </div>
 
         <!-- Uudet oppiaineet 7. luokalla -->
-        <div style="margin: 24px 0;">
+        <div style="margin: 24px 0; position:relative;" id="lukujarjestysKortit">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
             <i class="fa-solid fa-calendar-days" aria-hidden="true" style="font-size:1.1rem; color:#7c3aed;"></i>
             <h3 style="margin:0; font-size:1rem; font-weight:700; color:#3b0764;">Lukujärjestys muuttuu – uusia aineita tulossa</h3>
@@ -232,6 +232,18 @@
             <a href="https://www.seinajoki.fi/wp-content/uploads/2020/04/6.lk_opas_2020_XX.pdf" target="_blank" rel="noopener" style="color:#7c3aed;">[2]</a>
             <a href="https://eperusteet.opintopolku.fi/#/fi/perusopetus/419550/tiedot" target="_blank" rel="noopener" style="color:#7c3aed;">[3] ePerusteet – Perusopetuksen OPS 2014 (valtakunnallinen)</a>
           </p>
+          <!-- Suurenna-nappi -->
+          <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <button
+              onclick="avaaLukujarjestys()"
+              style="display:flex; align-items:center; gap:6px; background:#EEEDFE; border:none; border-radius:8px; padding:6px 14px; font-size:0.82rem; font-weight:600; color:#3C3489; cursor:pointer;"
+              onmouseover="this.style.background='#dddaf7'"
+              onmouseout="this.style.background='#EEEDFE'"
+            >
+              <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i>
+              Suurenna
+            </button>
+          </div>
         </div>
 
           <!-- Mitä on oppilaanohjaus -->
@@ -1776,6 +1788,81 @@
       />
     </div>
 
+    <!-- Modal: Lukujärjestys suurennettuna -->
+    <div
+      id="lukujarjestysModal"
+      onclick="suljeLukujarjestys()"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(15, 0, 40, 0.92);
+        align-items: center;
+        justify-content: center;
+        cursor: zoom-out;
+        padding: 24px 16px;
+      "
+      role="dialog"
+      aria-modal="true"
+      aria-label="Lukujärjestys suurennettuna"
+    >
+      <button
+        onclick="suljeLukujarjestys(event)"
+        style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50%;width:42px;height:42px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+        aria-label="Sulje"
+        onmouseover="this.style.background='rgba(255,255,255,0.28)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.15)'"
+      >
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <div
+        onclick="event.stopPropagation()"
+        style="background:#faf9ff; border-radius:18px; padding:28px 32px; max-width:720px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.5);"
+      >
+        <h3 style="margin:0 0 6px; font-size:1.1rem; font-weight:700; color:#3b0764;">Lukujärjestys muuttuu – uusia aineita tulossa</h3>
+        <p style="font-size:0.9rem; color:#374151; line-height:1.65; margin:0 0 18px;">
+          Yläkouluun siirtyminen tuo lukujärjestykseen uusia oppiaineita. Alakoulun ympäristöoppi jakautuu 7. luokalla viideksi erilliseksi aineeksi: biologiaksi, maantiedoksi, fysiikaksi, kemiaksi ja terveystiedoksi.
+        </p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <!-- Uudet aineet -->
+          <div style="background:#fff; border:1.5px solid #AFA9EC; border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:0.5px solid #e9d5ff;">
+              <div style="width:32px; height:32px; border-radius:8px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-star" aria-hidden="true" style="font-size:14px; color:#534AB7;"></i>
+              </div>
+              <span style="font-size:14px; font-weight:700; color:#3C3489;">Uudet aineet 7. lk:lla</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f3f0ff;"><span style="font-size:13px; color:#1f2937;">Kotitalous</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f3f0ff;"><span style="font-size:13px; color:#1f2937;">Terveystieto</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f3f0ff;"><span style="font-size:13px; color:#1f2937;">Fysiikka</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f3f0ff;"><span style="font-size:13px; color:#1f2937;">Kemia</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f3f0ff;"><span style="font-size:13px; color:#1f2937;">Uskonto / Elämänkatsomustieto</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0;"><span style="font-size:13px; color:#1f2937; font-weight:600;">Oppilaanohjaus (opo)</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#EEEDFE; color:#3C3489;">uusi</span></div>
+            </div>
+          </div>
+          <!-- Jatkuvat aineet -->
+          <div style="background:#fff; border:0.5px solid #e5e7eb; border-radius:14px; padding:18px 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:0.5px solid #e5e7eb;">
+              <div style="width:32px; height:32px; border-radius:8px; background:#E1F5EE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-arrow-right" aria-hidden="true" style="font-size:14px; color:#0F6E56;"></i>
+              </div>
+              <span style="font-size:14px; font-weight:700; color:#085041;">Jatkuvat aineet</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f0fdf4;"><span style="font-size:13px; color:#1f2937;">Äidinkieli ja kirjallisuus</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f0fdf4;"><span style="font-size:13px; color:#1f2937;">Matematiikka</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f0fdf4;"><span style="font-size:13px; color:#1f2937;">Kielet (A- ja B-kielet, ruotsi)</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f0fdf4;"><span style="font-size:13px; color:#1f2937;">Biologia ja maantieto</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:0.5px solid #f0fdf4;"><span style="font-size:13px; color:#1f2937;">Historia ja yhteiskuntaoppi</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0;"><span style="font-size:13px; color:#1f2937;">Taito- ja taideaineet</span><span style="font-size:11px; padding:3px 9px; border-radius:20px; background:#E1F5EE; color:#085041;">jatkuu</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Lightbox TEPPO-infograafille – body:n suora lapsi -->
     <div
       id="teppoLightbox"
@@ -1844,6 +1931,19 @@
       }
 
       /* ── Infograafit (lightbox) ── */
+      function avaaLukujarjestys() {
+        const m = document.getElementById("lukujarjestysModal");
+        m.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        m.focus();
+      }
+
+      function suljeLukujarjestys(e) {
+        if (e) e.stopPropagation();
+        document.getElementById("lukujarjestysModal").style.display = "none";
+        document.body.style.overflow = "";
+      }
+
       function avaaInfograafi() {
         const lb = document.getElementById("opoLightbox");
         lb.style.display = "flex";
@@ -1875,6 +1975,7 @@
         if (e.key === "Escape") {
           suljeInfograafi();
           suljeTeppoInfograafi();
+          suljeLukujarjestys();
         }
       });
 
