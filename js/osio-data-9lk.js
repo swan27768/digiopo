@@ -48,10 +48,10 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä odotat TET-jaksolta? (5 min)",
         "Duuniin! — opas työelämään (15 min)",
+        "Keskustelutehtävä: Millainen työkaveri haluaisit olla? (10 min)",
         "TET-jakson jälkeen: mitä opit? -reflektio (15 min)",
         "DuuniMinä-tehtävä (15 min)",
         "Reppu + CV: pakkaa vahvuudet reppuusi ja kirjoita oma CV (20 min)",
-        "Keskustelutehtävä: Millainen työkaveri haluaisit olla? (10 min)",
         "Keskustelutehtävä: Harrastuksesta ammatti? (10 min)"
       ],
       tavoitteet: [
