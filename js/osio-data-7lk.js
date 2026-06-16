@@ -5,30 +5,32 @@ window.OSIO_DATA = {
 
   osiot: {
     "johdanto": {
-      teoria: "selviytymisopas"
-    },
-
-    "tervetuloa": {
+      teoria: "selviytymisopas",
       rakenne: [
-        "Aloitus: Yläkoulun selviytymisopas – mitä neljää keinoa tarvitset? (5 min)",
+        "Aloitus: Uudet aineet yläkoulussa – lukujärjestys muuttuu (5 min)",
         "Mitä on oppilaanohjaus? – infograafi ja lyhyt esittely (5 min)",
+        "Yläkoulun selviytymisopas – mitä neljää keinoa tarvitset? (5 min)",
         "Interaktiivinen tarina: Robo saapuu yläkouluun (20–25 min)",
         "Operaatio Yläkoulu – ryhmätehtävä rastiradalla (20–25 min)"
       ],
       tavoitteet: [
-        "Tiedät, mitä neljää selviytymiskeinoa yläkoulussa tarvitset",
+        "Tiedät, mitä uusia oppiaineita 7. luokalla on odottamassa",
         "Tiedät, mikä oppilaanohjaus on ja keneltä saat apua",
+        "Tiedät, mitä neljää selviytymiskeinoa yläkoulussa tarvitset",
         "Tunnistat, että jännittäminen uudessa tilanteessa on normaalia",
         "Olet tutustunut Roboon ja kirjoittanut ajatuksia itsellesi tulevaisuuteen"
       ],
-      miksi: "Siirtymä alakoulusta yläkouluun on tutkitusti yksi koulupolun herkimmistä vaiheista: hyvä alku vahvistaa kouluun kiinnittymistä, mikä ennustaa sekä oppimistuloksia että hyvinvointia koko yläkoulun ajan. Selviytymisoppaan neljä keinoa antavat konkreettisen kehyksen koko yläkouluvuosille – tarvitset näitä taitoja heti ensimmäisinä viikkoina.",
+      miksi: "Siirtymä alakoulusta yläkouluun on tutkitusti yksi koulupolun herkimmistä vaiheista: hyvä alku vahvistaa kouluun kiinnittymistä, mikä ennustaa sekä oppimistuloksia että hyvinvointia koko yläkoulun ajan. Uusiin aineisiin ja oppilaanohjaukseen tutustuminen heti alussa antaa oppilaille kokonaiskuvan yläkoulusta – ja selviytymisoppaan neljä keinoa tarjoavat konkreettisen kehyksen koko yläkouluvuosille.",
       yhteenveto: [
+        "Tiedät, mitä uusia oppiaineita 7. luokalla on",
         "Osaat nimetä Yläkoulun selviytymisoppaan neljä keinoa",
         "Tiedät, mitä oppilaanohjaus tarkoittaa ja kuka on oposi",
         "Olet kirjoittanut kirjeen itsellesi – ajatukset tallennettu tulevaisuuteen",
         "Osaat nimetä ainakin kolme aikuista yläkoulussa, joilta voit pyytää apua"
       ]
     },
+
+    "tervetuloa": {},
 
     "opiskelutaidot": {
       rakenne: [
