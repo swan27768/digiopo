@@ -162,6 +162,36 @@
     .ov-result.win{color:var(--green);}
     .ov-result.lose{color:#ef4444;}
 
+    /* END GUIDE CARDS */
+    .end-guide-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+    .end-guide-card{border-radius:14px;border:2px solid;overflow:hidden;}
+    .end-guide-card.player{border-color:#3b82f6;background:rgba(59,130,246,.05);}
+    .end-guide-card.teacher{border-color:#0d9488;background:rgba(13,148,136,.05);}
+    .egc-toggle{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;background:transparent;border:none;width:100%;text-align:left;font-family:"Lato",sans-serif;}
+    .egc-icon-wrap{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .player .egc-icon-wrap{background:#dbeafe;}
+    .teacher .egc-icon-wrap{background:#ccfbf1;}
+    .egc-icon-wrap svg{width:24px;height:24px;}
+    .player .egc-icon-wrap svg{color:#1d4ed8;}
+    .teacher .egc-icon-wrap svg{color:#0f766e;}
+    .egc-label{font-weight:700;font-size:0.9rem;}
+    .player .egc-label{color:#1e3a5f;}
+    .teacher .egc-label{color:#134e4a;}
+    .egc-arrow{margin-left:auto;font-size:0.75rem;transition:transform .2s;color:var(--muted);}
+    .egc-toggle[aria-expanded="true"] .egc-arrow{transform:rotate(180deg);}
+    .egc-body{display:none;padding:0 18px 18px;font-size:0.85rem;color:#ccc;line-height:1.6;}
+    .egc-body.open{display:block;}
+    .egc-body h4{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin:12px 0 6px;}
+    .player .egc-body h4{color:#60a5fa;}
+    .teacher .egc-body h4{color:#2dd4bf;}
+    .egc-body ul{padding-left:16px;display:flex;flex-direction:column;gap:5px;}
+    .egc-body ul li{color:#ccc;}
+    .egc-body p{margin-bottom:8px;color:#ccc;}
+    .egc-tip{border-radius:8px;padding:10px 12px;font-size:0.82rem;margin-top:10px;}
+    .player .egc-tip{background:rgba(59,130,246,.12);border-left:3px solid #3b82f6;}
+    .teacher .egc-tip{background:rgba(13,148,136,.12);border-left:3px solid #0d9488;}
+    @media(max-width:540px){.end-guide-cards{grid-template-columns:1fr;}}
+
     /* END SCREEN */
     #end-screen{align-items:center;justify-content:flex-start;padding:24px 16px;background:radial-gradient(ellipse at 50% 0%,#1e3a5f33 0%,transparent 50%),var(--bg);}
     .end-content{max-width:700px;width:100%;}
@@ -394,6 +424,61 @@
       </div>
     </div>
 
+    <div class="end-guide-cards">
+
+      <!-- PELAAJALLE -->
+      <div class="end-guide-card player">
+        <button class="egc-toggle" aria-expanded="false" onclick="toggleGuide(this)">
+          <div class="egc-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+          </div>
+          <span class="egc-label">Pelaajalle</span>
+          <span class="egc-arrow">▼</span>
+        </button>
+        <div class="egc-body">
+          <h4>Mieti hetki</h4>
+          <ul>
+            <li>Mitkä termit olivat sinulle uusia? Mitkä jo tuttuja?</li>
+            <li>Kumpi polku tuntui tutummalta – lukion vai amiksen sanasto?</li>
+            <li>Oliko jokin kortti sellainen, jonka olisit halunnut omalle polullesi?</li>
+            <li>Mitä uutta opit toisen polusta, jota et tiennyt ennen peliä?</li>
+          </ul>
+          <div class="egc-tip">
+            💡 Molemmat polut johtavat hyvään tulevaisuuteen – eri reittejä pitkin. Kumpi tuntui sinulle omemmalta?
+          </div>
+        </div>
+      </div>
+
+      <!-- OPETTAJALLE -->
+      <div class="end-guide-card teacher">
+        <button class="egc-toggle" aria-expanded="false" onclick="toggleGuide(this)">
+          <div class="egc-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <span class="egc-label">Opettajalle</span>
+          <span class="egc-arrow">▼</span>
+        </button>
+        <div class="egc-body">
+          <h4>Purku luokassa</h4>
+          <ul>
+            <li>Katso yhdessä tulevaisuuspolku-näkymä – mitä kortteja kertyi?</li>
+            <li>Mitkä termit olivat hankalia? Selitetään yhdessä.</li>
+            <li>Huomauttakaa: molemmat polut johtavat AMK-opintoihin.</li>
+          </ul>
+          <h4>Keskustelukysymyksiä</h4>
+          <ul>
+            <li>Oliko jokin haaste yllättävän vaikea? Miksi?</li>
+            <li>Kumpi polku tuntui tutummalta omalle arjelle?</li>
+            <li>Muuttuiko käsitys toisesta polusta pelin aikana?</li>
+          </ul>
+          <div class="egc-tip">
+            📋 Lisää ohjeet ja pedagogiset tavoitteet: <a href="lukio_vs_amis_ohjeet.html" target="_blank" style="color:#2dd4bf;">Avaa opettajan ohjeet →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <div class="end-actions">
       <button class="btn-end-primary" onclick="restartGame()">🔁 Pelaa uudelleen</button>
       <button class="btn-end-secondary" onclick="showScreen('intro-screen')">🏠 Alkuun</button>
@@ -509,6 +594,11 @@ function initGame(){
   clearStage();
 }
 
+function toggleGuide(btn){
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  btn.nextElementSibling.classList.toggle('open', !expanded);
+}
 function restartGame(){
   initGame();
   showScreen('game-screen');
