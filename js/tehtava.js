@@ -413,8 +413,8 @@ window.addEventListener("load", async function () {
     const closeBtn2 = document.getElementById("closeBtn");
     if (closeBtn2) {
       closeBtn2.addEventListener("click", function () {
-        if (document.referrer) { window.location.href = document.referrer; }
-        else { window.history.back(); }
+        const anchor2 = task.sektio ? "#" + task.sektio : "";
+        window.location.href = "sivut/" + task.class + "luokka.html" + anchor2;
       });
     }
     return;
