@@ -70,8 +70,94 @@ function turvallinenPolku(urlPolku) {
   return koottu;
 }
 
+// ─── Fake Insta -muistikanta (nollautuu kun palvelin käynnistetään uudelleen) ─
+const fakeInstaDB = [];
+
+function fipMuoto(r) {
+  return {
+    id: r.id, username: r.kayttajanimi, name: r.nimi, avatar: r.avatar,
+    bio1: r.bio1, bio2: r.bio2, bio3: r.bio3, hashtags: r.hashtags,
+    likes: r.tykkayksiat,
+    starredStrengths: { bio1: r.tahdet_bio1, bio2: r.tahdet_bio2, bio3: r.tahdet_bio3 },
+    status: r.tila,
+    timestamp: new Date(r.luotu_at).getTime(),
+  };
+}
+
 const server = http.createServer(async (req, res) => {
   const url = req.url || "/";
+
+  // ── API: fake-insta (paikallinen, muistipohjainen) ───────────────────────
+  if (url.startsWith("/api/fake-insta")) {
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+      return res.end();
+    }
+
+    // GET – hae hyväksytyt profiilit galleriaan
+    if (req.method === "GET") {
+      const approved = fakeInstaDB.filter(p => p.tila === "hyvaksytty");
+      return lahetaJSON(res, 200, { ok: true, profiilit: approved.map(fipMuoto) });
+    }
+
+    // POST – eri toiminnot
+    const raw = await lueRunko(req);
+    let body = {};
+    try { body = JSON.parse(raw); } catch { return lahetaJSON(res, 400, { ok: false, virhe: "virheellinen_pyynto" }); }
+    const toiminto = body.toiminto || "";
+
+    if (toiminto === "tarkista_opettaja") {
+      return lahetaJSON(res, 200, { ok: true, koulu: "Paikallinen esikatselu" });
+    }
+    if (toiminto === "laheta") {
+      const p = body.profiili || {};
+      const uusi = {
+        id: Math.random().toString(36).slice(2),
+        koulu: body.koulu || "Paikallinen esikatselu",
+        kayttajanimi: (p.username || "").slice(0, 60),
+        nimi: (p.name || "").slice(0, 60),
+        avatar: p.avatar || "🙂",
+        bio1: p.bio1 || "", bio2: p.bio2 || "", bio3: p.bio3 || "",
+        hashtags: p.hashtags || "",
+        post1: p.post1||"", post2: p.post2||"", post3: p.post3||"",
+        post4: p.post4||"", post5: p.post5||"", post6: p.post6||"",
+        tila: "odottaa",
+        tykkayksiat: 0, tahdet_bio1: 0, tahdet_bio2: 0, tahdet_bio3: 0,
+        luotu_at: new Date().toISOString(),
+      };
+      fakeInstaDB.push(uusi);
+      return lahetaJSON(res, 200, { ok: true, id: uusi.id });
+    }
+    if (toiminto === "hae_kaikki") {
+      return lahetaJSON(res, 200, { ok: true, koulu: "Paikallinen esikatselu", profiilit: fakeInstaDB.map(fipMuoto) });
+    }
+    if (toiminto === "hyvaksy") {
+      const p = fakeInstaDB.find(r => r.id === body.id);
+      if (p) p.tila = "hyvaksytty";
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "poista") {
+      const idx = fakeInstaDB.findIndex(r => r.id === body.id);
+      if (idx !== -1) fakeInstaDB.splice(idx, 1);
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "tykkaa") {
+      const p = fakeInstaDB.find(r => r.id === body.id);
+      if (p) p.tykkayksiat++;
+      return lahetaJSON(res, 200, { ok: true, tykkayksiat: p ? p.tykkayksiat : 0 });
+    }
+    if (toiminto === "tahti") {
+      const p = fakeInstaDB.find(r => r.id === body.id);
+      const k = body.kentta;
+      if (p && ["bio1","bio2","bio3"].includes(k)) p[`tahdet_${k}`]++;
+      return lahetaJSON(res, 200, { ok: true, maara: p ? p[`tahdet_${k}`] : 0 });
+    }
+    if (toiminto === "tyhjenna") {
+      fakeInstaDB.length = 0;
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+  }
 
   // ── API: lisenssi (paikallinen, hyväksyy kaiken) ──────────────────────────
   if (url === "/api/lisenssi") {
