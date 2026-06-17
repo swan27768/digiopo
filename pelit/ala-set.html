@@ -5,60 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AmmattiSet</title>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- Supabase API -->
+<script>
+async function _apiGet(toiminto) {
+  const r = await fetch(`/api/ammattiset?toiminto=${toiminto}`);
+  return r.json();
+}
+async function _apiPost(body) {
+  const r = await fetch("/api/ammattiset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAbraPn4LQVLP_wKh31FTn46y9nlYWKHX0",
-  authDomain: "ammatti-peli.firebaseapp.com",
-  projectId: "ammatti-peli",
-  storageBucket: "ammatti-peli.firebasestorage.app",
-  messagingSenderId: "988252896453",
-  appId: "1:988252896453:web:081567a5e07df9c55304ac",
-  measurementId: "G-M2YMQ6H3LM"
+window._fbLbGet = async () => {
+  try {
+    const d = await _apiGet("tulostaulu");
+    return d.ok ? d.tulokset : [];
+  } catch { return []; }
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-/* ── TULOSTAULU API ── */
-async function lbGet() {
+window._fbLbSave = async (playerId, name, koulu, luokka, score) => {
   try {
-    const q = query(collection(db, "tulostaulu"), orderBy("score", "desc"), limit(10));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) { console.error(e); return []; }
-}
+    const d = await _apiPost({ toiminto: "tallenna", id: playerId, nimi: name, koulu, luokka, pisteet: score });
+    if (!d.ok) return { saved: false, reason: "Verkkovirhe" };
+    return { saved: d.saved, reason: d.reason || "" };
+  } catch { return { saved: false, reason: "Verkkovirhe" }; }
+};
 
-async function lbSave(playerId, name, koulu, luokka, score) {
+window._fbWordsGet = async () => {
   try {
-    const ref = doc(db, "tulostaulu", playerId);
-    const existing = await getDoc(ref);
-    if (existing.exists() && existing.data().score >= score) return { saved: false, reason: "Aiempi tulos on parempi" };
-    await setDoc(ref, {
-      name, koulu, luokka: luokka || "",
-      score,
-      date: new Date().toLocaleDateString("fi-FI"),
-      updated: Date.now()
-    });
-    return { saved: true };
-  } catch(e) { console.error(e); return { saved: false, reason: "Verkkovirhe" }; }
-}
+    const d = await _apiGet("sanaryhmat");
+    return d.ok ? d.ryhmat : [];
+  } catch { return []; }
+};
 
-/* ── OPETTAJAN SANARYHMÄT ── */
-async function wordsGet() {
-  try {
-    const snap = await getDoc(doc(db, "asetukset", "sanaryhmät"));
-    return snap.exists() ? snap.data().ryhmät || [] : [];
-  } catch(e) { console.error(e); return []; }
-}
-
-/* ── KIINNITÄ GLOBAALEIHIN ── */
-window._fbLbGet = lbGet;
-window._fbLbSave = lbSave;
-window._fbWordsGet = wordsGet;
 window._fbReady = true;
 window.dispatchEvent(new Event("fbready"));
 </script>

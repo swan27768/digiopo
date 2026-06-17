@@ -5,50 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tiedon Temppelin Salaisuudet</title>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocs, orderBy, query, limit }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- Supabase API -->
+<script>
+async function _apiGet(toiminto) {
+  const r = await fetch(`/api/tiedontemppeli?toiminto=${toiminto}`);
+  return r.json();
+}
+async function _apiPost(body) {
+  const r = await fetch("/api/tiedontemppeli", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAqtIi_SdGLrq_EzHpzDLhiBP0Lg_UsuWQ",
-  authDomain: "tiedon-temppeli.firebaseapp.com",
-  projectId: "tiedon-temppeli",
-  storageBucket: "tiedon-temppeli.firebasestorage.app",
-  messagingSenderId: "496664294577",
-  appId: "1:496664294577:web:37807df869eeb56096de90"
+window._fbLbGet = async () => {
+  try {
+    const d = await _apiGet("tulostaulu");
+    return d.ok ? d.tulokset : [];
+  } catch { return []; }
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-async function lbGet() {
+window._fbLbSave = async (playerId, name, koulu, luokka, score) => {
   try {
-    const q = query(collection(db, "tulostaulu_k1"), orderBy("score", "desc"), limit(5));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) { console.error(e); return []; }
-}
+    const d = await _apiPost({ toiminto: "tallenna", id: playerId, nimi: name, koulu, luokka, pisteet: score });
+    if (!d.ok) return { saved: false, reason: "Verkkovirhe" };
+    return { saved: d.saved, reason: d.reason || "" };
+  } catch { return { saved: false, reason: "Verkkovirhe" }; }
+};
 
-async function lbSave(playerId, name, koulu, luokka, score) {
-  try {
-    const ref = doc(db, "tulostaulu_k1", playerId);
-    const existing = await getDoc(ref);
-    if (existing.exists() && existing.data().score >= score)
-      return { saved: false, reason: "Aiempi tulos on parempi" };
-    await setDoc(ref, {
-      name, koulu, luokka: luokka || "",
-      score,
-      date: new Date().toLocaleDateString("fi-FI"),
-      updated: Date.now()
-    });
-    return { saved: true };
-  } catch(e) { console.error(e); return { saved: false, reason: "Verkkovirhe" }; }
-}
-
-window._fbLbGet = lbGet;
-window._fbLbSave = lbSave;
 window._fbReady = true;
 window.dispatchEvent(new Event("fbready"));
 </script>

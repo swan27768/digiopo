@@ -73,6 +73,14 @@ function turvallinenPolku(urlPolku) {
 // ─── Fake Insta -muistikanta (nollautuu kun palvelin käynnistetään uudelleen) ─
 const fakeInstaDB = [];
 
+// ─── Tiedon Temppeli -muistikanta ────────────────────────────────────────────
+const tiedonTemppTulostaulu = [];   // { id, name, koulu, luokka, score, date, updated }
+
+// ─── AmmattiSet -muistikanta ──────────────────────────────────────────────────
+const ammattSetTulostaulu  = [];    // { id, name, koulu, luokka, score, date, updated }
+const ammattSetSanaryhmat  = { ryhmat: [] };
+const AMMATTISET_ADMIN_KEY = "AlaSet#2026!";
+
 function fipMuoto(r) {
   return {
     id: r.id, username: r.kayttajanimi, name: r.nimi, avatar: r.avatar,
@@ -154,6 +162,111 @@ const server = http.createServer(async (req, res) => {
     }
     if (toiminto === "tyhjenna") {
       fakeInstaDB.length = 0;
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+  }
+
+  // ── API: tiedontemppeli (paikallinen, muistipohjainen) ───────────────────
+  if (url.startsWith("/api/tiedontemppeli")) {
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+      return res.end();
+    }
+
+    if (req.method === "GET") {
+      const top5 = [...tiedonTemppTulostaulu]
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+      return lahetaJSON(res, 200, { ok: true, tulokset: top5 });
+    }
+
+    const raw = await lueRunko(req);
+    let body = {};
+    try { body = JSON.parse(raw); } catch { return lahetaJSON(res, 400, { ok: false, virhe: "virheellinen_pyynto" }); }
+
+    if (body.toiminto === "tallenna") {
+      const { id, nimi, koulu, luokka, pisteet } = body;
+      const existing = tiedonTemppTulostaulu.find(r => r.id === id);
+      if (existing && existing.score >= pisteet) {
+        return lahetaJSON(res, 200, { ok: true, saved: false, reason: "Aiempi tulos on parempi" });
+      }
+      const pvm = new Date().toLocaleDateString("fi-FI");
+      if (existing) {
+        existing.name = nimi; existing.koulu = koulu; existing.luokka = luokka || "";
+        existing.score = pisteet; existing.date = pvm; existing.updated = Date.now();
+      } else {
+        tiedonTemppTulostaulu.push({ id, name: nimi, koulu, luokka: luokka || "", score: pisteet, date: pvm, updated: Date.now() });
+      }
+      return lahetaJSON(res, 200, { ok: true, saved: true });
+    }
+    return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+  }
+
+  // ── API: ammattiset (paikallinen, muistipohjainen) ────────────────────────
+  if (url.startsWith("/api/ammattiset")) {
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+      return res.end();
+    }
+
+    // GET
+    if (req.method === "GET") {
+      const params = new URL(url, "http://localhost").searchParams;
+      const toiminto = params.get("toiminto") || "";
+
+      if (toiminto === "tulostaulu") {
+        const top10 = [...ammattSetTulostaulu]
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+        return lahetaJSON(res, 200, { ok: true, tulokset: top10 });
+      }
+      if (toiminto === "sanaryhmat") {
+        return lahetaJSON(res, 200, { ok: true, ryhmat: ammattSetSanaryhmat.ryhmat });
+      }
+      return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+    }
+
+    // POST
+    const raw = await lueRunko(req);
+    let body = {};
+    try { body = JSON.parse(raw); } catch { return lahetaJSON(res, 400, { ok: false, virhe: "virheellinen_pyynto" }); }
+    const toiminto = body.toiminto || "";
+
+    if (toiminto === "tallenna") {
+      const { id, nimi, koulu, luokka, pisteet } = body;
+      const existing = ammattSetTulostaulu.find(r => r.id === id);
+      if (existing && existing.score >= pisteet) {
+        return lahetaJSON(res, 200, { ok: true, saved: false, reason: "Aiempi tulos on parempi" });
+      }
+      const pvm = new Date().toLocaleDateString("fi-FI");
+      if (existing) {
+        existing.name = nimi; existing.koulu = koulu; existing.luokka = luokka || "";
+        existing.score = pisteet; existing.date = pvm; existing.updated = Date.now();
+      } else {
+        ammattSetTulostaulu.push({ id, name: nimi, koulu, luokka: luokka || "", score: pisteet, date: pvm, updated: Date.now() });
+      }
+      return lahetaJSON(res, 200, { ok: true, saved: true });
+    }
+    if (toiminto === "hae_kaikki_tulokset") {
+      if (body.admin_key !== AMMATTISET_ADMIN_KEY) return lahetaJSON(res, 200, { ok: false, virhe: "virheellinen_avain" });
+      const top50 = [...ammattSetTulostaulu].sort((a, b) => b.score - a.score).slice(0, 50);
+      return lahetaJSON(res, 200, { ok: true, tulokset: top50 });
+    }
+    if (toiminto === "poista_tulos") {
+      if (body.admin_key !== AMMATTISET_ADMIN_KEY) return lahetaJSON(res, 200, { ok: false, virhe: "virheellinen_avain" });
+      const idx = ammattSetTulostaulu.findIndex(r => r.id === body.id);
+      if (idx !== -1) ammattSetTulostaulu.splice(idx, 1);
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "tyhjenna_tulostaulu") {
+      if (body.admin_key !== AMMATTISET_ADMIN_KEY) return lahetaJSON(res, 200, { ok: false, virhe: "virheellinen_avain" });
+      ammattSetTulostaulu.length = 0;
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "tallenna_sanaryhmat") {
+      if (body.admin_key !== AMMATTISET_ADMIN_KEY) return lahetaJSON(res, 200, { ok: false, virhe: "virheellinen_avain" });
+      ammattSetSanaryhmat.ryhmat = Array.isArray(body.ryhmat) ? body.ryhmat : [];
       return lahetaJSON(res, 200, { ok: true });
     }
     return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
