@@ -9,9 +9,13 @@
   // Lisätään @media print -sääntö dynaamisesti, jotta se kattaa myös sivut
   // joilla ei ole base.css:ää (tehtavat/, pelit/ jne.)
   (function lisaaTulostussuoja() {
-    // Opettajan ohjeet saa tulostaa vapaasti
+    // Opettajan ohjeet ja tulostettavat tehtäväkortit saa tulostaa vapaasti
     const polku = window.location.pathname;
-    if (polku.includes("_ope") || polku.includes("_opettaja")) return;
+    if (
+      polku.includes("_ope") ||
+      polku.includes("_opettaja") ||
+      polku.includes("/tehtavat/")
+    ) return;
 
     const style = document.createElement("style");
     style.textContent = [
