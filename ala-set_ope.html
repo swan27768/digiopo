@@ -5,53 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AmmattiSet – Opettajan paneeli</title>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocs, deleteDoc, orderBy, query, limit, setDoc as fsSetDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- Supabase API -->
+<script>
+const _ADMIN_KEY = "AlaSet#2026!";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAbraPn4LQVLP_wKh31FTn46y9nlYWKHX0",
-  authDomain: "ammatti-peli.firebaseapp.com",
-  projectId: "ammatti-peli",
-  storageBucket: "ammatti-peli.firebasestorage.app",
-  messagingSenderId: "988252896453",
-  appId: "1:988252896453:web:081567a5e07df9c55304ac"
+async function _apiGet(toiminto) {
+  const r = await fetch(`/api/ammattiset?toiminto=${toiminto}`);
+  return r.json();
+}
+async function _apiPost(body) {
+  const r = await fetch("/api/ammattiset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+window._lbGet = async () => {
+  const d = await _apiPost({ toiminto: "hae_kaikki_tulokset", admin_key: _ADMIN_KEY });
+  if (!d.ok) throw new Error(d.virhe || "Virhe");
+  return d.tulokset;
+};
+window._lbDelete = async (id) => {
+  const d = await _apiPost({ toiminto: "poista_tulos", admin_key: _ADMIN_KEY, id });
+  if (!d.ok) throw new Error(d.virhe || "Virhe");
+};
+window._lbClear = async () => {
+  const d = await _apiPost({ toiminto: "tyhjenna_tulostaulu", admin_key: _ADMIN_KEY });
+  if (!d.ok) throw new Error(d.virhe || "Virhe");
+};
+window._wordsGet = async () => {
+  const d = await _apiGet("sanaryhmat");
+  if (!d.ok) throw new Error(d.virhe || "Virhe");
+  return d.ryhmat;
+};
+window._wordsSave = async (ryhmat) => {
+  const d = await _apiPost({ toiminto: "tallenna_sanaryhmat", admin_key: _ADMIN_KEY, ryhmat });
+  if (!d.ok) throw new Error(d.virhe || "Virhe");
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-
-/* ── TULOSTAULU ── */
-async function lbGet() {
-  const q = query(collection(db,"tulostaulu"), orderBy("score","desc"), limit(50));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-}
-async function lbDelete(id) { await deleteDoc(doc(db,"tulostaulu",id)); }
-async function lbClear() {
-  const snap = await getDocs(collection(db,"tulostaulu"));
-  await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
-}
-
-/* ── SANARYHMÄT ── */
-async function wordsGet() {
-  const ref = doc(db,"asetukset","sanaryhmät");
-  const snap = await getDoc(ref);
-  return snap.exists() ? snap.data().ryhmät || [] : [];
-}
-async function wordsSave(ryhmät, adminKey) {
-  await setDoc(doc(db,"asetukset","sanaryhmät"), {
-    ryhmät, paivitetty: new Date().toISOString(), adminKey
-  });
-}
-
-/* ── GLOBAALIT ── */
-window._db = db;
-window._lbGet    = lbGet;
-window._lbDelete = lbDelete;
-window._lbClear  = lbClear;
-window._wordsGet  = wordsGet;
-window._wordsSave = wordsSave;
 window.dispatchEvent(new Event("fbready"));
 </script>
 
@@ -267,7 +260,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn" onclick="parsePreview()">👁 Esikatsele</button>
-        <button class="btn btn-grn" id="btn-save-words" onclick="saveWords()" disabled>💾 Tallenna Firebase-tietokantaan</button>
+        <button class="btn btn-grn" id="btn-save-words" onclick="saveWords()" disabled>💾 Tallenna tietokantaan</button>
         <button class="btn" onclick="document.getElementById('csv-input').value='';hideParsePreview()">✕ Tyhjennä</button>
       </div>
       <div id="save-words-msg" class="msg" style="margin-top:8px"></div>
@@ -287,7 +280,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <script>
 /* ══ SALASANA ══ */
 const PASSWORD = "opo123"; // ← Vaihda tämä ennen käyttöönottoa!
-const ADMIN_KEY = "AlaSet#2026!"; // ← Sama kuin Firebase Rules -salasana!
+const ADMIN_KEY = "AlaSet#2026!"; // ← Admin-avain (tarkistetaan palvelimella)
 let loggedIn = false;
 let pendingWords = [];
 
@@ -565,7 +558,7 @@ async function saveWords() {
     msg.textContent = "Virhe: " + e.message;
     msg.className = "msg err";
   } finally {
-    btn.textContent = "💾 Tallenna Firebase-tietokantaan";
+    btn.textContent = "💾 Tallenna tietokantaan";
     btn.disabled = false;
   }
 }
