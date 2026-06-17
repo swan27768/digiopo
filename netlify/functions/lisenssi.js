@@ -28,6 +28,25 @@ function tarkistaRateLimit(ip) {
   return true;
 }
 
+async function kirjaaKirjautuminen(koodi, koulu, ip, userAgent) {
+  try {
+    const baseUrl = SUPABASE_URL.replace(/\/$/, '');
+    await fetch(`${baseUrl}/rest/v1/lisenssi_kirjaukset`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ koodi, koulu, ip, user_agent: userAgent }),
+    });
+  } catch (err) {
+    // Kirjausvirhe ei saa kaataa koko kirjautumista
+    console.error("Kirjausvirhe:", err);
+  }
+}
+
 async function haeSupabasesta(koodi) {
   const baseUrl = SUPABASE_URL.replace(/\/$/, ''); // poista mahdollinen loppukauttaviiva
   const url = `${baseUrl}/rest/v1/lisenssit?koodi=eq.${encodeURIComponent(koodi.toUpperCase())}&select=koodi,koulu,tyyppi,voimassa_asti,aktiivinen`;
@@ -63,6 +82,7 @@ export const handler = async (event) => {
     event.headers["x-forwarded-for"]?.split(",")[0].trim() ||
     event.headers["client-ip"] ||
     "tuntematon";
+  const userAgent = event.headers["user-agent"] || "";
 
   if (!tarkistaRateLimit(ip)) {
     return {
@@ -99,7 +119,9 @@ export const handler = async (event) => {
       return { statusCode: 200, body: JSON.stringify({ ok: false, virhe: "vanhentunut" }) };
     }
 
-    // Kaikki ok
+    // Kaikki ok – kirjataan kirjautuminen taustalla
+    kirjaaKirjautuminen(lisenssi.koodi, lisenssi.koulu, ip, userAgent);
+
     return {
       statusCode: 200,
       body: JSON.stringify({
