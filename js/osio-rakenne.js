@@ -15,6 +15,14 @@
     rakennaTeoriaModal();
   });
 
+  // Rebuild objective/summary panels when language changes
+  document.addEventListener("digiopo:langchange", function () {
+    document.querySelectorAll(".osio-tavoitteet, .osio-yhteenveto").forEach(function (panel) {
+      panel.parentNode.removeChild(panel);
+    });
+    rakennaOsioPaneelit();
+  });
+
   /* ---- Työtavat ja tehtävätyypit --------------------------- */
   var TAVAT = {
     yksin: { ikoni: "fa-solid fa-user", nimi: "Yksin" },
@@ -49,6 +57,26 @@
   // Lisää teoria-napin sekä tavoite-/yhteenvetopaneelit yhteen osioon.
   // ala=true → ala-osio (otsikko h3, ope-/yhteenvetohaku rajataan tähän lohkoon).
   function kasitteleOsio(osio, d, ala) {
+    // i18n: hae käännökset jos saatavilla
+    var t = window.DIGIOPO_T || {};
+    var tl = t.lesson || {};
+    var sId = osio.id || osio.getAttribute("data-osio");
+    var ts = (t.sections && t.sections[sId]) || {};
+
+    var lblObjTitle  = tl.objectives_title   || "Tunnin tavoitteet";
+    var lblObjSub    = tl.objectives_subtitle || "Avaa ja katso, mitä tällä tunnilla tehdään";
+    var lblStructH   = tl.structure_heading  || "Tunnin rakenne";
+    var lblGoalsH    = tl.goals_heading      || "Tavoitteet";
+    var lblWhyH      = tl.why_heading        || "Miksi tämä kannattaa?";
+    var lblSumTitle  = tl.summary_title      || "Yhteenveto — mitä opit tällä oppitunnilla";
+    var lblSumSub    = tl.summary_subtitle   || "Avaa, kun olet tehnyt oppitunnin tehtävät";
+    var lblAfterH    = tl.after_heading      || "Tämän oppitunnin jälkeen";
+
+    var rakenne     = (ts.structure  && ts.structure.length)  ? ts.structure  : d.rakenne;
+    var tavoitteet  = (ts.objectives && ts.objectives.length) ? ts.objectives : d.tavoitteet;
+    var yhteenveto  = (ts.summary    && ts.summary.length)    ? ts.summary    : d.yhteenveto;
+    var miksi       = ts.why || d.miksi;
+
     if (d.teoria && DATA.teoriat && DATA.teoriat[d.teoria]) {
       var h = osio.querySelector(ala ? "h3, h2" : ".aihe-otsikko h2, h2");
       if (h && !h.querySelector(".teoria-nappi")) {
@@ -56,28 +84,26 @@
       }
     }
 
-    if (d.tavoitteet && d.tavoitteet.length) {
+    if (tavoitteet && tavoitteet.length) {
       var alku = el("details", "osio-info osio-tavoitteet");
       alku.innerHTML =
-        summaryHTML("fa-solid fa-bullseye", "Tunnin tavoitteet",
-          "Avaa ja katso, mitä tällä tunnilla tehdään") +
+        summaryHTML("fa-solid fa-bullseye", lblObjTitle, lblObjSub) +
         '<div class="osio-info-sisalto">' +
-        (d.rakenne ? "<h4>Tunnin rakenne</h4><ul>" + lista(d.rakenne) + "</ul>" : "") +
-        "<h4>Tavoitteet</h4><ul>" + lista(d.tavoitteet) + "</ul>" +
-        (d.miksi ? '<div class="osio-miksi"><strong>Miksi tämä kannattaa?</strong><br>' + d.miksi + "</div>" : "") +
+        (rakenne && rakenne.length ? "<h4>" + esc(lblStructH) + "</h4><ul>" + lista(rakenne) + "</ul>" : "") +
+        "<h4>" + esc(lblGoalsH) + "</h4><ul>" + lista(tavoitteet) + "</ul>" +
+        (miksi ? '<div class="osio-miksi"><strong>' + esc(lblWhyH) + '</strong><br>' + miksi + "</div>" : "") +
         "</div>";
       var otsikko = osio.querySelector(".aihe-otsikko") || osio.querySelector("h2, h3");
       if (otsikko) otsikko.insertAdjacentElement("afterend", alku);
       else osio.insertAdjacentElement("afterbegin", alku);
     }
 
-    if (d.yhteenveto && d.yhteenveto.length) {
+    if (yhteenveto && yhteenveto.length) {
       var loppu = el("details", "osio-info osio-yhteenveto");
       loppu.innerHTML =
-        summaryHTML("fa-solid fa-clipboard-check", "Yhteenveto — mitä opit tällä oppitunnilla",
-          "Avaa, kun olet tehnyt oppitunnin tehtävät") +
-        '<div class="osio-info-sisalto"><h4>Tämän oppitunnin jälkeen</h4><ul>' +
-        lista(d.yhteenveto) + "</ul></div>";
+        summaryHTML("fa-solid fa-clipboard-check", lblSumTitle, lblSumSub) +
+        '<div class="osio-info-sisalto"><h4>' + esc(lblAfterH) + '</h4><ul>' +
+        lista(yhteenveto) + "</ul></div>";
       // Rajaa ope-osioiden haku: pääosio ei nappaa ala-osion lohkoja eikä toisinpäin.
       var opeOsiot = Array.prototype.filter.call(
         osio.querySelectorAll(":scope .opettaja-osio, :scope .ope-osio"),
@@ -241,5 +267,8 @@
   }
   function lista(arr) {
     return arr.map(function (x) { return "<li>" + x + "</li>"; }).join("");
+  }
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 })();
