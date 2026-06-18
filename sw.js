@@ -1,0 +1,109 @@
+// DigiOpo – Service Worker
+// Strategia:
+//   - Staattiset resurssit (CSS, JS, kuvat): cache-first
+//   - HTML-sivut: network-first (sisältö pysyy tuoreena)
+//   - API-kutsut (/api/*): ei välimuistitusta
+
+const CACHE_VERSION = "digiopo-v1";
+const STATIC_CACHE = `${CACHE_VERSION}-static`;
+const HTML_CACHE = `${CACHE_VERSION}-html`;
+
+// Esiladataan tärkeimmät staattiset tiedostot heti asennuksessa
+const PRECACHE_ASSETS = [
+  "/css/base.css",
+  "/css/navbar.css",
+  "/css/layout.css",
+  "/css/components.css",
+  "/css/lisenssiportti.css",
+  "/js/lisenssiportti.js",
+  "/js/seuranta.js",
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+];
+
+// ── Asennus: esiladataan kriittiset resurssit ────────────────────────────────
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE_ASSETS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+// ── Aktivointi: poistetaan vanhat välimuistit ────────────────────────────────
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((k) => k.startsWith("digiopo-") && k !== STATIC_CACHE && k !== HTML_CACHE)
+            .map((k) => caches.delete(k))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
+});
+
+// ── Pyyntöjen käsittely ──────────────────────────────────────────────────────
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Ohita: API-kutsut, muut originit, POST-pyynnöt
+  if (
+    url.pathname.startsWith("/api/") ||
+    url.origin !== self.location.origin ||
+    request.method !== "GET"
+  ) {
+    return;
+  }
+
+  // HTML-sivut: network-first (koululainen saa tuoreimman sisällön)
+  // Jos verkko ei vastaa, tarjoillaan välimuistista
+  if (request.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(networkFirst(request, HTML_CACHE));
+    return;
+  }
+
+  // Staattiset resurssit: cache-first (nopea, välimuisti päivittyy taustalla)
+  event.respondWith(cacheFirst(request, STATIC_CACHE));
+});
+
+// ── Apufunktiot ──────────────────────────────────────────────────────────────
+
+async function networkFirst(request, cacheName) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    return cached || new Response("Ei verkkoyhteyttä eikä välimuistia.", {
+      status: 503,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+}
+
+async function cacheFirst(request, cacheName) {
+  const cached = await caches.match(request);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    return new Response("Resurssi ei saatavilla.", { status: 503 });
+  }
+}

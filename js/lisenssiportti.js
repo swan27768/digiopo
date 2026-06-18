@@ -286,4 +286,11 @@
   } else {
     tarkistaLisenssi();
   }
+
+  // ─── Service Worker ──────────────────────────────────────────────────────
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Rekisteröinti epäonnistui – ei kriittinen, sivusto toimii normaalisti
+    });
+  }
 })();
