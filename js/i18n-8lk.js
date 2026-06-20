@@ -6,18 +6,6 @@
 (function () {
   'use strict';
 
-  /* ── Maskotti: tallenna suomenkieliset oletustekstit ennen käännöstä ── */
-  var MASKOTTI_FI_DEFAULT = window.maskottiPuhetekstit
-    ? {
-        johdanto:    window.maskottiPuhetekstit.johdanto,
-        koulutus:    window.maskottiPuhetekstit.koulutus,
-        vahvuudet:   window.maskottiPuhetekstit.vahvuudet,
-        tet:         window.maskottiPuhetekstit.tet,
-        klinikka:    window.maskottiPuhetekstit.klinikka,
-        tulevaisuus: window.maskottiPuhetekstit.tulevaisuus
-      }
-    : {};
-
   /* ── Apufunktiot ── */
   function setTxt(sel, val) {
     if (!val) return;
@@ -545,22 +533,6 @@
       if (tulHaastetog && tul.haaste_toggle) tulHaastetog.textContent = tul.haaste_toggle;
     }
 
-    /* ── Maskotti-tekstit ── */
-    var mask = g8.maskotti;
-    if (mask) {
-      var kupla = document.querySelector('.puhekupla');
-      if (kupla) kupla.textContent = (mask.greeting || 'Moi! ') + (mask.initial || '');
-      if (window.maskottiPuhetekstit) {
-        window.maskottiPuhetekstit = {
-          johdanto:    mask.johdanto    || MASKOTTI_FI_DEFAULT.johdanto,
-          koulutus:    mask.koulutus    || MASKOTTI_FI_DEFAULT.koulutus,
-          vahvuudet:   mask.vahvuudet   || MASKOTTI_FI_DEFAULT.vahvuudet,
-          tet:         mask.tet         || MASKOTTI_FI_DEFAULT.tet,
-          klinikka:    mask.klinikka    || MASKOTTI_FI_DEFAULT.klinikka,
-          tulevaisuus: mask.tulevaisuus || MASKOTTI_FI_DEFAULT.tulevaisuus
-        };
-      }
-    }
   }
 
   /* ── Vain-suomeksi-varoitukset interaktiivisille tehtäville ── */
@@ -656,6 +628,9 @@
   }
 
   // MutationObserver: päivitä kortit heti kun luokka.js lisää ne DOM:iin
+  // Reagoidaan VAIN elementtilisäyksiin (nodeType 1), ei tekstimuutoksiin (nodeType 3).
+  // Näin vältetään ääretön silmukka, joka syntyisi kun textContent-muutokset
+  // laukaisivat observerin uudelleen.
   var _taskObserver = null;
   var _lastT = null;
 
@@ -665,8 +640,14 @@
     containers.forEach(function (cid) {
       var el = document.getElementById(cid);
       if (!el) return;
-      var obs = new MutationObserver(function () {
-        if (_lastT) kaannaKeskusteluKortit(_lastT);
+      var obs = new MutationObserver(function (mutations) {
+        if (!_lastT) return;
+        var hasNewElement = mutations.some(function (m) {
+          return Array.prototype.some.call(m.addedNodes, function (n) {
+            return n.nodeType === 1; // vain elementit, ei tekstisolmuja
+          });
+        });
+        if (hasNewElement) kaannaKeskusteluKortit(_lastT);
       });
       obs.observe(el, { childList: true, subtree: true });
     });
