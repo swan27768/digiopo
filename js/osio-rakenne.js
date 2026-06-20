@@ -61,7 +61,11 @@
     var t = window.DIGIOPO_T || {};
     var tl = t.lesson || {};
     var sId = osio.id || osio.getAttribute("data-osio");
-    var ts = (t.sections && t.sections[sId]) || {};
+    var luokka = DATA ? DATA.luokka : "";
+    var ts = (t.sections && (
+      (luokka && t.sections[luokka + "_" + sId]) ||
+      t.sections[sId]
+    )) || {};
 
     var lblObjTitle  = tl.objectives_title   || "Tunnin tavoitteet";
     var lblObjSub    = tl.objectives_subtitle || "Avaa ja katso, mitä tällä tunnilla tehdään";
