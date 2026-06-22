@@ -227,8 +227,6 @@
       }
     })();
 
-  }
-
     /* ── Ajattelu ── */
     (function () {
       var aj = g(g9, 'ajattelu');
@@ -877,6 +875,8 @@
         }
       })();
     })();
+
+  } /* /applyG9 */
 
   /* ── Tapahtumakuuntelijat ── */
   document.addEventListener('digiopo:langchange', function (e) {
