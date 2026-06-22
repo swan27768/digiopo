@@ -554,6 +554,330 @@
       })();
     })();
 
+    /* ── Päätöksenteko ── */
+    (function () {
+      var pa = g(g9, 'paatoksenteko');
+      if (!pa) return;
+
+      /* h2 sisältää napin — päivitetään vain tekstisolmu */
+      (function () {
+        var h2 = document.querySelector('#paatoksenteko h2#otsikko-paatoksenteko');
+        if (h2 && pa.h2) {
+          var nodes = h2.childNodes;
+          for (var n = 0; n < nodes.length; n++) {
+            if (nodes[n].nodeType === 3 && nodes[n].textContent.trim()) {
+              nodes[n].textContent = '\n              ' + pa.h2 + '\n              ';
+              break;
+            }
+          }
+        }
+      })();
+
+      setTxt('#paatoksenteko .aihe-otsikko p', pa.subtitle);
+
+      /* Tietopaketti */
+      (function () {
+        var infoDiv = document.querySelector('#paatoksenteko > div[style*="eff6ff"]');
+        if (!infoDiv) return;
+        var h3 = infoDiv.querySelector('h3');
+        if (h3) h3.textContent = pa.theory_h3;
+        var ps = infoDiv.querySelectorAll('p');
+        if (ps[0] && pa.theory_p1) ps[0].textContent = pa.theory_p1;
+        if (ps[1] && pa.theory_p2) ps[1].textContent = pa.theory_p2;
+      })();
+
+      /* Neuvonantaja-tehtävä */
+      if (pa.neuvonantaja) {
+        var na = pa.neuvonantaja;
+        var naDiv = document.querySelector('#paatoksenteko button[onclick*="_toggleNeuvonantaja2"]');
+        if (naDiv) {
+          var wrapper = naDiv.closest('div[style*="linear-gradient"]');
+          if (wrapper) {
+            /* badge div */
+            var badgeDiv = wrapper.querySelector('div[style*="0.7rem"]');
+            if (badgeDiv) badgeDiv.textContent = na.badge;
+            /* h3 */
+            var h3 = wrapper.querySelector('h3');
+            if (h3) h3.textContent = na.h3;
+            /* intro p */
+            var introP = wrapper.querySelector('p');
+            if (introP) introP.textContent = na.p;
+            /* open button span */
+            var btnSpan = naDiv.querySelector('span:first-child');
+            if (btnSpan && na.btn_open) {
+              var icon = btnSpan.querySelector('i');
+              btnSpan.textContent = na.btn_open;
+              if (icon) btnSpan.insertBefore(icon, btnSpan.firstChild);
+            }
+          }
+          /* Phase 1 */
+          var sisalto = document.getElementById('neuvonantajaSisalto2');
+          if (sisalto) {
+            var phase1 = sisalto.querySelector('div:first-child');
+            if (phase1) {
+              var p1badge = phase1.querySelector('p[style*="0.78rem"]');
+              if (p1badge) p1badge.textContent = na.phase1_badge;
+              var p1h4 = phase1.querySelector('h4');
+              if (p1h4) p1h4.textContent = na.phase1_h4;
+              var p1p = phase1.querySelector('p:not([style*="0.78rem"])');
+              if (p1p) p1p.textContent = na.phase1_p;
+              /* Decision tool cards */
+              if (na.tool) {
+                var toolCards = phase1.querySelectorAll('div[style*="eff6ff"][style*="border-radius:10px"]');
+                for (var i = 0; i < toolCards.length && i < na.tool.length; i++) {
+                  var strong = toolCards[i].querySelector('strong');
+                  var desc = toolCards[i].querySelector('p');
+                  if (strong) strong.textContent = na.tool[i].title;
+                  if (desc) desc.textContent = na.tool[i].desc;
+                }
+              }
+            }
+            /* Phase 2 */
+            var phase2 = sisalto.querySelectorAll('div[style*="border:1.5px"]')[1];
+            if (phase2) {
+              var p2badge = phase2.querySelector('p[style*="0.78rem"]');
+              if (p2badge) p2badge.textContent = na.phase2_badge;
+              var p2h4 = phase2.querySelector('h4');
+              if (p2h4) p2h4.textContent = na.phase2_h4;
+            }
+            /* Phase 3 */
+            var phase3 = sisalto.querySelectorAll('div[style*="border:1.5px"]')[2];
+            if (phase3) {
+              var p3badge = phase3.querySelector('p[style*="0.78rem"]');
+              if (p3badge) p3badge.textContent = na.phase3_badge;
+              var p3h4 = phase3.querySelector('h4');
+              if (p3h4) p3h4.textContent = na.phase3_h4;
+            }
+          }
+        }
+      }
+
+      /* Skenaariotehtävä */
+      if (pa.skenaario) {
+        var sk = pa.skenaario;
+        var skBtn = document.querySelector('#paatoksenteko button[onclick*="_toggleSkenaario"]');
+        if (skBtn) {
+          var skWrapper = skBtn.closest('div[style*="linear-gradient"]');
+          if (skWrapper) {
+            var skBadge = skWrapper.querySelector('div[style*="0.7rem"]');
+            if (skBadge) skBadge.textContent = sk.badge;
+            var skH3 = skWrapper.querySelector('h3');
+            if (skH3) skH3.textContent = sk.h3;
+            var skP = skWrapper.querySelector('p');
+            if (skP) skP.textContent = sk.p;
+            var skSpan = skBtn.querySelector('span:first-child');
+            if (skSpan && sk.btn_open) {
+              var skIcon = skSpan.querySelector('span[aria-hidden]');
+              skSpan.textContent = sk.btn_open;
+              if (skIcon) skSpan.insertBefore(skIcon, skSpan.firstChild);
+            }
+          }
+        }
+      }
+
+      /* Opettajan materiaali */
+      (function () {
+        var el = document.querySelector('#paatoksenteko .opettaja-toggle .opettaja-toggle-left span:last-child');
+        if (el && pa.opettaja_btn) el.textContent = pa.opettaja_btn;
+      })();
+    })();
+
+    /* ── Epävarmuus ── */
+    (function () {
+      var ev = g(g9, 'epavarmuus');
+      if (!ev) return;
+
+      setTxt('#epavarmuus h2#otsikko-epavarmuus', ev.h2);
+      setTxt('#epavarmuus .aihe-otsikko p', ev.subtitle);
+
+      /* Theory card */
+      (function () {
+        var tc = document.querySelector('#epavarmuus .theory-card .theory-text');
+        if (!tc) return;
+        var ps = tc.querySelectorAll('p');
+        if (ps[0] && ev.theory_p1) ps[0].textContent = ev.theory_p1;
+        if (ps[1] && ev.theory_p2) ps[1].textContent = ev.theory_p2;
+      })();
+
+      /* Vaihe 1 */
+      if (ev.v1) {
+        var v1 = ev.v1;
+        var v1div = document.getElementById('epavarmuus-v1');
+        if (v1div) {
+          var v1badge = v1div.querySelector('div[style*="0.7rem"]');
+          if (v1badge) v1badge.textContent = v1.badge;
+          var v1h3 = v1div.querySelector('h3');
+          if (v1h3) v1h3.textContent = v1.h3;
+          var v1p = v1div.querySelector('p');
+          if (v1p) v1p.textContent = v1.p;
+          var v1btn = v1div.querySelector('button[onclick*="toggleEpavarmuusV1"]');
+          if (v1btn && v1.btn_open) {
+            var v1span = v1btn.querySelector('span:first-child');
+            if (v1span) {
+              var v1icon = v1span.querySelector('i');
+              v1span.textContent = v1.btn_open;
+              if (v1icon) v1span.insertBefore(v1icon, v1span.firstChild);
+            }
+          }
+          /* Labels A–D */
+          var lA = v1div.querySelector('label[for="ev1a"]');
+          if (lA && v1.a_label) lA.textContent = v1.a_label;
+          var hA = v1div.querySelector('label[for="ev1a"] + p');
+          if (hA && v1.a_hint) {
+            var emA = hA.querySelector('em');
+            hA.textContent = v1.a_hint;
+          }
+          var lB = v1div.querySelector('label[for="ev1b"]');
+          if (lB && v1.b_label) lB.textContent = v1.b_label;
+          var hB = v1div.querySelector('label[for="ev1b"] + p');
+          if (hB && v1.b_hint) hB.textContent = v1.b_hint;
+          var lC = v1div.querySelector('label[for="ev1c"]');
+          if (lC && v1.c_label) lC.textContent = v1.c_label;
+          var hC = v1div.querySelector('label[for="ev1c"] + p');
+          if (hC && v1.c_hint) hC.textContent = v1.c_hint;
+          var lD = v1div.querySelector('label[for="ev1d"]');
+          if (lD && v1.d_label) lD.textContent = v1.d_label;
+          var hD = v1div.querySelector('label[for="ev1d"] + p');
+          if (hD && v1.d_hint) hD.textContent = v1.d_hint;
+        }
+      }
+
+      /* Vaihe 2 */
+      if (ev.v2) {
+        var v2 = ev.v2;
+        var v2div = document.getElementById('epavarmuus-v2');
+        if (v2div) {
+          var v2badge = v2div.querySelector('div[style*="0.7rem"]');
+          if (v2badge) v2badge.textContent = v2.badge;
+          var v2h3 = v2div.querySelector('h3');
+          if (v2h3) v2h3.textContent = v2.h3;
+          var v2ps = v2div.querySelectorAll('p');
+          if (v2ps[0] && v2.p) v2ps[0].textContent = v2.p;
+          var v2btn = v2div.querySelector('button[onclick*="toggleEpavarmuusV2"]');
+          if (v2btn && v2.btn_open) {
+            var v2span = v2btn.querySelector('span:first-child');
+            if (v2span) {
+              var v2icon = v2span.querySelector('i');
+              v2span.textContent = v2.btn_open;
+              if (v2icon) v2span.insertBefore(v2icon, v2span.firstChild);
+            }
+          }
+        }
+      }
+
+      /* Vaihe 3 */
+      if (ev.v3) {
+        var v3 = ev.v3;
+        var v3div = document.getElementById('epavarmuus-v3');
+        if (v3div) {
+          var v3badge = v3div.querySelector('div[style*="0.7rem"]');
+          if (v3badge) v3badge.textContent = v3.badge;
+          var v3h3 = v3div.querySelector('h3');
+          if (v3h3) v3h3.textContent = v3.h3;
+          var v3p = v3div.querySelector('p');
+          if (v3p && v3.p) v3p.textContent = v3.p;
+          var v3btn = v3div.querySelector('button[onclick*="toggleEpavarmuusV3"]');
+          if (v3btn && v3.btn_open) {
+            var v3span = v3btn.querySelector('span:first-child');
+            if (v3span) {
+              var v3icon = v3span.querySelector('i');
+              v3span.textContent = v3.btn_open;
+              if (v3icon) v3span.insertBefore(v3icon, v3span.firstChild);
+            }
+          }
+          /* Resilienssipakki-labelit */
+          var res1 = v3div.querySelector('label[for="res1"]');
+          if (res1 && v3.res1_label) res1.textContent = v3.res1_label;
+          var res2 = v3div.querySelector('label[for="res2"]');
+          if (res2 && v3.res2_label) res2.textContent = v3.res2_label;
+          var res3 = v3div.querySelector('label[for="res3"]');
+          if (res3 && v3.res3_label) res3.textContent = v3.res3_label;
+          var res4 = v3div.querySelector('label[for="res4"]');
+          if (res4 && v3.res4_label) res4.textContent = v3.res4_label;
+          var res5 = v3div.querySelector('label[for="res5"]');
+          if (res5 && v3.res5_label) res5.textContent = v3.res5_label;
+          /* Luokkaosuus heading */
+          if (v3.class_heading) {
+            var classPs = v3div.querySelectorAll('p[style*="0.8rem"]');
+            for (var i = 0; i < classPs.length; i++) {
+              if (classPs[i].textContent.indexOf('Luokkaosuus') !== -1) {
+                classPs[i].textContent = v3.class_heading;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      /* Vaihe 4 */
+      if (ev.v4) {
+        var v4 = ev.v4;
+        var v4div = document.getElementById('epavarmuus-v4');
+        if (v4div) {
+          var v4badge = v4div.querySelector('div[style*="0.7rem"]');
+          if (v4badge) v4badge.textContent = v4.badge;
+          var v4h3 = v4div.querySelector('h3');
+          if (v4h3) v4h3.textContent = v4.h3;
+          var v4p = v4div.querySelector('p');
+          if (v4p && v4.p) v4p.textContent = v4.p;
+          var v4btn = v4div.querySelector('button[onclick*="_toggleEpavarmuus"]');
+          if (v4btn && v4.btn_open) {
+            var v4span = v4btn.querySelector('span:first-child');
+            if (v4span) {
+              var v4icon = v4span.querySelector('i');
+              v4span.textContent = v4.btn_open;
+              if (v4icon) v4span.insertBefore(v4icon, v4span.firstChild);
+            }
+          }
+          /* Fieldset legend */
+          var legend = v4div.querySelector('legend');
+          if (legend && v4.legend) legend.textContent = v4.legend;
+          /* Instruction */
+          if (v4.instruction) {
+            var instrP = v4div.querySelector('p[style*="font-weight:600"]');
+            if (instrP) instrP.textContent = v4.instruction;
+          }
+          /* Checkbox items */
+          if (v4.items) {
+            var chkLabels = v4div.querySelectorAll('label[style*="display:flex"]');
+            for (var i = 0; i < chkLabels.length && i < v4.items.length; i++) {
+              var spanEl = chkLabels[i].querySelector('span:not([style])');
+              if (spanEl) spanEl.textContent = v4.items[i];
+            }
+          }
+          /* Reflektio intro */
+          if (v4.reflektio_intro) {
+            var reflIntroP = v4div.querySelector('p[style*="font-weight:600"]:last-of-type');
+            /* find the "Mieti hetki:" paragraph */
+            var allBoldPs = v4div.querySelectorAll('p');
+            for (var i = 0; i < allBoldPs.length; i++) {
+              if (allBoldPs[i].textContent.trim() === 'Mieti hetki:') {
+                allBoldPs[i].textContent = v4.reflektio_intro;
+                break;
+              }
+            }
+          }
+          /* Reflektio labels */
+          var rl1 = v4div.querySelector('label[for="askelmaReflektio1"]');
+          if (rl1 && v4.reflektio1_label) rl1.textContent = v4.reflektio1_label;
+          var rl2 = v4div.querySelector('label[for="askelmaReflektio2"]');
+          if (rl2 && v4.reflektio2_label) rl2.textContent = v4.reflektio2_label;
+        }
+      }
+
+      /* Opettajan materiaali */
+      (function () {
+        var el = document.querySelector('#epavarmuus .opettaja-toggle .opettaja-toggle-left span:last-child');
+        if (el && ev.opettaja_btn) el.textContent = ev.opettaja_btn;
+        var link = document.querySelector('#opettaja-sisalto-epavarmuus .opettaja-lataus');
+        if (link && ev.opettaja_link) {
+          var linkSpan = link.querySelector('span');
+          link.textContent = ev.opettaja_link;
+          if (linkSpan) link.insertBefore(linkSpan, link.firstChild);
+        }
+      })();
+    })();
+
   /* ── Tapahtumakuuntelijat ── */
   document.addEventListener('digiopo:langchange', function (e) {
     applyG9(e.detail.t);
