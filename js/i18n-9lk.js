@@ -878,14 +878,164 @@
 
   } /* /applyG9 */
 
+  /* ── Vain-suomeksi-varoitukset ── */
+  var FI_ONLY_CLASS = 'fi-only-varoitus';
+
+  var FI_ONLY_SELECTORS = [
+    'button[onclick*="avaaLaskuri"]',
+    'button[onclick*="avaaAjattelupeli"]',
+    'button[onclick*="avaaDuuniinTet"]',
+    'button[onclick*="avaaTetJakso"]',
+    'button.btn-duunimina',
+    'button[onclick*="avaaReppu"]',
+    'button[onclick*="avaaHakustrategia"]',
+    'button[onclick*="avaaElamapeli"]',
+    'button[onclick*="avaaAiLaboratorio"]',
+    'a.next-step-btn[href*="lukiosanasto"]',
+    'a.next-step-btn[href*="amissanasto"]',
+    'a.next-step-btn[href*="lukioristikko"]',
+    'a.next-step-btn[href*="amisristikko"]',
+    'a[href*="lukio_vs_amis.html"]'
+  ];
+
+  function poistaVaroitukset() {
+    document.querySelectorAll('.' + FI_ONLY_CLASS).forEach(function (el) {
+      el.parentNode.removeChild(el);
+    });
+  }
+
+  function lisaaVaroitukset(teksti) {
+    poistaVaroitukset();
+    if (!teksti) return; // suomi — ei varoitusta
+    FI_ONLY_SELECTORS.forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (!el) return;
+      var varoitus = document.createElement('p');
+      varoitus.className = FI_ONLY_CLASS;
+      varoitus.setAttribute('role', 'note');
+      varoitus.textContent = teksti;
+      varoitus.style.cssText = [
+        'display:inline-flex',
+        'align-items:center',
+        'gap:6px',
+        'margin:8px 0 0',
+        'padding:6px 12px',
+        'background:rgba(255,200,0,0.18)',
+        'border:1px solid rgba(180,130,0,0.4)',
+        'border-radius:8px',
+        'font-size:13px',
+        'line-height:1.4',
+        'color:inherit',
+        'opacity:0.9'
+      ].join(';');
+      el.insertAdjacentElement('afterend', varoitus);
+    });
+  }
+
+  function paivitaVaroitukset(t) {
+    var teksti = t && t.g9 && t.g9.fi_only_warning ? t.g9.fi_only_warning : null;
+    lisaaVaroitukset(teksti);
+  }
+
+  /* ── Keskustelutehtäväkorttien käännökset ── */
+  // Kartta: href-tunniste → g9.tasks-avain
+  var TASK_MAP = {
+    'keskustelu-tet9':              'tet9',
+    'keskustelu-harrastus-ammatti': 'harrastus_ammatti',
+    'reflektio-valinnat9':          'valinnat9'
+  };
+
+  function kaannaTehtavaKortit(t) {
+    var tasks = t && t.g9 && t.g9.tasks;
+    if (!tasks) return;
+
+    // Ryhmäkeskustelu-kortit
+    document.querySelectorAll('a.keskustelu-kortti').forEach(function (kortti) {
+      var href = kortti.getAttribute('href') || '';
+      var taskKey = null;
+      for (var id in TASK_MAP) {
+        if (href.indexOf(id) !== -1) { taskKey = TASK_MAP[id]; break; }
+      }
+      if (!taskKey || !tasks[taskKey]) return;
+      var td = tasks[taskKey];
+      var h3 = kortti.querySelector('h3');
+      if (h3 && td.title) h3.textContent = td.title;
+      var p = kortti.querySelector('p');
+      if (p && td.description) p.textContent = td.description;
+      // Badge "Ryhmäkeskustelu"
+      var badge = kortti.querySelector('[style*="border-radius:999px"]');
+      if (badge && tasks.discussion_label) badge.textContent = tasks.discussion_label;
+      // Hint "👥 Keskustele..."
+      var hint = kortti.querySelector('[style*="border-left"]');
+      if (hint && tasks.discussion_hint) hint.textContent = tasks.discussion_hint;
+    });
+
+    // Vihko-kortit (yksilötehtävät)
+    document.querySelectorAll('a.vihko-kortti').forEach(function (kortti) {
+      var href = kortti.getAttribute('href') || '';
+      var taskKey = null;
+      for (var id in TASK_MAP) {
+        if (href.indexOf(id) !== -1) { taskKey = TASK_MAP[id]; break; }
+      }
+      if (!taskKey || !tasks[taskKey]) return;
+      var td = tasks[taskKey];
+      var h3 = kortti.querySelector('h3');
+      if (h3 && td.title) {
+        // Säilytä ikoni-elementti h3:n sisällä
+        var ikoni = h3.querySelector('i');
+        h3.textContent = td.title;
+        if (ikoni) h3.appendChild(ikoni);
+      }
+      var p = kortti.querySelector('p');
+      if (p && td.description) p.textContent = td.description;
+      // Badge "✏️ Yksilötehtävä"
+      var badge = kortti.querySelector('span[style*="fef08a"]');
+      if (badge && tasks.individual_label) badge.textContent = tasks.individual_label;
+    });
+  }
+
+  // MutationObserver: päivitä kortit heti kun luokka.js lisää ne DOM:iin
+  var _taskObserver = null;
+  var _lastT = null;
+
+  function kaynnistaMutationObserver() {
+    if (_taskObserver) return;
+    var containers = ['tasks-tet-tyokaveri', 'tasks-tet', 'tasks-valinnat'];
+    containers.forEach(function (cid) {
+      var el = document.getElementById(cid);
+      if (!el) return;
+      var obs = new MutationObserver(function (mutations) {
+        if (!_lastT) return;
+        var hasNewElement = mutations.some(function (m) {
+          return Array.prototype.some.call(m.addedNodes, function (n) {
+            return n.nodeType === 1;
+          });
+        });
+        if (hasNewElement) kaannaTehtavaKortit(_lastT);
+      });
+      obs.observe(el, { childList: true, subtree: true });
+    });
+    _taskObserver = true;
+  }
+
+  function paivitaKortit(t) {
+    _lastT = t;
+    kaannaTehtavaKortit(t);
+    kaynnistaMutationObserver();
+  }
+
   /* ── Tapahtumakuuntelijat ── */
   document.addEventListener('digiopo:langchange', function (e) {
     applyG9(e.detail.t);
+    paivitaVaroitukset(e.detail.t);
+    paivitaKortit(e.detail.t);
   });
 
   /* Jos käännökset on jo ladattu ennen tätä skriptiä */
   if (window.DIGIOPO_T) {
     applyG9(window.DIGIOPO_T);
+    paivitaVaroitukset(window.DIGIOPO_T);
+    paivitaKortit(window.DIGIOPO_T);
   }
 
 })();
