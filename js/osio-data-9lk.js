@@ -4,6 +4,25 @@ window.OSIO_DATA = {
   luokka: "9",
 
   osiot: {
+    "johdanto": {
+      rakenne: [
+        "Aloitus: mitä 9. luokan opinto-ohjauksessa tehdään? (5 min)",
+        "Tutustuminen: kuka olen oppijana juuri nyt? (10 min)",
+        "Maskottitehtävä: mitä ajattelen peruskoulun jälkeen? (15 min)"
+      ],
+      tavoitteet: [
+        "Tiedät, mitä tämän vuoden opinto-ohjaus sisältää",
+        "Pohdit, missä olet juuri nyt — kiinnostukset, vahvuudet, epävarmuudet",
+        "Hahmotat, mitä asioita pitää päättää tämän lukuvuoden aikana"
+      ],
+      miksi: "Tutkimusten mukaan oppilaat, jotka tietävät mitä odottaa, kokevat prosessin hallittavampana. Johdantotunti ei anna valmiita vastauksia — se antaa kartan. Kun tiedät, mihin päätöstä tarvitaan ja milloin, se tuntuu paljon vähemmän ylivoimaiselta.",
+      yhteenveto: [
+        "Tiedät, mitä tämän vuoden opo-tunnit sisältävät",
+        "Olet pysähtynyt miettimään, missä itse olet juuri nyt",
+        "Sinulla on ensimmäinen ajatusten kartta tulevaisuudensuunnitelmistasi"
+      ]
+    },
+
     "jatko": {
       rakenne: [
         "Aloitus: mitä 9. luokan vuoteen kuuluu? (5 min)",
@@ -90,22 +109,45 @@ window.OSIO_DATA = {
       ]
     },
 
+    "paatoksenteko": {
+      rakenne: [
+        "Johdanto: mitä päätöksenteko tarkoittaa? (5 min)",
+        "Neuvonantaja-ryhmätehtävä: auta fiktiivistä henkilöä (20–25 min)",
+        "Skenaariotehtävä yksilötehtävänä (10–15 min)",
+        "Purku: mitä hyvä päätös vaatii? (5 min)"
+      ],
+      tavoitteet: [
+        "Opit neljän kohdan päätösmallin: puolesta · vastaan · en tiedä · miltä tuntuu",
+        "Harjoittelet päätöksentekoa neuvomalla toista — se auttaa myös omissa valinnoissasi",
+        "Huomaat, että hyvä päätös ei vaadi varmuutta — se vaatii harkintaa"
+      ],
+      miksi: "Päätöksentekoa on tutkittu laajasti kognitiivisessa psykologiassa. Ihmisillä on kaksi ajattelujärjestelmää: nopea (tunne, vaisto) ja hidas (analyysi, järki). Hyvä päätöksenteko vaatii molempia. Nuorten päätöksentekoon vaikuttaa erityisesti sosiaalinen paine — tämä harjoitus auttaa tunnistamaan, mikä on oikeasti oma tahto.",
+      yhteenveto: [
+        "Osaat käyttää päätösmallia: puolesta, vastaan, en tiedä, miltä tuntuu",
+        "Tiedät, miten sosiaalinen paine vaikuttaa päätöksentekoon",
+        "Olet harjoitellut neuvomista — taito, joka auttaa myös omissa isoissa valinnoissa"
+      ]
+    },
+
     "epavarmuus": {
       teoria: "epavarmuus",
       rakenne: [
         "Vaihe 1: Kartta epävarmuuteen — yksin (10–12 min)",
-        "Vaihe 2: harjoitukset (10–15 min)",
-        "Vaihe 3: oma varasuunnitelma (10 min)"
+        "Vaihe 2: Kaksi polkua — sama tavoite, parin kanssa (15–20 min)",
+        "Vaihe 3: Oma resilienssipakki — yksin, sitten luokka (10–15 min)",
+        "Vaihe 4: Näkymättömät askelmat — yksilö (10 min)"
       ],
       tavoitteet: [
         "Tunnistat, miltä epävarmuus tuntuu ja että se on normaalia",
         "Opit keinoja toimia, kun suunnitelma ei toteudu",
-        "Teet itsellesi varasuunnitelman yhteishakuun"
+        "Huomaat, että kaikki eivät aloita samalta viivalta — ja mitä se tarkoittaa",
+        "Kootaan sinulle oma resilienssipakki: keinot, joihin voit turvautua"
       ],
-      miksi: "Resilienssitutkimuksen mukaan vastoinkäymisistä selviäminen ei ole harvinainen supervoima vaan taito, jota voi harjoitella etukäteen. Yhteishaussa kaikki eivät pääse ykköstoiveeseensa — mutta ne, joilla on varasuunnitelma, kokevat tilanteen hallittavana eivätkä katastrofina. Sama taito kantaa läpi elämän.",
+      miksi: "Resilienssitutkimuksen mukaan vastoinkäymisistä selviäminen ei ole harvinainen supervoima vaan taito, jota voi harjoitella etukäteen. Yhteishaussa kaikki eivät pääse ykköstoiveeseensa — mutta ne, joilla on varasuunnitelma ja kyky jatkaa eteenpäin, kokevat tilanteen hallittavana eivätkä katastrofina. Sama taito kantaa läpi elämän.",
       yhteenveto: [
         "Osaat nimetä, miltä epävarmuus sinussa tuntuu ja mikä siihen auttaa",
-        "Sinulla on varasuunnitelma, jos ykköstoive ei toteudu",
+        "Sinulla on oma resilienssipakki — keinoja, joihin voit tukeutua",
+        "Tiedät, että lähtökohdat vaihtelevat — ja tiedät, mistä hakea apua",
         "Tiedät, että suunnitelman muuttuminen ei ole epäonnistuminen"
       ]
     },
