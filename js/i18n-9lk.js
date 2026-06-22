@@ -229,6 +229,331 @@
 
   }
 
+    /* ── Ajattelu ── */
+    (function () {
+      var aj = g(g9, 'ajattelu');
+      if (!aj) return;
+
+      setTxt('#ajattelu h2#otsikko-ajattelu', aj.h2);
+      setTxt('#ajattelu .aihe-otsikko p', aj.subtitle);
+
+      /* Tehtävä 1 badge (span ennen theory-card:ia) */
+      (function () {
+        var spans = document.querySelectorAll('#ajattelu > span');
+        if (spans.length && aj.badge1) spans[0].textContent = aj.badge1;
+        /* Myös harmaalla divissä oleva span */
+        var divSpans = document.querySelectorAll('#ajattelu > div > span');
+        for (var i = 0; i < divSpans.length; i++) {
+          if (divSpans[i].textContent.trim() === 'Tehtävä 1') {
+            divSpans[i].textContent = aj.badge1;
+            break;
+          }
+        }
+      })();
+
+      /* Theory card intro */
+      setTxt('#ajattelu .theory-card .theory-text > p', aj.theory_intro);
+
+      /* Ajattelutyypit – 5 korttia */
+      if (aj.thinking_types) {
+        var cards = document.querySelectorAll('#ajattelu .theory-card .theory-text > div > div');
+        for (var i = 0; i < cards.length && i < aj.thinking_types.length; i++) {
+          var ch = cards[i].children;
+          if (ch[1]) ch[1].textContent = aj.thinking_types[i].title;
+          if (ch[2]) ch[2].textContent = aj.thinking_types[i].desc;
+        }
+      }
+
+      /* Peli-napit */
+      (function () {
+        var openBtn = document.querySelector('#ajattelu button[onclick="avaaAjattelupeli()"]');
+        if (openBtn && aj.game_btn_open) openBtn.textContent = aj.game_btn_open;
+        var closeBtns = document.querySelectorAll('#ajatteluSuljeBtn, #ajattelupeliContainer button');
+        for (var i = 0; i < closeBtns.length; i++) {
+          if (aj.game_btn_close) closeBtns[i].textContent = aj.game_btn_close;
+        }
+      })();
+
+      /* Tehtävä 2 badge */
+      (function () {
+        var allSpans = document.querySelectorAll('#ajattelu > div > span');
+        for (var i = 0; i < allSpans.length; i++) {
+          if (allSpans[i].textContent.trim() === 'Tehtävä 2') {
+            allSpans[i].textContent = aj.badge2;
+            break;
+          }
+        }
+      })();
+
+      /* Salapoliisitehtävä (murha) */
+      if (aj.murha) {
+        var badge = document.querySelector('#ajattelu-mission .hero-badge');
+        if (badge) {
+          var icon = badge.querySelector('i');
+          badge.textContent = aj.murha.badge;
+          if (icon) badge.insertBefore(icon, badge.firstChild);
+        }
+        var mh3 = document.querySelector('#ajattelu-mission h3');
+        if (mh3) mh3.textContent = aj.murha.h3;
+        var mp = document.querySelector('#ajattelu-mission p');
+        if (mp) mp.textContent = aj.murha.p;
+        var infoSpan = document.querySelector('#ajattelu-mission .btn-hero + span');
+        if (infoSpan) infoSpan.textContent = aj.murha.info;
+        /* Open-painike ja toggleMurha-patch */
+        var openBtn = document.querySelector('#ajattelu-mission .btn-hero');
+        if (openBtn && aj.murha.btn_open) openBtn.textContent = aj.murha.btn_open;
+        /* Patch toggleMurha function */
+        window._murhaAuki = aj.murha.btn_open;
+        window._murhaSuljettu = aj.murha.btn_close;
+        window.toggleMurha = function (btn) {
+          var wrapper = document.getElementById('murha-wrapper');
+          var isOpen = wrapper.style.display === 'block';
+          wrapper.style.display = isOpen ? 'none' : 'block';
+          btn.textContent = isOpen ? (window._murhaAuki || 'Avaa tehtävä') : (window._murhaSuljettu || 'Sulje tehtävä');
+          btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+          if (!isOpen) wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        /* Close-painike murha-wrapperissa */
+        var closeBtn = document.querySelector('#murha-wrapper > div > button');
+        if (closeBtn) {
+          var closeIcon = closeBtn.querySelector('i');
+          closeBtn.textContent = aj.murha.btn_close;
+          if (closeIcon) closeBtn.insertBefore(closeIcon, closeBtn.firstChild);
+        }
+      }
+
+      /* Opettajan materiaali */
+      (function () {
+        var el = document.querySelector('#ajattelu .opettaja-toggle .opettaja-toggle-left span:last-child');
+        if (el && aj.opettaja_btn) el.textContent = aj.opettaja_btn;
+        var link = document.querySelector('#opettaja-sisalto-ajattelu .opettaja-lataus');
+        if (link && aj.opettaja_link) {
+          var linkSpan = link.querySelector('span');
+          link.textContent = aj.opettaja_link;
+          if (linkSpan) link.insertBefore(linkSpan, link.firstChild);
+        }
+      })();
+    })();
+
+    /* ── TET ── */
+    (function () {
+      var tet = g(g9, 'tet');
+      if (!tet) return;
+
+      setTxt('#tet h2#otsikko-tet', tet.h2);
+      setTxt('#tet .aihe-otsikko p', tet.subtitle);
+      setTxt('#tet .theory-card .theory-text p:first-of-type', tet.theory_p);
+      setTxt('#tet .theory-card .theory-text strong', tet.theory_strong);
+
+      /* "Klikkaa suurentaaksesi" -teksti (2 kuvaa) */
+      if (tet.zoom_caption) {
+        var zoomIcons = document.querySelectorAll('#tet .fa-magnifying-glass-plus');
+        for (var i = 0; i < zoomIcons.length; i++) {
+          var parentDiv = zoomIcons[i].parentNode;
+          if (parentDiv) {
+            /* Korvaa tekstisolmu ikonin jälkeen */
+            var nodes = parentDiv.childNodes;
+            for (var n = 0; n < nodes.length; n++) {
+              if (nodes[n].nodeType === 3) {
+                nodes[n].textContent = ' ' + tet.zoom_caption;
+              }
+            }
+          }
+        }
+      }
+
+      /* Dialog sulje kuva */
+      var tetDlgClose = document.querySelector('#tetKuvaDialog .tet-dialog-sulje');
+      if (tetDlgClose && tet.dialog_close) {
+        tetDlgClose.setAttribute('aria-label', tet.dialog_close);
+        tetDlgClose.textContent = '✕';
+      }
+
+      /* Duuniin! TET-peli */
+      if (tet.duuniintet) {
+        var du = tet.duuniintet;
+        var hero = document.querySelector('#tet .duuniintet-hero');
+        if (hero) {
+          var badge = hero.querySelector('.duuniintet-badge');
+          if (badge) {
+            var icon = badge.querySelector('i');
+            badge.textContent = du.badge;
+            if (icon) badge.insertBefore(icon, badge.firstChild);
+          }
+          setTxt('#tet .duuniintet-hero h3', du.h3);
+          setTxt('#tet .duuniintet-hero p', du.p);
+          var openBtn = hero.querySelector('.btn-duuniintet');
+          if (openBtn) {
+            var icon2 = openBtn.querySelector('i');
+            openBtn.textContent = du.btn_open;
+            if (icon2) openBtn.insertBefore(icon2, openBtn.firstChild);
+          }
+        }
+        var closeBtn = document.querySelector('#duuniintetContainer .duuniintet-sulje-btn');
+        if (closeBtn) {
+          var icon3 = closeBtn.querySelector('i');
+          closeBtn.textContent = du.btn_close;
+          if (icon3) closeBtn.insertBefore(icon3, closeBtn.firstChild);
+        }
+      }
+
+      /* TET-jakson jälkeen */
+      if (tet.tetjakso) {
+        var tj = tet.tetjakso;
+        var tetHero = document.querySelector('#tet-harjoittelu-tehtava');
+        if (tetHero) {
+          var badge = tetHero.querySelector('.tetjakso-badge');
+          if (badge) {
+            var icon = badge.querySelector('i');
+            badge.textContent = tj.badge;
+            if (icon) badge.insertBefore(icon, badge.firstChild);
+          }
+          setTxt('#tet-harjoittelu-tehtava h3', tj.h3);
+          setTxt('#tet-harjoittelu-tehtava p', tj.p);
+          var openBtn = tetHero.querySelector('.btn-tetjakso');
+          if (openBtn) {
+            var icon2 = openBtn.querySelector('i');
+            openBtn.textContent = tj.btn_open;
+            if (icon2) openBtn.insertBefore(icon2, openBtn.firstChild);
+          }
+        }
+        var closeBtn = document.querySelector('#tetjaksoContainer .tetjakso-sulje-btn');
+        if (closeBtn) {
+          var icon3 = closeBtn.querySelector('i');
+          closeBtn.textContent = tj.btn_close;
+          if (icon3) closeBtn.insertBefore(icon3, closeBtn.firstChild);
+        }
+      }
+
+      /* Miten minä opin? */
+      if (tet.oppiminen) {
+        var op = tet.oppiminen;
+        /* Label (pieni yläotsikko) */
+        (function () {
+          var osio = document.getElementById('tetOppimisOsio');
+          if (!osio) return;
+          /* Yläotsikko-div: ensimmäinen lapsi-div:n sisällä oleva pieni teksti-div */
+          var labelDiv = osio.querySelector('div > div > div:first-child');
+          if (labelDiv && op.label) labelDiv.textContent = op.label;
+          setTxt('#tetOppimisOsio h3', op.h3);
+          setTxt('#tetOppimisOsio > p', op.p);
+          /* Avaa-painike */
+          var openBtn = osio.querySelector('button[onclick="toggleTetOppiminen(this)"]');
+          if (openBtn && op.btn_open) {
+            var span = openBtn.querySelector('span:first-child');
+            if (span) {
+              var icon = span.querySelector('i');
+              span.textContent = op.btn_open;
+              if (icon) span.insertBefore(icon, span.firstChild);
+            }
+          }
+          /* Kysymykset */
+          var q1 = osio.querySelector('label[for="tetOppiminen1"]');
+          if (q1) q1.textContent = op.q1_label;
+          var q1p = osio.querySelector('label[for="tetOppiminen1"] + p');
+          if (q1p) {
+            var q1strong = q1p.querySelectorAll('strong');
+            q1p.textContent = op.q1_hint;
+          }
+          var q2 = osio.querySelector('label[for="tetOppiminen2"]');
+          if (q2) q2.textContent = op.q2_label;
+          var q2p = osio.querySelector('label[for="tetOppiminen2"] + p');
+          if (q2p) q2p.textContent = op.q2_hint;
+          var q3 = osio.querySelector('label[for="tetOppiminen3"]');
+          if (q3) q3.textContent = op.q3_label;
+          var q3p = osio.querySelector('label[for="tetOppiminen3"] + p');
+          if (q3p) q3p.textContent = op.q3_hint;
+          /* Bonus (details/summary) */
+          var summary = osio.querySelector('details summary');
+          if (summary && op.bonus_summary) {
+            var starSpan = summary.querySelector('span:first-child');
+            summary.textContent = op.bonus_summary;
+            if (starSpan) summary.insertBefore(starSpan, summary.firstChild);
+          }
+          var bonusLabel = osio.querySelector('label[for="tetOppiminenBonus"]');
+          if (bonusLabel) bonusLabel.textContent = op.bonus_label;
+          var bonusP = osio.querySelector('label[for="tetOppiminenBonus"] + p');
+          if (bonusP) bonusP.textContent = op.bonus_hint;
+          /* Tip (loppuhuomio) */
+          var tip = osio.querySelector('div[style*="border-left"]');
+          if (tip && op.tip) {
+            var tipIcon = tip.querySelector('i');
+            var tipStrong = tip.querySelector('strong');
+            /* Säilytetään Miksi tärkeää -strong osittain */
+            tip.textContent = op.tip;
+          }
+        })();
+      }
+
+      /* DuuniMinä */
+      if (tet.duunimina) {
+        var dm = tet.duunimina;
+        var hero = document.querySelector('.duunimina-hero');
+        if (hero) {
+          var badge = hero.querySelector('.duunimina-badge');
+          if (badge) {
+            var icon = badge.querySelector('i');
+            badge.textContent = dm.badge;
+            if (icon) badge.insertBefore(icon, badge.firstChild);
+          }
+          setTxt('.duunimina-hero h3', dm.h3);
+          setTxt('.duunimina-hero p', dm.p);
+          var openBtn = hero.querySelector('.btn-duunimina');
+          if (openBtn) {
+            var icon2 = openBtn.querySelector('i');
+            openBtn.textContent = dm.btn_open;
+            if (icon2) openBtn.insertBefore(icon2, openBtn.firstChild);
+          }
+        }
+        var closeBtn = document.querySelector('.duunimina-sulje-btn');
+        if (closeBtn) {
+          var icon3 = closeBtn.querySelector('i');
+          closeBtn.textContent = dm.btn_close;
+          if (icon3) closeBtn.insertBefore(icon3, closeBtn.firstChild);
+        }
+      }
+
+      /* Reppu */
+      if (tet.reppu) {
+        var rp = tet.reppu;
+        var repHero = document.querySelector('#reppu-tehtava');
+        if (repHero) {
+          var badge = repHero.querySelector('.tetjakso-badge');
+          if (badge) {
+            var icon = badge.querySelector('i');
+            badge.textContent = rp.badge;
+            if (icon) badge.insertBefore(icon, badge.firstChild);
+          }
+          setTxt('#reppu-tehtava h3', rp.h3);
+          setTxt('#reppu-tehtava p', rp.p);
+          var openBtn = repHero.querySelector('.btn-tetjakso');
+          if (openBtn) {
+            var icon2 = openBtn.querySelector('i');
+            openBtn.textContent = rp.btn_open;
+            if (icon2) openBtn.insertBefore(icon2, openBtn.firstChild);
+          }
+        }
+        var closeBtn = document.querySelector('#reppuContainer .tetjakso-sulje-btn');
+        if (closeBtn) {
+          var icon3 = closeBtn.querySelector('i');
+          closeBtn.textContent = rp.btn_close;
+          if (icon3) closeBtn.insertBefore(icon3, closeBtn.firstChild);
+        }
+      }
+
+      /* Opettajan materiaali – TET */
+      (function () {
+        var el = document.querySelector('#tet .opettaja-toggle .opettaja-toggle-left span:last-child');
+        if (el && tet.opettaja_btn) el.textContent = tet.opettaja_btn;
+        var link = document.querySelector('#opettaja-sisalto-tet .opettaja-lataus');
+        if (link && tet.opettaja_link) {
+          var linkSpan = link.querySelector('span');
+          link.textContent = tet.opettaja_link;
+          if (linkSpan) link.insertBefore(linkSpan, link.firstChild);
+        }
+      })();
+    })();
+
   /* ── Tapahtumakuuntelijat ── */
   document.addEventListener('digiopo:langchange', function (e) {
     applyG9(e.detail.t);
