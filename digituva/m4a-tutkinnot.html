@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M4-A — Tutkintoihin tutustuminen · DigiTuva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+  /* ── Reset & tokens ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --amber:       #d97706;
+    --amber-hover: #b45309;
+    --amber-light: #fef3c7;
+    --amber-mid:   #fbbf24;
+    --amber-dark:  #92400e;
+    --purple:      #5b3fa6;
+    --purple-light:#ede9fa;
+    --green:       #16a34a;
+    --green-light: #dcfce7;
+    --blue:        #2563eb;
+    --blue-light:  #eff6ff;
+    --pink:        #db2777;
+    --text:        #1f2937;
+    --text-mid:    #4b5563;
+    --text-light:  #9ca3af;
+    --bg:          #fdfaf5;
+    --card:        #ffffff;
+    --border:      #e5e7eb;
+    --navbar-bg:   #2d1b5e;
+    --sidebar-w:   260px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); }
+  a { text-decoration: none; color: inherit; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ── Navbar ─────────────────────────────────────────────────────── */
+  .navbar {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 24px;
+    background: var(--navbar-bg);
+  }
+  .nav-back {
+    display: flex; align-items: center; gap: 6px;
+    color: #c4b5fd; font-size: 13px; font-weight: 600;
+    padding: 5px 10px; border-radius: 8px;
+    transition: background .15s;
+  }
+  .nav-back:hover { background: rgba(255,255,255,.1); color: #fff; }
+  .nav-sep  { color: #4b3a7a; font-size: 14px; }
+  .nav-brand { color: #9ca3af; font-size: 14px; }
+  .nav-badge {
+    margin-left: auto;
+    background: rgba(217,119,6,.25); color: #fbbf24;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 12px; border-radius: 20px;
+  }
+  .nav-kaari {
+    background: rgba(251,191,36,.15); color: #fcd34d;
+    font-size: 10px; font-weight: 600; letter-spacing: .06em;
+    padding: 2px 10px; border-radius: 20px;
+  }
+
+  /* ── Layout ─────────────────────────────────────────────────────── */
+  .sivu {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* Sidebar */
+  .sivupalkki {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    position: sticky;
+    top: 56px;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    padding: 28px 0 28px 4px;
+  }
+  .sivupalkki-otsikko {
+    font-size: 10px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--text-light);
+    margin-bottom: 12px; padding-left: 12px;
+  }
+  .sivupalkki-lista { list-style: none; }
+  .sivupalkki-lista li a {
+    display: block; font-size: 13px; color: var(--text-mid);
+    padding: 7px 12px; border-radius: 8px;
+    border-left: 2px solid transparent;
+    transition: background .14s, color .14s, border-color .14s;
+  }
+  .sivupalkki-lista li a:hover,
+  .sivupalkki-lista li a.aktiivinen {
+    background: var(--amber-light);
+    color: var(--amber-dark);
+    border-left-color: var(--amber);
+  }
+  .sivupalkki-lista .tehtava-linkki {
+    font-weight: 700; color: var(--amber-dark);
+  }
+
+  /* Main */
+  .paasisalto {
+    flex: 1;
+    min-width: 0;
+    padding: 32px 0 0 36px;
+  }
+
+  /* ── Osiot ──────────────────────────────────────────────────────── */
+  .osio {
+    margin-bottom: 56px;
+    scroll-margin-top: 72px;
+  }
+  .osio-otsikko {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .osio-ikoni {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+    background: var(--amber-light);
+  }
+  .osio-otsikko-teksti h2 {
+    font-family: 'Lora', serif;
+    font-size: 22px; font-weight: 700; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .osio-otsikko-teksti p {
+    font-size: 14px; color: var(--text-mid); line-height: 1.55;
+  }
+  .osio-sisalto { font-size: 15px; color: var(--text-mid); line-height: 1.7; }
+  .osio-sisalto p + p { margin-top: 12px; }
+  .osio-sisalto strong { color: var(--text); }
+
+  /* ── Johdanto-kortti ────────────────────────────────────────────── */
+  .johdanto-kortti {
+    background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%);
+    border: 1.5px solid rgba(217,119,6,.25);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+  .johdanto-kortti .kaari-palkki {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .kaari-merkki {
+    font-size: 10px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: 3px 12px;
+    border-radius: 20px; border: 1px solid var(--amber-mid);
+    background: var(--amber-light); color: var(--amber-dark);
+  }
+  .johdanto-kortti h1 {
+    font-family: 'Lora', serif; font-size: 28px; font-weight: 700;
+    color: var(--amber-dark); margin-bottom: 10px; line-height: 1.2;
+  }
+  .johdanto-kortti .kuvaus {
+    font-size: 15.5px; color: var(--text-mid); line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .johdanto-askeleet {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .askel {
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 14px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+  }
+  .askel-nro {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--amber); color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Maskotti sparraaja ─────────────────────────────────────────── */
+  .sparraaja {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--purple-light);
+    border-radius: 14px; padding: 18px 20px;
+    margin: 24px 0;
+  }
+  .sparraaja-hahmo {
+    font-size: 28px; flex-shrink: 0;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--purple); border-radius: 50%;
+  }
+  .sparraaja-teksti {
+    font-size: 14.5px; color: #3b2a7a; line-height: 1.65;
+    font-style: italic;
+  }
+  .sparraaja-teksti strong { font-style: normal; color: var(--purple); }
+
+  /* ── Tutkintotutkija ─────────────────────────────────────────────── */
+  .tutkintotutkija {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .tt-header {
+    background: var(--amber); color: white;
+    padding: 18px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .tt-header h3 { font-size: 17px; font-weight: 700; }
+  .tt-header p  { font-size: 13px; opacity: .88; }
+
+  .tt-filtterit {
+    padding: 20px 24px 0;
+  }
+  .tt-filtterit-otsikko {
+    font-size: 12px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-mid);
+    margin-bottom: 10px;
+  }
+  .tt-kiinnostukset {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 20px;
+  }
+  .kiinnostus-nappi {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 20px;
+    border: 2px solid var(--border);
+    background: white; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .15s; color: var(--text-mid);
+  }
+  .kiinnostus-nappi:hover { border-color: var(--amber); color: var(--amber-dark); }
+  .kiinnostus-nappi.valittu {
+    background: var(--amber); border-color: var(--amber);
+    color: white; box-shadow: 0 2px 8px rgba(217,119,6,.3);
+  }
+  .kiinnostus-nappi .ikoni { font-size: 16px; }
+
+  .tt-tulokset-otsikko {
+    padding: 0 24px 12px;
+    font-size: 12px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-light);
+  }
+  .tt-tutkinnot {
+    padding: 0 24px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .tutkinto-kortti {
+    border: 1.5px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: transform .15s, box-shadow .15s;
+    cursor: pointer;
+    background: white;
+  }
+  .tutkinto-kortti:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+  .tutkinto-kortti.piilotettu { display: none; }
+
+  .tutkinto-vari-palkki {
+    height: 4px;
+  }
+  .tutkinto-sisalto { padding: 14px 16px; }
+  .tutkinto-ala-tagi {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 20px;
+    display: inline-block; margin-bottom: 8px;
+  }
+  .tutkinto-nimi { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .tutkinto-lyhyt { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; margin-bottom: 10px; }
+
+  .tutkinto-lisatiedot { display: none; }
+  .tutkinto-kortti.auki .tutkinto-lisatiedot { display: block; }
+  .tutkinto-lisatiedot {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--text-mid); line-height: 1.55;
+  }
+  .tutkinto-lisatiedot .tietorivi { margin-bottom: 6px; }
+  .tutkinto-lisatiedot .tietorivi strong { color: var(--text); }
+
+  .tutkinto-avaa-nappi {
+    font-size: 12px; font-weight: 700; color: var(--amber);
+    background: none; border: none; cursor: pointer;
+    padding: 0; transition: color .14s;
+  }
+  .tutkinto-avaa-nappi:hover { color: var(--amber-hover); }
+
+  .tt-ei-tuloksia {
+    display: none;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+
+  /* ── Amis arjessa ────────────────────────────────────────────────── */
+  .arki-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .arki-kortti {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .arki-kortti .ikoni { font-size: 24px; }
+  .arki-kortti h4 { font-size: 14px; font-weight: 700; color: var(--text); }
+  .arki-kortti p  { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+
+  /* ── Päivä ammattilaisena ────────────────────────────────────────── */
+  .tarinat-valitsimet {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tarina-nappi {
+    padding: 8px 16px; border-radius: 20px;
+    border: 2px solid var(--border);
+    background: white; font-size: 13px; font-weight: 600;
+    cursor: pointer; color: var(--text-mid);
+    transition: all .15s;
+  }
+  .tarina-nappi:hover { border-color: var(--amber); color: var(--amber-dark); }
+  .tarina-nappi.aktiivinen {
+    background: var(--amber); border-color: var(--amber);
+    color: white;
+  }
+
+  .tarina-kortti {
+    display: none;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .tarina-kortti.aktiivinen { display: block; }
+  .tarina-header {
+    padding: 20px 24px 16px;
+    background: linear-gradient(135deg, #fffbeb, #fff7ed);
+    border-bottom: 1px solid var(--border);
+  }
+  .tarina-header .ammatti-tagi {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 2px 10px; border-radius: 20px;
+    background: var(--amber-light); color: var(--amber-dark);
+    display: inline-block; margin-bottom: 10px;
+  }
+  .tarina-header h3 {
+    font-family: 'Lora', serif; font-size: 20px;
+    font-weight: 700; color: var(--text); margin-bottom: 6px;
+  }
+  .tarina-header p { font-size: 14px; color: var(--text-mid); }
+  .tarina-aikajana { padding: 20px 24px; }
+  .aika-rivi {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .aika-rivi:last-child { margin-bottom: 0; }
+  .aika-merkki {
+    flex-shrink: 0;
+    width: 54px; text-align: right;
+    font-size: 12px; font-weight: 700; color: var(--amber);
+    padding-top: 2px;
+  }
+  .aika-viiva {
+    flex-shrink: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--amber-mid), var(--border));
+    border-radius: 2px; align-self: stretch;
+    min-height: 100%;
+  }
+  .aika-sisalto h5 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .aika-sisalto p  { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+
+  /* ── Tehtäväkortti ───────────────────────────────────────────────── */
+  .tehtava-kortti {
+    background: white;
+    border: 2px solid var(--amber);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 28px;
+  }
+  .tehtava-otsikko {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--amber); color: white;
+    padding: 14px 20px;
+  }
+  .tehtava-otsikko h3 { font-size: 15px; font-weight: 700; }
+  .tehtava-otsikko .tagi { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,.2); }
+  .tehtava-sisalto { padding: 20px; }
+  .tehtava-sisalto p { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 14px; }
+  .tehtava-kentta {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color .15s;
+  }
+  .tehtava-kentta:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,.1); }
+  .tehtava-nappi {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 12px; padding: 10px 22px;
+    background: var(--amber); color: white;
+    border: none; border-radius: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  .tehtava-nappi:hover { background: var(--amber-hover); transform: translateY(-1px); }
+  .tehtava-vastaus {
+    display: none;
+    margin-top: 14px;
+    background: var(--green-light);
+    border: 1px solid #86efac; border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px; color: #14532d; line-height: 1.6;
+  }
+  .tehtava-vastaus.nakyva { display: block; }
+
+  /* ── Seuraava askel ─────────────────────────────────────────────── */
+  .seuraava-osio {
+    background: linear-gradient(135deg, #fffbeb, #fff7ed);
+    border: 2px solid var(--amber-mid);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    margin-top: 48px;
+  }
+  .seuraava-osio h3 {
+    font-family: 'Lora', serif; font-size: 20px;
+    color: var(--amber-dark); margin-bottom: 8px;
+  }
+  .seuraava-osio p { font-size: 14px; color: var(--text-mid); margin-bottom: 20px; }
+  .seuraava-nappi {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--amber); color: white;
+    padding: 13px 28px; border-radius: 12px;
+    font-size: 15px; font-weight: 700;
+    transition: background .15s, transform .15s;
+  }
+  .seuraava-nappi:hover { background: var(--amber-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(217,119,6,.3); }
+
+  /* ── Opettajan materiaalit ──────────────────────────────────────── */
+  .ope-toggle {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: linear-gradient(135deg, #1e3a5f, #1e40af);
+    color: white; border: none; border-radius: 12px;
+    padding: 12px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; text-align: left; margin-top: 32px;
+    transition: opacity .15s;
+  }
+  .ope-toggle:hover { opacity: .9; }
+  .ope-sisalto {
+    display: none;
+    background: #f0f4ff; border: 1.5px solid #bfdbfe;
+    border-radius: 0 0 12px 12px; padding: 20px;
+    font-size: 14px; color: var(--text-mid); line-height: 1.7;
+  }
+  .ope-sisalto.nakyva { display: block; }
+  .ope-sisalto h4 { font-size: 15px; font-weight: 700; color: var(--blue); margin: 16px 0 8px; }
+  .ope-sisalto h4:first-child { margin-top: 0; }
+  .ope-sisalto ul { padding-left: 18px; }
+  .ope-sisalto li { margin-bottom: 6px; }
+
+  /* ── Mobiili ────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .sivupalkki { display: none; }
+    .paasisalto { padding: 20px 0 0; }
+    .sivu { padding: 0 14px 60px; }
+    .tt-tutkinnot { grid-template-columns: 1fr; }
+    .arki-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .arki-grid { grid-template-columns: 1fr; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ──────────────────────────────────────────────────────── -->
+<nav class="navbar" aria-label="Päänavigaatio">
+  <a href="index.html" class="nav-back" aria-label="Takaisin DigiTuva-etusivulle">
+    ← DigiTuva
+  </a>
+  <span class="nav-sep">·</span>
+  <span class="nav-brand">Amispolku</span>
+  <span class="nav-badge">M4-A</span>
+  <span class="nav-kaari">Lyhyt kaari</span>
+</nav>
+
+<!-- ── Sivu ────────────────────────────────────────────────────────── -->
+<div class="sivu">
+
+  <!-- Sidebar -->
+  <nav class="sivupalkki" aria-label="Moduulin osiot">
+    <p class="sivupalkki-otsikko">M4-A — Tutkinnot</p>
+    <ul class="sivupalkki-lista">
+      <li><a href="#johdanto">Mitä tässä moduulissa tehdään?</a></li>
+      <li><a href="#tutkintotutkija" class="tehtava-linkki">🔍 Tutkintotutkija</a></li>
+      <li><a href="#amis-arjessa">Miltä amis näyttää arjessa?</a></li>
+      <li><a href="#paiva-ammattilaisena" class="tehtava-linkki">📅 Päivä ammattilaisena</a></li>
+      <li><a href="#reflektio" class="tehtava-linkki">✍️ Mihin minulle sopii?</a></li>
+      <li><a href="#seuraava">→ Jatkuva haku</a></li>
+    </ul>
+  </nav>
+
+  <!-- Pääsisältö -->
+  <main class="paasisalto" id="main-content">
+
+    <!-- JOHDANTO-KORTTI -->
+    <div class="johdanto-kortti" id="johdanto">
+      <div class="kaari-palkki">
+        <span class="kaari-merkki">Lyhyt kaari · M4-A</span>
+      </div>
+      <h1>Tutkintoihin tutustuminen</h1>
+      <p class="kuvaus">
+        Tässä moduulissa tutustut ammatillisiin tutkintoihin. Et tarvitse vielä päätöstä —
+        tarvitset uteliaisuuden. Katsellaan yhdessä, mitä mahdollisuuksia on olemassa.
+      </p>
+      <div class="johdanto-askeleet" aria-label="Moduulin vaiheet">
+        <div class="askel"><span class="askel-nro">1</span> Tutkinnot tutuksi</div>
+        <div class="askel"><span class="askel-nro">2</span> Amis arjessa</div>
+        <div class="askel"><span class="askel-nro">3</span> Päivä ammattilaisena</div>
+        <div class="askel"><span class="askel-nro">4</span> Mihin minulle sopii?</div>
+      </div>
+    </div>
+
+    <!-- SPARRAAJA 1 -->
+    <div class="sparraaja" role="note" aria-label="Sparraajan kysymys">
+      <div class="sparraaja-hahmo" aria-hidden="true">🤖</div>
+      <p class="sparraaja-teksti">
+        <strong>Sparraajan kysymys:</strong> Mitä sinulle tulee mieleen sanasta "ammattikoulu"?
+        Ei ole väärää vastausta — kirjaa ajatus itsellesi ylös ennen kuin jatkat.
+      </p>
+    </div>
+
+    <!-- TUTKINTOTUTKIJA -->
+    <section class="osio" id="tutkintotutkija" aria-labelledby="tt-otsikko">
+      <div class="osio-otsikko">
+        <div class="osio-ikoni" aria-hidden="true">🔍</div>
+        <div class="osio-otsikko-teksti">
+          <h2 id="tt-otsikko">Tutkintotutkija</h2>
+          <p>Valitse sinua kiinnostavia alueita. Näet niitä vastaavat tutkinnot.</p>
+        </div>
+      </div>
+
+      <div class="tutkintotutkija" role="search" aria-label="Tutkintotutkija">
+        <div class="tt-header">
+          <div>
+            <h3>Löydä oma juttu</h3>
+            <p>Valitse yksi tai useampi kiinnostuksen kohde</p>
+          </div>
+          <button onclick="nollaaFilttterit()" style="background:rgba(255,255,255,.2);border:none;color:white;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
+            Nollaa ✕
+          </button>
+        </div>
+
+        <div class="tt-filtterit">
+          <p class="tt-filtterit-otsikko">Kiinnostaa minua</p>
+          <div class="tt-kiinnostukset" role="group" aria-label="Valitse kiinnostuksen kohteita">
+            <button class="kiinnostus-nappi" data-ala="ihmiset" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">🤝</span> Ihmiset ja auttaminen
+            </button>
+            <button class="kiinnostus-nappi" data-ala="tekniikka" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">⚙️</span> Tekniikka ja rakentaminen
+            </button>
+            <button class="kiinnostus-nappi" data-ala="luonto" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">🌿</span> Luonto ja eläimet
+            </button>
+            <button class="kiinnostus-nappi" data-ala="taide" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">🎨</span> Taide ja media
+            </button>
+            <button class="kiinnostus-nappi" data-ala="kauppa" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">🛍️</span> Kauppa ja palvelu
+            </button>
+            <button class="kiinnostus-nappi" data-ala="data" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">💻</span> Tietokone ja data
+            </button>
+            <button class="kiinnostus-nappi" data-ala="ruoka" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">🍳</span> Ruoka ja ravintola
+            </button>
+            <button class="kiinnostus-nappi" data-ala="liikunta" onclick="toggleKiinnostus(this)" aria-pressed="false">
+              <span class="ikoni" aria-hidden="true">⚽</span> Liikunta ja urheilu
+            </button>
+          </div>
+        </div>
+
+        <p class="tt-tulokset-otsikko" id="tt-tulos-otsikko" aria-live="polite">Kaikki tutkinnot</p>
+        <p class="tt-ei-tuloksia" id="tt-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
+
+        <div class="tt-tutkinnot" id="tt-tutkinnot" role="list">
+          <!-- Tutkinnot lisätään JS:llä -->
+        </div>
+      </div>
+    </section>
+
+    <!-- AMIS ARJESSA -->
+    <section class="osio" id="amis-arjessa" aria-labelledby="arki-otsikko">
+      <div class="osio-otsikko">
+        <div class="osio-ikoni" aria-hidden="true">🏫</div>
+        <div class="osio-otsikko-teksti">
+          <h2 id="arki-otsikko">Miltä amis näyttää arjessa?</h2>
+          <p>Ammatillinen koulutus eroaa peruskoulusta monella tavalla.</p>
+        </div>
+      </div>
+      <div class="osio-sisalto">
+        <p>
+          Ammattikoulussa ei opiskella kaikkia aineita kuten peruskoulussa.
+          Opiskelet enimmäkseen <strong>oman alasi</strong> asioita — teoriassa ja käytännössä.
+          Isoimmissa kouluissa on jopa kymmeniä eri aloja saman katon alla.
+        </p>
+      </div>
+
+      <div class="arki-grid" role="list">
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">📚</span>
+          <h4>Teoriatunnit</h4>
+          <p>Luokkahuoneessa tai verkossa. Opit alan tiedot ja käsitteet. Usein lyhyempiä jaksoja kuin peruskoulussa.</p>
+        </div>
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">🔧</span>
+          <h4>Käytännön harjoittelu</h4>
+          <p>Pajassa, klinikalla, keittiössä tai muussa oppimisympäristössä. Teet oikeita töitä ohjatusti.</p>
+        </div>
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">🏢</span>
+          <h4>Työssäoppiminen</h4>
+          <p>Olet oikealla työpaikalla viikkoja tai kuukausia. Saat kokemusta ja verkostoja — ja usein töitä sen jälkeen.</p>
+        </div>
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">📋</span>
+          <h4>Näytöt</h4>
+          <p>Ammattikoulussa ei kirjoiteta kokeita kuten ylioppilastutkinnossa. Osaaminen näytetään tekemällä oikeita töitä.</p>
+        </div>
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">🗓️</span>
+          <h4>Jaksot</h4>
+          <p>Opiskelu on usein jaksotettu. Kuukauden jakson ajan opiskelet tiiviisti yhtä tai kahta aihetta.</p>
+        </div>
+        <div class="arki-kortti" role="listitem">
+          <span class="ikoni" aria-hidden="true">🎓</span>
+          <h4>Tutkinnon kesto</h4>
+          <p>Useimmat ammatilliset perustutkinnot kestävät 3 vuotta. Sen jälkeen voit hakea töihin tai jatko-opintoihin.</p>
+        </div>
+      </div>
+
+      <div class="sparraaja" role="note" aria-label="Sparraajan kysymys">
+        <div class="sparraaja-hahmo" aria-hidden="true">🤖</div>
+        <p class="sparraaja-teksti">
+          <strong>Sparraajan kysymys:</strong> Mikä näistä amiksen piirteistä kuulostaa sinulle hyvältä? Mikä ehkä mietityttää?
+          Voit jutella siitä parin kanssa tai kirjata ajatuksen itsellesi.
+        </p>
+      </div>
+    </section>
+
+    <!-- PÄIVÄ AMMATTILAISENA -->
+    <section class="osio" id="paiva-ammattilaisena" aria-labelledby="paiva-otsikko">
+      <div class="osio-otsikko">
+        <div class="osio-ikoni" aria-hidden="true">📅</div>
+        <div class="osio-otsikko-teksti">
+          <h2 id="paiva-otsikko">Päivä ammattilaisena</h2>
+          <p>Valitse ala ja katso, miltä yksi työpäivä voi näyttää.</p>
+        </div>
+      </div>
+
+      <div class="tarinat-valitsimet" role="tablist" aria-label="Valitse ammatti">
+        <button class="tarina-nappi aktiivinen" role="tab" aria-selected="true"  aria-controls="tarina-lahihoitaja" onclick="vaihdaTarina('lahihoitaja', this)">🏥 Lähihoitaja</button>
+        <button class="tarina-nappi" role="tab" aria-selected="false" aria-controls="tarina-kokki"       onclick="vaihdaTarina('kokki', this)">👨‍🍳 Kokki</button>
+        <button class="tarina-nappi" role="tab" aria-selected="false" aria-controls="tarina-sahkoasentaja" onclick="vaihdaTarina('sahkoasentaja', this)">⚡ Sähköasentaja</button>
+        <button class="tarina-nappi" role="tab" aria-selected="false" aria-controls="tarina-datanomi"  onclick="vaihdaTarina('datanomi', this)">💻 Datanomi</button>
+        <button class="tarina-nappi" role="tab" aria-selected="false" aria-controls="tarina-artesaani" onclick="vaihdaTarina('artesaani', this)">🎨 Artesaani</button>
+      </div>
+
+      <!-- Lähihoitaja -->
+      <div class="tarina-kortti aktiivinen" id="tarina-lahihoitaja" role="tabpanel" aria-label="Lähihoitajan päivä">
+        <div class="tarina-header">
+          <span class="ammatti-tagi">Sosiaali- ja terveysala</span>
+          <h3>Essi, lähihoitajaopiskelija</h3>
+          <p>Työssäoppimisjakso vanhainkodilla. Essi on toisen vuoden opiskelija.</p>
+        </div>
+        <div class="tarina-aikajana">
+          <div class="aika-rivi"><span class="aika-merkki">7:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Aamuvuoron raportti</h5><p>Yövuoron hoitaja kertoo, miten asukkaiden yö on mennyt. Essi kuuntelee ja kirjaa muistiinpanoja.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">7:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Aamupalat ja lääkkeet</h5><p>Essi auttaa asukkaita heräämisessä ja aamupalalla. Ohjaaja valvoo lääkkeiden jakoa.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">9:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Ulkoilu ja toiminta</h5><p>Essi vie ryhmän pihalle. Hän juttelee asukkaiden kanssa — tämä on päivän parasta aikaa.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">12:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Lounas ja lepohetki</h5><p>Ruokailun jälkeen Essi päivittää hoitokirjaukset tietokoneelle.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">14:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Ohjaajan palaute</h5><p>Päivittäinen 15 minuutin palautekeskustelu — mitä meni hyvin, mitä voisi tehdä toisin.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">15:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Vuoro päättyy</h5><p>"Tänään yksi asukas kiitti minua. Se riitti." — Essi</p></div></div>
+        </div>
+      </div>
+
+      <!-- Kokki -->
+      <div class="tarina-kortti" id="tarina-kokki" role="tabpanel" aria-label="Kokin päivä">
+        <div class="tarina-header">
+          <span class="ammatti-tagi">Matkailu-, ravitsemis- ja talousala</span>
+          <h3>Mikael, kokkiopiskelija</h3>
+          <p>Harjoittelujakso ravintolassa. Mikael on ensimmäisen vuoden opiskelija.</p>
+        </div>
+        <div class="tarina-aikajana">
+          <div class="aika-rivi"><span class="aika-merkki">8:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Raaka-aineiden vastaanotto</h5><p>Mikael tarkistaa tilaukset ja varastoi tavarat oikeisiin lämpötiloihin. Hygienia on kaikessa mukana.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">9:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Esivalmistelu</h5><p>Vihannesten pilkkominen, kastikkeiden valmistus. Keittiössä on oma rytmi — kaikki ennakoiden.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">11:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Lounasvuoro alkaa</h5><p>Mikaelin vastuu: alkuruoat. Kiire, lämpö, tiimityö. "En pysty ajattelemaan muuta kuin tätä hetkeä."</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">13:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Keittiön siivous ja ohjaajan arviointi</h5><p>Jokainen oppii siivoomaan oman pisteensä. Kokenut kokki arvioi Mikaelin työtä suoraan.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">15:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Uusi resepti opetellaan</h5><p>Päivä päättyy yhteen uuteen tekniikkaan. Tänään: brunoise-pilkkominen.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Sähköasentaja -->
+      <div class="tarina-kortti" id="tarina-sahkoasentaja" role="tabpanel" aria-label="Sähköasentajan päivä">
+        <div class="tarina-header">
+          <span class="ammatti-tagi">Tekniikan ja liikenteen ala</span>
+          <h3>Lauri, sähköasentajaopiskelija</h3>
+          <p>Työssäoppiminen sähköfirmassa. Tehdään talouden sähkötöitä.</p>
+        </div>
+        <div class="tarina-aikajana">
+          <div class="aika-rivi"><span class="aika-merkki">7:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Työmaan aloituspalaveri</h5><p>Päivän tehtävät ja turvallisuusasiat käydään läpi. Turvallisuus on ykkösjuttu — aina.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">8:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Kaapelointi uudessa talossa</h5><p>Lauri vetää kaapeleita ja oppii lukemaan sähköpiirustuksia. Kokenut asentaja selittää jokaisen valinnan.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">10:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Ongelmanratkaisu</h5><p>Sähköt eivät toimi suunnitellusti. Yhdessä selvitetään miksi. "Tämä on parasta — ettii vikaa."</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">13:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Mittaukset ja dokumentointi</h5><p>Valmiit asennukset mitataan ja kirjataan. Papereita on paljon — se on ammatillista osaamista sekin.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">15:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Päivä pakattuna</h5><p>"Tänään osasin jo jotain, mitä en eilen osannut." — Lauri</p></div></div>
+        </div>
+      </div>
+
+      <!-- Datanomi -->
+      <div class="tarina-kortti" id="tarina-datanomi" role="tabpanel" aria-label="Datanomin päivä">
+        <div class="tarina-header">
+          <span class="ammatti-tagi">Tieto- ja viestintätekniikka</span>
+          <h3>Sara, datanomiopiskelija</h3>
+          <p>IT-harjoittelu yrityksessä. Sara tukee henkilöstön tietoteknisiä ongelmia.</p>
+        </div>
+        <div class="tarina-aikajana">
+          <div class="aika-rivi"><span class="aika-merkki">8:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Tiketin jonot auki</h5><p>IT-tukipyynnöt odottavat. Saral on 12 pyyntöä. Hän priorisoi: mikä on kiireellisin?</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">9:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Käyttäjätuki</h5><p>Sara auttaa kirjanpitäjää, jonka Word ei avaudu. Ongelma löytyy — ja ratkaisu. "Se fiilis kun se toimii."</p></div></div>
+          <div class="aika-rivi"><span class="aika-merksti">11:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Uusien koneiden asennus</h5><p>Kolme uutta kannettavaa asennetaan yrityksen verkkoon. Sara seuraa ja tekee osan itse.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">13:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Tietoturvan koulutus</h5><p>Sara osallistuu henkilöstön tietoturvakoulutukseen. Hän on ainoa, joka jo tietää kaikki asiat.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">15:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Dokumentointi</h5><p>Kaikki tehdyt toimenpiteet kirjataan. Dokumentointi on osa työtä — ei lisätyö.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Artesaani -->
+      <div class="tarina-kortti" id="tarina-artesaani" role="tabpanel" aria-label="Artesaanin päivä">
+        <div class="tarina-header">
+          <span class="ammatti-tagi">Kulttuuriala</span>
+          <h3>Nea, artesaaniopiskelija</h3>
+          <p>Koulussa tekstiilityön jaksolla. Nea suunnittelee ja valmistaa tuotteen alusta loppuun.</p>
+        </div>
+        <div class="tarina-aikajana">
+          <div class="aika-rivi"><span class="aika-merkki">8:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Luonnokset ja suunnittelu</h5><p>Nea piirtää päivän tuotteen luonnoksen. Opettaja kommentoi ja ehdottaa parannuksia.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">9:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Materiaalien valinta</h5><p>Kankaat, langat, värit. Nealla on vahva näkemys — se on vahvuus, ei ongelma.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">10:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Valmistus</h5><p>Ompelukoneet, käsityöt. Paja on hiljainen — jokainen tekee omaa työtään. Aika kuluu huomaamatta.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">13:00</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Ryhmän arviointi</h5><p>Kukin esittelee tuotoksensa. Rakentavaa palautetta annetaan ja vastaanotetaan.</p></div></div>
+          <div class="aika-rivi"><span class="aika-merkki">14:30</span><div class="aika-viiva"></div><div class="aika-sisalto"><h5>Portfolio-päivitys</h5><p>Nea valokuvaa tuotteensa ja lisää sen digitaaliseen portfolioonsa. Se on hänen käyntikorttinsa.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFLEKTIO-TEHTÄVÄ -->
+    <section class="osio" id="reflektio" aria-labelledby="reflektio-otsikko">
+      <div class="osio-otsikko">
+        <div class="osio-ikoni" aria-hidden="true">✍️</div>
+        <div class="osio-otsikko-teksti">
+          <h2 id="reflektio-otsikko">Mihin minulle sopii?</h2>
+          <p>Pohdi rauhassa. Kirjaa oma ajatuksesi.</p>
+        </div>
+      </div>
+
+      <div class="sparraaja" role="note" aria-label="Sparraajan kysymys">
+        <div class="sparraaja-hahmo" aria-hidden="true">🤖</div>
+        <p class="sparraaja-teksti">
+          <strong>Sparraajan kysymys:</strong> Katsoit tutkintoja ja ammattipäiviä. Mikä jäi mieleen?
+          Ei tarvitse olla varmuus — riittää pieni kipinä.
+        </p>
+      </div>
+
+      <div class="tehtava-kortti">
+        <div class="tehtava-otsikko">
+          <span aria-hidden="true">✍️</span>
+          <h3>Oma ajatukseni</h3>
+          <span class="tagi">Yksin tai parin kanssa</span>
+        </div>
+        <div class="tehtava-sisalto">
+          <p>Kirjaa vastauksesi alla oleviin kohtiin. Ei ole oikeita tai vääriä vastauksia.</p>
+
+          <label for="vastaus-kiinnostaa" style="display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">
+            1. Mikä tutkinto tai ala herätti kiinnostukseni tänään?
+          </label>
+          <textarea id="vastaus-kiinnostaa" class="tehtava-kentta" rows="2" placeholder="Kirjaa vapaasti..."></textarea>
+
+          <label for="vastaus-miksi" style="display:block;font-size:13px;font-weight:700;color:var(--text);margin:14px 0 6px;">
+            2. Miksi juuri se? Mikä siinä kiinnostaa?
+          </label>
+          <textarea id="vastaus-miksi" class="tehtava-kentta" rows="2" placeholder="Mitä ajatuksia heräsi..."></textarea>
+
+          <label for="vastaus-lisaa" style="display:block;font-size:13px;font-weight:700;color:var(--text);margin:14px 0 6px;">
+            3. Mitä haluaisit tietää lisää ennen hakemista?
+          </label>
+          <textarea id="vastaus-lisaa" class="tehtava-kentta" rows="2" placeholder="Mihin tarvitset lisätietoa..."></textarea>
+
+          <button class="tehtava-nappi" onclick="tallennaReflektio()" aria-label="Tallenna vastauksesi">
+            Tallenna ✓
+          </button>
+          <div class="tehtava-vastaus" id="reflektio-vastaus" role="status">
+            ✓ Vastauksesi on tallennettu tähän selaimeen. Voit palata niihin myöhemmin.
+            <br><br>
+            <strong>Seuraava askel:</strong> Vie nämä ajatukset mukanasi M4-B:hen — siellä rakennat hakustrategiasi näiden kiinnostusten pohjalta.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEURAAVA ASKEL -->
+    <div class="seuraava-osio" id="seuraava">
+      <p style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;">Lyhyt kaari · vaihe 2/2</p>
+      <h3>Seuraavaksi: Jatkuva haku</h3>
+      <p>Olet tutustunut tutkintoihin. Nyt rakennetaan hakustrategia ja harjoitellaan hakemuksen kirjoittamista.</p>
+      <a href="m4b-jatkuva-haku.html" class="seuraava-nappi">
+        Siirry jatkuvaan hakuun →
+      </a>
+    </div>
+
+    <!-- OPETTAJAN MATERIAALIT -->
+    <button class="ope-toggle" onclick="toggleOpe()" aria-expanded="false" aria-controls="ope-sisalto">
+      <span>📋 Opettajalle — M4-A materiaalit</span>
+      <span id="ope-nuoli">▼</span>
+    </button>
+    <div class="ope-sisalto" id="ope-sisalto" role="region" aria-label="Opettajan materiaalit">
+      <h4>Oppitunnin rakenne (1–2 oppituntia)</h4>
+      <ul>
+        <li><strong>Aloitus (10 min):</strong> Sparraajan kysymys ääneen tai kirjaten. Voidaan tehdä parin kanssa.</li>
+        <li><strong>Tutkintotutkija (20–30 min):</strong> Opiskelija tekee yksin tai parin kanssa. Opettaja kiertää ja kysyy avoimia kysymyksiä.</li>
+        <li><strong>Amis arjessa (10 min):</strong> Voidaan käydä yhdessä läpi tai lukea itsenäisesti.</li>
+        <li><strong>Päivä ammattilaisena (10–15 min):</strong> Opiskelija valitsee tarinan oman kiinnostuksen mukaan.</li>
+        <li><strong>Reflektio (10–15 min):</strong> Kirjallinen tehtävä yksin. Ei palauteta opettajalle — opiskelija omistaa vastauksensa.</li>
+      </ul>
+      <h4>Vierailijat ja oppilaitosvierailut</h4>
+      <ul>
+        <li>Kutsu alan ammattilainen kertomaan arjestaan — sopii hyvin M4-A:n jälkeen.</li>
+        <li>Oppilaitosvierailu lähialueen ammattikouluun: tutustumispäivä eri osastoille.</li>
+        <li>Jatkuvan haun hakuajat: muistuta opiskelijoita tarkistamaan opintopolku.fi ajankohtaiset haut.</li>
+      </ul>
+      <h4>Eriyttäminen</h4>
+      <ul>
+        <li><strong>Tuki:</strong> Rajaa Tutkintotutkijassa näkyviä tutkintoja — aloita 3–4 tutunnäköisimmästä.</li>
+        <li><strong>Syventäminen:</strong> Opiskelija etsii Tutkintotutkijan lisäksi kaksi oppilaitosta, jotka tarjoavat kiinnostavinta tutkintoa.</li>
+      </ul>
+      <h4>Opintopolku.fi</h4>
+      <p>Tutkintotutkija antaa lähtökohtia — varsinainen hakutiedon lähde on <strong>opintopolku.fi</strong>. Suositellaan tutustumaan siihen jo tässä moduulissa.</p>
+    </div>
+
+  </main>
+</div><!-- /sivu -->
+
+<script>
+// ── Tutkintodata ──────────────────────────────────────────────────────────
+const TUTKINNOT = [
+  { nimi: "Lähihoitaja", ala: "Sosiaali- ja terveysala", kiinnostukset: ["ihmiset"], lyhyt: "Hoidat ja tuet ihmisiä eri elämäntilanteissa — vanhuksia, lapsia, vammaisia.", kesto: "3 vuotta", tyot: "Hoitaja, kodinhoitaja, päiväkotiapulainen", jatko: "Sairaanhoitaja (AMK), sosionomi (AMK)", vari: "#ef4444", tagi_vari: "#fef2f2", tagi_teksti: "#991b1b" },
+  { nimi: "Lastenohjaaja", ala: "Humanistiset ja kasvatusalat", kiinnostukset: ["ihmiset"], lyhyt: "Ohjaat ja kasvatat lapsia päiväkodeissa ja aamu-/iltapäivätoiminnassa.", kesto: "3 vuotta", tyot: "Lastentarhanopettajan apulainen, iltapäiväohjaaja", jatko: "Sosionomi (AMK)", vari: "#f97316", tagi_vari: "#fff7ed", tagi_teksti: "#9a3412" },
+  { nimi: "Sähköasentaja", ala: "Tekniikan ja liikenteen ala", kiinnostukset: ["tekniikka"], lyhyt: "Asennat, huollat ja korjaat sähkölaitteita rakennuksissa ja teollisuudessa.", kesto: "3 vuotta", tyot: "Sähköasentaja, sähkömies, kiinteistösähköasentaja", jatko: "Sähkötekniikka (AMK)", vari: "#eab308", tagi_vari: "#fefce8", tagi_teksti: "#713f12" },
+  { nimi: "Talonrakentaja", ala: "Tekniikan ja liikenteen ala", kiinnostukset: ["tekniikka"], lyhyt: "Rakennat taloja ja muita rakennuksia — perustuksista kattoon.", kesto: "3 vuotta", tyot: "Rakennusmies, kirvesmies, betonirakentaja", jatko: "Rakennustekniikka (AMK)", vari: "#84cc16", tagi_vari: "#f7fee7", tagi_teksti: "#365314" },
+  { nimi: "Autonasentaja", ala: "Tekniikan ja liikenteen ala", kiinnostukset: ["tekniikka"], lyhyt: "Huollat ja korjaat autoja ja muita ajoneuvoja.", kesto: "3 vuotta", tyot: "Autonasentaja, korjaamotyöntekijä", jatko: "Auto- ja kuljetustekniikka (AMK)", vari: "#6366f1", tagi_vari: "#eef2ff", tagi_teksti: "#3730a3" },
+  { nimi: "Metsätalous", ala: "Luonnonvara-ala", kiinnostukset: ["luonto"], lyhyt: "Hoidat ja hyödynnät metsäluontoa kestävästi — metsurityöstä metsäkoneen kuljettamiseen.", kesto: "3 vuotta", tyot: "Metsuri, metsäkoneenkuljettaja, metsänhoitaja", jatko: "Metsätalouden insinööri (AMK)", vari: "#22c55e", tagi_vari: "#f0fdf4", tagi_teksti: "#14532d" },
+  { nimi: "Maatalous", ala: "Luonnonvara-ala", kiinnostukset: ["luonto"], lyhyt: "Tuotat ruokaa ja hoidat maatilaa — kasvinviljelystä karjanhoitoon.", kesto: "3 vuotta", tyot: "Maanviljelijä, karjanhoitaja, maatalouslomittaja", jatko: "Agronomi (yliopisto)", vari: "#16a34a", tagi_vari: "#dcfce7", tagi_teksti: "#14532d" },
+  { nimi: "Eläintenhoitaja", ala: "Luonnonvara-ala", kiinnostukset: ["luonto"], lyhyt: "Hoidat eläimiä eläintarhoissa, tallissa, eläinklinikalla tai kotona.", kesto: "3 vuotta", tyot: "Eläintenhoitaja, tallityöntekijä, lemmikkihoitaja", jatko: "Eläinlääketiede (yliopisto)", vari: "#15803d", tagi_vari: "#f0fdf4", tagi_teksti: "#14532d" },
+  { nimi: "Artesaani", ala: "Kulttuuriala", kiinnostukset: ["taide"], lyhyt: "Suunnittelet ja valmistat käsin erilaisia tuotteita — tekstiileistä puuhun ja metalliin.", kesto: "3 vuotta", tyot: "Käsityöyrittäjä, tuotesuunnittelija, restauroija", jatko: "Muotoilu (AMK)", vari: "#ec4899", tagi_vari: "#fdf2f8", tagi_teksti: "#831843" },
+  { nimi: "Audiovisuaalinen viestintä", ala: "Kulttuuriala", kiinnostukset: ["taide", "data"], lyhyt: "Teet videoita, valokuvaat, editoit ja tuotat mediasisältöä.", kesto: "3 vuotta", tyot: "Videokuvaaja, editoija, sometuottaja", jatko: "Viestintä (AMK)", vari: "#a855f7", tagi_vari: "#faf5ff", tagi_teksti: "#581c87" },
+  { nimi: "Datanomi", ala: "Tieto- ja viestintätekniikka", kiinnostukset: ["data", "tekniikka"], lyhyt: "Rakennat ja ylläpidät tietojärjestelmiä, teet IT-tukea tai ohjelmoit.", kesto: "3 vuotta", tyot: "IT-tuki, koodari, järjestelmänvalvoja", jatko: "Tietotekniikka (AMK)", vari: "#3b82f6", tagi_vari: "#eff6ff", tagi_teksti: "#1e3a8a" },
+  { nimi: "Myyjä (kaupan ala)", ala: "Kauppa ja hallinto", kiinnostukset: ["kauppa"], lyhyt: "Palvelet asiakkaita ja hoidat myymälän toimintaa — kassalta tavarantäyttöön.", kesto: "3 vuotta", tyot: "Myyjä, kassahenkilö, asiakaspalvelija", jatko: "Tradenomi (AMK)", vari: "#0891b2", tagi_vari: "#ecfeff", tagi_teksti: "#164e63" },
+  { nimi: "Liiketalous", ala: "Kauppa ja hallinto", kiinnostukset: ["kauppa"], lyhyt: "Opit yrityksen pyörittämistä — taloushallinnosta markkinointiin.", kesto: "3 vuotta", tyot: "Toimistovirkailija, myyntiassistentti, kirjanpitäjä", jatko: "Tradenomi (AMK)", vari: "#0e7490", tagi_vari: "#ecfeff", tagi_teksti: "#164e63" },
+  { nimi: "Matkailuala", ala: "Matkailu- ja ravitsemisala", kiinnostukset: ["kauppa", "ihmiset"], lyhyt: "Suunnittelet matkoja ja palvelet matkailijoita — hotellista oppaaksi.", kesto: "3 vuotta", tyot: "Matkailuvirkailija, hotellityöntekijä, opas", jatko: "Restonomi (AMK)", vari: "#0891b2", tagi_vari: "#ecfeff", tagi_teksti: "#164e63" },
+  { nimi: "Kokki", ala: "Matkailu- ja ravitsemisala", kiinnostukset: ["ruoka"], lyhyt: "Valmistat ruokaa ravintolassa, suurkeittiössä tai yksityisiin tilaisuuksiin.", kesto: "3 vuotta", tyot: "Kokki, keittiöapulainen, catering-kokki", jatko: "Restonomi (AMK)", vari: "#f59e0b", tagi_vari: "#fffbeb", tagi_teksti: "#92400e" },
+  { nimi: "Leipuri-kondiittori", ala: "Matkailu- ja ravitsemisala", kiinnostukset: ["ruoka"], lyhyt: "Leivot leipää, kakkuja ja muita leivonnaisia.", kesto: "3 vuotta", tyot: "Leipuri, kondiittori, makeistyöntekijä", jatko: "Restonomi (AMK)", vari: "#d97706", tagi_vari: "#fef3c7", tagi_teksti: "#92400e" },
+  { nimi: "Liikunta-ala", ala: "Liikunta ja urheilu", kiinnostukset: ["liikunta", "ihmiset"], lyhyt: "Ohjaat liikuntaa eri-ikäisille ihmisille — kuntosalilta uimahalliin.", kesto: "3 vuotta", tyot: "Liikunnanohjaaja, personal trainer, kuntosaliohjaaja", jatko: "Liikunnanohjaaja (AMK)", vari: "#10b981", tagi_vari: "#ecfdf5", tagi_teksti: "#064e3b" },
+  { nimi: "Hiusalan perustutkinro", ala: "Kauneudenhoitoala", kiinnostukset: ["ihmiset", "taide"], lyhyt: "Leikkaat, värjäät ja muotoilet hiuksia — parturina tai kampaajana.", kesto: "3 vuotta", tyot: "Parturi, kampaaja, hiustyylisti", jatko: "Kosmetologi, yrittäjyys", vari: "#f43f5e", tagi_vari: "#fff1f2", tagi_teksti: "#881337" },
+];
+
+// ── Tutkinnot DOM:iin ─────────────────────────────────────────────────────
+const kontaineri = document.getElementById('tt-tutkinnot');
+TUTKINNOT.forEach((t, i) => {
+  const el = document.createElement('article');
+  el.className = 'tutkinto-kortti';
+  el.setAttribute('role', 'listitem');
+  el.dataset.kiinnostukset = JSON.stringify(t.kiinnostukset);
+  el.setAttribute('aria-label', t.nimi);
+  el.innerHTML = `
+    <div class="tutkinto-vari-palkki" style="background:${t.vari}" aria-hidden="true"></div>
+    <div class="tutkinto-sisalto">
+      <span class="tutkinto-ala-tagi" style="background:${t.tagi_vari};color:${t.tagi_teksti}">${t.ala}</span>
+      <p class="tutkinto-nimi">${t.nimi}</p>
+      <p class="tutkinto-lyhyt">${t.lyhyt}</p>
+      <button class="tutkinto-avaa-nappi" onclick="toggleTutkinto(this)" aria-expanded="false">
+        Lue lisää ▾
+      </button>
+      <div class="tutkinto-lisatiedot" aria-hidden="true">
+        <div class="tietorivi"><strong>Kesto:</strong> ${t.kesto}</div>
+        <div class="tietorivi"><strong>Töitä:</strong> ${t.tyot}</div>
+        <div class="tietorivi"><strong>Jatko-opinnot:</strong> ${t.jatko}</div>
+      </div>
+    </div>`;
+  kontaineri.appendChild(el);
+});
+
+// ── Suodatin ──────────────────────────────────────────────────────────────
+let valitutKiinnostukset = new Set();
+
+function toggleKiinnostus(nappi) {
+  const ala = nappi.dataset.ala;
+  const onValittu = valitutKiinnostukset.has(ala);
+  if (onValittu) {
+    valitutKiinnostukset.delete(ala);
+    nappi.classList.remove('valittu');
+    nappi.setAttribute('aria-pressed', 'false');
+  } else {
+    valitutKiinnostukset.add(ala);
+    nappi.classList.add('valittu');
+    nappi.setAttribute('aria-pressed', 'true');
+  }
+  paivitaTutkinnot();
+}
+
+function nollaaFilttterit() {
+  valitutKiinnostukset.clear();
+  document.querySelectorAll('.kiinnostus-nappi').forEach(n => {
+    n.classList.remove('valittu');
+    n.setAttribute('aria-pressed', 'false');
+  });
+  paivitaTutkinnot();
+}
+
+function paivitaTutkinnot() {
+  const kortit = document.querySelectorAll('.tutkinto-kortti');
+  let nakyvia = 0;
+  kortit.forEach(k => {
+    const k_alat = JSON.parse(k.dataset.kiinnostukset);
+    const nakyvissa = valitutKiinnostukset.size === 0 ||
+      k_alat.some(a => valitutKiinnostukset.has(a));
+    k.classList.toggle('piilotettu', !nakyvissa);
+    if (nakyvissa) nakyvia++;
+  });
+  const otsikko = document.getElementById('tt-tulos-otsikko');
+  const eiTuloksia = document.getElementById('tt-ei-tuloksia');
+  if (valitutKiinnostukset.size === 0) {
+    otsikko.textContent = `Kaikki tutkinnot (${TUTKINNOT.length})`;
+  } else {
+    otsikko.textContent = `${nakyvia} tutkinto${nakyvia !== 1 ? 'a' : ''} löytyi`;
+  }
+  eiTuloksia.style.display = nakyvia === 0 ? 'block' : 'none';
+  kontaineri.style.display = nakyvia === 0 ? 'none' : 'grid';
+}
+
+function toggleTutkinto(nappi) {
+  const kortti = nappi.closest('.tutkinto-kortti');
+  const auki = kortti.classList.toggle('auki');
+  const lisatiedot = kortti.querySelector('.tutkinto-lisatiedot');
+  nappi.textContent = auki ? 'Sulje ▴' : 'Lue lisää ▾';
+  nappi.setAttribute('aria-expanded', auki);
+  lisatiedot.setAttribute('aria-hidden', !auki);
+}
+
+// ── Tarinat ───────────────────────────────────────────────────────────────
+function vaihdaTarina(id, nappi) {
+  document.querySelectorAll('.tarina-kortti').forEach(k => k.classList.remove('aktiivinen'));
+  document.querySelectorAll('.tarina-nappi').forEach(n => {
+    n.classList.remove('aktiivinen');
+    n.setAttribute('aria-selected', 'false');
+  });
+  document.getElementById('tarina-' + id).classList.add('aktiivinen');
+  nappi.classList.add('aktiivinen');
+  nappi.setAttribute('aria-selected', 'true');
+}
+
+// ── Reflektio ─────────────────────────────────────────────────────────────
+function tallennaReflektio() {
+  const v1 = document.getElementById('vastaus-kiinnostaa').value.trim();
+  const v2 = document.getElementById('vastaus-miksi').value.trim();
+  const v3 = document.getElementById('vastaus-lisaa').value.trim();
+  if (!v1 && !v2 && !v3) {
+    alert('Kirjaa ensin ainakin yksi ajatus!');
+    return;
+  }
+  try {
+    localStorage.setItem('dt-m4a-reflektio', JSON.stringify({ v1, v2, v3, pvm: new Date().toLocaleDateString('fi-FI') }));
+  } catch(e) {}
+  document.getElementById('reflektio-vastaus').classList.add('nakyva');
+}
+
+// ── Opettaja toggle ───────────────────────────────────────────────────────
+function toggleOpe() {
+  const sisalto = document.getElementById('ope-sisalto');
+  const nappi = document.querySelector('.ope-toggle');
+  const nuoli = document.getElementById('ope-nuoli');
+  const auki = sisalto.classList.toggle('nakyva');
+  nappi.setAttribute('aria-expanded', auki);
+  nuoli.textContent = auki ? '▲' : '▼';
+}
+
+// ── Aktiivinen sivupalkkilinkki ───────────────────────────────────────────
+const osiot = document.querySelectorAll('.osio, #johdanto');
+const linkit = document.querySelectorAll('.sivupalkki-lista a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      linkit.forEach(l => {
+        l.classList.toggle('aktiivinen', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+document.querySelectorAll('.osio[id], #johdanto').forEach(o => observer.observe(o));
+
+// ── Lataa reflektio jos tallennettu ──────────────────────────────────────
+try {
+  const tallennettu = JSON.parse(localStorage.getItem('dt-m4a-reflektio') || 'null');
+  if (tallennettu) {
+    if (tallennettu.v1) document.getElementById('vastaus-kiinnostaa').value = tallennettu.v1;
+    if (tallennettu.v2) document.getElementById('vastaus-miksi').value = tallennettu.v2;
+    if (tallennettu.v3) document.getElementById('vastaus-lisaa').value = tallennettu.v3;
+  }
+} catch(e) {}
+
+// Alusta suodatin
+paivitaTutkinnot();
+</script>
+</body>
+</html>
