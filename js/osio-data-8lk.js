@@ -6,20 +6,21 @@ window.OSIO_DATA = {
   osiot: {
     "koulutus": {
       rakenne: [
-        "Aloitus: mitä reittejä peruskoulun jälkeen on? (5 min)",
-        "Koulutusjärjestelmä-kaavio ja koulutusalakaruselli (10 min)",
-        "Testi: mikä koulutusala voisi olla sun juttu? (15 min)",
+        "Aloitus: koulutusjärjestelmä-kaavio ja koulutusalakaruselli (10 min)",
+        "Valitse polku: Amispolku tai Lukiopolku — tutki tutkintoja tai linjoja ja tee tehtävä (20 min)",
+        "AmmattiSet: korttipeli koulutusaloista (10 min)",
         "Ryhmätehtävä: Maailma tarvitsee sinua (20–30 min)"
       ],
       tavoitteet: [
-        "Hahmotat Suomen koulutusjärjestelmän: lukio, ammatillinen koulutus ja muut polut",
-        "Tutustut eri koulutusaloihin ja löydät itseäsi kiinnostavia vaihtoehtoja",
+        "Hahmotat Suomen koulutusjärjestelmän: ammatillinen koulutus, lukio ja jatko-opintomahdollisuudet",
+        "Tutustut sinua kiinnostaviin tutkintoihin tai lukiolinjoihin ja opit, miltä arki näyttää",
+        "Tiedät, miten ammatillinen koulutus ja lukio eroavat toisistaan",
         "Ymmärrät, että reittejä on monta eikä yksikään valinta sulje kaikkia ovia"
       ],
       miksi: "Yhdeksännellä luokalla teet yhteishaun — ja hyvä valinta vaatii, että tiedät mistä valitset. Tutkimusten mukaan kiinnostus alaa kohtaan ennustaa opinnoissa pysymistä ja viihtymistä paremmin kuin pelkät arvosanat. Tämä tunti antaa sinulle vuoden etumatkan: ehdit tutkia, vertailla ja kysyä ennen kuin valinta on ajankohtainen.",
       yhteenveto: [
-        "Osaat piirtää pääpiirteissään Suomen koulutuspolut peruskoulusta eteenpäin",
-        "Sinulla on vähintään 2–3 koulutusalaa, jotka kiinnostavat sinua",
+        "Tiedät, mikä ero on ammattikoulukoulutuksella ja lukiokoulutuksella — ja kumpi voisi sopia sinulle paremmin",
+        "Sinulla on vähintään 2–3 tutkintoa tai lukiolinjaa, jotka kiinnostavat sinua",
         "Tiedät, että ammatteja tarvitaan maailman ongelmien ratkaisemiseen — myös sinun panostasi"
       ]
     },
