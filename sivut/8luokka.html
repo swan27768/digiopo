@@ -710,6 +710,18 @@
     .ls-radio-nappi:has(input:checked) { background:#2563eb; border-color:#2563eb; color:white; }
     .ls-radio-nappi input[type="radio"] { display:none; }
 
+    /* ── Osion kokonaispolku ── */
+    .osio-polku { background:#fff; border:2px solid #e5e7eb; border-radius:16px; padding:18px 20px 14px; margin:0 0 20px; }
+    .osio-polku-otsikko { font-size:12px; font-weight:800; color:#9ca3af; letter-spacing:.6px; text-transform:uppercase; margin:0 0 14px; }
+    .osio-polku-askeleet { display:flex; align-items:flex-start; gap:0; flex-wrap:wrap; row-gap:12px; }
+    .osio-askel { display:flex; align-items:flex-start; gap:10px; flex:1; min-width:140px; }
+    .osio-askel-nro { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:white; margin-top:1px; }
+    .osio-askel-teksti { flex:1; }
+    .osio-askel-nimi { font-size:13px; font-weight:700; color:#1f2937; line-height:1.3; margin-bottom:2px; }
+    .osio-askel-kuvaus { font-size:11.5px; color:#6b7280; line-height:1.4; }
+    .osio-nuoli { flex-shrink:0; font-size:16px; color:#d1d5db; align-self:center; padding:0 4px; margin-top:0; }
+    @media(max-width:520px){ .osio-nuoli { display:none; } .osio-askel { min-width:calc(50% - 8px); } }
+
     /* ── Etenemispolku: tavoite, askeleet, yhteenveto ── */
     .tj-tavoite { background:#f0fdf4; border:2px solid #86efac; border-radius:12px; padding:14px 16px; margin:10px 0 16px; }
     .tj-tavoite h5 { font-size:13px; font-weight:800; color:#14532d; margin:0 0 8px; }
@@ -849,6 +861,52 @@
             <p>Mitä vaihtoehtoja sulla on peruskoulun jälkeen?</p>
           </div>
 
+          <!-- ── NÄIN ETENET ── -->
+          <nav class="osio-polku" aria-label="Osion etenemispolku">
+            <p class="osio-polku-otsikko">Näin etenet tässä osiossa</p>
+            <ol class="osio-polku-askeleet" role="list">
+
+              <li class="osio-askel">
+                <div class="osio-askel-nro" style="background:#0891b2;" aria-hidden="true">1</div>
+                <div class="osio-askel-teksti">
+                  <div class="osio-askel-nimi">🖼️ Tutustu koulutusaloihin</div>
+                  <div class="osio-askel-kuvaus">Katso koulutusjärjestelmäkaavio ja selaa koulutusalainfograafeja</div>
+                </div>
+              </li>
+
+              <li class="osio-nuoli" aria-hidden="true">→</li>
+
+              <li class="osio-askel">
+                <div class="osio-askel-nro" style="background:#d97706;" aria-hidden="true">2</div>
+                <div class="osio-askel-teksti">
+                  <div class="osio-askel-nimi">🔍 Valitse polku &amp; tee tehtävä</div>
+                  <div class="osio-askel-kuvaus">Amispolku tai Lukiopolku — tutki, kokeile ja kirjaa ajatuksesi</div>
+                </div>
+              </li>
+
+              <li class="osio-nuoli" aria-hidden="true">→</li>
+
+              <li class="osio-askel">
+                <div class="osio-askel-nro" style="background:#7c3aed;" aria-hidden="true">3</div>
+                <div class="osio-askel-teksti">
+                  <div class="osio-askel-nimi">🃏 Kokeile AmmattiSet</div>
+                  <div class="osio-askel-kuvaus">Ryhmittele ammatit oikeille aloille — tunnetko koulutusalat?</div>
+                </div>
+              </li>
+
+              <li class="osio-nuoli" aria-hidden="true">→</li>
+
+              <li class="osio-askel">
+                <div class="osio-askel-nro" style="background:#059669;" aria-hidden="true">4</div>
+                <div class="osio-askel-teksti">
+                  <div class="osio-askel-nimi">🌍 Ryhmätehtävä</div>
+                  <div class="osio-askel-kuvaus">Maailma tarvitsee sinua — kokoa unelmatyöryhmä ja ratkaise ongelma</div>
+                </div>
+              </li>
+
+            </ol>
+          </nav>
+
           <div class="theory-card">
             <div class="theory-text">
               <p>
@@ -857,6 +915,7 @@
                 tapoja oppia ja kehittyä.
               </p>
               <p><strong>Ei ole vain yhtä oikeaa reittiä.</strong></p>
+              <p style="margin-top:10px;padding:10px 14px;background:#fdf4ff;border-left:3px solid #c026d3;border-radius:0 8px 8px 0;font-size:13px;color:#701a75;font-weight:600;">Tiedätkö jo, haluatko enemmän oppia tekemällä vai lukemalla laajasti eri aineita?</p>
               <button
                 onclick="avaaKjLightbox()"
                 style="margin-top:14px; display:inline-flex; align-items:center; gap:8px; background:#fce7f3; border:1.5px solid #f9a8d4; border-radius:8px; padding:9px 16px; font-size:0.85rem; font-weight:600; color:#9d174d; cursor:pointer;"
@@ -976,6 +1035,16 @@
             <div class="ala-karuselli-dots" id="alaKaruselliDots" role="tablist" aria-label="Karusellin sijainti"></div>
           </div>
 
+          <!-- Kehotus tutkijapaneeliin -->
+          <div style="margin:14px 0 4px;padding:14px 18px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <span style="font-size:22px;" aria-hidden="true">👇</span>
+            <div style="flex:1;min-width:180px;">
+              <p style="margin:0 0 2px;font-size:13px;font-weight:700;color:#92400e;">Löysitkö kiinnostavan alan?</p>
+              <p style="margin:0;font-size:12.5px;color:#78350f;line-height:1.5;">Tutustu seuraavaksi tutkintoihin ja lukiolinjoihin tarkemmin — valitse Amispolku tai Lukiopolku alta.</p>
+            </div>
+            <a href="#tutkija-alue" style="flex-shrink:0;background:#d97706;color:white;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;" aria-label="Siirry Amispolku- tai Lukiopolku-valintaan">Tutki tarkemmin →</a>
+          </div>
+
           <!-- ══ TUTKINTOTUTKIJA + LUKIOTUTKIJA ══ -->
           <div class="tutkija-alue" id="tutkija-alue">
             <h3 class="ala-karuselli-otsikko" style="margin-top:24px;">
@@ -1017,14 +1086,10 @@
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">2</div>
-                  <span class="tj-askel-teksti">Kurkista arkeen</span>
+                  <span class="tj-askel-teksti">Kurkista arkeen & kokeile</span>
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">3</div>
-                  <span class="tj-askel-teksti">Lisätietoa</span>
-                </li>
-                <li class="tj-askel">
-                  <div class="tj-askel-nro" aria-hidden="true">4</div>
                   <span class="tj-askel-teksti">Kirjaa ajatuksesi</span>
                 </li>
               </ol>
@@ -1046,7 +1111,8 @@
               <p class="tj-ei-tuloksia" id="amis-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
               <div class="tj-grid" id="amis-tutkinnot" role="list"></div>
 
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Miltä amis näyttää arjessa?</h4>
+              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Kurkista arkeen &amp; kokeile tehtävää</h4>
+              <p class="tj-kuvaus" style="margin-top:4px;margin-bottom:10px;">Katso, miltä ammattikoulu näyttää arjessa — ja tee interaktiivinen tehtävä: avaa tutkinto ja paina <strong>Kokeile — sopisiko ala sinulle? →</strong></p>
               <div class="tj-arki" role="list">
                 <div class="tj-arki-kortti" role="listitem">
                   <div class="ik" aria-hidden="true">🔧</div>
@@ -1097,7 +1163,7 @@
               </div>
 
               <!-- Erityisammattioppilaitokset -->
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>Erityisammattioppilaitokset</h4>
+              <h4 class="tj-osio-otsikko"><span style="display:inline-block;background:#f3f4f6;color:#6b7280;font-size:10px;font-weight:800;padding:1px 7px;border-radius:20px;margin-right:5px;vertical-align:middle;">Lisätieto</span>Erityisammattioppilaitokset</h4>
               <p class="tj-kuvaus">Jos tarvitset enemmän tukea opiskelussa, erityisammattioppilaitokset tarjoavat saman ammatillisen koulutuksen — pienemmissä ryhmissä ja yksilöllisemmin. Haetaan samassa yhteishaussa opintopolku.fi:ssä.</p>
               <div class="erityis-grid" role="list">
                 <div class="erityis-kortti" role="listitem">
@@ -1135,7 +1201,7 @@
 
               <!-- Omat ajatukseni (amis) -->
               <div class="tj-reflektio">
-                <h4><span class="tj-osio-vaihe" aria-label="Vaihe 4">Vaihe 4</span>✍️ Omat ajatukseni</h4>
+                <h4><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>✍️ Omat ajatukseni</h4>
                 <label id="amis-q1" class="tj-reflektio-kysymys" for="amis-v1">Mikä tutkinto tai ala herätti kiinnostukseni?</label>
                 <textarea id="amis-v1" class="tj-textarea" aria-labelledby="amis-q1" placeholder="Kirjaa vapaasti..."></textarea>
                 <label id="amis-q2" class="tj-reflektio-kysymys" for="amis-v2">Mitä haluaisin tietää lisää?</label>
@@ -1185,7 +1251,7 @@
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro lv" aria-hidden="true">2</div>
-                  <span class="tj-askel-teksti">Linjat & arki</span>
+                  <span class="tj-askel-teksti">Erikoislukiot &amp; arki</span>
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro lv" aria-hidden="true">3</div>
@@ -1213,11 +1279,11 @@
               <p class="tj-ei-tuloksia" id="lukio-ei-tuloksia" role="status">Ei tuloksia.</p>
               <div class="linja-grid" id="lukio-linjat" role="list"></div>
 
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot</h4>
+              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot &amp; arki</h4>
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
               <div class="erikoislukio-grid" id="erikoislukio-grid" role="list"></div>
 
-              <h4 class="tj-osio-otsikko">Päivä lukiolaisena</h4>
+              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2 jatkuu">Vaihe 2</span>Päivä lukiolaisena</h4>
               <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse lukiotyyppi">
                 <button class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true"  onclick="vaihdaLukioTarina('yleislukio',this)">🎓 Yleislukio</button>
                 <button class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('ib',this)">🌐 IB-lukio</button>
@@ -1366,6 +1432,7 @@
 
           <!-- AmmattiSet -->
           <div style="margin: 20px 0;">
+            <p style="font-size:13px;color:#6b7280;margin:0 0 10px;">🃏 Ennen kuin syvennyt yhteen polkuun — testaa, tunnetko koulutusalat ylipäänsä?</p>
             <div
               style="
                 position: relative;
@@ -2930,7 +2997,7 @@
       };
       window.maskottiPuhetekstit = {
         johdanto:    "Tänä vuonna suunta alkaa löytyä — tervetuloa! 👋",
-        koulutus:    "Suomessa on paljon koulutuspolkuja — sinulle löytyy oma 🗺️",
+        koulutus:    "Tiedätkö jo, haluatko oppia tekemällä vai lukemalla laajasti eri aineita? 🤔",
         vahvuudet:   "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään 💡",
         tet:         "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
         klinikka:    "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
