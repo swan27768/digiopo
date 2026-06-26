@@ -598,6 +598,20 @@
     var tj = t && t.g8 && t.g8.tutkija;
     if (!tj) return;
 
+    /* Kielivaroitus (näkyy muilla kuin suomella) */
+    var warnBox  = document.getElementById('tutkija-lang-warning');
+    var warnText = document.getElementById('tutkija-lang-warning-text');
+    if (warnBox && warnText) {
+      if (tj.lang_warning) {
+        warnText.textContent = tj.lang_warning;
+        warnBox.hidden = false;
+        warnBox.style.display = 'flex';
+      } else {
+        warnBox.hidden = true;
+        warnBox.style.display = '';
+      }
+    }
+
     /* Sivupalkki */
     var sidebarLinkTxt = t && t.g8 && t.g8.sidebar && t.g8.sidebar.link_tutkija;
     setTxt('.aihelista a[href="#tutkija-alue"]', sidebarLinkTxt);
