@@ -550,6 +550,98 @@
           if (linkSpan) link.insertBefore(linkSpan, link.firstChild);
         }
       })();
+
+      /* TET-polku: kielivaroitus + vaihe-käännökset */
+      (function () {
+        /* Kielivaroitus */
+        var warnBox  = document.getElementById('tet9-lang-warning');
+        var warnText = document.getElementById('tet9-lang-warning-text');
+        if (warnBox && warnText) {
+          if (tet.lang_warning) {
+            warnText.textContent = tet.lang_warning;
+            warnBox.hidden = false;
+            warnBox.style.display = 'flex';
+          } else {
+            warnBox.hidden = true;
+            warnBox.style.display = '';
+          }
+        }
+
+        var pk = tet.polku;
+        if (!pk) return;
+
+        /* Ohje-teksti */
+        setTxt('.tet-polku-osio .tet-polku-ohje', pk.ohje);
+
+        /* Node-labelit (Koulu, Työpaikka, …) */
+        var labels = document.querySelectorAll('.tet-polku-osio .tet-noodi-label');
+        var labelKeys = ['v1_label','v2_label','v3_label','v4_label','v5_label','v6_label'];
+        for (var i = 0; i < labels.length; i++) {
+          if (pk[labelKeys[i]]) labels[i].textContent = pk[labelKeys[i]];
+        }
+
+        /* Paneeli 1 */
+        var p1 = document.getElementById('tet9-paneeli-1');
+        if (p1) {
+          setTxt('#tet9-paneeli-1 .tet-paneeli-otsikko', pk.v1_otsikko);
+          var p1p = p1.querySelector('p:not(.tet-paneeli-vihje)');
+          if (p1p && pk.v1_p) p1p.textContent = pk.v1_p;
+          setTxt('#tet9-paneeli-1 .tet-paneeli-vihje', pk.v1_vihje);
+        }
+
+        /* Paneeli 2 (sisältää ul>li) */
+        var p2 = document.getElementById('tet9-paneeli-2');
+        if (p2) {
+          setTxt('#tet9-paneeli-2 .tet-paneeli-otsikko', pk.v2_otsikko);
+          var p2p = p2.querySelector('p:not(.tet-paneeli-vihje)');
+          if (p2p && pk.v2_p) {
+            /* Säilytetään strong-elementti */
+            p2p.textContent = pk.v2_p;
+          }
+          var p2lis = p2.querySelectorAll('li');
+          if (p2lis[0] && pk.v2_li1) p2lis[0].textContent = pk.v2_li1;
+          if (p2lis[1] && pk.v2_li2) p2lis[1].textContent = pk.v2_li2;
+          setTxt('#tet9-paneeli-2 .tet-paneeli-vihje', pk.v2_vihje);
+        }
+
+        /* Paneeli 3 (kaksi p-elementtiä) */
+        var p3 = document.getElementById('tet9-paneeli-3');
+        if (p3) {
+          setTxt('#tet9-paneeli-3 .tet-paneeli-otsikko', pk.v3_otsikko);
+          var p3ps = p3.querySelectorAll('p:not(.tet-paneeli-vihje)');
+          if (p3ps[0] && pk.v3_p1) p3ps[0].textContent = pk.v3_p1;
+          if (p3ps[1] && pk.v3_p2) p3ps[1].textContent = pk.v3_p2;
+          setTxt('#tet9-paneeli-3 .tet-paneeli-vihje', pk.v3_vihje);
+        }
+
+        /* Paneeli 4 (kaksi p-elementtiä) */
+        var p4 = document.getElementById('tet9-paneeli-4');
+        if (p4) {
+          setTxt('#tet9-paneeli-4 .tet-paneeli-otsikko', pk.v4_otsikko);
+          var p4ps = p4.querySelectorAll('p:not(.tet-paneeli-vihje)');
+          if (p4ps[0] && pk.v4_p1) p4ps[0].textContent = pk.v4_p1;
+          if (p4ps[1] && pk.v4_p2) p4ps[1].textContent = pk.v4_p2;
+          setTxt('#tet9-paneeli-4 .tet-paneeli-vihje', pk.v4_vihje);
+        }
+
+        /* Paneeli 5 */
+        var p5 = document.getElementById('tet9-paneeli-5');
+        if (p5) {
+          setTxt('#tet9-paneeli-5 .tet-paneeli-otsikko', pk.v5_otsikko);
+          var p5p = p5.querySelector('p:not(.tet-paneeli-vihje)');
+          if (p5p && pk.v5_p) p5p.textContent = pk.v5_p;
+          setTxt('#tet9-paneeli-5 .tet-paneeli-vihje', pk.v5_vihje);
+        }
+
+        /* Paneeli 6 */
+        var p6 = document.getElementById('tet9-paneeli-6');
+        if (p6) {
+          setTxt('#tet9-paneeli-6 .tet-paneeli-otsikko', pk.v6_otsikko);
+          var p6p = p6.querySelector('p:not(.tet-paneeli-vihje)');
+          if (p6p && pk.v6_p) p6p.textContent = pk.v6_p;
+          setTxt('#tet9-paneeli-6 .tet-paneeli-vihje', pk.v6_vihje);
+        }
+      })();
     })();
 
     /* ── Päätöksenteko ── */
