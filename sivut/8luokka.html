@@ -879,7 +879,7 @@
           <a href="#johdanto">Tänä vuonna otat suunnan</a>
 
           <a href="#koulutus">Suomen koulutusjärjestelmä</a>
-          <a href="#tutkija-alue" class="sub-link" style="font-weight:700;color:#d97706;">🔍 Oma reitti löytyy tutkimalla</a>
+          <a href="#tutkija-alue" class="sub-link" style="font-weight:700;color:#d97706;">Oma reitti löytyy tutkimalla</a>
           <a href="#koulutus-mission" class="sub-link mission-link">Maailma tarvitsee sinua</a>
 
           <a href="#vahvuudet">Mitä osaan – mitä haluan?</a>
@@ -1139,8 +1139,15 @@
             <a href="#tutkija-alue" style="flex-shrink:0;background:#d97706;color:white;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;" aria-label="Siirry Amispolku- tai Lukiopolku-valintaan">Tutki tarkemmin →</a>
           </div>
 
-          <!-- ══ TUTKINTOTUTKIJA + LUKIOTUTKIJA ══ -->
-          <div class="tutkija-alue" id="tutkija-alue">
+          <!-- ══ TUTKINTOTUTKIJA + LUKIOTUTKIJA ══
+               Tehtävä: "Oma reitti löytyy tutkimalla"
+               Oppilas tutkii joko Amispolkua tai Lukiopolkua (tai molempia).
+               – Amispolku:  4 vaihetta + yhteenveto, palautus Classroomiin
+               – Lukiopolku: 4 vaihetta + oma lukiosuunnitelma, palautus Classroomiin
+               Tila tallennetaan localStorage:oon (avaimet: dg8-amis-*, dg8-lukio-*)
+               Maskotti laukeaa kun tutkija-alue tulee näkyviin (aihe-osio-havainnointi)
+          ══ -->
+          <div class="tutkija-alue aihe-osio" id="tutkija-alue">
             <h3 class="ala-karuselli-otsikko" style="margin-top:24px;">
               <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               Oma reitti löytyy tutkimalla
@@ -1632,7 +1639,7 @@
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
               <div class="erikoislukio-grid" id="erikoislukio-grid" role="list"></div>
 
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2 jatkuu">Vaihe 2</span>Päivä lukiolaisena</h4>
+              <h4 class="tj-osio-otsikko" style="margin-top:20px;">Päivä lukiolaisena</h4>
               <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse lukiotyyppi">
                 <button class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true"  onclick="vaihdaLukioTarina('yleislukio',this)">
                   <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#bfdbfe"/><circle cx="20" cy="24" r="13" fill="#c98642"/><path d="M7 18 Q7 6 20 6 Q33 6 33 18 Z" fill="#2c1810"/><circle cx="15.5" cy="23" r="2" fill="#111"/><circle cx="24.5" cy="23" r="2" fill="#111"/><path d="M15 29 Q20 33 25 29" stroke="#8b5e3c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
@@ -3348,20 +3355,22 @@
     <!-- Maskotti-ilmeet ja puhetekstit 8. luokalle — ylikirjoittaa luokka.js:n oletukset -->
     <script>
       window.maskottiIlmeet = {
-        johdanto:    "kannustavana",
-        koulutus:    "kannustavana",
-        vahvuudet:   "kannustavana",
-        tet:         "iloisena",
-        klinikka:    "kannustavana",
-        tulevaisuus: "iloisena",
+        johdanto:       "kannustavana",
+        koulutus:       "kannustavana",
+        "tutkija-alue": "iloisena",
+        vahvuudet:      "kannustavana",
+        tet:            "iloisena",
+        klinikka:       "kannustavana",
+        tulevaisuus:    "iloisena",
       };
       window.maskottiPuhetekstit = {
-        johdanto:    "Tänä vuonna suunta alkaa löytyä — tervetuloa! 👋",
-        koulutus:    "Tiedätkö jo, haluatko oppia tekemällä vai lukemalla laajasti eri aineita? 🤔",
-        vahvuudet:   "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään 💡",
-        tet:         "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
-        klinikka:    "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
-        tulevaisuus: "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
+        johdanto:       "Tänä vuonna suunta alkaa löytyä — tervetuloa! 👋",
+        koulutus:       "Tiedätkö jo, haluatko oppia tekemällä vai lukemalla laajasti eri aineita? 🤔",
+        "tutkija-alue": "Tutki molempia polkuja — reitti selviää kokeilemalla 🗺️",
+        vahvuudet:      "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään 💡",
+        tet:            "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
+        klinikka:       "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
+        tulevaisuus:    "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
       };
       window.currentClassNumber = "8";
     </script>
@@ -3719,7 +3728,7 @@
     ];
 
     const TJ_LINJAT = [
-      { nimi:"Yleislinja",                          k:["kielet","matikka","yhteiskunta","taide","liikunta","viestinta"], ikoni:"📖", kuvaus:"Valitset kurssit vapaasti oman kiinnostuksesi mukaan. Ei pakollista painotusta." },
+      { nimi:"Yleislinja",                          k:["kielet","matikka","yhteiskunta","taide","liikunta","viestinta","englanti"], ikoni:"📖", kuvaus:"Valitset kurssit vapaasti oman kiinnostuksesi mukaan. Ei pakollista painotusta." },
       { nimi:"Kielilinja",                          k:["kielet"],                   ikoni:"🗣️", kuvaus:"Enemmän kieliopintoja, mahdollisesti kansainvälinen vaihto. Sopii, jos kielet ovat vahvuutesi." },
       { nimi:"Matemaattis-luonnontieteellinen",     k:["matikka"],                  ikoni:"🔢", kuvaus:"Syvempi matematiikka, fysiikka ja kemia. Hyvä pohja tekniikan ja lääketieteen opinnoille." },
       { nimi:"Musiikkilinja",                       k:["taide"],                    ikoni:"🎵", kuvaus:"Enemmän musiikkiopintoja — soitin, teoria ja esiintyminen." },
@@ -3877,11 +3886,13 @@
       const a = b.dataset.ala;
       if (lukioValitut.has(a)) { lukioValitut.delete(a); b.classList.remove('valittu-lukio'); b.setAttribute('aria-pressed','false'); }
       else { lukioValitut.add(a); b.classList.add('valittu-lukio'); b.setAttribute('aria-pressed','true'); }
+      try { localStorage.setItem('dg8-lukio-valitut', JSON.stringify([...lukioValitut])); } catch(e){}
       paivitaLukio();
     }
     function nollaaLukioFil() {
       lukioValitut.clear();
       document.querySelectorAll('#tutkija-lukio .tj-nappi').forEach(n => { n.classList.remove('valittu-lukio'); n.setAttribute('aria-pressed','false'); });
+      try { localStorage.removeItem('dg8-lukio-valitut'); } catch(e){}
       paivitaLukio();
     }
     function paivitaLukio() {
@@ -3949,6 +3960,9 @@
       { nimi:"Journalismi",              ty:"molemmat",  k:["viestinta","yhteiskunta"], kuvaus:"Toimittaja, sisällöntuottaja, some-asiantuntija. Mediamaailma muuttuu nopeasti.", ex:"TAMK, Aalto, JY" },
       { nimi:"Viestintä",               ty:"molemmat",  k:["viestinta"],           kuvaus:"Markkinointi, PR, sisäinen viestintä. Taitava viestijä menestyy kaikilla aloilla.", ex:"HY, HAAGA-HELIA, Metropolia" },
       { nimi:"Mediatuottaminen",         ty:"amk",       k:["viestinta","taide"],   kuvaus:"Video, podcast, digitaalinen media. Luova työ ja tekniset taidot yhdessä.", ex:"Metropolia, LAB, SeAMK" },
+      // englanti / IB
+      { nimi:"Yliopisto ulkomailla (IB-väylä)", ty:"yliopisto", k:["englanti"],        kuvaus:"IB-tutkinto hyväksytään yliopistoihin ympäri maailman. UK, Alankomaat, Saksa, Pohjoismaat — haku suoraan IB-pisteillä.", ex:"UK, Alankomaat, Pohjoismaat" },
+      { nimi:"Kansainväliset ohjelmat Suomessa", ty:"yliopisto", k:["englanti","kielet"], kuvaus:"Aalto, HY, Tampere ja muut suomalaiset yliopistot tarjoavat englanninkielisiä kandidaatti- ja maisteriohjelmia — sopii IB-tutkinnolla.", ex:"Aalto, HY, Tampere" },
     ];
 
     let kkRend = false;
@@ -3985,23 +3999,31 @@
         k.classList.toggle('piilotettu', !ok);
         if (ok) n++;
       });
+      const tjKK = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       document.getElementById('kk-tulos-otsikko').textContent =
-        lukioValitut.size === 0 ? `Kaikki vaihtoehdot (${KK_DATA.length})` : `${n} koulutusta löytyi`;
+        lukioValitut.size === 0
+          ? `${tjKK.kaikki_vaihtoehdot || 'Kaikki vaihtoehdot'} (${KK_DATA.length})`
+          : `${n} ${tjKK.koulutusta_loytyy || 'koulutusta löytyi'}`;
       document.getElementById('kk-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
     }
 
     function tallennaLukioSuunnitelma() {
       const jatko = (document.querySelector('input[name="ls-jatko"]:checked') || {}).value || '';
-      const data = {
-        linja:   document.getElementById('ls-linja').value.trim(),
-        aineet:  document.getElementById('ls-aineet').value.trim(),
-        jatko,
-        haave:   document.getElementById('ls-haave').value.trim(),
-        selvita: document.getElementById('ls-selvita').value.trim()
-      };
+      const linja   = document.getElementById('ls-linja').value.trim();
+      const aineet  = document.getElementById('ls-aineet').value.trim();
+      const haave   = document.getElementById('ls-haave').value.trim();
+      const selvita = document.getElementById('ls-selvita').value.trim();
+      // Vaadi vähintään yksi täytetty kenttä
+      if (!linja && !aineet && !jatko && !haave && !selvita) {
+        const tallennettu = document.getElementById('ls-tallennettu');
+        tallennettu.textContent = '⚠️ Täytä ainakin yksi kohta ennen tallentamista.';
+        tallennettu.classList.add('nakyva');
+        return;
+      }
+      const data = { linja, aineet, jatko, haave, selvita };
       try { localStorage.setItem('dg8-lukio-suunnitelma', JSON.stringify(data)); } catch(e){}
+      document.getElementById('ls-tallennettu').textContent = '✓ Tallennettu! Suunnitelmasi ovat tallessa tässä selaimessa.';
       document.getElementById('ls-tallennettu').classList.add('nakyva');
-      // Näytä latausnappi ja Hyvä työ! -boksi
       const lataa = document.getElementById('ls-lataa-nappi');
       if (lataa) lataa.style.display = 'block';
       const yv = document.getElementById('lukio-yhteenveto');
@@ -4178,6 +4200,17 @@
         }
       } catch(e){}
       paivitaAmis();
+      try {
+        // Palauta Lukiopolun Vaihe 1 valinnat
+        const lv = JSON.parse(localStorage.getItem('dg8-lukio-valitut') || 'null');
+        if (Array.isArray(lv)) {
+          lv.forEach(function(ala) {
+            lukioValitut.add(ala);
+            const nappi = document.querySelector('#tutkija-lukio .tj-nappi[data-ala="' + ala + '"]');
+            if (nappi) { nappi.classList.add('valittu-lukio'); nappi.setAttribute('aria-pressed','true'); }
+          });
+        }
+      } catch(e){}
       try {
         // Palauta vaihe 2 kuittaukset
         ['a','b'].forEach(function(osa) {
