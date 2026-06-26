@@ -1547,6 +1547,12 @@
                   <p>Luonto-alalta eteenpäin. Metsätalous, luonnonvarat, ympäristö.</p>
                   <p class="kk-esimerkki">📍 Karelia-AMK, HAMK, Lapin AMK</p>
                 </div>
+                <div class="kk-kortti amk" role="listitem" data-alat='["taide","data"]'>
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Medianomi (AMK)</h5>
+                  <p>Taide- ja media-alalta eteenpäin. Visuaalinen viestintä, video, animaatio, digitaalinen media.</p>
+                  <p class="kk-esimerkki">📍 Metropolia, XAMK, Haaga-Helia</p>
+                </div>
               </div>
 
               <a href="https://opintopolku.fi/konfo/fi/haku?koulutustyyppi=amk" target="_blank" rel="noopener" class="kk-opintopolku-nappi">
@@ -4174,7 +4180,7 @@
       paivitaAmis();
       try {
         // Palauta vaihe 2 kuittaukset
-        ['a','b','c'].forEach(function(osa) {
+        ['a','b'].forEach(function(osa) {
           if (localStorage.getItem('dg8-amis-v2-' + osa)) {
             const btn = document.getElementById('kuittaa-' + osa);
             if (btn) { btn.classList.add('kuitattu'); btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!'; btn.disabled = true; }
@@ -4184,14 +4190,11 @@
         if (localStorage.getItem('dg8-amis-v4-nahty')) amisV4Nahty = true;
         // Jos kaikki kuitattu JA V4 nähty, näytä yhteenveto
         tarkistaAmisYhteenveto();
-        // Jos B kuitattu, aktivoi nappi ja näytä sisältö
+        // Jos B on aiemmin avattu (reveal näytetty), palauta reveal auki ja piilota vihje
         if (localStorage.getItem('dg8-amis-v2-b')) {
-          const kb = document.getElementById('kuittaa-b');
-          if (kb) kb.disabled = false;
           const rv = document.getElementById('amis-paiva-reveal');
           const si = document.getElementById('amis-paiva-sisalto');
           if (rv && si) { rv.setAttribute('aria-expanded','true'); si.hidden = false; }
-          // Piilota vihje jos jo aiemmin kuitattu
           const vihje = document.getElementById('amis-b-vihje');
           if (vihje) vihje.hidden = true;
         }
