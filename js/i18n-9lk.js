@@ -641,6 +641,32 @@
           if (p6p && pk.v6_p) p6p.textContent = pk.v6_p;
           setTxt('#tet9-paneeli-6 .tet-paneeli-vihje', pk.v6_vihje);
         }
+
+        /* Dialogi-versio (kaikki vaiheet näkyvillä kerralla) */
+        setTxt('#tet9d-ohje', pk.ohje);
+        setTxt('#tet9-suurenna-teksti', pk.suurenna || 'Suurenna');
+        setTxt('#tet9d-v1-label', pk.v1_label); setTxt('#tet9d-v1-otsikko', pk.v1_otsikko);
+        if (pk.v1_p) { var d1p = document.getElementById('tet9d-v1-p'); if (d1p) d1p.textContent = pk.v1_p; }
+        setTxt('#tet9d-v1-vihje', pk.v1_vihje);
+        setTxt('#tet9d-v2-label', pk.v2_label); setTxt('#tet9d-v2-otsikko', pk.v2_otsikko);
+        if (pk.v2_p) { var d2p = document.getElementById('tet9d-v2-p'); if (d2p) d2p.textContent = pk.v2_p; }
+        if (pk.v2_li1) { var d2l1 = document.getElementById('tet9d-v2-li1'); if (d2l1) d2l1.textContent = pk.v2_li1; }
+        if (pk.v2_li2) { var d2l2 = document.getElementById('tet9d-v2-li2'); if (d2l2) d2l2.textContent = pk.v2_li2; }
+        setTxt('#tet9d-v2-vihje', pk.v2_vihje);
+        setTxt('#tet9d-v3-label', pk.v3_label); setTxt('#tet9d-v3-otsikko', pk.v3_otsikko);
+        if (pk.v3_p1) { var d3p1 = document.getElementById('tet9d-v3-p1'); if (d3p1) d3p1.textContent = pk.v3_p1; }
+        if (pk.v3_p2) { var d3p2 = document.getElementById('tet9d-v3-p2'); if (d3p2) d3p2.textContent = pk.v3_p2; }
+        setTxt('#tet9d-v3-vihje', pk.v3_vihje);
+        setTxt('#tet9d-v4-label', pk.v4_label); setTxt('#tet9d-v4-otsikko', pk.v4_otsikko);
+        if (pk.v4_p1) { var d4p1 = document.getElementById('tet9d-v4-p1'); if (d4p1) d4p1.textContent = pk.v4_p1; }
+        if (pk.v4_p2) { var d4p2 = document.getElementById('tet9d-v4-p2'); if (d4p2) d4p2.textContent = pk.v4_p2; }
+        setTxt('#tet9d-v4-vihje', pk.v4_vihje);
+        setTxt('#tet9d-v5-label', pk.v5_label); setTxt('#tet9d-v5-otsikko', pk.v5_otsikko);
+        if (pk.v5_p) { var d5p = document.getElementById('tet9d-v5-p'); if (d5p) d5p.textContent = pk.v5_p; }
+        setTxt('#tet9d-v5-vihje', pk.v5_vihje);
+        setTxt('#tet9d-v6-label', pk.v6_label); setTxt('#tet9d-v6-otsikko', pk.v6_otsikko);
+        if (pk.v6_p) { var d6p = document.getElementById('tet9d-v6-p'); if (d6p) d6p.textContent = pk.v6_p; }
+        setTxt('#tet9d-v6-vihje', pk.v6_vihje);
       })();
     })();
 
