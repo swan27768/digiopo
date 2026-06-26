@@ -700,6 +700,120 @@
       }
       var v3ohje = document.getElementById('amis-v3-ohje');
       if (v3ohje && tj.amis_v3_ohje) v3ohje.querySelector('p').textContent = tj.amis_v3_ohje;
+
+      /* ── Vaihe 2 OSA A ── */
+      var osaA = document.getElementById('amis-osa-a');
+      if (osaA) {
+        /* OSA A label */
+        var osaALabel = osaA.querySelector('.amis-v2-label');
+        if (osaALabel && tj.v2a_label) osaALabel.textContent = tj.v2a_label;
+
+        /* Koulutusmuoto */
+        var kmNimet  = osaA.querySelectorAll('.km-nimi');
+        var kmKuvaus = osaA.querySelectorAll('.km-kuvaus');
+        if (kmNimet[0]  && tj.v2a_km1_nimi)   kmNimet[0].textContent  = tj.v2a_km1_nimi;
+        if (kmKuvaus[0] && tj.v2a_km1_kuvaus)  kmKuvaus[0].textContent = tj.v2a_km1_kuvaus;
+        if (kmNimet[1]  && tj.v2a_km2_nimi)   kmNimet[1].textContent  = tj.v2a_km2_nimi;
+        if (kmKuvaus[1] && tj.v2a_km2_kuvaus)  kmKuvaus[1].textContent = tj.v2a_km2_kuvaus;
+        var kmVs = osaA.querySelector('.km-vs');
+        if (kmVs && tj.v2a_vai) kmVs.textContent = tj.v2a_vai;
+
+        /* YTO-boksi */
+        var ytoBoksi = osaA.querySelector('.yto-boksi');
+        if (ytoBoksi) {
+          var ytoOtsikko = ytoBoksi.querySelector('.yto-otsikko');
+          if (ytoOtsikko && tj.v2a_yto_otsikko) ytoOtsikko.textContent = tj.v2a_yto_otsikko;
+          var ytoKuvaus = ytoBoksi.querySelector('.yto-kuvaus');
+          if (ytoKuvaus && tj.v2a_yto_kuvaus) ytoKuvaus.textContent = tj.v2a_yto_kuvaus;
+          var ytoAineet = ytoBoksi.querySelectorAll('.yto-aine span:last-child');
+          var ytoTexts  = [tj.v2a_yto_1, tj.v2a_yto_2, tj.v2a_yto_3, tj.v2a_yto_4];
+          for (var yi = 0; yi < ytoAineet.length && yi < ytoTexts.length; yi++) {
+            if (ytoTexts[yi]) ytoAineet[yi].textContent = ytoTexts[yi];
+          }
+          var ytoLinkki = ytoBoksi.querySelector('.yto-linkki');
+          if (ytoLinkki && tj.v2a_yto_linkki) ytoLinkki.textContent = tj.v2a_yto_linkki;
+        }
+
+        /* Arki-kortit */
+        var arkiKortit = osaA.querySelectorAll('.tj-arki-kortti');
+        var arkiData   = [
+          [tj.v2a_arki1_nimi, tj.v2a_arki1_kuvaus],
+          [tj.v2a_arki2_nimi, tj.v2a_arki2_kuvaus],
+          [tj.v2a_arki3_nimi, tj.v2a_arki3_kuvaus]
+        ];
+        for (var ai = 0; ai < arkiKortit.length && ai < arkiData.length; ai++) {
+          var ak = arkiKortit[ai];
+          if (arkiData[ai][0]) { var ah = ak.querySelector('h5'); if (ah) ah.textContent = arkiData[ai][0]; }
+          if (arkiData[ai][1]) { var ap = ak.querySelector('p');  if (ap) ap.textContent = arkiData[ai][1]; }
+        }
+
+        /* Kuittaa A */
+        var kuittaaA = document.getElementById('kuittaa-a');
+        if (kuittaaA && tj.v2a_kuittaa && !kuittaaA.classList.contains('kuitattu')) {
+          var kaSpan = kuittaaA.querySelector('span');
+          kuittaaA.textContent = ' ' + tj.v2a_kuittaa;
+          if (kaSpan) kuittaaA.insertBefore(kaSpan, kuittaaA.firstChild);
+        }
+      }
+
+      /* ── Vaihe 2 OSA B ── */
+      var osaB = document.getElementById('amis-osa-b');
+      if (osaB) {
+        /* OSA B label */
+        var osaBLabel = osaB.querySelector('.amis-v2-label');
+        if (osaBLabel && tj.v2b_label) osaBLabel.textContent = tj.v2b_label;
+
+        /* Reveal-nappi */
+        var revealOtsikko = osaB.querySelector('.amis-reveal-otsikko');
+        if (revealOtsikko && tj.v2b_reveal_otsikko) revealOtsikko.textContent = tj.v2b_reveal_otsikko;
+        var revealKuvaus = osaB.querySelector('.amis-reveal-kuvaus');
+        if (revealKuvaus && tj.v2b_reveal_kuvaus) revealKuvaus.textContent = tj.v2b_reveal_kuvaus;
+
+        /* Tarina-tabit */
+        var tarinaTabit = osaB.querySelectorAll('.tj-tarina-nappi');
+        var tarinaLabels = [
+          tj.v2b_tab_lahihoitaja, tj.v2b_tab_kokki,    tj.v2b_tab_datanomi,
+          tj.v2b_tab_asentaja,    tj.v2b_tab_ymparistonhoitaja, tj.v2b_tab_artesaani,
+          tj.v2b_tab_myynti,      tj.v2b_tab_liikunta
+        ];
+        for (var ti = 0; ti < tarinaTabit.length && ti < tarinaLabels.length; ti++) {
+          if (tarinaLabels[ti]) tarinaTabit[ti].textContent = tarinaLabels[ti];
+        }
+
+        /* Kuittaa B */
+        var kuittaaB = document.getElementById('kuittaa-b');
+        if (kuittaaB && tj.v2b_kuittaa && !kuittaaB.classList.contains('kuitattu')) {
+          var kbSpan = kuittaaB.querySelector('span');
+          kuittaaB.textContent = ' ' + tj.v2b_kuittaa;
+          if (kbSpan) kuittaaB.insertBefore(kbSpan, kuittaaB.firstChild);
+        }
+      }
+
+      /* ── Yhteenveto (amispolku) ── */
+      var amisYhteenveto = document.getElementById('amis-yhteenveto');
+      if (amisYhteenveto) {
+        var ayH5 = amisYhteenveto.querySelector('h5');
+        if (ayH5 && tj.yhteenveto_otsikko) ayH5.textContent = tj.yhteenveto_otsikko;
+        var ayPs = amisYhteenveto.querySelectorAll('p');
+        if (ayPs[0] && tj.yhteenveto_p1) ayPs[0].textContent = tj.yhteenveto_p1;
+        if (ayPs[1] && tj.yhteenveto_p2) ayPs[1].textContent = tj.yhteenveto_p2;
+      }
+
+      /* ── Erityisammattioppilaitokset ── */
+      var erityisOtsikko = amisPanel.querySelector('.tj-osio-otsikko:last-of-type');
+      /* Find by text content since there's no id */
+      amisPanel.querySelectorAll('.tj-osio-otsikko').forEach(function(el) {
+        if (el.textContent.indexOf('Erityisammattioppilaitokset') !== -1 && tj.erityis_heading) {
+          var lisatietoSpan = el.querySelector('span');
+          el.textContent = tj.erityis_heading;
+          if (lisatietoSpan) el.insertBefore(lisatietoSpan, el.firstChild);
+        }
+      });
+      var erityisKuvaus = amisPanel.querySelector('.erityis-grid');
+      if (erityisKuvaus && tj.erityis_kuvaus) {
+        var erPrev = erityisKuvaus.previousElementSibling;
+        if (erPrev && erPrev.classList.contains('tj-kuvaus')) erPrev.textContent = tj.erityis_kuvaus;
+      }
     }
 
     /* ── LUKIOPOLKU ── */
