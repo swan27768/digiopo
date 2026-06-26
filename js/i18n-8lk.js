@@ -1009,6 +1009,78 @@
         if (lyPs[0] && tj.lukio_yhteenveto_p1) lyPs[0].textContent = tj.lukio_yhteenveto_p1;
       }
     }
+
+    /* ── Päivitä jo renderöidyt amis-kortit (mid-session kielenvaihto) ── */
+    var tNimi4  = tj.t_nimi  || [];
+    var tAla4   = tj.t_ala   || [];
+    var tLyhyt4 = tj.t_lyhyt || [];
+    document.querySelectorAll('#amis-tutkinnot .tj-kortti[data-idx]').forEach(function(kortti) {
+      var i = parseInt(kortti.dataset.idx, 10);
+      var alaEl  = kortti.querySelector('.tj-kortti-ala');
+      var nimiEl = kortti.querySelector('.tj-kortti-nimi');
+      var lyhEl  = kortti.querySelector('.tj-kortti-lyhyt');
+      if (alaEl  && tAla4[i])   alaEl.textContent  = tAla4[i];
+      if (nimiEl && tNimi4[i])  nimiEl.textContent = tNimi4[i];
+      if (lyhEl  && tLyhyt4[i]) lyhEl.textContent  = tLyhyt4[i];
+      /* "Lue lisää" / "Sulje" nappi */
+      var avaaBtn = kortti.querySelector('.tj-avaa');
+      if (avaaBtn) {
+        var onAuki = kortti.classList.contains('auki');
+        avaaBtn.textContent = onAuki ? (tj.sulje || 'Sulje ▴') : (tj.lue_lisaa || 'Lue lisää ▾');
+      }
+      /* "Kesto" ja "Hae" linkit */
+      var lisatiedot = kortti.querySelector('.tj-lisatiedot');
+      if (lisatiedot) {
+        var firstText = lisatiedot.firstChild;
+        if (firstText && firstText.nodeType === 3 && tj.kesto_3v) {
+          firstText.textContent = tj.kesto_3v + ' · ';
+        }
+        var opLink = lisatiedot.querySelector('a:not(.tj-peli-linkki)');
+        if (opLink && tj.hae_opintopolku) opLink.textContent = tj.hae_opintopolku;
+        var peliLink = lisatiedot.querySelector('.tj-peli-linkki');
+        if (peliLink && tj.kokeile) peliLink.textContent = tj.kokeile;
+      }
+    });
+
+    /* ── Päivitä jo renderöidyt lukio-linja-kortit ── */
+    var lNimi4   = tj.l_nimi   || [];
+    var lKuvaus4 = tj.l_kuvaus || [];
+    document.querySelectorAll('#lukio-linjat .linja-kortti[data-idx]').forEach(function(kortti) {
+      var i = parseInt(kortti.dataset.idx, 10);
+      var h5 = kortti.querySelector('h5');
+      var p  = kortti.querySelector('p');
+      if (h5 && lNimi4[i])   h5.textContent = lNimi4[i];
+      if (p  && lKuvaus4[i]) p.innerHTML    = lKuvaus4[i];
+    });
+
+    /* ── Päivitä jo renderöidyt erikoislukio-kortit ── */
+    var eKuvaus4 = tj.e_kuvaus || [];
+    document.querySelectorAll('#erikoislukio-grid .erikoislukio-kortti[data-idx]').forEach(function(kortti) {
+      var i = parseInt(kortti.dataset.idx, 10);
+      var p = kortti.querySelector('p');
+      if (p && eKuvaus4[i]) p.innerHTML = eKuvaus4[i];
+    });
+
+    /* ── Päivitä jo renderöidyt KK-kortit ── */
+    var kkNimi4   = tj.kk_nimi   || [];
+    var kkKuvaus4 = tj.kk_kuvaus || [];
+    var tyAmk4 = tj.kk_ty_amk || 'AMK';
+    var tyYo4  = tj.kk_ty_yo  || 'Yliopisto';
+    var tyMol4 = tj.kk_ty_molemmat || 'AMK & Yliopisto';
+    document.querySelectorAll('#kk-kortit .kk-kortti[data-idx]').forEach(function(kortti) {
+      var i = parseInt(kortti.dataset.idx, 10);
+      var h5 = kortti.querySelector('h5');
+      var p  = kortti.querySelector('p:not(.kk-esimerkki)');
+      var tySpan = kortti.querySelector('.kk-tyyppi-nappula');
+      if (h5 && kkNimi4[i])   h5.textContent = kkNimi4[i];
+      if (p  && kkKuvaus4[i]) p.textContent  = kkKuvaus4[i];
+      if (tySpan) {
+        var cls = tySpan.classList;
+        if (cls.contains('amk')) tySpan.textContent = tyAmk4;
+        else if (cls.contains('yliopisto')) tySpan.textContent = tyYo4;
+        else tySpan.textContent = tyMol4;
+      }
+    });
   }
 
   /* ── Keskustelutehtäväkorttien käännökset ── */

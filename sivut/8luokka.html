@@ -3600,20 +3600,32 @@
     function renderAmis() {
       if (amisRend) return;
       const k = document.getElementById('amis-tutkinnot');
-      TJ_TUTKINNOT.forEach(t => {
+      const tj = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      const tNimi  = tj.t_nimi  || [];
+      const tAla   = tj.t_ala   || [];
+      const tLyhyt = tj.t_lyhyt || [];
+      TJ_TUTKINNOT.forEach((t, i) => {
+        const nimi  = tNimi[i]  || t.nimi;
+        const ala   = tAla[i]   || t.ala;
+        const lyhyt = tLyhyt[i] || t.lyhyt;
+        const lueLisaa = tj.lue_lisaa || 'Lue lisää ▾';
+        const kesto    = tj.kesto_3v  || 'Kesto: 3 vuotta';
+        const haeOp    = tj.hae_opintopolku || `Hae ${t.nimi.toLowerCase()}ksi → opintopolku.fi`;
+        const kokeile  = tj.kokeile || 'Kokeile — sopisiko ala sinulle? →';
         const el = document.createElement('article');
         el.className = 'tj-kortti'; el.setAttribute('role','listitem');
-        el.dataset.k = JSON.stringify(t.k);
+        el.dataset.k   = JSON.stringify(t.k);
         el.dataset.img = t.imgKey;
+        el.dataset.idx = i;
         el.style.setProperty('--ala-vari', t.v);
         el.innerHTML = `<div class="tj-kortti-varipalkki" aria-hidden="true"><span>${t.ik}</span></div>
           <div class="tj-kortti-sisalto">
-            <span class="tj-kortti-ala" style="background:${t.tv};color:${t.tt}">${t.ala}</span>
-            <p class="tj-kortti-nimi">${t.nimi}</p>
-            <p class="tj-kortti-lyhyt">${t.lyhyt}</p>
-            <button class="tj-avaa" onclick="toggleAmisTutkinto(this)" aria-expanded="false">Lue lisää ▾</button>
-            <div class="tj-lisatiedot" aria-hidden="true">Kesto: 3 vuotta &middot; <a href="${t.op}" target="_blank" rel="noopener" style="color:#d97706">Hae ${t.nimi.toLowerCase()}ksi → opintopolku.fi</a>
-              ${t.p ? `<br><a href="${t.p}" class="tj-peli-linkki" target="_blank" rel="noopener">Kokeile — sopisiko ala sinulle? →</a>` : ''}</div>
+            <span class="tj-kortti-ala" style="background:${t.tv};color:${t.tt}">${ala}</span>
+            <p class="tj-kortti-nimi">${nimi}</p>
+            <p class="tj-kortti-lyhyt">${lyhyt}</p>
+            <button class="tj-avaa" onclick="toggleAmisTutkinto(this)" aria-expanded="false">${lueLisaa}</button>
+            <div class="tj-lisatiedot" aria-hidden="true">${kesto} &middot; <a href="${t.op}" target="_blank" rel="noopener" style="color:#d97706">${haeOp}</a>
+              ${t.p ? `<br><a href="${t.p}" class="tj-peli-linkki" target="_blank" rel="noopener">${kokeile}</a>` : ''}</div>
           </div>`;
         k.appendChild(el);
       });
@@ -3644,8 +3656,11 @@
         k.classList.toggle('piilotettu', !ok);
         if (ok) n++;
       });
+      const tjP = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       document.getElementById('amis-tulos-otsikko').textContent =
-        amisValitut.size === 0 ? `Kaikki tutkinnot (${TJ_TUTKINNOT.length})` : `${n} tutkintoa löytyi`;
+        amisValitut.size === 0
+          ? `${tjP.kaikki_tutkinnot || 'Kaikki tutkinnot'} (${TJ_TUTKINNOT.length})`
+          : `${n} ${tjP.tutkintoja_loytyy || 'tutkintoa löytyi'}`;
       document.getElementById('amis-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
       document.getElementById('amis-tutkinnot').style.display  = n === 0 ? 'none'  : 'grid';
     }
@@ -3653,7 +3668,8 @@
       const k = btn.closest('.tj-kortti');
       const auki = k.classList.toggle('auki');
       const ld = k.querySelector('.tj-lisatiedot');
-      btn.textContent = auki ? 'Sulje ▴' : 'Lue lisää ▾';
+      const tjBtn = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      btn.textContent = auki ? (tjBtn.sulje || 'Sulje ▴') : (tjBtn.lue_lisaa || 'Lue lisää ▾');
       btn.setAttribute('aria-expanded', auki);
       ld.setAttribute('aria-hidden', !auki);
     }
@@ -3672,19 +3688,25 @@
       if (lukioRend) return;
       const lg = document.getElementById('lukio-linjat');
       const eg = document.getElementById('erikoislukio-grid');
-      TJ_LINJAT.forEach(l => {
+      const tjL = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      const lNimi   = tjL.l_nimi   || [];
+      const lKuvaus = tjL.l_kuvaus || [];
+      const eKuvaus = tjL.e_kuvaus || [];
+      TJ_LINJAT.forEach((l, i) => {
         const el = document.createElement('div');
         el.className = 'linja-kortti'; el.setAttribute('role','listitem');
-        el.dataset.k = JSON.stringify(l.k);
-        el.innerHTML = `<div class="linja-kortti-ikoni">${l.ikoni}</div><h5>${l.nimi}</h5><p>${l.kuvaus}</p>`;
+        el.dataset.k   = JSON.stringify(l.k);
+        el.dataset.idx = i;
+        el.innerHTML = `<div class="linja-kortti-ikoni">${l.ikoni}</div><h5>${lNimi[i] || l.nimi}</h5><p>${lKuvaus[i] || l.kuvaus}</p>`;
         lg.appendChild(el);
       });
-      TJ_ERIKOISLUKIOT.forEach(e => {
+      TJ_ERIKOISLUKIOT.forEach((e, i) => {
         const el = document.createElement('div');
         el.className = 'erikoislukio-kortti'; el.setAttribute('role','listitem');
-        el.dataset.f = JSON.stringify(e.f);
+        el.dataset.f   = JSON.stringify(e.f);
         el.dataset.req = JSON.stringify(e.req || []);
-        el.innerHTML = `<h5>${e.ikoni} ${e.nimi}</h5><p>${e.kuvaus}</p>`;
+        el.dataset.idx = i;
+        el.innerHTML = `<h5>${e.ikoni} ${e.nimi}</h5><p>${eKuvaus[i] || e.kuvaus}</p>`;
         eg.appendChild(el);
       });
       lukioRend = true;
@@ -3717,8 +3739,11 @@
         const filterOk = lukioValitut.size === 0 || f.length === 0 || f.some(a => lukioValitut.has(a));
         k.style.display = (reqOk && filterOk) ? '' : 'none';
       });
+      const tjLp = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       document.getElementById('lukio-tulos-otsikko').textContent =
-        lukioValitut.size === 0 ? `Kaikki lukiolinjat (${TJ_LINJAT.length})` : `${n} linjaa löytyi`;
+        lukioValitut.size === 0
+          ? `${tjLp.kaikki_linjat || 'Kaikki lukiolinjat'} (${TJ_LINJAT.length})`
+          : `${n} ${tjLp.linjoja_loytyy || 'linjaa löytyi'}`;
       document.getElementById('lukio-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
       paivitaKK();
     }
@@ -3768,13 +3793,21 @@
     function renderKK() {
       if (kkRend) return;
       const g = document.getElementById('kk-kortit');
-      KK_DATA.forEach(kk => {
+      const tjK = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      const kkNimi   = tjK.kk_nimi   || [];
+      const kkKuvaus = tjK.kk_kuvaus || [];
+      const tyAmk = tjK.kk_ty_amk || 'AMK';
+      const tyYo  = tjK.kk_ty_yo  || 'Yliopisto';
+      const tyMol = tjK.kk_ty_molemmat || 'AMK & Yliopisto';
+      KK_DATA.forEach((kk, i) => {
         const el = document.createElement('div');
         el.className = `kk-kortti ${kk.ty}`;
         el.setAttribute('role','listitem');
-        el.dataset.k = JSON.stringify(kk.k);
-        el.innerHTML = `<span class="kk-tyyppi-nappula ${kk.ty}">${kk.ty === 'amk' ? 'AMK' : kk.ty === 'yliopisto' ? 'Yliopisto' : 'AMK & Yliopisto'}</span>
-          <h5>${kk.nimi}</h5><p>${kk.kuvaus}</p>
+        el.dataset.k   = JSON.stringify(kk.k);
+        el.dataset.idx = i;
+        const tyLabel = kk.ty === 'amk' ? tyAmk : kk.ty === 'yliopisto' ? tyYo : tyMol;
+        el.innerHTML = `<span class="kk-tyyppi-nappula ${kk.ty}">${tyLabel}</span>
+          <h5>${kkNimi[i] || kk.nimi}</h5><p>${kkKuvaus[i] || kk.kuvaus}</p>
           <p class="kk-esimerkki">📍 ${kk.ex}</p>`;
         g.appendChild(el);
       });
