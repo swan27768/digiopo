@@ -656,7 +656,7 @@
       var goalH = amisPanel.querySelector('.tj-tavoite h5');
       if (goalH && tj.amis_goal_heading) goalH.textContent = tj.amis_goal_heading;
       var goalLis = amisPanel.querySelectorAll('.tj-tavoite li');
-      var goals = [tj.amis_goal_1, tj.amis_goal_2, tj.amis_goal_3, tj.amis_goal_4, tj.amis_goal_5];
+      var goals = [tj.amis_goal_1, tj.amis_goal_2, tj.amis_goal_3, tj.amis_goal_4];
       for (var i = 0; i < goalLis.length && i < goals.length; i++) {
         if (goals[i]) goalLis[i].textContent = goals[i];
       }
@@ -849,7 +849,9 @@
         [tj.amis_v4_k3_nimi, tj.amis_v4_k3_kuvaus],
         [tj.amis_v4_k4_nimi, tj.amis_v4_k4_kuvaus],
         [tj.amis_v4_k5_nimi, tj.amis_v4_k5_kuvaus],
-        [tj.amis_v4_k6_nimi, tj.amis_v4_k6_kuvaus]
+        [tj.amis_v4_k6_nimi, tj.amis_v4_k6_kuvaus],
+        [tj.amis_v4_k7_nimi, tj.amis_v4_k7_kuvaus],
+        [tj.amis_v4_k8_nimi, tj.amis_v4_k8_kuvaus]
       ];
       for (var ki = 0; ki < kkKortit.length && ki < kkData.length; ki++) {
         var kk = kkKortit[ki];
