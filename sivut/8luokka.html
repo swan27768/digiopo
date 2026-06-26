@@ -584,9 +584,12 @@
 
     /* Tarinat */
     .tj-tarinat-valit { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-    .tj-tarina-nappi { padding: 6px 13px; border-radius: 20px; border: 2px solid #e5e7eb; background: white; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #6b7280; transition: all .14s; }
+    .tj-tarina-nappi { display:inline-flex; align-items:center; gap:6px; padding: 6px 13px; border-radius: 20px; border: 2px solid #e5e7eb; background: white; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #6b7280; transition: all .14s; }
     .tj-tarina-nappi.aktiivinen-amis  { background: #d97706; border-color: #d97706; color: white; }
     .tj-tarina-nappi.aktiivinen-lukio { background: #2563eb; border-color: #2563eb; color: white; }
+    .tarina-avatar { flex-shrink:0; border-radius:50%; overflow:hidden; display:block; }
+    .tj-tarina-header-flex { display:flex; align-items:center; gap:12px; }
+    .tj-tarina-header-flex .th-teksti { flex:1; min-width:0; }
     .tj-tarina { display: none; background: #fafafa; border: 1.5px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
     .tj-tarina.aktiivinen { display: block; }
     .tj-tarina-header { padding: 13px 18px; border-bottom: 1px solid #e5e7eb; }
@@ -721,6 +724,56 @@
     .osio-askel-kuvaus { display:none; }
     .osio-nuoli { flex-shrink:0; font-size:12px; color:#d1d5db; padding:0 2px; }
     @media(max-width:520px){ .osio-polku-askeleet { flex-wrap:wrap; gap:6px; } .osio-askel { flex:0 0 auto; } .osio-nuoli { display:none; } }
+
+    /* ── Vaihe 2: osat A / B / C ── */
+    .amis-v2-osa { border:1.5px solid #f3f4f6; border-radius:12px; padding:14px 16px; margin:10px 0; background:#fafafa; }
+    .amis-v2-osa-otsikko { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .amis-v2-kirjain { flex-shrink:0; width:24px; height:24px; background:#d97706; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
+    .amis-v2-osa-otsikko > span.amis-v2-label { font-size:13px; font-weight:700; color:#1f2937; flex:1; }
+
+    /* Koulutusmuoto */
+    .koulutusmalli-grid { display:flex; gap:8px; align-items:stretch; margin:0 0 12px; flex-wrap:wrap; }
+    .koulutusmalli-kortti { flex:1; min-width:140px; background:white; border:1.5px solid #e5e7eb; border-radius:10px; padding:12px; }
+    .km-ikoni { font-size:22px; margin-bottom:4px; }
+    .km-nimi { font-size:12px; font-weight:800; color:#1f2937; margin:0 0 4px; }
+    .km-kuvaus { font-size:11.5px; color:#6b7280; line-height:1.5; margin:0 0 8px; }
+    .km-tagi { display:inline-block; font-size:10.5px; font-weight:700; background:#fef3c7; color:#92400e; padding:2px 8px; border-radius:20px; }
+    .km-vs { flex-shrink:0; font-size:11px; font-weight:800; color:#9ca3af; align-self:center; padding:0 2px; }
+
+    /* YTO */
+    .yto-boksi { background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:10px; padding:11px 13px; margin:0 0 12px; }
+    .yto-otsikko { font-size:12.5px; font-weight:800; color:#1e3a8a; margin:0 0 4px; }
+    .yto-kuvaus { font-size:12px; color:#1e40af; margin:0 0 8px; }
+    .yto-lista { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+    .yto-aine { display:flex; align-items:center; gap:5px; background:white; border:1px solid #bfdbfe; border-radius:8px; padding:4px 10px; font-size:12px; color:#1e3a8a; font-weight:600; }
+    .yto-linkki { font-size:11.5px; color:#2563eb; font-weight:700; text-decoration:none; }
+    .yto-linkki:hover { text-decoration:underline; }
+
+    /* Reveal-nappi (Päivä ammattilaisena) */
+    .amis-reveal-nappi { width:100%; display:flex; align-items:center; gap:12px; background:white; border:2px solid #e5e7eb; border-radius:12px; padding:14px 16px; cursor:pointer; text-align:left; transition:all .15s; margin-bottom:10px; font-family:inherit; }
+    .amis-reveal-nappi:hover { border-color:#d97706; background:#fffbeb; }
+    .amis-reveal-ikoni { font-size:26px; flex-shrink:0; }
+    .amis-reveal-teksti { flex:1; }
+    .amis-reveal-otsikko { font-size:14px; font-weight:800; color:#1f2937; margin-bottom:2px; }
+    .amis-reveal-kuvaus { font-size:12px; color:#6b7280; }
+    .amis-reveal-nuoli { font-size:12px; color:#9ca3af; flex-shrink:0; transition:transform .2s; }
+    .amis-reveal-nappi[aria-expanded="true"] .amis-reveal-nuoli { transform:rotate(180deg); }
+
+    /* Kuittaa-nappi */
+    .amis-kuittaa { display:flex; align-items:center; gap:8px; background:white; border:2px solid #e5e7eb; border-radius:8px; padding:9px 16px; font-size:12.5px; font-weight:700; color:#6b7280; cursor:pointer; margin-top:12px; transition:all .2s; font-family:inherit; }
+    .amis-kuittaa:disabled { opacity:.35; cursor:not-allowed; }
+    .amis-kuittaa:not(:disabled):hover { border-color:#d97706; color:#92400e; }
+    .amis-kuittaa.kuitattu { background:#f0fdf4; border-color:#86efac; color:#166534; cursor:default; }
+
+    /* Vaihe 3: iframe-pelitarina */
+    .amis-v3-ohje { background:#f9fafb; border:1.5px dashed #d1d5db; border-radius:10px; padding:16px; text-align:center; color:#6b7280; font-size:13px; margin:4px 0 12px; }
+    .amis-v3-iframe-wrap { margin:4px 0 12px; }
+    .amis-v3-alaotsikko { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .amis-v3-ala-tagi { background:#d97706; color:white; font-size:11px; font-weight:800; padding:3px 9px; border-radius:12px; }
+    .amis-v3-ala-ohje { font-size:12px; color:#6b7280; }
+    .amis-v3-iframe { width:100%; height:560px; border:2px solid #e5e7eb; border-radius:12px; display:block; background:#f9fafb; }
+    .amis-v3-iframe-vihje { font-size:11.5px; color:#9ca3af; margin:6px 0 0; }
+    .amis-v3-iframe-vihje a { color:#d97706; font-weight:700; }
 
     /* ── Etenemispolku: tavoite, askeleet, yhteenveto ── */
     .tj-tavoite { background:#f0fdf4; border:2px solid #86efac; border-radius:12px; padding:14px 16px; margin:10px 0 16px; }
@@ -1090,7 +1143,7 @@
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">3</div>
-                  <span class="tj-askel-teksti">Kirjaa ajatuksesi</span>
+                  <span class="tj-askel-teksti">Tee alan tehtävä</span>
                 </li>
               </ol>
 
@@ -1112,54 +1165,131 @@
               <div class="tj-grid" id="amis-tutkinnot" role="list"></div>
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Kurkista arkeen &amp; kokeile tehtävää</h4>
-              <p class="tj-kuvaus" style="margin-top:4px;margin-bottom:10px;">Katso, miltä ammattikoulu näyttää arjessa — ja tee interaktiivinen tehtävä: avaa tutkinto ja paina <strong>Kokeile — sopisiko ala sinulle? →</strong></p>
-              <div class="tj-arki" role="list">
-                <div class="tj-arki-kortti" role="listitem">
-                  <div class="ik" aria-hidden="true">🔧</div>
-                  <h5>Käytännön harjoittelu</h5>
-                  <p>Pajassa, keittiössä tai hoitoympäristössä — teet oikeita töitä ohjatusti.</p>
+              <p class="tj-kuvaus" style="margin-top:4px;margin-bottom:12px;">Tutustu kolmeen kokonaisuuteen järjestyksessä — ja kuittaa jokainen kun olet valmis.</p>
+
+              <!-- ── OSA A: Mitä amis pitää sisällään? ── -->
+              <div class="amis-v2-osa" id="amis-osa-a" style="background:#fffbeb;border-color:#fde68a;">
+                <div class="amis-v2-osa-otsikko">
+                  <span class="amis-v2-kirjain" aria-hidden="true">A</span>
+                  <span class="amis-v2-label">Mitä amis pitää sisällään?</span>
                 </div>
-                <div class="tj-arki-kortti" role="listitem">
-                  <div class="ik" aria-hidden="true">🏢</div>
-                  <h5>Työssäoppiminen</h5>
-                  <p>Olet oikealla työpaikalla viikkoja kerrallaan. Se on usein paras osa amisesta.</p>
+
+                <!-- Koulutusmuoto -->
+                <div class="koulutusmalli-grid" role="list" aria-label="Opiskelutavat ammattikoulussa">
+                  <div class="koulutusmalli-kortti" role="listitem">
+                    <div class="km-ikoni" aria-hidden="true">🏫</div>
+                    <h5 class="km-nimi">Koulutussopimus</h5>
+                    <p class="km-kuvaus">Opiskellet koulussa ja käyt harjoittelussa työpaikalla. Yleisin tapa. Saat opintotukea.</p>
+                  </div>
+                  <div class="km-vs" aria-hidden="true">vai</div>
+                  <div class="koulutusmalli-kortti" role="listitem">
+                    <div class="km-ikoni" aria-hidden="true">🤝</div>
+                    <h5 class="km-nimi">Oppisopimus</h5>
+                    <p class="km-kuvaus">Opiskellet pääosin töissä. Työnantaja maksaa sinulle palkkaa. Edellyttää, että sinulla on työpaikka valmiina.</p>
+                  </div>
                 </div>
-                <div class="tj-arki-kortti" role="listitem">
-                  <div class="ik" aria-hidden="true">📋</div>
-                  <h5>Näytöt — ei kokeita</h5>
-                  <p>Et kirjoita yo-kirjoituksia. Näytät osaamisen tekemällä oikeita töitä.</p>
+
+                <!-- YTO-aineet -->
+                <div class="yto-boksi">
+                  <p class="yto-otsikko">📚 Amissakin on "kouluaineita" — YTO-aineet</p>
+                  <p class="yto-kuvaus">Ammatillisiin opintoihin kuuluu pakollisia yleissivistäviä aineita:</p>
+                  <div class="yto-lista" role="list">
+                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🔢</span><span>Matematiikka ja luonnontieteet</span></div>
+                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🗣️</span><span>Viestintä ja vuorovaikutus</span></div>
+                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🌍</span><span>Kielet (suomi, ruotsi, englanti)</span></div>
+                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🏛️</span><span>Yhteiskunta- ja työelämäosaaminen</span></div>
+                  </div>
+                  <a href="https://opintopolku.fi/konfo/fi/sivu/opinnot-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" class="yto-linkki">Lue lisää opintopolku.fi →</a>
                 </div>
+
+                <!-- Arki-kortit -->
+                <div class="tj-arki" role="list">
+                  <div class="tj-arki-kortti" role="listitem">
+                    <div class="ik" aria-hidden="true">🔧</div>
+                    <h5>Käytännön harjoittelu</h5>
+                    <p>Pajassa, keittiössä tai hoitoympäristössä — teet oikeita töitä ohjatusti.</p>
+                  </div>
+                  <div class="tj-arki-kortti" role="listitem">
+                    <div class="ik" aria-hidden="true">🏢</div>
+                    <h5>Työssäoppiminen</h5>
+                    <p>Olet oikealla työpaikalla viikkoja kerrallaan. Se on usein paras osa amisesta.</p>
+                  </div>
+                  <div class="tj-arki-kortti" role="listitem">
+                    <div class="ik" aria-hidden="true">📋</div>
+                    <h5>Näytöt — ei kokeita</h5>
+                    <p>Et kirjoita yo-kirjoituksia. Näytät osaamisen tekemällä oikeita töitä.</p>
+                  </div>
+                </div>
+
+                <button class="amis-kuittaa" id="kuittaa-a" onclick="kuitaaAmisV2('a')" aria-label="Kuittaa osa A tehdyksi">
+                  <span aria-hidden="true">○</span> Olen tutustunut — kuittaa ✓
+                </button>
               </div>
 
-              <h4 class="tj-osio-otsikko">Päivä ammattilaisena</h4>
-              <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse ammatti">
-                <button class="tj-tarina-nappi aktiivinen-amis" role="tab" aria-selected="true"  onclick="vaihdaAmisTarina('lahihoitaja',this)">🏥 Lähihoitaja</button>
-                <button class="tj-tarina-nappi"                 role="tab" aria-selected="false" onclick="vaihdaAmisTarina('kokki',this)">👨‍🍳 Kokki</button>
-                <button class="tj-tarina-nappi"                 role="tab" aria-selected="false" onclick="vaihdaAmisTarina('datanomi',this)">💻 IT-tukihenkilö</button>
-              </div>
-              <div class="tj-tarina aktiivinen" id="amis-lahihoitaja" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Sosiaali- ja terveysala</span><h4>Essi, lähihoitajaopiskelija</h4><p>Työssäoppimisjakso vanhainkodilla.</p></div>
-                <div class="tj-aikajana">
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">7:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Aamupalat ja lääkkeet</h6><p>Essi auttaa asukkaita heräämisessä. Ohjaaja valvoo lääkkeiden jakoa.</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:30</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Ulkoilu</h6><p>Essi vie ryhmän pihalle. Hän juttelee asukkaiden kanssa — tämä on päivän parasta aikaa.</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">14:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Palaute ohjaajalta</h6><p>"Tänään yksi asukas kiitti minua. Se riitti." — Essi</p></div></div>
+              <!-- ── OSA B: Päivä ammattilaisena ── -->
+              <div class="amis-v2-osa" id="amis-osa-b" style="background:#f5f3ff;border-color:#ddd6fe;">
+                <div class="amis-v2-osa-otsikko">
+                  <span class="amis-v2-kirjain" aria-hidden="true">B</span>
+                  <span class="amis-v2-label">Päivä ammattilaisena</span>
                 </div>
-              </div>
-              <div class="tj-tarina" id="amis-kokki" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Matkailu- ja ravitsemisala</span><h4>Mikael, kokkiopiskelija</h4><p>Harjoittelujakso ravintolassa.</p></div>
-                <div class="tj-aikajana">
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Esivalmistelu</h6><p>Vihannesten pilkkominen, kastikkeiden valmistus. Keittiössä on oma rytminsä.</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">11:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Lounasvuoro</h6><p>Kiire, lämpö, tiimityö. "En pysty ajattelemaan muuta kuin tätä hetkeä." — Mikael</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">15:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Uusi taito</h6><p>Päivä päättyy yhteen uuteen tekniikkaan. Tänään: erityinen hienopilkkomistekniikka.</p></div></div>
+
+                <button class="amis-reveal-nappi" id="amis-paiva-reveal" onclick="avaaAmisPayiva(this)" aria-expanded="false" aria-controls="amis-paiva-sisalto">
+                  <span class="amis-reveal-ikoni" aria-hidden="true">🏭</span>
+                  <span class="amis-reveal-teksti">
+                    <span class="amis-reveal-otsikko">Miltä tuntuu olla ammattilainen?</span>
+                    <span class="amis-reveal-kuvaus">Seuraa kolmea opiskelijaa heidän työpäivässään — avaa ja katso</span>
+                  </span>
+                  <span class="amis-reveal-nuoli" aria-hidden="true">▼</span>
+                </button>
+
+                <div id="amis-paiva-sisalto" hidden>
+                  <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse ammatti">
+                    <button class="tj-tarina-nappi aktiivinen-amis" role="tab" aria-selected="true"  onclick="vaihdaAmisTarina('lahihoitaja',this)">🏥 Lähihoitaja</button>
+                    <button class="tj-tarina-nappi"                 role="tab" aria-selected="false" onclick="vaihdaAmisTarina('kokki',this)">👨‍🍳 Kokki</button>
+                    <button class="tj-tarina-nappi"                 role="tab" aria-selected="false" onclick="vaihdaAmisTarina('datanomi',this)">💻 IT-tukihenkilö</button>
+                  </div>
+                  <div class="tj-tarina aktiivinen" id="amis-lahihoitaja" role="tabpanel">
+                    <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Sosiaali- ja terveysala</span><h4>Essi, lähihoitajaopiskelija</h4><p>Työssäoppimisjakso vanhainkodilla.</p></div>
+                    <div class="tj-aikajana">
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">7:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Aamupalat ja lääkkeet</h6><p>Essi auttaa asukkaita heräämisessä. Ohjaaja valvoo lääkkeiden jakoa.</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:30</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Ulkoilu</h6><p>Essi vie ryhmän pihalle. Hän juttelee asukkaiden kanssa — tämä on päivän parasta aikaa.</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">14:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Palaute ohjaajalta</h6><p>"Tänään yksi asukas kiitti minua. Se riitti." — Essi</p></div></div>
+                    </div>
+                  </div>
+                  <div class="tj-tarina" id="amis-kokki" role="tabpanel">
+                    <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Matkailu- ja ravitsemisala</span><h4>Mikael, kokkiopiskelija</h4><p>Harjoittelujakso ravintolassa.</p></div>
+                    <div class="tj-aikajana">
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Esivalmistelu</h6><p>Vihannesten pilkkominen, kastikkeiden valmistus. Keittiössä on oma rytminsä.</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">11:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Lounasvuoro</h6><p>Kiire, lämpö, tiimityö. "En pysty ajattelemaan muuta kuin tätä hetkeä." — Mikael</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">15:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Uusi taito</h6><p>Päivä päättyy yhteen uuteen tekniikkaan. Tänään: erityinen hienopilkkomistekniikka.</p></div></div>
+                    </div>
+                  </div>
+                  <div class="tj-tarina" id="amis-datanomi" role="tabpanel">
+                    <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Tieto- ja viestintätekniikka</span><h4>Sara, ICT-opiskelija</h4><p>IT-tukiharjoittelu yrityksessä.</p></div>
+                    <div class="tj-aikajana">
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>IT-tukipyynnöt</h6><p>Sara käy läpi tukipyyntölistansa: mikä ongelma pitää ratkaista ensin?</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">11:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Uusien koneiden asennus</h6><p>Kolme uutta kannettavaa asennetaan verkkoon. Sara tekee osan itse ohjaajan valvonnassa.</p></div></div>
+                      <div class="tj-aika-rivi"><span class="tj-aika-merkki">15:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Dokumentointi</h6><p>"Se fiilis kun ongelma ratkeaa." — Sara</p></div></div>
+                    </div>
+                  </div>
                 </div>
+
+                <button class="amis-kuittaa" id="kuittaa-b" onclick="kuitaaAmisV2('b')" aria-label="Kuittaa osa B tehdyksi" disabled>
+                  <span aria-hidden="true">○</span> Olen katsonut — kuittaa ✓
+                </button>
               </div>
-              <div class="tj-tarina" id="amis-datanomi" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi amis-tagi">Tieto- ja viestintätekniikka</span><h4>Sara, ICT-opiskelija</h4><p>IT-tukiharjoittelu yrityksessä.</p></div>
-                <div class="tj-aikajana">
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">9:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>IT-tukipyynnöt</h6><p>Sara käy läpi tukipyyntölistansa: mikä ongelma pitää ratkaista ensin?</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">11:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Uusien koneiden asennus</h6><p>Kolme uutta kannettavaa asennetaan verkkoon. Sara tekee osan itse ohjaajan valvonnassa.</p></div></div>
-                  <div class="tj-aika-rivi"><span class="tj-aika-merkki">15:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Dokumentointi</h6><p>"Se fiilis kun ongelma ratkeaa." — Sara</p></div></div>
+
+              <!-- ── OSA C: Kokeile alan tehtävää ── -->
+              <div class="amis-v2-osa" id="amis-osa-c" style="background:#f0fdf4;border-color:#bbf7d0;">
+                <div class="amis-v2-osa-otsikko">
+                  <span class="amis-v2-kirjain" aria-hidden="true">C</span>
+                  <span class="amis-v2-label">Kokeile alan tehtävää</span>
                 </div>
+                <p class="tj-kuvaus" style="margin:0 0 4px;">Palaa Vaihe 1:een, avaa jokin tutkinto ja paina <strong>Kokeile — sopisiko ala sinulle? →</strong></p>
+                <p class="tj-kuvaus" style="margin:0 0 0;">Tehtävä antaa palautteen heti — ei oikeita tai vääriä vastauksia.</p>
+                <button class="amis-kuittaa" id="kuittaa-c" onclick="kuitaaAmisV2('c')" aria-label="Kuittaa osa C tehdyksi">
+                  <span aria-hidden="true">○</span> Olen kokeillut — kuittaa ✓
+                </button>
               </div>
 
               <!-- Erityisammattioppilaitokset -->
@@ -1200,21 +1330,18 @@
               <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;margin-bottom:20px;">🔗 Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
 
               <!-- Omat ajatukseni (amis) -->
-              <div class="tj-reflektio">
-                <h4><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>✍️ Omat ajatukseni</h4>
-                <label id="amis-q1" class="tj-reflektio-kysymys" for="amis-v1">Mikä tutkinto tai ala herätti kiinnostukseni?</label>
-                <textarea id="amis-v1" class="tj-textarea" aria-labelledby="amis-q1" placeholder="Kirjaa vapaasti..."></textarea>
-                <label id="amis-q2" class="tj-reflektio-kysymys" for="amis-v2">Mitä haluaisin tietää lisää?</label>
-                <textarea id="amis-v2" class="tj-textarea" aria-labelledby="amis-q2" placeholder="Kysymyksiä, ideoita..."></textarea>
-                <div class="tj-toiminnot">
-                  <button class="tj-tallenna" onclick="tallennaAmis()">Tallenna ✓</button>
-                  <button class="tj-tyhjenna" onclick="tyhjennaAmis()">Tyhjennä</button>
+              <!-- Vaihe 3: Interaktiivinen alan tehtävä -->
+              <div class="amis-v3-wrap" id="amis-v3-wrap">
+                <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>🎮 Tee alan tehtävä</h4>
+                <div id="amis-v3-sisalto">
+                  <!-- renderAmisV3() täyttää tämän -->
+                  <div class="amis-v3-ohje" id="amis-v3-ohje">
+                    <p>👆 Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva ammattitilanne ilmestyy tähän automaattisesti.</p>
+                  </div>
                 </div>
-                <div class="tj-tallennettu" id="amis-tallennettu" role="status">✓ Tallennettu! Vastauksesi ovat tallessa tässä selaimessa.</div>
-                <p style="font-size:12px;color:#6b7280;margin-top:10px;">💡 Jos haluat saada vastauksen opolta, tallenna vastauksesi ja lähetä se Classroomin kautta.</p>
               </div>
               <!-- Yhteenveto -->
-              <div class="tj-yhteenveto" role="region" aria-label="Yhteenveto">
+              <div class="tj-yhteenveto" id="amis-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>✅ Hyvä työ!</h5>
                 <p>Olet nyt tutustunut ammatillisiin tutkintoihin ja saanut kuvan siitä, miltä ammattikoulu näyttää arjessa.</p>
                 <p>💡 <strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
@@ -1278,6 +1405,7 @@
               <p class="tj-tulos-otsikko" id="lukio-tulos-otsikko">Kaikki lukiolinjat</p>
               <p class="tj-ei-tuloksia" id="lukio-ei-tuloksia" role="status">Ei tuloksia.</p>
               <div class="linja-grid" id="lukio-linjat" role="list"></div>
+              <p style="font-size:11px;color:#9ca3af;margin:6px 0 0;">Lähde: <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#9ca3af;">opintopolku.fi/lukiokoulutus</a></p>
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot &amp; arki</h4>
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
@@ -1285,13 +1413,27 @@
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2 jatkuu">Vaihe 2</span>Päivä lukiolaisena</h4>
               <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse lukiotyyppi">
-                <button class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true"  onclick="vaihdaLukioTarina('yleislukio',this)">🎓 Yleislukio</button>
-                <button class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('ib',this)">🌐 IB-lukio</button>
-                <button class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('urheilu',this)">⚽ Urheilulukio</button>
+                <button class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true"  onclick="vaihdaLukioTarina('yleislukio',this)">
+                  <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#bfdbfe"/><circle cx="20" cy="24" r="13" fill="#c98642"/><path d="M7 18 Q7 6 20 6 Q33 6 33 18 Z" fill="#2c1810"/><circle cx="15.5" cy="23" r="2" fill="#111"/><circle cx="24.5" cy="23" r="2" fill="#111"/><path d="M15 29 Q20 33 25 29" stroke="#8b5e3c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                  Emre – Yleislukio
+                </button>
+                <button class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('ib',this)">
+                  <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#fce7f3"/><circle cx="20" cy="24" r="13" fill="#f5d0b3"/><path d="M7 16 Q7 6 20 6 Q33 6 33 16 L33 20 L7 20 Z" fill="#1a1a1a"/><circle cx="15.5" cy="25" r="2" fill="#222"/><circle cx="24.5" cy="25" r="2" fill="#222"/><path d="M15 30 Q20 34 25 30" stroke="#b08060" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                  Yuki – IB-lukio
+                </button>
+                <button class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('urheilu',this)">
+                  <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#d1fae5"/><circle cx="20" cy="24" r="13" fill="#fddab6"/><path d="M7 17 Q7 6 20 6 Q33 6 33 17 Z" fill="#d4a030"/><ellipse cx="33" cy="13" rx="5" ry="7" fill="#d4a030"/><circle cx="15.5" cy="23" r="2" fill="#333"/><circle cx="24.5" cy="23" r="2" fill="#333"/><path d="M15 29 Q20 33 25 29" stroke="#a07040" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                  Aino – Urheilulukio
+                </button>
               </div>
 
               <div class="tj-tarina aktiivinen" id="lukio-yleislukio" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi lukio-tagi">Yleislukio</span><h4>Emre, lukion 1. vuosi</h4><p>Normaali lukiopäivä syksyllä.</p></div>
+                <div class="tj-tarina-header">
+                  <div class="tj-tarina-header-flex">
+                    <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#bfdbfe"/><circle cx="20" cy="24" r="13" fill="#c98642"/><path d="M7 18 Q7 6 20 6 Q33 6 33 18 Z" fill="#2c1810"/><circle cx="15.5" cy="23" r="2" fill="#111"/><circle cx="24.5" cy="23" r="2" fill="#111"/><path d="M15 29 Q20 33 25 29" stroke="#8b5e3c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    <div class="th-teksti"><span class="tj-tarina-tagi lukio-tagi">Yleislukio</span><h4>Emre, lukion 1. vuosi</h4><p>Normaali lukiopäivä syksyllä.</p></div>
+                  </div>
+                </div>
                 <div class="tj-aikajana">
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">8:15</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Matematiikka (pitkä)</h6><p>Emre valitsi pitkän matikan. Se avaa enemmän ovia yliopistoihin.</p></div></div>
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">10:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Englanti — kirjallisuuden analyysi</h6><p>Kurssit ovat itsenäisempiä kuin yläasteella. Opettaja ei huolehdi sinun puolestasi.</p></div></div>
@@ -1300,7 +1442,12 @@
                 </div>
               </div>
               <div class="tj-tarina" id="lukio-ib" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi lukio-tagi">IB-lukio</span><h4>Yuki, IB:n 2. vuosi</h4><p>Kansainvälinen tutkinto — kaikki opetus englanniksi.</p></div>
+                <div class="tj-tarina-header">
+                  <div class="tj-tarina-header-flex">
+                    <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#fce7f3"/><circle cx="20" cy="24" r="13" fill="#f5d0b3"/><path d="M7 16 Q7 6 20 6 Q33 6 33 16 L33 20 L7 20 Z" fill="#1a1a1a"/><circle cx="15.5" cy="25" r="2" fill="#222"/><circle cx="24.5" cy="25" r="2" fill="#222"/><path d="M15 30 Q20 34 25 30" stroke="#b08060" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    <div class="th-teksti"><span class="tj-tarina-tagi lukio-tagi">IB-lukio</span><h4>Yuki, IB:n 2. vuosi</h4><p>Kansainvälinen tutkinto — kaikki opetus englanniksi.</p></div>
+                  </div>
+                </div>
                 <div class="tj-aikajana">
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">8:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Theory of Knowledge — tietoteoria</h6><p>IB:ssä on pakollinen filosofinen kurssi. Miten tiedämme mitä tiedämme?</p></div></div>
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">10:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Higher Level Mathematics — vaativa matematiikka</h6><p>Vaativampaa kuin suomalainen pitkä matikka. Yuki tähtää yliopistoon ulkomaille.</p></div></div>
@@ -1309,7 +1456,12 @@
                 </div>
               </div>
               <div class="tj-tarina" id="lukio-urheilu" role="tabpanel">
-                <div class="tj-tarina-header"><span class="tj-tarina-tagi lukio-tagi">Urheilulukio</span><h4>Aino, urheilulukion 1. vuosi</h4><p>Jalkapalloilija, harjoittelee ammattilaisseuraassa.</p></div>
+                <div class="tj-tarina-header">
+                  <div class="tj-tarina-header-flex">
+                    <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#d1fae5"/><circle cx="20" cy="24" r="13" fill="#fddab6"/><path d="M7 17 Q7 6 20 6 Q33 6 33 17 Z" fill="#d4a030"/><ellipse cx="33" cy="13" rx="5" ry="7" fill="#d4a030"/><circle cx="15.5" cy="23" r="2" fill="#333"/><circle cx="24.5" cy="23" r="2" fill="#333"/><path d="M15 29 Q20 33 25 29" stroke="#a07040" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    <div class="th-teksti"><span class="tj-tarina-tagi lukio-tagi">Urheilulukio</span><h4>Aino, urheilulukion 1. vuosi</h4><p>Jalkapalloilija, harjoittelee ammattilaisseuraassa.</p></div>
+                  </div>
+                </div>
                 <div class="tj-aikajana">
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">7:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Aamuharjoitukset</h6><p>Aino on salilla ennen koulua. Valmennus on osa lukujärjestystä.</p></div></div>
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">9:30</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Lukio-opinnot</h6><p>Tunnit on sijoitettu niin, että harjoitukset sopivat. Etätunnit ovat osa arkea.</p></div></div>
@@ -1341,24 +1493,9 @@
                 🔍 Kaikki koulutusohjelmat — opintopolku.fi
               </a>
 
-              <!-- Omat ajatukseni (lukio) -->
-              <div class="tj-reflektio">
-                <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span>✍️ Omat ajatukseni</h4>
-                <label id="lukio-q1" class="tj-reflektio-kysymys" for="lukio-v1">Mikä lukiolinja tai erikoislukio kuulostaa kiinnostavalta?</label>
-                <textarea id="lukio-v1" class="tj-textarea lukio" aria-labelledby="lukio-q1" placeholder="Kirjaa vapaasti..."></textarea>
-                <label id="lukio-q2" class="tj-reflektio-kysymys" for="lukio-v2">Mitä haluaisin tietää lisää lukiosta?</label>
-                <textarea id="lukio-v2" class="tj-textarea lukio" aria-labelledby="lukio-q2" placeholder="Kysymyksiä, ideoita..."></textarea>
-                <div class="tj-toiminnot">
-                  <button class="tj-tallenna lukio" onclick="tallennaLukio()">Tallenna ✓</button>
-                  <button class="tj-tyhjenna" onclick="tyhjennaLukio()">Tyhjennä</button>
-                </div>
-                <div class="tj-tallennettu" id="lukio-tallennettu" role="status">✓ Tallennettu! Vastauksesi ovat tallessa tässä selaimessa.</div>
-                <p style="font-size:12px;color:#6b7280;margin-top:10px;">💡 Jos haluat saada vastauksen opolta, tallenna vastauksesi ja lähetä se Classroomin kautta.</p>
-              </div>
-
               <!-- Lukiosuunnitelma -->
               <div class="lukio-suunnitelma">
-                <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4 jatkuu" style="background:#1d4ed8;color:white;">Vaihe 4</span>📋 Oma lukiosuunnitelma</h4>
+                <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span>📋 Oma lukiosuunnitelma</h4>
                 <p class="tj-kuvaus">Täytä vaihe kerrallaan — voit palata ja muokata myöhemmin.</p>
 
                 <div class="ls-vaihe">
@@ -1411,13 +1548,15 @@
                   <button class="tj-tyhjenna" onclick="tyhjennaLukioSuunnitelma()">Tyhjennä</button>
                 </div>
                 <div class="tj-tallennettu" id="ls-tallennettu" role="status">✓ Tallennettu! Suunnitelmasi ovat tallessa tässä selaimessa.</div>
+                <button id="ls-lataa-nappi" onclick="lataaLukioSuunnitelmaTxt()" style="display:none;margin-top:10px;width:100%;background:#1d4ed8;color:white;border:none;border-radius:8px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:left;">
+                  ⬇️ Lataa suunnitelma TXT-tiedostona — lähetä Classroomiin
+                </button>
               </div>
 
-              <!-- Yhteenveto -->
-              <div class="tj-yhteenveto lv" role="region" aria-label="Yhteenveto">
+              <!-- Yhteenveto (näkyy vasta tallennuksen jälkeen) -->
+              <div class="tj-yhteenveto lv" id="lukio-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>✅ Hyvä työ!</h5>
-                <p>Olet nyt tutustunut lukiolinjoihin, erikoislukioihin ja jatko-opintomahdollisuuksiin — ja tehnyt oman suunnitelmasi.</p>
-                <p>💡 <strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
+                <p>Olet tutustunut lukiolinjoihin, erikoislukioihin ja jatko-opintomahdollisuuksiin — ja tehnyt oman suunnitelmasi.</p>
                 <p>🔍 Haluatko tutkia lisää? Katso lukiokoulutusta <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#1e40af;font-weight:700;">opintopolku.fi</a>:stä.</p>
               </div>
 
@@ -3375,7 +3514,6 @@
       { nimi:"Musiikkilukio",    ikoni:"🎵", kuvaus:"Pääsykoe. Intensiivinen musiikkiohjelma ja lukio-opinnot. Soitin tai laulu on pakollinen.", f:["taide"] },
       { nimi:"Kuvataidelukio",   ikoni:"🎨", kuvaus:"Kuvataiteen erikoislukio — portfoliotyöskentely, näyttelyt ja taidehistoria pääosassa.", f:["taide"] },
       { nimi:"Steinerlukio",     ikoni:"🌱", kuvaus:"Erilainen oppimiskäsitys: ei numerosanoja, laaja taideintegraatio, oma tahti. Waldorf-pedagogiikkaan perustuva.", f:["taide"] },
-      { nimi:"Kielikylpylukio",  ikoni:"🗣️", kuvaus:"Osa tai kaikki opetus ruotsiksi tai englanniksi. Vahvistaa kielitaitoa nopeasti.", f:["kielet"] },
     ];
 
     /* ── Amis ── */
@@ -3409,15 +3547,18 @@
       const a = b.dataset.ala;
       if (amisValitut.has(a)) { amisValitut.delete(a); b.classList.remove('valittu-amis'); b.setAttribute('aria-pressed','false'); }
       else { amisValitut.add(a); b.classList.add('valittu-amis'); b.setAttribute('aria-pressed','true'); }
+      try { localStorage.setItem('dg8-amis-valitut', JSON.stringify([...amisValitut])); } catch(e){}
       paivitaAmis();
     }
     function nollaaAmisFil() {
       amisValitut.clear();
       document.querySelectorAll('#tutkija-amis .tj-nappi').forEach(n => { n.classList.remove('valittu-amis'); n.setAttribute('aria-pressed','false'); });
+      try { localStorage.removeItem('dg8-amis-valitut'); } catch(e){}
       paivitaAmis();
     }
     function paivitaAmis() {
       renderAmis();
+      renderAmisV3();
       const kortit = document.querySelectorAll('#amis-tutkinnot .tj-kortti');
       let n = 0;
       kortit.forEach(k => {
@@ -3444,18 +3585,6 @@
       document.querySelectorAll('#tutkija-amis .tj-tarina-nappi').forEach(n => { n.classList.remove('aktiivinen-amis'); n.setAttribute('aria-selected','false'); });
       document.getElementById('amis-'+id).classList.add('aktiivinen');
       nappi.classList.add('aktiivinen-amis'); nappi.setAttribute('aria-selected','true');
-    }
-    function tallennaAmis() {
-      const v1 = document.getElementById('amis-v1').value.trim();
-      const v2 = document.getElementById('amis-v2').value.trim();
-      try { localStorage.setItem('dg8-amis-reflektio', JSON.stringify({v1,v2})); } catch(e){}
-      document.getElementById('amis-tallennettu').classList.add('nakyva');
-    }
-    function tyhjennaAmis() {
-      document.getElementById('amis-v1').value = '';
-      document.getElementById('amis-v2').value = '';
-      document.getElementById('amis-tallennettu').classList.remove('nakyva');
-      try { localStorage.removeItem('dg8-amis-reflektio'); } catch(e){}
     }
 
     /* ── Lukio ── */
@@ -3518,18 +3647,6 @@
       document.querySelectorAll('#tutkija-lukio .tj-tarina-nappi').forEach(n => { n.classList.remove('aktiivinen-lukio'); n.setAttribute('aria-selected','false'); });
       document.getElementById('lukio-'+id).classList.add('aktiivinen');
       nappi.classList.add('aktiivinen-lukio'); nappi.setAttribute('aria-selected','true');
-    }
-    function tallennaLukio() {
-      const v1 = document.getElementById('lukio-v1').value.trim();
-      const v2 = document.getElementById('lukio-v2').value.trim();
-      try { localStorage.setItem('dg8-lukio-reflektio', JSON.stringify({v1,v2})); } catch(e){}
-      document.getElementById('lukio-tallennettu').classList.add('nakyva');
-    }
-    function tyhjennaLukio() {
-      document.getElementById('lukio-v1').value = '';
-      document.getElementById('lukio-v2').value = '';
-      document.getElementById('lukio-tallennettu').classList.remove('nakyva');
-      try { localStorage.removeItem('dg8-lukio-reflektio'); } catch(e){}
     }
 
     /* ── Korkeakoulut ── */
@@ -3609,13 +3726,102 @@
       };
       try { localStorage.setItem('dg8-lukio-suunnitelma', JSON.stringify(data)); } catch(e){}
       document.getElementById('ls-tallennettu').classList.add('nakyva');
+      // Näytä latausnappi ja Hyvä työ! -boksi
+      const lataa = document.getElementById('ls-lataa-nappi');
+      if (lataa) lataa.style.display = 'block';
+      const yv = document.getElementById('lukio-yhteenveto');
+      if (yv) { yv.hidden = false; yv.scrollIntoView({behavior:'smooth', block:'nearest'}); }
     }
+
+    function lataaLukioSuunnitelmaTxt() {
+      const jatkoMap = { amk:'AMK', yliopisto:'Yliopisto', molemmat:'Molemmat kiinnostavat', eos:'En tiedä vielä' };
+      const jatko = (document.querySelector('input[name="ls-jatko"]:checked') || {}).value || '';
+      const teksti = [
+        'OMA LUKIOSUUNNITELMA',
+        '====================',
+        '',
+        '1. Lukiolinja tai erikoislukio:',
+        document.getElementById('ls-linja').value.trim() || '–',
+        '',
+        '2. Kolme kiinnostavaa ainetta:',
+        document.getElementById('ls-aineet').value.trim() || '–',
+        '',
+        '3. Lukion jälkeen minua kiinnostaa:',
+        jatkoMap[jatko] || '–',
+        '',
+        '4. Haaveeni lukion jälkeen:',
+        document.getElementById('ls-haave').value.trim() || '–',
+        '',
+        '5. Yksi selvitettävä asia:',
+        document.getElementById('ls-selvita').value.trim() || '–',
+      ].join('\n');
+      const blob = new Blob([teksti], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'oma-lukiosuunnitelma.txt'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
     function tyhjennaLukioSuunnitelma() {
       ['ls-linja','ls-aineet','ls-haave','ls-selvita'].forEach(id => document.getElementById(id).value = '');
       const r = document.querySelector('input[name="ls-jatko"]:checked');
       if (r) r.checked = false;
       document.getElementById('ls-tallennettu').classList.remove('nakyva');
+      const lataa = document.getElementById('ls-lataa-nappi');
+      if (lataa) lataa.style.display = 'none';
+      const yv = document.getElementById('lukio-yhteenveto');
+      if (yv) yv.hidden = true;
       try { localStorage.removeItem('dg8-lukio-suunnitelma'); } catch(e){}
+    }
+
+    /* ── Vaihe 3: Alan pelitarina (iframe) ── */
+    const AMIS_V3_TIEDOSTOT = {
+      ihmiset:  '/pelit/koulutusalat/sote.html',
+      tekniikka:'/pelit/koulutusalat/tekniikka-ala.html',
+      luonto:   '/pelit/koulutusalat/luonto-ala.html',
+      taide:    '/pelit/koulutusalat/taide-ala.html',
+      kauppa:   '/pelit/koulutusalat/kauppa-ala.html',
+      data:     '/pelit/koulutusalat/it-ala.html',
+      ruoka:    '/pelit/koulutusalat/elintarvike-ala.html',
+      liikunta: '/pelit/koulutusalat/palvelu-ala.html'
+    };
+    const AMIS_V3_NIMET = {
+      ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
+      taide:'Taide ja kulttuuri', kauppa:'Kauppa ja myynti',
+      data:'IT ja tietotekniikka', ruoka:'Elintarvikeala', liikunta:'Palveluala'
+    };
+
+    function renderAmisV3() {
+      const sisalto = document.getElementById('amis-v3-sisalto');
+      if (!sisalto) return;
+      const prioriteetti = ['ihmiset','tekniikka','data','ruoka','luonto','taide','kauppa','liikunta'];
+      let ala = null;
+      for (const p of prioriteetti) { if (amisValitut.has(p)) { ala = p; break; } }
+      if (!ala) {
+        sisalto.innerHTML = '<div class="amis-v3-ohje"><p>👆 Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva pelitarina ilmestyy tähän automaattisesti.</p></div>';
+        return;
+      }
+      // Jos sama ala jo näkyy, älä lataa uudelleen
+      const nykyinen = sisalto.querySelector('iframe');
+      if (nykyinen && nykyinen.dataset.ala === ala) return;
+      const tiedosto = AMIS_V3_TIEDOSTOT[ala];
+      const nimi = AMIS_V3_NIMET[ala] || ala;
+      sisalto.innerHTML = `
+        <div class="amis-v3-iframe-wrap">
+          <div class="amis-v3-alaotsikko">
+            <span class="amis-v3-ala-tagi">${nimi}</span>
+            <span class="amis-v3-ala-ohje">Pelaa tarina loppuun</span>
+          </div>
+          <iframe
+            src="${tiedosto}"
+            class="amis-v3-iframe"
+            data-ala="${ala}"
+            title="${nimi} — interaktiivinen pelitarina"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+          <p class="amis-v3-iframe-vihje">💡 Tarina avautuu yllä. Voit myös <a href="${tiedosto}" target="_blank" rel="noopener">avata sen uuteen välilehteen</a>.</p>
+        </div>`;
     }
 
     /* ── Tab-vaihto ── */
@@ -3628,14 +3834,66 @@
       if (polku === 'amis') paivitaAmis(); else { paivitaLukio(); paivitaKK(); }
     }
 
+    /* ── Vaihe 2: kuittaus & reveal ── */
+    function kuitaaAmisV2(osa) {
+      const btn = document.getElementById('kuittaa-' + osa);
+      if (!btn || btn.disabled) return;
+      btn.classList.add('kuitattu');
+      btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!';
+      btn.disabled = true;
+      try { localStorage.setItem('dg8-amis-v2-' + osa, '1'); } catch(e){}
+      // Näytä yhteenveto kun kaikki kuitattu
+      if (['a','b','c'].every(function(o){ return document.getElementById('kuittaa-'+o) && document.getElementById('kuittaa-'+o).classList.contains('kuitattu'); })) {
+        const yv = document.getElementById('amis-yhteenveto');
+        if (yv) { yv.hidden = false; yv.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+      }
+    }
+
+    function avaaAmisPayiva(btn) {
+      const sisalto = document.getElementById('amis-paiva-sisalto');
+      const auki = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !auki);
+      sisalto.hidden = auki;
+      // Aktivoi kuittausnappi B heti kun avattu
+      const kb = document.getElementById('kuittaa-b');
+      if (kb && !kb.classList.contains('kuitattu')) kb.disabled = false;
+    }
+
     /* ── Init ── */
     (function() {
+      try {
+        // Palauta Vaihe 1 ala-valinnat ennen renderöintiä
+        const av = JSON.parse(localStorage.getItem('dg8-amis-valitut') || 'null');
+        if (Array.isArray(av)) {
+          av.forEach(function(ala) {
+            amisValitut.add(ala);
+            const nappi = document.querySelector('#tutkija-amis .tj-nappi[data-ala="' + ala + '"]');
+            if (nappi) { nappi.classList.add('valittu-amis'); nappi.setAttribute('aria-pressed','true'); }
+          });
+        }
+      } catch(e){}
       paivitaAmis();
       try {
-        const a = JSON.parse(localStorage.getItem('dg8-amis-reflektio') || 'null');
-        if (a) { if (a.v1) document.getElementById('amis-v1').value = a.v1; if (a.v2) document.getElementById('amis-v2').value = a.v2; }
-        const l = JSON.parse(localStorage.getItem('dg8-lukio-reflektio') || 'null');
-        if (l) { if (l.v1) document.getElementById('lukio-v1').value = l.v1; if (l.v2) document.getElementById('lukio-v2').value = l.v2; }
+        // Palauta vaihe 2 kuittaukset
+        ['a','b','c'].forEach(function(osa) {
+          if (localStorage.getItem('dg8-amis-v2-' + osa)) {
+            const btn = document.getElementById('kuittaa-' + osa);
+            if (btn) { btn.classList.add('kuitattu'); btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!'; btn.disabled = true; }
+          }
+        });
+        // Jos kaikki kuitattu, näytä yhteenveto
+        if (['a','b','c'].every(function(o){ return localStorage.getItem('dg8-amis-v2-'+o); })) {
+          const yv = document.getElementById('amis-yhteenveto');
+          if (yv) yv.hidden = false;
+        }
+        // Jos B kuitattu, aktivoi nappi ja näytä sisältö
+        if (localStorage.getItem('dg8-amis-v2-b')) {
+          const kb = document.getElementById('kuittaa-b');
+          if (kb) kb.disabled = false;
+          const rv = document.getElementById('amis-paiva-reveal');
+          const si = document.getElementById('amis-paiva-sisalto');
+          if (rv && si) { rv.setAttribute('aria-expanded','true'); si.hidden = false; }
+        }
         const s = JSON.parse(localStorage.getItem('dg8-lukio-suunnitelma') || 'null');
         if (s) {
           if (s.linja)   document.getElementById('ls-linja').value   = s.linja;
@@ -3643,6 +3901,11 @@
           if (s.jatko)   { const r = document.querySelector(`input[name="ls-jatko"][value="${s.jatko}"]`); if (r) r.checked = true; }
           if (s.haave)   document.getElementById('ls-haave').value   = s.haave;
           if (s.selvita) document.getElementById('ls-selvita').value = s.selvita;
+          // Näytä latausnappi ja Hyvä työ! -boksi jos jo tallennettu
+          const lataa = document.getElementById('ls-lataa-nappi');
+          if (lataa) lataa.style.display = 'block';
+          const yv = document.getElementById('lukio-yhteenveto');
+          if (yv) yv.hidden = false;
         }
       } catch(e){}
     })();
