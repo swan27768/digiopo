@@ -716,6 +716,8 @@
     .kk-tyyppi-nappula.yliopisto { background:#ede9fe; color:#4c1d95; }
     .kk-tyyppi-nappula.molemmat { background:#e0f2fe; color:#075985; }
     .kk-kortti.piilotettu { display:none; }
+    .kk-kortti.v4-korostettu { box-shadow:0 0 0 2.5px #d97706; border-color:#d97706 !important; }
+    .kk-kortti.v4-himmennetty { opacity:0.35; filter:grayscale(30%); }
     .kk-opintopolku-nappi {
       display:inline-flex; align-items:center; gap:6px;
       margin-top:12px; padding:8px 16px; border-radius:8px;
@@ -1183,7 +1185,6 @@
                   <li>Kurkistat ammatillisen koulun arkeen ja ammattilaisen työpäivään (Vaihe 2)</li>
                   <li>Teet oman alasi interaktiivisen tehtävän (Vaihe 3)</li>
                   <li>Näet, mihin amis johtaa — jatko-opintomahdollisuudet (Vaihe 4)</li>
-                  <li>Palautat tehtävän Classroomiin</li>
                 </ul>
               </div>
 
@@ -1191,7 +1192,7 @@
               <ol class="tj-askeleet" aria-label="Tehtävän vaiheet">
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">1</div>
-                  <span class="tj-askel-teksti">Valitse kiinnostuksesi</span>
+                  <span class="tj-askel-teksti">Valitse kiinnostava ala</span>
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">2</div>
@@ -1207,7 +1208,7 @@
                 </li>
               </ol>
 
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 1">Vaihe 1</span>Kiinnostaa minua</h4>
+              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 1">Vaihe 1</span>Valitse kiinnostava ala</h4>
               <div class="tj-kiinnostukset" role="group" aria-label="Valitse kiinnostuksen kohde">
                 <button class="tj-nappi" data-ala="ihmiset"   onclick="toggleAmisFil(this)" aria-pressed="false">🤝 Ihmiset</button>
                 <button class="tj-nappi" data-ala="tekniikka" onclick="toggleAmisFil(this)" aria-pressed="false">⚙️ Tekniikka</button>
@@ -1352,7 +1353,7 @@
                   <span class="amis-reveal-ikoni" aria-hidden="true">🏭</span>
                   <span class="amis-reveal-teksti">
                     <span class="amis-reveal-otsikko">Miltä tuntuu olla ammattilainen?</span>
-                    <span class="amis-reveal-kuvaus">Seuraa kolmea opiskelijaa heidän työpäivässään — avaa ja katso</span>
+                    <span class="amis-reveal-kuvaus">Seuraa ammattilaista heidän työpäivässään — avaa ja katso</span>
                   </span>
                   <span class="amis-reveal-nuoli" aria-hidden="true">▼</span>
                 </button>
@@ -1498,41 +1499,53 @@
 
               <p class="tj-osio-otsikko">Esimerkkejä — mitä AMK:ssa voi opiskella amispolun jälkeen?</p>
               <div class="kk-grid" role="list" style="margin-bottom:12px;">
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["ihmiset"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Sairaanhoitaja</h5>
                   <p>Sote-alalta eteenpäin. Kesto 3½ v. Hyvä työllistyvyys.</p>
                   <p class="kk-esimerkki">📍 Metropolia, TAMK, Savonia</p>
                 </div>
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["tekniikka"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Insinööri (AMK)</h5>
                   <p>Tekniikan alalta eteenpäin. Sähkö, kone, rakennus, automaatio.</p>
                   <p class="kk-esimerkki">📍 Metropolia, TAMK, OAMK</p>
                 </div>
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["kauppa"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Tradenomi</h5>
                   <p>Kaupan alalta eteenpäin. Taloushallinto, markkinointi, yrittäjyys.</p>
                   <p class="kk-esimerkki">📍 HAAGA-HELIA, Metropolia</p>
                 </div>
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["data"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Tietojenkäsittely</h5>
                   <p>IT-alalta eteenpäin. Ohjelmistokehitys, kyberturvallisuus, data.</p>
                   <p class="kk-esimerkki">📍 Metropolia, TAMK, Laurea</p>
                 </div>
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["ihmiset","taide"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Sosionomi</h5>
                   <p>Ihmiset-alalta eteenpäin. Lastensuojelu, nuorisotyö, sosiaalipalvelut.</p>
                   <p class="kk-esimerkki">📍 Metropolia, DIAK, LAMK</p>
                 </div>
-                <div class="kk-kortti amk" role="listitem">
+                <div class="kk-kortti amk" role="listitem" data-alat='["ruoka","taide"]'>
                   <span class="kk-tyyppi-nappula amk">AMK</span>
                   <h5>Restonomi</h5>
                   <p>Ravintola- ja matkailualalta eteenpäin. Hotelli, catering, tapahtumat.</p>
                   <p class="kk-esimerkki">📍 HAAGA-HELIA, Lapin AMK</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem" data-alat='["liikunta"]'>
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Liikunnanohjaaja (AMK)</h5>
+                  <p>Liikunta-alalta eteenpäin. Personal training, ohjaus, hyvinvointi.</p>
+                  <p class="kk-esimerkki">📍 JAMK, HAAGA-HELIA, Kajaani AMK</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem" data-alat='["luonto"]'>
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Metsätalousinsinööri (AMK)</h5>
+                  <p>Luonto-alalta eteenpäin. Metsätalous, luonnonvarat, ympäristö.</p>
+                  <p class="kk-esimerkki">📍 Karelia-AMK, HAMK, Lapin AMK</p>
                 </div>
               </div>
 
@@ -3724,6 +3737,7 @@
     /* ── Amis ── */
     const amisValitut = new Set();
     let amisRend = false;
+    let amisV4Nahty = false;
 
     function renderAmis() {
       if (amisRend) return;
@@ -3773,9 +3787,23 @@
       try { localStorage.removeItem('dg8-amis-valitut'); } catch(e){}
       paivitaAmis();
     }
+    function renderAmisV4() {
+      const kortit = document.querySelectorAll('#tutkija-amis .kk-grid .kk-kortti[data-alat]');
+      if (amisValitut.size === 0) {
+        kortit.forEach(k => { k.classList.remove('v4-korostettu','v4-himmennetty'); });
+        return;
+      }
+      kortit.forEach(k => {
+        const alat = JSON.parse(k.dataset.alat);
+        const osuu = alat.some(a => amisValitut.has(a));
+        k.classList.toggle('v4-korostettu', osuu);
+        k.classList.toggle('v4-himmennetty', !osuu);
+      });
+    }
     function paivitaAmis() {
       renderAmis();
       renderAmisV3();
+      renderAmisV4();
       const kortit = document.querySelectorAll('#amis-tutkinnot .tj-kortti');
       let n = 0;
       kortit.forEach(k => {
@@ -4081,6 +4109,15 @@
     }
 
     /* ── Vaihe 2: kuittaus & reveal ── */
+    function tarkistaAmisYhteenveto() {
+      const aOk = document.getElementById('kuittaa-a') && document.getElementById('kuittaa-a').classList.contains('kuitattu');
+      const bOk = document.getElementById('kuittaa-b') && document.getElementById('kuittaa-b').classList.contains('kuitattu');
+      const yv = document.getElementById('amis-yhteenveto');
+      if (!yv) return;
+      if (aOk && bOk && amisV4Nahty) {
+        yv.hidden = false;
+      }
+    }
     function kuitaaAmisV2(osa) {
       const btn = document.getElementById('kuittaa-' + osa);
       if (!btn || btn.disabled) return;
@@ -4088,12 +4125,23 @@
       btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!';
       btn.disabled = true;
       try { localStorage.setItem('dg8-amis-v2-' + osa, '1'); } catch(e){}
-      // Näytä yhteenveto kun kaikki kuitattu
-      if (['a','b'].every(function(o){ return document.getElementById('kuittaa-'+o) && document.getElementById('kuittaa-'+o).classList.contains('kuitattu'); })) {
-        const yv = document.getElementById('amis-yhteenveto');
-        if (yv) { yv.hidden = false; yv.scrollIntoView({behavior:'smooth', block:'nearest'}); }
-      }
+      tarkistaAmisYhteenveto();
     }
+
+    /* IntersectionObserver: Vaihe 4 nähtiin → avaa yhteenveto */
+    (function() {
+      const v4target = document.querySelector('#tutkija-amis .kk-opintopolku-nappi');
+      if (!v4target || !('IntersectionObserver' in window)) return;
+      const obs = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          amisV4Nahty = true;
+          try { localStorage.setItem('dg8-amis-v4-nahty', '1'); } catch(e){}
+          obs.disconnect();
+          tarkistaAmisYhteenveto();
+        }
+      }, { threshold: 0.3 });
+      obs.observe(v4target);
+    })();
 
     function avaaAmisPayiva(btn) {
       const sisalto = document.getElementById('amis-paiva-sisalto');
@@ -4132,11 +4180,10 @@
             if (btn) { btn.classList.add('kuitattu'); btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!'; btn.disabled = true; }
           }
         });
-        // Jos kaikki kuitattu, näytä yhteenveto
-        if (['a','b'].every(function(o){ return localStorage.getItem('dg8-amis-v2-'+o); })) {
-          const yv = document.getElementById('amis-yhteenveto');
-          if (yv) yv.hidden = false;
-        }
+        // Palauta V4-näkymistila
+        if (localStorage.getItem('dg8-amis-v4-nahty')) amisV4Nahty = true;
+        // Jos kaikki kuitattu JA V4 nähty, näytä yhteenveto
+        tarkistaAmisYhteenveto();
         // Jos B kuitattu, aktivoi nappi ja näytä sisältö
         if (localStorage.getItem('dg8-amis-v2-b')) {
           const kb = document.getElementById('kuittaa-b');
