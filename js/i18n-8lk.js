@@ -593,6 +593,164 @@
     lisaaVaroitukset(teksti);
   }
 
+  /* ── Oma reitti löytyy tutkimalla ── */
+  function applyTutkija(t) {
+    var tj = t && t.g8 && t.g8.tutkija;
+    if (!tj) return;
+
+    /* Sivupalkki */
+    setTxt('.aihelista a[href="#tutkija-alue"]', tj.sidebar_link);
+
+    /* Otsikko & alaotsikko */
+    setTxt('.ala-karuselli-otsikko', tj.heading);
+    var subtitleEl = document.querySelector('#tutkija-alue > p');
+    if (subtitleEl && tj.subtitle) subtitleEl.textContent = tj.subtitle;
+
+    /* Opettajan ohje -nappi */
+    var teacherBtn = document.querySelector('button[aria-controls="opettaja-ohje-sisalto"]');
+    if (teacherBtn && tj.teacher_btn) {
+      var span = teacherBtn.querySelector('span');
+      teacherBtn.textContent = ' ' + tj.teacher_btn;
+      if (span) teacherBtn.insertBefore(span, teacherBtn.firstChild);
+    }
+    /* Opettajan ohje -sisältö */
+    var teacherBox = document.getElementById('opettaja-ohje-sisalto');
+    if (teacherBox && tj.teacher_p1) {
+      var ps = teacherBox.querySelectorAll('p');
+      var lis = teacherBox.querySelectorAll('li');
+      if (ps[0] && tj.teacher_p1) ps[0].textContent = tj.teacher_p1;
+      if (lis[0] && tj.teacher_amis) lis[0].innerHTML = '<strong>Amispolku</strong> — ' + tj.teacher_amis;
+      if (lis[1] && tj.teacher_lukio) lis[1].innerHTML = '<strong>Lukiopolku</strong> — ' + tj.teacher_lukio;
+      if (ps[1] && tj.teacher_p2) ps[1].textContent = tj.teacher_p2;
+    }
+
+    /* Välilehdet */
+    var tabAmis  = document.getElementById('tab-amis');
+    var tabLukio = document.getElementById('tab-lukio');
+    if (tabAmis  && tj.tab_amis)  tabAmis.textContent  = tj.tab_amis;
+    if (tabLukio && tj.tab_lukio) tabLukio.textContent = tj.tab_lukio;
+
+    /* ── AMISPOLKU ── */
+    var amisPanel = document.getElementById('tutkija-amis');
+    if (amisPanel) {
+      /* Kuvaus */
+      var amisDesc = amisPanel.querySelector('.tj-kuvaus');
+      if (amisDesc && tj.amis_desc) amisDesc.textContent = tj.amis_desc;
+
+      /* Tavoite-lista */
+      var goalH = amisPanel.querySelector('.tj-tavoite h5');
+      if (goalH && tj.amis_goal_heading) goalH.textContent = tj.amis_goal_heading;
+      var goalLis = amisPanel.querySelectorAll('.tj-tavoite li');
+      var goals = [tj.amis_goal_1, tj.amis_goal_2, tj.amis_goal_3, tj.amis_goal_4];
+      for (var i = 0; i < goalLis.length && i < goals.length; i++) {
+        if (goals[i]) goalLis[i].textContent = goals[i];
+      }
+
+      /* Etenemispolku */
+      var steps = amisPanel.querySelectorAll('.tj-askel-teksti');
+      var stepTexts = [tj.amis_step_1, tj.amis_step_2, tj.amis_step_3];
+      for (var s = 0; s < steps.length && s < stepTexts.length; s++) {
+        if (stepTexts[s]) steps[s].textContent = stepTexts[s];
+      }
+
+      /* Vaihe 1 otsikko & alaotsikko */
+      var v1h = amisPanel.querySelector('#tutkija-amis .tj-osio-otsikko');
+      if (v1h && tj.amis_v1_heading) {
+        var vaiheSpan = v1h.querySelector('.tj-osio-vaihe');
+        v1h.textContent = tj.amis_v1_heading;
+        if (vaiheSpan) v1h.insertBefore(vaiheSpan, v1h.firstChild);
+      }
+      var v1sub = amisPanel.querySelector('.tj-kiinnostukset + p, .tj-kiinnostukset').previousElementSibling;
+      var v1subEl = amisPanel.querySelector('.tj-kuvaus[style]');
+      if (v1subEl && tj.amis_v1_subtitle) v1subEl.textContent = tj.amis_v1_subtitle;
+
+      /* Suodatinnapit */
+      var filMap = {
+        ihmiset: tj.amis_fil_ihmiset, tekniikka: tj.amis_fil_tekniikka,
+        data: tj.amis_fil_data, ruoka: tj.amis_fil_ruoka,
+        luonto: tj.amis_fil_luonto, taide: tj.amis_fil_taide,
+        kauppa: tj.amis_fil_kauppa, liikunta: tj.amis_fil_liikunta
+      };
+      amisPanel.querySelectorAll('.tj-kiinnostukset .tj-nappi[data-ala]').forEach(function(btn) {
+        var ala = btn.dataset.ala;
+        if (filMap[ala]) btn.textContent = filMap[ala];
+      });
+      var amisReset = amisPanel.querySelector('.tj-kiinnostukset button:not([data-ala])');
+      if (amisReset && tj.amis_fil_reset) amisReset.textContent = tj.amis_fil_reset;
+
+      /* Vaihe 2 otsikko */
+      var v2osiot = amisPanel.querySelectorAll('.tj-osio-otsikko');
+      if (v2osiot[1] && tj.amis_v2_heading) {
+        var v2span = v2osiot[1].querySelector('.tj-osio-vaihe');
+        v2osiot[1].textContent = tj.amis_v2_heading;
+        if (v2span) v2osiot[1].insertBefore(v2span, v2osiot[1].firstChild);
+      }
+      var v2sub = amisPanel.querySelector('.tj-kuvaus-v2');
+      if (v2sub && tj.amis_v2_subtitle) v2sub.textContent = tj.amis_v2_subtitle;
+
+      /* Vaihe 3 otsikko & alaotsikko */
+      if (v2osiot[2] && tj.amis_v3_heading) {
+        var v3span = v2osiot[2].querySelector('.tj-osio-vaihe');
+        v2osiot[2].textContent = tj.amis_v3_heading;
+        if (v3span) v2osiot[2].insertBefore(v3span, v2osiot[2].firstChild);
+      }
+      var v3sub = document.querySelector('#amis-v3-wrap > p');
+      if (v3sub && tj.amis_v3_subtitle) {
+        v3sub.innerHTML = tj.amis_v3_subtitle + ' <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;">Opintopolku.fi</a>';
+      }
+      var v3ohje = document.getElementById('amis-v3-ohje');
+      if (v3ohje && tj.amis_v3_ohje) v3ohje.querySelector('p').textContent = tj.amis_v3_ohje;
+    }
+
+    /* ── LUKIOPOLKU ── */
+    var lukioPanel = document.getElementById('tutkija-lukio');
+    if (lukioPanel) {
+      /* Kuvaus */
+      var lukioDesc = lukioPanel.querySelector('.tj-kuvaus');
+      if (lukioDesc && tj.lukio_desc) lukioDesc.textContent = tj.lukio_desc;
+
+      /* Tavoite-lista */
+      var lGoalH = lukioPanel.querySelector('.tj-tavoite h5');
+      if (lGoalH && tj.lukio_goal_heading) lGoalH.textContent = tj.lukio_goal_heading;
+      var lGoalLis = lukioPanel.querySelectorAll('.tj-tavoite li');
+      var lGoals = [tj.lukio_goal_1, tj.lukio_goal_2, tj.lukio_goal_3, tj.lukio_goal_4];
+      for (var li = 0; li < lGoalLis.length && li < lGoals.length; li++) {
+        if (lGoals[li]) lGoalLis[li].textContent = lGoals[li];
+      }
+
+      /* Etenemispolku */
+      var lSteps = lukioPanel.querySelectorAll('.tj-askel-teksti');
+      var lStepTexts = [tj.lukio_step_1, tj.lukio_step_2, tj.lukio_step_3, tj.lukio_step_4];
+      for (var ls = 0; ls < lSteps.length && ls < lStepTexts.length; ls++) {
+        if (lStepTexts[ls]) lSteps[ls].textContent = lStepTexts[ls];
+      }
+
+      /* Vaihe 1 otsikko */
+      var lv1h = lukioPanel.querySelector('.tj-osio-otsikko');
+      if (lv1h && tj.lukio_v1_heading) {
+        var lv1span = lv1h.querySelector('.tj-osio-vaihe');
+        lv1h.textContent = tj.lukio_v1_heading;
+        if (lv1span) lv1h.insertBefore(lv1span, lv1h.firstChild);
+      }
+      var lv1sub = lukioPanel.querySelector('.tj-kuvaus[style]');
+      if (lv1sub && tj.lukio_v1_subtitle) lv1sub.textContent = tj.lukio_v1_subtitle;
+
+      /* Suodatinnapit */
+      var lFilMap = {
+        kielet: tj.lukio_fil_kielet, matikka: tj.lukio_fil_matikka,
+        yhteiskunta: tj.lukio_fil_yhteiskunta, taide: tj.lukio_fil_taide,
+        liikunta: tj.lukio_fil_liikunta, viestinta: tj.lukio_fil_viestinta,
+        englanti: tj.lukio_fil_englanti
+      };
+      lukioPanel.querySelectorAll('.tj-kiinnostukset .tj-nappi[data-ala]').forEach(function(btn) {
+        var ala = btn.dataset.ala;
+        if (lFilMap[ala]) btn.textContent = lFilMap[ala];
+      });
+      var lukioReset = lukioPanel.querySelector('.tj-kiinnostukset button:not([data-ala])');
+      if (lukioReset && tj.lukio_fil_reset) lukioReset.textContent = tj.lukio_fil_reset;
+    }
+  }
+
   /* ── Keskustelutehtäväkorttien käännökset ── */
   // Kartta: href-tunniste → g8.tasks-avain
   var TASK_MAP = {
@@ -663,6 +821,7 @@
   /* ── Tapahtumakuuntelijat ── */
   document.addEventListener('digiopo:langchange', function (e) {
     applyG8(e.detail.t);
+    applyTutkija(e.detail.t);
     paivitaVaroitukset(e.detail.t);
     paivitaKortit(e.detail.t);
   });
@@ -670,6 +829,7 @@
   /* Jos käännökset on jo ladattu ennen tätä skriptiä */
   if (window.DIGIOPO_T) {
     applyG8(window.DIGIOPO_T);
+    applyTutkija(window.DIGIOPO_T);
     paivitaVaroitukset(window.DIGIOPO_T);
     paivitaKortit(window.DIGIOPO_T);
   }
