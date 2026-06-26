@@ -555,9 +555,8 @@
     .tj-kortti { border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: white; transition: transform .14s, box-shadow .14s; cursor: default; }
     .tj-kortti:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.07); }
     .tj-kortti.piilotettu { display: none; }
-    .tj-kortti-varipalkki { height: 68px; border-radius:8px 8px 0 0; overflow:hidden; background-size:cover; background-position:center; background-color:var(--ala-vari,#e5e7eb); display:flex; align-items:center; justify-content:center; font-size:34px; position:relative; }
+    .tj-kortti-varipalkki { height: 68px; border-radius:8px 8px 0 0; overflow:hidden; background-size:cover; background-position:center; background-color:var(--ala-vari,#e5e7eb); position:relative; }
     .tj-kortti-varipalkki::before { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.22); }
-    .tj-kortti-varipalkki span { position:relative; z-index:1; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
     [data-img="sote"]      .tj-kortti-varipalkki { background-image: url('../images/soteala.webp'); }
     [data-img="tekniikka"] .tj-kortti-varipalkki { background-image: url('../images/tekniikanala.webp'); }
     [data-img="luonto"]    .tj-kortti-varipalkki { background-image: url('../images/luontoala.webp'); }
@@ -565,7 +564,8 @@
     [data-img="kauppa"]    .tj-kortti-varipalkki { background-image: url('../images/kaupanala.webp'); }
     [data-img="it"]        .tj-kortti-varipalkki { background-image: url('../images/it-ala.webp'); }
     [data-img="ruoka"]     .tj-kortti-varipalkki { background-image: url('../images/elintarvikeala.webp'); }
-    [data-img="ammatit"]   .tj-kortti-varipalkki { background-image: url('../images/ammatit.webp'); }
+    [data-img="ammatit"]      .tj-kortti-varipalkki { background-image: url('../images/ammatit.webp'); }
+    [data-img="liikunta-ala"] .tj-kortti-varipalkki { background-image: url('../images/liikunta-ala.webp'); }
     .tj-kortti-sisalto { padding: 10px 12px; }
     .tj-kortti-ala { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; display: inline-block; margin-bottom: 6px; }
     .tj-kortti-nimi { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 3px; }
@@ -1105,7 +1105,7 @@
               <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               Oma reitti löytyy tutkimalla
             </h3>
-            <p style="font-size:13px;color:#6b7280;margin:0 0 14px;">Tutki ennen kuin valitset — voit käyttää molempia tutkijia!</p>
+            <p style="font-size:13px;color:#6b7280;margin:0 0 14px;">Tutki ennen kuin valitset — voit tutkia molempia polkuja</p>
 
             <!-- Opettajan ohje -->
             <button onclick="(function(b){var p=document.getElementById('opettaja-ohje-sisalto');var auki=p.hidden===false;p.hidden=auki;b.setAttribute('aria-expanded',!auki);b.title=auki?'Näytä opettajan ohje':'Sulje opettajan ohje';})(this)"
@@ -3568,7 +3568,7 @@
       { nimi:"Peliohjelmoija",      ala:"Peliala",              k:["data","taide"],      lyhyt:"Suunnittelet ja koodaat pelejä — grafiikasta logiikkaan.",    v:"#7c3aed",tv:"#f5f3ff",tt:"#4c1d95", ik:"🎮",  imgKey:"it",          p:"../pelit/koulutusalat/it-ala.html",        op:"https://opintopolku.fi/konfo/fi/haku?keyword=peliala&koulutustyyppi=amm" },
       { nimi:"Kokki",               ala:"Ravintola-ala",        k:["ruoka"],             lyhyt:"Valmistat ruokaa ravintolassa tai suurkeittiössä.",          v:"#f59e0b",tv:"#fffbeb",tt:"#92400e", ik:"👨‍🍳", imgKey:"ruoka",  p:"../pelit/koulutusalat/elintarvike-ala.html",op:"https://opintopolku.fi/konfo/fi/haku?keyword=kokki&koulutustyyppi=amm" },
       { nimi:"Leipuri-kondiittori", ala:"Ravintola-ala",        k:["ruoka"],             lyhyt:"Leivot leipää, kakkuja ja leivonnaisia.",                    v:"#d97706",tv:"#fef3c7",tt:"#92400e", ik:"🍞",  imgKey:"ruoka",  p:"../pelit/koulutusalat/elintarvike-ala.html",op:"https://opintopolku.fi/konfo/fi/haku?keyword=leipuri&koulutustyyppi=amm" },
-      { nimi:"Liikunta-ala",        ala:"Liikunta ja urheilu",  k:["liikunta","ihmiset"],lyhyt:"Ohjaat liikuntaa eri-ikäisille ihmisille.",                 v:"#10b981",tv:"#ecfdf5",tt:"#064e3b", ik:"⚽",  imgKey:"ammatit",         p:"../pelit/koulutusalat/palvelu-ala.html",   op:"https://opintopolku.fi/konfo/fi/haku?keyword=liikunta&koulutustyyppi=amm" },
+      { nimi:"Liikunta-ala",        ala:"Liikunta ja urheilu",  k:["liikunta","ihmiset"],lyhyt:"Ohjaat liikuntaa eri-ikäisille ihmisille.",                 v:"#10b981",tv:"#ecfdf5",tt:"#064e3b", ik:"",    imgKey:"liikunta-ala",    p:"../pelit/koulutusalat/palvelu-ala.html",   op:"https://opintopolku.fi/konfo/fi/haku?keyword=liikunta&koulutustyyppi=amm" },
     ];
 
     const TJ_LINJAT = [
@@ -3618,7 +3618,7 @@
         el.dataset.img = t.imgKey;
         el.dataset.idx = i;
         el.style.setProperty('--ala-vari', t.v);
-        el.innerHTML = `<div class="tj-kortti-varipalkki" aria-hidden="true"><span>${t.ik}</span></div>
+        el.innerHTML = `<div class="tj-kortti-varipalkki" aria-hidden="true"></div>
           <div class="tj-kortti-sisalto">
             <span class="tj-kortti-ala" style="background:${t.tv};color:${t.tt}">${ala}</span>
             <p class="tj-kortti-nimi">${nimi}</p>

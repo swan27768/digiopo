@@ -599,7 +599,8 @@
     if (!tj) return;
 
     /* Sivupalkki */
-    setTxt('.aihelista a[href="#tutkija-alue"]', tj.sidebar_link);
+    var sidebarLinkTxt = t && t.g8 && t.g8.sidebar && t.g8.sidebar.link_tutkija;
+    setTxt('.aihelista a[href="#tutkija-alue"]', sidebarLinkTxt);
 
     /* Otsikko & alaotsikko */
     setTxt('.ala-karuselli-otsikko', tj.heading);
