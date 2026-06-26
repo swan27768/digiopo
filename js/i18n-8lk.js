@@ -851,7 +851,8 @@
         [tj.amis_v4_k5_nimi, tj.amis_v4_k5_kuvaus],
         [tj.amis_v4_k6_nimi, tj.amis_v4_k6_kuvaus],
         [tj.amis_v4_k7_nimi, tj.amis_v4_k7_kuvaus],
-        [tj.amis_v4_k8_nimi, tj.amis_v4_k8_kuvaus]
+        [tj.amis_v4_k8_nimi, tj.amis_v4_k8_kuvaus],
+        [tj.amis_v4_k9_nimi, tj.amis_v4_k9_kuvaus]
       ];
       for (var ki = 0; ki < kkKortit.length && ki < kkData.length; ki++) {
         var kk = kkKortit[ki];
