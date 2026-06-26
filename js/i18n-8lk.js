@@ -1113,10 +1113,8 @@
         if (firstText && firstText.nodeType === 3 && tj.kesto_3v) {
           firstText.textContent = tj.kesto_3v + ' · ';
         }
-        var opLink = lisatiedot.querySelector('a:not(.tj-peli-linkki)');
+        var opLink = lisatiedot.querySelector('a');
         if (opLink && tj.hae_opintopolku) opLink.textContent = tj.hae_opintopolku;
-        var peliLink = lisatiedot.querySelector('.tj-peli-linkki');
-        if (peliLink && tj.kokeile) peliLink.textContent = tj.kokeile;
       }
     });
 
