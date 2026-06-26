@@ -656,14 +656,14 @@
       var goalH = amisPanel.querySelector('.tj-tavoite h5');
       if (goalH && tj.amis_goal_heading) goalH.textContent = tj.amis_goal_heading;
       var goalLis = amisPanel.querySelectorAll('.tj-tavoite li');
-      var goals = [tj.amis_goal_1, tj.amis_goal_2, tj.amis_goal_3, tj.amis_goal_4];
+      var goals = [tj.amis_goal_1, tj.amis_goal_2, tj.amis_goal_3, tj.amis_goal_4, tj.amis_goal_5];
       for (var i = 0; i < goalLis.length && i < goals.length; i++) {
         if (goals[i]) goalLis[i].textContent = goals[i];
       }
 
       /* Etenemispolku */
       var steps = amisPanel.querySelectorAll('.tj-askel-teksti');
-      var stepTexts = [tj.amis_step_1, tj.amis_step_2, tj.amis_step_3];
+      var stepTexts = [tj.amis_step_1, tj.amis_step_2, tj.amis_step_3, tj.amis_step_4];
       for (var s = 0; s < steps.length && s < stepTexts.length; s++) {
         if (stepTexts[s]) steps[s].textContent = stepTexts[s];
       }
@@ -804,6 +804,65 @@
         }
       }
 
+      /* ── Vaihe 4: Amispolku → jatko-opinnot ── */
+      var v4osiot = amisPanel.querySelectorAll('.tj-osio-otsikko');
+      /* v4osiot[3] = Vaihe 4 heading (0=V1, 1=V2, 2=V3, 3=V4) */
+      if (v4osiot[3] && tj.amis_v4_heading) {
+        var v4span = v4osiot[3].querySelector('.tj-osio-vaihe');
+        v4osiot[3].textContent = tj.amis_v4_heading;
+        if (v4span) v4osiot[3].insertBefore(v4span, v4osiot[3].firstChild);
+      }
+      var v4kuvaus = v4osiot[3] ? v4osiot[3].nextElementSibling : null;
+      if (v4kuvaus && v4kuvaus.classList.contains('tj-kuvaus') && tj.amis_v4_kuvaus) {
+        v4kuvaus.textContent = tj.amis_v4_kuvaus;
+      }
+
+      /* AMK vs YO kortit */
+      var v4InfoKortit = amisPanel.querySelectorAll('.kk-amk-vs-yo .kk-info-kortti');
+      if (v4InfoKortit[0]) {
+        var amkH = v4InfoKortit[0].querySelector('h5');
+        var amkP = v4InfoKortit[0].querySelector('p');
+        if (amkH && tj.amis_v4_amk_h) amkH.textContent = tj.amis_v4_amk_h;
+        if (amkP && tj.amis_v4_amk_p) amkP.innerHTML = tj.amis_v4_amk_p;
+      }
+      if (v4InfoKortit[1]) {
+        var yoH = v4InfoKortit[1].querySelector('h5');
+        var yoP = v4InfoKortit[1].querySelector('p');
+        if (yoH && tj.amis_v4_yo_h) yoH.textContent = tj.amis_v4_yo_h;
+        if (yoP && tj.amis_v4_yo_p) yoP.innerHTML = tj.amis_v4_yo_p;
+      }
+
+      /* Esimerkit-otsikko (p.tj-osio-otsikko ennen kk-grid) */
+      var kkGrid = amisPanel.querySelector('.kk-grid');
+      if (kkGrid && tj.amis_v4_esimerkit) {
+        var esimerkkiOtsikko = kkGrid.previousElementSibling;
+        if (esimerkkiOtsikko && esimerkkiOtsikko.tagName === 'P') {
+          esimerkkiOtsikko.textContent = tj.amis_v4_esimerkit;
+        }
+      }
+
+      /* AMK-kortit */
+      var kkKortit = amisPanel.querySelectorAll('.kk-grid .kk-kortti');
+      var kkData = [
+        [tj.amis_v4_k1_nimi, tj.amis_v4_k1_kuvaus],
+        [tj.amis_v4_k2_nimi, tj.amis_v4_k2_kuvaus],
+        [tj.amis_v4_k3_nimi, tj.amis_v4_k3_kuvaus],
+        [tj.amis_v4_k4_nimi, tj.amis_v4_k4_kuvaus],
+        [tj.amis_v4_k5_nimi, tj.amis_v4_k5_kuvaus],
+        [tj.amis_v4_k6_nimi, tj.amis_v4_k6_kuvaus]
+      ];
+      for (var ki = 0; ki < kkKortit.length && ki < kkData.length; ki++) {
+        var kk = kkKortit[ki];
+        var kkH = kk.querySelector('h5');
+        var kkPs = kk.querySelectorAll('p');
+        if (kkH && kkData[ki][0]) kkH.textContent = kkData[ki][0];
+        if (kkPs[0] && kkData[ki][1]) kkPs[0].textContent = kkData[ki][1];
+      }
+
+      /* Opintopolku-nappi */
+      var v4nappi = amisPanel.querySelector('.kk-opintopolku-nappi');
+      if (v4nappi && tj.amis_v4_nappi) v4nappi.textContent = tj.amis_v4_nappi;
+
       /* ── Yhteenveto (amispolku) ── */
       var amisYhteenveto = document.getElementById('amis-yhteenveto');
       if (amisYhteenveto) {
@@ -812,6 +871,7 @@
         var ayPs = amisYhteenveto.querySelectorAll('p');
         if (ayPs[0] && tj.yhteenveto_p1) ayPs[0].textContent = tj.yhteenveto_p1;
         if (ayPs[1] && tj.yhteenveto_p2) ayPs[1].textContent = tj.yhteenveto_p2;
+        if (ayPs[2] && tj.yhteenveto_p3_html) ayPs[2].innerHTML = tj.yhteenveto_p3_html;
       }
 
       /* ── Erityisammattioppilaitokset ── */

@@ -657,6 +657,31 @@
     .erityis-kortti a  { font-size:11.5px; font-weight:700; color:#d97706; text-decoration:none; }
     .erityis-kortti a:hover { text-decoration:underline; }
 
+    /* ── Sivupolku-toggle (Erityisammattioppilaitokset) ── */
+    .amis-sivupolku { margin: 10px 0 4px; }
+    .amis-sivupolku-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: #f9fafb; border: 1.5px dashed #d1d5db; border-radius: 10px;
+      padding: 11px 16px; cursor: pointer; font-family: inherit; text-align: left;
+      transition: background .15s, border-color .15s;
+    }
+    .amis-sivupolku-toggle:hover { background: #f3f4f6; border-color: #9ca3af; }
+    .amis-sivupolku-toggle[aria-expanded="true"] {
+      border-color: #d97706; border-style: solid; background: #fffbeb;
+      border-radius: 10px 10px 0 0;
+    }
+    .amis-sivupolku-vasen { display: flex; align-items: center; gap: 10px; }
+    .amis-sivupolku-ikoni { font-size: 1.1rem; flex-shrink: 0; }
+    .amis-sivupolku-teksti { display: flex; flex-direction: column; gap: 1px; }
+    .amis-sivupolku-otsikko { font-size: 13px; font-weight: 700; color: #374151; }
+    .amis-sivupolku-kuvaus  { font-size: 11.5px; color: #6b7280; }
+    .amis-sivupolku-nuoli   { font-size: 11px; color: #9ca3af; transition: transform .25s; flex-shrink: 0; }
+    .amis-sivupolku-toggle[aria-expanded="true"] .amis-sivupolku-nuoli { transform: rotate(180deg); }
+    .amis-sivupolku-sisalto {
+      background: #fffdf7; border: 1.5px solid #d97706; border-top: none;
+      border-radius: 0 0 10px 10px; padding: 16px 18px 14px;
+    }
+
     /* Peli-linkki amiskorteissa */
     .tj-peli-linkki { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#d97706; text-decoration:none; margin-top:5px; }
     .tj-peli-linkki:hover { color:#b45309; text-decoration:underline; }
@@ -764,6 +789,19 @@
     .amis-kuittaa:disabled { opacity:.35; cursor:not-allowed; }
     .amis-kuittaa:not(:disabled):hover { border-color:#d97706; color:#92400e; }
     .amis-kuittaa.kuitattu { background:#f0fdf4; border-color:#86efac; color:#166534; cursor:default; }
+
+    /* Vihje: avaa reveal ensin */
+    .amis-b-vihje {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; font-weight: 600; color: #92400e;
+      background: #fffbeb; border: 1px dashed #fbbf24;
+      border-radius: 8px; padding: 7px 12px; margin-top: 6px;
+      animation: vihjePulse 2.4s ease-in-out infinite;
+    }
+    @keyframes vihjePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
 
     /* Vaihe 3: pelitarina iframe */
     .amis-v3-ohje { background:#f9fafb; border:1.5px dashed #d1d5db; border-radius:10px; padding:16px; text-align:center; color:#6b7280; font-size:13px; margin:4px 0 12px; }
@@ -1144,6 +1182,7 @@
                   <li>Valitset kiinnostavan alan ja tutustut ammatillisiin tutkintoihin (Vaihe 1)</li>
                   <li>Kurkistat ammatillisen koulun arkeen ja ammattilaisen työpäivään (Vaihe 2)</li>
                   <li>Teet oman alasi interaktiivisen tehtävän (Vaihe 3)</li>
+                  <li>Näet, mihin amis johtaa — jatko-opintomahdollisuudet (Vaihe 4)</li>
                   <li>Palautat tehtävän Classroomiin</li>
                 </ul>
               </div>
@@ -1161,6 +1200,10 @@
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">3</div>
                   <span class="tj-askel-teksti">Tee alan tehtävä</span>
+                </li>
+                <li class="tj-askel">
+                  <div class="tj-askel-nro" aria-hidden="true">4</div>
+                  <span class="tj-askel-teksti">Mihin amis johtaa?</span>
                 </li>
               </ol>
 
@@ -1181,7 +1224,62 @@
               <p class="tj-ei-tuloksia" id="amis-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
               <div class="tj-grid" id="amis-tutkinnot" role="list"></div>
 
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Kurkista kouluarkeen ja ammattilaisen työpäivään</h4>
+              <!-- ── Sivupolku: Erityisammattioppilaitokset ── -->
+              <div class="amis-sivupolku">
+                <button
+                  class="amis-sivupolku-toggle"
+                  onclick="(function(b){var p=document.getElementById('erityis-sisalto');var auki=b.getAttribute('aria-expanded')==='true';p.hidden=!auki?false:true;b.setAttribute('aria-expanded',auki?'false':'true');})(this)"
+                  aria-expanded="false"
+                  aria-controls="erityis-sisalto"
+                >
+                  <span class="amis-sivupolku-vasen">
+                    <span class="amis-sivupolku-ikoni" aria-hidden="true">🔀</span>
+                    <span class="amis-sivupolku-teksti">
+                      <span class="amis-sivupolku-otsikko">Sivupolku — Erityisammattioppilaitokset</span>
+                      <span class="amis-sivupolku-kuvaus">Tarvitsetko enemmän tukea opiskelussa? Katso tästä</span>
+                    </span>
+                  </span>
+                  <span class="amis-sivupolku-nuoli" aria-hidden="true">▼</span>
+                </button>
+                <div id="erityis-sisalto" class="amis-sivupolku-sisalto" hidden>
+                  <p class="tj-kuvaus" style="margin-top:0;">Jos tarvitset enemmän tukea opiskelussa, erityisammattioppilaitokset tarjoavat saman ammatillisen koulutuksen — pienemmissä ryhmissä ja yksilöllisemmin. Haetaan samassa yhteishaussa opintopolku.fi:ssä.</p>
+                  <div class="erityis-grid" role="list">
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Aitoon koulutuskeskus</h5>
+                      <p>Pälkäne ja Tampere. Valmentava koulutus ja ammatilliset perustutkinnot opiskelijoille, jotka tarvitsevat enemmän tukea.</p>
+                      <a href="https://www.aikk.fi" target="_blank" rel="noopener" aria-label="Aitoon koulutuskeskuksen verkkosivut (avautuu uuteen välilehteen)">www.aikk.fi →</a>
+                    </div>
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Ammattiopisto Live</h5>
+                      <p>Pääkaupunkiseutu. Pääkaupunkiseudun suurin ammatillinen erityisoppilaitos, noin 1 900 opiskelijaa vuosittain.</p>
+                      <a href="https://www.livesaatio.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Liven verkkosivut (avautuu uuteen välilehteen)">www.livesaatio.fi →</a>
+                    </div>
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Ammattiopisto Luovi</h5>
+                      <p>Valtakunnallinen, yli 30 paikkakuntaa. 18 eri ammatillista perustutkintoa sekä TUVA ja TELMA (valmentavat koulutukset).</p>
+                      <a href="https://www.luovi.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Luovin verkkosivut (avautuu uuteen välilehteen)">www.luovi.fi →</a>
+                    </div>
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Ammattiopisto Spesia</h5>
+                      <p>Jyväskylä, Järvenpää, Pieksämäki ja Turku — yhteensä 12 paikkakunnalla, yli 1 500 opiskelijaa.</p>
+                      <a href="https://www.spesia.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Spesian verkkosivut (avautuu uuteen välilehteen)">www.spesia.fi →</a>
+                    </div>
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Kiipulan ammattiopisto</h5>
+                      <p>Janakkala, Hämeenlinna, Lahti, Nokia — 10 paikkakuntaa. Yksilöllinen koulutus ja tuettu asuminen.</p>
+                      <a href="https://www.kiipula.fi/ammattiopisto" target="_blank" rel="noopener" aria-label="Kiipulan ammattiopiston verkkosivut (avautuu uuteen välilehteen)">www.kiipula.fi →</a>
+                    </div>
+                    <div class="erityis-kortti" role="listitem">
+                      <h5>Optima</h5>
+                      <p>Pohjanmaa ja Etelä-Suomi. Ruotsinkielinen oppilaitos opiskelijoille, jotka tarvitsevat enemmän tukea opiskelussa.</p>
+                      <a href="https://www.optimaedu.fi" target="_blank" rel="noopener" aria-label="Optiman verkkosivut (avautuu uuteen välilehteen)">www.optimaedu.fi →</a>
+                    </div>
+                  </div>
+                  <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;">🔗 Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
+                </div>
+              </div>
+
+              <h4 class="tj-osio-otsikko" style="margin-top:20px;"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Kurkista kouluarkeen ja ammattilaisen työpäivään</h4>
               <p class="tj-kuvaus" style="margin-top:4px;margin-bottom:12px;">Tutustu kahteen kokonaisuuteen järjestyksessä — ja kuittaa jokainen kun olet valmis.</p>
 
               <!-- ── OSA A: Mitä amis pitää sisällään? ── -->
@@ -1361,45 +1459,11 @@
                 <button class="amis-kuittaa" id="kuittaa-b" onclick="kuitaaAmisV2('b')" aria-label="Kuittaa osa B tehdyksi" disabled>
                   <span aria-hidden="true">○</span> Olen katsonut — kuittaa ✓
                 </button>
+                <p class="amis-b-vihje" id="amis-b-vihje" aria-live="polite">
+                  👆 Avaa ensin <strong style="margin:0 2px;">Miltä tuntuu olla ammattilainen?</strong> -osio yllä
+                </p>
               </div>
 
-
-              <!-- Erityisammattioppilaitokset -->
-              <h4 class="tj-osio-otsikko"><span style="display:inline-block;background:#f3f4f6;color:#6b7280;font-size:10px;font-weight:800;padding:1px 7px;border-radius:20px;margin-right:5px;vertical-align:middle;">Lisätieto</span>Erityisammattioppilaitokset</h4>
-              <p class="tj-kuvaus">Jos tarvitset enemmän tukea opiskelussa, erityisammattioppilaitokset tarjoavat saman ammatillisen koulutuksen — pienemmissä ryhmissä ja yksilöllisemmin. Haetaan samassa yhteishaussa opintopolku.fi:ssä.</p>
-              <div class="erityis-grid" role="list">
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Aitoon koulutuskeskus</h5>
-                  <p>Pälkäne ja Tampere. Valmentava koulutus ja ammatilliset perustutkinnot opiskelijoille, jotka tarvitsevat enemmän tukea.</p>
-                  <a href="https://www.aikk.fi" target="_blank" rel="noopener" aria-label="Aitoon koulutuskeskuksen verkkosivut (avautuu uuteen välilehteen)">www.aikk.fi →</a>
-                </div>
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Ammattiopisto Live</h5>
-                  <p>Pääkaupunkiseutu. Pääkaupunkiseudun suurin ammatillinen erityisoppilaitos, noin 1 900 opiskelijaa vuosittain.</p>
-                  <a href="https://www.livesaatio.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Liven verkkosivut (avautuu uuteen välilehteen)">www.livesaatio.fi →</a>
-                </div>
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Ammattiopisto Luovi</h5>
-                  <p>Valtakunnallinen, yli 30 paikkakuntaa. 18 eri ammatillista perustutkintoa sekä TUVA ja TELMA (valmentavat koulutukset).</p>
-                  <a href="https://www.luovi.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Luovin verkkosivut (avautuu uuteen välilehteen)">www.luovi.fi →</a>
-                </div>
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Ammattiopisto Spesia</h5>
-                  <p>Jyväskylä, Järvenpää, Pieksämäki ja Turku — yhteensä 12 paikkakunnalla, yli 1 500 opiskelijaa.</p>
-                  <a href="https://www.spesia.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Spesian verkkosivut (avautuu uuteen välilehteen)">www.spesia.fi →</a>
-                </div>
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Kiipulan ammattiopisto</h5>
-                  <p>Janakkala, Hämeenlinna, Lahti, Nokia — 10 paikkakuntaa. Yksilöllinen koulutus ja tuettu asuminen.</p>
-                  <a href="https://www.kiipula.fi/ammattiopisto" target="_blank" rel="noopener" aria-label="Kiipulan ammattiopiston verkkosivut (avautuu uuteen välilehteen)">www.kiipula.fi →</a>
-                </div>
-                <div class="erityis-kortti" role="listitem">
-                  <h5>Optima</h5>
-                  <p>Pohjanmaa ja Etelä-Suomi. Ruotsinkielinen oppilaitos opiskelijoille, jotka tarvitsevat enemmän tukea opiskelussa.</p>
-                  <a href="https://www.optimaedu.fi" target="_blank" rel="noopener" aria-label="Optiman verkkosivut (avautuu uuteen välilehteen)">www.optimaedu.fi →</a>
-                </div>
-              </div>
-              <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;margin-bottom:20px;">🔗 Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
 
               <!-- Omat ajatukseni (amis) -->
               <!-- Vaihe 3: Interaktiivinen alan tehtävä -->
@@ -1417,17 +1481,77 @@
                   </div>
                 </div>
               </div>
+              <!-- ── Vaihe 4: Amis → jatko-opinnot ── -->
+              <h4 class="tj-osio-otsikko" style="margin-top:24px;"><span class="tj-osio-vaihe" aria-label="Vaihe 4">Vaihe 4</span>Amispolun jälkeen — mihin voi hakea?</h4>
+              <p class="tj-kuvaus">Ammatillinen tutkinto ei pysäytä opintopolkua. Se avaa suoran oven ammattikorkeakouluun — yo-kirjoituksia ei tarvita.</p>
+
+              <div class="kk-amk-vs-yo" role="list" style="margin-bottom:14px;">
+                <div class="kk-info-kortti amk" role="listitem">
+                  <h5>🎓 AMK — ammattikorkeakoulu</h5>
+                  <p>Amis-tutkinnon jälkeen voit hakea <strong>suoraan AMK:hon</strong>. Haku tapahtuu opintopolku.fi:ssä kevään yhteishaussa. Kesto 3½–4 vuotta. Tutkinto: <strong>AMK-tutkinto</strong>.</p>
+                </div>
+                <div class="kk-info-kortti yo" role="listitem">
+                  <h5>🔬 Yliopisto — avoimen kautta</h5>
+                  <p>Yliopistoon voi hakea myöhemmin <strong>avoimen yliopiston väylää</strong> pitkin tai suorittaa ylioppilaskirjoitukset aikuisena. Reitti on pidempi, mutta mahdollinen.</p>
+                </div>
+              </div>
+
+              <p class="tj-osio-otsikko">Esimerkkejä — mitä AMK:ssa voi opiskella amispolun jälkeen?</p>
+              <div class="kk-grid" role="list" style="margin-bottom:12px;">
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Sairaanhoitaja</h5>
+                  <p>Sote-alalta eteenpäin. Kesto 3½ v. Hyvä työllistyvyys.</p>
+                  <p class="kk-esimerkki">📍 Metropolia, TAMK, Savonia</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Insinööri (AMK)</h5>
+                  <p>Tekniikan alalta eteenpäin. Sähkö, kone, rakennus, automaatio.</p>
+                  <p class="kk-esimerkki">📍 Metropolia, TAMK, OAMK</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Tradenomi</h5>
+                  <p>Kaupan alalta eteenpäin. Taloushallinto, markkinointi, yrittäjyys.</p>
+                  <p class="kk-esimerkki">📍 HAAGA-HELIA, Metropolia</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Tietojenkäsittely</h5>
+                  <p>IT-alalta eteenpäin. Ohjelmistokehitys, kyberturvallisuus, data.</p>
+                  <p class="kk-esimerkki">📍 Metropolia, TAMK, Laurea</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Sosionomi</h5>
+                  <p>Ihmiset-alalta eteenpäin. Lastensuojelu, nuorisotyö, sosiaalipalvelut.</p>
+                  <p class="kk-esimerkki">📍 Metropolia, DIAK, LAMK</p>
+                </div>
+                <div class="kk-kortti amk" role="listitem">
+                  <span class="kk-tyyppi-nappula amk">AMK</span>
+                  <h5>Restonomi</h5>
+                  <p>Ravintola- ja matkailualalta eteenpäin. Hotelli, catering, tapahtumat.</p>
+                  <p class="kk-esimerkki">📍 HAAGA-HELIA, Lapin AMK</p>
+                </div>
+              </div>
+
+              <a href="https://opintopolku.fi/konfo/fi/haku?koulutustyyppi=amk" target="_blank" rel="noopener" class="kk-opintopolku-nappi">
+                🔍 Kaikki AMK-ohjelmat — opintopolku.fi
+              </a>
+
               <!-- Yhteenveto -->
               <div class="tj-yhteenveto" id="amis-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>✅ Hyvä työ!</h5>
-                <p>Olet nyt tutustunut ammatillisiin tutkintoihin ja saanut kuvan siitä, miltä ammattikoulu näyttää arjessa.</p>
+                <p>Olet tutustunut ammatillisiin tutkintoihin, saanut kuvan amisarjesta ja nähnyt, mihin polku voi johtaa.</p>
                 <p>💡 <strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
-                <p>🔍 Haluatko tutkia lisää? Katso eri tutkintoja <a href="https://opintopolku.fi/konfo/fi/haku?koulutustyyppi=amm" target="_blank" rel="noopener" style="color:#92400e;font-weight:700;">opintopolku.fi</a>:stä.</p>
+                <p>🔍 Haluatko tutkia lisää? Katso tutkintoja ja AMK-hakua <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#92400e;font-weight:700;">opintopolku.fi</a>:stä.</p>
               </div>
 
               <div style="margin-top:20px;padding-top:12px;border-top:1px solid #f3f4f6;font-size:11px;color:#9ca3af;line-height:1.7;">
                 <strong style="color:#6b7280;">Lähteet:</strong>
-                15 ammatillista perustutkintoa: <a href="https://opintopolku.fi/konfo/fi/haku?koulutustyyppi=amm" target="_blank" rel="noopener" style="color:#9ca3af;">Opetushallitus / opintopolku.fi</a> ·
+                Ammatilliset perustutkinnot: <a href="https://opintopolku.fi/konfo/fi/haku?koulutustyyppi=amm" target="_blank" rel="noopener" style="color:#9ca3af;">Opetushallitus / opintopolku.fi</a> ·
+                AMK-haku amistutkinnolla: <a href="https://opintopolku.fi/konfo/fi/sivu/ammatillisen-koulutuksen-jarjestajat" target="_blank" rel="noopener" style="color:#9ca3af;">opintopolku.fi/amk-haku</a> ·
                 Erityinen tuki: <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="color:#9ca3af;">opintopolku.fi/erityinen-tuki</a>
               </div>
             </div><!-- /tutkija-amis -->
@@ -3979,6 +4103,11 @@
       // Aktivoi kuittausnappi B heti kun avattu
       const kb = document.getElementById('kuittaa-b');
       if (kb && !kb.classList.contains('kuitattu')) kb.disabled = false;
+      // Piilota vihje pysyvästi heti kun reveal avataan
+      if (!auki) {
+        const vihje = document.getElementById('amis-b-vihje');
+        if (vihje) vihje.hidden = true;
+      }
     }
 
     /* ── Init ── */
@@ -4015,6 +4144,9 @@
           const rv = document.getElementById('amis-paiva-reveal');
           const si = document.getElementById('amis-paiva-sisalto');
           if (rv && si) { rv.setAttribute('aria-expanded','true'); si.hidden = false; }
+          // Piilota vihje jos jo aiemmin kuitattu
+          const vihje = document.getElementById('amis-b-vihje');
+          if (vihje) vihje.hidden = true;
         }
         const s = JSON.parse(localStorage.getItem('dg8-lukio-suunnitelma') || 'null');
         if (s) {
