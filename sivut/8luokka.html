@@ -740,6 +740,51 @@
     .ls-radio-nappi:has(input:checked) { background:#2563eb; border-color:#2563eb; color:white; }
     .ls-radio-nappi input[type="radio"] { display:none; }
 
+    /* ── Lukiopolku vuosikaavio ── */
+    .lv-vuosikaavio { margin:18px 0 22px; }
+    .lv-vuosikaavio-otsikko { font-size:11px; font-weight:800; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin:0 0 10px; }
+    .lv-vuodet { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .lv-vuosi { border-radius:12px; padding:12px 13px; }
+    .lv-vuosi-1 { background:#eff6ff; border:2px solid #bfdbfe; }
+    .lv-vuosi-2 { background:#f5f3ff; border:2px solid #ddd6fe; }
+    .lv-vuosi-3 { background:#f0fdf4; border:2px solid #bbf7d0; }
+    .lv-vuosi-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; margin:0 0 4px; }
+    .lv-vuosi-1 .lv-vuosi-label { color:#1d4ed8; }
+    .lv-vuosi-2 .lv-vuosi-label { color:#6d28d9; }
+    .lv-vuosi-3 .lv-vuosi-label { color:#065f46; }
+    .lv-vuosi-kuvaus { font-size:12px; font-weight:700; color:#1e293b; margin:0 0 8px; line-height:1.3; }
+    .lv-vuosi-lista { list-style:none; padding:0; margin:0; }
+    .lv-vuosi-lista li { font-size:11.5px; color:#374151; padding:3px 0 3px 14px; border-bottom:1px solid rgba(0,0,0,.06); line-height:1.35; position:relative; }
+    .lv-vuosi-lista li::before { content:"•"; position:absolute; left:2px; color:#9ca3af; }
+    .lv-vuosi-lista li:last-child { border-bottom:none; }
+    .lv-vuosi-paatos { margin-top:8px; font-size:10.5px; font-weight:700; color:white; border-radius:6px; padding:3px 8px; display:inline-block; }
+    .lv-vuosi-1 .lv-vuosi-paatos { background:#1d4ed8; }
+    .lv-vuosi-2 .lv-vuosi-paatos { background:#6d28d9; }
+    .lv-vuosi-3 .lv-vuosi-paatos { background:#065f46; }
+    .lv-yo-palkki { background:linear-gradient(90deg,#1d4ed8,#6d28d9,#065f46); border-radius:8px; padding:9px 14px; margin:10px 0 0; display:flex; align-items:center; gap:10px; }
+    .lv-yo-teksti { font-size:12px; font-weight:700; color:white; flex:1; }
+    @media(max-width:520px){ .lv-vuodet { grid-template-columns:1fr; } }
+
+    /* ── Wizard ── */
+    .ls-wizard { background:#f8fafc; border:2px solid #e2e8f0; border-radius:16px; padding:20px 18px; }
+    .ls-wizard-progpalkki { display:flex; gap:5px; margin:0 0 6px; }
+    .ls-wizard-askel-dot { flex:1; height:5px; border-radius:3px; background:#e5e7eb; transition:background .25s; }
+    .ls-wizard-askel-dot.aktiivinen { background:#3b82f6; }
+    .ls-wizard-askel-dot.valmis { background:#86efac; }
+    .ls-wizard-laskuri { font-size:11px; color:#9ca3af; margin:0 0 16px; font-weight:600; }
+    .ls-wizard-step { display:none; }
+    .ls-wizard-step.nakyvissa { display:block; }
+    .ls-wizard-emoji { font-size:34px; display:block; margin:0 0 10px; line-height:1; }
+    .ls-wizard-kysymys { font-size:15px; font-weight:800; color:#1e293b; margin:0 0 12px; line-height:1.4; }
+    .ls-wizard-nav { display:flex; gap:8px; margin-top:14px; align-items:center; }
+    .ls-wizard-btn-eteen { flex:1; background:#1d4ed8; color:white; border:none; border-radius:10px; padding:12px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+    .ls-wizard-btn-eteen:hover { background:#1e40af; }
+    .ls-wizard-btn-takaisin { background:none; border:1.5px solid #d1d5db; border-radius:10px; padding:10px 14px; font-size:13px; color:#6b7280; cursor:pointer; font-family:inherit; }
+    .ls-wizard-btn-takaisin:hover { border-color:#9ca3af; }
+    .ls-wizard-tallenna { flex:1; background:#15803d; color:white; border:none; border-radius:10px; padding:12px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+    .ls-wizard-tallenna:hover { background:#166534; }
+    .ls-wizard-tyhjenna-linkki { font-size:11px; color:#9ca3af; background:none; border:none; cursor:pointer; padding:0; font-family:inherit; text-decoration:underline; margin-top:8px; display:block; }
+
     /* ── Osion kokonaispolku ── */
     .osio-polku { background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:10px 14px; margin:0 0 14px; }
     .osio-polku-otsikko { font-size:10px; font-weight:800; color:#9ca3af; letter-spacing:.5px; text-transform:uppercase; margin:0 0 8px; }
@@ -1698,6 +1743,50 @@
                 </div>
               </div>
 
+              <!-- ── LUKIOPOLKU VUOSIKAAVIO ── -->
+              <div class="lv-vuosikaavio">
+                <p class="lv-vuosikaavio-otsikko">Kolme vuotta lukiossa</p>
+                <div class="lv-vuodet">
+                  <div class="lv-vuosi lv-vuosi-1">
+                    <p class="lv-vuosi-label">1. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Aloitat ja löydät suuntasi</p>
+                    <ul class="lv-vuosi-lista">
+                      <li>Valitset linjasi tai erikoistumisesi</li>
+                      <li>Pakolliset kurssit kaikille</li>
+                      <li>Uusi opiskelutapa — itseohjautuvuus</li>
+                      <li>Vapaavalintaisia aineita kokeilemaan</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">~75 kurssia edessä</span>
+                  </div>
+                  <div class="lv-vuosi lv-vuosi-2">
+                    <p class="lv-vuosi-label">2. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Syventät ja suunnittelet</p>
+                    <ul class="lv-vuosi-lista">
+                      <li>Syventäviä kursseja omasta kiinnostuksesta</li>
+                      <li>Ylioppilaskirjoitusten suunnittelu alkaa</li>
+                      <li>Mahdollinen vaihto-opiskelu / TET</li>
+                      <li>Jatko-opintohaaveet selkiytyvät</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">Suunta selkenee</span>
+                  </div>
+                  <div class="lv-vuosi lv-vuosi-3">
+                    <p class="lv-vuosi-label">3. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Yo-kirjoitukset ja jatko</p>
+                    <ul class="lv-vuosi-lista">
+                      <li>Ylioppilaskirjoitukset — min. 5 ainetta</li>
+                      <li>Haku AMK:iin tai yliopistoon</li>
+                      <li>Tulevaisuus alkaa hahmottua</li>
+                      <li>Valmistuminen keväällä 🎓</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">Ylioppilastutkinto</span>
+                  </div>
+                </div>
+                <div class="lv-yo-palkki">
+                  <span style="font-size:16px;">🏁</span>
+                  <span class="lv-yo-teksti">Lukion lopussa: ylioppilastutkinto → haku AMK:iin tai yliopistoon</span>
+                </div>
+              </div>
+
               <!-- ── KORKEAKOULUTUTKIJA ── -->
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 3">Vaihe 3</span>Lukion jälkeen — mihin voi hakea?</h4>
               <p class="tj-kuvaus">Lukiosta pääsee ammattikorkeakouluun (AMK) tai yliopistoon. Kiinnostusnappit suodattavat vaihtoehtoja myös tässä.</p>
@@ -1721,64 +1810,87 @@
                 🔍 Kaikki koulutusohjelmat — opintopolku.fi
               </a>
 
-              <!-- Lukiosuunnitelma -->
+              <!-- Lukiosuunnitelma wizard -->
               <div class="lukio-suunnitelma">
                 <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span>📋 Oma lukiosuunnitelma</h4>
-                <p class="tj-kuvaus">Täytä vaihe kerrallaan — voit palata ja muokata myöhemmin.</p>
+                <p class="tj-kuvaus">Vastaa yhteen kysymykseen kerrallaan — kuin pelissä.</p>
 
-                <div class="ls-vaihe">
-                  <div class="ls-numero" aria-label="Vaihe 1">1</div>
-                  <div class="ls-sisalto">
-                    <label id="ls-q1" class="ls-kysymys" for="ls-linja">Mikä lukiolinja tai erikoislukio kiinnostaa eniten?</label>
-                    <textarea id="ls-linja" class="tj-textarea lukio" aria-labelledby="ls-q1" placeholder="Esim. matematiikka- ja tiedekorostus, urheilulukio, IB..."></textarea>
+                <div class="ls-wizard" id="ls-wizard">
+                  <!-- Edistymispalkit -->
+                  <div class="ls-wizard-progpalkki" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
+                    <div class="ls-wizard-askel-dot aktiivinen" id="lsdot-0"></div>
+                    <div class="ls-wizard-askel-dot" id="lsdot-1"></div>
+                    <div class="ls-wizard-askel-dot" id="lsdot-2"></div>
+                    <div class="ls-wizard-askel-dot" id="lsdot-3"></div>
+                    <div class="ls-wizard-askel-dot" id="lsdot-4"></div>
                   </div>
-                </div>
+                  <p class="ls-wizard-laskuri" id="ls-wizard-laskuri">Kysymys 1 / 5</p>
 
-                <div class="ls-vaihe">
-                  <div class="ls-numero" aria-label="Vaihe 2">2</div>
-                  <div class="ls-sisalto">
-                    <label id="ls-q2" class="ls-kysymys" for="ls-aineet">Kolme ainetta, jotka haluaisin valita:</label>
-                    <textarea id="ls-aineet" class="tj-textarea lukio" aria-labelledby="ls-q2" placeholder="Esim. matematiikka (pitkä), englanti, kuvataide..."></textarea>
+                  <!-- Askel 1 -->
+                  <div class="ls-wizard-step nakyvissa" id="ls-step-0">
+                    <span class="ls-wizard-emoji">🏫</span>
+                    <p class="ls-wizard-kysymys">Mikä lukiolinja tai erikoislukio kiinnostaa eniten?</p>
+                    <textarea id="ls-linja" class="tj-textarea lukio" placeholder="Esim. matematiikka- ja tiedekorostus, urheilulukio, IB..." rows="3"></textarea>
+                    <div class="ls-wizard-nav">
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                    </div>
                   </div>
-                </div>
 
-                <div class="ls-vaihe">
-                  <div class="ls-numero" aria-label="Vaihe 3">3</div>
-                  <div class="ls-sisalto">
-                    <p class="ls-kysymys">Lukion jälkeen minua kiinnostaa:</p>
+                  <!-- Askel 2 -->
+                  <div class="ls-wizard-step" id="ls-step-1">
+                    <span class="ls-wizard-emoji">📚</span>
+                    <p class="ls-wizard-kysymys">Kolme ainetta, jotka haluaisin valita:</p>
+                    <textarea id="ls-aineet" class="tj-textarea lukio" placeholder="Esim. matematiikka (pitkä), englanti, kuvataide..." rows="3"></textarea>
+                    <div class="ls-wizard-nav">
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                    </div>
+                  </div>
+
+                  <!-- Askel 3 -->
+                  <div class="ls-wizard-step" id="ls-step-2">
+                    <span class="ls-wizard-emoji">🎯</span>
+                    <p class="ls-wizard-kysymys">Lukion jälkeen minua kiinnostaa:</p>
                     <div class="ls-radio-ryhma" role="group" aria-label="Jatko-opinnot">
                       <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="amk"> AMK</label>
                       <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="yliopisto"> Yliopisto</label>
                       <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="molemmat"> Molemmat kiinnostavat</label>
                       <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="eos"> En tiedä vielä</label>
                     </div>
+                    <div class="ls-wizard-nav">
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                    </div>
                   </div>
-                </div>
 
-                <div class="ls-vaihe">
-                  <div class="ls-numero" aria-label="Vaihe 4">4</div>
-                  <div class="ls-sisalto">
-                    <label id="ls-q4" class="ls-kysymys" for="ls-haave">Mitä haaveilen opiskelevani tai tekeväni lukion jälkeen?</label>
-                    <textarea id="ls-haave" class="tj-textarea lukio" aria-labelledby="ls-q4" placeholder="Esim. haluaisin opiskella lääkäriksi, tai perustaa yrityksen..."></textarea>
+                  <!-- Askel 4 -->
+                  <div class="ls-wizard-step" id="ls-step-3">
+                    <span class="ls-wizard-emoji">💭</span>
+                    <p class="ls-wizard-kysymys">Mitä haaveilen opiskelevani tai tekeväni lukion jälkeen?</p>
+                    <textarea id="ls-haave" class="tj-textarea lukio" placeholder="Esim. haluaisin opiskella lääkäriksi, tai perustaa yrityksen..." rows="3"></textarea>
+                    <div class="ls-wizard-nav">
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                    </div>
                   </div>
-                </div>
 
-                <div class="ls-vaihe">
-                  <div class="ls-numero" aria-label="Vaihe 5">5</div>
-                  <div class="ls-sisalto">
-                    <label id="ls-q5" class="ls-kysymys" for="ls-selvita">Yksi asia, jonka pitää vielä selvittää:</label>
-                    <textarea id="ls-selvita" class="tj-textarea lukio" aria-labelledby="ls-q5" placeholder="Esim. miten aineiden valinta vaikuttaa jatko-opintoihin..."></textarea>
+                  <!-- Askel 5 — viimeinen, tallenna tässä -->
+                  <div class="ls-wizard-step" id="ls-step-4">
+                    <span class="ls-wizard-emoji">🔍</span>
+                    <p class="ls-wizard-kysymys">Yksi asia, jonka pitää vielä selvittää:</p>
+                    <textarea id="ls-selvita" class="tj-textarea lukio" placeholder="Esim. miten aineiden valinta vaikuttaa jatko-opintoihin..." rows="3"></textarea>
+                    <div class="ls-wizard-nav">
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
+                      <button class="ls-wizard-tallenna" onclick="tallennaLukioSuunnitelma()">Tallenna ✓</button>
+                    </div>
                   </div>
-                </div>
 
-                <div class="tj-toiminnot">
-                  <button class="tj-tallenna lukio" onclick="tallennaLukioSuunnitelma()">Tallenna suunnitelma ✓</button>
-                  <button class="tj-tyhjenna" onclick="tyhjennaLukioSuunnitelma()">Tyhjennä</button>
+                  <div class="tj-tallennettu" id="ls-tallennettu" role="status"></div>
+                  <button id="ls-lataa-nappi" onclick="lataaLukioSuunnitelmaTxt()" style="display:none;margin-top:10px;width:100%;background:#1d4ed8;color:white;border:none;border-radius:8px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:left;">
+                    ⬇️ Lataa suunnitelma TXT-tiedostona — lähetä Classroomiin
+                  </button>
+                  <button class="ls-wizard-tyhjenna-linkki" onclick="tyhjennaLukioSuunnitelma()">Tyhjennä vastaukset</button>
                 </div>
-                <div class="tj-tallennettu" id="ls-tallennettu" role="status">✓ Tallennettu! Suunnitelmasi ovat tallessa tässä selaimessa.</div>
-                <button id="ls-lataa-nappi" onclick="lataaLukioSuunnitelmaTxt()" style="display:none;margin-top:10px;width:100%;background:#1d4ed8;color:white;border:none;border-radius:8px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:left;">
-                  ⬇️ Lataa suunnitelma TXT-tiedostona — lähetä Classroomiin
-                </button>
               </div>
 
               <!-- Yhteenveto (näkyy vasta tallennuksen jälkeen) -->
@@ -4009,6 +4121,37 @@
       document.getElementById('kk-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
     }
 
+    // ── Wizard-logiikka (Lukiosuunnitelma) ──
+    var lsWizardAskel = 0;
+
+    function naytaLsAskel(n) {
+      for (var i = 0; i < 5; i++) {
+        var step = document.getElementById('ls-step-' + i);
+        var dot  = document.getElementById('lsdot-' + i);
+        if (step) step.classList.remove('nakyvissa');
+        if (dot) {
+          dot.classList.remove('aktiivinen', 'valmis');
+          if (i < n)      dot.classList.add('valmis');
+          else if (i === n) dot.classList.add('aktiivinen');
+        }
+      }
+      var curr = document.getElementById('ls-step-' + n);
+      if (curr) curr.classList.add('nakyvissa');
+      var laskuri = document.getElementById('ls-wizard-laskuri');
+      if (laskuri) laskuri.textContent = 'Kysymys ' + (n + 1) + ' / 5';
+      var pb = document.querySelector('.ls-wizard-progpalkki');
+      if (pb) pb.setAttribute('aria-valuenow', n + 1);
+      lsWizardAskel = n;
+    }
+
+    function seuraavaLsAskel() {
+      if (lsWizardAskel < 4) naytaLsAskel(lsWizardAskel + 1);
+    }
+
+    function edellinenLsAskel() {
+      if (lsWizardAskel > 0) naytaLsAskel(lsWizardAskel - 1);
+    }
+
     function tallennaLukioSuunnitelma() {
       const jatko = (document.querySelector('input[name="ls-jatko"]:checked') || {}).value || '';
       const linja   = document.getElementById('ls-linja').value.trim();
@@ -4062,15 +4205,19 @@
     }
 
     function tyhjennaLukioSuunnitelma() {
-      ['ls-linja','ls-aineet','ls-haave','ls-selvita'].forEach(id => document.getElementById(id).value = '');
+      ['ls-linja','ls-aineet','ls-haave','ls-selvita'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
       const r = document.querySelector('input[name="ls-jatko"]:checked');
       if (r) r.checked = false;
-      document.getElementById('ls-tallennettu').classList.remove('nakyva');
+      var tallennettu = document.getElementById('ls-tallennettu');
+      if (tallennettu) { tallennettu.textContent = ''; tallennettu.classList.remove('nakyva'); }
       const lataa = document.getElementById('ls-lataa-nappi');
       if (lataa) lataa.style.display = 'none';
       const yv = document.getElementById('lukio-yhteenveto');
       if (yv) yv.hidden = true;
       try { localStorage.removeItem('dg8-lukio-suunnitelma'); } catch(e){}
+      naytaLsAskel(0);
     }
 
     /* ── Vaihe 3: Alan pelitarina (iframe) ── */
@@ -4235,16 +4382,18 @@
         }
         const s = JSON.parse(localStorage.getItem('dg8-lukio-suunnitelma') || 'null');
         if (s) {
-          if (s.linja)   document.getElementById('ls-linja').value   = s.linja;
-          if (s.aineet)  document.getElementById('ls-aineet').value  = s.aineet;
+          if (s.linja)   { const el = document.getElementById('ls-linja');   if (el) el.value = s.linja; }
+          if (s.aineet)  { const el = document.getElementById('ls-aineet');  if (el) el.value = s.aineet; }
           if (s.jatko)   { const r = document.querySelector(`input[name="ls-jatko"][value="${s.jatko}"]`); if (r) r.checked = true; }
-          if (s.haave)   document.getElementById('ls-haave').value   = s.haave;
-          if (s.selvita) document.getElementById('ls-selvita').value = s.selvita;
+          if (s.haave)   { const el = document.getElementById('ls-haave');   if (el) el.value = s.haave; }
+          if (s.selvita) { const el = document.getElementById('ls-selvita'); if (el) el.value = s.selvita; }
           // Näytä latausnappi ja Hyvä työ! -boksi jos jo tallennettu
           const lataa = document.getElementById('ls-lataa-nappi');
           if (lataa) lataa.style.display = 'block';
           const yv = document.getElementById('lukio-yhteenveto');
           if (yv) yv.hidden = false;
+          // Hyppää wizardissa viimeiseen askeleeseen jotta tallennettu tieto näkyy
+          naytaLsAskel(4);
         }
       } catch(e){}
     })();
