@@ -218,7 +218,7 @@
       const data = await vastaus.json();
 
       if (data.ok) {
-        tallenneLisenssi(data);
+        tallenneLisenssi({ ...data, koodi }); // tallennetaan myös koodi taustapäivitystä varten
         naytaViesti("✓ Koodi hyväksytty! Tervetuloa.", "onnistui");
         setTimeout(() => piilotaPortti(), 800);
       } else {

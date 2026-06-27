@@ -126,6 +126,7 @@ export const handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         ok: true,
+        koodi: lisenssi.koodi,
         voimassa_asti: lisenssi.voimassa_asti,
         koulu: lisenssi.koulu,
       }),
