@@ -1,9 +1,60 @@
 // DigiOpo – Lisenssiportti
 // Tarkistaa lisenssin localStorage:sta ja tarvittaessa palvelimelta.
+// Tukee myös opettajalisenssiä Supabase magic link -kirjautumisella.
 // Lisätään kaikkien sivujen <head>-osioon.
 
 (function () {
   "use strict";
+
+  // ─── Supabase-konfiguraatio ──────────────────────────────────────────────
+  const SUPABASE_URL  = 'https://xltsuuovdrradlproonr.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_OMQhHO_Bz_z1KhVC-tiIRw_WFIyOEn-';
+
+  // Lataa Supabase JS SDK dynaamisesti (kerran)
+  function lataaSuperbase() {
+    return new Promise((resolve, reject) => {
+      if (window.__supabaseClient) return resolve(window.__supabaseClient);
+      if (document.getElementById('supabase-sdk')) {
+        // SDK ladataan parhaillaan – odotetaan
+        const odota = setInterval(() => {
+          if (window.__supabaseClient) { clearInterval(odota); resolve(window.__supabaseClient); }
+        }, 50);
+        return;
+      }
+      const script = document.createElement('script');
+      script.id = 'supabase-sdk';
+      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+      script.onload = () => {
+        const { createClient } = window.supabase;
+        window.__supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON);
+        resolve(window.__supabaseClient);
+      };
+      script.onerror = () => reject(new Error('Supabase SDK ei latautunut'));
+      document.head.appendChild(script);
+    });
+  }
+
+  // Tarkistaa onko opettajalla validi Supabase-sessio ja aktiivinen lisenssi
+  async function tarkistaOpettajaSessio() {
+    try {
+      const db = await lataaSuperbase();
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) return false;
+
+      const vastaus = await fetch('/api/lisenssi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({}),
+      });
+      const data = await vastaus.json();
+      return data.ok === true;
+    } catch {
+      return false;
+    }
+  }
 
   // ─── Tulostussuojaus ─────────────────────────────────────────────────────
   // Lisätään @media print -sääntö dynaamisesti, jotta se kattaa myös sivut
@@ -241,6 +292,11 @@
   async function tarkistaLisenssi() {
     if (onVapaaPolku()) return;
 
+    // 1. Opettajalisenssi: tarkistetaan Supabase-sessio
+    const opettajaOk = await tarkistaOpettajaSessio();
+    if (opettajaOk) return; // Pääsy myönnetty
+
+    // 2. Koululisenssi: tarkistetaan localStorage
     const tallennettu = lueListenssi();
 
     // Ei tallennettua lisenssiä → näytä portti heti

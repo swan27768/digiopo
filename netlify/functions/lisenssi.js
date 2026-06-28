@@ -5,27 +5,39 @@
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-// Yksinkertainen muistipohjainen rate limiter
-// (nollautuu funktiokäynnistyksen yhteydessä – riittävä suoja brute forceen)
-const yritykset = new Map();
+// Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä
+// Max 5 yritystä / IP / 10 minuuttia
 const MAX_YRITYKSIA = 5;
-const IKKUNA_MS = 10 * 60 * 1000; // 10 minuuttia
+const IKKUNA_S = 10 * 60; // 10 minuuttia sekunteina
 
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const merkinta = yritykset.get(ip) || { maara: 0, alku: nyt };
+async function tarkistaRateLimit(ip) {
+  if (!UPSTASH_REDIS_REST_URL || !UPSTASH_REDIS_REST_TOKEN) return true;
 
-  // Nollaa ikkuna jos se on vanhentunut
-  if (nyt - merkinta.alku > IKKUNA_MS) {
-    yritykset.set(ip, { maara: 1, alku: nyt });
+  const avain = `rl:lisenssi:${ip}`;
+  const headers = {
+    Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}`,
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const incrVastaus = await fetch(`${UPSTASH_REDIS_REST_URL}/incr/${avain}`, {
+      method: 'POST', headers,
+    });
+    const { result: maara } = await incrVastaus.json();
+
+    if (maara === 1) {
+      await fetch(`${UPSTASH_REDIS_REST_URL}/expire/${avain}/${IKKUNA_S}`, {
+        method: 'POST', headers,
+      });
+    }
+
+    return maara <= MAX_YRITYKSIA;
+  } catch {
     return true;
   }
-
-  if (merkinta.maara >= MAX_YRITYKSIA) return false;
-
-  yritykset.set(ip, { maara: merkinta.maara + 1, alku: merkinta.alku });
-  return true;
 }
 
 async function kirjaaKirjautuminen(koodi, koulu, ip, userAgent) {
@@ -84,7 +96,7 @@ export const handler = async (event) => {
     "tuntematon";
   const userAgent = event.headers["user-agent"] || "";
 
-  if (!tarkistaRateLimit(ip)) {
+  if (!await tarkistaRateLimit(ip)) {
     return {
       statusCode: 429,
       body: JSON.stringify({ ok: false, virhe: "liikaa_yrityksia" }),
