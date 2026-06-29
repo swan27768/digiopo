@@ -158,8 +158,8 @@
     var a = document.createElement("button");
     a.type = "button";
     a.className = "jarjestys-opelinkki";
-    a.textContent = "OPO";
-    a.title = "OPO – muokkaustila";
+    a.textContent = "Sivun hallinta";
+    a.title = "Sivun hallinta (opon muokkaustila)";
     a.addEventListener("click", avaaPinPortti);
     document.body.appendChild(a);
   }

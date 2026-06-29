@@ -12,6 +12,7 @@
     { src: "../images/koulutusalat/tekniikan-ala.png",             alt: "Tekniikan alat – infograafi",            nimi: "Tekniikan alat" },
     { src: "../images/koulutusalat/taide-ja-humanistinen-ala.png", alt: "Taide- ja humanistinen ala – infograafi",nimi: "Taide- ja humanistinen ala" },
     { src: "../images/koulutusalat/sote-ala-iso.png",              alt: "Terveys- ja hyvinvointiala – infograafi",nimi: "Terveys- ja hyvinvointiala" },
+    { src: "../images/koulutusalat/merenkulkuala-iso.png",         alt: "Merenkulkuala – infograafi",             nimi: "Merenkulkuala" },
   ];
 
   let nykyinenSivu = 0;

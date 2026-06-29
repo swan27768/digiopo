@@ -7,10 +7,20 @@
   'use strict';
 
   /* ── Apufunktiot ── */
+  // Aseta otsikon teksti, mutta säilytä siihen lisätty teoria-nappi (i-linkki).
+  // osio-rakenne.js lisää tieteellisen perustan i-napin h2/h3-otsikkoon; pelkkä
+  // textContent-asetus pyyhkisi sen pois, joten irrotamme ja palautamme napin.
+  function asetaOtsikko(el, val) {
+    if (!el || !val) return;
+    var nappi = el.querySelector(".teoria-nappi");
+    el.textContent = val;
+    if (nappi) el.appendChild(nappi);
+  }
+
   function setTxt(sel, val) {
     if (!val) return;
     var el = document.querySelector(sel);
-    if (el) el.textContent = val;
+    if (el) asetaOtsikko(el, val);
   }
 
   function setAllTxt(sel, vals) {
@@ -292,7 +302,7 @@
           if (icon) badge.insertBefore(icon, badge.firstChild);
         }
         var mh3 = document.querySelector('#ajattelu-mission h3');
-        if (mh3) mh3.textContent = aj.murha.h3;
+        if (mh3) asetaOtsikko(mh3, aj.murha.h3);
         var mp = document.querySelector('#ajattelu-mission p');
         if (mp) mp.textContent = aj.murha.p;
         var infoSpan = document.querySelector('#ajattelu-mission .btn-hero + span');

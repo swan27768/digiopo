@@ -7,10 +7,20 @@
   'use strict';
 
   /* ── Apufunktiot ── */
+  // Aseta otsikon teksti, mutta säilytä siihen lisätty teoria-nappi (i-linkki).
+  // osio-rakenne.js lisää tieteellisen perustan i-napin h2/h3-otsikkoon; pelkkä
+  // textContent-asetus pyyhkisi sen pois, joten irrotamme ja palautamme napin.
+  function asetaOtsikko(el, val) {
+    if (!el || !val) return;
+    var nappi = el.querySelector(".teoria-nappi");
+    el.textContent = val;
+    if (nappi) el.appendChild(nappi);
+  }
+
   function setTxt(sel, val) {
     if (!val) return;
     var el = document.querySelector(sel);
-    if (el) el.textContent = val;
+    if (el) asetaOtsikko(el, val);
   }
 
   function setHTML(sel, val) {
@@ -142,7 +152,7 @@
       if (testiCards[1]) {
         var asetH3 = testiCards[1].querySelector('h3');
         var asetP  = testiCards[1].querySelector('p');
-        if (asetH3 && kou.alaset_heading) asetH3.textContent = kou.alaset_heading;
+        if (asetH3 && kou.alaset_heading) asetaOtsikko(asetH3, kou.alaset_heading);
         if (asetP && kou.alaset_desc) asetP.textContent = kou.alaset_desc;
         var asetBadge = testiCards[1].querySelector('.hero-badge');
         if (asetBadge && kou.alaset_badge) {
@@ -161,7 +171,7 @@
         var maailmaP  = maailmaCard.querySelector('p');
         var maailmaBtn = maailmaCard.querySelector('button.btn-hero');
         var maailmaBadge = maailmaCard.querySelector('.hero-badge');
-        if (maailmaH3 && kou.maailma_heading) maailmaH3.textContent = kou.maailma_heading;
+        if (maailmaH3 && kou.maailma_heading) asetaOtsikko(maailmaH3, kou.maailma_heading);
         if (maailmaP && kou.maailma_desc) maailmaP.textContent = kou.maailma_desc;
         if (maailmaBtn && kou.maailma_btn_open) maailmaBtn.textContent = kou.maailma_btn_open;
         if (maailmaBadge && kou.maailma_badge) {
@@ -202,7 +212,7 @@
             vmBadge.textContent = vah.vahvuusmatka_badge;
             if (vmIcon) vmBadge.insertBefore(vmIcon, vmBadge.firstChild);
           }
-          if (vmH3 && vah.vahvuusmatka_heading) vmH3.textContent = vah.vahvuusmatka_heading;
+          if (vmH3 && vah.vahvuusmatka_heading) asetaOtsikko(vmH3, vah.vahvuusmatka_heading);
           if (vmP && vah.vahvuusmatka_desc) vmP.textContent = vah.vahvuusmatka_desc;
           if (vmBtn && vah.vahvuusmatka_btn) vmBtn.textContent = vah.vahvuusmatka_btn;
           if (vmVinkki && vah.vahvuusmatka_vinkki) vmVinkki.textContent = vah.vahvuusmatka_vinkki;
@@ -228,7 +238,7 @@
           fiBadge.textContent = vah.fakeinsta_badge;
           if (fiIcon) fiBadge.insertBefore(fiIcon, fiBadge.firstChild);
         }
-        if (fiH3  && vah.fakeinsta_heading) fiH3.textContent = vah.fakeinsta_heading;
+        if (fiH3  && vah.fakeinsta_heading) asetaOtsikko(fiH3, vah.fakeinsta_heading);
         if (fiP   && vah.fakeinsta_desc)    fiP.textContent  = vah.fakeinsta_desc;
         if (fiBtn && vah.fakeinsta_btn_open) fiBtn.textContent = vah.fakeinsta_btn_open;
         if (fiMeta && vah.fakeinsta_meta)    fiMeta.textContent = vah.fakeinsta_meta;
@@ -310,7 +320,7 @@
           pyoraBadge.textContent = tet.pyora_badge;
           if (pyIcon) pyoraBadge.insertBefore(pyIcon, pyoraBadge.firstChild);
         }
-        if (pyoraH3  && tet.pyora_heading)   pyoraH3.textContent   = tet.pyora_heading;
+        if (pyoraH3  && tet.pyora_heading)   asetaOtsikko(pyoraH3, tet.pyora_heading);
         if (pyoraP   && tet.pyora_desc)       pyoraP.textContent    = tet.pyora_desc;
         if (pyoraBtn && tet.pyora_btn_open)   pyoraBtn.textContent  = tet.pyora_btn_open;
         if (pyoraMeta && tet.pyora_meta)      pyoraMeta.textContent = tet.pyora_meta;
@@ -419,7 +429,9 @@
       var stuckToggle = document.querySelector('#vara-sisalto').previousElementSibling;
       if (stuckToggle) {
         var stuckSpan = stuckToggle.querySelector('span > span:last-child');
-        if (stuckSpan && tul.stuck_toggle) stuckSpan.textContent = tul.stuck_toggle;
+        // Riisu mahdollinen vanha emoji käännöksen alusta (selaimen välimuisti
+        // voi tarjota vanhaa 🤫-versiota — ikoni on jo erillisessä spanissa).
+        if (stuckSpan && tul.stuck_toggle) stuckSpan.textContent = tul.stuck_toggle.replace(/^[\s🤫🛟]+/, '');
       }
       var stuckIntroP = document.querySelector('#vara-sisalto > p');
       if (stuckIntroP && tul.stuck_intro) stuckIntroP.textContent = tul.stuck_intro;

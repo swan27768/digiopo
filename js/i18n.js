@@ -87,7 +87,13 @@
     for (var i = 0; i < els.length; i++) {
       var key = els[i].getAttribute('data-i18n');
       var val = getKey(t, key);
-      if (val !== null) els[i].textContent = val;
+      if (val !== null) {
+        // Säilytä otsikkoon mahdollisesti lisätty teoria-nappi (i-linkki):
+        // pelkkä textContent-asetus pyyhkisi sen pois.
+        var nappi = els[i].querySelector('.teoria-nappi');
+        els[i].textContent = val;
+        if (nappi) els[i].appendChild(nappi);
+      }
     }
 
     // HTML-sisältö (esim. <strong>-tagit)
@@ -180,7 +186,7 @@
       'display:flex',
       'align-items:center',
       'margin-left:auto',
-      'padding-right:12px'
+      'padding-right:180px'
     ].join(';');
 
     var select = document.createElement('select');
