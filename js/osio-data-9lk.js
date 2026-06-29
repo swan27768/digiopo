@@ -44,6 +44,7 @@ window.OSIO_DATA = {
     },
 
     "ajattelu": {
+      teoria: "ajattelutyylit",
       rakenne: [
         "Aloitus: voiko omaan ajatteluun luottaa? (5 min)",
         "Ryhmäpeli: Salapoliisitehtävä — Kadonnut kultainen kello (25–30 min)",
@@ -230,6 +231,19 @@ window.OSIO_DATA = {
   },
 
   teoriat: {
+    "ajattelutyylit": {
+      otsikko: "Mikä ajattelija sinä olet? — viisi ajattelutapaa",
+      teksti: [
+        "Tehtävä perustuu ajattelutaitojen tutkimukseen: ajattelu ei ole synnynnäinen, muuttumaton ominaisuus vaan joukko harjoiteltavia taitoja, ja eri tilanteet vaativat eri ajattelutapaa. Kriittinen ajattelu tarkoittaa väitteiden arviointia ja kyseenalaistamista, looginen ajattelu järjestelmällistä päättelyä, luova ajattelu uusien ideoiden tuottamista (divergentti ajattelu), lateraalinen ajattelu ongelman lähestymistä yllättävästä suunnasta ja reflektiivinen ajattelu oman ajattelun tarkastelua.",
+        "Oman vahvuuden tunnistaminen tukee metakognitiota — tietoisuutta siitä, miten itse ajattelee. Tutkimusten mukaan tämä tietoisuus parantaa oppimista ja päätöksentekoa. Tavoite ei ole leimata itseään yhdeksi tyypiksi vaan oppia käyttämään kaikkia tapoja joustavasti tilanteen mukaan."
+      ],
+      lahteet: [
+        "Dewey, J. (1933). <em>How We Think</em>. D.C. Heath. (reflektiivinen ajattelu)",
+        "Guilford, J. P. (1967). <em>The Nature of Human Intelligence</em>. McGraw-Hill. (divergentti eli luova ajattelu)",
+        "de Bono, E. (1970). <em>Lateral Thinking</em>. Ward Lock. (lateraalinen ajattelu)",
+        "Facione, P. (1990). Critical Thinking: A Statement of Expert Consensus. <em>The Delphi Report</em>. (kriittinen ajattelu)"
+      ]
+    },
     "salapoliisi": {
       otsikko: "Salapoliisitehtävä — Kadonnut kultainen kello",
       teksti: [
