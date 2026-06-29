@@ -1113,33 +1113,49 @@
   }
 
   // MutationObserver: päivitä kortit heti kun luokka.js lisää ne DOM:iin
-  var _taskObserver = null;
+  var _observers = [];
   var _lastT = null;
+  var _applying = false; // estää itseään ruokkivan silmukan
 
   function kaynnistaMutationObserver() {
-    if (_taskObserver) return;
+    if (_observers.length) return;
     var containers = ['tasks-tet-tyokaveri', 'tasks-tet', 'tasks-valinnat'];
     containers.forEach(function (cid) {
       var el = document.getElementById(cid);
       if (!el) return;
       var obs = new MutationObserver(function (mutations) {
-        if (!_lastT) return;
+        if (_applying || !_lastT) return; // ohita käännöksen itse aiheuttamat muutokset
         var hasNewElement = mutations.some(function (m) {
           return Array.prototype.some.call(m.addedNodes, function (n) {
             return n.nodeType === 1;
           });
         });
-        if (hasNewElement) kaannaTehtavaKortit(_lastT);
+        if (hasNewElement) sovellaKaannos();
       });
       obs.observe(el, { childList: true, subtree: true });
+      _observers.push({ obs: obs, el: el });
     });
-    _taskObserver = true;
+  }
+
+  // Suorita käännös niin, ettei se laukaise observeria uudelleen
+  function sovellaKaannos() {
+    if (_applying || !_lastT) return;
+    _applying = true;
+    _observers.forEach(function (o) { o.obs.disconnect(); });
+    try {
+      kaannaTehtavaKortit(_lastT);
+    } finally {
+      _observers.forEach(function (o) {
+        o.obs.observe(o.el, { childList: true, subtree: true });
+      });
+      _applying = false;
+    }
   }
 
   function paivitaKortit(t) {
     _lastT = t;
-    kaannaTehtavaKortit(t);
     kaynnistaMutationObserver();
+    sovellaKaannos();
   }
 
   /* ── Tapahtumakuuntelijat ── */
