@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="../css/pinkkiteema.css" />
 
   <style>
+    /* Kuvat: säilytä mittasuhteet (estää venymisen width/height-attribuuttien kanssa) */
+    img[width][height] { height: auto; }
+
     .nav-logo {
       font-family: 'Playfair Display', serif;
       font-size: 22px;
@@ -522,16 +525,45 @@
     .tutkija-alue { margin: 24px 0; }
     .tutkija-tabbar { display: flex; gap: 8px; }
     .tutkija-tab {
-      flex: 1; padding: 11px 14px;
+      flex: 1; padding: 16px 16px;
       border: 2px solid #e5e7eb; background: #f9fafb;
       border-radius: 12px 12px 0 0;
-      font-family: inherit; font-size: 14px; font-weight: 700;
+      font-family: inherit; font-size: 20px; font-weight: 800;
+      letter-spacing: .01em;
       cursor: pointer; color: #6b7280; transition: all .15s;
       border-bottom: none;
     }
     .tutkija-tab.aktiivinen { background: white; color: #1f2937; position: relative; z-index: 1; }
-    .tutkija-tab.aktiivinen.amis-tab { border-top: 3px solid #d97706; color: #92400e; }
-    .tutkija-tab.aktiivinen.lukio-tab { border-top: 3px solid #2563eb; color: #1e3a8a; }
+    .tutkija-tab.aktiivinen.amis-tab { border-top: 4px solid #d97706; color: #92400e; }
+    .tutkija-tab.aktiivinen.lukio-tab { border-top: 4px solid #2563eb; color: #1e3a8a; }
+
+    /* ── "Tutki tarkemmin" -CTA (avaa koko tehtävän) ── */
+    .tutki-cta {
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px;
+      background: #d97706; color: #fff; font-size: 15px; font-weight: 800;
+      padding: 12px 22px; border: none; border-radius: 10px; cursor: pointer;
+      font-family: inherit; box-shadow: 0 3px 10px rgba(217,119,6,.30);
+      transition: transform .12s, box-shadow .12s, background .12s;
+    }
+    .tutki-cta:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(217,119,6,.40); background: #c2660a; }
+    .tutki-cta .tutki-nuoli { transition: transform .15s; }
+    .tutki-cta[aria-expanded="true"] .tutki-nuoli { transform: rotate(90deg); }
+
+    /* ── "Opettajalle" -pallero (tehtävän lopussa) ── */
+    .opettajalle-pallero { text-align: center; margin: 22px 0 6px; }
+    .opettajalle-nappi {
+      background: none; border: none; cursor: pointer; padding: 6px;
+      display: inline-flex; flex-direction: column; align-items: center; gap: 7px;
+      font-family: inherit;
+    }
+    .opettajalle-ikoni {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 3px solid #db2777; color: #db2777; background: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+      transition: transform .12s, box-shadow .12s;
+    }
+    .opettajalle-nappi:hover .opettajalle-ikoni { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(219,39,119,.25); }
+    .opettajalle-teksti { color: #db2777; font-weight: 800; font-size: 14px; letter-spacing: .02em; }
     .tutkija-paneeli {
       background: white; border: 2px solid #e5e7eb;
       border-radius: 0 0 14px 14px; padding: 20px; margin-top: -2px;
@@ -978,7 +1010,7 @@
             <img
               src="../images/8luokka_johdanto.webp"
               alt="8. luokan opo-tunnit — kaavio"
-              style="width:100%; display:block; border-radius:14px;" width="1535" height="1024">
+              style="height: auto; width:100%; display:block; border-radius:14px;" width="1535" height="1024">
             <span style="
               position:absolute; bottom:12px; right:12px;
               background:rgba(0,0,0,0.55); color:white;
@@ -1175,13 +1207,16 @@
           </div>
 
           <!-- Kehotus tutkijapaneeliin -->
-          <div style="margin:14px 0 4px;padding:14px 18px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-            <span style="font-size:22px;" aria-hidden="true">👇</span>
-            <div style="flex:1;min-width:180px;">
-              <p style="margin:0 0 2px;font-size:13px;font-weight:700;color:#92400e;">Löysitkö kiinnostavan alan?</p>
-              <p style="margin:0;font-size:12.5px;color:#78350f;line-height:1.5;">Tutustu seuraavaksi tutkintoihin ja lukiolinjoihin tarkemmin — valitse Amispolku tai Lukiopolku alta.</p>
+          <div style="margin:20px 0 6px;padding:24px 28px;background:linear-gradient(135deg,#fffdf5 0%,#fef3c7 100%);border:2px solid #fcd34d;border-radius:18px;box-shadow:0 4px 18px rgba(217,119,6,.15);display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            <span style="font-size:34px;" aria-hidden="true">👇</span>
+            <div style="flex:1;min-width:200px;">
+              <p style="margin:0 0 6px;font-size:21px;font-weight:800;color:#92400e;letter-spacing:.01em;">Löysitkö kiinnostavan alan?</p>
+              <p style="margin:0;font-size:15px;color:#78350f;line-height:1.55;">Tutustu seuraavaksi tutkintoihin ja lukiolinjoihin tarkemmin — valitse Amispolku tai Lukiopolku alta.</p>
             </div>
-            <a href="#tutkija-alue" style="flex-shrink:0;background:#d97706;color:white;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;" aria-label="Siirry Amispolku- tai Lukiopolku-valintaan">Tutki tarkemmin →</a>
+            <button type="button" class="tutki-cta" onclick="avaaReitti(this)" aria-expanded="false" aria-controls="tutkija-alue" aria-label="Avaa Amispolku- tai Lukiopolku-tehtävä">
+              <span class="tutki-teksti">Tutki tarkemmin</span>
+              <span class="tutki-nuoli" aria-hidden="true">→</span>
+            </button>
           </div>
 
           <!-- ══ TUTKINTOTUTKIJA + LUKIOTUTKIJA ══
@@ -1192,27 +1227,11 @@
                Tila tallennetaan localStorage:oon (avaimet: dg8-amis-*, dg8-lukio-*)
                Maskotti laukeaa kun tutkija-alue tulee näkyviin (aihe-osio-havainnointi)
           ══ -->
-          <div class="tutkija-alue aihe-osio" id="tutkija-alue">
+          <div class="tutkija-alue aihe-osio" id="tutkija-alue" style="display:none;">
             <h3 class="ala-karuselli-otsikko" style="margin-top:24px;">
               Oma reitti löytyy tutkimalla
             </h3>
-            <p style="font-size:13px;color:#6b7280;margin:0 0 14px;">Tutki ennen kuin valitset — voit tutkia molempia polkuja</p>
-
-            <!-- Opettajan ohje -->
-            <button onclick="(function(b){var p=document.getElementById('opettaja-ohje-sisalto');var auki=p.hidden===false;p.hidden=auki;b.setAttribute('aria-expanded',!auki);b.title=auki?'Näytä opettajan ohje':'Sulje opettajan ohje';})(this)"
-              aria-expanded="false" aria-controls="opettaja-ohje-sisalto" title="Näytä opettajan ohje"
-              style="background:none;border:none;cursor:pointer;padding:0;margin:0 0 8px;display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:13px;color:#2563eb;font-weight:600;">
-              <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:2px solid #2563eb;font-size:12px;font-weight:700;flex-shrink:0;">i</span>
-              Opettajan ohje
-            </button>
-            <div id="opettaja-ohje-sisalto" hidden style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:13px;color:#1e3a5f;">
-              <p style="margin:0 0 8px;">Tehtävä sisältää kaksi polkua, joita oppilas tutkii omien kiinnostustensa mukaan:</p>
-              <ul style="margin:0 0 8px;padding-left:18px;line-height:1.8;">
-                <li><strong>Amispolku</strong> — oppilas tutkii ammatillisia tutkintoja, tutustuu kouluarkeen ja ammattilaisen työpäivään, ja tekee interaktiivisen pelitehtävän oman alansa mukaan. Palautus Classroomiin.</li>
-                <li><strong>Lukiopolku</strong> — oppilas tutkii lukiolinjoja ja erikoislukioita, tutustuu lukioarjen tarinoihin ja jatko-opintovaihtoehtoihin, ja laatii oman lukiosuunnitelman. Palautus Classroomiin.</li>
-              </ul>
-              <p style="margin:0;color:#374151;">Oppilas etenee omassa polussa oman etenemisjärjestyksensä mukaan. Molempia polkuja voi käyttää saman tunnin aikana.</p>
-            </div>
+            <p style="font-size:14px;color:#6b7280;margin:0 0 14px;">Tutki ennen kuin valitset — voit tutkia molempia polkuja</p>
 
             <!-- Tab-palkki -->
             <div class="tutkija-tabbar" role="tablist" aria-label="Valitse tutkija">
@@ -1525,7 +1544,7 @@
                   <span id="tutkija-lang-warning-text"></span>
                 </div>
                 <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>🎮 Tee alan tehtävä</h4>
-                <p style="font-size:12.5px;color:#6b7280;margin:0 0 10px;">Tarkista ajankohtaiset tiedot <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;">Opintopolku.fi</a>-sivuilta.</p>
+                <p style="font-size:13px;color:#6b7280;margin:0 0 10px;">Tarkista ajankohtaiset tiedot <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;">Opintopolku.fi</a>-sivuilta.</p>
                 <div id="amis-v3-sisalto">
                   <!-- renderAmisV3() täyttää tämän -->
                   <div class="amis-v3-ohje" id="amis-v3-ohje">
@@ -1832,7 +1851,7 @@
                     <p class="ls-wizard-kysymys">Mikä lukiolinja tai erikoislukio kiinnostaa eniten?</p>
                     <textarea id="ls-linja" class="tj-textarea lukio" placeholder="Esim. matematiikka- ja tiedekorostus, urheilulukio, IB..." rows="3"></textarea>
                     <div class="ls-wizard-nav">
-                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
                     </div>
                   </div>
 
@@ -1842,8 +1861,8 @@
                     <p class="ls-wizard-kysymys">Kolme ainetta, jotka haluaisin valita:</p>
                     <textarea id="ls-aineet" class="tj-textarea lukio" placeholder="Esim. matematiikka (pitkä), englanti, kuvataide..." rows="3"></textarea>
                     <div class="ls-wizard-nav">
-                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
-                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
                     </div>
                   </div>
 
@@ -1858,8 +1877,8 @@
                       <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="eos"> En tiedä vielä</label>
                     </div>
                     <div class="ls-wizard-nav">
-                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
-                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
                     </div>
                   </div>
 
@@ -1869,8 +1888,8 @@
                     <p class="ls-wizard-kysymys">Mitä haaveilen opiskelevani tai tekeväni lukion jälkeen?</p>
                     <textarea id="ls-haave" class="tj-textarea lukio" placeholder="Esim. haluaisin opiskella lääkäriksi, tai perustaa yrityksen..." rows="3"></textarea>
                     <div class="ls-wizard-nav">
-                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
-                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava →</button>
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
+                      <button class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
                     </div>
                   </div>
 
@@ -1880,7 +1899,7 @@
                     <p class="ls-wizard-kysymys">Yksi asia, jonka pitää vielä selvittää:</p>
                     <textarea id="ls-selvita" class="tj-textarea lukio" placeholder="Esim. miten aineiden valinta vaikuttaa jatko-opintoihin..." rows="3"></textarea>
                     <div class="ls-wizard-nav">
-                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()">← Takaisin</button>
+                      <button class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
                       <button class="ls-wizard-tallenna" onclick="tallennaLukioSuunnitelma()">Tallenna ✓</button>
                     </div>
                   </div>
@@ -1909,19 +1928,42 @@
 
           </div><!-- /tutkija-alue -->
 
+          <!-- Opettajalle — TEHTÄVÄN ULKOPUOLELLA: näkyy aina, myös kun tehtävä on kiinni -->
+          <div class="opettaja-osio" style="margin-top: 8px;">
+            <button
+              class="opettaja-toggle"
+              onclick="toggleOpettaja(this)"
+              aria-expanded="false"
+              aria-controls="opettaja-sisalto-reitti"
+            >
+              <span class="opettaja-toggle-left">
+                <span aria-hidden="true">🖨️</span>
+                <span>Opettajan materiaali – Oma reitti löytyy tutkimalla</span>
+              </span>
+              <span class="opettaja-nuoli" aria-hidden="true">▼</span>
+            </button>
+            <div id="opettaja-sisalto-reitti" class="opettaja-sisalto" hidden>
+              <p>Tehtävä sisältää kaksi polkua, joita oppilas tutkii omien kiinnostustensa mukaan:</p>
+              <ul style="padding-left:18px;line-height:1.8;">
+                <li><strong>Amispolku</strong> — oppilas tutkii ammatillisia tutkintoja, tutustuu kouluarkeen ja ammattilaisen työpäivään, ja tekee interaktiivisen pelitehtävän oman alansa mukaan. Palautus Classroomiin.</li>
+                <li><strong>Lukiopolku</strong> — oppilas tutkii lukiolinjoja ja erikoislukioita, tutustuu lukioarjen tarinoihin ja jatko-opintovaihtoehtoihin, ja laatii oman lukiosuunnitelman. Palautus Classroomiin.</li>
+              </ul>
+              <p style="margin:0;">Oppilas etenee omassa polussa oman etenemisjärjestyksensä mukaan. Molempia polkuja voi käyttää saman tunnin aikana.</p>
+            </div>
+          </div>
+
           <!-- AmmattiSet -->
           <div style="margin: 20px 0;">
-            <p style="font-size:13px;color:#6b7280;margin:0 0 10px;">🃏 Ennen kuin syvennyt yhteen polkuun — testaa, tunnetko koulutusalat ylipäänsä?</p>
+            <p style="font-size:18px;font-weight:700;color:#5b21b6;margin:0 0 14px;">Pelaa ja testaa – tunnetko ammatit?</p>
             <div
               style="
                 position: relative;
                 border-radius: 18px;
                 overflow: hidden;
-                min-height: 200px;
+                min-height: 250px;
                 display: flex;
                 align-items: flex-end;
                 box-shadow: 0 8px 28px rgba(109, 40, 217, 0.25);
-                max-width: 560px;
               "
             >
               <div
@@ -1979,7 +2021,7 @@
             </div>
 
             <!-- Opettajan materiaali: AmmattiSet -->
-            <div class="opettaja-osio" style="margin-top: 10px; max-width: 560px;">
+            <div class="opettaja-osio" style="margin-top: 10px;">
               <button
                 class="opettaja-toggle"
                 onclick="toggleOpettaja(this)"
@@ -2917,7 +2959,7 @@
             <h3 style="color:#3b0764; font-size:1.05rem; font-weight:700; margin:0;">Rakenna huomisen koulu</h3>
             <span style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#7c3aed; background:#ede9fe; padding:3px 10px; border-radius:50px;">Tiimityö</span>
           </div>
-          <p style="font-size:0.88rem; color:#6b7280; margin:0 0 12px 42px;">Millainen koulu voisi olla — jos saisit päättää?</p>
+          <p style="font-size:14px; color:#6b7280; margin:0 0 12px 42px;">Millainen koulu voisi olla — jos saisit päättää?</p>
 
           <!-- Klikkaa auki -->
           <div class="tasks-section">
@@ -3525,6 +3567,34 @@
           sisalto.hidden = false;
           sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
+      }
+
+      /* ── "Oma reitti löytyy tutkimalla": avaa/sulje koko tehtävä ── */
+      function avaaReitti(btn) {
+        var t = document.getElementById('tutkija-alue');
+        if (!t) return;
+        var auki = t.style.display && t.style.display !== 'none';
+        if (auki) {
+          t.style.display = 'none';
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'false');
+            var x = btn.querySelector('.tutki-teksti'); if (x) x.textContent = 'Tutki tarkemmin';
+          }
+        } else {
+          t.style.display = 'block';
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'true');
+            var y = btn.querySelector('.tutki-teksti'); if (y) y.textContent = 'Sulje tehtävä';
+          }
+          t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      function toggleOpeOhje8(btn) {
+        var p = document.getElementById('ope-ohje-8-sisalto');
+        if (!p) return;
+        var auki = p.hidden === false;
+        p.hidden = auki;
+        if (btn) btn.setAttribute('aria-expanded', String(!auki));
       }
 
       /* ── Tehtäväikkunat: avaa/sulje ── */
