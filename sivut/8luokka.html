@@ -2098,9 +2098,11 @@
               display: flex;
               justify-content: flex-end;
               margin-bottom: 8px;
+              position: relative;
+              z-index: 5;
             ">
               <button
-                onclick="suljeMaailma()"
+                onclick="suljeMaailma(this)"
                 style="
                   background: #db2777;
                   color: white;
@@ -3531,9 +3533,16 @@
         wrapper.style.display = 'block';
         wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-      function suljeMaailma() {
-        var wrapper = document.getElementById('maailma-wrapper');
-        wrapper.style.display = 'none';
+      function suljeMaailma(btn) {
+        // 1) Piilota näkyvä maailma-iframe SUORAAN (varmin, riippumaton säiliöstä)
+        document.querySelectorAll('iframe[src*="maailma_tarvitsee_sinua"]').forEach(function (f) {
+          f.style.display = 'none';
+          if (f.parentElement) f.parentElement.style.display = 'none';
+        });
+        // 2) Piilota myös tunnettu säiliö (napista lähtien tai id:llä)
+        var box = (btn && btn.closest) ? btn.closest('#maailma-wrapper') : null;
+        if (!box) box = document.getElementById('maailma-wrapper');
+        if (box) box.style.display = 'none';
       }
       function toggleMaailma(btn) {
         var wrapper = document.getElementById('maailma-wrapper');
