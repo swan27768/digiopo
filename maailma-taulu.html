@@ -452,6 +452,18 @@ body {
 // ── Konfiguraatio ──────────────────────────────────────────────────────────
 const API = '/api/maailma-taulu';
 
+// ── Lue koulunimi DigiOpon lisenssiportilta ─────────────────────────────────
+function lueKouluNimi() {
+  try {
+    const raw = localStorage.getItem('digiopo_lisenssi');
+    if (!raw) return null;
+    const lis = JSON.parse(raw);
+    if (!lis || !lis.ok) return null;
+    if (new Date(lis.voimassa_asti) <= new Date()) return null;
+    return lis.koulu ? lis.koulu.trim() : null;
+  } catch { return null; }
+}
+
 // Roolit ja lauseenaloitukset
 const ROOLIT = [
   'Lääkäri','Arkkitehti','Ympäristötutkija','Taiteilija',
@@ -471,7 +483,7 @@ const STARTER = {
 };
 
 // Tila
-let kouluNimi = localStorage.getItem('mt_koulu') || '';
+let kouluNimi = lueKouluNimi() || '';
 let opettajaKoodi = '';
 let tykkaamattu = JSON.parse(localStorage.getItem('mt_tykannyt') || '[]');
 
@@ -560,11 +572,14 @@ async function lahetaIlmoitus() {
     if (nimi && rooli) jasenet.push({ nimi, rooli });
   });
 
+  // Hae koulunimi tuoreena (käyttäjä saattanut kirjautua latauksen jälkeen)
+  const koulu = lueKouluNimi() || kouluNimi;
+
   // Validointi
   if (!ongelma) { alert('Valitse ongelma.'); return; }
   if (jasenet.length < 3) { alert('Lisää vähintään 3 ryhmän jäsentä (nimi + rooli).'); return; }
   if (!idea) { alert('Kirjoita lyhyt kuvaus ideasta.'); return; }
-  if (!kouluNimi) { alert('Koulukoodi puuttuu. Avaa sivu DigiOpo-tunnuksilla.'); return; }
+  if (!koulu) { alert('Koulukoodi puuttuu. Avaa sivu DigiOpo-tunnuksilla.'); return; }
 
   btn.disabled = true;
   btn.textContent = '⏳ Lähetetään...';
@@ -575,7 +590,7 @@ async function lahetaIlmoitus() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         toiminto: 'laheta',
-        koulu: kouluNimi,
+        koulu,
         ilmoitus: { ongelma, jasenet, idea }
       })
     });
@@ -814,12 +829,6 @@ function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Hae koulukoodi lisenssiportilta kun se on valmis
-window.addEventListener('digiopo:lisenssi', e => {
-  kouluNimi = e.detail?.koulu || kouluNimi;
-  localStorage.setItem('mt_koulu', kouluNimi);
-  document.getElementById('galleriaKoulu').textContent = kouluNimi;
-});
 </script>
 </body>
 </html>
