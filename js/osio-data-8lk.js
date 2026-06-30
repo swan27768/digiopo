@@ -51,7 +51,7 @@ window.OSIO_DATA = {
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään? (5 min)",
         "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen (15 min)",
         "Toiminnallinen tehtävä: Pyörä pyörii — satunnainen ura (20 min)",
-        "Keskustelutehtävä: Mitä työ oikeasti on? (10 min)"
+        "Keskustelutehtävä: Mikä tekee työstä hyvän työn? (10 min)"
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
