@@ -152,6 +152,40 @@
     color: #0d47a1;
   }
 
+  /* Toteutustavan valinta (hero-kortit) */
+  .tapa-valinta {
+    max-width: 680px;
+    margin: 1.6rem auto 0;
+    padding: 0 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .9rem;
+  }
+  .tapa-kortti {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 14px;
+    padding: 1.1rem 1rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    transition: background .18s, transform .15s;
+  }
+  .tapa-kortti:hover, .tapa-kortti:focus-visible {
+    background: rgba(255,255,255,0.28);
+    transform: translateY(-2px);
+    outline: none;
+  }
+  .tapa-kortti:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .tapa-emoji { font-size: 2rem; display: block; margin-bottom: .4rem; }
+  .tapa-otsikko { font-size: 1rem; font-weight: 800; display: block; }
+  .tapa-kuvaus { font-size: .82rem; opacity: .88; margin-top: .2rem; display: block; }
+  @media (max-width: 420px) {
+    .tapa-valinta { grid-template-columns: 1fr; }
+  }
+
   /* Footer-linkit */
   .footer-links {
     max-width: 680px;
@@ -387,13 +421,106 @@
   <header class="hero">
     <div class="hero-icon">📱</div>
     <h1>Fake Insta</h1>
-    <p class="hero-sub">Luo someprofiiili omista vahvuuksistasi</p>
+    <p class="hero-sub">Luo someprofiili omista vahvuuksistasi</p>
     <div class="hero-badges">
       <span class="badge">⏱ 25 min</span>
       <span class="badge">👥 Pareittain</span>
-      <span class="badge">✏️ Paperi + kynä</span>
     </div>
+
+  <div class="tapa-valinta" role="group" aria-label="Valitse toteutustapa">
+    <button class="tapa-kortti" onclick="naytaDigitaalinen()" aria-label="Tee tehtävä digitaalisesti DigiOpo-sovelluksessa">
+      <span class="tapa-emoji">📱</span>
+      <span class="tapa-otsikko">Digitaalisesti</span>
+      <span class="tapa-kuvaus">Täytä profiili selaimessa – ilmestyy luokan galleriaan</span>
+    </button>
+    <button class="tapa-kortti" onclick="naytaPaperi()" aria-label="Tee tehtävä paperilla ja kynällä">
+      <span class="tapa-emoji">✏️</span>
+      <span class="tapa-otsikko">Paperilla</span>
+      <span class="tapa-kuvaus">Tulosta profiilipohja ja täytä kynällä</span>
+    </button>
+  </div>
+
   </header>
+
+  <!-- ── Digitaalinen marssijärjestys ── -->
+  <div id="digitaalinen-sisalto" style="display:none;">
+  <div class="steps-wrap">
+    <p class="steps-title">Näin tehtävä etenee – digitaalinen versio</p>
+
+    <div class="step">
+      <div class="step-bubble" style="background:linear-gradient(135deg,#667eea,#764ba2);font-weight:800;font-size:1.1rem;">1</div>
+      <div class="step-content">
+        <h2>Lue ohjeet</h2>
+        <span class="step-time">⏱ 2 min – tee tämä ennen sovelluksen avaamista</span>
+        <p>Parisi kanssa sovitaan: kumpi on ensin <strong>tähti</strong> ja kumpi <strong>somemanageri</strong>.</p>
+        <div class="role-row">
+          <div class="role-card role-star">
+            <div class="role-title">⭐ Tähti</div>
+            <ul>
+              <li>Vastaat kysymyksiin</li>
+              <li>Kerrot itsestäsi rehellisesti</li>
+              <li>Et tarvitse olla vaatimaton!</li>
+            </ul>
+          </div>
+          <div class="role-card role-mgr">
+            <div class="role-title">🎙 Somemanageri</div>
+            <ul>
+              <li>Kysyt alla olevia kysymyksiä</li>
+              <li>Kuuntelet tarkkaan</li>
+              <li>Täytät profiilin tähden puolesta sovelluksessa</li>
+            </ul>
+          </div>
+        </div>
+        <div class="q-grid" style="margin-top:.8rem;">
+          <div class="q-card">Mihin asiaan kaverit tai perhe pyytää sinua apuun?</div>
+          <div class="q-card">Milloin viimeksi teit jotain, joka sujui tosi hyvin?</div>
+          <div class="q-card">Mikä koulutehtävä ei tuntunut raskaalta, vaikka se oli pitkä?</div>
+          <div class="q-card">Jos olisit supersankari, mikä olisi sinun supervoimasi?</div>
+          <div class="q-card">Mitä teet vapaa-ajalla ilman että kukaan pakottaa?</div>
+          <div class="q-card">Mitä haluaisit oppia lisää tai missä haluaisit kehittyä?</div>
+        </div>
+        <div class="hint">💡 Vahvuus ei tarkoita vain kouluainetta. Se voi olla esim. rauhallisuus, kyky kuunnella tai luovuus.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-bubble" style="background:linear-gradient(135deg,#667eea,#764ba2);font-weight:800;font-size:1.1rem;">2</div>
+      <div class="step-content">
+        <h2>Tee profiili sovelluksessa</h2>
+        <span class="step-time">⏱ 8 min – somemanageri täyttää, tähti vastaa</span>
+        <p>Avaa DigiOpo Fake Insta -sovellus ja täytä profiili yhdessä. Somemanageri kirjoittaa tähden vastaukset profiiliin.</p>
+        <a href="../fake-insta.html" style="display:inline-block;margin-top:.8rem;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:.6rem 1.4rem;border-radius:10px;font-weight:700;font-size:.97rem;text-decoration:none;">📱 Avaa sovellus →</a>
+        <div class="hint" style="margin-top:.7rem;">💡 Vaihdetaan roolit kun ensimmäinen profiili on valmis – molemmat tekevät oman profiilinsa.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-bubble" style="background:linear-gradient(135deg,#667eea,#764ba2);font-weight:800;font-size:1.1rem;">3</div>
+      <div class="step-content">
+        <h2>Odota hyväksyntää</h2>
+        <span class="step-time">⏱ hetki</span>
+        <p>Kun profiili on lähetetty, se odottaa opettajan hyväksyntää. Saat ilmoituksen galleriassa kun profiilisi on julkaistu.</p>
+        <div class="hint">💡 Voit avata gallerian ja seurata muiden profiilien ilmestymistä jo odottaessasi.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-bubble" style="background:linear-gradient(135deg,#667eea,#764ba2);font-weight:800;font-size:1.1rem;">4</div>
+      <div class="step-content">
+        <h2>Katso galleria & anna sydän</h2>
+        <span class="step-time">⏱ 5 min</span>
+        <p>Kierrä galleriassa katsomassa luokkakaverien profiileja ja anna palautetta:</p>
+        <ul>
+          <li>Anna sydän ❤️ tai vahvuustähti 🌟 profiileille</li>
+          <li>Ei kirjoiteta kommentteja – pelkkä reaktio riittää</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /digitaalinen-sisalto -->
+
+  <div id="paperi-sisalto" style="display:none;">
 
   <div class="intro-wrap">
     <div class="intro-box">
@@ -465,6 +592,7 @@
           <li>Piirrä profiilikuva tai symboli, joka kuvaa sinua</li>
           <li>Lisää hashtag-vahvuudet bioon</li>
           <li>Piirrä tai kirjoita kuvaruutuihin tilanteita, joissa olet hyvä</li>
+          <li>Kun valmis – palauta profiilipohja opettajalle tai lähetä DigiOpon kautta</li>
         </ul>
       </div>
     </div>
@@ -475,10 +603,10 @@
       <div class="step-content">
         <h2>Vaihe 4 – Galleria & tykkäykset</h2>
         <span class="step-time">⏱ 5 min</span>
-        <p>Kiinnitä profiilisi seinälle. Kierrä katsomassa muiden profiileja ja jätä tarralappuja:</p>
+        <p>Kierrä katsomassa muiden profiileja ja anna palaute:</p>
         <ul>
-          <li>Kirjoita lapulle yksi positiivinen kommentti tai ❤️</li>
-          <li>Esim. <em>"Tää on tosi siisti vahvuus!"</em> tai <em>"En olis arvannut, mutta sopii sulle täydellisesti"</em></li>
+          <li>Kiinnitä paperi seinälle tai katso DigiOpon galleria</li>
+          <li>Anna sydän ❤️ tai vahvuustähti 🌟 – ei kirjoiteta kommentteja</li>
         </ul>
       </div>
     </div>
@@ -500,6 +628,11 @@
 
   </div><!-- /steps-wrap -->
 
+  <div class="footer-links" style="margin-top:1rem;">
+    <button class="footer-link" onclick="showView('view-pohja')" aria-label="Avaa tulostettava profiilipohja">📄 Tulostettava profiilipohja</button>
+  </div>
+
+  </div><!-- /paperi-sisalto -->
 
 </div><!-- /view-oppilas -->
 
@@ -579,6 +712,10 @@
           <li>Tykkäykset ❤️ ja vahvuustähdet 🌟 toimivat automaattisesti</li>
           <li>Ei tulostettavaa – ei kyniä</li>
         </ul>
+        <div style="margin-top:.7rem;padding:.7rem .9rem;background:#e3f2fd;border-left:4px solid #1976d2;border-radius:6px;font-size:.88rem;color:#0d47a1;">
+          <strong>🔑 Näin pääset hyväksymään profiilit:</strong><br>
+          Avaa sama sovellus kuin oppilaat (<strong>fake-insta.html</strong>), paina alareunan <strong>Opettaja – Hyväksy profiileja</strong> -nappia ja kirjaudu koulukoodillasi. Näet odottavat profiilit ja voit hyväksyä ne galleriaan yhdellä klikkauksella.
+        </div>
       </div>
 
       <div style="border:1.5px solid #a5d6a7;border-radius:10px;padding:.8rem 1rem;background:#f1f8e9;">
@@ -619,7 +756,7 @@
         <span class="t-time">Paperilla tai DigiOpossa</span>
         <p>Somemanageri kirjoittaa tähden profiilin puolesta. Ei tarvitse olla täydellinen – riittää, että se kertoo jotain aitoa.</p>
         <div class="t-hint">
-          💡 DigiOpossa: muistuta oppilaita, että profiili ilmestyy galleriaan vasta kun olet hyväksynyt sen.
+          💡 DigiOpossa: muistuta oppilaita, että profiili ilmestyy galleriaan vasta kun olet hyväksynyt sen. Avaa <strong>fake-insta.html</strong> → paina <strong>Opettaja</strong>-nappia → kirjaudu koulukoodilla → hyväksy profiilit.
         </div>
       </div>
     </div>
@@ -810,6 +947,20 @@
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function naytaDigitaalinen() {
+    document.getElementById('paperi-sisalto').style.display = 'none';
+    const el = document.getElementById('digitaalinen-sisalto');
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function naytaPaperi() {
+    document.getElementById('digitaalinen-sisalto').style.display = 'none';
+    const el = document.getElementById('paperi-sisalto');
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 </script>
 
