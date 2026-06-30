@@ -1126,6 +1126,8 @@
   var _observers = [];
   var _lastT = null;
   var _applying = false; // estää itseään ruokkivan silmukan
+  var _havahdukset = 0;          // circuit breaker -laskuri
+  var _ikkunaAlku = Date.now();  // laskurin aikaikkuna
 
   function kaynnistaMutationObserver() {
     if (_observers.length) return;
@@ -1135,12 +1137,30 @@
       if (!el) return;
       var obs = new MutationObserver(function (mutations) {
         if (_applying || !_lastT) return; // ohita käännöksen itse aiheuttamat muutokset
-        var hasNewElement = mutations.some(function (m) {
+
+        // Circuit breaker: jos tarkkailija havahtuu epänormaalin monta kertaa
+        // lyhyessä ajassa (esim. ulkoinen selainlaajennus tai odottamaton tila
+        // muokkaa DOMia jatkuvasti), pysäytä tarkkailu kokonaan ettei sivu jää
+        // silmukkaan ("Page Unresponsive").
+        var nyt = Date.now();
+        if (nyt - _ikkunaAlku > 2000) { _ikkunaAlku = nyt; _havahdukset = 0; }
+        if (++_havahdukset > 40) {
+          _observers.forEach(function (o) { o.obs.disconnect(); });
+          _observers.length = 0;
+          return;
+        }
+
+        // Reagoi VAIN jos lisätty solmu on aito tehtäväkortti (luokka.js:n lisäämä)
+        // — ei käännöksen omiin eikä ulkoisiin DOM-muutoksiin.
+        var uusiKortti = mutations.some(function (m) {
           return Array.prototype.some.call(m.addedNodes, function (n) {
-            return n.nodeType === 1;
+            return n.nodeType === 1 && typeof n.querySelector === 'function' && (
+              (n.matches && n.matches('a.vihko-kortti, a.keskustelu-kortti')) ||
+              n.querySelector('a.vihko-kortti, a.keskustelu-kortti')
+            );
           });
         });
-        if (hasNewElement) sovellaKaannos();
+        if (uusiKortti) sovellaKaannos();
       });
       obs.observe(el, { childList: true, subtree: true });
       _observers.push({ obs: obs, el: el });
