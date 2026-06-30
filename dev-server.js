@@ -73,6 +73,9 @@ function turvallinenPolku(urlPolku) {
 // ─── Fake Insta -muistikanta (nollautuu kun palvelin käynnistetään uudelleen) ─
 const fakeInstaDB = [];
 
+// ─── Maailma tarvitsee sinua -muistikanta ─────────────────────────────────────
+const maailmaTauluDB = [];  // { id, koulu, ongelma, jasenet, idea, tila, tykkaukset, created_at }
+
 // ─── Tiedon Temppeli -muistikanta ────────────────────────────────────────────
 const tiedonTemppTulostaulu = [];   // { id, name, koulu, luokka, score, date, updated }
 
@@ -162,6 +165,66 @@ const server = http.createServer(async (req, res) => {
     }
     if (toiminto === "tyhjenna") {
       fakeInstaDB.length = 0;
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+  }
+
+  // ── API: maailma-taulu (paikallinen, muistipohjainen) ────────────────────
+  if (url.startsWith("/api/maailma-taulu")) {
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+      return res.end();
+    }
+
+    if (req.method === "GET") {
+      const hyv = maailmaTauluDB.filter(r => r.tila === "hyvaksytty");
+      return lahetaJSON(res, 200, { ok: true, ilmoitukset: hyv });
+    }
+
+    const raw = await lueRunko(req);
+    let body = {};
+    try { body = JSON.parse(raw); } catch { return lahetaJSON(res, 400, { ok: false, virhe: "virheellinen_pyynto" }); }
+    const toiminto = body.toiminto || "";
+
+    if (toiminto === "tarkista_opettaja") {
+      return lahetaJSON(res, 200, { ok: true, koulu: "Paikallinen esikatselu" });
+    }
+    if (toiminto === "laheta") {
+      const il = body.ilmoitus || {};
+      const uusi = {
+        id: Math.random().toString(36).slice(2),
+        koulu: body.koulu || "Paikallinen esikatselu",
+        ongelma: il.ongelma || "",
+        jasenet: il.jasenet || [],
+        idea: il.idea || "",
+        tila: "odottaa",
+        tykkaukset: 0,
+        created_at: new Date().toISOString(),
+      };
+      maailmaTauluDB.push(uusi);
+      return lahetaJSON(res, 200, { ok: true, id: uusi.id });
+    }
+    if (toiminto === "hae_kaikki") {
+      return lahetaJSON(res, 200, { ok: true, koulu: "Paikallinen esikatselu", ilmoitukset: maailmaTauluDB });
+    }
+    if (toiminto === "hyvaksy") {
+      const r = maailmaTauluDB.find(x => x.id === body.id);
+      if (r) r.tila = "hyvaksytty";
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "poista") {
+      const idx = maailmaTauluDB.findIndex(x => x.id === body.id);
+      if (idx !== -1) maailmaTauluDB.splice(idx, 1);
+      return lahetaJSON(res, 200, { ok: true });
+    }
+    if (toiminto === "tykkaa") {
+      const r = maailmaTauluDB.find(x => x.id === body.id);
+      if (r) r.tykkaukset++;
+      return lahetaJSON(res, 200, { ok: true, tykkaukset: r ? r.tykkaukset : 0 });
+    }
+    if (toiminto === "tyhjenna") {
+      maailmaTauluDB.length = 0;
       return lahetaJSON(res, 200, { ok: true });
     }
     return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
