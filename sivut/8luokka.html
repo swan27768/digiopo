@@ -969,7 +969,7 @@
           >
 
           <a href="#tet">Kurkistus työelämään</a>
-          <a href="#tet-mission" class="sub-link mission-link">Pyörä pyörii</a>
+          <a href="#tet-haku" class="sub-link mission-link">Hakuharjoitus</a>
 
           <a href="#klinikka">Oppimaan oppimisen klinikka</a>
          
@@ -2753,8 +2753,8 @@
             <div class="task-list" id="tasks-tet" aria-live="polite"></div>
           </div>
 
-          <!-- Pyörä pyörii – hero-kortti -->
-          <div id="tet-mission"
+          <!-- Hakuharjoitus – hero-kortti -->
+          <div id="tet-haku"
             style="
               position: relative;
               border-radius: 18px;
@@ -2763,20 +2763,19 @@
               min-height: 200px;
               display: flex;
               align-items: center;
-              box-shadow: 0 8px 28px rgba(124,58,237,0.30);
+              box-shadow: 0 8px 28px rgba(5,150,105,0.30);
             "
           >
-            <!-- Tausta: violetti-to-pinkki gradi -->
+            <!-- Tausta: teal-to-cyan gradi -->
             <div style="
               position: absolute;
               inset: 0;
               background: linear-gradient(135deg,
-                rgba(124,58,237,0.95) 0%,
-                rgba(109,40,217,0.90) 45%,
-                rgba(190,24,93,0.92) 100%);
+                rgba(5,150,105,0.95) 0%,
+                rgba(2,132,199,0.92) 100%);
             " aria-hidden="true"></div>
 
-            <!-- Koristeltu taustakuvio (pisteet) -->
+            <!-- Koristeltu taustakuvio -->
             <div style="
               position: absolute;
               inset: 0;
@@ -2793,9 +2792,9 @@
               color: #fff;
               width: 100%;
             ">
-              <div class="hero-badge" data-tapa="ryhma" data-tyyppi="toiminnallinen" data-teoria="pyora-pyorii" style="margin-bottom: 10px; background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.38);">
-                <i class="fa-solid fa-dice" aria-hidden="true"></i>
-                Toiminnallinen tehtävä
+              <div class="hero-badge" data-tapa="yksin" data-tyyppi="kirjoitus" style="margin-bottom: 10px; background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.38);">
+                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                Kirjoitustehtävä
               </div>
               <h3 style="
                 margin: 0 0 8px;
@@ -2804,7 +2803,7 @@
                 letter-spacing: -0.5px;
                 text-shadow: 0 2px 8px rgba(0,0,0,0.35);
               ">
-                🎰 Pyörä pyörii – satunnainen ura
+                📨 Ota yhteyttä työnantajaan
               </h3>
               <p style="
                 margin: 0 0 20px;
@@ -2814,65 +2813,99 @@
                 text-shadow: 0 1px 4px rgba(0,0,0,0.3);
                 max-width: 460px;
               ">
-                Saat satunnaisen, harvinaisen ammatin. Sinulla on 3 minuuttia valmistautua –
-                ja sitten vakuutat muut täydellä vakavuudella, miksi se on täydellinen juuri sinulle.
+                Harjoittele TET-paikan hakemista. Täytä tiedot — saat valmiin viestin, jonka voit lähettää tai muokata.
               </p>
               <div style="display:flex; gap: 10px; flex-wrap: wrap; align-items: center;">
                 <button
                   class="btn-hero"
-                  onclick="togglePyora(this)"
+                  onclick="toggleHaku(this)"
                   aria-expanded="false"
-                  aria-controls="pyora-wrapper"
-                  style="background: #fff; color: #7c3aed; border: none;"
+                  aria-controls="haku-wrapper"
+                  style="background: #fff; color: #059669; border: none;"
                 >
                   Avaa tehtävä
                 </button>
                 <span style="font-size:13px; opacity:0.82;">
-                  ⏱ 20–25 min &nbsp;·&nbsp; 🎭 Koko luokka &nbsp;·&nbsp; 🎰 Arvonta
+                  ⏱ 15 min &nbsp;·&nbsp; ✍️ Yksin &nbsp;·&nbsp; 📨 Luo viesti
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- Pyörä pyörii -tehtävä (piilotettu, avautuu painikkeesta) -->
-          <div id="pyora-wrapper" style="display: none; margin-top: 8px;">
-            <div style="
-              display: flex;
-              justify-content: flex-end;
-              margin-bottom: 8px;
-            ">
+          <!-- Hakuharjoitus – lomake (piilotettu) -->
+          <div id="haku-wrapper" style="display: none; margin-top: 8px;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
               <button
-                onclick="togglePyora(document.querySelector('[aria-controls=pyora-wrapper]'))"
+                onclick="toggleHaku(document.querySelector('[aria-controls=haku-wrapper]'))"
                 style="
-                  background: #7c3aed;
-                  color: white;
-                  border: none;
-                  padding: 8px 18px;
-                  border-radius: 8px;
-                  font-size: 14px;
-                  font-weight: 600;
-                  cursor: pointer;
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
+                  background: #059669; color: white; border: none;
+                  padding: 8px 18px; border-radius: 8px; font-size: 14px;
+                  font-weight: 600; cursor: pointer;
+                  display: flex; align-items: center; gap: 6px;
                 "
               >
                 <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
               </button>
             </div>
-            <iframe
-              src="../tehtavat/pyora-pyorii.html"
-              style="
-                width: 100%;
-                height: 90vh;
-                min-height: 680px;
-                border: none;
-                border-radius: 14px;
-                box-shadow: 0 4px 20px rgba(124,58,237,0.18);
-              "
-              title="Pyörä pyörii – satunnainen ura"
-              loading="lazy"
-            ></iframe>
+
+            <div style="background:#f0fdf4; border:1.5px solid #a7f3d0; border-radius:14px; padding:24px;">
+              <h4 style="margin:0 0 6px; color:#065f46; font-size:1rem;">✏️ Täytä tiedot — luodaan viesti sinulle</h4>
+              <p style="font-size:0.85rem; color:#374151; margin:0 0 20px;">Voit käyttää oikeaa TET-paikkaa tai keksittyä. Tärkeintä on harjoitella!</p>
+
+              <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
+                <div>
+                  <label for="haku-nimi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Etunimesi</label>
+                  <input id="haku-nimi" type="text" placeholder="esim. Emmi"
+                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+                    oninput="paivitaHakuPohja()" />
+                </div>
+                <div>
+                  <label for="haku-paikka" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Minne haluat TET:iin? (yritys tai paikka)</label>
+                  <input id="haku-paikka" type="text" placeholder="esim. kirjasto, eläinlääkäri, rakennusliike..."
+                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+                    oninput="paivitaHakuPohja()" />
+                </div>
+                <div>
+                  <label for="haku-miksi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Miksi juuri tämä paikka kiinnostaa sinua?</label>
+                  <textarea id="haku-miksi" placeholder="esim. Olen aina pitänyt eläimistä ja haluaisin nähdä, miltä eläinlääkärin työ oikeasti näyttää."
+                    style="width:100%; min-height:80px; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none; resize:vertical;"
+                    oninput="paivitaHakuPohja()"></textarea>
+                </div>
+                <div>
+                  <label for="haku-aika" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">TET-ajankohta (viikko tai kuukausi)</label>
+                  <input id="haku-aika" type="text" placeholder="esim. viikolla 6 tai helmikuussa"
+                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+                    oninput="paivitaHakuPohja()" />
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size:0.82rem; font-weight:700; color:#065f46; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Valmis viesti:
+                </div>
+                <div id="haku-pohja" style="
+                  background:#fff; border:1.5px solid #a7f3d0; border-radius:10px;
+                  padding:18px; font-size:0.88rem; line-height:1.8; color:#1f2937;
+                  white-space:pre-wrap; font-family:inherit; min-height:160px;
+                ">Täytä tiedot yllä niin viesti ilmestyy tähän.</div>
+              </div>
+
+              <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; align-items:center;">
+                <button onclick="kopioiHakuViesti()" style="
+                  background:linear-gradient(135deg,#059669,#0284c7); color:#fff;
+                  border:none; padding:10px 20px; border-radius:10px;
+                  font-size:0.9rem; font-weight:700; cursor:pointer;
+                  display:flex; align-items:center; gap:7px;
+                ">
+                  <i class="fa-solid fa-copy" aria-hidden="true"></i> Kopioi viesti
+                </button>
+                <span id="haku-kopioitu" style="font-size:0.82rem; color:#059669; display:none;">✓ Kopioitu!</span>
+              </div>
+
+              <div style="margin-top:16px; background:#ecfdf5; border-left:3px solid #10b981; border-radius:0 8px 8px 0; padding:10px 14px; font-size:0.82rem; color:#065f46;">
+                💡 <strong>Muista:</strong> Oikea työnantaja arvostaa lyhyttä, asiallista viestiä. Kerro kuka olet, minne haluat ja milloin.
+              </div>
+            </div>
           </div>
 
           
@@ -3485,6 +3518,83 @@
             </div>
           </div>
 
+          <!-- Pyörä pyörii – satunnainen ura (siirretty TET-osiosta) -->
+          <div id="tulevaisuus-pyora"
+            style="
+              position: relative;
+              border-radius: 18px;
+              overflow: hidden;
+              margin: 24px 0 16px;
+              min-height: 200px;
+              display: flex;
+              align-items: center;
+              box-shadow: 0 8px 28px rgba(124,58,237,0.30);
+            "
+          >
+            <div style="
+              position: absolute; inset: 0;
+              background: linear-gradient(135deg,
+                rgba(124,58,237,0.95) 0%,
+                rgba(109,40,217,0.90) 45%,
+                rgba(190,24,93,0.92) 100%);
+            " aria-hidden="true"></div>
+            <div style="
+              position: absolute; inset: 0; opacity: 0.07;
+              background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+              background-size: 22px 22px;
+            " aria-hidden="true"></div>
+            <div style="position: relative; z-index: 1; padding: 28px 32px; color: #fff; width: 100%;">
+              <div class="hero-badge" data-tapa="ryhma" data-tyyppi="toiminnallinen" data-teoria="pyora-pyorii" style="margin-bottom: 10px; background: rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.38);">
+                <i class="fa-solid fa-dice" aria-hidden="true"></i>
+                Toiminnallinen tehtävä
+              </div>
+              <h3 style="margin: 0 0 8px; font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 900; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.35);">
+                🎰 Pyörä pyörii – satunnainen ura
+              </h3>
+              <p style="margin: 0 0 20px; font-size: 15px; line-height: 1.6; opacity: 0.95; text-shadow: 0 1px 4px rgba(0,0,0,0.3); max-width: 460px;">
+                Saat satunnaisen, harvinaisen ammatin. Sinulla on 3 minuuttia valmistautua —
+                ja sitten vakuutat muut täydellä vakavuudella, miksi se on täydellinen juuri sinulle.
+              </p>
+              <div style="display:flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button
+                  class="btn-hero"
+                  onclick="togglePyora(this)"
+                  aria-expanded="false"
+                  aria-controls="pyora-wrapper"
+                  style="background: #fff; color: #7c3aed; border: none;"
+                >
+                  Avaa tehtävä
+                </button>
+                <span style="font-size:13px; opacity:0.82;">
+                  ⏱ 20–25 min &nbsp;·&nbsp; 🎭 Koko luokka &nbsp;·&nbsp; 🎰 Arvonta
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pyörä pyörii -tehtävä (piilotettu) -->
+          <div id="pyora-wrapper" style="display: none; margin-top: 8px;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+              <button
+                onclick="togglePyora(document.querySelector('[aria-controls=pyora-wrapper]'))"
+                style="
+                  background: #7c3aed; color: white; border: none;
+                  padding: 8px 18px; border-radius: 8px; font-size: 14px;
+                  font-weight: 600; cursor: pointer;
+                  display: flex; align-items: center; gap: 6px;
+                "
+              >
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
+              </button>
+            </div>
+            <iframe
+              src="../tehtavat/pyora-pyorii.html"
+              style="width: 100%; height: 90vh; min-height: 680px; border: none; border-radius: 14px; box-shadow: 0 4px 20px rgba(124,58,237,0.18);"
+              title="Pyörä pyörii – satunnainen ura"
+              loading="lazy"
+            ></iframe>
+          </div>
+
           <!-- Mission: Tulevaisuuden työpaikka -esittely -->
           <div id="tulevaisuus2-mission" class="mission-card" style="margin-top:12px;padding:1.25rem 1.5rem;">
             <div class="mission-header">
@@ -3728,6 +3838,41 @@
         btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
         btn.setAttribute('aria-expanded', open ? 'false' : 'true');
         if (!open) wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function toggleHaku(btn) {
+        var wrapper = document.getElementById('haku-wrapper');
+        var open = wrapper.style.display === 'block';
+        wrapper.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        if (!open) { paivitaHakuPohja(); wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }
+
+      function paivitaHakuPohja() {
+        var nimi   = (document.getElementById('haku-nimi')  && document.getElementById('haku-nimi').value.trim())   || '[etunimesi]';
+        var paikka = (document.getElementById('haku-paikka') && document.getElementById('haku-paikka').value.trim()) || '[TET-paikka]';
+        var miksi  = (document.getElementById('haku-miksi') && document.getElementById('haku-miksi').value.trim())  || '[Kerro lyhyesti, miksi juuri tämä paikka kiinnostaa sinua.]';
+        var aika   = (document.getElementById('haku-aika')  && document.getElementById('haku-aika').value.trim())   || '[ajankohta]';
+        var pohja  = document.getElementById('haku-pohja');
+        if (!pohja) return;
+        pohja.textContent =
+          'Hei!\n\n' +
+          'Nimeni on ' + nimi + ' ja olen 8-luokkalainen.\n\n' +
+          'Olen kiinnostunut suorittamaan TET-harjoittelun ' + paikka + ':ssä. ' + miksi + '\n\n' +
+          'TET-jaksoni ajoittuu ' + aika + '. Onko teillä mahdollisuus ottaa TET-harjoittelija silloin?\n\n' +
+          'Ystävällisin terveisin,\n' + nimi;
+      }
+
+      function kopioiHakuViesti() {
+        var pohja = document.getElementById('haku-pohja');
+        if (!pohja || !pohja.textContent || pohja.textContent.indexOf('[') === 0) return;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(pohja.textContent).then(function() {
+            var k = document.getElementById('haku-kopioitu');
+            if (k) { k.style.display = 'inline'; setTimeout(function(){ k.style.display = 'none'; }, 2000); }
+          });
+        }
       }
 
       /* ── Haaste (eriyttäminen ylöspäin) ── */
