@@ -91,20 +91,19 @@ window.OSIO_DATA = {
       teoria: "tulevaisuustuumailu",
       rakenne: [
         "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä? (5 min)",
-        "Tiimitehtävä 1: Rakenna huomisen koulu (45 min tai 2 h)",
-        "Toiminnallinen tehtävä: Pyörä pyörii – satunnainen ura (20 min)",
-        "Tiimitehtävä 2: Tulevaisuuden työpaikka (45 min tai 2 h)",
-        "Purku: esittelyt ja keskustelu"
+        "Toiminnallinen lämmittely: Pyörä pyörii – satunnainen ura (20 min)",
+        "Tiimitehtävä: Tulevaisuuden työpaikka (45 min)",
+        "Purku: ryhmät esittelevät, luokka äänestää (10 min)"
       ],
       tavoitteet: [
         "Harjoittelet kuvittelemaan ja perustelemaan vaihtoehtoisia tulevaisuuksia",
-        "Suunnittelet ryhmässä ja puolustat ideoitasi rakentavasti",
-        "Pohdit omaa paikkaasi muuttuvassa työelämässä"
+        "Suunnittelet ryhmässä tulevaisuuden työpaikan ja puolustat ideaasi",
+        "Huomaat, että yllättävästäkin ammattialasta voi löytyä kiinnostavia puolia"
       ],
       miksi: "Iso osa tulevaisuuden töistä ei ole vielä olemassa. Tulevaisuudentutkimuksessa puhutaan tulevaisuuslukutaidosta: kyvystä kuvitella useita mahdollisia tulevaisuuksia sen sijaan, että odottaisi yhtä valmista. Tämä taito auttaa sinua tekemään valintoja, jotka kestävät, vaikka maailma muuttuu.",
       yhteenveto: [
-        "Olet rakentanut ryhmässä vision tulevaisuuden koulusta tai työpaikasta",
-        "Osaat perustella ideasi ja kuunnella muiden näkökulmia",
+        "Olet harjoitellut kuvittelemaan tulevaisuutta avoimin mielin — myös sellaisia ammatteja, joita et olisi itse valinnut",
+        "Olet rakentanut ryhmässä vision tulevaisuuden työpaikasta ja osannut perustella sen",
         "Ymmärrät, että tulevaisuus tehdään — se ei vain tapahdu"
       ]
     }
