@@ -50,12 +50,12 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään? (5 min)",
         "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen (15 min)",
-        "Toiminnallinen tehtävä: Pyörä pyörii — satunnainen ura (20 min)",
+        "Kirjoitustehtävä: Ota yhteyttä työnantajaan (15 min)",
         "Keskustelutehtävä: Mikä tekee työstä hyvän työn? (10 min)"
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
-        "Uskallat ottaa yhteyttä työnantajaan",
+        "Harjoittelet ottamaan yhteyttä työnantajaan — ja sinulla on valmis viestipohja",
         "Huomaat, että yllättäväkin työ voi opettaa ja kiinnostaa",
         "Pohdit yhdessä: mitä työ oikeasti on – ja mitä siitä ei opita koulussa?"
       ],
@@ -93,6 +93,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä? (5 min)",
         "Tiimitehtävä 1: Rakenna huomisen koulu (45 min tai 2 h)",
+        "Toiminnallinen tehtävä: Pyörä pyörii – satunnainen ura (20 min)",
         "Tiimitehtävä 2: Tulevaisuuden työpaikka (45 min tai 2 h)",
         "Purku: esittelyt ja keskustelu"
       ],
