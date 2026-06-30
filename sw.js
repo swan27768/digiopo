@@ -1,6 +1,7 @@
 // DigiOpo – Service Worker
 // Strategia:
 //   - Staattiset resurssit (CSS, JS, kuvat): cache-first
+//   - JSON-datatiedostot (tehtavat.json, fi.json jne.): network-first (pysyy aina tuoreena)
 //   - HTML-sivut: network-first (sisältö pysyy tuoreena)
 //   - API-kutsut (/api/*): ei välimuistitusta
 
@@ -65,6 +66,12 @@ self.addEventListener("fetch", (event) => {
   // HTML-sivut: network-first (koululainen saa tuoreimman sisällön)
   // Jos verkko ei vastaa, tarjoillaan välimuistista
   if (request.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(networkFirst(request, HTML_CACHE));
+    return;
+  }
+
+  // JSON-datatiedostot: network-first (sisältö muuttuu usein — ei välimuistia)
+  if (url.pathname.endsWith(".json") && !url.pathname.includes("manifest")) {
     event.respondWith(networkFirst(request, HTML_CACHE));
     return;
   }
