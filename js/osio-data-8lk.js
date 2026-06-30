@@ -55,15 +55,14 @@ window.OSIO_DATA = {
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
-        "Harjoittelet ottamaan yhteyttä työnantajaan — ja sinulla on valmis viestipohja",
-        "Huomaat, että yllättäväkin työ voi opettaa ja kiinnostaa",
-        "Pohdit yhdessä: mitä työ oikeasti on – ja mitä siitä ei opita koulussa?"
+        "Olet harjoitellut ottamaan yhteyttä työnantajaan — sinulla on valmis viestipohja",
+        "Pohdit, mikä tekee työstä hyvän: palkka, kiinnostus vai kaverit?"
       ],
-      miksi: "TET on useimmille ensimmäinen oma kosketus työelämään, ja kokemuksellisen oppimisen tutkimus osoittaa: itse tekeminen ja kokeminen opettaa työelämästä asioita, joita ei voi oppia kirjasta. Urateorioissa korostetaan myös sattuman roolia — moni löytää uransa yllättävän kokemuksen kautta. Siksi kannattaa kokeilla avoimin mielin.",
+      miksi: "TET on useimmille ensimmäinen oma kosketus työelämään. Moni ei hae paikkaa, koska ei tiedä miten — harjoittelemalla madaltuu kynnys oikeaan yhteydenottoon. Työterveyslaitoksen tutkimuksen mukaan merkityksellinen työ on yksi tärkeimmistä hyvinvoinnin lähteistä, joten on hyvä pysähtyä miettimään, mitä hyvältä työltä oikeastaan odottaa.",
       yhteenveto: [
         "Tiedät TET-prosessin alusta loppuun: lomake, paikan haku, viikko, työtodistus",
-        "Olet harjoitellut, miten työpaikkaa kysytään",
-        "Osaat suhtautua uteliaasti myös aloihin, joita et ole tullut ajatelleeksi"
+        "Sinulla on harjoiteltu viesti, jonka voit lähettää oikealle työnantajalle",
+        "Tiedät oman vastauksesi: onko hyvässä työssä tärkeintä palkka, kiinnostus vai kaverit"
       ]
     },
 
