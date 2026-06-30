@@ -3680,6 +3680,14 @@
         var wrapper = document.getElementById('maailma-wrapper');
         var open = wrapper.style.display === 'block';
         wrapper.style.display = open ? 'none' : 'block';
+        if (!open) {
+          // Palauta iframen näkyvyys jos suljeMaailma oli piilottanut sen suoraan
+          wrapper.querySelectorAll('iframe').forEach(function(f) {
+            f.style.display = '';
+            if (f.parentElement && f.parentElement !== wrapper) f.parentElement.style.display = '';
+          });
+          wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
         btn.setAttribute('aria-expanded', open ? 'false' : 'true');
       }
