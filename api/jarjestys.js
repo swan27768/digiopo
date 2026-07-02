@@ -85,6 +85,23 @@ export default async function handler(req, res) {
   // ── GET: hae ryhmän järjestys (julkinen luku) ──
   if (req.method === 'GET') {
     const ryhma = String(req.query.ryhma || '').trim().toUpperCase();
+
+    // GET ?ryhma=KOODI&luokat=1  →  mitkä luokat ryhmällä on tallennettuja järjestyksiä
+    if (req.query.luokat === '1') {
+      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
+        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+      }
+      try {
+        const r = await sb(`jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&select=luokka`);
+        if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
+        const rivit = await r.json();
+        return res.status(200).json({ ok: true, luokat: rivit.map((rv) => rv.luokka) });
+      } catch (err) {
+        console.error('jarjestys GET luokat:', err);
+        return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
+      }
+    }
+
     const luokka = String(req.query.luokka || '').trim();
     if (!/^[A-Z0-9-]{4,16}$/.test(ryhma) || !SALLITUT_LUOKAT.includes(luokka)) {
       return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });

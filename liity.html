@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liity ryhmään – DigiOpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue-deep:  #1a3f6f;
+    --blue-mid:   #2563a8;
+    --blue-pale:  #ddeaf7;
+    --green-mid:  #2d9e6b;
+    --yellow:     #f5c842;
+    --text-dark:  #0f2540;
+    --text-mid:   #3a5a7a;
+    --text-light: #7a9ab5;
+    --white:      #f8fbff;
+    --error:      #dc2626;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(107,163,216,0.2);
+    border-radius: 24px;
+    padding: 48px 44px;
+    box-shadow: 0 4px 32px rgba(26,63,111,0.07);
+    width: 100%;
+    max-width: 440px;
+  }
+  .logo {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--blue-deep);
+    text-align: center;
+    margin-bottom: 8px;
+    text-decoration: none;
+    display: block;
+  }
+  .logo span { color: var(--green-mid); }
+  .tagline {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px; font-weight: 800;
+    color: var(--blue-deep);
+    margin-bottom: 8px;
+  }
+  .desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+  }
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid rgba(107,163,216,0.35);
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  input:focus { border-color: var(--blue-mid); }
+  input::placeholder { color: var(--text-light); letter-spacing: 0; }
+  .btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--blue-deep);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    margin-top: 4px;
+  }
+  .btn:hover { background: var(--blue-mid); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* Luokkavalinta */
+  .luokkavalinta { display: none; margin-top: 20px; }
+  .luokkavalinta.nakyy { display: block; }
+  .luokkavalinta p {
+    font-size: 14px; font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 12px;
+  }
+  .luokat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .luokka-nappi {
+    padding: 14px 8px;
+    border: 2px solid var(--blue-pale);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--blue-deep);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .luokka-nappi:hover { background: var(--blue-pale); border-color: var(--blue-mid); }
+  .luokka-nappi.korostettu { background: var(--blue-deep); color: #fff; border-color: var(--blue-deep); }
+
+  /* Viesti */
+  .viesti {
+    margin-top: 14px;
+    font-size: 13.5px;
+    min-height: 20px;
+    text-align: center;
+  }
+  .viesti.virhe { color: var(--error); }
+  .viesti.info  { color: var(--text-mid); }
+  .viesti.ok    { color: var(--green-mid); font-weight: 600; }
+
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="card">
+  <a class="logo" href="/">Digi<span>Opo</span></a>
+  <p class="tagline">Omilla Jäljillä</p>
+
+  <h1>Liity opettajan ryhmään</h1>
+  <p class="desc">Syötä koulukoodisi ja opettajasi antama ryhmäkoodi. Pääset suoraan oikealle sivulle opettajan järjestyksessä.</p>
+
+  <label for="koulukoodi">Koulukoodi</label>
+  <input id="koulukoodi" type="text" placeholder="esim. MERIKOULU-2026-AB3X"
+         autocomplete="off" autocapitalize="characters" spellcheck="false">
+
+  <label for="ryhmakoodi">Ryhmäkoodi (opettajalta)</label>
+  <input id="ryhmakoodi" type="text" placeholder="esim. K3M-9PQ2"
+         autocomplete="off" autocapitalize="characters" spellcheck="false">
+
+  <button class="btn" id="jatka-nappi">Jatka →</button>
+
+  <div class="luokkavalinta" id="luokkavalinta">
+    <p>Valitse luokkasi:</p>
+    <div class="luokat-grid" id="luokat-grid"></div>
+  </div>
+
+  <div class="viesti" id="viesti"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var LS_LISENSSI = 'digiopo_lisenssi';
+  var LS_RYHMA    = 'digiopo-ryhma';
+
+  var koulukoodiEl = document.getElementById('koulukoodi');
+  var ryhmakoodiEl = document.getElementById('ryhmakoodi');
+  var nappi        = document.getElementById('jatka-nappi');
+  var viestiEl     = document.getElementById('viesti');
+  var luokkaDiv    = document.getElementById('luokkavalinta');
+  var luokatGrid   = document.getElementById('luokat-grid');
+
+  // Esitäytä jos jo tallennettu
+  try {
+    var tallennettu = JSON.parse(localStorage.getItem(LS_LISENSSI) || 'null');
+    if (tallennettu && tallennettu.koodi) koulukoodiEl.value = tallennettu.koodi;
+    var tallennettuRyhma = localStorage.getItem(LS_RYHMA);
+    if (tallennettuRyhma) ryhmakoodiEl.value = tallennettuRyhma;
+  } catch (e) {}
+
+  function nayta(teksti, tyyppi) {
+    viestiEl.textContent = teksti;
+    viestiEl.className = 'viesti ' + (tyyppi || '');
+  }
+
+  function aseta_lataus(paalla) {
+    nappi.disabled = paalla;
+    nappi.innerHTML = paalla
+      ? '<span class="spinner"></span>Tarkistetaan…'
+      : 'Jatka →';
+  }
+
+  function ohjaa(luokka, ryhmakoodi) {
+    try { localStorage.setItem(LS_RYHMA, ryhmakoodi.toUpperCase()); } catch (e) {}
+    window.location.href = '/' + luokka + 'luokka/?ryhma=' + encodeURIComponent(ryhmakoodi.toUpperCase());
+  }
+
+  function naytaLuokkavalinta(luokat, ryhmakoodi) {
+    luokkaDiv.classList.add('nakyy');
+    luokatGrid.innerHTML = '';
+    // Näytä aina 7, 8, 9 – korostetaan ne joilla on järjestys
+    ['7','8','9'].forEach(function (lk) {
+      var onJarjestys = luokat.indexOf(lk) !== -1;
+      var btn = document.createElement('button');
+      btn.className = 'luokka-nappi' + (onJarjestys ? ' korostettu' : '');
+      btn.textContent = lk + '. luokka';
+      btn.addEventListener('click', function () { ohjaa(lk, ryhmakoodi); });
+      luokatGrid.appendChild(btn);
+    });
+    nayta('Valitse luokkasi alta.', 'info');
+  }
+
+  nappi.addEventListener('click', async function () {
+    var koulukoodi = koulukoodiEl.value.trim().toUpperCase();
+    var ryhmakoodi = ryhmakoodiEl.value.trim().toUpperCase();
+
+    if (!koulukoodi) { nayta('Syötä koulukoodi.', 'virhe'); koulukoodiEl.focus(); return; }
+    if (!ryhmakoodi) { nayta('Syötä ryhmäkoodi.', 'virhe'); ryhmakoodiEl.focus(); return; }
+    if (!/^[A-Z0-9-]{4,16}$/.test(ryhmakoodi)) {
+      nayta('Ryhmäkoodi näyttää virheelliseltä. Tarkista kirjoitusasu.', 'virhe');
+      ryhmakoodiEl.focus(); return;
+    }
+
+    aseta_lataus(true);
+    nayta('', '');
+    luokkaDiv.classList.remove('nakyy');
+
+    try {
+      // 1. Validoi koulukoodi
+      var lisenssiVastaus = await fetch('/api/lisenssi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ koodi: koulukoodi }),
+      }).then(function (r) { return r.json(); });
+
+      if (!lisenssiVastaus.ok) {
+        nayta('Koulukoodi ei kelpaa. Tarkista koodi opettajaltasi.', 'virhe');
+        aseta_lataus(false); return;
+      }
+
+      // Tallenna lisenssi localStorage:een
+      try {
+        localStorage.setItem(LS_LISENSSI, JSON.stringify({
+          koodi:       lisenssiVastaus.koodi,
+          koulu:       lisenssiVastaus.koulu,
+          tyyppi:      lisenssiVastaus.tyyppi,
+          voimassa_asti: lisenssiVastaus.voimassa_asti,
+          tarkistettu: Date.now(),
+        }));
+      } catch (e) {}
+
+      // 2. Selvitä mille luokille ryhmäkoodilla on järjestyksiä
+      var luokatVastaus = await fetch('/api/jarjestys?ryhma=' + encodeURIComponent(ryhmakoodi) + '&luokat=1')
+        .then(function (r) { return r.json(); });
+
+      var luokat = (luokatVastaus.ok && Array.isArray(luokatVastaus.luokat))
+        ? luokatVastaus.luokat : [];
+
+      if (luokat.length === 1) {
+        // Täsmälleen yksi luokka → ohjaa suoraan
+        nayta('Ohjataan…', 'ok');
+        ohjaa(luokat[0], ryhmakoodi);
+      } else {
+        // 0 tai useampi luokka → näytä valinta
+        aseta_lataus(false);
+        naytaLuokkavalinta(luokat, ryhmakoodi);
+      }
+
+    } catch (err) {
+      console.error(err);
+      nayta('Verkkovirhe. Tarkista internetyhteys ja yritä uudelleen.', 'virhe');
+      aseta_lataus(false);
+    }
+  });
+
+  // Enter-näppäin
+  [koulukoodiEl, ryhmakoodiEl].forEach(function (el) {
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') nappi.click();
+    });
+  });
+})();
+</script>
+</body>
+</html>
