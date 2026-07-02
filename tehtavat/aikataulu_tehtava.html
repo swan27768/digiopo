@@ -104,6 +104,12 @@
   }
   .day-slot.drag-over { border-color: #059669; background: #d1fae5; }
   .day-slot.has-task { border-style: solid; border-color: transparent; font-style: normal; color: inherit; cursor: default; }
+  .day-slot-select {
+    width: 100%; background: transparent; border: none; color: #6b7280;
+    font-size: 0.68rem; font-style: italic; text-align: center; text-align-last: center;
+    cursor: pointer; padding: 4px 2px;
+  }
+  .day-slot-select:focus { outline: 2px solid var(--green); border-radius: 6px; }
   .placed-chip { padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 4px; width: 100%; text-align: center; justify-content: center; }
   .slot-remove { background: rgba(255,255,255,0.3); border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; color: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 
@@ -187,9 +193,9 @@
 <div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
   <div class="step-dot active" role="tab" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
   <div class="step-dot" role="tab" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
-  <div class="step-dot" role="tab" aria-label="Vaihe 3: Viikkokalenteri" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
-  <div class="step-dot" role="tab" aria-label="Vaihe 4: Projektin suunnittelu" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
-  <div class="step-dot" role="tab" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 3: Kokeeseen lukeminen" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 4: Tietovisa" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 5: Lisätehtävä" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
 </div>
 
 <!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
@@ -201,19 +207,19 @@
     <p>🔑 <strong>Tärkein vinkki:</strong> Laske <em>taaksepäin</em> koepäivästä. Jos koe on perjantaina, milloin teet viimeisen kertauksen? Torstaina! Milloin harjoittelet tehtäviä? Keskiviikkona! Ja niin edelleen – älä jätä kaikkea viimeiseen iltaan!</p>
   </div>
 
-  <p style="font-size:1rem;font-weight:800;color:#064e3b;margin-bottom:12px;">📋 Näin jaetaan iso projekti osiin:</p>
+  <p style="font-size:1rem;font-weight:800;color:#064e3b;margin-bottom:12px;">📋 Näin jaat kokeeseen valmistautumisen osiin:</p>
   <div class="project-steps">
-    <div class="proj-step ps6"><span class="ps-num">6</span>Palautus (määräpäivä)</div>
-    <div class="proj-step ps5"><span class="ps-num">5</span>Viimeistely ja tarkistus</div>
-    <div class="proj-step ps4"><span class="ps-num">4</span>Luonnosten kirjoittaminen</div>
-    <div class="proj-step ps3"><span class="ps-num">3</span>Sisällön organisoiminen</div>
-    <div class="proj-step ps2"><span class="ps-num">2</span>Taustan selvittäminen</div>
-    <div class="proj-step ps1"><span class="ps-num">1</span>Aivoriihi – ideointi (aloita tästä!)</div>
+    <div class="proj-step ps6"><span class="ps-num">6</span>Koe (määräpäivä)</div>
+    <div class="proj-step ps5"><span class="ps-num">5</span>Viimeinen kertaus</div>
+    <div class="proj-step ps4"><span class="ps-num">4</span>Harjoittelutehtävät ja itsetestaus</div>
+    <div class="proj-step ps3"><span class="ps-num">3</span>Tiivistelmän tekeminen</div>
+    <div class="proj-step ps2"><span class="ps-num">2</span>Muistiinpanojen ja kirjan läpikäynti</div>
+    <div class="proj-step ps1"><span class="ps-num">1</span>Aloita ajoissa (aloita tästä!)</div>
   </div>
-  <p style="font-size:0.85rem;color:#059669;margin-top:12px;text-align:center;font-style:italic;">↑ Suunnittele taaksepäin – aloita määräpäivästä!</p>
+  <p style="font-size:0.85rem;color:#059669;margin-top:12px;text-align:center;font-style:italic;">↑ Suunnittele taaksepäin – aloita koepäivästä!</p>
 
   <button class="btn btn-full" onclick="nextScreen()" style="margin-top:20px;">
-    Rakenna viikkoaikataulu! 📅
+    Aloitetaan – Ihmisaikajana! 🏃
   </button>
 </section>
 
@@ -222,7 +228,7 @@
   <div class="teacher-box" style="background: linear-gradient(135deg, #064e3b, #ea580c);">
     <div class="teacher-label">🏃 Toiminnallinen tehtävä</div>
     <h2 id="s-toim-aika-title">Ihmisaikajana — sinä olet tehtäväkortti!</h2>
-    <p>Tämä tehtävä tehdään <strong>lattialla liikkuen</strong>. Jokainen teistä on osa projektia!</p>
+    <p>Tämä tehtävä tehdään <strong>lattialla liikkuen</strong>. Jokainen teistä on osa aikataulua!</p>
   </div>
 
   <div style="background: white; border: 2px solid #a7f3d0; border-radius: 18px; padding: 22px; margin-bottom: 16px;">
@@ -239,7 +245,7 @@
       <div style="display: flex; gap: 14px; align-items: flex-start;">
         <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
         <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
-          Jokaiselle oppilaalle annetaan <strong>tehtäväkortti</strong>: Aivoriihi 💡 / Tutkimustyö 🔍 / Luonnokset ✏️ / Viimeistely ✨ / Palautus 📬
+          Jokaiselle oppilaalle annetaan <strong>tehtäväkortti</strong>: Muistiinpanojen läpikäynti 📋 / Tiivistelmä 🧠 / Harjoittelu ✏️ / Viimeinen kertaus 🔁 / Koe 📝
         </div>
       </div>
       <div style="display: flex; gap: 14px; align-items: flex-start;">
@@ -251,7 +257,7 @@
       <div style="display: flex; gap: 14px; align-items: flex-start;">
         <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669, #ea580c); color: white; font-size: 1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
         <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.6; padding-top: 5px;">
-          Opettaja sanoo: <strong>"Palautuspäivä on päivä 10!"</strong> — Ryhmä tarkistaa: mahtuuko kaikki? Onko puskuria? Siirretään tarvittaessa!
+          Opettaja sanoo: <strong>"Koepäivä on päivä 10!"</strong> — Ryhmä tarkistaa: mahtuuko kaikki? Onko puskuria? Siirretään tarvittaessa!
         </div>
       </div>
       <div style="display: flex; gap: 14px; align-items: flex-start;">
@@ -283,11 +289,11 @@
         Tulosta viisi tehtäväkorttia (yksi per oppilas tai pari). Oppilaat saavat kortit käteen ja asettuvat aikajanalle niiden mukaan.
       </p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
-        <div style="background: #ec4899; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">💡 Aivoriihi<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 1–2</span></div>
-        <div style="background: #f59e0b; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">🔍 Tutkimustyö<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 2–4</span></div>
-        <div style="background: #3b82f6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">✏️ Luonnosten kirjoitus<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 4–7</span></div>
-        <div style="background: #8b5cf6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">✨ Viimeistely<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 7–9</span></div>
-        <div style="background: #059669; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center; grid-column: span 2;">📬 PALAUTUS — Päivä 10!</div>
+        <div style="background: #ec4899; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">📋 Muistiinpanojen läpikäynti<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 1–3</span></div>
+        <div style="background: #f59e0b; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">🧠 Tiivistelmä<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 3–5</span></div>
+        <div style="background: #3b82f6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">✏️ Harjoittelu<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 5–7</span></div>
+        <div style="background: #8b5cf6; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center;">🔁 Viimeinen kertaus<br><span style="font-weight: 400; font-size: 0.78rem;">Päivät 7–9</span></div>
+        <div style="background: #059669; color: white; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; text-align: center; grid-column: span 2;">📝 KOE — Päivä 10!</div>
       </div>
       <a href="aikataulu_tehtavakortit.html" target="_blank"
         style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; background:#059669; color:white; border-radius:8px; text-decoration:none; font-size:0.88rem; font-weight:700; transition:background 0.18s;"
@@ -316,33 +322,8 @@
   </div>
 
   <button class="btn btn-full" onclick="nextScreen()">
-    ✅ Tehty — rakennetaan digitaalinen kalenteri! 📅
+    ✅ Tehty — suunnitellaan kokeeseen lukeminen! 📖
   </button>
-</section>
-
-<!-- ═══════════ SCREEN 1: VIIKKOKALENTERI ═══════════ -->
-<section class="screen" id="screen-1" aria-labelledby="s1-title">
-  <div class="section-title">
-    <span>📅</span> <span id="s1-title">Rakenna viikkosi!</span>
-    <span class="section-badge">Vaihe 2</span>
-  </div>
-  <p style="color:#065f46; margin-bottom:16px; font-size:0.95rem;">Vedä tehtävät kalenteriin. Yritä pitää tasapaino: ei liikaa samana päivänä! Napauta + lisätäksesi tehtävän päivälle.</p>
-
-  <div class="task-pool" aria-label="Siirrettävät tehtävät">
-    <div class="task-pool-label">🎒 Tehtäväpankki – vedä kalenteriin</div>
-    <div class="task-chips" id="taskPool"></div>
-  </div>
-
-  <div class="week-grid" id="weekGrid" role="grid" aria-label="Viikkokalenteri"></div>
-
-  <div class="balance-bar-wrap" style="margin-top:20px;" aria-label="Aikatasapaino">
-    <p style="font-size:0.9rem;font-weight:800;color:#064e3b;margin-bottom:12px;">⚖️ Työtaakka per päivä:</p>
-    <div id="balanceBars"></div>
-  </div>
-
-  <div id="calendarFeedback" style="display:none;margin-top:12px;"></div>
-  <button class="btn btn-full" onclick="checkCalendar()" style="margin-top:16px;">✔ Tarkista aikataulu</button>
-  <button class="btn btn-outline btn-full" onclick="nextScreen()" id="calNextBtn" style="display:none;margin-top:10px;">Jatka ▶</button>
 </section>
 
 <!-- ═══════════ SCREEN 2: KOKEESEEN LUKEMINEN ═══════════ -->
@@ -374,7 +355,32 @@
     <span class="section-badge">Vaihe 4</span>
   </div>
   <div id="quizContainer"></div>
-  <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">🏁 Katso tulokset!</button>
+  <button class="btn btn-full" id="quizDoneBtn" onclick="nextScreen()" style="display:none;margin-top:8px;">➡️ Jatka lisätehtävään</button>
+</section>
+
+<!-- ═══════════ SCREEN 1 (SIIRRETTY VIIMEISEKSI): LISÄTEHTÄVÄ – VIIKKOKALENTERI ═══════════ -->
+<section class="screen" id="screen-1" aria-labelledby="s1-title">
+  <div class="section-title">
+    <span>🎁</span> <span id="s1-title">Lisätehtävä</span>
+    <span class="section-badge">Vaihe 5</span>
+  </div>
+  <p style="color:#065f46; margin-bottom:16px; font-size:0.95rem;">Rakenna oma viikkoaikataulusi! Vedä tehtävät kalenteriin, tai valitse tyhjästä ruudusta pudotusvalikolla mitä lisäät. Yritä pitää tasapaino: ei liikaa samana päivänä!</p>
+
+  <div class="task-pool" aria-label="Siirrettävät tehtävät">
+    <div class="task-pool-label">🎒 Tehtäväpankki – vedä kalenteriin</div>
+    <div class="task-chips" id="taskPool"></div>
+  </div>
+
+  <div class="week-grid" id="weekGrid" role="grid" aria-label="Viikkokalenteri"></div>
+
+  <div class="balance-bar-wrap" style="margin-top:20px;" aria-label="Aikatasapaino">
+    <p style="font-size:0.9rem;font-weight:800;color:#064e3b;margin-bottom:12px;">⚖️ Työtaakka per päivä:</p>
+    <div id="balanceBars"></div>
+  </div>
+
+  <div id="calendarFeedback" style="display:none;margin-top:12px;"></div>
+  <button class="btn btn-full" onclick="checkCalendar()" style="margin-top:16px;">✔ Tarkista aikataulu</button>
+  <button class="btn btn-full" onclick="showFinal()" id="calNextBtn" style="display:none;margin-top:10px;">🏁 Katso tulokset!</button>
 </section>
 
 <!-- ═══════════ SCREEN 4: LOPPUTULOS ═══════════ -->
@@ -399,7 +405,7 @@
 
 <script>
 let currentScreen = 0;
-const totalScreens = 5;
+const totalScreens = 6;
 let quizScore = 0;
 let quizAnswered = 0;
 
@@ -409,9 +415,9 @@ function goToScreen(n) {
   currentScreen = n;
   updateProgress();
   window.scrollTo({top:0,behavior:'smooth'});
-  if(n===2&&!calInit) initCalendar();
-  if(n===3&&!planInit) initPlan();
-  if(n===4&&!quizInitialized) initQuiz();
+  if(n===2&&!planInit) initPlan();
+  if(n===3&&!quizInitialized) initQuiz();
+  if(n===4&&!calInit) initCalendar();
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
@@ -497,9 +503,26 @@ function renderWeekGrid() {
           <button class="slot-remove" onclick="removeTask('${day}',${si})" aria-label="${t.label} poista ${day}-päivästä">✕</button>
         </div>`;
       } else {
-        slot.textContent = '+ lisää';
-        slot.style.cursor = 'pointer';
-        slot.onclick = () => openAddMenu(day, si, slot);
+        const select = document.createElement('select');
+        select.className = 'day-slot-select';
+        select.setAttribute('aria-label', 'Lisää tehtävä: '+day+', paikka '+(si+1));
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '+ lisää';
+        placeholder.selected = true;
+        placeholder.disabled = true;
+        select.appendChild(placeholder);
+        tasks.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.id;
+          opt.textContent = t.label;
+          select.appendChild(opt);
+        });
+        select.addEventListener('change', () => {
+          const chosen = tasks.find(t => t.id === select.value);
+          if(chosen && !calState[day][si]) { calState[day][si] = chosen; renderWeekGrid(); renderBalanceBars(); }
+        });
+        slot.appendChild(select);
         slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
         slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
         slot.addEventListener('drop', e => { e.preventDefault(); slot.classList.remove('drag-over'); if(draggingTask && !calState[day][si]) { calState[day][si] = draggingTask; draggingTask = null; renderWeekGrid(); renderBalanceBars(); } });
@@ -509,18 +532,6 @@ function renderWeekGrid() {
     col.appendChild(slots);
     grid.appendChild(col);
   });
-}
-
-function openAddMenu(day, si, slotEl) {
-  // Simple prompt-free: pick first available task
-  const placed = Object.values(calState).flat().map(t=>t?t.id:'');
-  const avail = tasks.filter(t => !placed.includes(t.id) || true); // allow re-use
-  if(avail.length === 0) return;
-  // Cycle through tasks on click
-  const idx = Math.floor(Math.random()*avail.length);
-  calState[day][si] = avail[idx];
-  renderWeekGrid();
-  renderBalanceBars();
 }
 
 function removeTask(day, si) {
