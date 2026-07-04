@@ -12,6 +12,8 @@
 //   { toiminto: "tykkaa",            id }                   → { ok, tykkaukset }
 //   { toiminto: "tyhjenna",          koodi }                → { ok }
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL        = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -100,6 +102,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, ilmoitukset: rivit.map(riviIlmoitukseksi) });
     } catch (err) {
       console.error('maailma-taulu GET:', err);
+      await kirjaaVirhe('maailma-taulu GET', err);
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
     }
   }
@@ -257,6 +260,7 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error('maailma-taulu POST:', err);
+    await kirjaaVirhe('maailma-taulu POST', err, { toiminto });
     return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
   }
 }

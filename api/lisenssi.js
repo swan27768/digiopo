@@ -3,6 +3,8 @@
 // Palauttaa: { ok: true, voimassa_asti: "2026-12-31" }
 //         tai { ok: false, virhe: "vanhentunut" | "virheellinen" | "liikaa_yrityksia" }
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
@@ -143,6 +145,7 @@ export default async function handler(req, res) {
       });
     } catch (err) {
       console.error('Opettajatarkistusvirhe:', err);
+      await kirjaaVirhe('lisenssi opettaja', err);
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
     }
   }
@@ -182,6 +185,7 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('Supabase-virhe:', err);
+    await kirjaaVirhe('lisenssi koulukoodi', err);
     return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
   }
 }

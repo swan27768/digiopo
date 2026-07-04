@@ -9,9 +9,14 @@
 //   { toiminto:"tyhjenna_tulostaulu",  admin_key }
 //   { toiminto:"tallenna_sanaryhmat",  admin_key, ryhmat[] }
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL         = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const ADMIN_KEY            = process.env.AMMATTISET_ADMIN_KEY || "AlaSet#2026!";
+// HUOM: ei kovakoodattua oletusarvoa enää (oli aiemmin "AlaSet#2026!" suoraan
+// koodissa – poistettu tietoturvasyistä). Jos ympäristömuuttuja puuttuu,
+// admin-toiminnot lukittuvat sen sijaan että käyttäisivät tunnettua salasanaa.
+const ADMIN_KEY = process.env.AMMATTISET_ADMIN_KEY || null;
 
 // ── Rate limiter ──────────────────────────────────────────────
 const yritykset = new Map();
@@ -86,6 +91,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, tulokset: rivit.map(riviTulokseksi) });
       } catch (err) {
         console.error("ammattiset GET tulostaulu:", err);
+        await kirjaaVirhe('ammattiset GET tulostaulu', err);
         return res.status(500).json({ ok: false, virhe: "palvelinvirhe" });
       }
     }
@@ -98,6 +104,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, ryhmat: rivit[0]?.arvo || [] });
       } catch (err) {
         console.error("ammattiset GET sanaryhmat:", err);
+        await kirjaaVirhe('ammattiset GET sanaryhmat', err);
         return res.status(500).json({ ok: false, virhe: "palvelinvirhe" });
       }
     }
@@ -233,6 +240,7 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error("ammattiset POST:", err);
+    await kirjaaVirhe('ammattiset POST', err, { toiminto });
     return res.status(500).json({ ok: false, virhe: "palvelinvirhe" });
   }
 }

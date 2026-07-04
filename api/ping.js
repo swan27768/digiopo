@@ -3,6 +3,8 @@
 // Kasvattaa sivukohtaista päivälaskuria Supabasessa.
 // Ei tallenna henkilötietoja – vain sivun nimi ja lukumäärä.
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -71,11 +73,13 @@ export default async function handler(req, res) {
     if (!vastaus.ok) {
       const teksti = await vastaus.text();
       console.error(`ping virhe [${sivu}]: ${vastaus.status} – ${teksti}`);
+      await kirjaaVirhe('ping', new Error(`${vastaus.status}: ${teksti}`), { sivu });
     } else {
       console.log(`ping ok [${sivu}]`);
     }
   } catch (err) {
     console.error(`ping catch [${sivu}]:`, err.message);
+    await kirjaaVirhe('ping', err, { sivu });
   }
 
   return res.status(200).end();

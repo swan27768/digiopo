@@ -15,6 +15,8 @@
 //
 // Selain ei koskaan puhu suoraan Supabaseen – tämä funktio käyttää service_keytä.
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL       = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -112,6 +114,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, profiilit: rivit.map(riviProfiiliksi) });
     } catch (err) {
       console.error('fake-insta GET:', err);
+      await kirjaaVirhe('fake-insta GET', err);
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
     }
   }
@@ -286,6 +289,7 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error('fake-insta POST:', err);
+    await kirjaaVirhe('fake-insta POST', err, { toiminto });
     return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
   }
 }
