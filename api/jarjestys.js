@@ -12,6 +12,7 @@
 // Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
 
 import crypto from 'node:crypto';
+import { kirjaaVirhe } from './_lib/virhelogi.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -98,6 +99,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, luokat: rivit.map((rv) => rv.luokka) });
       } catch (err) {
         console.error('jarjestys GET luokat:', err);
+        await kirjaaVirhe('jarjestys GET luokat', err);
         return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
       }
     }
@@ -117,6 +119,7 @@ export default async function handler(req, res) {
       });
     } catch (err) {
       console.error('jarjestys GET:', err);
+      await kirjaaVirhe('jarjestys GET', err);
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
     }
   }
@@ -211,6 +214,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });
   } catch (err) {
     console.error('jarjestys POST:', err);
+    await kirjaaVirhe('jarjestys POST', err, { toiminto });
     return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
   }
 }

@@ -4,6 +4,8 @@
 // POST /api/tiedontemppeli
 //   { toiminto:"tallenna", id, nimi, koulu, luokka, pisteet }  → { ok, saved, reason? }
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL         = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -77,6 +79,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, tulokset: rivit.map(riviTulokseksi) });
     } catch (err) {
       console.error("tiedontemppeli GET:", err);
+      await kirjaaVirhe('tiedontemppeli GET', err);
       return res.status(500).json({ ok: false, virhe: "palvelinvirhe" });
     }
   }
@@ -138,6 +141,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, saved: true });
   } catch (err) {
     console.error("tiedontemppeli POST:", err);
+    await kirjaaVirhe('tiedontemppeli POST', err);
     return res.status(500).json({ ok: false, virhe: "palvelinvirhe" });
   }
 }

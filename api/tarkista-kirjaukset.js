@@ -5,6 +5,8 @@
 //
 // Vercel cron config on tiedostossa vercel.json
 
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -101,6 +103,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, halytys: false, maara });
   } catch (err) {
     console.error('Kirjausvahti virhe:', err.message);
+    await kirjaaVirhe('tarkista-kirjaukset', err);
     return res.status(500).json({ ok: false, virhe: err.message });
   }
 }
