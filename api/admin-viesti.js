@@ -19,14 +19,16 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 
+// Isompi vastaanottajajoukko + Resendin rate limit -kunnioittava viive voi
+// kestää tavallista pidempään, joten nostetaan funktion maksimiaikaa.
+export const config = { maxDuration: 60 };
+
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@digiopo.fi';
 const ADMIN_DASHBOARD_KEY = process.env.ADMIN_DASHBOARD_KEY;
-
-const RESEND_BATCH_KOKO = 100; // Resendin batch-rajapinnan yläraja per kutsu
 
 function sbHeaders(extra = {}) {
   return {
@@ -94,38 +96,75 @@ function viestinHtml(otsikko, viesti) {
 </html>`;
 }
 
+function odota(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// HUOM: Resendin /emails/batch-rajapinta osoittautui testissä epäluotettavaksi
+// HTML-muotoillun sisällön kanssa – vastaanotettu viesti näytti raakoja
+// HTML-tageja (<div>, <b> jne.) muotoillun tekstin sijaan. Muualla koodikannassa
+// (tilaus.js, tarkista-virheet.js) käytetty yksittäinen /emails-rajapinta
+// toimii HTML:n kanssa luotettavasti, joten lähetetään viestit yksitellen sen
+// kautta. Resendin oletusrajoitus on 5 pyyntöä/s koko tiimille, joten pyyntöjen
+// välissä pieni viive ettei osumaa tule 429:ään (ja jos silti osuu, yritetään
+// kerran uudelleen lyhyen odotuksen jälkeen).
+const RESEND_VIIVE_MS = 900;
+
+async function lahetaYksi(email, otsikko, html, yrKerta = 0) {
+  const vastaus = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: `DigiOpo <${FROM_EMAIL}>`,
+      to: [email],
+      subject: otsikko,
+      html,
+    }),
+  });
+
+  if (vastaus.ok) return { ok: true };
+
+  if (vastaus.status === 429 && yrKerta < 1) {
+    await odota(1000);
+    return lahetaYksi(email, otsikko, html, yrKerta + 1);
+  }
+
+  const teksti = await vastaus.text();
+  return { ok: false, status: vastaus.status, teksti };
+}
+
+// Lähetetään pieninä, rinnakkaisina erinä (ei yksi kerrallaan) jotta iso
+// vastaanottajajoukko ei aja Vercelin funktion suoritusajan (maxDuration) yli.
+// 4 rinnakkaista pyyntöä + ~900ms tauko erien välissä pysyy Resendin 5 pyyntöä/s
+// -oletusrajan alla.
+const RINNAKKAISUUS = 4;
+
 async function lahetaBatch(emailit, otsikko, viesti) {
   const html = viestinHtml(otsikko, viesti);
   const kaikki = Array.from(emailit.keys());
   let onnistuneet = 0;
   let epaonnistuneet = 0;
 
-  for (let i = 0; i < kaikki.length; i += RESEND_BATCH_KOKO) {
-    const erä = kaikki.slice(i, i + RESEND_BATCH_KOKO);
-    const payload = erä.map((email) => ({
-      from: `DigiOpo <${FROM_EMAIL}>`,
-      to: [email],
-      subject: otsikko,
-      html,
-    }));
+  for (let i = 0; i < kaikki.length; i += RINNAKKAISUUS) {
+    const era = kaikki.slice(i, i + RINNAKKAISUUS);
+    const tulokset = await Promise.all(era.map((email) => lahetaYksi(email, otsikko, html)));
 
-    const vastaus = await fetch('https://api.resend.com/emails/batch', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (vastaus.ok) {
-      onnistuneet += erä.length;
-    } else {
-      epaonnistuneet += erä.length;
-      const teksti = await vastaus.text();
-      console.error(`admin-viesti batch-virhe (${i}-${i + erä.length}):`, teksti);
-      await kirjaaVirhe('admin-viesti batch', new Error(`Resend batch ${vastaus.status}: ${teksti}`), { eran_koko: erä.length });
+    for (let j = 0; j < tulokset.length; j++) {
+      const tulos = tulokset[j];
+      const email = era[j];
+      if (tulos.ok) {
+        onnistuneet += 1;
+      } else {
+        epaonnistuneet += 1;
+        console.error(`admin-viesti lähetysvirhe (${email}):`, tulos.status, tulos.teksti);
+        await kirjaaVirhe('admin-viesti laheta', new Error(`Resend ${tulos.status}: ${tulos.teksti}`), { email });
+      }
     }
+
+    if (i + RINNAKKAISUUS < kaikki.length) await odota(RESEND_VIIVE_MS);
   }
 
   return { onnistuneet, epaonnistuneet };
