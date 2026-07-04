@@ -60,11 +60,26 @@ async function haeVastaanottajat() {
   return emailit;
 }
 
+// Viesti tulee admin-paneelin rich text -editorista valmiina HTML:nä (esim.
+// <b>lihavoitu</b>, <u>alleviivattu</u>). Puhdistetaan vaaralliset elementit
+// palvelimella vielä uudelleen (selain jo puhdisti, tämä on toinen varmistus)
+// ennen kuin sisältö upotetaan oikeasti asiakkaille lähtevään sähköpostiin.
+function puhdistaViestiHtml(html) {
+  return String(html)
+    // poista script/style/iframe/object/embed kokonaan sisältöineen
+    .replace(/<(script|style|iframe|object|embed)[^>]*>[\s\S]*?<\/\1>/gi, '')
+    .replace(/<(script|style|iframe|object|embed)[^>]*\/?>/gi, '')
+    // poista on*-tapahtumakäsittelijät ja javascript: -linkit attribuuteista
+    .replace(/\son\w+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, '')
+    .replace(/(href|src)\s*=\s*(["'])\s*javascript:[^"']*\2/gi, '$1="#"');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function viestinHtml(otsikko, viesti) {
-  // viesti tulee admin-paneelin textarealta – rivinvaihdot säilytetään, HTML-erikoismerkit paetaan
-  const escHtml = (s) => String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const viestiHtml = escHtml(viesti).replace(/\n/g, '<br>');
+  const puhdasViesti = puhdistaViestiHtml(viesti);
 
   return `<!DOCTYPE html>
 <html lang="fi">
@@ -73,7 +88,7 @@ function viestinHtml(otsikko, viesti) {
     <span style="font-size:26px;font-weight:700;color:#1a3f6f">Digi<span style="color:#2d9e6b">Opo</span></span>
   </div>
   <h2 style="color:#1a3f6f">${escHtml(otsikko)}</h2>
-  <p style="line-height:1.7">${viestiHtml}</p>
+  <div style="line-height:1.7">${puhdasViesti}</div>
   <p style="font-size:12px;color:#7a9ab5;margin-top:32px">Tämä on tiedote DigiOpo-palvelusta. Kysyttävää? Vastaa tähän viestiin tai ota yhteyttä: <a href="mailto:digiopo@digiopo.fi" style="color:#2563a8">digiopo@digiopo.fi</a></p>
 </body>
 </html>`;
@@ -179,7 +194,7 @@ export default async function handler(req, res) {
 
     const action = String(body.action || '');
     const otsikko = String(body.otsikko || '').trim().slice(0, 200);
-    const viesti = String(body.viesti || '').trim().slice(0, 5000);
+    const viesti = String(body.viesti || '').trim().slice(0, 8000); // HTML-muotoilu vie enemmän tilaa kuin pelkkä teksti
 
     if (!otsikko || !viesti) {
       return res.status(400).json({ ok: false, virhe: 'otsikko_tai_viesti_puuttuu' });
