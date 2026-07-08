@@ -218,6 +218,9 @@ function aktivoiSisallysluettelo() {
   function setActiveLink() {
     let currentId = "";
     sections.forEach((section) => {
+      // Ohita piilotetut osiot (esim. display:none) — muuten niiden
+      // getBoundingClientRect().top on 0 ja ne jäävät virheellisesti aktiivisiksi.
+      if (section.offsetParent === null) return;
       const rect = section.getBoundingClientRect();
       if (rect.top <= 160) {
         currentId = section.id;
