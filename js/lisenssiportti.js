@@ -23,7 +23,7 @@
       }
       const script = document.createElement('script');
       script.id = 'supabase-sdk';
-      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+      script.src = 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';
       script.onload = () => {
         const { createClient } = window.supabase;
         window.__supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON);
