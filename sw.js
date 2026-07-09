@@ -5,7 +5,7 @@
 //   - HTML-sivut: network-first (sisältö pysyy tuoreena)
 //   - API-kutsut (/api/*): ei välimuistitusta
 
-const CACHE_VERSION = "digiopo-v2";
+const CACHE_VERSION = "digiopo-v3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const HTML_CACHE = `${CACHE_VERSION}-html`;
 
