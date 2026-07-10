@@ -24,8 +24,25 @@ function b64urlDecode(str) {
   return bytes;
 }
 
-async function tuoAvain(secret) {
-  return crypto.subtle.importKey(
+// Hakee Web Crypto -rajapinnan tavalla joka toimii KAIKISSA ympäristöissä:
+//   - Edge-runtime + Node 19+: globalThis.crypto.subtle on valmiiksi olemassa
+//   - Node 18 (ja vanhemmat): globalThis.crypto puuttuu → käytetään
+//     node:crypto-moduulin webcryptoa. (node:crypto-importtia ei koskaan ajeta
+//     Edgessä, koska siellä globalThis.crypto on olemassa.)
+let _subtle = null;
+async function getSubtle() {
+  if (_subtle) return _subtle;
+  if (globalThis.crypto && globalThis.crypto.subtle) {
+    _subtle = globalThis.crypto.subtle;
+  } else {
+    const { webcrypto } = await import('node:crypto');
+    _subtle = webcrypto.subtle;
+  }
+  return _subtle;
+}
+
+async function tuoAvain(subtle, secret) {
+  return subtle.importKey(
     'raw', enc.encode(secret),
     { name: 'HMAC', hash: 'SHA-256' },
     false, ['sign', 'verify']
@@ -34,9 +51,10 @@ async function tuoAvain(secret) {
 
 // Luo allekirjoitetun tokenin annetusta payloadista.
 export async function luoToken(payload, secret) {
+  const subtle = await getSubtle();
   const body = b64urlEncode(enc.encode(JSON.stringify(payload)));
-  const key = await tuoAvain(secret);
-  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode(body)));
+  const key = await tuoAvain(subtle, secret);
+  const sig = new Uint8Array(await subtle.sign('HMAC', key, enc.encode(body)));
   return body + '.' + b64urlEncode(sig);
 }
 
@@ -47,8 +65,9 @@ export async function tarkistaToken(token, secret) {
   const [body, sig] = token.split('.');
   if (!body || !sig) return null;
   try {
-    const key = await tuoAvain(secret);
-    const ok = await crypto.subtle.verify('HMAC', key, b64urlDecode(sig), enc.encode(body));
+    const subtle = await getSubtle();
+    const key = await tuoAvain(subtle, secret);
+    const ok = await subtle.verify('HMAC', key, b64urlDecode(sig), enc.encode(body));
     if (!ok) return null;
     const payload = JSON.parse(dec.decode(b64urlDecode(body)));
     if (payload.exp && Date.now() > payload.exp) return null; // vanhentunut
