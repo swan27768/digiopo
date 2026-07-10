@@ -395,8 +395,25 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── Siistit URLit (sama kuin vercel.json rewrites) ────────────────────────
+  // Esim. /8luokka → /sivut/8luokka.html, jotta paikallinen esikatselu vastaa
+  // tuotantoa. Yleistetty: /<nimi> (ilman päätettä) → /sivut/<nimi>.html jos on.
+  const puhdasUrl = url.split("?")[0];
+  const REWRITES = {
+    "/7luokka": "/sivut/7luokka.html",
+    "/8luokka": "/sivut/8luokka.html",
+    "/9luokka": "/sivut/9luokka.html",
+  };
+  let reititettyUrl = url;
+  if (REWRITES[puhdasUrl]) {
+    reititettyUrl = REWRITES[puhdasUrl] + url.slice(puhdasUrl.length);
+  } else if (/^\/[^./]+$/.test(puhdasUrl)) {
+    const ehdokas = path.join(ROOT, "sivut", puhdasUrl.slice(1) + ".html");
+    if (fs.existsSync(ehdokas)) reititettyUrl = "/sivut" + puhdasUrl + ".html" + url.slice(puhdasUrl.length);
+  }
+
   // ── Staattiset tiedostot ──────────────────────────────────────────────────
-  let polku = turvallinenPolku(url);
+  let polku = turvallinenPolku(reititettyUrl);
   if (!polku) {
     res.writeHead(403);
     return res.end("Kielletty");
