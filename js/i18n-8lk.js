@@ -426,7 +426,8 @@
       if (openBtn && tul.open_task_btn) openBtn.textContent = tul.open_task_btn;
 
       /* Ryhmä jumissa */
-      var stuckToggle = document.querySelector('#vara-sisalto').previousElementSibling;
+      var varaSisalto = document.querySelector('#vara-sisalto');
+      var stuckToggle = varaSisalto ? varaSisalto.previousElementSibling : null;
       if (stuckToggle) {
         var stuckSpan = stuckToggle.querySelector('span > span:last-child');
         // Riisu mahdollinen vanha emoji käännöksen alusta (selaimen välimuisti
