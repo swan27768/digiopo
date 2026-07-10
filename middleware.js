@@ -4,10 +4,11 @@
 // ENNEN kuin suojattu sisältö tarjoillaan. Ilman evästettä pyyntö ohjataan
 // liity.html-portille (sivut) tai estetään 401:llä (data).
 //
+// HUOM: tiedostonimi on middleware.js (EI .mjs) – Vercel tunnistaa middlewaren
+// vain .js/.ts-päätteellä.
+//
 // TURVAVENTTIILI: jos LISENSSI_JWT_SECRET-ympäristömuuttujaa ei ole asetettu,
-// muuri on POIS PÄÄLTÄ (fail-open). Näin koodin voi julkaista turvallisesti,
-// ja muuri aktivoituu vasta kun salaisuus asetetaan Verceliin. Rollback =
-// poista ympäristömuuttuja (ei uutta deployta tarvita).
+// muuri on POIS PÄÄLTÄ (fail-open). Rollback = poista ympäristömuuttuja.
 
 import { next } from '@vercel/functions';
 import { tarkistaToken } from './api/_lib/token.js';
