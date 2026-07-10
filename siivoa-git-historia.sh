@@ -57,12 +57,19 @@ git add -A
 git commit -m "Optimoi kuvat WebP:ksi (-24 Mt työpuusta)" || echo "(ei committoitavaa)"
 echo
 
-# 3) Varmista git-filter-repo
-if ! command -v git-filter-repo >/dev/null 2>&1 && ! git filter-repo --version >/dev/null 2>&1; then
+# 3) Varmista git-filter-repo (vikasietoinen: brew → pip → suora lataus)
+FR="git filter-repo"
+if ! git filter-repo --version >/dev/null 2>&1; then
   echo "Asennetaan git-filter-repo…"
-  pip3 install --user git-filter-repo || pip install --user git-filter-repo || {
-    echo "Asennus epäonnistui. Asenna käsin:  brew install git-filter-repo"; exit 1; }
+  command -v brew >/dev/null 2>&1 && brew install git-filter-repo || true
+  if ! git filter-repo --version >/dev/null 2>&1; then
+    echo "Ladataan git-filter-repo suoraan…"
+    curl -fsSL https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo \
+      -o /tmp/git-filter-repo && chmod +x /tmp/git-filter-repo && FR="python3 /tmp/git-filter-repo"
+  fi
 fi
+$FR --version >/dev/null 2>&1 || { echo "git-filter-repo ei käytettävissä. Asenna: brew install git-filter-repo"; exit 1; }
+echo "Käytetään: $FR"
 
 # 4) Laske poistettavat blobit = HISTORIAN isot blobit, jotka EIVÄT ole nykyversiossa
 echo "4) Lasketaan poistettavat historialliset blobit…"
@@ -75,7 +82,7 @@ echo
 
 # 5) Kirjoita historia uudelleen
 echo "5) Ajetaan git filter-repo…"
-git filter-repo --force --strip-blobs-with-ids /tmp/strip-ids.txt
+$FR --force --strip-blobs-with-ids /tmp/strip-ids.txt
 
 # 6) Siivoa reflog + pakkaa
 git reflog expire --expire=now --all || true
