@@ -4,46 +4,67 @@
 //         tai { ok: false, virhe: "vanhentunut" | "virheellinen" | "liikaa_yrityksia" }
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { haeIp } from './_lib/turva.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
 const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-// Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä
-// Max 5 yritystä / IP / 10 minuuttia
-const MAX_YRITYKSIA = 5;
+// Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä.
+// Kolme kerrosta brute-forcea vastaan:
+//   - per IP:     kaikki yritykset          (max 5 / 10 min)
+//   - per koodi:  saman koodin EPÄonnistuneet yritykset (max 8 / 10 min)
+//   - globaali:   EPÄonnistuneet yritykset yhteensä      (max 120 / 10 min)
+// Onnistuneita kirjautumisia ei lasketa epäonnistumisiin, joten laillinen
+// käyttö (koko koulu kirjautuu aamulla) ei laukaise koodi-/globaalirajaa.
+const MAX_IP = 5;
+const MAX_KOODI_FAIL = 8;
+const MAX_GLOBAL_FAIL = 120;
 const IKKUNA_S = 10 * 60; // 10 minuuttia sekunteina
 
-async function tarkistaRateLimit(ip) {
-  // Jos Redis ei ole konfiguroitu, sallitaan pyyntö (ei kaada palvelua)
-  if (!UPSTASH_REDIS_REST_URL || !UPSTASH_REDIS_REST_TOKEN) return true;
+const redisKaytossa = () => Boolean(UPSTASH_REDIS_REST_URL && UPSTASH_REDIS_REST_TOKEN);
 
-  const avain = `rl:lisenssi:${ip}`;
+// Kasvattaa Redis-laskuria ja palauttaa sen arvon, tai null jos Redis on
+// poissa/virhetilassa (jolloin ei rangaista käyttäjää = fail-open).
+async function incr(avain, ikkunaS) {
+  if (!redisKaytossa()) return null;
   const headers = {
     Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}`,
     'Content-Type': 'application/json',
   };
-
   try {
-    // Kasvata laskuria
-    const incrVastaus = await fetch(`${UPSTASH_REDIS_REST_URL}/incr/${avain}`, {
+    const r = await fetch(`${UPSTASH_REDIS_REST_URL}/incr/${encodeURIComponent(avain)}`, {
       method: 'POST', headers,
     });
-    const { result: maara } = await incrVastaus.json();
-
-    // Aseta vanhenemisaika vain ensimmäisellä kerralla
+    const { result: maara } = await r.json();
     if (maara === 1) {
-      await fetch(`${UPSTASH_REDIS_REST_URL}/expire/${avain}/${IKKUNA_S}`, {
+      await fetch(`${UPSTASH_REDIS_REST_URL}/expire/${encodeURIComponent(avain)}/${ikkunaS}`, {
         method: 'POST', headers,
       });
     }
-
-    return maara <= MAX_YRITYKSIA;
+    return maara;
   } catch {
-    // Redis-virhe: sallitaan pyyntö, ei rangaista käyttäjää
-    return true;
+    return null;
   }
+}
+
+// Per-IP-raja: lasketaan jokainen yritys. False = raja ylitetty.
+async function ipSallittu(ip) {
+  const maara = await incr(`rl:lisenssi:ip:${ip}`, IKKUNA_S);
+  return maara === null ? true : maara <= MAX_IP;
+}
+
+// Kirjaa epäonnistuneen kooditarkistuksen. Palauttaa true jos koodikohtainen
+// tai globaali raja ylittyi (→ pyyntö kannattaa estää 429:llä).
+async function kirjaaEpaonnistuminen(koodi) {
+  const [g, k] = await Promise.all([
+    incr('rl:lisenssi:fail:global', IKKUNA_S),
+    incr(`rl:lisenssi:fail:koodi:${koodi}`, IKKUNA_S),
+  ]);
+  const globaaliYli = g !== null && g > MAX_GLOBAL_FAIL;
+  const koodiYli = k !== null && k > MAX_KOODI_FAIL;
+  return globaaliYli || koodiYli;
 }
 
 async function haeSupabasesta(koodi) {
@@ -112,13 +133,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ virhe: 'Metodi ei sallittu' });
   }
 
-  // IP rate limiting
-  const ip =
-    (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
-    req.socket?.remoteAddress ||
-    'tuntematon';
+  // IP rate limiting (x-real-ip on Vercelissä luotettava, ei väärennettävissä)
+  const ip = haeIp(req);
 
-  if (!await tarkistaRateLimit(ip)) {
+  if (!await ipSallittu(ip)) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 
@@ -167,6 +185,10 @@ export default async function handler(req, res) {
     const lisenssi = await haeSupabasesta(koodi);
 
     if (!lisenssi || !lisenssi.aktiivinen) {
+      // Virheellinen koodi = mahdollinen brute-force-yritys → kirjataan.
+      if (await kirjaaEpaonnistuminen(koodi.toUpperCase())) {
+        return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
+      }
       return res.status(200).json({ ok: false, virhe: 'virheellinen' });
     }
 
@@ -174,6 +196,7 @@ export default async function handler(req, res) {
     const voimassaAsti = new Date(lisenssi.voimassa_asti);
 
     if (nyt > voimassaAsti) {
+      // Vanhentunut mutta oikea koodi – ei lasketa brute-force-yritykseksi.
       return res.status(200).json({ ok: false, virhe: 'vanhentunut' });
     }
 
