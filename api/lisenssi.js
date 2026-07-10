@@ -5,11 +5,42 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
+import { luoToken } from './_lib/token.mjs';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
 const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+const LISENSSI_JWT_SECRET = process.env.LISENSSI_JWT_SECRET;
+
+// Lisenssievästeen (maksumuurin) ikä. Pitkä, jotta oppilas kirjautuu vain kerran
+// per laite. lisenssiportti.js tekee taustalla 24 h välein hiljaisen tarkistuksen,
+// joka uusii evästeen (onnistuessaan) tai poistaa sen (jos lisenssi peruttu) –
+// näin peruutus tehoaa ~vuorokaudessa vaikka eväste on pitkäikäinen.
+const EVASTE_IKA_S = 300 * 24 * 60 * 60; // ~lukuvuosi (300 vrk)
+
+// Asettaa allekirjoitetun lisenssievästeen vastaukseen. Jos salaisuutta ei ole
+// asetettu, ei tehdä mitään (maksumuuri on tällöin pois päältä = fail-open).
+async function asetaLisenssiEvaste(res, tiedot) {
+  if (!LISENSSI_JWT_SECRET) return;
+  const token = await luoToken(
+    { ...tiedot, exp: Date.now() + EVASTE_IKA_S * 1000 },
+    LISENSSI_JWT_SECRET
+  );
+  res.setHeader(
+    'Set-Cookie',
+    `digiopo_lisenssi=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${EVASTE_IKA_S}`
+  );
+}
+
+// Poistaa lisenssievästeen (peruttu tai vanhentunut lisenssi). Näin taustalla
+// tehtävä tarkistus lopettaa pääsyn heti kun lisenssi ei enää kelpaa.
+function poistaLisenssiEvaste(res) {
+  res.setHeader(
+    'Set-Cookie',
+    'digiopo_lisenssi=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0'
+  );
+}
 
 // Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä.
 // Kolme kerrosta brute-forcea vastaan:
@@ -150,11 +181,14 @@ export default async function handler(req, res) {
 
       const lisenssi = await haeOpettajaSupabasesta(email);
       if (!lisenssi || !lisenssi.aktiivinen) {
+        poistaLisenssiEvaste(res);
         return res.status(200).json({ ok: false, virhe: 'virheellinen' });
       }
       if (new Date() > new Date(lisenssi.voimassa_asti)) {
+        poistaLisenssiEvaste(res);
         return res.status(200).json({ ok: false, virhe: 'vanhentunut' });
       }
+      await asetaLisenssiEvaste(res, { typ: 'opettaja', koulu: lisenssi.koulu });
       return res.status(200).json({
         ok: true,
         tyyppi: 'opettaja',
@@ -185,6 +219,7 @@ export default async function handler(req, res) {
     const lisenssi = await haeSupabasesta(koodi);
 
     if (!lisenssi || !lisenssi.aktiivinen) {
+      poistaLisenssiEvaste(res);
       // Virheellinen koodi = mahdollinen brute-force-yritys → kirjataan.
       if (await kirjaaEpaonnistuminen(koodi.toUpperCase())) {
         return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
@@ -196,10 +231,12 @@ export default async function handler(req, res) {
     const voimassaAsti = new Date(lisenssi.voimassa_asti);
 
     if (nyt > voimassaAsti) {
+      poistaLisenssiEvaste(res);
       // Vanhentunut mutta oikea koodi – ei lasketa brute-force-yritykseksi.
       return res.status(200).json({ ok: false, virhe: 'vanhentunut' });
     }
 
+    await asetaLisenssiEvaste(res, { typ: 'koulu', koulu: lisenssi.koulu });
     return res.status(200).json({
       ok: true,
       koodi: lisenssi.koodi,
