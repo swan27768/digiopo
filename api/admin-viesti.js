@@ -18,6 +18,7 @@
 // ADMIN_EMAIL, FROM_EMAIL, ADMIN_DASHBOARD_KEY (sama kuin admin-tilastot.js:ssä)
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { vertaaSalaisuus } from './_lib/turva.js';
 
 // Isompi vastaanottajajoukko + Resendin rate limit -kunnioittava viive voi
 // kestää tavallista pidempään, joten nostetaan funktion maksimiaikaa.
@@ -192,7 +193,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, virhe: 'admin_avainta_ei_konfiguroitu' });
   }
   const annettuAvain = req.headers['x-admin-key'] || '';
-  if (annettuAvain !== ADMIN_DASHBOARD_KEY) {
+  if (!vertaaSalaisuus(annettuAvain, ADMIN_DASHBOARD_KEY)) {
     return res.status(401).json({ ok: false, virhe: 'virheellinen_avain' });
   }
 

@@ -17,6 +17,7 @@
 //   VERCEL_TEAM_ID                       – team_o308vJFcrnS2dDWecH2xhjLh
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { vertaaSalaisuus } from './_lib/turva.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -138,7 +139,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, virhe: 'admin_avainta_ei_konfiguroitu' });
   }
   const annettuAvain = req.headers['x-admin-key'] || '';
-  if (annettuAvain !== ADMIN_DASHBOARD_KEY) {
+  if (!vertaaSalaisuus(annettuAvain, ADMIN_DASHBOARD_KEY)) {
     return res.status(401).json({ ok: false, virhe: 'virheellinen_avain' });
   }
 

@@ -10,6 +10,7 @@
 //   { toiminto:"tallenna_sanaryhmat",  admin_key, ryhmat[] }
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
 
 const SUPABASE_URL         = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -117,10 +118,7 @@ export default async function handler(req, res) {
   }
 
   // ── Rate limit ───────────────────────────────────────────────
-  const ip =
-    (req.headers["x-forwarded-for"] || "").split(",")[0].trim() ||
-    req.socket?.remoteAddress ||
-    "tuntematon";
+  const ip = haeIp(req);
   if (!tarkistaRateLimit(ip)) {
     return res.status(429).json({ ok: false, virhe: "liikaa_yrityksia" });
   }
@@ -170,7 +168,7 @@ export default async function handler(req, res) {
 
     // ── HAE KAIKKI TULOKSET (opettaja) ─────────────────────────
     if (toiminto === "hae_kaikki_tulokset") {
-      if (String(body.admin_key || "") !== ADMIN_KEY) {
+      if (!vertaaSalaisuus(String(body.admin_key || ""), ADMIN_KEY)) {
         return res.status(200).json({ ok: false, virhe: "virheellinen_avain" });
       }
       const r = await sb("ammattiset_tulostaulu?order=pisteet.desc&limit=50&select=*");
@@ -181,7 +179,7 @@ export default async function handler(req, res) {
 
     // ── POISTA TULOS (opettaja) ─────────────────────────────────
     if (toiminto === "poista_tulos") {
-      if (String(body.admin_key || "") !== ADMIN_KEY) {
+      if (!vertaaSalaisuus(String(body.admin_key || ""), ADMIN_KEY)) {
         return res.status(200).json({ ok: false, virhe: "virheellinen_avain" });
       }
       const id = String(body.id || "").trim();
@@ -197,7 +195,7 @@ export default async function handler(req, res) {
 
     // ── TYHJENNÄ TULOSTAULU (opettaja) ─────────────────────────
     if (toiminto === "tyhjenna_tulostaulu") {
-      if (String(body.admin_key || "") !== ADMIN_KEY) {
+      if (!vertaaSalaisuus(String(body.admin_key || ""), ADMIN_KEY)) {
         return res.status(200).json({ ok: false, virhe: "virheellinen_avain" });
       }
       const r = await sb("rpc/ammattiset_tyhjenna_tulostaulu", {
@@ -210,7 +208,7 @@ export default async function handler(req, res) {
 
     // ── TALLENNA SANARYHMÄT (opettaja) ──────────────────────────
     if (toiminto === "tallenna_sanaryhmat") {
-      if (String(body.admin_key || "") !== ADMIN_KEY) {
+      if (!vertaaSalaisuus(String(body.admin_key || ""), ADMIN_KEY)) {
         return res.status(200).json({ ok: false, virhe: "virheellinen_avain" });
       }
       if (!Array.isArray(body.ryhmat)) {

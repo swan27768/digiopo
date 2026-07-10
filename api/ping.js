@@ -4,6 +4,7 @@
 // Ei tallenna henkilötietoja – vain sivun nimi ja lukumäärä.
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { haeIp } from './_lib/turva.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -43,8 +44,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).end();
 
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
-    req.socket?.remoteAddress || 'tuntematon';
+  const ip = haeIp(req);
   if (!tarkistaRateLimit(ip)) return res.status(429).end();
 
   let sivu;
