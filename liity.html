@@ -200,6 +200,15 @@
   var luokkaDiv    = document.getElementById('luokkavalinta');
   var luokatGrid   = document.getElementById('luokat-grid');
 
+  // Maksumuuri: jos middleware ohjasi tänne, ?redirect= kertoo alkuperäisen
+  // sivun. Tällöin pelkkä koulukoodi riittää pääsyyn (ryhmäkoodi valinnainen).
+  var redirectTarget = null;
+  try {
+    var rp = new URLSearchParams(location.search).get('redirect');
+    // Vain sama-alkuperäinen suhteellinen polku (estä avoin uudelleenohjaus).
+    if (rp && rp.charAt(0) === '/' && rp.charAt(1) !== '/') redirectTarget = rp;
+  } catch (e) {}
+
   // Esitäytä jos jo tallennettu
   try {
     var tallennettu = JSON.parse(localStorage.getItem(LS_LISENSSI) || 'null');
@@ -245,10 +254,13 @@
     var ryhmakoodi = ryhmakoodiEl.value.trim().toUpperCase();
 
     if (!koulukoodi) { nayta('Syötä koulukoodi.', 'virhe'); koulukoodiEl.focus(); return; }
-    if (!ryhmakoodi) { nayta('Syötä ryhmäkoodi.', 'virhe'); ryhmakoodiEl.focus(); return; }
-    if (!/^[A-Z0-9-]{4,16}$/.test(ryhmakoodi)) {
-      nayta('Ryhmäkoodi näyttää virheelliseltä. Tarkista kirjoitusasu.', 'virhe');
-      ryhmakoodiEl.focus(); return;
+    // Maksumuuri-tilassa ryhmäkoodi on valinnainen – pelkkä lisenssi riittää.
+    if (!redirectTarget) {
+      if (!ryhmakoodi) { nayta('Syötä ryhmäkoodi.', 'virhe'); ryhmakoodiEl.focus(); return; }
+      if (!/^[A-Z0-9-]{4,16}$/.test(ryhmakoodi)) {
+        nayta('Ryhmäkoodi näyttää virheelliseltä. Tarkista kirjoitusasu.', 'virhe');
+        ryhmakoodiEl.focus(); return;
+      }
     }
 
     aseta_lataus(true);
@@ -279,6 +291,13 @@
           tarkistettu: Date.now(),
         }));
       } catch (e) {}
+
+      // Maksumuuri-tila: lisenssi ok (ja eväste asetettu) → takaisin sivulle.
+      if (redirectTarget) {
+        nayta('Ohjataan…', 'ok');
+        window.location.href = redirectTarget;
+        return;
+      }
 
       // 2. Selvitä mille luokille ryhmäkoodilla on järjestyksiä
       var luokatVastaus = await fetch('/api/jarjestys?ryhma=' + encodeURIComponent(ryhmakoodi) + '&luokat=1')

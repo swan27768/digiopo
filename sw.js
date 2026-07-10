@@ -5,7 +5,23 @@
 //   - HTML-sivut: network-first (sisältö pysyy tuoreena)
 //   - API-kutsut (/api/*): ei välimuistitusta
 
-const CACHE_VERSION = "digiopo-v3";
+const CACHE_VERSION = "digiopo-v4";
+
+// Maksumuurin takana oleva sisältö: EI koskaan välimuistiin, jotta middleware
+// hallitsee pääsyä eikä suojattua sisältöä voi lukea offline ilman lisenssiä.
+function onSuojattuPolku(pathname) {
+  return (
+    pathname.startsWith("/sivut/") ||
+    pathname.startsWith("/pelit/") ||
+    pathname.startsWith("/tehtavat/") ||
+    pathname.startsWith("/robo-peli/") ||
+    pathname === "/7luokka" ||
+    pathname === "/8luokka" ||
+    pathname === "/9luokka" ||
+    pathname.includes("osio-data-") ||
+    pathname === "/js/tehtavat.json"
+  );
+}
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const HTML_CACHE = `${CACHE_VERSION}-html`;
 
@@ -60,6 +76,13 @@ self.addEventListener("fetch", (event) => {
     url.origin !== self.location.origin ||
     request.method !== "GET"
   ) {
+    return;
+  }
+
+  // Maksumuurin takana oleva sisältö: ohita SW kokonaan → selain hoitaa
+  // pyynnön natiivisti ja middleware ohjaa portille jos lisenssi puuttuu.
+  // Näin suojattua sisältöä ei tallenneta välimuistiin.
+  if (onSuojattuPolku(url.pathname)) {
     return;
   }
 
