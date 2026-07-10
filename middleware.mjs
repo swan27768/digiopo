@@ -10,7 +10,7 @@
 // poista ympäristömuuttuja (ei uutta deployta tarvita).
 
 import { next } from '@vercel/functions';
-import { tarkistaToken } from './api/_lib/token.mjs';
+import { tarkistaToken } from './api/_lib/token.js';
 
 export const config = {
   matcher: [

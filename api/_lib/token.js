@@ -1,8 +1,12 @@
 // DigiOpo – allekirjoitettu istuntotoken (HMAC-SHA256, Web Crypto)
 //
-// Toimii sekä Vercelin Node- (api/*) että Edge-ympäristössä (middleware.mjs),
-// koska käyttää vain Web Crypto -rajapintaa – ei Node-riippuvuuksia eikä
-// ulkoisia kirjastoja.
+// HUOM: tämä on .js (ei .mjs), jotta Vercel voi kääntää sen samoin kuin muut
+// api/_lib -tiedostot. .mjs aiheutti ERR_REQUIRE_ESM:n, koska Vercel ajaa
+// api-funktioita CommonJS-tilassa eikä voi require()-ladata ES-moduulia.
+//
+// Toimii sekä Node- (api/*) että Edge-ympäristössä (middleware): käyttää
+// Web Cryptoa, ja jos globalThis.crypto puuttuu (vanha Node), turvautuu
+// node:crypton webcryptoon.
 //
 // Muoto:  base64url(JSON-payload) + "." + base64url(HMAC-SHA256)
 
@@ -24,20 +28,20 @@ function b64urlDecode(str) {
   return bytes;
 }
 
-// Hakee Web Crypto -rajapinnan tavalla joka toimii KAIKISSA ympäristöissä:
-//   - Edge-runtime + Node 19+: globalThis.crypto.subtle on valmiiksi olemassa
-//   - Node 18 (ja vanhemmat): globalThis.crypto puuttuu → käytetään
-//     node:crypto-moduulin webcryptoa. (node:crypto-importtia ei koskaan ajeta
-//     Edgessä, koska siellä globalThis.crypto on olemassa.)
+// Hakee Web Crypto -rajapinnan tavalla joka toimii kaikissa ympäristöissä.
+// Edge + Node 19+: globalThis.crypto valmiina. Node 18: node:crypto webcrypto.
+// (node:crypto-import kirjoitettu ei-literaalina, jottei Edge-bundleri yritä
+// analysoida sitä; sitä ei koskaan ajeta Edgessä koska globalThis.crypto on.)
 let _subtle = null;
 async function getSubtle() {
   if (_subtle) return _subtle;
   if (globalThis.crypto && globalThis.crypto.subtle) {
     _subtle = globalThis.crypto.subtle;
-  } else {
-    const { webcrypto } = await import('node:crypto');
-    _subtle = webcrypto.subtle;
+    return _subtle;
   }
+  const moduuli = 'node:' + 'crypto';
+  const { webcrypto } = await import(moduuli);
+  _subtle = webcrypto.subtle;
   return _subtle;
 }
 

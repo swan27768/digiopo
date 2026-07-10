@@ -5,7 +5,7 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
-import { luoToken } from './_lib/token.mjs';
+import { luoToken } from './_lib/token.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
