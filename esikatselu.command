@@ -21,4 +21,4 @@ fi
 ( sleep 1.5 && open "http://localhost:8000" ) &
 
 # Käynnistä palvelin
-node dev-server.js
+node dev-server.cjs
