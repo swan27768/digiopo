@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robon koe – AI-laboratorio</title>
+  <style>
+    :root {
+      --color-primary: #003366;
+      --color-accent: #ff8c00;
+      --color-bg: #eef1f4;
+      --color-card: #ffffff;
+      --color-soft: #fff8e6;
+      --color-border: #000;
+      --color-success-bg: #e6f9f0;
+      --color-success-border: #10b981;
+      --color-error-bg: #ffecec;
+      --color-error-border: #ef4444;
+      --color-ai-a: #0891b2;
+      --color-ai-b: #6d28d9;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--color-bg); color: #000;
+      line-height: 1.6; padding: 20px; min-height: 100vh;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .wrap { max-width: 700px; margin: 0 auto; }
+
+    /* EDISTYMISPALKKI */
+    .progress-wrap { margin-bottom: 24px; }
+    .progress-label { font-size: 0.85em; color: var(--color-primary); font-weight: 700; margin-bottom: 4px; }
+    .progress-bar { height: 10px; background: #cdd5de; border-radius: 5px; overflow: hidden; border: 1px solid #bbb; }
+    .progress-fill { height: 100%; background: var(--color-accent); border-radius: 5px; transition: width 0.5s ease; }
+
+    /* LUKU-TAG */
+    .chapter-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-ai-a), var(--color-ai-b));
+      color: #fff; font-size: 0.78em; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 6px; padding: 3px 10px; margin-bottom: 16px;
+    }
+
+    /* ROBON PUHEKORTTI */
+    .robo-intro {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--color-card); border: 2px solid var(--color-border);
+      border-radius: var(--radius); padding: 16px;
+      box-shadow: 3px 3px 0 #000; margin-bottom: 24px;
+    }
+    .robo-intro img { width: 90px; flex-shrink: 0; }
+    .robo-bubble-safe {
+      flex: 1; background: var(--color-soft);
+      border: 2px solid var(--color-accent);
+      border-radius: 12px; padding: 16px;
+      font-size: 1.05em; line-height: 1.7;
+    }
+    .robo-bubble-safe p + p { margin-top: 10px; }
+    .robo-name-tag {
+      font-size: 0.78em; font-weight: 700; color: var(--color-primary);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+    }
+
+    /* KYSYMYSKORTTI */
+    .q-card {
+      background: var(--color-card); border: 2px solid var(--color-border);
+      border-radius: var(--radius); padding: 16px;
+      box-shadow: 3px 3px 0 #000; margin-bottom: 20px;
+      display: none; animation: fadeSlide 0.35s ease;
+    }
+    .q-card.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .q-meta { font-size: 0.78em; color: #555; margin-bottom: 8px; font-weight: 700; }
+    .q-points {
+      display: inline-block; background: linear-gradient(135deg, var(--color-ai-a), var(--color-ai-b));
+      color: #fff; font-size: 0.75em; font-weight: 700;
+      padding: 2px 10px; border-radius: 999px; margin-left: 8px;
+    }
+    .q-card h2 { font-size: 1.05em; color: var(--color-primary); margin-bottom: 16px; }
+
+    /* VASTAUSNAPIT */
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      background: var(--color-soft); border: 2px solid var(--color-border);
+      border-radius: 24px 20px 26px 18px;
+      padding: 12px 18px; font-size: 1em; font-weight: 700;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: left; cursor: pointer;
+      box-shadow: 3px 3px 0 #000;
+      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .opt-btn:hover:not(:disabled):not(.selected) { background: #ffe0a0; transform: translateY(-1px); }
+    .opt-btn.selected {
+      background: #dbeafe; border-color: var(--color-ai-a);
+      box-shadow: 3px 3px 0 var(--color-ai-a);
+    }
+    .opt-btn.reveal-correct { background: var(--color-success-bg); border-color: var(--color-success-border); box-shadow: 3px 3px 0 var(--color-success-border); }
+    .opt-btn.reveal-wrong   { background: var(--color-error-bg);   border-color: var(--color-error-border);   box-shadow: 3px 3px 0 var(--color-error-border); }
+    .opt-btn:disabled { cursor: default; }
+    .opt-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--color-primary); color: #fff;
+      font-size: 0.85em; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* NAPIT */
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .btn-primary {
+      background: var(--color-primary); color: #fff;
+      border: 2px solid var(--color-border);
+      border-radius: 24px 20px 26px 18px;
+      padding: 12px 24px; font-size: 1em; font-weight: 700;
+      font-family: Arial, Helvetica, sans-serif;
+      cursor: pointer; box-shadow: 3px 3px 0 #000;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background: #00204d; transform: translateY(-1px); }
+    .btn-primary:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
+    .btn-primary:disabled { background: #888; cursor: default; box-shadow: none; }
+
+    /* TULOKSET */
+    .result-card {
+      background: var(--color-card); border: 2px solid var(--color-border);
+      border-radius: var(--radius); padding: 24px;
+      box-shadow: 3px 3px 0 #000; display: none; margin-bottom: 20px;
+      text-align: center;
+    }
+    .result-card.show { display: block; }
+    .result-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-ai-a), var(--color-ai-b));
+      color: #fff; font-weight: 700; font-size: 0.85em;
+      padding: 8px 20px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .result-score {
+      font-size: 3em; font-weight: 700; color: var(--color-primary);
+      line-height: 1; margin-bottom: 8px;
+    }
+    .result-max { font-size: 0.95em; color: #555; margin-bottom: 16px; }
+    .result-grade {
+      font-size: 1.25em; font-weight: 700; margin-bottom: 20px;
+      padding: 12px 20px; border-radius: 10px; border: 2px solid;
+    }
+    .result-grade.erinomainen { background: var(--color-success-bg); border-color: var(--color-success-border); color: #065f46; }
+    .result-grade.hyva        { background: #fff8e6; border-color: var(--color-accent); color: #92400e; }
+    .result-grade.harjoitellaan { background: var(--color-error-bg); border-color: var(--color-error-border); color: #b91c1c; }
+
+    /* VASTAUSTEN LÄPIKÄYNTI */
+    .review-section { margin-top: 24px; text-align: left; }
+    .review-section h3 { font-size: 1em; color: var(--color-primary); margin-bottom: 12px; font-weight: 700; }
+    .review-item {
+      background: var(--color-soft); border: 2px solid var(--color-border);
+      border-radius: 10px; padding: 12px 16px; margin-bottom: 10px;
+      font-size: 0.9em; line-height: 1.5;
+    }
+    .review-item.ok   { background: var(--color-success-bg); border-color: var(--color-success-border); }
+    .review-item.fail { background: var(--color-error-bg);   border-color: var(--color-error-border); }
+    .review-q { font-weight: 700; margin-bottom: 4px; }
+    .review-ans { color: #333; }
+    .review-correct { color: #065f46; font-weight: 700; }
+    .review-wrong-ans { color: #b91c1c; text-decoration: line-through; }
+
+    /* KANSI */
+    .cover-card {
+      background: var(--color-card); border: 2px solid var(--color-border);
+      border-radius: var(--radius); padding: 32px;
+      box-shadow: 3px 3px 0 #000; text-align: center; margin-bottom: 20px;
+    }
+    .cover-card h1 { font-size: 1.5em; color: var(--color-primary); margin: 16px 0 10px; }
+    .cover-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--color-ai-a), var(--color-ai-b));
+      color: #fff; font-weight: 700; font-size: 0.8em;
+      padding: 5px 14px; border-radius: 999px; margin-bottom: 12px;
+    }
+    .rule-list { text-align: left; list-style: none; margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+    .rule-list li {
+      background: var(--color-soft); border: 1.5px solid var(--color-border);
+      border-radius: 10px; padding: 10px 14px; font-size: 0.95em;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+  </style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1 class="sr-only">Robon koe – AI-laboratorio, tarkistustehtävä</h1>
+
+<!-- EDISTYMISPALKKI -->
+<div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Kokeen eteneminen">
+  <div class="progress-label" id="progressLabel">Aloitus</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<!-- KANSI -->
+<div id="page-cover" class="q-card active" role="main" aria-label="Aloitussivu">
+  <div class="cover-card">
+    <div class="cover-badge" aria-label="AI-laboratorio tarkistustehtävä">⚗️ AI-laboratorio — koe</div>
+    <img id="robo-cover" src="../images/robo-cover.webp" alt="Robo-robotti" style="width:100px; margin: 0 auto 16px; display:block;" onerror="this.style.display='none'" />
+    <h1>Robon koe</h1>
+    <p style="margin-bottom:16px;">Vastaa kaikkiin kysymyksiin. Näet pisteet vasta lopussa.</p>
+    <ul class="rule-list" aria-label="Ohjeet">
+      <li><span aria-hidden="true">📋</span> 6 kysymystä, 10 pistettä yhteensä</li>
+      <li><span aria-hidden="true">🔇</span> Ei vihjeitä kesken kokeen — palaute näkyy lopussa</li>
+      <li><span aria-hidden="true">✏️</span> Valitse yksi vaihtoehto per kysymys</li>
+    </ul>
+    <div class="btn-row" style="justify-content:center; margin-top:20px;">
+      <button class="btn-primary" onclick="goTo(1)">Aloita koe →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 1 (1p) ==================== -->
+<div id="q-1" class="q-card" role="main" aria-label="Kysymys 1 kuudesta">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 1 / 6</div>
+  <p class="q-meta">Kysymys 1 / 6 <span class="q-points" aria-label="1 piste">1 piste</span></p>
+  <h2 id="q1-title">Mitä tekoäly tarkoittaa?</h2>
+  <div class="options" role="group" aria-labelledby="q1-title">
+    <button class="opt-btn" onclick="valitse(this,1,'A')" aria-label="A: Robotti, joka tuntee tunteita">
+      <span class="opt-letter" aria-hidden="true">A</span>Robotti, joka tuntee tunteita
+    </button>
+    <button class="opt-btn" onclick="valitse(this,1,'B')" aria-label="B: Ohjelma, joka oppii tiedosta ja tunnistaa malleja">
+      <span class="opt-letter" aria-hidden="true">B</span>Ohjelma, joka oppii tiedosta ja tunnistaa malleja
+    </button>
+    <button class="opt-btn" onclick="valitse(this,1,'C')" aria-label="C: Tietokone, joka ajattelee kuten ihminen">
+      <span class="opt-letter" aria-hidden="true">C</span>Tietokone, joka ajattelee kuten ihminen
+    </button>
+    <button class="opt-btn" onclick="valitse(this,1,'D')" aria-label="D: Internet-palvelu, joka tietää kaiken">
+      <span class="opt-letter" aria-hidden="true">D</span>Internet-palvelu, joka tietää kaiken
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-1" onclick="goTo(2)" disabled>Seuraava →</button>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 2 (1p) ==================== -->
+<div id="q-2" class="q-card" role="main" aria-label="Kysymys 2 kuudesta">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 2 / 6</div>
+  <p class="q-meta">Kysymys 2 / 6 <span class="q-points" aria-label="1 piste">1 piste</span></p>
+  <h2 id="q2-title">Mikä näistä tilanteista sopii tekoälyn käyttöön opiskelussa?</h2>
+  <div class="options" role="group" aria-labelledby="q2-title">
+    <button class="opt-btn" onclick="valitse(this,2,'A')" aria-label="A: Haluan tietää, mitä mieltä ystäväni on minusta">
+      <span class="opt-letter" aria-hidden="true">A</span>Haluan tietää, mitä mieltä ystäväni on minusta
+    </button>
+    <button class="opt-btn" onclick="valitse(this,2,'B')" aria-label="B: Haluan tiivistelmän matematiikan luvusta">
+      <span class="opt-letter" aria-hidden="true">B</span>Haluan tiivistelmän matematiikan luvusta
+    </button>
+    <button class="opt-btn" onclick="valitse(this,2,'C')" aria-label="C: Haluan tekoälyn tekevän koevastaukseni valmiiksi">
+      <span class="opt-letter" aria-hidden="true">C</span>Haluan tekoälyn tekevän koevastaukseni valmiiksi
+    </button>
+    <button class="opt-btn" onclick="valitse(this,2,'D')" aria-label="D: Haluan tekoälyn kertovan, mitä koulussa tapahtui tänään">
+      <span class="opt-letter" aria-hidden="true">D</span>Haluan tekoälyn kertovan, mitä koulussa tapahtui tänään
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-2" onclick="goTo(3)" disabled>Seuraava →</button>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 3 (2p) ==================== -->
+<div id="q-3" class="q-card" role="main" aria-label="Kysymys 3 kuudesta">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 3 / 6</div>
+  <p class="q-meta">Kysymys 3 / 6 <span class="q-points" aria-label="2 pistettä">2 pistettä</span></p>
+  <h2 id="q3-title">Kumpi on parempi tapa kysyä tekoälyltä?</h2>
+  <div class="options" role="group" aria-labelledby="q3-title">
+    <button class="opt-btn" onclick="valitse(this,3,'A')" aria-label="A: murrosikä???">
+      <span class="opt-letter" aria-hidden="true">A</span>"murrosikä???"
+    </button>
+    <button class="opt-btn" onclick="valitse(this,3,'B')" aria-label="B: Kerro murrosikä">
+      <span class="opt-letter" aria-hidden="true">B</span>"Kerro murrosikä"
+    </button>
+    <button class="opt-btn" onclick="valitse(this,3,'C')" aria-label="C: Olen 7-luokkalainen. Selitä murrosikä kolmella lauseella, helposti.">
+      <span class="opt-letter" aria-hidden="true">C</span>"Olen 7-luokkalainen. Selitä murrosikä kolmella lauseella, helposti."
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-3" onclick="goTo(4)" disabled>Seuraava →</button>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 4 (2p) ==================== -->
+<div id="q-4" class="q-card" role="main" aria-label="Kysymys 4 kuudesta">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 4 / 6</div>
+  <p class="q-meta">Kysymys 4 / 6 <span class="q-points" aria-label="2 pistettä">2 pistettä</span></p>
+  <h2 id="q4-title">Miten pyydät tekoälyä kuulustelemaan sinua kokeeseen?</h2>
+  <div class="options" role="group" aria-labelledby="q4-title">
+    <button class="opt-btn" onclick="valitse(this,4,'A')" aria-label="A: Anna minulle kaikki kysymykset kerralla">
+      <span class="opt-letter" aria-hidden="true">A</span>"Anna minulle kaikki kysymykset kerralla"
+    </button>
+    <button class="opt-btn" onclick="valitse(this,4,'B')" aria-label="B: Olen 7-luokkalainen. Tenttaa minua fotosynteesin pääkohdista. Kysy yksi kysymys kerrallaan ja kerro, oliko vastaukseni oikein.">
+      <span class="opt-letter" aria-hidden="true">B</span>"Olen 7-luokkalainen. Tenttaa minua fotosynteesin pääkohdista. Kysy yksi kysymys kerrallaan ja kerro, oliko vastaukseni oikein."
+    </button>
+    <button class="opt-btn" onclick="valitse(this,4,'C')" aria-label="C: Tee minulle koe ja anna oikeat vastaukset heti">
+      <span class="opt-letter" aria-hidden="true">C</span>"Tee minulle koe ja anna oikeat vastaukset heti"
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-4" onclick="goTo(5)" disabled>Seuraava →</button>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 5 (2p) ==================== -->
+<div id="q-5" class="q-card" role="main" aria-label="Kysymys 5 kuudesta">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 5 / 6</div>
+  <p class="q-meta">Kysymys 5 / 6 <span class="q-points" aria-label="2 pistettä">2 pistettä</span></p>
+  <h2 id="q5-title">Tekoäly teki koetehtäväsi valmiiksi. Mitä teet?</h2>
+  <div class="options" role="group" aria-labelledby="q5-title">
+    <button class="opt-btn" onclick="valitse(this,5,'A')" aria-label="A: Palautat sen sellaisenaan">
+      <span class="opt-letter" aria-hidden="true">A</span>Palautat sen sellaisenaan — nopea ja helppo
+    </button>
+    <button class="opt-btn" onclick="valitse(this,5,'B')" aria-label="B: Luet läpi, muokkaat omin sanoin ja lisäät oman ajatuksen">
+      <span class="opt-letter" aria-hidden="true">B</span>Luet läpi, muokkaat omin sanoin ja lisäät oman ajatuksen
+    </button>
+    <button class="opt-btn" onclick="valitse(this,5,'C')" aria-label="C: Heitit sen pois, tekoäly ei koskaan auta">
+      <span class="opt-letter" aria-hidden="true">C</span>Heitit sen pois — tekoäly ei koskaan auta
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-5" onclick="goTo(6)" disabled>Seuraava →</button>
+  </div>
+</div>
+
+<!-- ==================== KYSYMYS 6 (2p) ==================== -->
+<div id="q-6" class="q-card" role="main" aria-label="Kysymys 6 kuudesta, viimeinen">
+  <div class="chapter-tag" aria-hidden="true">⚗️ AI-laboratorio · Kysymys 6 / 6</div>
+  <p class="q-meta">Kysymys 6 / 6 <span class="q-points" aria-label="2 pistettä">2 pistettä</span></p>
+  <h2 id="q6-title">Tekoäly kertoo sinulle jonkin tiedon. Mitä teet?</h2>
+  <div class="options" role="group" aria-labelledby="q6-title">
+    <button class="opt-btn" onclick="valitse(this,6,'A')" aria-label="A: Uskon kaiken heti, tekoäly tietää kaiken">
+      <span class="opt-letter" aria-hidden="true">A</span>Uskon kaiken heti — tekoäly tietää kaiken
+    </button>
+    <button class="opt-btn" onclick="valitse(this,6,'B')" aria-label="B: Tarkistan tiedon muualta, esimerkiksi oppikirjasta">
+      <span class="opt-letter" aria-hidden="true">B</span>Tarkistan tiedon muualta — esim. oppikirjasta
+    </button>
+    <button class="opt-btn" onclick="valitse(this,6,'C')" aria-label="C: En käytä tekoälyä lainkaan, se valehtelee aina">
+      <span class="opt-letter" aria-hidden="true">C</span>En käytä tekoälyä lainkaan — se valehtelee aina
+    </button>
+  </div>
+  <div class="btn-row">
+    <button class="btn-primary" id="next-6" onclick="naytaTulokset()" disabled>Katso tulokset →</button>
+  </div>
+</div>
+
+<!-- ==================== TULOKSET ==================== -->
+<div id="tulokset" class="result-card" role="main" aria-label="Kokeen tulokset" aria-live="polite">
+  <div class="result-badge" aria-hidden="true">⚗️ AI-laboratorio — tulos</div>
+  <img src="../images/robo-cover.webp" alt="Robo-robotti" style="width:80px; margin: 0 auto 12px; display:block;" onerror="this.style.display='none'" />
+  <div class="result-score" id="result-score" aria-live="polite">0</div>
+  <div class="result-max">/ 10 pistettä</div>
+  <div class="result-grade" id="result-grade" role="status"></div>
+
+  <div class="review-section" aria-label="Vastausten läpikäynti">
+    <h3>Vastausten läpikäynti</h3>
+    <div id="review-list"></div>
+  </div>
+
+  <div class="btn-row" style="justify-content:center; margin-top:20px;">
+    <button class="btn-primary" onclick="uusiYritys()">Yritä uudelleen ↺</button>
+    <a href="robo-ai-laboratorio.html" style="display:inline-block;">
+      <button class="btn-primary" style="background:#555;">← Takaisin peliin</button>
+    </a>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+  // ==========================================
+  // KYSYMYSDATA
+  // ==========================================
+  const kysymykset = [
+    {
+      id: 1, pisteet: 1,
+      kysymys: "Mitä tekoäly tarkoittaa?",
+      oikein: 'B',
+      oikeaSelitys: "Tekoäly on ohjelma, joka oppii tiedosta ja tunnistaa malleja. Se ei tunne tunteita eikä ajattele kuten ihminen.",
+      vaihtoehdot: {
+        A: "Robotti, joka tuntee tunteita",
+        B: "Ohjelma, joka oppii tiedosta ja tunnistaa malleja",
+        C: "Tietokone, joka ajattelee kuten ihminen",
+        D: "Internet-palvelu, joka tietää kaiken"
+      }
+    },
+    {
+      id: 2, pisteet: 1,
+      kysymys: "Mikä näistä tilanteista sopii tekoälyn käyttöön opiskelussa?",
+      oikein: 'B',
+      oikeaSelitys: "Tekoäly sopii hyvin tiivistelmien tekemiseen, selittämiseen ja harjoitustehtävien keksimiseen.",
+      vaihtoehdot: {
+        A: "Haluan tietää, mitä mieltä ystäväni on minusta",
+        B: "Haluan tiivistelmän matematiikan luvusta",
+        C: "Haluan tekoälyn tekevän koevastaukseni valmiiksi",
+        D: "Haluan tekoälyn kertovan, mitä koulussa tapahtui tänään"
+      }
+    },
+    {
+      id: 3, pisteet: 2,
+      kysymys: "Kumpi on parempi tapa kysyä tekoälyltä?",
+      oikein: 'C',
+      oikeaSelitys: "Hyvä kysymys kertoo, kuka olet ja mitä haluat. Tarkka kysymys saa tarkemman vastauksen.",
+      vaihtoehdot: {
+        A: '"murrosikä???"',
+        B: '"Kerro murrosikä"',
+        C: '"Olen 7-luokkalainen. Selitä murrosikä kolmella lauseella, helposti."'
+      }
+    },
+    {
+      id: 4, pisteet: 2,
+      kysymys: "Miten pyydät tekoälyä kuulustelemaan sinua kokeeseen?",
+      oikein: 'B',
+      oikeaSelitys: "Pyydä tekoälyä kysymään yksi kysymys kerrallaan ja antamaan palautetta. Näin opit parhaiten.",
+      vaihtoehdot: {
+        A: '"Anna minulle kaikki kysymykset kerralla"',
+        B: '"Olen 7-luokkalainen. Tenttaa minua fotosynteesin pääkohdista. Kysy yksi kysymys kerrallaan ja kerro, oliko vastaukseni oikein."',
+        C: '"Tee minulle koe ja anna oikeat vastaukset heti"'
+      }
+    },
+    {
+      id: 5, pisteet: 2,
+      kysymys: "Tekoäly teki koetehtäväsi valmiiksi. Mitä teet?",
+      oikein: 'B',
+      oikeaSelitys: "Tekoäly voi auttaa alkuun, mutta oppiminen tapahtuu, kun muokkaat itse. Lue, korjaa ja lisää oma ajatuksesi.",
+      vaihtoehdot: {
+        A: "Palautat sen sellaisenaan",
+        B: "Luet läpi, muokkaat omin sanoin ja lisäät oman ajatuksen",
+        C: "Heitit sen pois — tekoäly ei koskaan auta"
+      }
+    },
+    {
+      id: 6, pisteet: 2,
+      kysymys: "Tekoäly kertoo sinulle jonkin tiedon. Mitä teet?",
+      oikein: 'B',
+      oikeaSelitys: "Tekoäly voi erehtyä. Tarkista aina tärkeä tieto toisesta lähteestä — esim. oppikirjasta.",
+      vaihtoehdot: {
+        A: "Uskon kaiken heti",
+        B: "Tarkistan tiedon muualta — esim. oppikirjasta",
+        C: "En käytä tekoälyä lainkaan"
+      }
+    }
+  ];
+
+  const vastaukset = {};
+
+  // ==========================================
+  // NAVIGAATIO
+  // ==========================================
+  function goTo(nro) {
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(nro === 0 ? 'page-cover' : 'q-' + nro);
+    if (!target) return;
+    target.classList.add('active');
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Päivitä edistymispalkki
+    const total = kysymykset.length;
+    const pct = nro === 0 ? 0 : Math.round((nro / (total + 1)) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressFill').parentElement.setAttribute('aria-valuenow', pct);
+    if (nro === 0) {
+      document.getElementById('progressLabel').textContent = 'Aloitus';
+    } else {
+      document.getElementById('progressLabel').textContent = 'Kysymys ' + nro + ' / ' + total;
+    }
+  }
+
+  // ==========================================
+  // VASTAAMINEN
+  // ==========================================
+  function valitse(btn, qNro, kirjain) {
+    const card = document.getElementById('q-' + qNro);
+    card.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    vastaukset[qNro] = kirjain;
+    document.getElementById('next-' + qNro).disabled = false;
+  }
+
+  // ==========================================
+  // TULOKSET
+  // ==========================================
+  function naytaTulokset() {
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    const tulosDiv = document.getElementById('tulokset');
+    tulosDiv.classList.add('show');
+    tulosDiv.setAttribute('tabindex', '-1');
+    tulosDiv.focus({ preventScroll: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Laske pisteet
+    let yhteensa = 0;
+    kysymykset.forEach(q => {
+      if (vastaukset[q.id] === q.oikein) yhteensa += q.pisteet;
+    });
+
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'Valmis!';
+
+    // Näytä pisteet
+    document.getElementById('result-score').textContent = yhteensa;
+
+    // Arvosana
+    const gradeEl = document.getElementById('result-grade');
+    if (yhteensa >= 8) {
+      gradeEl.className = 'result-grade erinomainen';
+      gradeEl.textContent = '🌟 Erinomainen! Osaat tekoälyn perusteet hyvin.';
+    } else if (yhteensa >= 5) {
+      gradeEl.className = 'result-grade hyva';
+      gradeEl.textContent = '👍 Hyvä työ! Perusasiat ovat hallussa.';
+    } else {
+      gradeEl.className = 'result-grade harjoitellaan';
+      gradeEl.textContent = '💪 Harjoitellaan lisää! Palaa peliin ja kertaa aiheet.';
+    }
+
+    // Vastausten läpikäynti
+    const reviewList = document.getElementById('review-list');
+    reviewList.innerHTML = '';
+    kysymykset.forEach(q => {
+      const oliOikein = vastaukset[q.id] === q.oikein;
+      const item = document.createElement('div');
+      item.className = 'review-item ' + (oliOikein ? 'ok' : 'fail');
+      const annettu = vastaukset[q.id] ? q.vaihtoehdot[vastaukset[q.id]] : '(ei vastattu)';
+      const oikeaVast = q.vaihtoehdot[q.oikein];
+      item.innerHTML =
+        '<div class="review-q">' + (oliOikein ? '✅' : '❌') + ' ' + q.kysymys + ' <span style="font-size:0.8em; font-weight:400; color:#555;">(' + q.pisteet + ' p)</span></div>' +
+        (oliOikein
+          ? '<div class="review-ans review-correct">Vastauksesi: ' + annettu + '</div>'
+          : '<div class="review-ans"><span class="review-wrong-ans">Vastauksesi: ' + annettu + '</span><br><span class="review-correct">Oikein: ' + oikeaVast + '</span></div>'
+        ) +
+        '<div style="font-size:0.88em; color:#333; margin-top:4px;">' + q.oikeaSelitys + '</div>';
+      reviewList.appendChild(item);
+    });
+  }
+
+  function uusiYritys() {
+    Object.keys(vastaukset).forEach(k => delete vastaukset[k]);
+    document.querySelectorAll('.opt-btn').forEach(b => {
+      b.classList.remove('selected','reveal-correct','reveal-wrong');
+      b.disabled = false;
+    });
+    document.querySelectorAll('[id^="next-"]').forEach(b => b.disabled = true);
+    document.getElementById('tulokset').classList.remove('show');
+    goTo(0);
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('page-cover').classList.add('active');
+  }
+</script>
+</body>
+</html>
