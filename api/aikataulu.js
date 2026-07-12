@@ -1,0 +1,255 @@
+// DigiOpo – Koulukohtainen lukuvuoden aikataulu (Vaihe 2)
+//
+// GET  /api/aikataulu?ryhma=7A-K3M9
+//      → { ok:true, tapahtumat:[ {id,otsikko,tyyppi,alku_pvm,loppu_pvm,kuvaus}, ... ] }
+//        (julkinen luku, oppilaille; järjestetty alku_pvm:n mukaan nousevasti)
+//
+// POST /api/aikataulu   (JSON body, toiminto-kenttä ratkaisee — kaikki vaativat avaimen)
+//   { toiminto:"lisaa",   ryhma, avain, otsikko, tyyppi, alku_pvm, loppu_pvm?, kuvaus? }
+//        → { ok:true, id }
+//   { toiminto:"muokkaa", ryhma, avain, id, otsikko, tyyppi, alku_pvm, loppu_pvm?, kuvaus? }
+//        → { ok:true }
+//   { toiminto:"poista",  ryhma, avain, id }
+//        → { ok:true }
+//
+// Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
+// Sama opettaja-avain kuin järjestyksessä (opetusryhmat-taulu + JARJESTYS_PEPPER).
+
+import crypto from 'node:crypto';
+import { kirjaaVirhe } from './_lib/virhelogi.js';
+import { haeIp } from './_lib/turva.js';
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const PEPPER = process.env.JARJESTYS_PEPPER || ''; // sama suola kuin jarjestys.js:ssä
+
+const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
+const MAX_TAPAHTUMIA = 100; // enimmäismäärä per ryhmä (roskaamisen esto)
+
+// ─── Rate limiter (muistipohjainen, kuten jarjestys.js / lisenssi.js) ─────────
+const yritykset = new Map();
+const MAX_YRITYKSIA = 30;
+const IKKUNA_MS = 10 * 60 * 1000;
+
+function tarkistaRateLimit(ip) {
+  const nyt = Date.now();
+  const m = yritykset.get(ip) || { maara: 0, alku: nyt };
+  if (nyt - m.alku > IKKUNA_MS) { yritykset.set(ip, { maara: 1, alku: nyt }); return true; }
+  if (m.maara >= MAX_YRITYKSIA) return false;
+  yritykset.set(ip, { maara: m.maara + 1, alku: m.alku });
+  return true;
+}
+
+// ─── Apurit ──────────────────────────────────────────────────────────────────
+function hashAvain(avain) {
+  return crypto.createHash('sha256').update(`${PEPPER}:${avain}`).digest('hex');
+}
+
+function validiRyhma(r) {
+  return /^[A-Z0-9-]{4,16}$/.test(r);
+}
+
+function validiId(id) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+}
+
+function validiPvm(s) {
+  if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const d = new Date(`${s}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+}
+
+// Lukee ja normalisoi tapahtuman kentät bodystä
+function lueKentat(body) {
+  return {
+    otsikko: String(body.otsikko || '').trim(),
+    tyyppi: String(body.tyyppi || 'muu').trim(),
+    alku_pvm: String(body.alku_pvm || '').trim(),
+    loppu_pvm: body.loppu_pvm == null || body.loppu_pvm === '' ? null : String(body.loppu_pvm).trim(),
+    kuvaus: body.kuvaus == null || body.kuvaus === '' ? null : String(body.kuvaus).trim(),
+  };
+}
+
+// Palauttaa virhekoodin tai null jos kentät ovat kelvolliset
+function validoiKentat(k) {
+  if (!k.otsikko || k.otsikko.length > 80) return 'otsikko_virheellinen';
+  if (!SALLITUT_TYYPIT.includes(k.tyyppi)) return 'tyyppi_virheellinen';
+  if (!validiPvm(k.alku_pvm)) return 'pvm_virheellinen';
+  if (k.loppu_pvm !== null && !validiPvm(k.loppu_pvm)) return 'pvm_virheellinen';
+  if (k.loppu_pvm !== null && k.loppu_pvm < k.alku_pvm) return 'pvm_jarjestys';
+  if (k.kuvaus !== null && k.kuvaus.length > 200) return 'kuvaus_liian_pitka';
+  return null;
+}
+
+async function sb(path, opts = {}) {
+  const base = SUPABASE_URL.replace(/\/$/, '');
+  const r = await fetch(`${base}/rest/v1/${path}`, {
+    ...opts,
+    headers: {
+      apikey: SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+  return r;
+}
+
+async function haeRyhma(ryhmakoodi) {
+  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash`);
+  if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+  return (await r.json())[0] || null;
+}
+
+// Vahvistaa opettaja-avaimen ryhmää vasten. Palauttaa true/false.
+async function avainTasmaa(ryhma, avain) {
+  const rivi = await haeRyhma(ryhma);
+  return !!rivi && rivi.avain_hash === hashAvain(avain);
+}
+
+// ─── Handler ─────────────────────────────────────────────────────────────────
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    return res.status(500).json({ ok: false, virhe: 'palvelin_ei_konfiguroitu' });
+  }
+
+  // ── GET: hae ryhmän tapahtumat (julkinen luku) ──
+  if (req.method === 'GET') {
+    const ryhma = String(req.query.ryhma || '').trim().toUpperCase();
+    if (!validiRyhma(ryhma)) {
+      return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+    }
+    try {
+      const r = await sb(
+        `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}` +
+        '&select=id,otsikko,tyyppi,alku_pvm,loppu_pvm,kuvaus' +
+        '&order=alku_pvm.asc'
+      );
+      if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
+      const tapahtumat = await r.json();
+      return res.status(200).json({ ok: true, tapahtumat });
+    } catch (err) {
+      console.error('aikataulu GET:', err);
+      await kirjaaVirhe('aikataulu GET', err);
+      return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
+    }
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ ok: false, virhe: 'metodi_ei_sallittu' });
+  }
+
+  // ── Rate limit POST-toiminnoille ──
+  const ip = haeIp(req);
+  if (!tarkistaRateLimit(ip)) {
+    return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
+  }
+
+  let body;
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+  } catch {
+    return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+  }
+
+  const toiminto = body.toiminto;
+  const ryhma = String(body.ryhma || '').trim().toUpperCase();
+  const avain = String(body.avain || '');
+  if (!validiRyhma(ryhma)) {
+    return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+  }
+  if (avain.length < 4 || avain.length > 64) {
+    return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
+  }
+
+  try {
+    // Kaikki kirjoitustoiminnot vaativat oikean opettaja-avaimen
+    if (!(await avainTasmaa(ryhma, avain))) {
+      return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
+    }
+
+    // ── LISÄÄ: uusi tapahtuma ──
+    if (toiminto === 'lisaa') {
+      const k = lueKentat(body);
+      const virhe = validoiKentat(k);
+      if (virhe) return res.status(400).json({ ok: false, virhe });
+
+      // Tarkista ryhmän tapahtumamäärä (roskaamisen esto)
+      const lask = await sb(
+        `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&select=id`
+      );
+      if (!lask.ok) throw new Error(`DB-virhe ${lask.status}`);
+      if ((await lask.json()).length >= MAX_TAPAHTUMIA) {
+        return res.status(400).json({ ok: false, virhe: 'liikaa_tapahtumia' });
+      }
+
+      const r = await sb('lukuvuosi_tapahtumat', {
+        method: 'POST',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({
+          ryhmakoodi: ryhma,
+          otsikko: k.otsikko,
+          tyyppi: k.tyyppi,
+          alku_pvm: k.alku_pvm,
+          loppu_pvm: k.loppu_pvm,
+          kuvaus: k.kuvaus,
+        }),
+      });
+      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+      const luotu = (await r.json())[0];
+      return res.status(200).json({ ok: true, id: luotu ? luotu.id : null });
+    }
+
+    // ── MUOKKAA: päivitä olemassa oleva tapahtuma ──
+    if (toiminto === 'muokkaa') {
+      const id = String(body.id || '').trim();
+      if (!validiId(id)) return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+      const k = lueKentat(body);
+      const virhe = validoiKentat(k);
+      if (virhe) return res.status(400).json({ ok: false, virhe });
+
+      // Rajaa sekä id:llä ETTÄ ryhmällä → ei voi muokata toisen ryhmän tapahtumaa
+      const r = await sb(
+        `lukuvuosi_tapahtumat?id=eq.${encodeURIComponent(id)}&ryhmakoodi=eq.${encodeURIComponent(ryhma)}`,
+        {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({
+            otsikko: k.otsikko,
+            tyyppi: k.tyyppi,
+            alku_pvm: k.alku_pvm,
+            loppu_pvm: k.loppu_pvm,
+            kuvaus: k.kuvaus,
+          }),
+        }
+      );
+      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── POISTA: poista tapahtuma ──
+    if (toiminto === 'poista') {
+      const id = String(body.id || '').trim();
+      if (!validiId(id)) return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+
+      const r = await sb(
+        `lukuvuosi_tapahtumat?id=eq.${encodeURIComponent(id)}&ryhmakoodi=eq.${encodeURIComponent(ryhma)}`,
+        { method: 'DELETE', headers: { Prefer: 'return=minimal' } }
+      );
+      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });
+  } catch (err) {
+    console.error('aikataulu POST:', err);
+    await kirjaaVirhe('aikataulu POST', err, { toiminto });
+    return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
+  }
+}
