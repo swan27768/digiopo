@@ -362,20 +362,35 @@
     var b = document.createElement("div");
     b.className = "jarjestys-banneri";
     b.innerHTML =
-      '<div class="jarjestys-rivi">' +
-        '<span class="jarjestys-teksti">👩‍🏫 <strong>Muokkaustila</strong> — raahaa osioita kahvasta (⠿), lukitse/avaa lukolla (🔒).</span>' +
-        '<button type="button" class="jarjestys-nappi jarjestys-palauta">Palauta oletus</button>' +
-        '<button type="button" class="jarjestys-nappi jarjestys-sulje">Sulje</button>' +
+      '<div class="jp-head">' +
+        '<span class="jp-title">👩‍🏫 Muokkaustila</span>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-sulje" title="Sulje">✕</button>' +
       '</div>' +
-      '<div class="jarjestys-jako">' +
-        '<span class="jarjestys-teksti">Oppilaiden ryhmäkoodi: <strong>' + (ryhma || "—") + '</strong> · ' +
-        'linkki: <a class="jarjestys-linkki" href="' + linkki + '">' + linkki + '</a></span>' +
+      // 1. Osioiden järjestys
+      '<div class="jp-block">' +
+        '<div class="jp-h">Osioiden järjestys</div>' +
+        '<p class="jp-ohje">Raahaa osioita kahvasta (⠿) ja lukitse/avaa osioita lukolla (🔒).</p>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-palauta">Palauta oletusjärjestys</button>' +
+      '</div>' +
+      // 2. Lukuvuoden aikataulu
+      '<div class="jp-block">' +
+        '<div class="jp-h">Lukuvuoden aikataulu</div>' +
+        '<p class="jp-ohje">Lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät.</p>' +
+        '<a class="jarjestys-nappi" href="/aikataulu_ope.html">Muokkaa aikataulua</a>' +
+      '</div>' +
+      // 3. Julkaise muutokset oppilaille
+      '<div class="jp-block">' +
+        '<div class="jp-h">Julkaise oppilaille</div>' +
+        '<p class="jp-ohje">Tallenna tekemäsi järjestys- ja lukitusmuutokset oppilaiden nähtäväksi.</p>' +
         '<button type="button" class="jarjestys-nappi jarjestys-julkaise">Tallenna oppilaille</button>' +
         '<span class="jarjestys-tila"></span>' +
       '</div>' +
-      '<div class="jarjestys-jako">' +
-        '<span class="jarjestys-teksti">🗓️ <strong>Lukuvuoden aikataulu</strong> — lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät.</span>' +
-        '<a class="jarjestys-nappi" href="/aikataulu_ope.html" style="display:inline-block;text-decoration:none;">Muokkaa aikataulua</a>' +
+      // 4. Jaettava linkki oppilaille (viimeisenä)
+      '<div class="jp-block">' +
+        '<div class="jp-h">Jaa linkki oppilaille</div>' +
+        '<p class="jp-koodi">Ryhmäkoodi: <strong>' + (ryhma || "—") + '</strong></p>' +
+        '<code class="jarjestys-linkki-teksti">' + linkki + '</code>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-kopioi">Kopioi linkki</button>' +
       '</div>';
     document.body.appendChild(b);
     b.querySelector(".jarjestys-sulje").addEventListener("click", lopetaMuokkaus);
@@ -385,6 +400,14 @@
       paivitaKaikkiLukot();
     });
     b.querySelector(".jarjestys-julkaise").addEventListener("click", julkaise);
+    var kopioiNappi = b.querySelector(".jarjestys-kopioi");
+    if (kopioiNappi) kopioiNappi.addEventListener("click", function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(linkki).then(function () {
+        var vanha = kopioiNappi.textContent;
+        kopioiNappi.textContent = "Kopioitu ✓";
+        setTimeout(function () { kopioiNappi.textContent = vanha; }, 1500);
+      });
+    });
     julkaisuTila = b.querySelector(".jarjestys-tila");
   }
 

@@ -41,47 +41,64 @@ body.ope-muokkaustila section.aihe-osio {
   background: #ede9fe !important;
 }
 
-/* Muokkaustilan paneeli (banneri alhaalla) */
+/* Muokkaustilan paneeli — kelluva kortti sivun oikealla puolella */
 .jarjestys-banneri {
   position: fixed;
-  left: 50%;
-  bottom: 1.25rem;
-  transform: translateX(-50%);
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 9999;
-  width: min(94vw, 820px);
+  width: 310px;
+  max-width: calc(100vw - 2rem);
+  max-height: 88vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  padding: 0.9rem 1.1rem;
+  gap: 0;
+  padding: 1rem 1.15rem;
   background: #1f1147;
   color: #fff;
   border-radius: 0.9rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  font-size: 0.92rem;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
+  font-size: 0.9rem;
 }
-.jarjestys-rivi,
-.jarjestys-jako {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-}
-.jarjestys-jako {
-  padding-top: 0.7rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-.jarjestys-teksti { flex: 1 1 240px; line-height: 1.35; }
 .jarjestys-banneri strong { color: #c4b5fd; }
 
-.jarjestys-linkki {
-  color: #c4b5fd;
-  word-break: break-all;
+/* Otsikkorivi */
+.jp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
 }
+.jp-title { font-weight: 700; font-size: 1rem; }
+
+/* Loogiset lohkot, ohut erotin väliin */
+.jp-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.jp-block:last-child { padding-bottom: 0.2rem; }
+.jp-h {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #c4b5fd;
+}
+.jp-ohje { margin: 0; font-size: 0.83rem; line-height: 1.4; color: #e9e5ff; }
+.jp-koodi { margin: 0; font-size: 0.85rem; }
 
 .jarjestys-nappi {
-  flex: 0 0 auto;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.88rem;
+  align-self: flex-start;
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: #1f1147;
   background: #c4b5fd;
@@ -89,29 +106,56 @@ body.ope-muokkaustila section.aihe-osio {
   border-radius: 0.6rem;
   cursor: pointer;
   white-space: nowrap;
+  text-decoration: none;
 }
 .jarjestys-nappi:hover { background: #ddd6fe; }
-.jarjestys-palauta { background: #a99fd4; }
+/* Ensisijainen toiminto */
+.jarjestys-julkaise { background: #a78bfa; }
+/* Toissijaiset / neutraalit */
+.jarjestys-palauta,
 .jarjestys-sulje {
   background: transparent;
   color: #ddd6fe;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.32);
 }
+.jarjestys-palauta:hover,
 .jarjestys-sulje:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.jarjestys-sulje { padding: 0.3rem 0.6rem; font-size: 0.95rem; line-height: 1; }
+
+/* Jakolinkki */
+.jarjestys-linkki-teksti {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.76rem;
+  color: #c4b5fd;
+  word-break: break-all;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.5rem;
+}
 
 .jarjestys-tila {
-  flex: 1 1 100%;
-  font-size: 0.85rem;
-  min-height: 1.1em;
+  font-size: 0.82rem;
+  min-height: 1em;
   color: #e9e5ff;
 }
 .jarjestys-tila.ok { color: #86efac; }
 .jarjestys-tila.virhe { color: #fca5a5; }
 .jarjestys-tila.odottaa { color: #fcd34d; }
 
-@media (max-width: 560px) {
-  .jarjestys-rivi,
-  .jarjestys-jako { flex-direction: column; align-items: stretch; text-align: center; }
+/* Mobiili: alapalkiksi koko leveydeltä */
+@media (max-width: 640px) {
+  .jarjestys-banneri {
+    right: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    max-width: none;
+    top: auto;
+    bottom: 0.5rem;
+    transform: none;
+    max-height: 72vh;
+  }
 }
 
 /* ============================================================
