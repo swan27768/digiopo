@@ -372,6 +372,10 @@
         'linkki: <a class="jarjestys-linkki" href="' + linkki + '">' + linkki + '</a></span>' +
         '<button type="button" class="jarjestys-nappi jarjestys-julkaise">Tallenna oppilaille</button>' +
         '<span class="jarjestys-tila"></span>' +
+      '</div>' +
+      '<div class="jarjestys-jako">' +
+        '<span class="jarjestys-teksti">🗓️ <strong>Lukuvuoden aikataulu</strong> — lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät.</span>' +
+        '<a class="jarjestys-nappi" href="/aikataulu_ope.html" style="display:inline-block;text-decoration:none;">Muokkaa aikataulua</a>' +
       '</div>';
     document.body.appendChild(b);
     b.querySelector(".jarjestys-sulje").addEventListener("click", lopetaMuokkaus);
