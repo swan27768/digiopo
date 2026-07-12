@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startti TETiin</title>
+<style>
+  :root{
+    --bg:#0f1226;
+    --bg2:#171a35;
+    --card:#20244a;
+    --card2:#2a2f5c;
+    --line:#3a4080;
+    --text:#eef0ff;
+    --muted:#aab0e0;
+    --accent:#ffd447;
+    --accent2:#7cf0c8;
+    --lock:#ff7a8a;
+    --ok:#7cf0c8;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 700px at 50% -10%,#252a55 0%,var(--bg) 55%);
+    color:var(--text);
+    line-height:1.55;
+    padding:16px;
+    min-height:100vh;
+  }
+  .wrap{max-width:720px;margin:0 auto}
+  header.hero{
+    text-align:center;
+    padding:22px 16px 8px;
+  }
+  .hero h1{
+    font-size:1.9rem;
+    margin:.2em 0 .1em;
+    letter-spacing:.5px;
+  }
+  .hero p{color:var(--muted);margin:.3em auto;max-width:34em}
+  .keybar{
+    position:sticky;top:0;z-index:5;
+    display:flex;align-items:center;gap:10px;
+    background:rgba(15,18,38,.9);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 14px;
+    margin:14px 0 20px;
+    box-shadow:var(--shadow);
+  }
+  .keybar .keys{font-size:1.25rem;letter-spacing:2px;flex:1}
+  .keybar .keys .got{filter:none}
+  .keybar .keys .miss{opacity:.28;filter:grayscale(1)}
+  .keybar .count{font-weight:700;color:var(--accent)}
+  .progress{
+    height:8px;border-radius:6px;background:#141733;overflow:hidden;flex:1;max-width:160px;
+  }
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s ease}
+
+  .lock{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px 18px 20px;
+    margin:0 0 18px;
+    box-shadow:var(--shadow);
+    position:relative;
+    transition:border-color .3s,opacity .3s,transform .2s;
+  }
+  .lock.done{border-color:var(--ok)}
+  .lock.done::after{
+    content:"Vihreä ✓";
+    position:absolute;top:14px;right:16px;
+    color:var(--ok);font-weight:700;font-size:.85rem;
+  }
+  .lock h2{
+    font-size:1.15rem;margin:.1em 0 .35em;display:flex;align-items:center;gap:10px;
+  }
+  .lock h2 .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:9px;
+    background:var(--lock);color:#2a0b12;font-weight:800;font-size:.95rem;flex:none;
+  }
+  .lock.done h2 .num{background:var(--ok);color:#0a2a20}
+  .lock .why{color:var(--muted);margin:.1em 0 .8em;font-size:.96rem}
+
+  label.check{
+    display:flex;gap:12px;align-items:flex-start;
+    background:#191d3d;border:1px solid #313766;border-radius:12px;
+    padding:12px 14px;margin:8px 0;cursor:pointer;
+    transition:border-color .2s,background .2s;
+  }
+  label.check:hover{border-color:var(--line)}
+  label.check:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+  label.check input{width:22px;height:22px;margin-top:1px;flex:none;accent-color:var(--accent2);cursor:pointer}
+  label.check span{font-size:.98rem}
+
+  .field{margin:10px 0}
+  .field label{display:block;font-weight:600;margin-bottom:5px;font-size:.95rem}
+  .field input, .field textarea{
+    width:100%;background:#141733;border:1px solid #313766;border-radius:11px;
+    color:var(--text);padding:11px 13px;font-size:1rem;font-family:inherit;
+  }
+  .field input:focus,.field textarea:focus{outline:2px solid var(--accent2);outline-offset:1px;border-color:var(--accent2)}
+  .field .hint{color:var(--muted);font-size:.85rem;margin-top:4px}
+  textarea{resize:vertical;min-height:64px}
+
+  .lockmsg{
+    margin-top:10px;font-size:.92rem;font-weight:600;color:var(--lock);
+    min-height:1.2em;
+  }
+  .lock.done .lockmsg{color:var(--ok)}
+
+  /* Final door */
+  #door{
+    text-align:center;
+    background:linear-gradient(180deg,#20244a,#191d3d);
+    border:1px solid var(--line);border-radius:20px;
+    padding:26px 18px;margin:6px 0 30px;box-shadow:var(--shadow);
+  }
+  #door.locked .doorbody{opacity:.55}
+  #door h2{font-size:1.35rem;margin:.1em 0 .3em}
+  #door .big{font-size:2.6rem;line-height:1;margin:.2em 0}
+  .btn{
+    display:inline-block;border:none;cursor:pointer;
+    background:var(--accent);color:#2a2200;font-weight:800;
+    padding:13px 20px;border-radius:12px;font-size:1rem;margin:6px 5px;
+    transition:transform .1s,filter .2s;font-family:inherit;
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* Summary */
+  #summary{display:none;margin-top:18px;text-align:left}
+  #summary.show{display:block}
+  .summary-card{
+    background:#fff;color:#1b1e33;border-radius:16px;padding:20px 22px;
+    box-shadow:var(--shadow);
+  }
+  .summary-card h3{margin:.1em 0 .1em;font-size:1.25rem}
+  .summary-card .date{color:#6a6f8c;font-size:.85rem;margin-bottom:14px}
+  .summary-card .row{
+    display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #eceef6;font-size:.97rem;
+  }
+  .summary-card .row:last-child{border-bottom:none}
+  .summary-card .row .k{font-weight:700;flex:none;width:44%;color:#33385c}
+  .summary-card .row .v{flex:1;color:#1b1e33;word-break:break-word}
+  .summary-card .sect{margin-top:14px;font-weight:800;color:#33385c;font-size:.8rem;letter-spacing:.5px;text-transform:uppercase}
+  .summary-card ul{margin:6px 0 0;padding-left:20px}
+  .summary-card ul li{margin:3px 0}
+  .savehint{
+    background:#191d3d;border:1px dashed var(--line);border-radius:12px;
+    padding:12px 15px;margin-top:14px;color:var(--muted);font-size:.92rem;
+  }
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:10px 0 30px}
+  @media (max-width:480px){
+    .hero h1{font-size:1.55rem}
+    .summary-card .row{flex-direction:column;gap:2px}
+    .summary-card .row .k{width:auto}
+    .keybar{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div style="font-size:2.4rem">🚦🏁</div>
+    <h1>Startti TETiin</h1>
+    <p>Olet lähtöviivalla. TET alkaa pian, mutta saat lähteä vasta,
+       kun kaikki kuusi valoa palaa vihreänä. Laita jokainen kohta kuntoon
+       ja ota starttilupa.</p>
+  </header>
+
+  <div class="keybar" role="status" aria-live="polite">
+    <div class="keys" id="keys" aria-hidden="true">
+      <span class="miss">🟢</span><span class="miss">🟢</span><span class="miss">🟢</span><span class="miss">🟢</span><span class="miss">🟢</span><span class="miss">🟢</span>
+    </div>
+    <span class="count"><span id="count">0</span>/6 vihreää</span>
+    <div class="progress"><i id="bar"></i></div>
+  </div>
+
+  <!-- LUKKO 1 -->
+  <section class="lock" id="lock1" data-lock>
+    <h2><span class="num">1</span> Sopimus ja allekirjoitukset</h2>
+    <p class="why">Ilman valmista TET-sopimusta et pääse töihin. Sopimuksessa pitää olla kolme nimeä.
+       Rastita kohdat vasta, kun olet nähnyt allekirjoitukset paperissa.</p>
+    <label class="check"><input type="checkbox" data-req> <span>Huoltaja on allekirjoittanut sopimuksen.</span></label>
+    <label class="check"><input type="checkbox" data-req> <span>Työnantaja on allekirjoittanut sopimuksen.</span></label>
+    <label class="check"><input type="checkbox" data-req> <span>Minä olen allekirjoittanut sopimuksen.</span></label>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- LUKKO 2 -->
+  <section class="lock" id="lock2" data-lock>
+    <h2><span class="num">2</span> TET-arviointilomake mukaan</h2>
+    <p class="why">Ota TET-arviointilomake mukaasi. Työnantaja arvioi siihen, miten työskentelit.
+       Se on sama asia kuin työtodistus. Muista pyytää se työnantajalta!</p>
+    <label class="check"><input type="checkbox" data-req> <span>TET-arviointilomake on repussa.</span></label>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- LUKKO 3 -->
+  <section class="lock" id="lock3" data-lock>
+    <h2><span class="num">3</span> Tärkeät numerot ja osoite</h2>
+    <p class="why">Ota nämä tiedot talteen tähän. Jos jokin menee pieleen, voit aina soittaa.
+       Löydät tiedot sopimuksesta tai kysy opolta.</p>
+    <div class="field">
+      <label for="opoNro">Opon puhelinnumero</label>
+      <input id="opoNro" type="tel" inputmode="tel" data-req placeholder="esim. 040 123 4567" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="tnNro">Työnantajan puhelinnumero</label>
+      <input id="tnNro" type="tel" inputmode="tel" data-req placeholder="esim. 09 765 4321" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="osoite">Työpaikan osoite</label>
+      <input id="osoite" type="text" data-req placeholder="Katu, numero ja kaupunki" autocomplete="off">
+    </div>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- LUKKO 4 -->
+  <section class="lock" id="lock4" data-lock>
+    <h2><span class="num">4</span> Ensimmäinen aamu</h2>
+    <p class="why">Katso sopimuksesta kohta "Ilmoittautuminen ensimmäisenä päivänä".
+       Kirjoita tähän, mihin menet, milloin ja kenen luo. Näin tiedät aamulla heti, minne mennä.</p>
+    <div class="field">
+      <label for="missa">Missä ilmoittaudut?</label>
+      <input id="missa" type="text" data-req placeholder="esim. pääovi / vastaanotto" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="milloin">Mihin aikaan olet paikalla?</label>
+      <input id="milloin" type="text" inputmode="numeric" data-req placeholder="esim. klo 8.00" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="kenelle">Kenelle ilmoittaudut?</label>
+      <input id="kenelle" type="text" data-req placeholder="Ohjaajan nimi" autocomplete="off">
+    </div>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- LUKKO 5 -->
+  <section class="lock" id="lock5" data-lock>
+    <h2><span class="num">5</span> Vaatteet, kännykkä ja muut ohjeet</h2>
+    <p class="why">Sopimuksessa lukee usein, miten pukeudut ja saako kännykkää pitää esillä.
+       Tarkista ne nyt, niin et yllätä itseäsi aamulla.</p>
+    <label class="check"><input type="checkbox" data-req> <span>Tiedän, miten pukeudun. Vaatteet ovat valmiina.</span></label>
+    <label class="check"><input type="checkbox" data-req> <span>Tiedän kännykän säännöt työpaikalla.</span></label>
+    <label class="check"><input type="checkbox" data-req> <span>Luin sopimuksen muut ohjeet (esim. ruokailu, tauot).</span></label>
+    <div class="field">
+      <label for="vaatteet">Miten pukeudut? (vapaaehtoinen muistiin)</label>
+      <input id="vaatteet" type="text" placeholder="esim. siistit vaatteet, tukevat kengät" autocomplete="off">
+    </div>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- LUKKO 6 -->
+  <section class="lock" id="lock6" data-lock>
+    <h2><span class="num">6</span> Matka työpaikalle</h2>
+    <p class="why">Mieti valmiiksi, miten pääset perille. Tarkista liput tai lataa matkakortti,
+       niin matka sujuu ilman kiirettä.</p>
+    <div class="field">
+      <label for="matka">Miten menet töihin?</label>
+      <input id="matka" type="text" data-req placeholder="esim. bussi 12, pyörä, kävely" autocomplete="off">
+    </div>
+    <label class="check"><input type="checkbox" data-req> <span>Matkaliput tai matkakortti ovat valmiina.</span></label>
+    <p class="lockmsg" data-msg></p>
+  </section>
+
+  <!-- DOOR -->
+  <section id="door" class="locked">
+    <div class="doorbody">
+      <div class="big" id="doorIcon">🔴</div>
+      <h2 id="doorTitle">Valo on vielä punaisella</h2>
+      <p class="muted" id="doorText" style="color:var(--muted)">Laita kaikki kuusi kohtaa kuntoon, niin saat vihreän valon.</p>
+      <button class="btn" id="openBtn" disabled>Ota startti</button>
+    </div>
+
+    <div id="summary">
+      <div class="summary-card" id="summaryCard">
+        <h3>Starttilistani TETiin 🏁</h3>
+        <div class="date" id="sumDate"></div>
+
+        <div class="sect">Tärkeät tiedot</div>
+        <div class="row"><span class="k">Opon numero</span><span class="v" id="s-opo"></span></div>
+        <div class="row"><span class="k">Työnantajan numero</span><span class="v" id="s-tn"></span></div>
+        <div class="row"><span class="k">Työpaikan osoite</span><span class="v" id="s-osoite"></span></div>
+
+        <div class="sect">Ensimmäinen aamu</div>
+        <div class="row"><span class="k">Missä</span><span class="v" id="s-missa"></span></div>
+        <div class="row"><span class="k">Milloin</span><span class="v" id="s-milloin"></span></div>
+        <div class="row"><span class="k">Kenelle</span><span class="v" id="s-kenelle"></span></div>
+
+        <div class="sect">Matka ja vaatteet</div>
+        <div class="row"><span class="k">Matka</span><span class="v" id="s-matka"></span></div>
+        <div class="row"><span class="k">Vaatteet</span><span class="v" id="s-vaatteet"></span></div>
+
+        <div class="sect">Tarkistettu</div>
+        <ul>
+          <li>Sopimus allekirjoitettu (huoltaja, työnantaja, minä)</li>
+          <li>TET-arviointilomake mukana (pyydä työnantajalta)</li>
+          <li>Vaatteet, kännykän säännöt ja muut ohjeet tarkistettu</li>
+          <li>Matkaliput valmiina</li>
+        </ul>
+      </div>
+
+      <div class="savehint">
+        📸 <strong>Tallenna kooste:</strong> paina alta "Tallenna kooste" tai
+        ota kuvakaappaus tästä kortista. Näin sinulla on tiedot mukana TET-aamuna,
+        vaikka nettiä ei olisi.
+      </div>
+
+      <div style="text-align:center">
+        <button class="btn" id="saveBtn">Tallenna kooste</button>
+        <button class="btn ghost" id="printBtn">Tulosta / tallenna PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>Tee rauhassa. Voit palata muokkaamaan mitä tahansa kohtaa. 💪</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var locks = Array.prototype.slice.call(document.querySelectorAll('[data-lock]'));
+  var totalLocks = locks.length;
+
+  function lockComplete(lock){
+    var reqs = lock.querySelectorAll('[data-req]');
+    for (var i=0;i<reqs.length;i++){
+      var el = reqs[i];
+      if (el.type === 'checkbox'){ if(!el.checked) return false; }
+      else { if(!el.value || el.value.trim()==='') return false; }
+    }
+    return true;
+  }
+
+  function updateKeys(n){
+    var keyEls = document.querySelectorAll('#keys span');
+    for (var i=0;i<keyEls.length;i++){
+      keyEls[i].className = (i < n) ? 'got' : 'miss';
+    }
+    var countEl = document.getElementById('count');
+    if (countEl) countEl.textContent = n;
+    var bar = document.getElementById('bar');
+    if (bar) bar.style.width = Math.round((n/totalLocks)*100) + '%';
+  }
+
+  function refresh(){
+    var done = 0;
+    locks.forEach(function(lock){
+      var ok = lockComplete(lock);
+      var msg = lock.querySelector('[data-msg]');
+      if (ok){
+        if (!lock.classList.contains('done')){
+          lock.classList.add('done');
+        }
+        if (msg) msg.textContent = '🟢 Vihreä valo! Tämä on kunnossa.';
+        done++;
+      } else {
+        lock.classList.remove('done');
+        if (msg) msg.textContent = '';
+      }
+    });
+    updateKeys(done);
+    updateDoor(done);
+    return done;
+  }
+
+  function updateDoor(done){
+    var door = document.getElementById('door');
+    var openBtn = document.getElementById('openBtn');
+    var doorTitle = document.getElementById('doorTitle');
+    var doorText = document.getElementById('doorText');
+    var doorIcon = document.getElementById('doorIcon');
+    if (!door) return;
+    if (done >= totalLocks){
+      door.classList.remove('locked');
+      if (openBtn) openBtn.disabled = false;
+      if (doorIcon) doorIcon.textContent = '🟢';
+      if (doorTitle) doorTitle.textContent = 'Vihreä valo — saat lähteä!';
+      if (doorText) doorText.textContent = 'Kaikki kuusi valoa palaa vihreänä. Paina nappia ja katso starttikoosteesi.';
+    } else {
+      door.classList.add('locked');
+      if (openBtn) openBtn.disabled = true;
+      if (doorIcon) doorIcon.textContent = '🔴';
+      if (doorTitle) doorTitle.textContent = 'Valo on vielä punaisella';
+      if (doorText) doorText.textContent = 'Puuttuu vielä ' + (totalLocks - done) + ' vihreää valoa. Laita loput kohdat kuntoon.';
+      var sum = document.getElementById('summary');
+      if (sum) sum.classList.remove('show');
+    }
+  }
+
+  function val(id){
+    var el = document.getElementById(id);
+    return el && el.value ? el.value.trim() : '';
+  }
+  function orDash(s){ return s ? s : '—'; }
+
+  function buildSummary(){
+    var map = {
+      's-opo':'opoNro','s-tn':'tnNro','s-osoite':'osoite',
+      's-missa':'missa','s-milloin':'milloin','s-kenelle':'kenelle',
+      's-matka':'matka','s-vaatteet':'vaatteet'
+    };
+    for (var target in map){
+      if (map.hasOwnProperty(target)){
+        var el = document.getElementById(target);
+        if (el) el.textContent = orDash(val(map[target]));
+      }
+    }
+    var d = new Date();
+    var dateEl = document.getElementById('sumDate');
+    if (dateEl){
+      dateEl.textContent = 'Tehty ' + d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+    }
+  }
+
+  function openDoor(){
+    buildSummary();
+    var sum = document.getElementById('summary');
+    if (sum){
+      sum.classList.add('show');
+      sum.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  function buildText(){
+    var lines = [];
+    lines.push('STARTTILISTANI TETIIN');
+    lines.push('=====================');
+    lines.push('');
+    lines.push('TÄRKEÄT TIEDOT');
+    lines.push('Opon numero: ' + orDash(val('opoNro')));
+    lines.push('Työnantajan numero: ' + orDash(val('tnNro')));
+    lines.push('Työpaikan osoite: ' + orDash(val('osoite')));
+    lines.push('');
+    lines.push('ENSIMMÄINEN AAMU');
+    lines.push('Missä: ' + orDash(val('missa')));
+    lines.push('Milloin: ' + orDash(val('milloin')));
+    lines.push('Kenelle: ' + orDash(val('kenelle')));
+    lines.push('');
+    lines.push('MATKA JA VAATTEET');
+    lines.push('Matka: ' + orDash(val('matka')));
+    lines.push('Vaatteet: ' + orDash(val('vaatteet')));
+    lines.push('');
+    lines.push('TARKISTETTU');
+    lines.push('[x] Sopimus allekirjoitettu (huoltaja, työnantaja, minä)');
+    lines.push('[x] TET-arviointilomake mukana (pyydä työnantajalta)');
+    lines.push('[x] Vaatteet, kännykän säännöt ja muut ohjeet tarkistettu');
+    lines.push('[x] Matkaliput valmiina');
+    return lines.join('\n');
+  }
+
+  function saveText(){
+    var text = buildText();
+    var blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'TET-starttilista.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  }
+
+  // Wire up events
+  locks.forEach(function(lock){
+    var inputs = lock.querySelectorAll('input, textarea');
+    for (var i=0;i<inputs.length;i++){
+      inputs[i].addEventListener('input', refresh);
+      inputs[i].addEventListener('change', refresh);
+    }
+  });
+  var openBtn = document.getElementById('openBtn');
+  if (openBtn) openBtn.addEventListener('click', openDoor);
+  var saveBtn = document.getElementById('saveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', saveText);
+  var printBtn = document.getElementById('printBtn');
+  if (printBtn) printBtn.addEventListener('click', function(){ buildSummary(); window.print(); });
+
+  refresh();
+})();
+</script>
+</body>
+</html>
