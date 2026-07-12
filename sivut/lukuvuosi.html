@@ -63,17 +63,6 @@
   .alaotsikko{text-align:center;color:#4a3a26;font-size:13.5px;max-width:32em;margin:0 auto 6px;
     background:rgba(251,247,236,.72);padding:4px 12px;border-radius:12px;display:table;transform:rotate(.4deg)}
 
-  .ryhmatieto{
-    display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
-    font-size:.82rem;color:#4a3a26;margin:12px 0 6px;
-  }
-  .ryhmatieto .lappu{background:#fbf7ec;padding:4px 12px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);transform:rotate(-.6deg)}
-  .ryhmatieto b{color:var(--text)}
-  .ryhmatieto button{
-    background:#fbf7ec;border:none;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);
-    padding:5px 12px;font-size:.8rem;color:var(--text);cursor:pointer;font-family:inherit;transform:rotate(.5deg)
-  }
-
   /* Muistilappujen ruudukko */
   .lappuseina{display:flex;flex-wrap:wrap;gap:18px 16px;justify-content:center;padding:14px 4px 4px}
 
@@ -136,13 +125,8 @@
 <body>
 <div class="lauta">
 
-  <div class="banneri"><h1>Oman koulun lukuvuosi</h1></div>
-  <p class="alaotsikko">Oman koulusi tärkeät päivät: TET-jakso, yhteishaku, palautukset ja tapahtumat.</p>
-
-  <div class="ryhmatieto" id="ryhmatieto" hidden>
-    <span class="lappu">Ryhmä: <b id="ryhmaKoodi"></b></span>
-    <button id="vaihdaBtn" type="button">Vaihda ryhmä</button>
-  </div>
+  <div class="banneri"><h1 id="lvOtsikko">Lukuvuosi</h1></div>
+  <p class="alaotsikko">Lukuvuoden tärkeimmät tapahtumat</p>
 
   <div id="sisalto"></div>
 
@@ -157,8 +141,15 @@
   var LS_RYHMA = "digiopo-ryhma";
 
   var sisalto = document.getElementById("sisalto");
-  var ryhmatieto = document.getElementById("ryhmatieto");
-  var ryhmaKoodiEl = document.getElementById("ryhmaKoodi");
+
+  // Dynaaminen lukuvuosi-otsikko (esim. "Lukuvuosi 2026 – 2027").
+  // Heinäkuusta eteenpäin näytetään alkava lukuvuosi, muuten kuluva.
+  (function(){
+    var d = new Date(), y = d.getFullYear();
+    var alku = (d.getMonth() >= 6) ? y : y - 1;
+    var otsEl = document.getElementById("lvOtsikko");
+    if (otsEl) otsEl.textContent = "Lukuvuosi " + alku + " – " + (alku + 1);
+  })();
 
   function lueRyhma(){ try { return localStorage.getItem(LS_RYHMA); } catch(e){ return null; } }
   function tallennaRyhma(k){ try { localStorage.setItem(LS_RYHMA, k); } catch(e){} }
@@ -224,7 +215,6 @@
   }
 
   function naytaKoodilomake(viesti){
-    ryhmatieto.hidden = true;
     sisalto.innerHTML =
       '<div class="kortti">' +
         '<h2>Liity ryhmääsi</h2>' +
@@ -247,8 +237,6 @@
   }
 
   function lataa(ryhma){
-    ryhmaKoodiEl.textContent = ryhma;
-    ryhmatieto.hidden = false;
     sisalto.innerHTML = '<p class="tila">Ladataan aikataulua…</p>';
     fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
       .then(function(r){ return r.json(); })
@@ -263,11 +251,6 @@
         sisalto.innerHTML = '<p class="tila">Yhteysvirhe. Kokeile ladata sivu uudelleen hetken kuluttua.</p>';
       });
   }
-
-  document.getElementById("vaihdaBtn").addEventListener("click", function(){
-    poistaRyhma();
-    naytaKoodilomake("Syötä uusi ryhmäkoodi.");
-  });
 
   var params = new URLSearchParams(location.search);
   var EMBED = params.get("embed") === "1";
