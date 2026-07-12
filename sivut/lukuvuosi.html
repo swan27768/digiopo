@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oman koulun lukuvuosi – DigiOpo</title>
+<style>
+  :root{
+    --text:#20324f;
+    --muted:#5b6b86;
+    /* Muistilappujen värit tyypeittäin */
+    --tet:#bfe3f5;         --tet-pin:#2f7d8c;
+    --yhteishaku:#f9c9d9;  --yhteishaku-pin:#c0396a;
+    --palautus:#fff2a8;    --palautus-pin:#c79a1a;
+    --tapahtuma:#e0cff5;   --tapahtuma-pin:#7c3abf;
+    --muu:#d9ecaa;         --muu-pin:#5f8a1e;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    line-height:1.5;
+    padding:18px;
+    min-height:100vh;
+    /* Korkkitaulu-tausta */
+    background-color:#c9a26b;
+    background-image:
+      radial-gradient(rgba(120,80,40,0.22) 1px, transparent 1.6px),
+      radial-gradient(rgba(90,60,30,0.16) 1px, transparent 1.6px),
+      radial-gradient(rgba(150,110,70,0.18) 1px, transparent 1.6px);
+    background-size:13px 13px, 21px 21px, 31px 29px;
+    background-position:0 0, 7px 11px, 15px 5px;
+  }
+  .lauta{
+    max-width:760px;margin:0 auto;
+    border:14px solid #a9773f;
+    border-radius:10px;
+    box-shadow:0 12px 30px rgba(0,0,0,.28), inset 0 0 40px rgba(90,60,30,.25);
+    background-color:#caa46f;
+    background-image:
+      radial-gradient(rgba(120,80,40,0.20) 1px, transparent 1.6px),
+      radial-gradient(rgba(90,60,30,0.14) 1px, transparent 1.6px);
+    background-size:13px 13px, 21px 21px;
+    background-position:0 0, 7px 11px;
+    padding:26px 22px 34px;
+  }
+
+  /* Teipattu otsikkobanneri */
+  .banneri{
+    position:relative;background:#fbf7ec;color:var(--text);
+    max-width:520px;margin:6px auto 8px;padding:12px 22px;border-radius:3px;
+    text-align:center;transform:rotate(-1deg);
+    box-shadow:0 3px 10px rgba(0,0,0,.20);
+  }
+  .banneri::before,.banneri::after{
+    content:"";position:absolute;top:-11px;width:74px;height:22px;
+    background:rgba(226,214,180,.75);box-shadow:0 1px 3px rgba(0,0,0,.15);
+  }
+  .banneri::before{left:16px;transform:rotate(-6deg)}
+  .banneri::after{right:16px;transform:rotate(5deg)}
+  .banneri h1{font-size:1.5rem;margin:0;letter-spacing:.5px;text-transform:uppercase}
+  .alaotsikko{text-align:center;color:#4a3a26;font-size:13.5px;max-width:32em;margin:0 auto 6px;
+    background:rgba(251,247,236,.72);padding:4px 12px;border-radius:12px;display:table;transform:rotate(.4deg)}
+
+  .ryhmatieto{
+    display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+    font-size:.82rem;color:#4a3a26;margin:12px 0 6px;
+  }
+  .ryhmatieto .lappu{background:#fbf7ec;padding:4px 12px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);transform:rotate(-.6deg)}
+  .ryhmatieto b{color:var(--text)}
+  .ryhmatieto button{
+    background:#fbf7ec;border:none;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.18);
+    padding:5px 12px;font-size:.8rem;color:var(--text);cursor:pointer;font-family:inherit;transform:rotate(.5deg)
+  }
+
+  /* Muistilappujen ruudukko */
+  .lappuseina{display:flex;flex-wrap:wrap;gap:18px 16px;justify-content:center;padding:14px 4px 4px}
+
+  .lappu-tapahtuma{
+    position:relative;width:200px;min-height:140px;
+    padding:22px 16px 16px;border-radius:2px;
+    box-shadow:0 6px 14px rgba(0,0,0,.22);
+    color:var(--text);
+  }
+  .lappu-tapahtuma:nth-child(3n+1){transform:rotate(-2deg)}
+  .lappu-tapahtuma:nth-child(3n+2){transform:rotate(1.5deg)}
+  .lappu-tapahtuma:nth-child(3n+3){transform:rotate(-.8deg)}
+  /* Nasta */
+  .lappu-tapahtuma .nasta{
+    position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+    width:18px;height:18px;border-radius:50%;
+    box-shadow:0 2px 4px rgba(0,0,0,.35),inset -2px -2px 3px rgba(0,0,0,.25),inset 2px 2px 3px rgba(255,255,255,.6);
+  }
+  .lappu-tapahtuma .ikoni{font-size:1.7rem;line-height:1;margin-bottom:6px}
+  .lappu-tapahtuma .otsikko{font-weight:700;font-size:1.02rem;margin:0 0 6px;word-break:break-word}
+  .lappu-tapahtuma .pvm{font-size:.85rem;font-weight:700;color:#3a4a63;margin:0 0 4px}
+  .lappu-tapahtuma .kuvaus{font-size:.82rem;color:#3f4d63;margin:6px 0 0}
+
+  .t-tet{background:var(--tet)}          .t-tet .nasta{background:var(--tet-pin)}
+  .t-yhteishaku{background:var(--yhteishaku)} .t-yhteishaku .nasta{background:var(--yhteishaku-pin)}
+  .t-palautus{background:var(--palautus)} .t-palautus .nasta{background:var(--palautus-pin)}
+  .t-tapahtuma{background:var(--tapahtuma)} .t-tapahtuma .nasta{background:var(--tapahtuma-pin)}
+  .t-muu{background:var(--muu)}          .t-muu .nasta{background:var(--muu-pin)}
+
+  /* Muistilappu-tyylinen tieto-/liittymiskortti */
+  .kortti{
+    background:#fbf7ec;border-radius:3px;padding:18px 20px;max-width:420px;margin:16px auto;
+    box-shadow:0 6px 16px rgba(0,0,0,.22);transform:rotate(-.5deg);
+  }
+  .kortti h2{font-size:1.05rem;margin:0 0 6px}
+  .kortti p{color:var(--muted);margin:.2em 0;font-size:.92rem}
+  .koodilomake{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .koodilomake input{
+    flex:1;min-width:150px;background:#fff;border:1.5px solid #d9cfb6;border-radius:8px;
+    color:var(--text);padding:10px 13px;font-size:1rem;font-family:inherit;text-transform:uppercase;
+  }
+  .koodilomake button{
+    background:#0f766e;color:#fff;border:none;border-radius:8px;
+    padding:10px 20px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .tila{text-align:center;color:#4a3a26;padding:16px;font-size:.95rem;
+    background:rgba(251,247,236,.7);border-radius:6px;max-width:420px;margin:12px auto}
+  footer{text-align:center;color:#4a3a26;font-size:.8rem;padding:16px 0 8px;
+    text-shadow:0 1px 2px rgba(255,255,255,.35)}
+  @media (max-width:480px){
+    .banneri h1{font-size:1.25rem}
+    .lappu-tapahtuma{width:100%;max-width:280px}
+  }
+</style>
+</head>
+<body>
+<div class="lauta">
+
+  <div class="banneri"><h1>Oman koulun lukuvuosi</h1></div>
+  <p class="alaotsikko">Oman koulusi tärkeät päivät: TET-jakso, yhteishaku, palautukset ja tapahtumat.</p>
+
+  <div class="ryhmatieto" id="ryhmatieto" hidden>
+    <span class="lappu">Ryhmä: <b id="ryhmaKoodi"></b></span>
+    <button id="vaihdaBtn" type="button">Vaihda ryhmä</button>
+  </div>
+
+  <div id="sisalto"></div>
+
+</div>
+
+<footer>DigiOpo · Aikataulun ylläpitää oma opettajasi.</footer>
+
+<script>
+(function(){
+  "use strict";
+  var API = "/api/aikataulu";
+  var LS_RYHMA = "digiopo-ryhma";
+
+  var sisalto = document.getElementById("sisalto");
+  var ryhmatieto = document.getElementById("ryhmatieto");
+  var ryhmaKoodiEl = document.getElementById("ryhmaKoodi");
+
+  function lueRyhma(){ try { return localStorage.getItem(LS_RYHMA); } catch(e){ return null; } }
+  function tallennaRyhma(k){ try { localStorage.setItem(LS_RYHMA, k); } catch(e){} }
+  function poistaRyhma(){ try { localStorage.removeItem(LS_RYHMA); } catch(e){} }
+
+  var TYYPIT = {
+    tet:        { nimi:"TET",        ikoni:"🤝" },
+    yhteishaku: { nimi:"Yhteishaku", ikoni:"💻" },
+    palautus:   { nimi:"Palautus",   ikoni:"📅" },
+    tapahtuma:  { nimi:"Tapahtuma",  ikoni:"⭐" },
+    muu:        { nimi:"Muu",        ikoni:"📌" }
+  };
+
+  function tanaan(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function pvmSuomeksi(iso){
+    var o = String(iso||"").split("-");
+    if (o.length !== 3) return iso || "";
+    return parseInt(o[2],10) + "." + parseInt(o[1],10) + "." + o[0];
+  }
+  function pvmVali(alku, loppu){
+    if (loppu && loppu !== alku) return pvmSuomeksi(alku) + " – " + pvmSuomeksi(loppu);
+    return pvmSuomeksi(alku);
+  }
+  function onMennyt(t, nyt){
+    var viim = t.loppu_pvm || t.alku_pvm;
+    return viim < nyt;
+  }
+  function turva(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
+    });
+  }
+
+  function tapahtumaHTML(t){
+    var tyyppi = TYYPIT[t.tyyppi] ? t.tyyppi : "muu";
+    var meta = TYYPIT[tyyppi];
+    var kuvaus = t.kuvaus ? '<p class="kuvaus">'+turva(t.kuvaus)+'</p>' : '';
+    return '<div class="lappu-tapahtuma t-'+tyyppi+'">' +
+             '<span class="nasta" aria-hidden="true"></span>' +
+             '<div class="ikoni" aria-hidden="true">'+meta.ikoni+'</div>' +
+             '<p class="pvm">'+turva(pvmVali(t.alku_pvm, t.loppu_pvm))+'</p>' +
+             '<p class="otsikko">'+turva(t.otsikko)+'</p>' +
+             kuvaus +
+           '</div>';
+  }
+
+  function renderoiTapahtumat(lista){
+    var nyt = tanaan();
+    // Näytetään vain tulevat (ja käynnissä olevat) tapahtumat — menneet jätetään pois
+    var tulossa = lista.filter(function(t){ return !onMennyt(t, nyt); });
+    tulossa.sort(function(a,b){ return a.alku_pvm < b.alku_pvm ? -1 : 1; });
+
+    if (!tulossa.length){
+      var viesti = lista.length
+        ? "Ei tulevia tapahtumia juuri nyt. Käy katsomassa myöhemmin uudelleen."
+        : "Opettajasi ei ole vielä lisännyt tapahtumia. Käy katsomassa myöhemmin uudelleen.";
+      return '<p class="tila">' + viesti + '</p>';
+    }
+    return '<div class="lappuseina">' + tulossa.map(tapahtumaHTML).join("") + '</div>';
+  }
+
+  function naytaKoodilomake(viesti){
+    ryhmatieto.hidden = true;
+    sisalto.innerHTML =
+      '<div class="kortti">' +
+        '<h2>Liity ryhmääsi</h2>' +
+        '<p>'+turva(viesti || "Pyydä opettajaltasi ryhmälinkki tai -koodi. Syötä koodi tähän, niin näet oman koulusi lukuvuoden.")+'</p>' +
+        '<div class="koodilomake">' +
+          '<input id="koodiInput" type="text" placeholder="esim. ABC-1234" autocomplete="off" maxlength="16" />' +
+          '<button id="liityBtn" type="button">Näytä aikataulu</button>' +
+        '</div>' +
+      '</div>';
+    var input = document.getElementById("koodiInput");
+    var btn = document.getElementById("liityBtn");
+    function liity(){
+      var k = (input.value || "").trim().toUpperCase();
+      if (!/^[A-Z0-9-]{4,16}$/.test(k)){ input.focus(); return; }
+      tallennaRyhma(k);
+      lataa(k);
+    }
+    btn.addEventListener("click", liity);
+    input.addEventListener("keydown", function(e){ if (e.key === "Enter") liity(); });
+  }
+
+  function lataa(ryhma){
+    ryhmaKoodiEl.textContent = ryhma;
+    ryhmatieto.hidden = false;
+    sisalto.innerHTML = '<p class="tila">Ladataan aikataulua…</p>';
+    fetch(API + "?ryhma=" + encodeURIComponent(ryhma))
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (!data || !data.ok){
+          sisalto.innerHTML = '<p class="tila">Aikataulua ei löytynyt. Tarkista ryhmäkoodi opettajaltasi.</p>';
+          return;
+        }
+        sisalto.innerHTML = renderoiTapahtumat(data.tapahtumat || []);
+      })
+      .catch(function(){
+        sisalto.innerHTML = '<p class="tila">Yhteysvirhe. Kokeile ladata sivu uudelleen hetken kuluttua.</p>';
+      });
+  }
+
+  document.getElementById("vaihdaBtn").addEventListener("click", function(){
+    poistaRyhma();
+    naytaKoodilomake("Syötä uusi ryhmäkoodi.");
+  });
+
+  var params = new URLSearchParams(location.search);
+  var ryhmaParam = (params.get("ryhma") || "").trim().toUpperCase();
+  if (ryhmaParam && /^[A-Z0-9-]{4,16}$/.test(ryhmaParam)){
+    tallennaRyhma(ryhmaParam);
+    lataa(ryhmaParam);
+  } else {
+    var tallennettu = lueRyhma();
+    if (tallennettu){ lataa(tallennettu); } else { naytaKoodilomake(); }
+  }
+})();
+</script>
+</body>
+</html>

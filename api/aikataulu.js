@@ -24,7 +24,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const PEPPER = process.env.JARJESTYS_PEPPER || ''; // sama suola kuin jarjestys.js:ssä
 
 const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
-const MAX_TAPAHTUMIA = 100; // enimmäismäärä per ryhmä (roskaamisen esto)
+const MAX_TAPAHTUMIA = 15; // enimmäismäärä per ryhmä
 
 // ─── Rate limiter (muistipohjainen, kuten jarjestys.js / lisenssi.js) ─────────
 const yritykset = new Map();
