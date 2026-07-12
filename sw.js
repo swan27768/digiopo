@@ -5,7 +5,7 @@
 //   - HTML-sivut: network-first (sisältö pysyy tuoreena)
 //   - API-kutsut (/api/*): ei välimuistitusta
 
-const CACHE_VERSION = "digiopo-v4";
+const CACHE_VERSION = "digiopo-v5";
 
 // Maksumuurin takana oleva sisältö: EI koskaan välimuistiin, jotta middleware
 // hallitsee pääsyä eikä suojattua sisältöä voi lukea offline ilman lisenssiä.
