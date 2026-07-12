@@ -24,7 +24,8 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const PEPPER = process.env.JARJESTYS_PEPPER || ''; // sama suola kuin jarjestys.js:ssä
 
 const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
-const MAX_TAPAHTUMIA = 15; // enimmäismäärä per ryhmä
+const SALLITUT_LUOKAT = ['7', '8', '9'];
+const MAX_TAPAHTUMIA = 15; // enimmäismäärä per ryhmä JA luokka
 
 // ─── Rate limiter (muistipohjainen, kuten jarjestys.js / lisenssi.js) ─────────
 const yritykset = new Map();
@@ -122,12 +123,14 @@ export default async function handler(req, res) {
   // ── GET: hae ryhmän tapahtumat (julkinen luku) ──
   if (req.method === 'GET') {
     const ryhma = String(req.query.ryhma || '').trim().toUpperCase();
-    if (!validiRyhma(ryhma)) {
+    const luokka = String(req.query.luokka || '9').trim();
+    if (!validiRyhma(ryhma) || !SALLITUT_LUOKAT.includes(luokka)) {
       return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
     }
     try {
       const r = await sb(
         `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}` +
+        `&luokka=eq.${luokka}` +
         '&select=id,otsikko,tyyppi,alku_pvm,loppu_pvm,kuvaus' +
         '&order=alku_pvm.asc'
       );
@@ -161,6 +164,7 @@ export default async function handler(req, res) {
   const toiminto = body.toiminto;
   const ryhma = String(body.ryhma || '').trim().toUpperCase();
   const avain = String(body.avain || '');
+  const luokka = String(body.luokka || '').trim();
   if (!validiRyhma(ryhma)) {
     return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
   }
@@ -176,13 +180,16 @@ export default async function handler(req, res) {
 
     // ── LISÄÄ: uusi tapahtuma ──
     if (toiminto === 'lisaa') {
+      if (!SALLITUT_LUOKAT.includes(luokka)) {
+        return res.status(400).json({ ok: false, virhe: 'luokka_virheellinen' });
+      }
       const k = lueKentat(body);
       const virhe = validoiKentat(k);
       if (virhe) return res.status(400).json({ ok: false, virhe });
 
-      // Tarkista ryhmän tapahtumamäärä (roskaamisen esto)
+      // Tarkista ryhmän JA luokan tapahtumamäärä (roskaamisen esto)
       const lask = await sb(
-        `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&select=id`
+        `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=id`
       );
       if (!lask.ok) throw new Error(`DB-virhe ${lask.status}`);
       if ((await lask.json()).length >= MAX_TAPAHTUMIA) {
@@ -194,6 +201,7 @@ export default async function handler(req, res) {
         headers: { Prefer: 'return=representation' },
         body: JSON.stringify({
           ryhmakoodi: ryhma,
+          luokka: luokka,
           otsikko: k.otsikko,
           tyyppi: k.tyyppi,
           alku_pvm: k.alku_pvm,

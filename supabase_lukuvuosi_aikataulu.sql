@@ -13,6 +13,7 @@
 create table if not exists lukuvuosi_tapahtumat (
   id           uuid        primary key default gen_random_uuid(),
   ryhmakoodi   text        not null references opetusryhmat (ryhmakoodi) on delete cascade,
+  luokka       text        not null default '9' check (luokka in ('7', '8', '9')),
   otsikko      text        not null check (char_length(otsikko) <= 80),
   tyyppi       text        not null default 'muu'
                            check (tyyppi in ('tet','yhteishaku','palautus','tapahtuma','muu')),
@@ -25,8 +26,8 @@ create table if not exists lukuvuosi_tapahtumat (
   constraint lukuvuosi_pvm_jarjestys check (loppu_pvm is null or loppu_pvm >= alku_pvm)
 );
 
-create index if not exists lukuvuosi_tapahtumat_ryhma_idx
-  on lukuvuosi_tapahtumat (ryhmakoodi, alku_pvm);
+create index if not exists lukuvuosi_tapahtumat_ryhma_luokka_idx
+  on lukuvuosi_tapahtumat (ryhmakoodi, luokka, alku_pvm);
 
 -- ─── Automaattinen muokattu_at-päivitys (käyttää supabase_schema.sql:n funktiota) ─
 drop trigger if exists lukuvuosi_tapahtumat_muokattu_at on lukuvuosi_tapahtumat;

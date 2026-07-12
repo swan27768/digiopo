@@ -115,7 +115,17 @@
         <code id="jakolinkkiTeksti"></code>
         <button class="nappi toissij" id="kopioiBtn" type="button">Kopioi</button>
       </div>
+      <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">ℹ️ Oppilaat näkevät valitsemasi luokan aikataulun luokkasivun <strong>"Oman koulun lukuvuosi"</strong> -linkistä sekä yllä olevasta jakolinkistä. 9. luokalla se näkyy myös suoraan Opo-tunnit-osiossa.</p>
       <p style="margin-top:12px"><button class="pikkunappi" id="ulosBtn" type="button">Kirjaudu ulos</button></p>
+    </div>
+
+    <div class="kortti" style="padding:14px 18px;">
+      <div style="font-weight:600;font-size:.92rem;margin-bottom:8px;">Minkä luokan aikataulua muokkaat?</div>
+      <div class="valilehdet" id="luokkaValinta">
+        <button type="button" data-luokka="7">7. luokka</button>
+        <button type="button" data-luokka="8">8. luokka</button>
+        <button type="button" data-luokka="9" class="aktiivinen">9. luokka</button>
+      </div>
     </div>
 
     <div class="kortti">
@@ -173,7 +183,7 @@
 
   var TYYPPI_NIMI = { tet:"TET-jakso", yhteishaku:"Yhteishaku", palautus:"Palautuspäivä", tapahtuma:"Tapahtuma", muu:"Muu" };
 
-  var ryhma = null, avain = null, muokattavaId = null;
+  var ryhma = null, avain = null, muokattavaId = null, luokka = "9";
 
   function $(id){ return document.getElementById(id); }
   function lueRaaka(a){ try { return localStorage.getItem(a); } catch(e){ return null; } }
@@ -227,13 +237,36 @@
   });
 
   // ── Editori ──
+  function paivitaJakolinkki(){
+    var linkki = location.origin + "/sivut/lukuvuosi.html?ryhma=" + encodeURIComponent(ryhma || "") + "&luokka=" + luokka;
+    $("jakolinkkiTeksti").textContent = linkki;
+  }
+
+  function asetaLuokka(l){
+    luokka = l;
+    Array.prototype.forEach.call($("luokkaValinta").querySelectorAll("button"), function(b){
+      if (b.getAttribute("data-luokka") === l) b.classList.add("aktiivinen");
+      else b.classList.remove("aktiivinen");
+    });
+    paivitaJakolinkki();
+  }
+
+  // Luokkavälilehtien kytkentä
+  Array.prototype.forEach.call(document.querySelectorAll("#luokkaValinta button"), function(b){
+    b.addEventListener("click", function(){
+      asetaLuokka(b.getAttribute("data-luokka"));
+      tyhjennaLomake();
+      naytaIlmo($("lomakeIlmoitus"), "");
+      lataaTapahtumat();
+    });
+  });
+
   function avaaEditori(k, p){
     ryhma = k; avain = p;
     $("kirjautuminen").classList.add("piilo");
     $("editori").classList.remove("piilo");
     $("ryhmaNimi").textContent = k;
-    var linkki = location.origin + "/sivut/lukuvuosi.html?ryhma=" + encodeURIComponent(k);
-    $("jakolinkkiTeksti").textContent = linkki;
+    asetaLuokka("9"); // oletusluokka
     lataaTapahtumat();
   }
 
@@ -254,7 +287,7 @@
 
   function lataaTapahtumat(){
     $("tapahtumaLista").innerHTML = '<li style="color:var(--muted)">Ladataan…</li>';
-    fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma)).then(function(r){ return r.json(); }).then(function(data){
+    fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + luokka).then(function(r){ return r.json(); }).then(function(data){
       if (!data || !data.ok) { $("tapahtumaLista").innerHTML = '<li style="color:#a32d2d">Lataus epäonnistui.</li>'; return; }
       renderoi(data.tapahtumat || []);
     }).catch(function(){ $("tapahtumaLista").innerHTML = '<li style="color:#a32d2d">Yhteysvirhe.</li>'; });
@@ -319,7 +352,7 @@
     if (!alku) return naytaIlmo($("lomakeIlmoitus"),"Valitse alkupäivä.","virhe");
     if (loppu && loppu < alku) return naytaIlmo($("lomakeIlmoitus"),"Loppupäivä ei voi olla ennen alkupäivää.","virhe");
 
-    var payload = { ryhma:ryhma, avain:avain, otsikko:otsikko, tyyppi:tyyppi, alku_pvm:alku, loppu_pvm:loppu, kuvaus:kuvaus };
+    var payload = { ryhma:ryhma, avain:avain, luokka:luokka, otsikko:otsikko, tyyppi:tyyppi, alku_pvm:alku, loppu_pvm:loppu, kuvaus:kuvaus };
     payload.toiminto = muokattavaId ? "muokkaa" : "lisaa";
     if (muokattavaId) payload.id = muokattavaId;
 

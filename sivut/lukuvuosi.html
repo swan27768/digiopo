@@ -123,6 +123,10 @@
     background:rgba(251,247,236,.7);border-radius:6px;max-width:420px;margin:12px auto}
   footer{text-align:center;color:#4a3a26;font-size:.8rem;padding:16px 0 8px;
     text-shadow:0 1px 2px rgba(255,255,255,.35)}
+  /* Upotustila (iframe esim. 9luokka-sivulla) */
+  body.embed{ background:transparent; padding:4px; min-height:0; }
+  body.embed footer{ display:none; }
+  body.embed .lauta{ margin:0; }
   @media (max-width:480px){
     .banneri h1{font-size:1.25rem}
     .lappu-tapahtuma{width:100%;max-width:280px}
@@ -246,7 +250,7 @@
     ryhmaKoodiEl.textContent = ryhma;
     ryhmatieto.hidden = false;
     sisalto.innerHTML = '<p class="tila">Ladataan aikataulua…</p>';
-    fetch(API + "?ryhma=" + encodeURIComponent(ryhma))
+    fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
       .then(function(r){ return r.json(); })
       .then(function(data){
         if (!data || !data.ok){
@@ -266,6 +270,12 @@
   });
 
   var params = new URLSearchParams(location.search);
+  var EMBED = params.get("embed") === "1";
+  if (EMBED) { try { document.body.classList.add("embed"); } catch(e){} }
+
+  var LUOKKA = params.get("luokka");
+  if (["7","8","9"].indexOf(LUOKKA) === -1) LUOKKA = "9"; // oletus 9. luokka
+
   var ryhmaParam = (params.get("ryhma") || "").trim().toUpperCase();
   if (ryhmaParam && /^[A-Z0-9-]{4,16}$/.test(ryhmaParam)){
     tallennaRyhma(ryhmaParam);
@@ -273,6 +283,16 @@
   } else {
     var tallennettu = lueRyhma();
     if (tallennettu){ lataa(tallennettu); } else { naytaKoodilomake(); }
+  }
+
+  // Upotettuna: ilmoita korkeus vanhemmalle sivulle, jotta iframe kasvaa sisällön mukaan
+  if (EMBED && window.self !== window.top){
+    var raportoiKorkeus = function(){
+      try { window.parent.postMessage({ type:"lukuvuosi-korkeus", korkeus: document.body.scrollHeight }, location.origin); } catch(e){}
+    };
+    new MutationObserver(function(){ requestAnimationFrame(raportoiKorkeus); }).observe(sisalto, { childList:true, subtree:true });
+    window.addEventListener("resize", function(){ requestAnimationFrame(raportoiKorkeus); });
+    requestAnimationFrame(raportoiKorkeus);
   }
 })();
 </script>
