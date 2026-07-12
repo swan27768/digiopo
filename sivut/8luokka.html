@@ -1004,8 +1004,8 @@
 
           
 
-          <!-- Intro-kuva suurennustoiminnolla -->
-          <div style="position:relative; border-radius:14px; overflow:hidden; margin-top:4px;">
+          <!-- Intro-kuva suurennustoiminnolla (näkyy jos EI tulevia aikataulutapahtumia) -->
+          <div id="johdantoInfograafi8" style="position:relative; border-radius:14px; overflow:hidden; margin-top:4px;">
             <img
               src="../images/8luokka_johdanto.webp"
               alt="8. luokan opo-tunnit — kaavio"
@@ -1018,6 +1018,42 @@
               pointer-events:none;
             ">🔍 Suurenna</span>
           </div>
+
+          <!-- Oman koulun lukuvuoden aikataulu (näkyy vain jos tulevia tapahtumia on) -->
+          <div id="lukuvuosiUpotus8" style="margin-top:4px; display:none;">
+            <iframe id="lukuvuosiFrame8" title="Oman koulun lukuvuosi"
+              style="width:100%; border:none; display:block; height:520px;" scrolling="no" loading="lazy"></iframe>
+          </div>
+          <script>
+            (function(){
+              var ryhma = null;
+              try { ryhma = localStorage.getItem("digiopo-ryhma"); } catch(e){}
+              if (!(ryhma && /^[A-Z0-9-]{4,16}$/.test(ryhma))) return; // ei liittynyt -> infografiikka
+              function tulevia(lista){
+                var d=new Date(), t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+                return (lista||[]).filter(function(x){ return (x.loppu_pvm||x.alku_pvm) >= t; }).length;
+              }
+              fetch("/api/aikataulu?ryhma="+encodeURIComponent(ryhma)+"&luokka=8")
+                .then(function(r){ return r.json(); })
+                .then(function(dd){
+                  if (dd && dd.ok && tulevia(dd.tapahtumat) > 0){
+                    var info=document.getElementById("johdantoInfograafi8");
+                    var up=document.getElementById("lukuvuosiUpotus8");
+                    var f=document.getElementById("lukuvuosiFrame8");
+                    if(info) info.style.display="none";
+                    if(up) up.style.display="block";
+                    if(f && !f.getAttribute("src")) f.setAttribute("src","../sivut/lukuvuosi.html?embed=1&luokka=8");
+                  }
+                }).catch(function(){});
+            })();
+            window.addEventListener("message", function(e){
+              if (e.origin !== location.origin) return;
+              if (e.data && e.data.type === "lukuvuosi-korkeus" && e.data.korkeus){
+                var f=document.getElementById("lukuvuosiFrame8");
+                if (f) f.style.height = (parseInt(e.data.korkeus,10)+8)+"px";
+              }
+            });
+          </script>
         </section>
 
         <!-- 1. Koulutus -->
