@@ -41,10 +41,12 @@ body.ope-muokkaustila section.aihe-osio {
   background: #ede9fe !important;
 }
 
-/* Muokkaustilan paneeli — kelluva kortti sivun oikealla puolella */
+/* Muokkaustilan paneeli — kelluva kortti sivun vasemmalla puolella.
+   Vasemmalla, jotta se ei peitä osioiden siirto- ja lukituspainikkeita
+   (jotka ovat oikeassa reunassa). */
 .jarjestys-banneri {
   position: fixed;
-  right: 1rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 9999;
@@ -56,8 +58,10 @@ body.ope-muokkaustila section.aihe-osio {
   flex-direction: column;
   gap: 0;
   padding: 1rem 1.15rem;
-  background: #1f1147;
+  /* Tummanpetroli erottuu selvästi violetista navigaatiosta */
+  background: #0e3a53;
   color: #fff;
+  border: 2px solid #7dd3fc;
   border-radius: 0.9rem;
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
   font-size: 0.9rem;
@@ -147,8 +151,8 @@ body.ope-muokkaustila section.aihe-osio {
 /* Mobiili: alapalkiksi koko leveydeltä */
 @media (max-width: 640px) {
   .jarjestys-banneri {
-    right: 0.5rem;
     left: 0.5rem;
+    right: 0.5rem;
     width: auto;
     max-width: none;
     top: auto;
