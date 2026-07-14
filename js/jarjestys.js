@@ -221,7 +221,11 @@
         postServer({ toiminto: "rekisteroi", avain: pinU, koulukoodi: koulukoodi }).then(function (v) {
           if (v && v.ok && v.ryhmakoodi) {
             kirjoitaRaaka(LS_OPE_R, v.ryhmakoodi); kirjoitaRaaka(LS_OPE_A, pinU);
-            sulje(); kaynnistaMuokkaus(); julkaise();
+            // EI kutsuta julkaise() tässä: muuten muokkaustilaan tullessa
+            // näkyy heti tallennuskuittaus, vaikka opettaja ei ole tehnyt
+            // mitään muutoksia. Tallennus tapahtuu vasta "Tallenna oppilaille"
+            // -napista (kuten muissakin kirjautumispoluissa).
+            sulje(); kaynnistaMuokkaus();
           } else nayta("Ryhmän luonti epäonnistui.", "virhe");
         });
       } else {
