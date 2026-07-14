@@ -337,12 +337,12 @@ window.addEventListener("load", async function () {
       liveStatus.style.cssText =
         "min-height:1px;font-size:0.8rem;color:#059669;margin-top:4px;margin-bottom:8px;";
 
-      let autoSaveTimer;
+      // Luonnos tallentuu hiljaa selaimen muistiin, jotta teksti ei katoa
+      // sivun päivityksessä. EI näytetä "Tallennettu"-tekstiä kirjoittaessa,
+      // koska varsinainen tallennus tapahtuu vasta "Tallenna omalle koneelle"
+      // -napista (muuten oppilas luulee jo palauttaneensa tehtävän).
       summaryTA.addEventListener("input", function () {
         localStorage.setItem("digiopo_notes_" + id, summaryTA.value);
-        liveStatus.textContent = "✓ Tallennettu";
-        clearTimeout(autoSaveTimer);
-        autoSaveTimer = setTimeout(function () { liveStatus.textContent = ""; }, 2000);
       });
 
       summaryBox.appendChild(summaryTA);
@@ -376,6 +376,9 @@ window.addEventListener("load", async function () {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        liveStatus.textContent = "✓ Tallennettu tiedostoksi";
+        clearTimeout(liveStatus._t);
+        liveStatus._t = setTimeout(function () { liveStatus.textContent = ""; }, 4000);
       });
       nappiRivi.appendChild(lataaBtn);
 
