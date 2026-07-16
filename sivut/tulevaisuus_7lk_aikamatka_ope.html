@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opettajan ohje — Aikamatka tulevaisuuteen, 7. luokka | DigiOpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --violet: #5b21b6;
+    --violet-mid: #7c3aed;
+    --violet-light: #ede9fe;
+    --violet-pale: #faf5ff;
+    --violet-dark: #3b0764;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --amber-border: #fcd34d;
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --bg: #f9f7f4;
+    --white: #ffffff;
+    --border: rgba(91,33,182,0.12);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* Header */
+  .header {
+    background: var(--violet-dark);
+    color: white;
+    padding: 36px 32px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: rgba(124,58,237,0.25);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -32px; left: -5%; right: -5%;
+    height: 64px;
+    background: var(--bg);
+    border-radius: 50%;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 10px;
+  }
+  .header-title {
+    font-family: 'Lora', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .header-title em {
+    font-style: italic;
+    color: #c4b5fd;
+  }
+  .header-sub {
+    font-size: 14px;
+    opacity: 0.7;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+
+  /* Main */
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 0;
+  }
+
+  /* Miksi-kortti */
+  .miksi-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .miksi-card::before {
+    content: '"';
+    font-family: 'Lora', serif;
+    font-size: 80px;
+    color: var(--violet-light);
+    position: absolute;
+    top: 8px; left: 20px;
+    line-height: 1;
+  }
+  .miksi-card p {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.75;
+    color: var(--violet-dark);
+    padding-left: 8px;
+    margin-top: 16px;
+  }
+
+  /* Vaihe-kortit */
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--violet-mid);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .vaihe-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .vaihe-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .vaihe-num {
+    width: 44px; height: 44px;
+    background: var(--violet-light);
+    color: var(--violet);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .vaihe-content h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--violet-dark);
+    margin-bottom: 4px;
+  }
+  .vaihe-content .vaihe-meta {
+    font-size: 11px;
+    color: var(--violet-mid);
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+  .vaihe-content p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+  .vaihe-tip {
+    margin-top: 10px;
+    background: var(--violet-pale);
+    border-left: 3px solid var(--violet-mid);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--violet-dark);
+  }
+  .vaihe-tip strong {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    color: var(--violet-mid);
+    margin-bottom: 4px;
+  }
+
+  /* Seuraava tunti -kortti */
+  .seuraava-card {
+    background: var(--amber-light);
+    border: 1.5px solid var(--amber-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  .seuraava-card h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--amber);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .seuraava-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #78350f;
+    margin-bottom: 12px;
+  }
+  .seuraava-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .seuraava-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: #78350f;
+    line-height: 1.55;
+  }
+  .seuraava-step-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    background: #fef3c7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+
+  /* Muistutus-kortti */
+  .muistutus-card {
+    background: var(--teal-light);
+    border: 1.5px solid rgba(15,110,86,0.2);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  .muistutus-card h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--teal);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .muistutus-card p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #064e3b;
+  }
+  .muistutus-card p + p { margin-top: 10px; }
+
+  /* Tulosta-nappi */
+  .print-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn-print {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--violet-mid);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-print:hover { background: var(--violet-dark); }
+
+  @media print {
+    .print-bar { display: none; }
+    .header { background: #3b0764 !important; -webkit-print-color-adjust: exact; }
+    body { background: white; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .miksi-card  { animation: fadeUp 0.4s ease both; }
+  .vaihe-card:nth-child(1) { animation: fadeUp 0.4s 0.1s ease both; }
+  .vaihe-card:nth-child(2) { animation: fadeUp 0.4s 0.18s ease both; }
+  .vaihe-card:nth-child(3) { animation: fadeUp 0.4s 0.26s ease both; }
+  .vaihe-card:nth-child(4) { animation: fadeUp 0.4s 0.32s ease both; }
+  .vaihe-card:nth-child(5) { animation: fadeUp 0.4s 0.38s ease both; }
+  .seuraava-card { animation: fadeUp 0.4s 0.32s ease both; }
+  .muistutus-card { animation: fadeUp 0.4s 0.38s ease both; }
+
+  /* Tieteellinen pohja + lähteet */
+  .tiede-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    margin-bottom: 20px;
+  }
+  .tiede-card > p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .tiede-card > p:last-child { margin-bottom: 0; }
+  .tiede-perusta { display: flex; flex-direction: column; gap: 12px; margin: 4px 0 4px; }
+  .tiede-kohta {
+    background: var(--violet-pale);
+    border-left: 3px solid var(--violet-mid);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+  }
+  .tiede-kohta h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--violet-dark);
+    margin-bottom: 4px;
+  }
+  .tiede-kohta p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+  .lahteet-lista {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .lahteet-lista li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    padding-left: 16px;
+    position: relative;
+  }
+  .lahteet-lista li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--violet-mid);
+  }
+  .lahteet-lista a { color: var(--violet); text-decoration: underline; }
+  .lahteet-lista a:hover { color: var(--violet-dark); }
+</style>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="manifest" href="../manifest.json" />
+    <meta name="theme-color" content="#7c3aed" />
+    <script src="../js/lisenssiportti.js"></script>
+    <script src="../js/seuranta.js" defer></script>
+
+
+
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">🎓 DigiOpo · Opettajan ohje</div>
+  <div class="header-eyebrow">7. luokka · Selviytymiskeino 4</div>
+  <div class="header-title">Aikamatka <em>tulevaisuuteen</em></div>
+  <div class="header-sub">Pedagoginen ohje Robon kanssa tehtävään aikamatka-tehtävään. Oppilas matkaa vuoteen 2045, tekee valintoja ja kirjoittaa omista unelmistaan.</div>
+</div>
+
+<div class="main">
+
+  <!-- Miksi -->
+  <div class="miksi-card">
+    <p>Tulevaisuuden kuvittelu on taito — ei lahjakkuutta. Tämä tehtävä harjoittelee juuri sitä: mitä teen, kun en tiedä mitä tehdä? Se on 7. luokan viimeinen selviytymiskeino, ja se kokoaa yhteen vuoden aikana opitun: oman oppimistavan, vahvuudet ja rohkeuden kuvitella. Oppilas tekee tehtävän itsenäisesti Robon kanssa, selkokielellä.</p>
+  </div>
+
+  <!-- Näin ohjaat -->
+  <div class="section-label">Näin ohjaat tunnilla</div>
+
+  <div class="miksi-card" style="font-style:normal;">
+    <p style="font-family:'DM Sans',sans-serif; font-style:normal; color:var(--text-muted); padding-left:0; margin-top:0;">
+      Tehtävä on itsenäinen ja etenee omaan tahtiin (n. 10–15 min). Avaa se luokassa <strong>Aikakone</strong>-kortista 7. luokan sivulla. Oppilas voi tehdä sen omalla laitteella tai yhdessä parin kanssa. Lopuksi oppilas tallentaa koonnin ja palauttaa sen sinulle (esimerkiksi Classroomiin). Tehtävää ei arvioida oikein–väärin; tavoite on rohkaista pohtimaan.
+    </p>
+  </div>
+
+  <!-- Vaiheet -->
+  <div class="section-label">Matkan viisi pysähdystä</div>
+
+  <div class="vaihe-grid">
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">1</div>
+      <div class="vaihe-content">
+        <h3>Aikakone käynnistyy — tässä hetkessä</h3>
+        <div class="vaihe-meta">2–3 min · ankkurointi nykyhetkeen</div>
+        <p>Robo vie oppilaan vuoteen 2045. Ennen lähtöä oppilas kirjoittaa, mikä on hänelle tärkeää juuri nyt (kaverit, harrastus, lemmikki, koulu).</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Nykyhetki on tarkoituksella ensin: se tekee tulevaisuudesta turvallisen kuvitella. Anna kirjoittaa lyhyesti, ei tarvitse olla valmista.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">2</div>
+      <div class="vaihe-content">
+        <h3>Pysähdys 1: Tulevaisuuden arki</h3>
+        <div class="vaihe-meta">2–3 min · uteliaisuus · ei oikeaa vastausta</div>
+        <p>Oppilas valitsee, mikä tulevaisuuden uusi asia kiinnostaa eniten (robotit, puhtaampi luonto, avaruus, pelit) ja kirjoittaa lyhyesti miksi.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Kaikki valinnat ovat yhtä hyviä. Jos oppilas jumittuu, kysy: "Mikä näistä tuntuu kaikkein jännittävimmältä?"
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">3</div>
+      <div class="vaihe-content">
+        <h3>Pysähdys 2: Tulevaisuuden työt</h3>
+        <div class="vaihe-meta">3–4 min · toimijuus · oman ammatin keksiminen</div>
+        <p>Oppilas valitsee, millaista työtä haluaisi kokeilla, ja keksii oman tulevaisuuden ammatin — sellaisen, jota ei vielä ole olemassa.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Korosta viestiä: iso osa tulevaisuuden töistä on vielä keksimättä, joten kukaan ei voi vastata "väärin". Villit ideat ovat sallittuja ja toivottuja.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">4</div>
+      <div class="vaihe-content">
+        <h3>Pysähdys 3: Sinun unelmasi</h3>
+        <div class="vaihe-meta">2–3 min · suunta · pieni askel jo nyt</div>
+        <p>Oppilas kirjoittaa yhden unelman ja yhden pienen askeleen, jonka voi tehdä jo nyt sitä kohti. "Unelma ei ole lupaus — se on suunta."</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Pieni askel on tärkein kohta: se muuttaa haaveen toiminnaksi. Auta tarvittaessa keksimään konkreettinen, tänään mahdollinen askel.
+        </div>
+      </div>
+    </div>
+
+    <div class="vaihe-card">
+      <div class="vaihe-num">5</div>
+      <div class="vaihe-content">
+        <h3>Koonti ja palautus</h3>
+        <div class="vaihe-meta">1–2 min · tallennus · palautus opolle</div>
+        <p>Oppilas näkee koonnin vastauksistaan, tallentaa sen tiedostoksi ja palauttaa sinulle. Koontia voi käyttää yhteisen purun pohjana.</p>
+        <div class="vaihe-tip">
+          <strong>Ohjaajan muistutus</strong>
+          Muistuta tallentamisesta ja palautuksesta (esim. Classroom). Koonti on oppilaan oma — kysy lupa, jos haluat lukea sen ääneen.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Seuraava tunti -->
+  <div class="section-label">Yhteinen purku</div>
+
+  <div class="seuraava-card">
+    <h3>💬 Jaetaan unelmat</h3>
+    <p>Kun jokainen on tehnyt aikamatkan, kootaan ajatukset yhteen. Tarkoitus ei ole arvioida vaan kuunnella: tulevaisuus näyttää erilaiselta jokaisen silmin.</p>
+    <div class="seuraava-steps">
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🗣️</span>
+        <span>Jokainen kertoo halutessaan yhden tulevaisuuden työn tai unelman</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🤝</span>
+        <span>Etsitään yhtäläisyyksiä: monella on samoja toiveita, vaikka sanat eroavat</span>
+      </div>
+      <div class="seuraava-step">
+        <span class="seuraava-step-icon">🌱</span>
+        <span>Lopuksi: mikä pieni askel voisi olla yhteinen koko luokalle?</span>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:13px; font-style:italic;">Vapaaehtoisuus tekee jakamisesta turvallista.</p>
+  </div>
+
+  <!-- Eriyttäminen -->
+  <div class="section-label">Eriyttäminen</div>
+
+  <div class="miksi-card" style="font-style:normal;">
+    <p style="font-family:'DM Sans',sans-serif; font-style:normal; color:var(--text-muted); padding-left:0; margin-top:0;">
+      <strong>Tukea tarvitsevalle:</strong> tarina on selkokielellä ja etenee pienin askelin; valinnat voi tehdä myös ilman kirjoittamista. Pari- tai pienryhmätyö madaltaa kynnystä.
+      <br><br>
+      <strong>Lisähaastetta:</strong> pyydä perustelemaan valinnat tarkemmin, keksimään useampi tulevaisuuden ammatti tai kirjoittamaan lyhyt tarina päivästä vuonna 2045.
+    </p>
+  </div>
+
+  <!-- Tieteellinen pohja -->
+  <div class="section-label">Tieteellinen pohja</div>
+
+  <div class="tiede-card">
+    <p>Tehtävä ei ole ennustamista vaan <strong>tulevaisuusajattelun</strong> harjoittelua: kykyä kuvitella erilaisia mahdollisia tulevaisuuksia ja nähdä itsensä osana niitä. Rakenne nojaa muutamaan vakiintuneeseen kasvatustieteen ja psykologian ajatukseen:</p>
+
+    <div class="tiede-perusta">
+      <div class="tiede-kohta">
+        <h4>Mahdolliset minät (possible selves)</h4>
+        <p>Kuva omasta tulevasta itsestä ohjaa motivaatiota ja valintoja jo nyt. Kun nuori kuvittelee, kuka voisi olla, hän saa suunnan ja syyn toimia (Markus &amp; Nurius, 1986).</p>
+      </div>
+      <div class="tiede-kohta">
+        <h4>Toimijuus ja ennakointi</h4>
+        <p>Oppiminen vahvistuu, kun oppilas ennakoi, toimii ja pohtii. Tehtävän "pieni askel jo nyt" nojaa tähän ennakointi–toiminta–reflektio-kehään ja oppilaan toimijuuteen (OECD, Learning Compass 2030).</p>
+      </div>
+      <div class="tiede-kohta">
+        <h4>Tulevaisuuslukutaito (futures literacy)</h4>
+        <p>Taitoa kuvitella ja kyseenalaistaa tulevaisuuksia voi harjoitella. UNESCO pitää sitä 2000-luvun perustaitona epävarmuuden keskellä (Miller / UNESCO).</p>
+      </div>
+      <div class="tiede-kohta">
+        <h4>Toivo ja kasvun ajattelutapa</h4>
+        <p>Toivo rakentuu tavoitteesta, poluista ja uskosta omaan toimintaan (Snyder). Ajatus "haaveilu on taito, ei lahjakkuutta" nojaa kasvun ajattelutapaan (Dweck): taidot kehittyvät harjoittelemalla.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lähteet -->
+  <div class="section-label">Lähteet</div>
+
+  <div class="tiede-card">
+    <ul class="lahteet-lista">
+      <li>Markus, H. &amp; Nurius, P. (1986). Possible selves. <em>American Psychologist, 41</em>(9), 954–969. <a href="https://doi.org/10.1037/0003-066X.41.9.954" target="_blank" rel="noopener">doi.org/10.1037/0003-066X.41.9.954</a></li>
+      <li>OECD (2019). <em>OECD Future of Education and Skills 2030 — Learning Compass 2030</em> (student agency; anticipation–action–reflection cycle). <a href="https://www.oecd.org/education/2030-project/" target="_blank" rel="noopener">oecd.org/education/2030-project</a></li>
+      <li>Miller, R. (toim.) (2018). <em>Transforming the Future: Anticipation in the 21st Century</em> — futures literacy. UNESCO / Routledge. <a href="https://www.unesco.org/en/futures-literacy" target="_blank" rel="noopener">unesco.org/en/futures-literacy</a></li>
+      <li>Snyder, C. R. (2002). Hope theory: Rainbows in the mind. <em>Psychological Inquiry, 13</em>(4), 249–275.</li>
+      <li>Dweck, C. S. (2006). <em>Mindset: The New Psychology of Success</em> (kasvun ajattelutapa). New York: Random House.</li>
+    </ul>
+  </div>
+
+  <!-- Muistutus -->
+  <div class="section-label">Yksi muistutus</div>
+
+  <div class="muistutus-card">
+    <h3>🌱 Sinun ei tarvitse tietää vastausta</h3>
+    <p>Tähän tehtävään ei ole oikeaa vastausta — ei sinulla eikä oppilailla. Se on tarkoitus.</p>
+    <p>Kun oppilas huomaa, että aikuinenkaan ei tiedä miltä tulevaisuus näyttää, hän ymmärtää että haaveilu ja keksiminen eivät ole lahjakkuutta. Ne ovat harjoiteltavia taitoja — joita hän juuri harjoitteli.</p>
+  </div>
+
+</div>
+
+<!-- Tulosta-palkki -->
+<div class="print-bar">
+  <button class="btn-print" onclick="window.print()">🖨 Tulosta ohje</button>
+</div>
+
+</body>
+</html>
