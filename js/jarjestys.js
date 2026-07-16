@@ -39,6 +39,20 @@
   function lueRaaka(a) { try { return localStorage.getItem(a); } catch (e) { return null; } }
   function kirjoitaRaaka(a, v) { try { localStorage.setItem(a, v); } catch (e) {} }
 
+  // Kirjaa ryhmäkoodi paikalliseen "omat ryhmät" -listaan (ei PIN:iä). Sama
+  // lista näkyy lukuvuoden aikataulun muokkaustilassa (aikataulu_ope.html).
+  function listaanRyhma(koodi) {
+    if (!koodi) return;
+    try {
+      var l = JSON.parse(localStorage.getItem("digiopo-ryhmalista") || "[]");
+      if (!Array.isArray(l)) l = [];
+      if (!l.some(function (r) { return r && r.koodi === koodi; })) {
+        l.push({ koodi: koodi, nimi: "" });
+        localStorage.setItem("digiopo-ryhmalista", JSON.stringify(l));
+      }
+    } catch (e) {}
+  }
+
   function yhdista(tallennettu) {
     if (!Array.isArray(tallennettu)) return null;
     var nyt = jarjestysNyt();
@@ -233,7 +247,7 @@
         try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
         postServer({ toiminto: "rekisteroi", avain: pinU, koulukoodi: koulukoodi }).then(function (v) {
           if (v && v.ok && v.ryhmakoodi) {
-            kirjoitaRaaka(LS_OPE_R, v.ryhmakoodi); kirjoitaRaaka(LS_OPE_A, pinU);
+            kirjoitaRaaka(LS_OPE_R, v.ryhmakoodi); kirjoitaRaaka(LS_OPE_A, pinU); listaanRyhma(v.ryhmakoodi);
             // EI kutsuta julkaise() tässä: muuten muokkaustilaan tullessa
             // näkyy heti tallennuskuittaus, vaikka opettaja ei ole tehnyt
             // mitään muutoksia. Tallennus tapahtuu vasta "Tallenna oppilaille"
@@ -248,7 +262,7 @@
         if (pinL.length < 4) return nayta("Anna PIN.", "virhe");
         nayta("Tarkistetaan…");
         postServer({ toiminto: "tarkista", ryhma: koodi, avain: pinL }).then(function (v) {
-          if (v && v.ok) { kirjoitaRaaka(LS_OPE_R, koodi); kirjoitaRaaka(LS_OPE_A, pinL); sulje(); kaynnistaMuokkaus(); }
+          if (v && v.ok) { kirjoitaRaaka(LS_OPE_R, koodi); kirjoitaRaaka(LS_OPE_A, pinL); listaanRyhma(koodi); sulje(); kaynnistaMuokkaus(); }
           else nayta(v && v.virhe === "avain_ei_tasmaa" ? "Väärä koodi tai PIN." : "Tarkistus epäonnistui.", "virhe");
         });
       }

@@ -48,8 +48,6 @@
   .nappi.vaara{background:#fff;color:#a32d2d;border:1.5px solid #e0a3a3}
   .nappi:disabled{opacity:.5;cursor:not-allowed}
 
-  .jakolinkki{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
-  .jakolinkki code{flex:1;min-width:180px;background:#f4efe2;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.82rem;word-break:break-all}
 
   .tapahtumat{list-style:none;margin:14px 0 0;padding:0}
   .tap-rivi{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;border-left:5px solid var(--muu)}
@@ -63,6 +61,13 @@
   .tap-rivi .toiminnot{display:flex;gap:6px;flex:none}
   .pikkunappi{background:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:.8rem;cursor:pointer;font-family:inherit;color:var(--muted)}
   .pikkunappi.poista{color:#a32d2d;border-color:#e0a3a3}
+
+  .rlista{width:100%;border-collapse:collapse;margin-top:8px}
+  .rlista td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .rlista .rnimi{width:100%;padding:6px 8px;font-size:.9rem}
+  .rlista .rkoodi{background:#f4efe2;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;color:var(--text);cursor:pointer;white-space:nowrap}
+  .rlista .rkoodi:hover{border-color:var(--teal)}
+  .rlista .rpoista{background:none;border:none;color:#a32d2d;font-size:1.15rem;cursor:pointer;padding:2px 8px;line-height:1}
 
   .laskuri{font-size:.82rem;color:var(--muted);text-align:right;margin-top:6px}
   .ilmoitus{font-size:.9rem;font-weight:600;min-height:1.2em;margin:8px 0 0}
@@ -109,20 +114,20 @@
     </div>
 
     <p class="ilmoitus" id="kirjIlmoitus" role="status" aria-live="polite"></p>
+
+    <div id="ryhmaLista" class="piilo">
+      <div style="font-weight:600;font-size:.9rem;margin:18px 0 4px;border-top:1px solid var(--line);padding-top:14px">Omat ryhmät (tällä laitteella)</div>
+      <p style="font-size:.8rem;color:var(--muted);margin:0">Napauta ryhmäkoodia täyttääksesi sen kirjautumiseen — syötä sitten PIN. Voit nimetä ryhmät (esim. 7A). PIN:iä ei tallenneta.</p>
+      <table class="rlista"><tbody id="ryhmaListaBody"></tbody></table>
+    </div>
   </div>
 
   <!-- ── Editori ── -->
   <div id="editori" class="piilo">
 
-    <div class="kortti">
-      <h2>Ryhmä <span id="ryhmaNimi"></span></h2>
-      <p>Jaa tämä linkki oppilaille — he näkevät aina ajantasaisen aikataulun:</p>
-      <div class="jakolinkki">
-        <code id="jakolinkkiTeksti"></code>
-        <button class="nappi toissij" id="kopioiBtn" type="button">Kopioi</button>
-      </div>
-      <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">ℹ️ Oppilaat näkevät valitsemasi luokan aikataulun luokkasivulla (kun tulevia tapahtumia on) sekä <strong>"Oman koulun lukuvuosi"</strong> -linkistä ja yllä olevasta jakolinkistä.</p>
-      <p style="margin-top:12px"><button class="pikkunappi" id="ulosBtn" type="button">Kirjaudu ulos</button></p>
+    <div class="kortti" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px">
+      <h2 style="margin:0">Ryhmä <span id="ryhmaNimi"></span></h2>
+      <button class="pikkunappi" id="ulosBtn" type="button">Kirjaudu ulos</button>
     </div>
 
     <div class="kortti" style="padding:14px 18px;">
@@ -208,6 +213,52 @@
 
   function naytaIlmo(el, teksti, laji){ el.textContent = teksti || ""; el.className = "ilmoitus" + (laji ? " "+laji : ""); }
 
+  // ── Omat ryhmät (paikallinen lista, ei PIN:iä) ──
+  var LS_LISTA = "digiopo-ryhmalista";
+  function lueLista(){ try { var l = JSON.parse(localStorage.getItem(LS_LISTA) || "[]"); return Array.isArray(l) ? l : []; } catch(e){ return []; } }
+  function tallennaLista(l){ try { localStorage.setItem(LS_LISTA, JSON.stringify(l)); } catch(e){} }
+  function lisaaListaan(koodi){
+    if (!koodi) return;
+    var l = lueLista();
+    if (!l.some(function(r){ return r && r.koodi === koodi; })){ l.push({ koodi:koodi, nimi:"" }); tallennaLista(l); }
+  }
+  function renderLista(){
+    var l = lueLista(), lohko = $("ryhmaLista"), body = $("ryhmaListaBody");
+    if (!l.length){ lohko.classList.add("piilo"); body.innerHTML = ""; return; }
+    lohko.classList.remove("piilo");
+    body.innerHTML = l.map(function(r){
+      var k = turva(r.koodi), n = turva(r.nimi || "");
+      return '<tr>' +
+        '<td><input class="rnimi" data-koodi="'+k+'" value="'+n+'" placeholder="Nimi (esim. 7A)" maxlength="40"></td>' +
+        '<td><button type="button" class="rkoodi" data-koodi="'+k+'">'+k+'</button></td>' +
+        '<td><button type="button" class="rpoista" data-koodi="'+k+'" title="Poista listalta">×</button></td>' +
+      '</tr>';
+    }).join("");
+  }
+  $("ryhmaListaBody").addEventListener("click", function(e){
+    var kBtn = e.target.closest && e.target.closest(".rkoodi");
+    if (kBtn){
+      $("tabOn").click();
+      $("koodi").value = kBtn.getAttribute("data-koodi");
+      $("pin").value = ""; $("pin").focus();
+      return;
+    }
+    var pBtn = e.target.closest && e.target.closest(".rpoista");
+    if (pBtn){
+      var koodi = pBtn.getAttribute("data-koodi");
+      if (!window.confirm("Poistetaanko ryhmä " + koodi + " tältä listalta?\n\nRyhmä ja sen tiedot säilyvät palvelimella — tämä poistaa vain rivin tästä laitteesta.")) return;
+      tallennaLista(lueLista().filter(function(r){ return r.koodi !== koodi; }));
+      renderLista();
+    }
+  });
+  $("ryhmaListaBody").addEventListener("change", function(e){
+    var inp = e.target.closest && e.target.closest(".rnimi");
+    if (!inp) return;
+    var koodi = inp.getAttribute("data-koodi"), l = lueLista();
+    l.forEach(function(r){ if (r.koodi === koodi) r.nimi = inp.value.trim().slice(0,40); });
+    tallennaLista(l);
+  });
+
   // ── Kirjautuminen ──
   $("tabOn").addEventListener("click", function(){
     $("tabOn").classList.add("aktiivinen"); $("tabUusi").classList.remove("aktiivinen");
@@ -243,18 +294,12 @@
   });
 
   // ── Editori ──
-  function paivitaJakolinkki(){
-    var linkki = location.origin + "/sivut/lukuvuosi.html?ryhma=" + encodeURIComponent(ryhma || "") + "&luokka=" + luokka;
-    $("jakolinkkiTeksti").textContent = linkki;
-  }
-
   function asetaLuokka(l){
     luokka = l;
     Array.prototype.forEach.call($("luokkaValinta").querySelectorAll("button"), function(b){
       if (b.getAttribute("data-luokka") === l) b.classList.add("aktiivinen");
       else b.classList.remove("aktiivinen");
     });
-    paivitaJakolinkki();
   }
 
   // Luokkavälilehtien kytkentä
@@ -269,6 +314,7 @@
 
   function avaaEditori(k, p){
     ryhma = k; avain = p;
+    lisaaListaan(k); renderLista(); // kirjaa ryhmä paikalliseen listaan
     $("kirjautuminen").classList.add("piilo");
     $("editori").classList.remove("piilo");
     $("ryhmaNimi").textContent = k;
@@ -281,14 +327,6 @@
     ryhma = null; avain = null;
     $("editori").classList.add("piilo"); $("kirjautuminen").classList.remove("piilo");
     naytaIlmo($("kirjIlmoitus"),"Kirjauduttu ulos.","ok");
-  });
-
-  $("kopioiBtn").addEventListener("click", function(){
-    var t = $("jakolinkkiTeksti").textContent;
-    if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){
-      var b = $("kopioiBtn"); var vanha = b.textContent; b.textContent = "Kopioitu ✓";
-      setTimeout(function(){ b.textContent = vanha; }, 1500);
-    });
   });
 
   function lataaTapahtumat(){
@@ -391,6 +429,7 @@
   }
 
   // ── Käynnistys: jos laitteella on jo ryhmä + avain (esim. järjestyksestä), avaa suoraan ──
+  renderLista(); // näytä omat ryhmät heti kirjautumisnäkymässä
   var tallR = lueRaaka(LS_OPE_R), tallA = lueRaaka(LS_OPE_A);
   if (tallR && tallA){
     naytaIlmo($("kirjIlmoitus"),"Tarkistetaan tallennettu ryhmä…");
