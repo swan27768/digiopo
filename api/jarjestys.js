@@ -78,7 +78,11 @@ async function haeRyhma(ryhmakoodi) {
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
+  // Sama kuin admin-tilastot/admin-viesti: sallitaan kaikki alkuperät, jotta
+  // paikallinen admin-paneeli (file://) voi kutsua admin_nollaa_pin-toimintoa.
+  // Kirjoitustoiminnot on suojattu PIN:llä tai x-admin-key:llä, ei evästeellä,
+  // joten '*' ei avaa CSRF-riskiä (ei ambient-tunnistautumista).
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-key');
   if (req.method === 'OPTIONS') return res.status(204).end();
