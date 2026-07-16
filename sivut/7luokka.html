@@ -28,7 +28,30 @@
 
     <style>
       /* 7. luokka — teema D: pehmeä violetti/pinkki */
-    
+
+      /* ── Aikakone-hero (Selviytymiskeino 4) — design C2 ── */
+      .ak-hero{position:relative;overflow:hidden;border-radius:20px;
+        background:linear-gradient(150deg,#4c1d95,#6d28d9 60%,#7c3aed);
+        padding:0;box-shadow:0 16px 36px -14px rgba(76,29,149,.45);
+        width:100%;border:none;text-align:left;cursor:pointer;color:#fff;
+        font-family:inherit;display:block;transition:transform .15s, box-shadow .15s;}
+      .ak-hero:hover{transform:translateY(-2px);box-shadow:0 22px 44px -14px rgba(76,29,149,.55);}
+      .ak-hero:focus-visible{outline:3px solid #fbbf24;outline-offset:3px;}
+      .ak-hero .ak-big2045{position:absolute;right:-14px;top:-26px;font-size:8rem;font-weight:900;color:rgba(255,255,255,.10);line-height:1;letter-spacing:-.02em;pointer-events:none;}
+      .ak-hero .ak-top{padding:22px 22px 0;position:relative;z-index:1;}
+      .ak-hero .ak-badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fde68a;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:50px;}
+      .ak-hero .ak-title{color:#fff;font-size:1.55rem;font-weight:900;margin:14px 0 8px;line-height:1.1;}
+      .ak-hero .ak-bubble{background:#fff;border-radius:14px;border:2.5px solid #3b0764;padding:12px 14px;font-size:.88rem;color:#3b0764;font-weight:600;position:relative;margin:0 0 18px;max-width:78%;}
+      .ak-hero .ak-bubble::after{content:"";position:absolute;left:22px;bottom:-9px;width:16px;height:16px;background:#fff;border-right:2.5px solid #3b0764;border-bottom:2.5px solid #3b0764;transform:rotate(45deg);}
+      .ak-hero .ak-robo{position:absolute;right:8px;bottom:0;width:150px;z-index:0;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));pointer-events:none;}
+      .ak-hero .ak-cta{position:relative;z-index:1;margin:0 22px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#3b0764;font-weight:800;border-radius:12px;padding:13px 18px;font-size:.95rem;}
+      .ak-hero .ak-cta-icon{transition:transform .3s;}
+      @media (max-width:520px){
+        .ak-hero .ak-robo{width:96px;opacity:.9;}
+        .ak-hero .ak-bubble{max-width:100%;}
+        .ak-hero .ak-big2045{font-size:6rem;}
+        .ak-hero .ak-title{font-size:1.3rem;}
+      }
     </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
@@ -1376,31 +1399,28 @@
 
             <!-- Klikkaa auki -nappi -->
             <div style="margin-top: 24px;">
-              <button
+              <div
                 onclick="toggleTulevaisuusTehtava()"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTulevaisuusTehtava();}"
                 id="tulevaisuus-toggle-btn"
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 10px;
-                  background: linear-gradient(135deg, #6d28d9, #7c3aed);
-                  color: white;
-                  border: none;
-                  border-radius: 12px;
-                  padding: 14px 24px;
-                  font-size: 1rem;
-                  font-weight: 600;
-                  cursor: pointer;
-                  width: 100%;
-                  justify-content: space-between;
-                  transition: all 0.2s;
-                "
+                class="ak-hero"
+                role="button"
+                tabindex="0"
                 aria-expanded="false"
                 aria-controls="tulevaisuus-tehtava-sisalto"
               >
-                <span>📋 Avaa Tulevaisuus-tehtävä</span>
-                <span id="tulevaisuus-toggle-icon" style="font-size:1.2rem; transition: transform 0.3s;">▼</span>
-              </button>
+                <span class="ak-big2045" aria-hidden="true">2045</span>
+                <div class="ak-top">
+                  <span class="ak-badge">Tehtävä · seikkailu · 10–15 min</span>
+                  <div class="ak-title">Aikamatka<br>tulevaisuuteen</div>
+                  <div class="ak-bubble">Löysin aikakoneen! Tuletko mukaan vuoteen 2045?</div>
+                </div>
+                <img class="ak-robo" src="../images/robo_maskotti_7lk_yllattyy.webp" alt="" aria-hidden="true" width="300" height="300" loading="lazy">
+                <div class="ak-cta">
+                  <span id="tulevaisuus-toggle-text">Avaa Aikakone</span>
+                  <span id="tulevaisuus-toggle-icon" class="ak-cta-icon" style="font-size:1.2rem;">▼</span>
+                </div>
+              </div>
 
               <!-- Tehtävän sisältö — piilotettu aluksi -->
               <div
@@ -2148,17 +2168,18 @@
         var sisalto = document.getElementById('tulevaisuus-tehtava-sisalto');
         var ikoni = document.getElementById('tulevaisuus-toggle-icon');
         var nappi = document.getElementById('tulevaisuus-toggle-btn');
+        var teksti = document.getElementById('tulevaisuus-toggle-text');
         var auki = sisalto.style.display === 'none' || sisalto.style.display === '';
         if (auki) {
           sisalto.style.display = 'block';
           ikoni.style.transform = 'rotate(180deg)';
           nappi.setAttribute('aria-expanded', 'true');
-          nappi.querySelector('span').textContent = '📋 Sulje Tulevaisuus-tehtävä';
+          if (teksti) teksti.textContent = 'Sulje Aikakone';
         } else {
           sisalto.style.display = 'none';
           ikoni.style.transform = 'rotate(0deg)';
           nappi.setAttribute('aria-expanded', 'false');
-          nappi.querySelector('span').textContent = '📋 Avaa Tulevaisuus-tehtävä';
+          if (teksti) teksti.textContent = 'Avaa Aikakone';
         }
       }
 
