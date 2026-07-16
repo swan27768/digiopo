@@ -8,15 +8,18 @@
 //      → { ok: true, ryhmakoodi: "7A-K3M9" }                 (luo ryhmän)
 //   { toiminto: "tallenna", ryhma, avain, luokka, jarjestys }
 //      → { ok: true }                                        (vaatii avaimen)
+//   { toiminto: "admin_nollaa_pin", ryhma }   + header x-admin-key: <ADMIN_DASHBOARD_KEY>
+//      → { ok: true, ryhmakoodi, uusiPin }    (vaihtaa PIN:n, järjestys säilyy)
 //
 // Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
 
 import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
-import { haeIp } from './_lib/turva.js';
+import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const ADMIN_DASHBOARD_KEY = process.env.ADMIN_DASHBOARD_KEY; // sama admin-avain kuin admin-tilastoissa
 const PEPPER = process.env.JARJESTYS_PEPPER || ''; // valinnainen lisäsuola avainhashille
 
 const SALLITUT_LUOKAT = ['7', '8', '9'];
@@ -77,7 +80,7 @@ async function haeRyhma(ryhmakoodi) {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-key');
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
@@ -143,6 +146,37 @@ export default async function handler(req, res) {
   }
 
   const toiminto = body.toiminto;
+
+  // ── ADMIN: nollaa ryhmän PIN (x-admin-key-suojattu, kuten admin-tilastot) ──
+  // Opettaja unohtaa PIN:n → admin ajaa yhden kutsun. Ryhmäkoodi ja järjestykset
+  // säilyvät ennallaan, vain avain_hash vaihtuu. Palauttaa uuden PIN:n opettajalle.
+  if (toiminto === 'admin_nollaa_pin') {
+    if (!ADMIN_DASHBOARD_KEY || !vertaaSalaisuus(req.headers['x-admin-key'] || '', ADMIN_DASHBOARD_KEY)) {
+      return res.status(403).json({ ok: false, virhe: 'ei_oikeutta' });
+    }
+    const ryhma = String(body.ryhma || '').trim().toUpperCase();
+    if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
+      return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+    }
+    try {
+      if (!(await haeRyhma(ryhma))) {
+        return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
+      }
+      const uusiPin = arvoRyhmakoodi().replace('-', ''); // 7 merkkiä, ei sekoittuvia
+      const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ avain_hash: hashAvain(uusiPin) }),
+      });
+      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+      return res.status(200).json({ ok: true, ryhmakoodi: ryhma, uusiPin });
+    } catch (err) {
+      console.error('jarjestys admin_nollaa_pin:', err);
+      await kirjaaVirhe('jarjestys admin_nollaa_pin', err);
+      return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
+    }
+  }
+
   const avain = String(body.avain || '');
   if (avain.length < 4 || avain.length > 64) {
     return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
@@ -151,6 +185,12 @@ export default async function handler(req, res) {
   try {
     // ── REKISTERÖI: luo uusi opetusryhmä ──
     if (toiminto === 'rekisteroi') {
+      // Uudet PIN:it vaativat väh. 6 merkkiä (suoja oppilaiden arvailua vastaan).
+      // Vanhojen ryhmien tarkistus (tarkista/tallenna) jää sallivaksi, jottei
+      // ketään lukita ulos.
+      if (avain.length < 6) {
+        return res.status(400).json({ ok: false, virhe: 'avain_liian_lyhyt' });
+      }
       const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
       const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) : null;
       const avain_hash = hashAvain(avain);

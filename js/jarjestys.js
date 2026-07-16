@@ -214,7 +214,7 @@
 
       if (aktiiviUusi) {
         var pinU = overlay.querySelector(".portti-pin-uusi").value.trim();
-        if (pinU.length < 4) return nayta("Valitse PIN (vähintään 4 merkkiä).", "virhe");
+        if (pinU.length < 6) return nayta("Valitse PIN (vähintään 6 numeroa).", "virhe");
         nayta("Luodaan ryhmää…");
         var koulukoodi = null;
         try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
@@ -262,8 +262,8 @@
         '<button type="button" class="portti-moodi" data-mode="liity">Minulla on jo ryhmä</button>' +
       '</div>' +
       '<div class="portti-uusi">' +
-        '<p>Valitse salainen PIN. Se luo jakoryhmän ja toimii jatkossa muokkaustilan avaimena. Älä jaa sitä oppilaille.</p>' +
-        '<input class="portti-pin-uusi" type="password" inputmode="numeric" placeholder="Valitse PIN (väh. 4 merkkiä)" autocomplete="off">' +
+        '<p>Valitse salainen PIN (väh. 6 numeroa). Se luo jakoryhmän ja toimii jatkossa muokkaustilan avaimena. Älä jaa sitä oppilaille äläkä käytä arvattavaa (esim. 123456 tai syntymävuosi).</p>' +
+        '<input class="portti-pin-uusi" type="password" inputmode="numeric" placeholder="Valitse PIN (väh. 6 numeroa)" autocomplete="off">' +
       '</div>' +
       '<div class="portti-liity" hidden>' +
         '<p>Toisella laitteella jo luotu ryhmä? Anna ryhmäkoodi ja PIN.</p>' +
