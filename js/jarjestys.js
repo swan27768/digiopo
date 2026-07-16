@@ -182,6 +182,19 @@
     var viesti = overlay.querySelector(".portti-viesti");
     function nayta(t, lk) { viesti.textContent = t; viesti.className = "portti-viesti" + (lk ? " " + lk : ""); }
 
+    // "Vaihda ryhmä / luo uusi": unohtaa tältä laitteelta muistetun ryhmän ja
+    // avaa portin uudelleen luonti-/liittymisnäkymässä (ryhmä ja sen järjestys
+    // säilyvät palvelimella — tämä ei poista mitään serveriltä).
+    var vaihda = overlay.querySelector(".portti-vaihda");
+    if (vaihda) {
+      vaihda.addEventListener("click", function (e) {
+        e.preventDefault();
+        try { localStorage.removeItem(LS_OPE_R); localStorage.removeItem(LS_OPE_A); } catch (e2) {}
+        sulje();
+        avaaPinPortti();
+      });
+    }
+
     // Tilanvaihto uudelle/tunnetulle laitteelle
     var modeUusi = overlay.querySelector('[data-mode="uusi"]');
     var modeLiity = overlay.querySelector('[data-mode="liity"]');
@@ -252,6 +265,7 @@
         '<p>Ryhmä <strong>' + tunnettu + '</strong>. Syötä PIN avataksesi muokkaustilan.</p>' +
         '<input class="portti-pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off">' +
         '<p class="portti-viesti"></p>' +
+        '<p class="portti-vaihda-rivi" style="margin:4px 0 0;font-size:13px"><a href="#" class="portti-vaihda" style="color:#7c3aed">Vaihda ryhmä / luo uusi</a></p>' +
         '<div class="portti-napit"><button type="button" class="portti-peruuta">Peruuta</button>' +
         '<button type="button" class="jarjestys-nappi portti-laheta">Avaa</button></div></div>';
     }
