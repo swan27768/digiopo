@@ -108,7 +108,7 @@
 
     <div id="lohkoUusi" class="piilo">
       <p>Luo uusi opetusryhmä. Saat ryhmäkoodin, jonka jaat oppilaille. Valitse PIN, jolla itse pääset muokkaamaan.</p>
-      <label for="pinUusi">Valitse PIN (väh. 4 merkkiä)</label>
+      <label for="pinUusi">Valitse PIN (väh. 6 numeroa)</label>
       <input id="pinUusi" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off">
       <p style="margin:12px 0 0"><button class="nappi" id="luoBtn" type="button">Luo ryhmä</button></p>
     </div>
@@ -273,7 +273,7 @@
     var k = ($("koodi").value||"").trim().toUpperCase();
     var p = ($("pin").value||"").trim();
     if (!/^[A-Z0-9-]{4,16}$/.test(k)) return naytaIlmo($("kirjIlmoitus"),"Tarkista ryhmäkoodi.","virhe");
-    if (p.length < 4) return naytaIlmo($("kirjIlmoitus"),"Anna PIN (väh. 4 merkkiä).","virhe");
+    if (!p) return naytaIlmo($("kirjIlmoitus"),"Anna PIN.","virhe");
     naytaIlmo($("kirjIlmoitus"),"Tarkistetaan…");
     post(API_J, { toiminto:"tarkista", ryhma:k, avain:p }).then(function(v){
       if (v && v.ok){ kirjoitaRaaka(LS_OPE_R,k); kirjoitaRaaka(LS_OPE_A,p); avaaEditori(k,p); }
@@ -283,7 +283,7 @@
 
   $("luoBtn").addEventListener("click", function(){
     var p = ($("pinUusi").value||"").trim();
-    if (p.length < 4) return naytaIlmo($("kirjIlmoitus"),"Valitse PIN (väh. 4 merkkiä).","virhe");
+    if (!/^\d{6,}$/.test(p)) return naytaIlmo($("kirjIlmoitus"),"Valitse PIN: väh. 6 numeroa (vain numeroita).","virhe");
     naytaIlmo($("kirjIlmoitus"),"Luodaan ryhmää…");
     var koulukoodi = null;
     try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi")||"null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch(e){}

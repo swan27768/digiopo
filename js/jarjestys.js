@@ -230,7 +230,7 @@
 
       if (tunnettu) {
         var pin = overlay.querySelector(".portti-pin").value.trim();
-        if (pin.length < 4) return nayta("Anna PIN (vähintään 4 merkkiä).", "virhe");
+        if (!pin) return nayta("Anna PIN.", "virhe");
         nayta("Tarkistetaan…");
         postServer({ toiminto: "tarkista", ryhma: tunnettu, avain: pin }).then(function (v) {
           if (v && v.ok) { kirjoitaRaaka(LS_OPE_A, pin); sulje(); kaynnistaMuokkaus(); }
@@ -241,7 +241,7 @@
 
       if (aktiiviUusi) {
         var pinU = overlay.querySelector(".portti-pin-uusi").value.trim();
-        if (pinU.length < 6) return nayta("Valitse PIN (vähintään 6 numeroa).", "virhe");
+        if (!/^\d{6,}$/.test(pinU)) return nayta("Valitse PIN: vähintään 6 numeroa (vain numeroita).", "virhe");
         nayta("Luodaan ryhmää…");
         var koulukoodi = null;
         try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
@@ -259,7 +259,7 @@
         var koodi = overlay.querySelector(".portti-koodi").value.trim().toUpperCase();
         var pinL = overlay.querySelector(".portti-pin-liity").value.trim();
         if (!/^[A-Z0-9-]{4,16}$/.test(koodi)) return nayta("Tarkista ryhmäkoodi.", "virhe");
-        if (pinL.length < 4) return nayta("Anna PIN.", "virhe");
+        if (!pinL) return nayta("Anna PIN.", "virhe");
         nayta("Tarkistetaan…");
         postServer({ toiminto: "tarkista", ryhma: koodi, avain: pinL }).then(function (v) {
           if (v && v.ok) { kirjoitaRaaka(LS_OPE_R, koodi); kirjoitaRaaka(LS_OPE_A, pinL); listaanRyhma(koodi); sulje(); kaynnistaMuokkaus(); }

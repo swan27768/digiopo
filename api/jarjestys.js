@@ -185,10 +185,10 @@ export default async function handler(req, res) {
   try {
     // ── REKISTERÖI: luo uusi opetusryhmä ──
     if (toiminto === 'rekisteroi') {
-      // Uudet PIN:it vaativat väh. 6 merkkiä (suoja oppilaiden arvailua vastaan).
-      // Vanhojen ryhmien tarkistus (tarkista/tallenna) jää sallivaksi, jottei
-      // ketään lukita ulos.
-      if (avain.length < 6) {
+      // Uudet PIN:it: väh. 6 numeroa (vain numerot, kuten puhelimen PIN).
+      // Suoja oppilaiden arvailua vastaan. Vanhojen ryhmien tarkistus
+      // (tarkista/tallenna) jää sallivaksi, jottei ketään lukita ulos.
+      if (!/^\d{6,}$/.test(avain)) {
         return res.status(400).json({ ok: false, virhe: 'avain_liian_lyhyt' });
       }
       const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
