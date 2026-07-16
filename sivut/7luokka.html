@@ -335,7 +335,7 @@
           <script>
             (function(){
               var ryhma = null;
-              try { ryhma = localStorage.getItem("digiopo-ryhma"); } catch(e){}
+              try { ryhma = localStorage.getItem("digiopo-ryhma") || localStorage.getItem("digiopo-ope-ryhma"); } catch(e){} // oppilaan liittymä tai opettajan oma ryhmä (esikatselu)
               if (!(ryhma && /^[A-Z0-9-]{4,16}$/.test(ryhma))) return; // ei liittynyt -> ei mitään
               function tulevia(lista){
                 var d=new Date(), t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
