@@ -50,6 +50,12 @@ function arvoRyhmakoodi() {
   return `${osa(3)}-${osa(4)}`; // esim. "K3M-9PQ2"
 }
 
+// Arpoo pelkistä numeroista koostuvan PIN:n (sama sääntö kuin opettajan valitsema:
+// vähintään 6 numeroa, vain numeroita). Käytetään admin-PIN-nollauksessa.
+function arvoNumeroPin(pituus = 8) {
+  return Array.from(crypto.randomBytes(pituus)).map((b) => b % 10).join('');
+}
+
 function validiJarjestys(arr) {
   return Array.isArray(arr) && arr.length <= 40 &&
     arr.every((x) => typeof x === 'string' && /^[a-z0-9-]{1,40}$/.test(x));
@@ -166,7 +172,7 @@ export default async function handler(req, res) {
       if (!(await haeRyhma(ryhma))) {
         return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
       }
-      const uusiPin = arvoRyhmakoodi().replace('-', ''); // 7 merkkiä, ei sekoittuvia
+      const uusiPin = arvoNumeroPin(8); // 8 numeroa (sama sääntö kuin opettajan PIN: vain numeroita)
       const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
         method: 'PATCH',
         headers: { Prefer: 'return=minimal' },
