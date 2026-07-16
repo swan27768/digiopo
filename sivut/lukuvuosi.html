@@ -279,7 +279,10 @@
     tallennaRyhma(ryhmaParam);
     lataa(ryhmaParam);
   } else {
+    // Käytä jo tallennettua ryhmää: oppilaan liittymä TAI opettajan oma ryhmä.
+    // Näin jo kertaalleen liittyneeltä ei kysytä koodia uudelleen.
     var tallennettu = lueRyhma();
+    if (!tallennettu){ try { tallennettu = localStorage.getItem("digiopo-ope-ryhma"); } catch(e){} }
     if (tallennettu){ lataa(tallennettu); } else { naytaKoodilomake(); }
   }
 
