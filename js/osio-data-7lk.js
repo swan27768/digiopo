@@ -117,9 +117,10 @@ window.OSIO_DATA = {
       ],
       miksi: "Tulevaisuudentutkijat puhuvat tulevaisuuslukutaidosta: kyvystä kuvitella useita mahdollisia tulevaisuuksia ja toimia, vaikka ei tiedä varmasti mitä tapahtuu. Moni työ, jota teet aikuisena, ei ole vielä olemassa — siksi kuvittelukyky on yhtä tärkeä taito kuin lukeminen tai laskeminen.",
       yhteenveto: [
-        "Olet kuvitellut oman tulevaisuutesi ja kirjannut yhden unelman",
-        "Osaat sietää tilannetta, jossa oikeaa vastausta ei ole",
-        "Tiedät, että tulevaisuuteen voi vaikuttaa omilla valinnoilla — yhdellä pienellä askeleella kerrallaan"
+        "Teit Aikamatka tulevaisuuteen -tehtävän Robon kanssa ja kuvittelit elämääsi vuonna 2045",
+        "Pohdit, millaista työtä haluaisit kokeilla — ja keksit jopa oman tulevaisuuden ammatin",
+        "Kirjasit yhden unelman ja yhden pienen askeleen, jonka voit tehdä jo nyt",
+        "Osaat sietää tilannetta, jossa oikeaa vastausta ei ole — se on tärkein taito muuttuvassa maailmassa"
       ]
     },
 
