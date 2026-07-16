@@ -52,6 +52,27 @@
       }
     } catch (e) {}
   }
+  function lueRyhmalista() {
+    try { var l = JSON.parse(localStorage.getItem("digiopo-ryhmalista") || "[]"); return Array.isArray(l) ? l : []; }
+    catch (e) { return []; }
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  // "Omat ryhmät" -lista porttiin: opettaja voi valita heti minkä ryhmän avaa.
+  function porttiListaHTML(aktiivinen) {
+    var lista = lueRyhmalista();
+    if (!lista.length) return "";
+    var rivit = lista.map(function (r) {
+      var on = r.koodi === aktiivinen ? " aktiivinen" : "";
+      var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
+      return '<button type="button" class="portti-lista-rivi' + on + '" data-koodi="' + esc(r.koodi) + '">' +
+        nimi + '<span class="portti-lista-koodi">' + esc(r.koodi) + '</span></button>';
+    }).join("");
+    return '<div class="portti-lista"><div class="portti-lista-otsikko">Omat ryhmät</div>' + rivit + '</div>';
+  }
 
   function yhdista(tallennettu) {
     if (!Array.isArray(tallennettu)) return null;
@@ -209,6 +230,17 @@
       });
     }
 
+    // "Omat ryhmät": klikkaus valitsee ryhmän ja avaa portin uudelleen PIN-kysymykseen.
+    Array.prototype.forEach.call(overlay.querySelectorAll(".portti-lista-rivi"), function (btn) {
+      btn.addEventListener("click", function () {
+        var koodi = btn.getAttribute("data-koodi");
+        kirjoitaRaaka(LS_OPE_R, koodi);
+        try { localStorage.removeItem(LS_OPE_A); } catch (e2) {} // eri ryhmä → pyydä PIN uudelleen
+        sulje();
+        avaaPinPortti();
+      });
+    });
+
     // Tilanvaihto uudelle/tunnetulle laitteelle
     var modeUusi = overlay.querySelector('[data-mode="uusi"]');
     var modeLiity = overlay.querySelector('[data-mode="liity"]');
@@ -276,6 +308,7 @@
     if (tunnettu) {
       return '<div class="portti-laatikko">' +
         '<h2>Opettajan muokkaustila</h2>' +
+        porttiListaHTML(tunnettu) +
         '<p>Ryhmä <strong>' + tunnettu + '</strong>. Syötä PIN avataksesi muokkaustilan.</p>' +
         '<input class="portti-pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off">' +
         '<p class="portti-viesti"></p>' +
@@ -285,6 +318,7 @@
     }
     return '<div class="portti-laatikko">' +
       '<h2>Opettajan muokkaustila</h2>' +
+      porttiListaHTML(null) +
       '<div class="portti-moodit">' +
         '<button type="button" class="portti-moodi aktiivinen" data-mode="uusi">Luo uusi ryhmä</button>' +
         '<button type="button" class="portti-moodi" data-mode="liity">Minulla on jo ryhmä</button>' +
