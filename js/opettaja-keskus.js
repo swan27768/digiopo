@@ -75,10 +75,6 @@
       ".ok-mini:hover{border-color:#7c3aed}",
       ".ok-jako{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;background:#efeaf9;border-radius:.35rem;padding:.2rem .45rem;word-break:break-all}",
       ".ok-alanapit{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem}",
-      ".ok-haltuun-toggle{font-size:.88rem;color:#7c3aed;text-decoration:none}",
-      ".ok-haltuun{margin-top:.7rem;display:flex;flex-direction:column;gap:.4rem}",
-      ".ok-haltuun input{padding:.55rem .6rem;border:1px solid #c4b5fd;border-radius:.5rem;font-size:.95rem;font-family:inherit}",
-      ".ok-haltuun-viesti{font-size:.85rem;color:#b91c1c;margin:.2rem 0 0}",
     ].join("");
     document.head.appendChild(st);
   }
@@ -135,13 +131,7 @@
           '</div>';
         }).join("");
       }
-      html += '<div class="ok-alanapit"><button type="button" class="ok-nappi ok-luo">➕ Luo uusi ryhmä</button>' +
-        '<a href="#" class="ok-haltuun-toggle">+ Ota olemassa oleva ryhmä haltuun</a></div>' +
-        '<div class="ok-haltuun" hidden>' +
-          '<input class="ok-haltuun-koodi" type="text" placeholder="Ryhmäkoodi" autocomplete="off" style="text-transform:uppercase">' +
-          '<input class="ok-haltuun-pin" type="password" inputmode="numeric" placeholder="Ryhmän nykyinen PIN" autocomplete="off">' +
-          '<button type="button" class="ok-nappi ok-haltuun-btn">Ota haltuun</button>' +
-          '<p class="ok-haltuun-viesti"></p></div>';
+      html += '<div class="ok-alanapit"><button type="button" class="ok-nappi ok-luo">➕ Luo uusi ryhmä</button></div>';
       q(".ok-body").innerHTML = html;
       kytke();
     }
@@ -181,21 +171,6 @@
         });
       });
 
-      var tgl = q(".ok-haltuun-toggle"), lom = q(".ok-haltuun");
-      if (tgl && lom) tgl.addEventListener("click", function (e) { e.preventDefault(); lom.hidden = false; tgl.style.display = "none"; });
-      var hbtn = q(".ok-haltuun-btn");
-      if (hbtn) hbtn.addEventListener("click", function () {
-        var koodi = (q(".ok-haltuun-koodi").value || "").trim().toUpperCase();
-        var pin = (q(".ok-haltuun-pin").value || "").trim();
-        var vm = q(".ok-haltuun-viesti");
-        if (!/^[A-Z0-9-]{4,16}$/.test(koodi)) { vm.textContent = "Tarkista ryhmäkoodi."; return; }
-        if (!pin) { vm.textContent = "Anna ryhmän PIN."; return; }
-        vm.textContent = "Otetaan haltuun…";
-        post(API_J, { toiminto: "ota_haltuun", ryhma: koodi, avain: pin }).then(function (r) {
-          if (r && r.ok) lataa();
-          else vm.textContent = (r && r.virhe === "avain_ei_tasmaa") ? "Väärä PIN." : ((r && r.virhe === "jo_omistettu") ? "Ryhmällä on jo toinen omistaja." : "Haltuunotto epäonnistui.");
-        });
-      });
     }
 
     lataa();

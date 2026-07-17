@@ -322,9 +322,21 @@
     // hänen palvelinpuoliset ryhmänsä ja avaa muokkaus ILMAN PIN:iä. Alla oleva
     // PIN-virta jää fallbackiksi (uudet/legacy-ryhmät, kirjautumaton laite).
     postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
-      if (!v || !v.ok) return; // ei kirjautunut opettajana → PIN-portti sellaisenaan
       var laatikko = overlay.querySelector(".portti-laatikko");
       if (!laatikko) return;
+      // Ei kirjautunut opettajana → kirjautumiskehotus (ei PIN-porttia).
+      if (!v || !v.ok) {
+        laatikko.innerHTML =
+          '<h2>Opettajan muokkaustila</h2>' +
+          '<p>Kirjaudu opettajana omalla sähköpostillasi, niin voit muokata ryhmiäsi.</p>' +
+          '<div class="portti-napit">' +
+            '<a class="jarjestys-nappi" href="/kirjaudu.html" style="text-decoration:none">Kirjaudu opettajana →</a>' +
+            '<button type="button" class="portti-sulje-kirj">Sulje</button>' +
+          '</div>';
+        var sk = laatikko.querySelector(".portti-sulje-kirj");
+        if (sk) sk.addEventListener("click", sulje);
+        return;
+      }
       var ryhmat = v.ryhmat || [];
       var listaHTML = ryhmat.length
         ? ryhmat.map(function (r) {
@@ -336,23 +348,14 @@
               '<button type="button" class="portti-tili-poista" data-koodi="' + esc(r.ryhmakoodi) + '" title="Poista ryhmä" style="flex:0 0 auto;background:#fff;border:1px solid #e0a3a3;color:#b91c1c;border-radius:.5rem;padding:0 .55rem;cursor:pointer;font-size:15px">🗑</button>' +
             '</div>';
           }).join("")
-        : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Ota olemassa oleva ryhmä haltuun alta (ryhmäkoodi + sen PIN).</p>';
-      var onRyhmia = ryhmat.length > 0;
+        : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Luo ensimmäinen alta.</p>';
       var lohko = document.createElement("div");
       lohko.style.cssText = "margin:0 0 0.8rem;padding:0 0 0.8rem;border-bottom:1px solid #ece7d6";
       lohko.innerHTML =
         (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
         '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
         listaHTML +
-        '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>' +
-        '<a href="#" class="portti-haltuun-toggle" style="display:' + (onRyhmia ? 'inline-block' : 'none') + ';margin-top:.5rem;font-size:13px;color:#7c3aed;text-decoration:none">+ Ota olemassa oleva ryhmä haltuun</a>' +
-        '<div class="portti-haltuun-lomake"' + (onRyhmia ? ' hidden' : '') + ' style="margin-top:.5rem">' +
-          (onRyhmia ? '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.3rem">Ota ryhmä haltuun</div>' : '') +
-          '<input class="portti-haltuun-koodi" type="text" placeholder="Ryhmäkoodi (esim. K3M-9PQ2)" autocomplete="off" style="text-transform:uppercase">' +
-          '<input class="portti-haltuun-pin" type="password" inputmode="numeric" placeholder="Ryhmän nykyinen PIN" autocomplete="off">' +
-          '<p class="portti-haltuun-viesti" style="font-size:12px;min-height:1em;margin:.3rem 0"></p>' +
-          '<button type="button" class="jarjestys-nappi portti-haltuun-btn">Ota haltuun</button>' +
-        '</div>';
+        '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>';
       var otsikko = laatikko.querySelector("h2");
       if (otsikko && otsikko.nextSibling) laatikko.insertBefore(lohko, otsikko.nextSibling);
       else laatikko.insertBefore(lohko, laatikko.firstChild);
@@ -413,42 +416,6 @@
           });
         });
       }
-
-      // "Ota ryhmä haltuun" -linkki avaa lomakkeen (piilossa kun ryhmiä on)
-      var haltuunToggle = lohko.querySelector(".portti-haltuun-toggle");
-      var haltuunLomake = lohko.querySelector(".portti-haltuun-lomake");
-      if (haltuunToggle && haltuunLomake) {
-        haltuunToggle.addEventListener("click", function (e) {
-          e.preventDefault();
-          haltuunLomake.hidden = false;
-          haltuunToggle.style.display = "none";
-          var k = haltuunLomake.querySelector(".portti-haltuun-koodi");
-          if (k) k.focus();
-        });
-      }
-
-      // Ota olemassa oleva ryhmä haltuun (koodi + PIN → liitä tiliin)
-      var hViesti = lohko.querySelector(".portti-haltuun-viesti");
-      lohko.querySelector(".portti-haltuun-btn").addEventListener("click", function () {
-        var koodi = (lohko.querySelector(".portti-haltuun-koodi").value || "").trim().toUpperCase();
-        var pin = (lohko.querySelector(".portti-haltuun-pin").value || "").trim();
-        if (!/^[A-Z0-9-]{4,16}$/.test(koodi)) { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Tarkista ryhmäkoodi."; return; }
-        if (!pin) { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Anna ryhmän PIN."; return; }
-        hViesti.style.color = "#6b5f88"; hViesti.textContent = "Otetaan haltuun…";
-        postServer({ toiminto: "ota_haltuun", ryhma: koodi, avain: pin }).then(function (r) {
-          if (r && r.ok) {
-            hViesti.style.color = "#0f766e"; hViesti.textContent = "✓ Liitetty tiliisi.";
-            kirjoitaRaaka(LS_OPE_R, koodi);
-            tiliMoodi = true;
-            sulje();
-            kaynnistaMuokkaus(); // vie suoraan muokkaustilaan ilman PIN:iä
-          } else if (r && r.virhe === "avain_ei_tasmaa") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Väärä PIN."; }
-          else if (r && r.virhe === "jo_omistettu") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Ryhmällä on jo toinen omistaja."; }
-          else if (r && r.virhe === "ryhmaa_ei_loydy") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Ryhmäkoodia ei löytynyt."; }
-          else if (r && r.virhe === "ei_kirjautunut") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Istunto vanhentui — kirjaudu uudelleen."; }
-          else { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Haltuunotto epäonnistui."; }
-        });
-      });
     });
 
     var eka = overlay.querySelector("input");
