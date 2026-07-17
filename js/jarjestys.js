@@ -52,28 +52,11 @@
       }
     } catch (e) {}
   }
-  function lueRyhmalista() {
-    try { var l = JSON.parse(localStorage.getItem("digiopo-ryhmalista") || "[]"); return Array.isArray(l) ? l : []; }
-    catch (e) { return []; }
-  }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   }
-  // "Omat ryhmät" -lista porttiin: opettaja voi valita heti minkä ryhmän avaa.
-  function porttiListaHTML(aktiivinen) {
-    var lista = lueRyhmalista();
-    if (!lista.length) return "";
-    var rivit = lista.map(function (r) {
-      var on = r.koodi === aktiivinen ? " aktiivinen" : "";
-      var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
-      return '<button type="button" class="portti-lista-rivi' + on + '" data-koodi="' + esc(r.koodi) + '">' +
-        nimi + '<span class="portti-lista-koodi">' + esc(r.koodi) + '</span></button>';
-    }).join("");
-    return '<div class="portti-lista"><div class="portti-lista-otsikko">Omat ryhmät</div>' + rivit + '</div>';
-  }
-
   function yhdista(tallennettu) {
     if (!Array.isArray(tallennettu)) return null;
     var nyt = jarjestysNyt();
@@ -221,122 +204,33 @@
   function avaaPinPortti() {
     if (muokkausPaalla) return;
     if (document.querySelector(".jarjestys-portti")) return;
-    var tunnettu = lueRaaka(LS_OPE_R); // ryhmäkoodi tallessa tällä laitteella?
-
     var overlay = document.createElement("div");
     overlay.className = "jarjestys-portti";
-    overlay.innerHTML = porttiHTML(tunnettu);
+    overlay.innerHTML = '<div class="portti-laatikko"><h2>Opettajan muokkaustila</h2><div class="portti-sisalto"><p class="portti-viesti">Tarkistetaan…</p></div></div>';
     document.body.appendChild(overlay);
 
     var sulje = function () { overlay.remove(); };
     overlay.addEventListener("click", function (e) { if (e.target === overlay) sulje(); });
-    overlay.querySelector(".portti-peruuta").addEventListener("click", sulje);
+    var sisalto = overlay.querySelector(".portti-sisalto");
 
-    var viesti = overlay.querySelector(".portti-viesti");
-    function nayta(t, lk) { viesti.textContent = t; viesti.className = "portti-viesti" + (lk ? " " + lk : ""); }
-
-    // "Vaihda ryhmä / luo uusi": unohtaa tältä laitteelta muistetun ryhmän ja
-    // avaa portin uudelleen luonti-/liittymisnäkymässä (ryhmä ja sen järjestys
-    // säilyvät palvelimella — tämä ei poista mitään serveriltä).
-    var vaihda = overlay.querySelector(".portti-vaihda");
-    if (vaihda) {
-      vaihda.addEventListener("click", function (e) {
-        e.preventDefault();
-        try { localStorage.removeItem(LS_OPE_R); localStorage.removeItem(LS_OPE_A); } catch (e2) {}
-        sulje();
-        avaaPinPortti();
-      });
-    }
-
-    // "Omat ryhmät": klikkaus valitsee ryhmän ja avaa portin uudelleen PIN-kysymykseen.
-    Array.prototype.forEach.call(overlay.querySelectorAll(".portti-lista-rivi"), function (btn) {
-      btn.addEventListener("click", function () {
-        var koodi = btn.getAttribute("data-koodi");
-        kirjoitaRaaka(LS_OPE_R, koodi);
-        try { localStorage.removeItem(LS_OPE_A); } catch (e2) {} // eri ryhmä → pyydä PIN uudelleen
-        sulje();
-        avaaPinPortti();
-      });
-    });
-
-    // Tilanvaihto uudelle/tunnetulle laitteelle
-    var modeUusi = overlay.querySelector('[data-mode="uusi"]');
-    var modeLiity = overlay.querySelector('[data-mode="liity"]');
-    var lohkoUusi = overlay.querySelector(".portti-uusi");
-    var lohkoLiity = overlay.querySelector(".portti-liity");
-    if (modeUusi && modeLiity) {
-      modeUusi.addEventListener("click", function () {
-        modeUusi.classList.add("aktiivinen"); modeLiity.classList.remove("aktiivinen");
-        lohkoUusi.hidden = false; lohkoLiity.hidden = true; nayta("");
-      });
-      modeLiity.addEventListener("click", function () {
-        modeLiity.classList.add("aktiivinen"); modeUusi.classList.remove("aktiivinen");
-        lohkoLiity.hidden = false; lohkoUusi.hidden = true; nayta("");
-      });
-    }
-
-    overlay.querySelector(".portti-laheta").addEventListener("click", function () {
-      var aktiiviUusi = lohkoUusi && !lohkoUusi.hidden;
-
-      if (tunnettu) {
-        var pin = overlay.querySelector(".portti-pin").value.trim();
-        if (!/^\d{6,}$/.test(pin)) return nayta("PIN on vähintään 6 numeroa (vain numeroita).", "virhe");
-        nayta("Tarkistetaan…");
-        postServer({ toiminto: "tarkista", ryhma: tunnettu, avain: pin }).then(function (v) {
-          if (v && v.ok) { kirjoitaRaaka(LS_OPE_A, pin); sulje(); kaynnistaMuokkaus(); }
-          else nayta(v && v.virhe === "avain_ei_tasmaa" ? "Väärä PIN." : "Tarkistus epäonnistui.", "virhe");
-        });
-        return;
-      }
-
-      if (aktiiviUusi) {
-        var pinU = overlay.querySelector(".portti-pin-uusi").value.trim();
-        if (!/^\d{6,}$/.test(pinU)) return nayta("Valitse PIN: vähintään 6 numeroa (vain numeroita).", "virhe");
-        nayta("Luodaan ryhmää…");
-        var koulukoodi = null;
-        try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
-        postServer({ toiminto: "rekisteroi", avain: pinU, koulukoodi: koulukoodi }).then(function (v) {
-          if (v && v.ok && v.ryhmakoodi) {
-            kirjoitaRaaka(LS_OPE_R, v.ryhmakoodi); kirjoitaRaaka(LS_OPE_A, pinU); listaanRyhma(v.ryhmakoodi);
-            // EI kutsuta julkaise() tässä: muuten muokkaustilaan tullessa
-            // näkyy heti tallennuskuittaus, vaikka opettaja ei ole tehnyt
-            // mitään muutoksia. Tallennus tapahtuu vasta "Tallenna oppilaille"
-            // -napista (kuten muissakin kirjautumispoluissa).
-            sulje(); kaynnistaMuokkaus();
-          } else nayta("Ryhmän luonti epäonnistui.", "virhe");
-        });
-      } else {
-        var koodi = overlay.querySelector(".portti-koodi").value.trim().toUpperCase();
-        var pinL = overlay.querySelector(".portti-pin-liity").value.trim();
-        if (!/^[A-Z0-9-]{4,16}$/.test(koodi)) return nayta("Tarkista ryhmäkoodi.", "virhe");
-        if (!/^\d{6,}$/.test(pinL)) return nayta("PIN on vähintään 6 numeroa (vain numeroita).", "virhe");
-        nayta("Tarkistetaan…");
-        postServer({ toiminto: "tarkista", ryhma: koodi, avain: pinL }).then(function (v) {
-          if (v && v.ok) { kirjoitaRaaka(LS_OPE_R, koodi); kirjoitaRaaka(LS_OPE_A, pinL); listaanRyhma(koodi); sulje(); kaynnistaMuokkaus(); }
-          else nayta(v && v.virhe === "avain_ei_tasmaa" ? "Väärä koodi tai PIN." : "Tarkistus epäonnistui.", "virhe");
-        });
-      }
-    });
-
-    // TILIMOODI: jos opettaja on kirjautunut omalla tilillään (istunto), näytä
-    // hänen palvelinpuoliset ryhmänsä ja avaa muokkaus ILMAN PIN:iä. Alla oleva
-    // PIN-virta jää fallbackiksi (uudet/legacy-ryhmät, kirjautumaton laite).
+    // Puhtaan tilipohjainen: näytetään kirjautuneen opettajan omat ryhmät (avaa
+    // ilman PIN:iä) TAI kirjautumiskehotus. Ei PIN-porttia.
     postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
-      var laatikko = overlay.querySelector(".portti-laatikko");
-      if (!laatikko) return;
-      // Ei kirjautunut opettajana → kirjautumiskehotus (ei PIN-porttia).
       if (!v || !v.ok) {
-        laatikko.innerHTML =
-          '<h2>Opettajan muokkaustila</h2>' +
+        sisalto.innerHTML =
           '<p>Kirjaudu opettajana omalla sähköpostillasi, niin voit muokata ryhmiäsi.</p>' +
           '<div class="portti-napit">' +
             '<a class="jarjestys-nappi" href="/kirjaudu.html" style="text-decoration:none">Kirjaudu opettajana →</a>' +
-            '<button type="button" class="portti-sulje-kirj">Sulje</button>' +
+            '<button type="button" class="portti-sulje-x">Sulje</button>' +
           '</div>';
-        var sk = laatikko.querySelector(".portti-sulje-kirj");
+        var sk = sisalto.querySelector(".portti-sulje-x");
         if (sk) sk.addEventListener("click", sulje);
         return;
       }
+      renderTili(v);
+    });
+
+    function renderTili(v) {
       var ryhmat = v.ryhmat || [];
       var listaHTML = ryhmat.length
         ? ryhmat.map(function (r) {
@@ -349,29 +243,18 @@
             '</div>';
           }).join("")
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Luo ensimmäinen alta.</p>';
-      var lohko = document.createElement("div");
-      lohko.style.cssText = "margin:0 0 0.8rem;padding:0 0 0.8rem;border-bottom:1px solid #ece7d6";
-      lohko.innerHTML =
+      sisalto.innerHTML =
         (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
         '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
         listaHTML +
-        '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>';
-      var otsikko = laatikko.querySelector("h2");
-      if (otsikko && otsikko.nextSibling) laatikko.insertBefore(lohko, otsikko.nextSibling);
-      else laatikko.insertBefore(lohko, laatikko.firstChild);
+        '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>' +
+        '<div class="portti-napit" style="margin-top:.7rem"><button type="button" class="portti-sulje-x">Sulje</button></div>';
 
-      // Kirjautuneelle opettajalle näytetään VAIN tili-osio: piilota PIN-virta ja
-      // paikallinen roster, jottei sama ryhmä näy kahdesti eikä PIN-portti jää
-      // sekoittamaan (klikkaus alempaan riviin avasi ennen PIN-portin uudelleen).
-      ['.portti-lista', '.portti-pin', '.portti-laheta', '.portti-moodit', '.portti-uusi', '.portti-liity'].forEach(function (sel) {
-        var piiloon = laatikko.querySelector(sel); if (piiloon) piiloon.style.display = 'none';
-      });
-      Array.prototype.forEach.call(laatikko.children, function (child) {
-        if (child.tagName === 'P') child.style.display = 'none'; // PIN-ohjetekstit + viesti (suorat lapset)
-      });
+      var sx = sisalto.querySelector(".portti-sulje-x");
+      if (sx) sx.addEventListener("click", sulje);
 
-      // Avaa oma ryhmä ilman PIN:iä (tilimoodi)
-      Array.prototype.forEach.call(lohko.querySelectorAll(".portti-tili-rivi"), function (btn) {
+      // Avaa oma ryhmä ilman PIN:iä
+      Array.prototype.forEach.call(sisalto.querySelectorAll(".portti-tili-rivi"), function (btn) {
         btn.addEventListener("click", function () {
           kirjoitaRaaka(LS_OPE_R, btn.getAttribute("data-koodi"));
           tiliMoodi = true;
@@ -380,79 +263,36 @@
         });
       });
 
-      // Poista oma ryhmä (poista_oma, vahvistus). Poistaa myös järjestyksen ja aikataulun.
-      Array.prototype.forEach.call(lohko.querySelectorAll(".portti-tili-poista"), function (btn) {
+      // Poista oma ryhmä (poista_oma, vahvistus)
+      Array.prototype.forEach.call(sisalto.querySelectorAll(".portti-tili-poista"), function (btn) {
         btn.addEventListener("click", function () {
           var koodi = btn.getAttribute("data-koodi");
           if (!window.confirm("Poistetaanko ryhmä " + koodi + " pysyvästi?\n\nTämä poistaa myös ryhmän osiojärjestyksen ja aikataulun. Ei voi perua.")) return;
           btn.disabled = true; btn.textContent = "…";
           postServer({ toiminto: "poista_oma", ryhma: koodi, vahvista: koodi }).then(function (r) {
-            if (r && r.ok) { sulje(); avaaPinPortti(); } // päivitä lista
+            if (r && r.ok) { postServer({ toiminto: "omat_ryhmat" }).then(function (v2) { if (v2 && v2.ok) renderTili(v2); }); }
             else { btn.disabled = false; btn.textContent = "🗑"; alert("Poisto epäonnistui: " + ((r && r.virhe) || "")); }
           });
         });
       });
 
-      // "Luo uusi ryhmä": luo ryhmä opettajan omistukseen ja avaa muokkaustila
-      var luoBtn = lohko.querySelector(".portti-luo-btn");
-      if (luoBtn) {
-        luoBtn.addEventListener("click", function () {
-          var nimi = window.prompt("Anna ryhmälle nimi (esim. 7A). Voit jättää tyhjäksi.", "");
-          if (nimi === null) return; // peruttu
-          var koulukoodi = null;
-          try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
-          luoBtn.disabled = true; luoBtn.textContent = "Luodaan…";
-          postServer({ toiminto: "luo_oma", nimi: nimi.trim(), koulukoodi: koulukoodi }).then(function (r) {
-            if (r && r.ok && r.ryhmakoodi) {
-              kirjoitaRaaka(LS_OPE_R, r.ryhmakoodi);
-              tiliMoodi = true;
-              listaanRyhma(r.ryhmakoodi);
-              sulje();
-              kaynnistaMuokkaus();
-            } else {
-              luoBtn.disabled = false; luoBtn.textContent = "➕ Luo uusi ryhmä";
-              alert("Ryhmän luonti epäonnistui.");
-            }
-          });
+      // Luo uusi ryhmä (auto-omistus, ei PIN-vaivaa)
+      var luoBtn = sisalto.querySelector(".portti-luo-btn");
+      if (luoBtn) luoBtn.addEventListener("click", function () {
+        var nimi = window.prompt("Anna ryhmälle nimi (esim. 7A). Voit jättää tyhjäksi.", "");
+        if (nimi === null) return;
+        var koulukoodi = null;
+        try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
+        luoBtn.disabled = true; luoBtn.textContent = "Luodaan…";
+        postServer({ toiminto: "luo_oma", nimi: nimi.trim(), koulukoodi: koulukoodi }).then(function (r) {
+          if (r && r.ok && r.ryhmakoodi) {
+            kirjoitaRaaka(LS_OPE_R, r.ryhmakoodi); tiliMoodi = true; listaanRyhma(r.ryhmakoodi);
+            sulje(); kaynnistaMuokkaus();
+          } else { luoBtn.disabled = false; luoBtn.textContent = "➕ Luo uusi ryhmä"; alert("Ryhmän luonti epäonnistui."); }
         });
-      }
-    });
-
-    var eka = overlay.querySelector("input");
-    if (eka) eka.focus();
-  }
-
-  function porttiHTML(tunnettu) {
-    if (tunnettu) {
-      return '<div class="portti-laatikko">' +
-        '<h2>Opettajan muokkaustila</h2>' +
-        porttiListaHTML(tunnettu) +
-        '<p>Ryhmä <strong>' + tunnettu + '</strong>. Syötä PIN avataksesi muokkaustilan.</p>' +
-        '<input class="portti-pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off">' +
-        '<p class="portti-viesti"></p>' +
-        '<p class="portti-vaihda-rivi" style="margin:4px 0 0;font-size:13px"><a href="#" class="portti-vaihda" style="color:#7c3aed">Vaihda ryhmä / luo uusi</a></p>' +
-        '<div class="portti-napit"><button type="button" class="portti-peruuta">Peruuta</button>' +
-        '<button type="button" class="jarjestys-nappi portti-laheta">Avaa</button></div></div>';
+      });
     }
-    return '<div class="portti-laatikko">' +
-      '<h2>Opettajan muokkaustila</h2>' +
-      porttiListaHTML(null) +
-      '<div class="portti-moodit">' +
-        '<button type="button" class="portti-moodi aktiivinen" data-mode="uusi">Luo uusi ryhmä</button>' +
-        '<button type="button" class="portti-moodi" data-mode="liity">Minulla on jo ryhmä</button>' +
-      '</div>' +
-      '<div class="portti-uusi">' +
-        '<p>Valitse salainen PIN (väh. 6 numeroa). Se luo jakoryhmän ja toimii jatkossa muokkaustilan avaimena. Älä jaa sitä oppilaille äläkä käytä arvattavaa (esim. 123456 tai syntymävuosi).</p>' +
-        '<input class="portti-pin-uusi" type="password" inputmode="numeric" placeholder="Valitse PIN (väh. 6 numeroa)" autocomplete="off">' +
-      '</div>' +
-      '<div class="portti-liity" hidden>' +
-        '<p>Toisella laitteella jo luotu ryhmä? Anna ryhmäkoodi ja PIN.</p>' +
-        '<input class="portti-koodi" type="text" placeholder="Ryhmäkoodi (esim. K3M-9PQ2)" autocomplete="off">' +
-        '<input class="portti-pin-liity" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off">' +
-      '</div>' +
-      '<p class="portti-viesti"></p>' +
-      '<div class="portti-napit"><button type="button" class="portti-peruuta">Peruuta</button>' +
-      '<button type="button" class="jarjestys-nappi portti-laheta">Jatka</button></div></div>';
+
   }
 
   // ---------- Muokkaustila ----------
