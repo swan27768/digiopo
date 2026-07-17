@@ -313,7 +313,8 @@
         ? ryhmat.map(function (r) {
             var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
             return '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '">' +
-              nimi + '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>';
+              '<span class="portti-tili-avaa">✏️ Avaa</span>' + nimi +
+              '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>';
           }).join("")
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Ota olemassa oleva ryhmä haltuun alta (ryhmäkoodi + sen PIN).</p>';
       var lohko = document.createElement("div");
