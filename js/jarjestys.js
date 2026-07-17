@@ -317,13 +317,16 @@
               '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>';
           }).join("")
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Ota olemassa oleva ryhmä haltuun alta (ryhmäkoodi + sen PIN).</p>';
+      var onRyhmia = ryhmat.length > 0;
       var lohko = document.createElement("div");
       lohko.style.cssText = "margin:0 0 0.8rem;padding:0 0 0.8rem;border-bottom:1px solid #ece7d6";
       lohko.innerHTML =
+        (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
         '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
         listaHTML +
-        '<div style="margin-top:.6rem">' +
-          '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.3rem">Ota ryhmä haltuun</div>' +
+        '<a href="#" class="portti-haltuun-toggle" style="display:' + (onRyhmia ? 'inline-block' : 'none') + ';margin-top:.4rem;font-size:13px;color:#7c3aed;text-decoration:none">+ Ota olemassa oleva ryhmä haltuun</a>' +
+        '<div class="portti-haltuun-lomake"' + (onRyhmia ? ' hidden' : '') + ' style="margin-top:.5rem">' +
+          (onRyhmia ? '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.3rem">Ota ryhmä haltuun</div>' : '') +
           '<input class="portti-haltuun-koodi" type="text" placeholder="Ryhmäkoodi (esim. K3M-9PQ2)" autocomplete="off" style="text-transform:uppercase">' +
           '<input class="portti-haltuun-pin" type="password" inputmode="numeric" placeholder="Ryhmän nykyinen PIN" autocomplete="off">' +
           '<p class="portti-haltuun-viesti" style="font-size:12px;min-height:1em;margin:.3rem 0"></p>' +
@@ -352,6 +355,19 @@
           kaynnistaMuokkaus();
         });
       });
+
+      // "Ota ryhmä haltuun" -linkki avaa lomakkeen (piilossa kun ryhmiä on)
+      var haltuunToggle = lohko.querySelector(".portti-haltuun-toggle");
+      var haltuunLomake = lohko.querySelector(".portti-haltuun-lomake");
+      if (haltuunToggle && haltuunLomake) {
+        haltuunToggle.addEventListener("click", function (e) {
+          e.preventDefault();
+          haltuunLomake.hidden = false;
+          haltuunToggle.style.display = "none";
+          var k = haltuunLomake.querySelector(".portti-haltuun-koodi");
+          if (k) k.focus();
+        });
+      }
 
       // Ota olemassa oleva ryhmä haltuun (koodi + PIN → liitä tiliin)
       var hViesti = lohko.querySelector(".portti-haltuun-viesti");

@@ -239,7 +239,7 @@ export default async function handler(req, res) {
       if (toiminto === 'omat_ryhmat') {
         const r = await sb(`opetusryhmat?omistaja_email=eq.${encodeURIComponent(opettaja)}&select=ryhmakoodi,nimi,luotu_at&order=luotu_at.desc`);
         if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-        return res.status(200).json({ ok: true, ryhmat: await r.json() });
+        return res.status(200).json({ ok: true, email: opettaja, ryhmat: await r.json() });
       }
 
       // Loput koskevat yhtä ryhmää → vaativat omistajuuden
