@@ -252,8 +252,10 @@
     const { error } = await db.auth.signInWithOtp({
       email,
       options: {
-        // Käyttäjä ohjataan tänne linkin klikkauksen jälkeen
-        emailRedirectTo: 'https://app.digiopo.fi',
+        // Ohjaa takaisin tähän sivuun, joka poimii session URL:sta (supabase-js
+        // ladataan täällä) ja ohjaa sitten sovellukseen. Etusivu ei lataa
+        // supabase-js:ää, joten sinne ohjaaminen hukkaisi session.
+        emailRedirectTo: 'https://app.digiopo.fi/kirjaudu.html',
         // Luodaan auth-käyttäjä tarvittaessa – lisenssi tarkistetaan backendissä
         shouldCreateUser: true,
       },
