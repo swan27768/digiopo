@@ -210,8 +210,8 @@
     var a = document.createElement("button");
     a.type = "button";
     a.className = "jarjestys-opelinkki";
-    a.textContent = "Sivun hallinta";
-    a.title = "Sivun hallinta (opon muokkaustila)";
+    a.textContent = "Opettajan hallintasivu";
+    a.title = "Opettajan hallintasivu";
     a.addEventListener("click", avaaPinPortti);
     document.body.appendChild(a);
   }
@@ -222,7 +222,7 @@
     if (document.querySelector(".jarjestys-portti")) return;
     var overlay = document.createElement("div");
     overlay.className = "jarjestys-portti";
-    overlay.innerHTML = '<div class="portti-laatikko"><h2>Opettajan muokkaustila</h2><div class="portti-sisalto"><p class="portti-viesti">Tarkistetaan…</p></div></div>';
+    overlay.innerHTML = '<div class="portti-laatikko"><h2>Opettajan hallintasivu</h2><div class="portti-sisalto"><p class="portti-viesti">Tarkistetaan…</p></div></div>';
     document.body.appendChild(overlay);
 
     var sulje = function () { overlay.remove(); };
@@ -261,7 +261,7 @@
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Luo ensimmäinen alta.</p>';
       sisalto.innerHTML =
         (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
-        '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
+        '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät</div>' +
         listaHTML +
         '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>' +
         '<div class="portti-napit" style="margin-top:.7rem"><button type="button" class="portti-sulje-x">Sulje</button></div>';
