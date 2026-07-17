@@ -230,7 +230,7 @@ export default async function handler(req, res) {
   // Opettaja hallitsee vain omia ryhmiään (omistaja_email = kirjautunut email).
   // Valtuutus tulee lisenssievästeestä, ei PIN:stä → sijoitettu ennen avain-
   // tarkistusta, koska nämä eivät käytä avain-kenttää.
-  const OMAT_TOIMINNOT = ['omat_ryhmat', 'nimea_oma', 'poista_oma', 'nollaa_oma_pin'];
+  const OMAT_TOIMINNOT = ['omat_ryhmat', 'nimea_oma', 'poista_oma', 'nollaa_oma_pin', 'tallenna_oma'];
   if (OMAT_TOIMINNOT.includes(toiminto)) {
     const opettaja = await haeKirjautunutOpettaja(req);
     if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
@@ -251,6 +251,26 @@ export default async function handler(req, res) {
       if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
       if (rivi.omistaja_email !== opettaja) {
         return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
+      }
+
+      // TALLENNA oma järjestys (istunto+omistajuus, ei PIN:iä) — kuten 'tallenna'
+      if (toiminto === 'tallenna_oma') {
+        const luokka = String(body.luokka || '').trim();
+        const jarjestys = body.jarjestys;
+        const lukitut = body.lukitut == null ? [] : body.lukitut;
+        if (!SALLITUT_LUOKAT.includes(luokka)) {
+          return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+        }
+        if (!validiJarjestys(jarjestys) || !validiJarjestys(lukitut)) {
+          return res.status(400).json({ ok: false, virhe: 'jarjestys_virheellinen' });
+        }
+        const r = await sb('jarjestykset?on_conflict=ryhmakoodi,luokka', {
+          method: 'POST',
+          headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+          body: JSON.stringify({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut }),
+        });
+        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        return res.status(200).json({ ok: true });
       }
 
       // NIMEÄ oma ryhmä

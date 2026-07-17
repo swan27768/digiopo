@@ -182,6 +182,7 @@
   // ============================================================
   var muokkausPaalla = false;
   var julkaisuTila;
+  var tiliMoodi = false; // true = muokkaus avattiin opettajatilillä (tallennus istunnolla, ei PIN:llä)
 
   document.addEventListener("DOMContentLoaded", function () {
     lisaaOpeLinkki();
@@ -262,7 +263,7 @@
 
       if (tunnettu) {
         var pin = overlay.querySelector(".portti-pin").value.trim();
-        if (!pin) return nayta("Anna PIN.", "virhe");
+        if (!/^\d{6,}$/.test(pin)) return nayta("PIN on vähintään 6 numeroa (vain numeroita).", "virhe");
         nayta("Tarkistetaan…");
         postServer({ toiminto: "tarkista", ryhma: tunnettu, avain: pin }).then(function (v) {
           if (v && v.ok) { kirjoitaRaaka(LS_OPE_A, pin); sulje(); kaynnistaMuokkaus(); }
@@ -291,13 +292,42 @@
         var koodi = overlay.querySelector(".portti-koodi").value.trim().toUpperCase();
         var pinL = overlay.querySelector(".portti-pin-liity").value.trim();
         if (!/^[A-Z0-9-]{4,16}$/.test(koodi)) return nayta("Tarkista ryhmäkoodi.", "virhe");
-        if (!pinL) return nayta("Anna PIN.", "virhe");
+        if (!/^\d{6,}$/.test(pinL)) return nayta("PIN on vähintään 6 numeroa (vain numeroita).", "virhe");
         nayta("Tarkistetaan…");
         postServer({ toiminto: "tarkista", ryhma: koodi, avain: pinL }).then(function (v) {
           if (v && v.ok) { kirjoitaRaaka(LS_OPE_R, koodi); kirjoitaRaaka(LS_OPE_A, pinL); listaanRyhma(koodi); sulje(); kaynnistaMuokkaus(); }
           else nayta(v && v.virhe === "avain_ei_tasmaa" ? "Väärä koodi tai PIN." : "Tarkistus epäonnistui.", "virhe");
         });
       }
+    });
+
+    // TILIMOODI: jos opettaja on kirjautunut omalla tilillään (istunto), näytä
+    // hänen palvelinpuoliset ryhmänsä ja avaa muokkaus ILMAN PIN:iä. Alla oleva
+    // PIN-virta jää fallbackiksi (uudet/legacy-ryhmät, kirjautumaton laite).
+    postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
+      if (!v || !v.ok || !v.ryhmat || !v.ryhmat.length) return;
+      var laatikko = overlay.querySelector(".portti-laatikko");
+      if (!laatikko) return;
+      var lohko = document.createElement("div");
+      lohko.style.cssText = "margin:0 0 0.8rem;padding:0 0 0.8rem;border-bottom:1px solid #ece7d6";
+      lohko.innerHTML =
+        '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
+        v.ryhmat.map(function (r) {
+          var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
+          return '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '">' +
+            nimi + '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>';
+        }).join("");
+      var otsikko = laatikko.querySelector("h2");
+      if (otsikko && otsikko.nextSibling) laatikko.insertBefore(lohko, otsikko.nextSibling);
+      else laatikko.insertBefore(lohko, laatikko.firstChild);
+      Array.prototype.forEach.call(lohko.querySelectorAll(".portti-tili-rivi"), function (btn) {
+        btn.addEventListener("click", function () {
+          kirjoitaRaaka(LS_OPE_R, btn.getAttribute("data-koodi"));
+          tiliMoodi = true;
+          sulje();
+          kaynnistaMuokkaus();
+        });
+      });
     });
 
     var eka = overlay.querySelector("input");
@@ -478,14 +508,24 @@
   }
 
   function julkaise() {
-    var ryhma = lueRaaka(LS_OPE_R), avain = lueRaaka(LS_OPE_A);
-    if (!ryhma || !avain) return;
+    var ryhma = lueRaaka(LS_OPE_R);
+    if (!ryhma) return;
+    var payload;
+    if (tiliMoodi) {
+      // Opettajatili: tallennus istunnolla + omistajuudella, ei PIN:iä.
+      payload = { toiminto: "tallenna_oma", ryhma: ryhma, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
+    } else {
+      var avain = lueRaaka(LS_OPE_A);
+      if (!avain) return;
+      payload = { toiminto: "tallenna", ryhma: ryhma, avain: avain, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
+    }
     if (julkaisuTila) { julkaisuTila.textContent = "Tallennetaan…"; julkaisuTila.className = "jarjestys-tila"; }
-    postServer({ toiminto: "tallenna", ryhma: ryhma, avain: avain, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() })
+    postServer(payload)
       .then(function (v) {
         if (!julkaisuTila) return;
         if (v && v.ok) { julkaisuTila.textContent = "✓ Julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila ok"; }
         else if (v && v.virhe === "avain_ei_tasmaa") { julkaisuTila.textContent = "Avain ei täsmää."; julkaisuTila.className = "jarjestys-tila virhe"; }
+        else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja")) { julkaisuTila.textContent = "Istunto vanhentui — kirjaudu uudelleen."; julkaisuTila.className = "jarjestys-tila virhe"; }
         else { julkaisuTila.textContent = "Tallennus epäonnistui."; julkaisuTila.className = "jarjestys-tila virhe"; }
       });
   }
