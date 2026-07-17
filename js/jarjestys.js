@@ -312,9 +312,12 @@
       var listaHTML = ryhmat.length
         ? ryhmat.map(function (r) {
             var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
-            return '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '">' +
-              '<span class="portti-tili-avaa">✏️ Avaa</span>' + nimi +
-              '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>';
+            return '<div style="display:flex;gap:6px;margin-bottom:.3rem">' +
+              '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '" style="flex:1;margin-bottom:0">' +
+                '<span class="portti-tili-avaa">✏️ Avaa</span>' + nimi +
+                '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>' +
+              '<button type="button" class="portti-tili-poista" data-koodi="' + esc(r.ryhmakoodi) + '" title="Poista ryhmä" style="flex:0 0 auto;background:#fff;border:1px solid #e0a3a3;color:#b91c1c;border-radius:.5rem;padding:0 .55rem;cursor:pointer;font-size:15px">🗑</button>' +
+            '</div>';
           }).join("")
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Ota olemassa oleva ryhmä haltuun alta (ryhmäkoodi + sen PIN).</p>';
       var onRyhmia = ryhmat.length > 0;
@@ -354,6 +357,19 @@
           tiliMoodi = true;
           sulje();
           kaynnistaMuokkaus();
+        });
+      });
+
+      // Poista oma ryhmä (poista_oma, vahvistus). Poistaa myös järjestyksen ja aikataulun.
+      Array.prototype.forEach.call(lohko.querySelectorAll(".portti-tili-poista"), function (btn) {
+        btn.addEventListener("click", function () {
+          var koodi = btn.getAttribute("data-koodi");
+          if (!window.confirm("Poistetaanko ryhmä " + koodi + " pysyvästi?\n\nTämä poistaa myös ryhmän osiojärjestyksen ja aikataulun. Ei voi perua.")) return;
+          btn.disabled = true; btn.textContent = "…";
+          postServer({ toiminto: "poista_oma", ryhma: koodi, vahvista: koodi }).then(function (r) {
+            if (r && r.ok) { sulje(); avaaPinPortti(); } // päivitä lista
+            else { btn.disabled = false; btn.textContent = "🗑"; alert("Poisto epäonnistui: " + ((r && r.virhe) || "")); }
+          });
         });
       });
 
