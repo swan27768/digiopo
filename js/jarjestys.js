@@ -186,6 +186,23 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     lisaaOpeLinkki();
+    // Opettajan keskuksesta tullessa: ?tili_ryhma=KOODI avaa muokkaustilan suoraan
+    // (ja ?aikataulu=1 myös aikataulu-modaalin), jos kirjautunut opettaja omistaa ryhmän.
+    var tiliRyhmaParam = (params.get("tili_ryhma") || "").trim().toUpperCase();
+    var avaaAikataulu = params.get("aikataulu") === "1";
+    if (tiliRyhmaParam && /^[A-Z0-9-]{4,16}$/.test(tiliRyhmaParam)) {
+      postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
+        if (v && v.ok && (v.ryhmat || []).some(function (r) { return r.ryhmakoodi === tiliRyhmaParam; })) {
+          kirjoitaRaaka(LS_OPE_R, tiliRyhmaParam);
+          tiliMoodi = true;
+          kaynnistaMuokkaus();
+          if (avaaAikataulu) avaaAikatauluModaali();
+        } else if (avaaPortti) {
+          avaaPinPortti();
+        }
+      });
+      return;
+    }
     if (avaaPortti) avaaPinPortti();
   });
 
