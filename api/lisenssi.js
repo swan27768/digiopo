@@ -188,7 +188,8 @@ export default async function handler(req, res) {
         poistaLisenssiEvaste(res);
         return res.status(200).json({ ok: false, virhe: 'vanhentunut' });
       }
-      await asetaLisenssiEvaste(res, { typ: 'opettaja', koulu: lisenssi.koulu });
+      // email evästeeseen → palvelin tunnistaa kirjautuneen opettajan (opettajatili).
+      await asetaLisenssiEvaste(res, { typ: 'opettaja', koulu: lisenssi.koulu, email: email.toLowerCase() });
       return res.status(200).json({
         ok: true,
         tyyppi: 'opettaja',
