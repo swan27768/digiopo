@@ -363,7 +363,10 @@
         postServer({ toiminto: "ota_haltuun", ryhma: koodi, avain: pin }).then(function (r) {
           if (r && r.ok) {
             hViesti.style.color = "#0f766e"; hViesti.textContent = "✓ Liitetty tiliisi.";
-            sulje(); avaaPinPortti(); // avaa portti uudelleen → ryhmä näkyy nyt listassa
+            kirjoitaRaaka(LS_OPE_R, koodi);
+            tiliMoodi = true;
+            sulje();
+            kaynnistaMuokkaus(); // vie suoraan muokkaustilaan ilman PIN:iä
           } else if (r && r.virhe === "avain_ei_tasmaa") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Väärä PIN."; }
           else if (r && r.virhe === "jo_omistettu") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Ryhmällä on jo toinen omistaja."; }
           else if (r && r.virhe === "ryhmaa_ei_loydy") { hViesti.style.color = "#b91c1c"; hViesti.textContent = "Ryhmäkoodia ei löytynyt."; }
