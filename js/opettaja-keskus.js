@@ -55,8 +55,8 @@
     var st = document.createElement("style");
     st.id = "ope-keskus-tyylit";
     st.textContent = [
-      ".ope-keskus-nappi{position:fixed;right:16px;bottom:16px;z-index:9998;background:#7c3aed;color:#fff;border:none;border-radius:2rem;padding:.7rem 1.1rem;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(124,58,237,.4);font-family:inherit}",
-      ".ope-keskus-nappi:hover{background:#6d28d9}",
+      ".ope-keskus-nappi{position:fixed;right:16px;bottom:16px;z-index:9998;background:#2b3350;color:#f4f5fb;border:1px solid rgba(255,255,255,.14);border-radius:.7rem;padding:.7rem 1.15rem;font-size:.92rem;font-weight:600;letter-spacing:.01em;cursor:pointer;box-shadow:0 6px 20px rgba(20,18,48,.32);font-family:inherit;transition:background .18s,transform .15s}",
+      ".ope-keskus-nappi:hover{background:#38426a;transform:translateY(-1px)}",
       ".ope-keskus-overlay{position:fixed;inset:0;z-index:10002;display:flex;align-items:flex-start;justify-content:center;background:rgba(31,17,71,.55);padding:24px 12px;overflow:auto}",
       ".ope-keskus{width:min(96vw,600px);background:#fff;color:#1f1147;border-radius:.9rem;padding:1.3rem;box-shadow:0 12px 40px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}",
       ".ok-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:1.15rem;margin-bottom:1rem;gap:.6rem}",
@@ -85,7 +85,7 @@
     var overlay = document.createElement("div");
     overlay.className = "ope-keskus-overlay";
     overlay.innerHTML =
-      '<div class="ope-keskus"><div class="ok-head"><span>👩‍🏫 Opettajan muokkaustila</span>' +
+      '<div class="ope-keskus"><div class="ok-head"><span>Opettajan hallintasivu</span>' +
       '<button type="button" class="ok-sulje" title="Sulje">✕</button></div>' +
       '<div class="ok-body"><p class="ok-tila">Tarkistetaan kirjautumista…</p></div></div>';
     document.body.appendChild(overlay);
@@ -183,7 +183,7 @@
     var b = document.createElement("button");
     b.type = "button";
     b.className = "ope-keskus-nappi";
-    b.textContent = "👩‍🏫 Opettajan muokkaustila";
+    b.textContent = "Opettajan hallintasivu";
     b.addEventListener("click", avaaKeskus);
     document.body.appendChild(b);
   });
