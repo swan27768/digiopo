@@ -332,6 +332,16 @@
       if (otsikko && otsikko.nextSibling) laatikko.insertBefore(lohko, otsikko.nextSibling);
       else laatikko.insertBefore(lohko, laatikko.firstChild);
 
+      // Kirjautuneelle opettajalle näytetään VAIN tili-osio: piilota PIN-virta ja
+      // paikallinen roster, jottei sama ryhmä näy kahdesti eikä PIN-portti jää
+      // sekoittamaan (klikkaus alempaan riviin avasi ennen PIN-portin uudelleen).
+      ['.portti-lista', '.portti-pin', '.portti-laheta', '.portti-moodit', '.portti-uusi', '.portti-liity'].forEach(function (sel) {
+        var piiloon = laatikko.querySelector(sel); if (piiloon) piiloon.style.display = 'none';
+      });
+      Array.prototype.forEach.call(laatikko.children, function (child) {
+        if (child.tagName === 'P') child.style.display = 'none'; // PIN-ohjetekstit + viesti (suorat lapset)
+      });
+
       // Avaa oma ryhmä ilman PIN:iä (tilimoodi)
       Array.prototype.forEach.call(lohko.querySelectorAll(".portti-tili-rivi"), function (btn) {
         btn.addEventListener("click", function () {
