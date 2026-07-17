@@ -324,7 +324,8 @@
         (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
         '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät · avaa ilman PIN:iä</div>' +
         listaHTML +
-        '<a href="#" class="portti-haltuun-toggle" style="display:' + (onRyhmia ? 'inline-block' : 'none') + ';margin-top:.4rem;font-size:13px;color:#7c3aed;text-decoration:none">+ Ota olemassa oleva ryhmä haltuun</a>' +
+        '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>' +
+        '<a href="#" class="portti-haltuun-toggle" style="display:' + (onRyhmia ? 'inline-block' : 'none') + ';margin-top:.5rem;font-size:13px;color:#7c3aed;text-decoration:none">+ Ota olemassa oleva ryhmä haltuun</a>' +
         '<div class="portti-haltuun-lomake"' + (onRyhmia ? ' hidden' : '') + ' style="margin-top:.5rem">' +
           (onRyhmia ? '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.3rem">Ota ryhmä haltuun</div>' : '') +
           '<input class="portti-haltuun-koodi" type="text" placeholder="Ryhmäkoodi (esim. K3M-9PQ2)" autocomplete="off" style="text-transform:uppercase">' +
@@ -355,6 +356,30 @@
           kaynnistaMuokkaus();
         });
       });
+
+      // "Luo uusi ryhmä": luo ryhmä opettajan omistukseen ja avaa muokkaustila
+      var luoBtn = lohko.querySelector(".portti-luo-btn");
+      if (luoBtn) {
+        luoBtn.addEventListener("click", function () {
+          var nimi = window.prompt("Anna ryhmälle nimi (esim. 7A). Voit jättää tyhjäksi.", "");
+          if (nimi === null) return; // peruttu
+          var koulukoodi = null;
+          try { var lis = JSON.parse(localStorage.getItem("digiopo_lisenssi") || "null"); if (lis) koulukoodi = lis.koodi || lis.koulu || null; } catch (e) {}
+          luoBtn.disabled = true; luoBtn.textContent = "Luodaan…";
+          postServer({ toiminto: "luo_oma", nimi: nimi.trim(), koulukoodi: koulukoodi }).then(function (r) {
+            if (r && r.ok && r.ryhmakoodi) {
+              kirjoitaRaaka(LS_OPE_R, r.ryhmakoodi);
+              tiliMoodi = true;
+              listaanRyhma(r.ryhmakoodi);
+              sulje();
+              kaynnistaMuokkaus();
+            } else {
+              luoBtn.disabled = false; luoBtn.textContent = "➕ Luo uusi ryhmä";
+              alert("Ryhmän luonti epäonnistui.");
+            }
+          });
+        });
+      }
 
       // "Ota ryhmä haltuun" -linkki avaa lomakkeen (piilossa kun ryhmiä on)
       var haltuunToggle = lohko.querySelector(".portti-haltuun-toggle");

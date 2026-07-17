@@ -230,7 +230,7 @@ export default async function handler(req, res) {
   // Opettaja hallitsee vain omia ryhmiään (omistaja_email = kirjautunut email).
   // Valtuutus tulee lisenssievästeestä, ei PIN:stä → sijoitettu ennen avain-
   // tarkistusta, koska nämä eivät käytä avain-kenttää.
-  const OMAT_TOIMINNOT = ['omat_ryhmat', 'nimea_oma', 'poista_oma', 'nollaa_oma_pin', 'tallenna_oma'];
+  const OMAT_TOIMINNOT = ['omat_ryhmat', 'luo_oma', 'nimea_oma', 'poista_oma', 'nollaa_oma_pin', 'tallenna_oma'];
   if (OMAT_TOIMINNOT.includes(toiminto)) {
     const opettaja = await haeKirjautunutOpettaja(req);
     if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
@@ -240,6 +240,26 @@ export default async function handler(req, res) {
         const r = await sb(`opetusryhmat?omistaja_email=eq.${encodeURIComponent(opettaja)}&select=ryhmakoodi,nimi,luotu_at&order=luotu_at.desc`);
         if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
         return res.status(200).json({ ok: true, email: opettaja, ryhmat: await r.json() });
+      }
+
+      // LUO: uusi ryhmä kirjautuneen opettajan omistukseen. PIN generoidaan
+      // taustalla (opettaja hallitsee tilillä, ei tarvitse PIN:iä). Palauttaa
+      // ryhmäkoodin, jonka opettaja jakaa oppilaille.
+      if (toiminto === 'luo_oma') {
+        const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) || null : null;
+        const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
+        const avain_hash = hashAvain(arvoNumeroPin(8)); // vestigiaalinen PIN, ei näytetä
+        for (let i = 0; i < 5; i++) {
+          const ryhmakoodi = arvoRyhmakoodi();
+          const r = await sb('opetusryhmat', {
+            method: 'POST',
+            headers: { Prefer: 'return=minimal' },
+            body: JSON.stringify({ ryhmakoodi, avain_hash, koulukoodi, nimi, omistaja_email: opettaja }),
+          });
+          if (r.status === 201) return res.status(200).json({ ok: true, ryhmakoodi, nimi });
+          if (r.status !== 409) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        }
+        return res.status(500).json({ ok: false, virhe: 'koodin_luonti_epaonnistui' });
       }
 
       // Loput koskevat yhtä ryhmää → vaativat omistajuuden
