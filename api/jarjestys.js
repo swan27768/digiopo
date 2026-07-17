@@ -16,6 +16,7 @@
 import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
+import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -77,7 +78,7 @@ async function sb(path, opts = {}) {
 }
 
 async function haeRyhma(ryhmakoodi) {
-  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash`);
+  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash,omistaja_email`);
   if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
   return (await r.json())[0] || null;
 }
@@ -157,32 +158,70 @@ export default async function handler(req, res) {
 
   const toiminto = body.toiminto;
 
-  // ── ADMIN: nollaa ryhmän PIN (x-admin-key-suojattu, kuten admin-tilastot) ──
-  // Opettaja unohtaa PIN:n → admin ajaa yhden kutsun. Ryhmäkoodi ja järjestykset
-  // säilyvät ennallaan, vain avain_hash vaihtuu. Palauttaa uuden PIN:n opettajalle.
-  if (toiminto === 'admin_nollaa_pin') {
+  // ── ADMIN-toiminnot (x-admin-key-suojatut, sama avain kuin admin-tilastot) ──
+  // Ryhmien hallinta admin-paneelista: listaa, nimeä, nollaa PIN, poista.
+  const ADMIN_TOIMINNOT = ['admin_nollaa_pin', 'admin_ryhmat_lista', 'admin_nimea', 'admin_poista'];
+  if (ADMIN_TOIMINNOT.includes(toiminto)) {
     if (!ADMIN_DASHBOARD_KEY || !vertaaSalaisuus(req.headers['x-admin-key'] || '', ADMIN_DASHBOARD_KEY)) {
       return res.status(403).json({ ok: false, virhe: 'ei_oikeutta' });
     }
-    const ryhma = String(body.ryhma || '').trim().toUpperCase();
-    if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
-      return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-    }
     try {
+      // LISTA: kaikki ryhmät hallintanäkymälle (uusin ensin)
+      if (toiminto === 'admin_ryhmat_lista') {
+        const r = await sb('opetusryhmat?select=ryhmakoodi,nimi,koulukoodi,luotu_at&order=luotu_at.desc');
+        if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        return res.status(200).json({ ok: true, ryhmat: await r.json() });
+      }
+
+      // Loput toiminnot koskevat yhtä ryhmää
+      const ryhma = String(body.ryhma || '').trim().toUpperCase();
+      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
+        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+      }
       if (!(await haeRyhma(ryhma))) {
         return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
       }
-      const uusiPin = arvoNumeroPin(8); // 8 numeroa (sama sääntö kuin opettajan PIN: vain numeroita)
-      const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ avain_hash: hashAvain(uusiPin) }),
-      });
-      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-      return res.status(200).json({ ok: true, ryhmakoodi: ryhma, uusiPin });
+
+      // NIMEÄ (Update): aseta ryhmän nimi (esim. "7A")
+      if (toiminto === 'admin_nimea') {
+        const nimi = body.nimi == null ? null : (String(body.nimi).trim().slice(0, 80) || null);
+        const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({ nimi }),
+        });
+        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, nimi });
+      }
+
+      // NOLLAA PIN: vaihda avain_hash, palauta uusi numeerinen PIN opettajalle
+      if (toiminto === 'admin_nollaa_pin') {
+        const uusiPin = arvoNumeroPin(8);
+        const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({ avain_hash: hashAvain(uusiPin) }),
+        });
+        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, uusiPin });
+      }
+
+      // POISTA (Delete): poistaa ryhmän + sen järjestykset ja aikataulut (ON DELETE
+      // CASCADE). Tuplavarmistus: body.vahvista täytyy olla sama kuin ryhmäkoodi.
+      if (toiminto === 'admin_poista') {
+        if (String(body.vahvista || '').trim().toUpperCase() !== ryhma) {
+          return res.status(400).json({ ok: false, virhe: 'vahvistus_puuttuu' });
+        }
+        const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
+          method: 'DELETE',
+          headers: { Prefer: 'return=minimal' },
+        });
+        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, poistettu: true });
+      }
     } catch (err) {
-      console.error('jarjestys admin_nollaa_pin:', err);
-      await kirjaaVirhe('jarjestys admin_nollaa_pin', err);
+      console.error('jarjestys admin CRUD:', err);
+      await kirjaaVirhe('jarjestys admin CRUD', err, { toiminto });
       return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
     }
   }
@@ -204,6 +243,9 @@ export default async function handler(req, res) {
       const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
       const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) : null;
       const avain_hash = hashAvain(avain);
+      // Jos opettaja on kirjautunut tililleen, leimaa ryhmä hänen omistamakseen.
+      // Ilman kirjautumista (esim. koulukoodilla) omistaja jää tyhjäksi.
+      const omistaja_email = await haeKirjautunutOpettaja(req);
 
       // Yritä luoda uniikki ryhmäkoodi (max 5 yritystä törmäyksen varalta)
       for (let i = 0; i < 5; i++) {
@@ -211,10 +253,10 @@ export default async function handler(req, res) {
         const r = await sb('opetusryhmat', {
           method: 'POST',
           headers: { Prefer: 'return=representation' },
-          body: JSON.stringify({ ryhmakoodi, avain_hash, koulukoodi, nimi }),
+          body: JSON.stringify({ ryhmakoodi, avain_hash, koulukoodi, nimi, omistaja_email }),
         });
         if (r.status === 201) {
-          return res.status(200).json({ ok: true, ryhmakoodi });
+          return res.status(200).json({ ok: true, ryhmakoodi, omistaja_email });
         }
         if (r.status !== 409) { // 409 = törmäys, kokeile uutta koodia
           throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
@@ -259,6 +301,36 @@ export default async function handler(req, res) {
       });
       if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
       return res.status(200).json({ ok: true });
+    }
+
+    // ── OTA HALTUUN: liitä olemassa oleva ryhmä kirjautuneen opettajan tiliin ──
+    // Vaatii kirjautuneen opettajan (eväste) + oikean PIN:n. Asettaa omistajan
+    // vain jos ryhmällä ei vielä ole omistajaa → ei kaappausta.
+    if (toiminto === 'ota_haltuun') {
+      const opettaja = await haeKirjautunutOpettaja(req);
+      if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
+      const ryhma = String(body.ryhma || '').trim().toUpperCase();
+      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
+        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
+      }
+      const rivi = await haeRyhma(ryhma);
+      if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
+      if (rivi.avain_hash !== hashAvain(avain)) {
+        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
+      }
+      if (rivi.omistaja_email && rivi.omistaja_email !== opettaja) {
+        return res.status(200).json({ ok: false, virhe: 'jo_omistettu' });
+      }
+      if (rivi.omistaja_email === opettaja) {
+        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, omistaja_email: opettaja });
+      }
+      const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ omistaja_email: opettaja }),
+      });
+      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+      return res.status(200).json({ ok: true, ryhmakoodi: ryhma, omistaja_email: opettaja });
     }
 
     return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });
