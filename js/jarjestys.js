@@ -576,7 +576,7 @@
       '<div class="jp-block">' +
         '<div class="jp-h">Lukuvuoden aikataulu</div>' +
         '<p class="jp-ohje">Lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät.</p>' +
-        '<a class="jarjestys-nappi" href="/aikataulu_ope.html">Muokkaa aikataulua</a>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-aikataulu">Muokkaa aikataulua</button>' +
       '</div>' +
       // 3. Julkaise muutokset oppilaille
       '<div class="jp-block">' +
@@ -600,6 +600,8 @@
       paivitaKaikkiLukot();
     });
     b.querySelector(".jarjestys-julkaise").addEventListener("click", julkaise);
+    var aikatauluNappi = b.querySelector(".jarjestys-aikataulu");
+    if (aikatauluNappi) aikatauluNappi.addEventListener("click", avaaAikatauluModaali);
     var kopioiNappi = b.querySelector(".jarjestys-kopioi");
     if (kopioiNappi) kopioiNappi.addEventListener("click", function () {
       if (navigator.clipboard) navigator.clipboard.writeText(linkki).then(function () {
@@ -609,6 +611,121 @@
       });
     });
     julkaisuTila = b.querySelector(".jarjestys-tila");
+  }
+
+  // ---------- Aikataulu-modaali (samalla luokkasivulla, ei erillistä sivua) ----------
+  function avaaAikatauluModaali() {
+    if (document.querySelector(".aikataulu-modaali-overlay")) return;
+    var ryhma = lueRaaka(LS_OPE_R);
+    if (!ryhma) return;
+    var API_A = "/api/aikataulu";
+    var TYYPIT = { tet: "TET-jakso", yhteishaku: "Yhteishaku", palautus: "Palautuspäivä", tapahtuma: "Tapahtuma", muu: "Muu" };
+    var muokattavaId = null;
+
+    // Valtuutus samoin kuin muokkaustila avattiin: istunto (tilimoodi) tai PIN.
+    function avainNyt() { return tiliMoodi ? "" : (lueRaaka(LS_OPE_A) || ""); }
+    function postA(payload) {
+      return fetch(API_A, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        .then(function (r) { return r.json(); }).catch(function () { return { ok: false, virhe: "verkko" }; });
+    }
+    function pvmSuomeksi(iso) { var o = String(iso || "").split("-"); if (o.length !== 3) return iso || ""; return parseInt(o[2], 10) + "." + parseInt(o[1], 10) + "." + o[0]; }
+    function pvmVali(a, l) { if (l && l !== a) return pvmSuomeksi(a) + " – " + pvmSuomeksi(l); return pvmSuomeksi(a); }
+
+    var overlay = document.createElement("div");
+    overlay.className = "aikataulu-modaali-overlay";
+    overlay.innerHTML =
+      '<div class="aikataulu-modaali">' +
+        '<div class="am-head"><span>🗓️ Lukuvuoden aikataulu — ' + LUOKKA + '. luokka</span>' +
+        '<button type="button" class="am-sulje" title="Sulje">✕</button></div>' +
+        '<div class="am-lomake">' +
+          '<input class="am-otsikko" type="text" maxlength="80" placeholder="Otsikko (esim. TET-jakso)">' +
+          '<div class="am-rivi2">' +
+            '<select class="am-tyyppi">' + Object.keys(TYYPIT).map(function (k) { return '<option value="' + k + '">' + esc(TYYPIT[k]) + '</option>'; }).join("") + '</select>' +
+            '<input class="am-alku" type="date">' +
+            '<input class="am-loppu" type="date">' +
+          '</div>' +
+          '<textarea class="am-kuvaus" maxlength="200" placeholder="Lyhyt lisätieto oppilaille (valinnainen)"></textarea>' +
+          '<div class="am-napit">' +
+            '<button type="button" class="jarjestys-nappi am-tallenna">Lisää tapahtuma</button>' +
+            '<button type="button" class="am-peru" hidden>Peru</button>' +
+            '<span class="am-tila"></span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="am-lista"><p class="am-tyhja">Ladataan…</p></div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    var q = function (sel) { return overlay.querySelector(sel); };
+    function sulje() { overlay.remove(); }
+    overlay.addEventListener("click", function (e) { if (e.target === overlay) sulje(); });
+    q(".am-sulje").addEventListener("click", sulje);
+
+    function naytaTila(t, lk) { var el = q(".am-tila"); el.textContent = t || ""; el.className = "am-tila" + (lk ? " " + lk : ""); }
+    function tyhjennaLomake() { muokattavaId = null; q(".am-otsikko").value = ""; q(".am-tyyppi").value = "tet"; q(".am-alku").value = ""; q(".am-loppu").value = ""; q(".am-kuvaus").value = ""; q(".am-tallenna").textContent = "Lisää tapahtuma"; q(".am-peru").hidden = true; }
+
+    function lataa() {
+      fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
+        .then(function (r) { return r.json(); })
+        .then(function (d) { if (!d || !d.ok) { q(".am-lista").innerHTML = '<p class="am-tyhja">Lataus epäonnistui.</p>'; return; } renderoi(d.tapahtumat || []); })
+        .catch(function () { q(".am-lista").innerHTML = '<p class="am-tyhja">Yhteysvirhe.</p>'; });
+    }
+
+    function renderoi(lista) {
+      if (!lista.length) { q(".am-lista").innerHTML = '<p class="am-tyhja">Ei vielä tapahtumia. Lisää ensimmäinen yllä.</p>'; return; }
+      q(".am-lista").innerHTML = lista.map(function (t) {
+        var tyyppi = TYYPIT[t.tyyppi] ? t.tyyppi : "muu";
+        return '<div class="am-rivi am-t-' + tyyppi + '" data-id="' + esc(t.id) + '">' +
+          '<div class="am-tiedot"><div class="am-pvm">' + esc(pvmVali(t.alku_pvm, t.loppu_pvm)) + ' · ' + esc(TYYPIT[tyyppi]) + '</div>' +
+          '<div class="am-otsikkorivi">' + esc(t.otsikko) + '</div>' + (t.kuvaus ? '<div class="am-kuvausrivi">' + esc(t.kuvaus) + '</div>' : '') + '</div>' +
+          '<div class="am-toiminnot"><button type="button" class="am-muokkaa">Muokkaa</button><button type="button" class="am-poista">Poista</button></div>' +
+        '</div>';
+      }).join("");
+      Array.prototype.forEach.call(q(".am-lista").querySelectorAll(".am-rivi"), function (el) {
+        var id = el.getAttribute("data-id");
+        var t = lista.filter(function (x) { return String(x.id) === id; })[0];
+        el.querySelector(".am-muokkaa").addEventListener("click", function () { aloitaMuokkaus(t); });
+        el.querySelector(".am-poista").addEventListener("click", function () { poista(t); });
+      });
+    }
+
+    function aloitaMuokkaus(t) {
+      muokattavaId = t.id;
+      q(".am-otsikko").value = t.otsikko || ""; q(".am-tyyppi").value = t.tyyppi || "muu";
+      q(".am-alku").value = t.alku_pvm || ""; q(".am-loppu").value = t.loppu_pvm || ""; q(".am-kuvaus").value = t.kuvaus || "";
+      q(".am-tallenna").textContent = "Tallenna muutokset"; q(".am-peru").hidden = false; q(".am-otsikko").focus();
+    }
+
+    q(".am-peru").addEventListener("click", function () { tyhjennaLomake(); naytaTila(""); });
+
+    q(".am-tallenna").addEventListener("click", function () {
+      var otsikko = (q(".am-otsikko").value || "").trim();
+      var alku = q(".am-alku").value;
+      var loppu = q(".am-loppu").value || null;
+      var kuvaus = (q(".am-kuvaus").value || "").trim() || null;
+      if (!otsikko) return naytaTila("Anna otsikko.", "virhe");
+      if (!alku) return naytaTila("Valitse alkupäivä.", "virhe");
+      if (loppu && loppu < alku) return naytaTila("Loppupäivä ei voi olla ennen alkupäivää.", "virhe");
+      var payload = { ryhma: ryhma, avain: avainNyt(), luokka: LUOKKA, otsikko: otsikko, tyyppi: q(".am-tyyppi").value, alku_pvm: alku, loppu_pvm: loppu, kuvaus: kuvaus };
+      payload.toiminto = muokattavaId ? "muokkaa" : "lisaa";
+      if (muokattavaId) payload.id = muokattavaId;
+      q(".am-tallenna").disabled = true; naytaTila("Tallennetaan…");
+      postA(payload).then(function (v) {
+        q(".am-tallenna").disabled = false;
+        if (v && v.ok) { naytaTila(muokattavaId ? "Muutokset tallennettu." : "Tapahtuma lisätty.", "ok"); tyhjennaLomake(); lataa(); }
+        else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja" || v.virhe === "avain_ei_tasmaa")) naytaTila("Ei oikeutta — kirjaudu uudelleen.", "virhe");
+        else naytaTila("Tallennus epäonnistui.", "virhe");
+      });
+    });
+
+    function poista(t) {
+      if (!window.confirm('Poistetaanko "' + (t.otsikko || "") + '"?')) return;
+      postA({ toiminto: "poista", ryhma: ryhma, avain: avainNyt(), id: t.id }).then(function (v) {
+        if (v && v.ok) { if (muokattavaId === t.id) tyhjennaLomake(); lataa(); }
+        else naytaTila("Poisto epäonnistui.", "virhe");
+      });
+    }
+
+    lataa();
   }
 
   function julkaise() {
