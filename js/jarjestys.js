@@ -174,19 +174,29 @@
     var tiliRyhmaParam = (params.get("tili_ryhma") || "").trim().toUpperCase();
     var avaaAikataulu = params.get("aikataulu") === "1";
     if (tiliRyhmaParam && /^[A-Z0-9-]{4,16}$/.test(tiliRyhmaParam)) {
+      // Näytä heti latausilmoitus, ettei käyttäjä hätäänny odottaessaan.
+      var lataus = document.createElement("div");
+      lataus.className = "jarjestys-lataus";
+      lataus.style.cssText = "position:fixed;inset:0;z-index:10003;display:flex;align-items:center;justify-content:center;background:rgba(31,17,71,.45);color:#fff;font-size:1.05rem;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+      lataus.textContent = avaaAikataulu ? "Avataan aikataulua…" : "Avataan muokkaustilaa…";
+      document.body.appendChild(lataus);
+      var poistaLataus = function () { if (lataus && lataus.parentNode) lataus.parentNode.removeChild(lataus); };
+
       // Opettajaeväste voi asettua taustalla (lisenssiportti.js) hieman viiveellä,
       // joten yritetään omat_ryhmat muutaman kerran ennen luovuttamista.
       var yritaAvata = function (kertaa) {
         postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
           if (v && v.ok && (v.ryhmat || []).some(function (r) { return r.ryhmakoodi === tiliRyhmaParam; })) {
+            poistaLataus();
             kirjoitaRaaka(LS_OPE_R, tiliRyhmaParam);
             tiliMoodi = true;
             kaynnistaMuokkaus();
             if (avaaAikataulu) avaaAikatauluModaali();
           } else if (kertaa < 5) {
             setTimeout(function () { yritaAvata(kertaa + 1); }, 600);
-          } else if (avaaPortti) {
-            avaaPinPortti();
+          } else {
+            poistaLataus();
+            avaaPinPortti(); // ei löytynyt/ei kirjautunut → näytä tili-/kirjautumisnäkymä
           }
         });
       };
