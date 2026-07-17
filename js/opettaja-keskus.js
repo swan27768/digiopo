@@ -85,7 +85,7 @@
     var overlay = document.createElement("div");
     overlay.className = "ope-keskus-overlay";
     overlay.innerHTML =
-      '<div class="ope-keskus"><div class="ok-head"><span>Opettajan hallintasivu</span>' +
+      '<div class="ope-keskus"><div class="ok-head"><span>Hallintapaneeli</span>' +
       '<button type="button" class="ok-sulje" title="Sulje">✕</button></div>' +
       '<div class="ok-body"><p class="ok-tila">Tarkistetaan kirjautumista…</p></div></div>';
     document.body.appendChild(overlay);
@@ -183,7 +183,7 @@
     var b = document.createElement("button");
     b.type = "button";
     b.className = "ope-keskus-nappi";
-    b.textContent = "Opettajan hallintasivu";
+    b.textContent = "Hallintapaneeli";
     b.addEventListener("click", avaaKeskus);
     document.body.appendChild(b);
   });

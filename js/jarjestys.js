@@ -210,8 +210,8 @@
     var a = document.createElement("button");
     a.type = "button";
     a.className = "jarjestys-opelinkki";
-    a.textContent = "Opettajan hallintasivu";
-    a.title = "Opettajan hallintasivu";
+    a.textContent = "Hallintapaneeli";
+    a.title = "Hallintapaneeli";
     a.addEventListener("click", avaaPinPortti);
     document.body.appendChild(a);
   }
@@ -222,7 +222,7 @@
     if (document.querySelector(".jarjestys-portti")) return;
     var overlay = document.createElement("div");
     overlay.className = "jarjestys-portti";
-    overlay.innerHTML = '<div class="portti-laatikko"><h2>Opettajan hallintasivu</h2><div class="portti-sisalto"><p class="portti-viesti">Tarkistetaan…</p></div></div>';
+    overlay.innerHTML = '<div class="portti-laatikko"><h2>Hallintapaneeli</h2><div class="portti-sisalto"><p class="portti-viesti">Tarkistetaan…</p></div></div>';
     document.body.appendChild(overlay);
 
     var sulje = function () { overlay.remove(); };
