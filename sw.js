@@ -18,7 +18,6 @@ function onSuojattuPolku(pathname) {
     pathname === "/7luokka" ||
     pathname === "/8luokka" ||
     pathname === "/9luokka" ||
-    pathname === "/aikataulu_ope.html" ||
     pathname.includes("osio-data-") ||
     pathname === "/js/tehtavat.json"
   );

@@ -22,7 +22,6 @@ export const config = {
     '/7luokka',
     '/8luokka',
     '/9luokka',
-    '/aikataulu_ope.html',
     '/js/osio-data-7lk.js',
     '/js/osio-data-8lk.js',
     '/js/osio-data-9lk.js',

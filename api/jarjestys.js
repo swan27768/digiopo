@@ -4,10 +4,12 @@
 //      → { ok: true, jarjestys: ["johdanto", ...] | null }   (julkinen luku)
 //
 // POST /api/jarjestys   (JSON body, toiminto-kenttä ratkaisee)
-//   { toiminto: "rekisteroi", avain, koulukoodi?, nimi? }
-//      → { ok: true, ryhmakoodi: "7A-K3M9" }                 (luo ryhmän)
+//   Ryhmien luonti/muokkaus tapahtuu tili-toiminnoilla (luo_oma, tallenna_oma…),
+//   jotka valtuutetaan opettajan istunnolla (ei PIN:iä). Legacy PIN-polut:
 //   { toiminto: "tallenna", ryhma, avain, luokka, jarjestys }
-//      → { ok: true }                                        (vaatii avaimen)
+//      → { ok: true }   (vain omistajattomille ryhmille; omistetulle 403)
+//   { toiminto: "admin_nollaa_pin", ryhma }   + header x-admin-key: <ADMIN_DASHBOARD_KEY>
+//      → { ok: true, ryhmakoodi, uusiPin }    (vaihtaa PIN:n, järjestys säilyy)
 //   { toiminto: "admin_nollaa_pin", ryhma }   + header x-admin-key: <ADMIN_DASHBOARD_KEY>
 //      → { ok: true, ryhmakoodi, uusiPin }    (vaihtaa PIN:n, järjestys säilyy)
 //
@@ -17,6 +19,7 @@ import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
 import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
+import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -26,19 +29,9 @@ const PEPPER = process.env.JARJESTYS_PEPPER || ''; // valinnainen lisäsuola ava
 const SALLITUT_LUOKAT = ['7', '8', '9'];
 const KOODI_AAKKOSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // ei sekoittuvia (0/O, 1/I)
 
-// ─── Rate limiter (muistipohjainen, kuten lisenssi.js) ───────────────────────
-const yritykset = new Map();
-const MAX_YRITYKSIA = 20;
-const IKKUNA_MS = 10 * 60 * 1000;
-
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const m = yritykset.get(ip) || { maara: 0, alku: nyt };
-  if (nyt - m.alku > IKKUNA_MS) { yritykset.set(ip, { maara: 1, alku: nyt }); return true; }
-  if (m.maara >= MAX_YRITYKSIA) return false;
-  yritykset.set(ip, { maara: m.maara + 1, alku: m.alku });
-  return true;
-}
+// ─── Rate limit (Redis, jaettu instanssien kesken – ks. _lib/rate.js) ────────
+const RL_MAX = 40;          // POST-toimintoja per IP
+const RL_IKKUNA_S = 10 * 60; // 10 minuutin ikkuna
 
 // ─── Apurit ──────────────────────────────────────────────────────────────────
 function hashAvain(avain) {
@@ -85,10 +78,14 @@ async function haeRyhma(ryhmakoodi) {
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  // Sama kuin admin-tilastot/admin-viesti: sallitaan kaikki alkuperät, jotta
-  // paikallinen admin-paneeli (file://) voi kutsua admin_nollaa_pin-toimintoa.
-  // Kirjoitustoiminnot on suojattu PIN:llä tai x-admin-key:llä, ei evästeellä,
-  // joten '*' ei avaa CSRF-riskiä (ei ambient-tunnistautumista).
+  // Sallitaan kaikki alkuperät, jotta paikallinen admin-paneeli (file://, origin
+  // null) voi kutsua admin-toimintoja x-admin-key-otsikolla.
+  // CSRF: tili-toiminnot (luo_oma, poista_oma, tallenna_oma…) valtuutetaan
+  // lisenssievästeellä, mutta eväste on SameSite=Lax → selain EI liitä sitä
+  // cross-site-POST-pyyntöihin, joten vieras sivu ei voi väärentää niitä.
+  // Admin-toiminnot vaativat x-admin-key:n (ei evästettä). Selain ei myöskään
+  // salli lukea vastausta cross-originina, kun mukana on tunnisteita ('*' +
+  // credentials on kielletty). → '*' on turvallinen tässä.
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-key');
@@ -143,9 +140,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, virhe: 'metodi_ei_sallittu' });
   }
 
-  // ── Rate limit POST-toiminnoille ──
+  // ── Rate limit POST-toiminnoille (Redis, jaettu instanssien kesken) ──
   const ip = haeIp(req);
-  if (!tarkistaRateLimit(ip)) {
+  if (!(await rateLimitSallittu(`rl:jarjestys:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 
@@ -339,39 +336,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ── REKISTERÖI: luo uusi opetusryhmä ──
-    if (toiminto === 'rekisteroi') {
-      // Uudet PIN:it: väh. 6 numeroa (vain numerot, kuten puhelimen PIN).
-      // Suoja oppilaiden arvailua vastaan. Vanhojen ryhmien tarkistus
-      // (tarkista/tallenna) jää sallivaksi, jottei ketään lukita ulos.
-      if (!/^\d{6,}$/.test(avain)) {
-        return res.status(400).json({ ok: false, virhe: 'avain_liian_lyhyt' });
-      }
-      const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
-      const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) : null;
-      const avain_hash = hashAvain(avain);
-      // Jos opettaja on kirjautunut tililleen, leimaa ryhmä hänen omistamakseen.
-      // Ilman kirjautumista (esim. koulukoodilla) omistaja jää tyhjäksi.
-      const omistaja_email = await haeKirjautunutOpettaja(req);
-
-      // Yritä luoda uniikki ryhmäkoodi (max 5 yritystä törmäyksen varalta)
-      for (let i = 0; i < 5; i++) {
-        const ryhmakoodi = arvoRyhmakoodi();
-        const r = await sb('opetusryhmat', {
-          method: 'POST',
-          headers: { Prefer: 'return=representation' },
-          body: JSON.stringify({ ryhmakoodi, avain_hash, koulukoodi, nimi, omistaja_email }),
-        });
-        if (r.status === 201) {
-          return res.status(200).json({ ok: true, ryhmakoodi, omistaja_email });
-        }
-        if (r.status !== 409) { // 409 = törmäys, kokeile uutta koodia
-          throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-        }
-      }
-      return res.status(500).json({ ok: false, virhe: 'koodin_luonti_epaonnistui' });
-    }
-
     // ── TARKISTA: vahvista avain avaamatta/kirjoittamatta mitään ──
     if (toiminto === 'tarkista') {
       const ryhma = String(body.ryhma || '').trim().toUpperCase();
@@ -397,7 +361,16 @@ export default async function handler(req, res) {
       }
 
       const ryhmaRivi = await haeRyhma(ryhma);
-      if (!ryhmaRivi || ryhmaRivi.avain_hash !== hashAvain(avain)) {
+      if (!ryhmaRivi) {
+        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
+      }
+      // Omistetulle ryhmälle ei sallita PIN-kirjoitusta: tilipohjaiset ryhmät
+      // muokataan istunnolla (tallenna_oma). Näin vanha PIN ei ole enää
+      // kirjoitusreitti migratoiduille ryhmille.
+      if (ryhmaRivi.omistaja_email) {
+        return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
+      }
+      if (ryhmaRivi.avain_hash !== hashAvain(avain)) {
         return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
       }
 
@@ -408,36 +381,6 @@ export default async function handler(req, res) {
       });
       if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
       return res.status(200).json({ ok: true });
-    }
-
-    // ── OTA HALTUUN: liitä olemassa oleva ryhmä kirjautuneen opettajan tiliin ──
-    // Vaatii kirjautuneen opettajan (eväste) + oikean PIN:n. Asettaa omistajan
-    // vain jos ryhmällä ei vielä ole omistajaa → ei kaappausta.
-    if (toiminto === 'ota_haltuun') {
-      const opettaja = await haeKirjautunutOpettaja(req);
-      if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
-      const ryhma = String(body.ryhma || '').trim().toUpperCase();
-      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
-        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-      }
-      const rivi = await haeRyhma(ryhma);
-      if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
-      if (rivi.avain_hash !== hashAvain(avain)) {
-        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
-      }
-      if (rivi.omistaja_email && rivi.omistaja_email !== opettaja) {
-        return res.status(200).json({ ok: false, virhe: 'jo_omistettu' });
-      }
-      if (rivi.omistaja_email === opettaja) {
-        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, omistaja_email: opettaja });
-      }
-      const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ omistaja_email: opettaja }),
-      });
-      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-      return res.status(200).json({ ok: true, ryhmakoodi: ryhma, omistaja_email: opettaja });
     }
 
     return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });

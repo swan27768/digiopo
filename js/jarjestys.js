@@ -39,8 +39,7 @@
   function lueRaaka(a) { try { return localStorage.getItem(a); } catch (e) { return null; } }
   function kirjoitaRaaka(a, v) { try { localStorage.setItem(a, v); } catch (e) {} }
 
-  // Kirjaa ryhmäkoodi paikalliseen "omat ryhmät" -listaan (ei PIN:iä). Sama
-  // lista näkyy lukuvuoden aikataulun muokkaustilassa (aikataulu_ope.html).
+  // Kirjaa ryhmäkoodi paikalliseen "omat ryhmät" -listaan (ei PIN:iä).
   function listaanRyhma(koodi) {
     if (!koodi) return;
     try {

@@ -19,6 +19,7 @@ import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
+import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -28,19 +29,9 @@ const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
 const SALLITUT_LUOKAT = ['7', '8', '9'];
 const MAX_TAPAHTUMIA = 15; // enimmäismäärä per ryhmä JA luokka
 
-// ─── Rate limiter (muistipohjainen, kuten jarjestys.js / lisenssi.js) ─────────
-const yritykset = new Map();
-const MAX_YRITYKSIA = 30;
-const IKKUNA_MS = 10 * 60 * 1000;
-
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const m = yritykset.get(ip) || { maara: 0, alku: nyt };
-  if (nyt - m.alku > IKKUNA_MS) { yritykset.set(ip, { maara: 1, alku: nyt }); return true; }
-  if (m.maara >= MAX_YRITYKSIA) return false;
-  yritykset.set(ip, { maara: m.maara + 1, alku: m.alku });
-  return true;
-}
+// ─── Rate limit (Redis, jaettu instanssien kesken – ks. _lib/rate.js) ────────
+const RL_MAX = 40;           // POST-toimintoja per IP
+const RL_IKKUNA_S = 10 * 60; // 10 minuutin ikkuna
 
 // ─── Apurit ──────────────────────────────────────────────────────────────────
 function hashAvain(avain) {
@@ -104,12 +95,6 @@ async function haeRyhma(ryhmakoodi) {
   return (await r.json())[0] || null;
 }
 
-// Vahvistaa opettaja-avaimen ryhmää vasten. Palauttaa true/false.
-async function avainTasmaa(ryhma, avain) {
-  const rivi = await haeRyhma(ryhma);
-  return !!rivi && rivi.avain_hash === hashAvain(avain);
-}
-
 // ─── Handler ─────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
@@ -149,9 +134,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, virhe: 'metodi_ei_sallittu' });
   }
 
-  // ── Rate limit POST-toiminnoille ──
+  // ── Rate limit POST-toiminnoille (Redis, jaettu instanssien kesken) ──
   const ip = haeIp(req);
-  if (!tarkistaRateLimit(ip)) {
+  if (!(await rateLimitSallittu(`rl:aikataulu:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 
@@ -171,19 +156,22 @@ export default async function handler(req, res) {
 
   try {
     // Valtuutus kirjoituksiin: kirjautunut omistaja (istunto) TAI oikea PIN.
-    // Opettajatilillä ei tarvita PIN:iä; ilman kirjautumista käy PIN kuten ennen.
+    // Jos ryhmällä on omistaja, PIN-fallbackia EI sallita — tilipohjaiset ryhmät
+    // muokataan vain istunnolla. PIN käy vain omistajattomille (legacy) ryhmille.
     const opettaja = await haeKirjautunutOpettaja(req);
-    let valtuutettu = false;
-    if (opettaja) {
-      const rivi = await haeRyhma(ryhma);
-      valtuutettu = !!rivi && rivi.omistaja_email === opettaja;
-    }
+    const rivi = await haeRyhma(ryhma);
+    if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
+    let valtuutettu = !!opettaja && rivi.omistaja_email === opettaja;
     if (!valtuutettu) {
+      if (rivi.omistaja_email) {
+        // Omistettu ryhmä → vain istunto kelpaa.
+        return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
+      }
       const avain = String(body.avain || '');
       if (avain.length < 4 || avain.length > 64) {
         return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
       }
-      if (!(await avainTasmaa(ryhma, avain))) {
+      if (rivi.avain_hash !== hashAvain(avain)) {
         return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
       }
     }
