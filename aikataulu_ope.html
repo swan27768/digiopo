@@ -92,6 +92,14 @@
 
   <!-- ── Kirjautuminen ── -->
   <div class="kortti" id="kirjautuminen">
+    <!-- Kirjautuneen opettajan omat ryhmät: avaa ilman PIN:iä (tilipohjainen) -->
+    <div id="tiliRyhmat" class="piilo">
+      <div style="font-weight:700;font-size:1rem;margin:0 0 2px">Omat ryhmät · avaa ilman PIN:iä</div>
+      <p style="font-size:.78rem;color:var(--muted);margin:0 0 8px" id="tiliRyhmatEmail"></p>
+      <div id="tiliRyhmatLista"></div>
+      <div style="border-top:1px solid var(--line);margin:14px 0 12px"></div>
+    </div>
+
     <!-- Ryhmävalinta ensin: opettaja valitsee heti minkä ryhmän aikataulua muokkaa -->
     <div id="ryhmaLista" class="piilo">
       <div style="font-weight:700;font-size:1rem;margin:0 0 4px">Valitse ryhmä</div>
@@ -275,7 +283,7 @@
     var k = ($("koodi").value||"").trim().toUpperCase();
     var p = ($("pin").value||"").trim();
     if (!/^[A-Z0-9-]{4,16}$/.test(k)) return naytaIlmo($("kirjIlmoitus"),"Tarkista ryhmäkoodi.","virhe");
-    if (!p) return naytaIlmo($("kirjIlmoitus"),"Anna PIN.","virhe");
+    if (!/^\d{6,}$/.test(p)) return naytaIlmo($("kirjIlmoitus"),"PIN on vähintään 6 numeroa (vain numeroita).","virhe");
     naytaIlmo($("kirjIlmoitus"),"Tarkistetaan…");
     post(API_J, { toiminto:"tarkista", ryhma:k, avain:p }).then(function(v){
       if (v && v.ok){ kirjoitaRaaka(LS_OPE_R,k); kirjoitaRaaka(LS_OPE_A,p); avaaEditori(k,p); }
@@ -429,6 +437,33 @@
       else naytaIlmo($("lomakeIlmoitus"), v && v.virhe==="avain_ei_tasmaa" ? "Väärä PIN – kirjaudu uudelleen." : "Poisto epäonnistui.","virhe");
     });
   }
+
+  // ── Tilipohjaiset ryhmät: jos opettaja on kirjautunut, näytä omat ryhmät ──
+  // jotka avautuvat ilman PIN:iä (tallennus valtuutetaan istunnolla + omistajuudella).
+  async function haeTiliRyhmat(){
+    try {
+      const res = await fetch(API_J, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ toiminto:"omat_ryhmat" }) });
+      const data = await res.json();
+      if (!data || !data.ok) return; // ei kirjautunut opettajana → PIN-virta sellaisenaan
+      if (data.email) $("tiliRyhmatEmail").textContent = "Kirjautunut: " + data.email;
+      const ryhmat = data.ryhmat || [];
+      const lista = $("tiliRyhmatLista");
+      if (!ryhmat.length){
+        lista.innerHTML = '<p style="font-size:.85rem;color:var(--muted);margin:0">Ei vielä omia ryhmiä. Luo ryhmä alta.</p>';
+      } else {
+        lista.innerHTML = ryhmat.map(function(r){
+          const nimi = r.nimi ? '<span style="font-weight:600;margin-right:6px">'+turva(r.nimi)+'</span>' : '';
+          return '<button type="button" class="nappi" data-koodi="'+turva(r.ryhmakoodi)+'" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:6px;gap:10px">'+
+            '<span>✏️ Avaa</span><span style="font-family:ui-monospace,Menlo,monospace">'+nimi+turva(r.ryhmakoodi)+'</span></button>';
+        }).join("");
+        Array.prototype.forEach.call(lista.querySelectorAll("button[data-koodi]"), function(btn){
+          btn.addEventListener("click", function(){ avaaEditori(btn.getAttribute("data-koodi"), ""); });
+        });
+      }
+      $("tiliRyhmat").classList.remove("piilo");
+    } catch(e){}
+  }
+  haeTiliRyhmat();
 
   // ── Käynnistys: jos laitteella on jo ryhmä + avain (esim. järjestyksestä), avaa suoraan ──
   renderLista(); // näytä omat ryhmät heti kirjautumisnäkymässä

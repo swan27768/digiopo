@@ -18,6 +18,7 @@
 import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
+import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -98,7 +99,7 @@ async function sb(path, opts = {}) {
 }
 
 async function haeRyhma(ryhmakoodi) {
-  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash`);
+  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash,omistaja_email`);
   if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
   return (await r.json())[0] || null;
 }
@@ -163,19 +164,28 @@ export default async function handler(req, res) {
 
   const toiminto = body.toiminto;
   const ryhma = String(body.ryhma || '').trim().toUpperCase();
-  const avain = String(body.avain || '');
   const luokka = String(body.luokka || '').trim();
   if (!validiRyhma(ryhma)) {
     return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
   }
-  if (avain.length < 4 || avain.length > 64) {
-    return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
-  }
 
   try {
-    // Kaikki kirjoitustoiminnot vaativat oikean opettaja-avaimen
-    if (!(await avainTasmaa(ryhma, avain))) {
-      return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
+    // Valtuutus kirjoituksiin: kirjautunut omistaja (istunto) TAI oikea PIN.
+    // Opettajatilillä ei tarvita PIN:iä; ilman kirjautumista käy PIN kuten ennen.
+    const opettaja = await haeKirjautunutOpettaja(req);
+    let valtuutettu = false;
+    if (opettaja) {
+      const rivi = await haeRyhma(ryhma);
+      valtuutettu = !!rivi && rivi.omistaja_email === opettaja;
+    }
+    if (!valtuutettu) {
+      const avain = String(body.avain || '');
+      if (avain.length < 4 || avain.length > 64) {
+        return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
+      }
+      if (!(await avainTasmaa(ryhma, avain))) {
+        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
+      }
     }
 
     // ── LISÄÄ: uusi tapahtuma ──
