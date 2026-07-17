@@ -174,16 +174,23 @@
     var tiliRyhmaParam = (params.get("tili_ryhma") || "").trim().toUpperCase();
     var avaaAikataulu = params.get("aikataulu") === "1";
     if (tiliRyhmaParam && /^[A-Z0-9-]{4,16}$/.test(tiliRyhmaParam)) {
-      postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
-        if (v && v.ok && (v.ryhmat || []).some(function (r) { return r.ryhmakoodi === tiliRyhmaParam; })) {
-          kirjoitaRaaka(LS_OPE_R, tiliRyhmaParam);
-          tiliMoodi = true;
-          kaynnistaMuokkaus();
-          if (avaaAikataulu) avaaAikatauluModaali();
-        } else if (avaaPortti) {
-          avaaPinPortti();
-        }
-      });
+      // Opettajaeväste voi asettua taustalla (lisenssiportti.js) hieman viiveellä,
+      // joten yritetään omat_ryhmat muutaman kerran ennen luovuttamista.
+      var yritaAvata = function (kertaa) {
+        postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
+          if (v && v.ok && (v.ryhmat || []).some(function (r) { return r.ryhmakoodi === tiliRyhmaParam; })) {
+            kirjoitaRaaka(LS_OPE_R, tiliRyhmaParam);
+            tiliMoodi = true;
+            kaynnistaMuokkaus();
+            if (avaaAikataulu) avaaAikatauluModaali();
+          } else if (kertaa < 5) {
+            setTimeout(function () { yritaAvata(kertaa + 1); }, 600);
+          } else if (avaaPortti) {
+            avaaPinPortti();
+          }
+        });
+      };
+      yritaAvata(0);
       return;
     }
     if (avaaPortti) avaaPinPortti();
