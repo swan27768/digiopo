@@ -42,6 +42,30 @@ function poistaLisenssiEvaste(res) {
   );
 }
 
+// Seuranta (ei estä): kirjaa onnistuneen koodikirjautumisen laitetunniste
+// koodikohtaiseen tauluun deduplattuna (yksi rivi per koodi + laite). Näin
+// admin näkee montako eri laitetta koodia käyttää vs. myydyt paikat. Upsert
+// päivittää viim_nahty:n; ensi_nahty säilyy (ei mukana payloadissa). Seurannan
+// epäonnistuminen EI koskaan saa vaikuttaa kirjautumiseen (try/catch + fire).
+async function kirjaaLaite(koodi, koulu, laite) {
+  if (!laite) return; // ei tunnistetta (esim. vanha frontend) → ei kirjata
+  try {
+    const base = SUPABASE_URL.replace(/\/$/, '');
+    await fetch(`${base}/rest/v1/lisenssi_laitteet?on_conflict=koodi,laite`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({ koodi, koulu, laite, viim_nahty: new Date().toISOString() }),
+    });
+  } catch {
+    // Seurannan epäonnistuminen ei vaikuta kirjautumiseen.
+  }
+}
+
 // Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä.
 // Kolme kerrosta brute-forcea vastaan – KAIKKI laskevat vain EPÄonnistuneita
 // yrityksiä, joten onnistunut kirjautuminen ei koskaan kuluta budjettia:
@@ -242,9 +266,11 @@ export default async function handler(req, res) {
 
   // ── Koululisenssi: kooditarkistus ────────────────────────────────────────
   let koodi;
+  let laite = '';
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
     koodi = (body.koodi || '').trim();
+    laite = String(body.laite || '').trim().slice(0, 64); // seuranta (ei estä)
   } catch {
     return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
   }
@@ -275,6 +301,8 @@ export default async function handler(req, res) {
     }
 
     await asetaLisenssiEvaste(res, { typ: 'koulu', koulu: lisenssi.koulu });
+    // Seuranta (ei estä): kirjaa laite koodikohtaisesti käyttömäärän arviointiin.
+    await kirjaaLaite(lisenssi.koodi, lisenssi.koulu, laite);
     return res.status(200).json({
       ok: true,
       koodi: lisenssi.koodi,

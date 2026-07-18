@@ -6,6 +6,22 @@
 (function () {
   "use strict";
 
+  // Pysyvä laitetunniste (localStorage) → palvelin arvioi koulukoodin
+  // käyttäjämäärää eri laitteiden perusteella (seuranta, ei estä). Ei
+  // henkilötietoa, satunnainen id. Sama avain kuin muualla sivustolla.
+  function laiteTunnus() {
+    try {
+      let v = localStorage.getItem('digiopo_laite');
+      if (!v) {
+        v = (self.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : (Date.now() + '-' + Math.random().toString(16).slice(2));
+        localStorage.setItem('digiopo_laite', v);
+      }
+      return v;
+    } catch { return ''; }
+  }
+
   // ─── Supabase-konfiguraatio ──────────────────────────────────────────────
   const SUPABASE_URL  = 'https://xltsuuovdrradlproonr.supabase.co';
   const SUPABASE_ANON = 'sb_publishable_OMQhHO_Bz_z1KhVC-tiIRw_WFIyOEn-';
@@ -263,7 +279,7 @@
       const vastaus = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koodi }),
+        body: JSON.stringify({ koodi, laite: laiteTunnus() }),
       });
 
       const data = await vastaus.json();
@@ -320,7 +336,7 @@
       const vastaus = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ koodi: tallennettu.koodi || tallennettu.voimassa_asti }),
+        body: JSON.stringify({ koodi: tallennettu.koodi || tallennettu.voimassa_asti, laite: laiteTunnus() }),
       });
       const data = await vastaus.json();
 
