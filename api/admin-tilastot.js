@@ -85,6 +85,15 @@ async function haeKuorma() {
   };
 }
 
+// ─── Lisenssien käyttö (laitepohjainen seuranta) ──────────────────────────
+// Hakee lisenssi_kaytto-näkymän (laitteita per koodi vs. myydyt paikat).
+// Jos näkymää ei ole vielä luotu, palautetaan tyhjä lista → ei kaada muuta.
+async function haeLisenssikaytto() {
+  const r = await sb('lisenssi_kaytto?select=*&order=laitteita_30pv.desc&limit=200');
+  if (!r.ok) return [];
+  return r.json();
+}
+
 // ─── Virheet ──────────────────────────────────────────────────────────────
 async function haeVirheet() {
   const r = await sb('api_virheet?select=*&order=luotu_at.desc&limit=50');
@@ -148,11 +157,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [lisenssit, kuorma, virheet, deploy] = await Promise.all([
+    const [lisenssit, kuorma, virheet, deploy, lisenssikaytto] = await Promise.all([
       haeLisenssit(),
       haeKuorma(),
       haeVirheet(),
       haeDeployStatus().catch(() => null),
+      haeLisenssikaytto().catch(() => []),
     ]);
 
     return res.status(200).json({
@@ -162,6 +172,7 @@ export default async function handler(req, res) {
       kuorma,
       virheet,
       deploy,
+      lisenssikaytto,
     });
   } catch (err) {
     console.error('admin-tilastot:', err);
