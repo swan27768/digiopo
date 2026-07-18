@@ -1,6 +1,30 @@
 -- ============================================================
+--  ⚠️  HISTORIALLINEN KOOSTETIEDOSTO – ÄLÄ KÄYTÄ UUDESSA PYSTYTYKSESSÄ
+-- ============================================================
+--
+--  Tämä on 29.6.2026 tehty kertaluonteinen kooste, jolla useampi
+--  muutos ajettiin tuotantoon yhdellä kertaa. Sisältö on TÄYSIN
+--  päällekkäinen alla lueteltujen modulaaristen tiedostojen kanssa
+--  (tarkistettu: yhtään riviä ei ole vain tässä tiedostossa).
+--
+--  KÄYTÄ NÄITÄ – näissä on sama sisältö, mutta ne on jaettu
+--  ominaisuuksittain ja ajojärjestys on hallittu:
+--
+--    supabase_jarjestys.sql            (opetusryhmat, jarjestykset)
+--    supabase_lisenssi_kirjaukset.sql  (lisenssi_kirjaukset)
+--    supabase_ammattiset.sql           (ammattiset_*)
+--    supabase_fake_insta.sql           (fake_insta_profiilit)
+--    supabase_tiedontemppeli.sql       (tiedontemppeli_tulostaulu)
+--
+--  Ajojärjestys kokonaisuudessaan: katso docs/03-tietokanta.md
+--
+--  Tiedosto on säilytetty vain historiatietona siitä, mitä
+--  tuotantokantaan on ajettu ja milloin. Sen voi poistaa, kun
+--  docs/03-tietokanta.md on valmis.
+--
+-- ============================================================
+--  Alkuperäinen otsikko:
 --  DigiOpo – KAIKKI uudet skeemat (yhdistetty 29.6.2026)
---  Aja tämä koko tiedosto Supabasen SQL Editorissa kerralla.
 --  Kaikki on CREATE IF NOT EXISTS / OR REPLACE -tyyliä:
 --  ei tuhoa olemassa olevaa dataa, turvallinen ajaa.
 -- ============================================================

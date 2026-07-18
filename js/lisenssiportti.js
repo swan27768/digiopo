@@ -360,9 +360,29 @@
   }
 
   // ─── Service Worker ──────────────────────────────────────────────────────
+  // Paikallisessa kehityksessä service workeria EI rekisteröidä. Muuten se
+  // sieppaa pyynnöt ja tarjoilee vanhaa välimuistisisältöä, jolloin dev-serverin
+  // muutokset eivät näy – tai näyttää "Ei verkkoyhteyttä eikä välimuistia",
+  // jos palvelin ei ole käynnissä.
+  //
+  // Lisäksi poistetaan aiemmin rekisteröity SW: pelkkä rekisteröinnin ohitus
+  // ei riitä, koska kerran asennettu SW jää selaimeen pysyvästi.
+  const onPaikallinen = ["localhost", "127.0.0.1", "::1"].includes(
+    location.hostname
+  );
+
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      // Rekisteröinti epäonnistui – ei kriittinen, sivusto toimii normaalisti
-    });
+    if (onPaikallinen) {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((rekisteroinnit) => {
+          rekisteroinnit.forEach((r) => r.unregister());
+        })
+        .catch(() => {});
+    } else {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        // Rekisteröinti epäonnistui – ei kriittinen, sivusto toimii normaalisti
+      });
+    }
   }
 })();

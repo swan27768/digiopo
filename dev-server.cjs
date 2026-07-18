@@ -8,19 +8,15 @@
 // - Vastaa /api/lisenssi paikallisesti: hyväksyy minkä tahansa koulukoodin,
 //   jotta lisenssiportti ei estä sivujen näkymistä kehityksen aikana.
 // - Vastaa /api/ping (käyttölaskuri) hiljaa OK:lla, ettei konsoliin tule virheitä.
-// - Jos haluat testata Claude-tekoälyä paikallisesti, aseta ANTHROPIC_API_KEY
-//   ympäristömuuttuja, niin /v1/messages välitetään Anthropicin rajapintaan.
 //
 // Tämä tiedosto EI vaikuta tuotantoon eikä kuluta Vercelin julkaisurajaa.
 
 const http = require("http");
-const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
 const PORT = process.env.PORT || 8000;
 const ROOT = __dirname;
-const API_KEY = process.env.ANTHROPIC_API_KEY || null;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -362,39 +358,6 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
-  // ── Valinnainen: Claude-välitys (vain jos API-avain annettu) ───────────────
-  if (url === "/v1/messages" && req.method === "POST") {
-    if (!API_KEY) {
-      return lahetaJSON(res, 503, {
-        error:
-          "ANTHROPIC_API_KEY ei asetettu – tekoälyä ei testata paikallisesti.",
-      });
-    }
-    const body = await lueRunko(req);
-    const optiot = {
-      hostname: "api.anthropic.com",
-      path: "/v1/messages",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": API_KEY,
-        "anthropic-version": "2023-06-01",
-        "Content-Length": Buffer.byteLength(body),
-      },
-    };
-    const apiReq = https.request(optiot, (apiRes) => {
-      res.writeHead(apiRes.statusCode, {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      });
-      apiRes.pipe(res);
-    });
-    apiReq.on("error", (err) => lahetaJSON(res, 500, { error: err.message }));
-    apiReq.write(body);
-    apiReq.end();
-    return;
-  }
-
   // ── Siistit URLit (sama kuin vercel.json rewrites) ────────────────────────
   // Esim. /8luokka → /sivut/8luokka.html, jotta paikallinen esikatselu vastaa
   // tuotantoa. Yleistetty: /<nimi> (ilman päätettä) → /sivut/<nimi>.html jos on.
@@ -452,10 +415,6 @@ server.listen(PORT, () => {
   console.log("  →   http://localhost:" + PORT);
   console.log("");
   console.log("  Lisenssiportti hyväksyy paikallisesti minkä tahansa koodin.");
-  console.log(
-    "  Tekoäly: " +
-      (API_KEY ? "käytössä (API-avain löytyi)" : "ei testissä (ei tarpeen esikatselussa)")
-  );
   console.log("  Pysäytä: paina Ctrl + C");
   console.log("");
 });
