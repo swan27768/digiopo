@@ -1117,7 +1117,10 @@
           
 
           <!-- Intro-kuva suurennustoiminnolla (näkyy jos EI tulevia aikataulutapahtumia) -->
-          <div id="johdantoInfograafi8" style="position:relative; border-radius:14px; overflow:hidden; margin-top:4px;">
+          <div id="johdantoInfograafi8" style="position:relative; cursor:pointer; border-radius:14px; overflow:hidden; margin-top:4px;"
+               onclick="avaaIntro8Lightbox()" role="button" tabindex="0"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();avaaIntro8Lightbox();}"
+               aria-label="Suurenna: 8. luokan opo-tunnit">
             <img
               src="../images/8luokka_johdanto.webp"
               alt="8. luokan opo-tunnit — kaavio"
@@ -1130,6 +1133,43 @@
               pointer-events:none;
             ">🔍 Suurenna</span>
           </div>
+
+          <script>
+          (function() {
+            var IMG = "../images/8luokka_johdanto.webp";
+            function open() {
+              var old = document.getElementById("intro8Lb");
+              if (old) old.parentNode.removeChild(old);
+              var lb = document.createElement("div");
+              lb.id = "intro8Lb";
+              lb.setAttribute("style","position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;");
+              var inner = document.createElement("div");
+              inner.setAttribute("style","position:relative;max-width:1000px;width:100%;max-height:92vh;overflow-y:auto;border-radius:14px;");
+              var closeBtn = document.createElement("button");
+              closeBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+              closeBtn.setAttribute("aria-label","Sulje");
+              closeBtn.setAttribute("style","position:absolute;top:8px;right:8px;background:white;border:none;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3);");
+              closeBtn.addEventListener("click", close);
+              var img = document.createElement("img");
+              img.src = IMG;
+              img.alt = "8. luokan opo-tunnit";
+              img.setAttribute("style","width:100%;height:auto;display:block;border-radius:14px;");
+              inner.appendChild(closeBtn);
+              inner.appendChild(img);
+              lb.appendChild(inner);
+              document.documentElement.appendChild(lb);
+              document.body.style.overflow = "hidden";
+              lb.addEventListener("click", function(e) { if(e.target === lb) close(); });
+            }
+            function close() {
+              var lb = document.getElementById("intro8Lb");
+              if (lb) lb.parentNode.removeChild(lb);
+              document.body.style.overflow = "";
+            }
+            document.addEventListener("keydown", function(e) { if(e.key==="Escape") close(); });
+            window.avaaIntro8Lightbox = open;
+          })();
+          </script>
 
           <!-- Opon infotaulu: oman koulun lukuvuoden aikataulu (infografiikan alla, näkyy jos oppilas on liittynyt ryhmään) -->
           <div id="oponInfotaulu8" class="opon-infotaulu" style="display:none;">
