@@ -693,6 +693,21 @@ function suljeSuurennettu(e) {
   document.getElementById('enlargedOverlay').classList.remove('active');
 }
 
+// Pysyvä laitetunniste (localStorage) → palvelin estää saman laitteen
+// toistuvat tykkäykset (per-laite-esto). Ei henkilötietoa, satunnainen id.
+function laiteTunnus() {
+  try {
+    let v = localStorage.getItem('digiopo_laite');
+    if (!v) {
+      v = (self.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : (Date.now() + '-' + Math.random().toString(16).slice(2));
+      localStorage.setItem('digiopo_laite', v);
+    }
+    return v;
+  } catch { return ''; }
+}
+
 // ── Tykkää ───────────────────────────────────────────────────────────────────
 async function tykkaa(id, btn) {
   if (tykkaamattu.includes(id)) return;
@@ -700,7 +715,7 @@ async function tykkaa(id, btn) {
     const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'tykkaa', id })
+      body: JSON.stringify({ toiminto: 'tykkaa', id, laite: laiteTunnus() })
     });
     const data = await r.json();
     if (!data.ok) return;

@@ -227,9 +227,12 @@ export default async function handler(req, res) {
       const id = String(body.id || '').trim();
       if (!id) return res.status(400).json({ ok: false, virhe: 'id_puuttuu' });
 
+      // Per-laite-esto: selaimen tunniste estää saman laitteen toistuvat
+      // tykkäykset ja vähentää turhaa rivikuormaa. Tyhjä → legacy (kasvatetaan).
+      const laite = String(body.laite || '').trim().slice(0, 64);
       const r = await sb('rpc/mt_kasvata_tykkays', {
         method: 'POST',
-        body:   JSON.stringify({ p_id: id }),
+        body:   JSON.stringify({ p_id: id, p_laite: laite || null }),
       });
       if (!r.ok) throw new Error(`DB ${r.status}: ${await r.text()}`);
       const uusi = await r.json();

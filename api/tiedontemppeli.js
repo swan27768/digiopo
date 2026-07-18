@@ -6,26 +6,15 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
+import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL         = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-// ── Rate limiter ──────────────────────────────────────────────
-const yritykset = new Map();
-const MAX_YRITYKSIA = 60;
-const IKKUNA_MS = 5 * 60 * 1000;
-
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const m = yritykset.get(ip) || { maara: 0, alku: nyt };
-  if (nyt - m.alku > IKKUNA_MS) {
-    yritykset.set(ip, { maara: 1, alku: nyt });
-    return true;
-  }
-  if (m.maara >= MAX_YRITYKSIA) return false;
-  yritykset.set(ip, { maara: m.maara + 1, alku: m.alku });
-  return true;
-}
+// ── Rate limit: jaettu Redis-laskuri (ks. _lib/rate.js) ───────
+// Toimii serverless-instanssien kesken (aiempi Map nollautui cold startissa).
+const RL_MAX = 120;          // POST-toimintoja per IP
+const RL_IKKUNA_S = 5 * 60;  // 5 minuutin ikkuna
 
 function sbHeaders(extra = {}) {
   return {
@@ -89,9 +78,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, virhe: "metodi_ei_sallittu" });
   }
 
-  // ── Rate limit ───────────────────────────────────────────────
+  // ── Rate limit (Redis, jaettu instanssien kesken) ────────────
   const ip = haeIp(req);
-  if (!tarkistaRateLimit(ip)) {
+  if (!(await rateLimitSallittu(`rl:tiedontemppeli:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
     return res.status(429).json({ ok: false, virhe: "liikaa_yrityksia" });
   }
 

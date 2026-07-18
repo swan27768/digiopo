@@ -999,7 +999,7 @@ async function likeProfile(id, btn) {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'tykkaa', id })
+      body:    JSON.stringify({ toiminto: 'tykkaa', id, laite: laiteTunnus() })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1050,7 +1050,7 @@ async function giveStrengthStar(id, key) {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'tahti', id, kentta: key })
+      body:    JSON.stringify({ toiminto: 'tahti', id, kentta: key, laite: laiteTunnus() })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1246,6 +1246,20 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2600);
+}
+// Pysyvä laitetunniste (localStorage) → palvelin estää saman laitteen
+// toistuvat tykkäykset/tähdet (per-laite-esto). Ei henkilötietoa.
+function laiteTunnus() {
+  try {
+    let v = localStorage.getItem('digiopo_laite');
+    if (!v) {
+      v = (self.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : (Date.now() + '-' + Math.random().toString(16).slice(2));
+      localStorage.setItem('digiopo_laite', v);
+    }
+    return v;
+  } catch { return ''; }
 }
 function getLiked()     { try { return JSON.parse(sessionStorage.getItem('liked')   ||'[]'); } catch { return []; } }
 function getStarred()   { try { return JSON.parse(sessionStorage.getItem('starred') ||'[]'); } catch { return []; } }
