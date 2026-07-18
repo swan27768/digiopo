@@ -127,6 +127,15 @@
   body.embed footer{ display:none; }
   body.embed .lauta{ margin:0; }
   body.embed .takaisin-rivi{ display:none; }
+  /* Paljas upotus: ulompi sivu piirtää korkkitaulun (Opon infotaulu 8./9. lk).
+     Piilotetaan iframen oma kehys ja banneri, jotta laput asettuvat suoraan
+     ulomman taulun päälle ilman kaksinkertaista kehystä. */
+  body.embed.paljas{ padding:0; }
+  body.embed.paljas .lauta{
+    border:none; box-shadow:none; background:transparent; padding:0;
+  }
+  body.embed.paljas .banneri,
+  body.embed.paljas .alaotsikko{ display:none; }
   @media (max-width:480px){
     .banneri h1{font-size:1.25rem}
     .lappu-tapahtuma{width:100%;max-width:280px}
@@ -267,6 +276,8 @@
   var params = new URLSearchParams(location.search);
   var EMBED = params.get("embed") === "1";
   if (EMBED) { try { document.body.classList.add("embed"); } catch(e){} }
+  // Paljas kehys: ulompi sivu piirtää korkkitaulun (kehys=0)
+  if (EMBED && params.get("kehys") === "0") { try { document.body.classList.add("paljas"); } catch(e){} }
 
   var LUOKKA = params.get("luokka");
   if (["7","8","9"].indexOf(LUOKKA) === -1) LUOKKA = "9"; // oletus 9. luokka

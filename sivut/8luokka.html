@@ -953,29 +953,81 @@
         padding-bottom: 24px;
       }
     }
-    /* ── Opon infotaulu (lukuvuoden aikataulu infografiikan alla) ── */
+    /* ── Opon infotaulu: korkkitaulu (sopii yhteen yllä olevan infografiikan kanssa) ── */
     .opon-infotaulu {
-      background: #fffdf7;
-      border: 1.5px solid var(--grade-accent, #c8a030);
-      border-radius: 14px;
-      padding: 18px 20px;
+      position: relative;
+      border: 14px solid #a9773f;
+      border-radius: 12px;
       margin-top: 4px;
-      box-shadow: 0 4px 16px rgba(26,10,58,0.08);
+      background-color: #c9a26b;
+      background-image:
+        radial-gradient(rgba(120,80,40,0.22) 1px, transparent 1.6px),
+        radial-gradient(rgba(90,60,30,0.16) 1px, transparent 1.6px),
+        radial-gradient(rgba(150,110,70,0.18) 1px, transparent 1.6px);
+      background-size: 13px 13px, 21px 21px, 31px 29px;
+      background-position: 0 0, 7px 11px, 15px 5px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28), inset 0 0 44px rgba(90,60,30,0.28);
+      padding: 30px 20px 34px;
     }
+    /* Teipattu otsikkobanneri */
     .opon-infotaulu-otsikko {
-      margin: 0 0 12px;
-      font-size: 1.05rem;
-      color: #1a0a3a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      position: relative;
+      display: table;
+      margin: 0 auto 16px;
+      background: #fbf7ec;
+      color: #20324f;
+      padding: 10px 26px;
+      border-radius: 3px;
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-align: center;
+      transform: rotate(-1deg);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.20);
     }
-    .opon-infotaulu-otsikko i { color: var(--grade-accent, #c8a030); }
+    .opon-infotaulu-otsikko::before,
+    .opon-infotaulu-otsikko::after {
+      content: "";
+      position: absolute;
+      top: -11px;
+      width: 68px;
+      height: 22px;
+      background: rgba(226,214,180,0.75);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .opon-infotaulu-otsikko::before { left: 14px; transform: rotate(-6deg); }
+    .opon-infotaulu-otsikko::after { right: 14px; transform: rotate(5deg); }
+    .opon-infotaulu-otsikko i { color: #c0396a; margin-right: 2px; }
+    /* Tyhjä tila: keltainen muistilappu nastalla */
     .opon-infotaulu-tyhja {
-      color: #6b7280;
-      font-style: italic;
-      padding: 8px 0 4px;
-      margin: 0;
+      position: relative;
+      display: block;
+      width: 230px;
+      max-width: 82%;
+      margin: 10px auto 4px;
+      background: #fff2a8;
+      color: #4a3a26;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 28px 18px 24px;
+      border-radius: 3px;
+      transform: rotate(-1.6deg);
+      box-shadow: 0 7px 16px rgba(0,0,0,0.22);
+    }
+    .opon-infotaulu-tyhja::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd24a, #c79a1a 70%);
+      box-shadow: 0 3px 5px rgba(0,0,0,0.35);
     }
   </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -1112,7 +1164,7 @@
                     var f=document.getElementById("lukuvuosiFrame8");
                     if(tyhja) tyhja.style.display="none";
                     if(up) up.style.display="block";
-                    if(f && !f.getAttribute("src")) f.setAttribute("src","../sivut/lukuvuosi.html?embed=1&luokka=8");
+                    if(f && !f.getAttribute("src")) f.setAttribute("src","../sivut/lukuvuosi.html?embed=1&kehys=0&luokka=8");
                   }
                 }).catch(function(){});
             })();
