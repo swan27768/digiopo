@@ -5,9 +5,7 @@
 //
 // POST /api/jarjestys   (JSON body, toiminto-kenttä ratkaisee)
 //   Ryhmien luonti/muokkaus tapahtuu tili-toiminnoilla (luo_oma, tallenna_oma…),
-//   jotka valtuutetaan opettajan istunnolla (ei PIN:iä). Legacy PIN-polut:
-//   { toiminto: "tallenna", ryhma, avain, luokka, jarjestys }
-//      → { ok: true }   (vain omistajattomille ryhmille; omistetulle 403)
+//   jotka valtuutetaan opettajan istunnolla. (PIN-pohjaiset polut on poistettu.)
 //
 // Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
 
@@ -20,7 +18,6 @@ import { rateLimitSallittu } from './_lib/rate.js';
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const ADMIN_DASHBOARD_KEY = process.env.ADMIN_DASHBOARD_KEY; // sama admin-avain kuin admin-tilastoissa
-const PEPPER = process.env.JARJESTYS_PEPPER || ''; // valinnainen lisäsuola avainhashille
 
 const SALLITUT_LUOKAT = ['7', '8', '9'];
 const KOODI_AAKKOSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // ei sekoittuvia (0/O, 1/I)
@@ -30,20 +27,10 @@ const RL_MAX = 40;          // POST-toimintoja per IP
 const RL_IKKUNA_S = 10 * 60; // 10 minuutin ikkuna
 
 // ─── Apurit ──────────────────────────────────────────────────────────────────
-function hashAvain(avain) {
-  return crypto.createHash('sha256').update(`${PEPPER}:${avain}`).digest('hex');
-}
-
 function arvoRyhmakoodi() {
   const osa = (n) => Array.from(crypto.randomBytes(n))
     .map((b) => KOODI_AAKKOSET[b % KOODI_AAKKOSET.length]).join('');
   return `${osa(3)}-${osa(4)}`; // esim. "K3M-9PQ2"
-}
-
-// Arpoo pelkistä numeroista koostuvan PIN:n (sama sääntö kuin opettajan valitsema:
-// vähintään 6 numeroa, vain numeroita). Käytetään admin-PIN-nollauksessa.
-function arvoNumeroPin(pituus = 8) {
-  return Array.from(crypto.randomBytes(pituus)).map((b) => b % 10).join('');
 }
 
 function validiJarjestys(arr) {
@@ -67,7 +54,7 @@ async function sb(path, opts = {}) {
 }
 
 async function haeRyhma(ryhmakoodi) {
-  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash,omistaja_email`);
+  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,omistaja_email`);
   if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
   return (await r.json())[0] || null;
 }
@@ -217,7 +204,7 @@ export default async function handler(req, res) {
   // Opettaja hallitsee vain omia ryhmiään (omistaja_email = kirjautunut email).
   // Valtuutus tulee lisenssievästeestä, ei PIN:stä → sijoitettu ennen avain-
   // tarkistusta, koska nämä eivät käytä avain-kenttää.
-  const OMAT_TOIMINNOT = ['omat_ryhmat', 'luo_oma', 'nimea_oma', 'poista_oma', 'nollaa_oma_pin', 'tallenna_oma'];
+  const OMAT_TOIMINNOT = ['omat_ryhmat', 'luo_oma', 'nimea_oma', 'poista_oma', 'tallenna_oma'];
   if (OMAT_TOIMINNOT.includes(toiminto)) {
     const opettaja = await haeKirjautunutOpettaja(req);
     if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
@@ -229,19 +216,17 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, email: opettaja, ryhmat: await r.json() });
       }
 
-      // LUO: uusi ryhmä kirjautuneen opettajan omistukseen. PIN generoidaan
-      // taustalla (opettaja hallitsee tilillä, ei tarvitse PIN:iä). Palauttaa
+      // LUO: uusi ryhmä kirjautuneen opettajan omistukseen. Palauttaa
       // ryhmäkoodin, jonka opettaja jakaa oppilaille.
       if (toiminto === 'luo_oma') {
         const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) || null : null;
         const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
-        const avain_hash = hashAvain(arvoNumeroPin(8)); // vestigiaalinen PIN, ei näytetä
         for (let i = 0; i < 5; i++) {
           const ryhmakoodi = arvoRyhmakoodi();
           const r = await sb('opetusryhmat', {
             method: 'POST',
             headers: { Prefer: 'return=minimal' },
-            body: JSON.stringify({ ryhmakoodi, avain_hash, koulukoodi, nimi, omistaja_email: opettaja }),
+            body: JSON.stringify({ ryhmakoodi, koulukoodi, nimi, omistaja_email: opettaja }),
           });
           if (r.status === 201) return res.status(200).json({ ok: true, ryhmakoodi, nimi });
           if (r.status !== 409) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
@@ -291,17 +276,6 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, ryhmakoodi: ryhma, nimi });
       }
 
-      // NOLLAA oman ryhmän PIN → uusi numeerinen PIN
-      if (toiminto === 'nollaa_oma_pin') {
-        const uusiPin = arvoNumeroPin(8);
-        const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
-          method: 'PATCH', headers: { Prefer: 'return=minimal' },
-          body: JSON.stringify({ avain_hash: hashAvain(uusiPin) }),
-        });
-        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, uusiPin });
-      }
-
       // POISTA oma ryhmä (+ järjestykset ja aikataulu cascadella). Vahvistus.
       if (toiminto === 'poista_oma') {
         if (String(body.vahvista || '').trim().toUpperCase() !== ryhma) {
@@ -320,63 +294,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const avain = String(body.avain || '');
-  if (avain.length < 4 || avain.length > 64) {
-    return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
-  }
-
-  try {
-    // ── TARKISTA: vahvista avain avaamatta/kirjoittamatta mitään ──
-    if (toiminto === 'tarkista') {
-      const ryhma = String(body.ryhma || '').trim().toUpperCase();
-      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) {
-        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-      }
-      const rivi = await haeRyhma(ryhma);
-      const tasmaa = !!rivi && rivi.avain_hash === hashAvain(avain);
-      return res.status(200).json(tasmaa ? { ok: true } : { ok: false, virhe: 'avain_ei_tasmaa' });
-    }
-
-    // ── TALLENNA: päivitä ryhmän järjestys (vaatii oikean avaimen) ──
-    if (toiminto === 'tallenna') {
-      const ryhma = String(body.ryhma || '').trim().toUpperCase();
-      const luokka = String(body.luokka || '').trim();
-      const jarjestys = body.jarjestys;
-      const lukitut = body.lukitut == null ? [] : body.lukitut;
-      if (!/^[A-Z0-9-]{4,16}$/.test(ryhma) || !SALLITUT_LUOKAT.includes(luokka)) {
-        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-      }
-      if (!validiJarjestys(jarjestys) || !validiJarjestys(lukitut)) {
-        return res.status(400).json({ ok: false, virhe: 'jarjestys_virheellinen' });
-      }
-
-      const ryhmaRivi = await haeRyhma(ryhma);
-      if (!ryhmaRivi) {
-        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
-      }
-      // Omistetulle ryhmälle ei sallita PIN-kirjoitusta: tilipohjaiset ryhmät
-      // muokataan istunnolla (tallenna_oma). Näin vanha PIN ei ole enää
-      // kirjoitusreitti migratoiduille ryhmille.
-      if (ryhmaRivi.omistaja_email) {
-        return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
-      }
-      if (ryhmaRivi.avain_hash !== hashAvain(avain)) {
-        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
-      }
-
-      const r = await sb('jarjestykset?on_conflict=ryhmakoodi,luokka', {
-        method: 'POST',
-        headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-        body: JSON.stringify({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut }),
-      });
-      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-      return res.status(200).json({ ok: true });
-    }
-
-    return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });
-  } catch (err) {
-    console.error('jarjestys POST:', err);
-    await kirjaaVirhe('jarjestys POST', err, { toiminto });
-    return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
-  }
+  // PIN-pohjaiset polut (tarkista/tallenna) on poistettu — muokkaus tapahtuu
+  // vain opettajan istunnolla (*_oma-toiminnot). Tuntematon toiminto → 400.
+  return res.status(400).json({ ok: false, virhe: 'tuntematon_toiminto' });
 }

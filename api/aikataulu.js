@@ -13,9 +13,8 @@
 //        → { ok:true }
 //
 // Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
-// Sama opettaja-avain kuin järjestyksessä (opetusryhmat-taulu + JARJESTYS_PEPPER).
+// Valtuutus kirjoituksiin tulee opettajan istunnosta (omistajuus).
 
-import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
@@ -23,7 +22,6 @@ import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const PEPPER = process.env.JARJESTYS_PEPPER || ''; // sama suola kuin jarjestys.js:ssä
 
 const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
 const SALLITUT_LUOKAT = ['7', '8', '9'];
@@ -34,10 +32,6 @@ const RL_MAX = 40;           // POST-toimintoja per IP
 const RL_IKKUNA_S = 10 * 60; // 10 minuutin ikkuna
 
 // ─── Apurit ──────────────────────────────────────────────────────────────────
-function hashAvain(avain) {
-  return crypto.createHash('sha256').update(`${PEPPER}:${avain}`).digest('hex');
-}
-
 function validiRyhma(r) {
   return /^[A-Z0-9-]{4,16}$/.test(r);
 }
@@ -106,7 +100,7 @@ async function poistaMenneet(ryhma, luokka) {
 }
 
 async function haeRyhma(ryhmakoodi) {
-  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,avain_hash,omistaja_email`);
+  const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi)}&select=ryhmakoodi,omistaja_email`);
   if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
   return (await r.json())[0] || null;
 }
@@ -177,25 +171,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Valtuutus kirjoituksiin: kirjautunut omistaja (istunto) TAI oikea PIN.
-    // Jos ryhmällä on omistaja, PIN-fallbackia EI sallita — tilipohjaiset ryhmät
-    // muokataan vain istunnolla. PIN käy vain omistajattomille (legacy) ryhmille.
+    // Valtuutus kirjoituksiin: vain kirjautunut omistaja (istunto).
+    // (PIN-fallback on poistettu.)
     const opettaja = await haeKirjautunutOpettaja(req);
+    if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
     const rivi = await haeRyhma(ryhma);
     if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
-    let valtuutettu = !!opettaja && rivi.omistaja_email === opettaja;
-    if (!valtuutettu) {
-      if (rivi.omistaja_email) {
-        // Omistettu ryhmä → vain istunto kelpaa.
-        return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
-      }
-      const avain = String(body.avain || '');
-      if (avain.length < 4 || avain.length > 64) {
-        return res.status(400).json({ ok: false, virhe: 'avain_virheellinen' });
-      }
-      if (rivi.avain_hash !== hashAvain(avain)) {
-        return res.status(200).json({ ok: false, virhe: 'avain_ei_tasmaa' });
-      }
+    if (rivi.omistaja_email !== opettaja) {
+      return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
     }
 
     // ── LISÄÄ: uusi tapahtuma ──

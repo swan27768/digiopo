@@ -1,11 +1,8 @@
 /* ============================================================
    JARJESTYS.JS — opettajan osiojärjestys
    - Vain OSIOITA järjestetään, ei tehtäviä.
-   - Muokkaustila avautuu "Opettaja"-linkistä PIN-portin kautta (Taso 2):
-     PIN = opettaja-avain, joka vahvistetaan palvelimelta.
-       · 1. kerta: PIN luo jakoryhmän (yksi ryhmäkoodi).
-       · tunnettu laite: pelkkä PIN.
-       · uusi laite: ryhmäkoodi + PIN (kuten Classroomin luokkakoodi).
+   - Muokkaustila avautuu "Hallintapaneeli"-linkistä. Valtuutus tulee opettajan
+     istunnosta (kirjautunut opettaja + ryhmän omistajuus). PIN on poistettu.
    - Oppilas liittyy ?ryhma=KOODI-linkillä ja näkee opettajan järjestyksen.
    - Järjestys sovelletaan siirtämällä <section>-elementit DOM:ssa.
    Riippuvuus: SortableJS (ladataan vain muokkaustilassa).
@@ -23,7 +20,6 @@
   var LS_CACHE = "digiopo-jarjestys-cache-" + LUOKKA; // palvelimelta haettu (oppilas)
   var LS_RYHMA = "digiopo-ryhma";                     // oppilaan liittymä
   var LS_OPE_R = "digiopo-ope-ryhma";                 // opettajan jakoryhmä (laite)
-  var LS_OPE_A = "digiopo-ope-avain";                 // opettajan avain (laite)
   var LS_LOCK = "digiopo-lukitut-" + LUOKKA;          // opettajan lukot (työversio)
   var LS_LOCK_CACHE = "digiopo-lukitut-cache-" + LUOKKA; // oppilaan välimuisti
 
@@ -462,8 +458,6 @@
     var TYYPIT = { tet: "TET-jakso", yhteishaku: "Yhteishaku", palautus: "Palautuspäivä", tapahtuma: "Tapahtuma", muu: "Muu" };
     var muokattavaId = null;
 
-    // Valtuutus samoin kuin muokkaustila avattiin: istunto (tilimoodi) tai PIN.
-    function avainNyt() { return tiliMoodi ? "" : (lueRaaka(LS_OPE_A) || ""); }
     function postA(payload) {
       return fetch(API_A, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
         .then(function (r) { return r.json(); }).catch(function () { return { ok: false, virhe: "verkko" }; });
@@ -545,21 +539,21 @@
       if (!otsikko) return naytaTila("Anna otsikko.", "virhe");
       if (!alku) return naytaTila("Valitse alkupäivä.", "virhe");
       if (loppu && loppu < alku) return naytaTila("Loppupäivä ei voi olla ennen alkupäivää.", "virhe");
-      var payload = { ryhma: ryhma, avain: avainNyt(), luokka: LUOKKA, otsikko: otsikko, tyyppi: q(".am-tyyppi").value, alku_pvm: alku, loppu_pvm: loppu, kuvaus: kuvaus };
+      var payload = { ryhma: ryhma, luokka: LUOKKA, otsikko: otsikko, tyyppi: q(".am-tyyppi").value, alku_pvm: alku, loppu_pvm: loppu, kuvaus: kuvaus };
       payload.toiminto = muokattavaId ? "muokkaa" : "lisaa";
       if (muokattavaId) payload.id = muokattavaId;
       q(".am-tallenna").disabled = true; naytaTila("Tallennetaan…");
       postA(payload).then(function (v) {
         q(".am-tallenna").disabled = false;
         if (v && v.ok) { naytaTila(muokattavaId ? "Muutokset tallennettu." : "Tapahtuma lisätty.", "ok"); tyhjennaLomake(); lataa(); }
-        else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja" || v.virhe === "avain_ei_tasmaa")) naytaTila("Ei oikeutta — kirjaudu uudelleen.", "virhe");
+        else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja")) naytaTila("Ei oikeutta — kirjaudu uudelleen.", "virhe");
         else naytaTila("Tallennus epäonnistui.", "virhe");
       });
     });
 
     function poista(t) {
       if (!window.confirm('Poistetaanko "' + (t.otsikko || "") + '"?')) return;
-      postA({ toiminto: "poista", ryhma: ryhma, avain: avainNyt(), id: t.id }).then(function (v) {
+      postA({ toiminto: "poista", ryhma: ryhma, id: t.id }).then(function (v) {
         if (v && v.ok) { if (muokattavaId === t.id) tyhjennaLomake(); lataa(); }
         else naytaTila("Poisto epäonnistui.", "virhe");
       });
@@ -571,21 +565,13 @@
   function julkaise() {
     var ryhma = lueRaaka(LS_OPE_R);
     if (!ryhma) return;
-    var payload;
-    if (tiliMoodi) {
-      // Opettajatili: tallennus istunnolla + omistajuudella, ei PIN:iä.
-      payload = { toiminto: "tallenna_oma", ryhma: ryhma, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
-    } else {
-      var avain = lueRaaka(LS_OPE_A);
-      if (!avain) return;
-      payload = { toiminto: "tallenna", ryhma: ryhma, avain: avain, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
-    }
+    // Tallennus vain opettajan istunnolla + omistajuudella (PIN poistettu).
+    var payload = { toiminto: "tallenna_oma", ryhma: ryhma, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
     if (julkaisuTila) { julkaisuTila.textContent = "Tallennetaan…"; julkaisuTila.className = "jarjestys-tila"; }
     postServer(payload)
       .then(function (v) {
         if (!julkaisuTila) return;
         if (v && v.ok) { julkaisuTila.textContent = "✓ Julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila ok"; }
-        else if (v && v.virhe === "avain_ei_tasmaa") { julkaisuTila.textContent = "Avain ei täsmää."; julkaisuTila.className = "jarjestys-tila virhe"; }
         else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja")) { julkaisuTila.textContent = "Istunto vanhentui — kirjaudu uudelleen."; julkaisuTila.className = "jarjestys-tila virhe"; }
         else { julkaisuTila.textContent = "Tallennus epäonnistui."; julkaisuTila.className = "jarjestys-tila virhe"; }
       });
