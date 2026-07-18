@@ -140,8 +140,10 @@ export default async function handler(req, res) {
       const tapahtumat = await r.json();
       // Edge-välimuisti: sama ryhmä+luokka on kaikilla luokan oppilailla identtinen.
       // s-maxage=30 → CDN palvelee 30 s välimuistista (opettajan muutos näkyy
-      // ~30 s viiveellä), stale-while-revalidate pitää vasteen nopeana piikissä.
-      res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=300');
+      // ~30 s viiveellä). Pitkä stale-while-revalidate (1 h): 30 s jälkeen CDN
+      // palauttaa vanhan vastauksen HETI ja päivittää taustalla → oppilaan pyyntö
+      // ei jää odottamaan funktion cold startia piikissä.
+      res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=3600');
       return res.status(200).json({ ok: true, tapahtumat });
     } catch (err) {
       console.error('aikataulu GET:', err);
