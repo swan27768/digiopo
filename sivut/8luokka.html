@@ -953,6 +953,30 @@
         padding-bottom: 24px;
       }
     }
+    /* ── Opon infotaulu (lukuvuoden aikataulu infografiikan alla) ── */
+    .opon-infotaulu {
+      background: #fffdf7;
+      border: 1.5px solid var(--grade-accent, #c8a030);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-top: 4px;
+      box-shadow: 0 4px 16px rgba(26,10,58,0.08);
+    }
+    .opon-infotaulu-otsikko {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      color: #1a0a3a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .opon-infotaulu-otsikko i { color: var(--grade-accent, #c8a030); }
+    .opon-infotaulu-tyhja {
+      color: #6b7280;
+      font-style: italic;
+      padding: 8px 0 4px;
+      margin: 0;
+    }
   </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
@@ -1055,16 +1079,26 @@
             ">🔍 Suurenna</span>
           </div>
 
-          <!-- Oman koulun lukuvuoden aikataulu (näkyy vain jos tulevia tapahtumia on) -->
-          <div id="lukuvuosiUpotus8" style="margin-top:4px; display:none;">
-            <iframe id="lukuvuosiFrame8" title="Oman koulun lukuvuosi"
-              style="width:100%; border:none; display:block; height:520px;" scrolling="no" loading="lazy"></iframe>
+          <!-- Opon infotaulu: oman koulun lukuvuoden aikataulu (infografiikan alla, näkyy jos oppilas on liittynyt ryhmään) -->
+          <div id="oponInfotaulu8" class="opon-infotaulu" style="display:none;">
+            <h3 class="opon-infotaulu-otsikko">
+              <i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Opon infotaulu
+            </h3>
+            <p id="lukuvuosiTyhja8" class="opon-infotaulu-tyhja">Aikataulu on tulossa.</p>
+            <div id="lukuvuosiUpotus8" style="display:none;">
+              <iframe id="lukuvuosiFrame8" title="Oman koulun lukuvuosi"
+                style="width:100%; border:none; display:block; height:520px;" scrolling="no" loading="lazy"></iframe>
+            </div>
           </div>
           <script>
+            // Infografiikka pysyy aina. Opon infotaulu näkyy jos oppilas on liittynyt ryhmään:
+            // tulevia tapahtumia -> aikataulu, muuten "Aikataulu on tulossa".
             (function(){
               var ryhma = null;
               try { ryhma = localStorage.getItem("digiopo-ryhma") || localStorage.getItem("digiopo-ope-ryhma"); } catch(e){} // oppilaan liittymä tai opettajan oma ryhmä (esikatselu)
-              if (!(ryhma && /^[A-Z0-9-]{4,16}$/.test(ryhma))) return; // ei liittynyt -> infografiikka
+              if (!(ryhma && /^[A-Z0-9-]{4,16}$/.test(ryhma))) return; // ei liittynyt -> vain infografiikka
+              var taulu=document.getElementById("oponInfotaulu8");
+              if(taulu) taulu.style.display="block"; // näytä infotaulu (oletuksena "Aikataulu on tulossa")
               function tulevia(lista){
                 var d=new Date(), t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
                 return (lista||[]).filter(function(x){ return (x.loppu_pvm||x.alku_pvm) >= t; }).length;
@@ -1073,10 +1107,10 @@
                 .then(function(r){ return r.json(); })
                 .then(function(dd){
                   if (dd && dd.ok && tulevia(dd.tapahtumat) > 0){
-                    var info=document.getElementById("johdantoInfograafi8");
+                    var tyhja=document.getElementById("lukuvuosiTyhja8");
                     var up=document.getElementById("lukuvuosiUpotus8");
                     var f=document.getElementById("lukuvuosiFrame8");
-                    if(info) info.style.display="none";
+                    if(tyhja) tyhja.style.display="none";
                     if(up) up.style.display="block";
                     if(f && !f.getAttribute("src")) f.setAttribute("src","../sivut/lukuvuosi.html?embed=1&luokka=8");
                   }
