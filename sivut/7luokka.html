@@ -74,6 +74,39 @@
       .tiede-paneeli .lahteet ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;}
       .tiede-paneeli .lahteet li{font-size:.78rem;color:#6b7280;line-height:1.5;}
       .tiede-paneeli .lahteet a{color:#6d28d9;}
+    /* ── Hampurilaisvalikko: vasen aihevalikko mobiilissa ── */
+    .nav-hamburger { display: none; }
+    @media (max-width: 768px) {
+      .nav-hamburger {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.14);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .nav-hamburger:hover { background: rgba(255,255,255,0.24); }
+      .book-page-left {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
+      .book-page-left.nav-open {
+        max-height: 80vh;
+        overflow-y: auto;
+        padding-top: 24px;
+        padding-bottom: 24px;
+      }
+    }
     </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
@@ -99,6 +132,11 @@
           <i class="fa-solid fa-arrow-left" aria-hidden="true" style="font-size:16px; margin-right:6px;"></i>Digi<span>opo</span>
         </a>
       </div>
+      <button id="navHampurilainen" class="nav-hamburger" type="button"
+        aria-label="Avaa aihevalikko" aria-expanded="false" aria-controls="aihevalikko">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        <span>Aiheet</span>
+      </button>
     </header>
 
     <a href="#main-content" class="sr-only sr-only-focusable" data-i18n="nav.skipToMain"
@@ -107,7 +145,7 @@
 
     <div class="book-spread">
       <!-- Vasen sivu: aihenavigointi -->
-      <aside class="book-page-left" aria-label="Aiheet">
+      <aside class="book-page-left" id="aihevalikko" aria-label="Aiheet">
         <h3 data-i18n="sidebar.heading">Yläkoulun startti</h3>
 
         <nav class="aihelista" aria-label="Sivun aiheet">
@@ -1949,6 +1987,31 @@
     <button id="scrollTopBtn" aria-label="Takaisin sivun alkuun">
       <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
     </button>
+    <script>
+      // Hampurilaisvalikko (mobiili): vasen aihevalikko kokoontaitettavaksi
+      document.addEventListener("DOMContentLoaded", function () {
+        var hampurilainen = document.getElementById("navHampurilainen");
+        var aihevalikko = document.getElementById("aihevalikko");
+        if (!hampurilainen || !aihevalikko) return;
+
+        function suljeValikko() {
+          aihevalikko.classList.remove("nav-open");
+          hampurilainen.setAttribute("aria-expanded", "false");
+          hampurilainen.querySelector("i").className = "fa-solid fa-bars";
+        }
+
+        hampurilainen.addEventListener("click", function () {
+          var auki = aihevalikko.classList.toggle("nav-open");
+          hampurilainen.setAttribute("aria-expanded", auki ? "true" : "false");
+          hampurilainen.querySelector("i").className =
+            auki ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+        });
+
+        aihevalikko.querySelectorAll(".aihelista a[href^='#']").forEach(function (link) {
+          link.addEventListener("click", suljeValikko);
+        });
+      });
+    </script>
     <script src="../js/luokka.js"></script>
     <script>
       /* ── Togglet: haaste ja opettaja ── */
