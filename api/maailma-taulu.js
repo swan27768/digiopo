@@ -14,23 +14,18 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
+import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL        = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-// ─── Rate limiter (muistipohjainen) ──────────────────────────────────────────
-const yritykset    = new Map();
-const MAX_YRITYKSIA = 30;
-const IKKUNA_MS     = 5 * 60 * 1000;
-
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const m   = yritykset.get(ip) || { maara: 0, alku: nyt };
-  if (nyt - m.alku > IKKUNA_MS) { yritykset.set(ip, { maara: 1, alku: nyt }); return true; }
-  if (m.maara >= MAX_YRITYKSIA) return false;
-  yritykset.set(ip, { maara: m.maara + 1, alku: m.alku });
-  return true;
-}
+// ─── Rate limit: jaettu Redis-laskuri (ks. _lib/rate.js) ─────────────────────
+// Toimii luotettavasti serverless-instanssien kesken (aiempi Map-laskuri
+// nollautui joka cold startissa eikä pätenyt instanssien yli). Raja on väljähkö,
+// koska koko luokka voi lähettää ja tykätä yhden koulun jaetun NAT-IP:n takaa –
+// liian tiukka raja estäisi laillisen yhteiskäytön.
+const RL_MAX = 120;          // POST-toimintoja per IP
+const RL_IKKUNA_S = 5 * 60;  // 5 minuutin ikkuna
 
 // ─── Supabase-apuri ──────────────────────────────────────────────────────────
 function sbHeaders(extra = {}) {
@@ -114,7 +109,7 @@ export default async function handler(req, res) {
 
   // ── Rate limit POST ──────────────────────────────────────────────────────
   const ip = haeIp(req);
-  if (!tarkistaRateLimit(ip)) {
+  if (!(await rateLimitSallittu(`rl:maailma:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 

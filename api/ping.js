@@ -5,6 +5,7 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
+import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -21,19 +22,14 @@ const SALLITUT_SIVUT = new Set([
   "sivu-valinnat", "sivu-tulevaisuus",
 ]);
 
-// Yksinkertainen rate limiter – max 60 pingiä / IP / minuutti
-const ipLaskuri = new Map();
-function tarkistaRateLimit(ip) {
-  const nyt = Date.now();
-  const data = ipLaskuri.get(ip) || { maara: 0, alku: nyt };
-  if (nyt - data.alku > 60_000) {
-    ipLaskuri.set(ip, { maara: 1, alku: nyt });
-    return true;
-  }
-  if (data.maara >= 60) return false;
-  ipLaskuri.set(ip, { maara: data.maara + 1, alku: data.alku });
-  return true;
-}
+// Rate limit: jaettu Redis-laskuri (ks. _lib/rate.js) – toimii luotettavasti
+// serverless-instanssien kesken. Aiempi Map-laskuri nollautui joka cold startissa
+// eikä pätenyt instanssien yli, joten raja oli käytännössä olematon piikissä.
+// Ping on best-effort-analytiikkaa ja deduploidaan selaimessa (kerran per sivu
+// per päivä), joten raja on väljä: se estää vain yksittäisen IP:n roskaliikenteen,
+// ei koulun jaetun NAT-IP:n normaalia yhteiskäyttöä.
+const RL_MAX = 300;      // pingiä per IP
+const RL_IKKUNA_S = 60;  // per minuutti
 
 export default async function handler(req, res) {
   // CORS-otsikot
@@ -45,7 +41,9 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const ip = haeIp(req);
-  if (!tarkistaRateLimit(ip)) return res.status(429).end();
+  if (!(await rateLimitSallittu(`rl:ping:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
+    return res.status(429).end();
+  }
 
   let sivu;
   try {
