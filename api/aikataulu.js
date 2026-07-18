@@ -27,7 +27,7 @@ const PEPPER = process.env.JARJESTYS_PEPPER || ''; // sama suola kuin jarjestys.
 
 const SALLITUT_TYYPIT = ['tet', 'yhteishaku', 'palautus', 'tapahtuma', 'muu'];
 const SALLITUT_LUOKAT = ['7', '8', '9'];
-const MAX_TAPAHTUMIA = 15; // enimmäismäärä per ryhmä JA luokka
+const MAX_TAPAHTUMIA = 12; // tulevien enimmäismäärä per ryhmä JA luokka (menneet siivotaan automaattisesti)
 
 // ─── Rate limit (Redis, jaettu instanssien kesken – ks. _lib/rate.js) ────────
 const RL_MAX = 40;           // POST-toimintoja per IP
@@ -87,6 +87,22 @@ async function sb(path, opts = {}) {
     },
   });
   return r;
+}
+
+// Poistaa menneet tapahtumat (viimeinen pvm eilinen tai vanhempi).
+// Pitää taulun siistinä ja vapauttaa tilaa enimmäismäärästä. Sama menneen
+// määritelmä kuin näkymässä: viimeinen pvm = loppu_pvm tai (jos ei ole) alku_pvm.
+async function poistaMenneet(ryhma, luokka) {
+  const nyt = new Date().toISOString().slice(0, 10);
+  const r = await sb(
+    `lukuvuosi_tapahtumat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}` +
+    `&or=(loppu_pvm.lt.${nyt},and(loppu_pvm.is.null,alku_pvm.lt.${nyt}))`,
+    { method: 'DELETE', headers: { Prefer: 'return=minimal' } }
+  );
+  // Siivouksen epäonnistuminen ei saa kaataa varsinaista toimintoa — vain kirjataan.
+  if (r.status >= 300) {
+    console.warn('aikataulu: menneiden tapahtumien poisto epäonnistui', r.status);
+  }
 }
 
 async function haeRyhma(ryhmakoodi) {
@@ -184,6 +200,9 @@ export default async function handler(req, res) {
       const k = lueKentat(body);
       const virhe = validoiKentat(k);
       if (virhe) return res.status(400).json({ ok: false, virhe });
+
+      // Siivoa menneet ennen laskentaa: raja koskee vain tulevia tapahtumia.
+      await poistaMenneet(ryhma, luokka);
 
       // Tarkista ryhmän JA luokan tapahtumamäärä (roskaamisen esto)
       const lask = await sb(
