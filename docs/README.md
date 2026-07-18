@@ -175,11 +175,23 @@ etusivu ja luokkasivujen rewritet vastaavat 200:lla, `/api/lisenssi` toimii,
 
 Löydetty, ei vielä korjattu:
 
-1. **`index.html`:stä puuttuu favicon- ja manifest-linkitys.** Sivustolla on
-   `favicon.svg` ja `manifest.json`, ja 68 muuta HTML-sivua linkittää ne, mutta
-   etusivu ei. Seuraukset: selaimen välilehdessä ei näy tunnusta etusivulla,
-   ja PWA-asennuskehote ei laukea siltä sivulta jolle kävijä ensimmäisenä tulee.
-   Korjaus on neljä riviä `<head>`-osioon.
+1. **Favicon- ja manifest-linkitys puuttuu 18 sivulta.** Sivustolla on
+   `favicon.svg` ja `manifest.json`, mutta kaikki sivut eivät linkitä niitä.
+   Seuraus: selaimen välilehdessä ei näy tunnusta, eikä PWA-asennuskehote
+   laukea kyseisiltä sivuilta.
+
+   Korjattu 19.7.2026: `index.html`, `liity.html` (lisenssiportti) ja
+   `kirjaudu.html` — eli sivuston sisäänkäynnit.
+
+   Jäljellä 18 sivua, kaikki sisäsivuja joihin päädytään navigoimalla:
+   `aikataulu_ope.html`, `fake-insta.html`, 10 sivua `pelit/`-kansiossa,
+   `sivut/lukuvuosi.html`, `sivut/startti-tetiin.html` ja kolme sivua
+   `tehtavat/`-kansiossa. Korjataan kun noihin tiedostoihin muutenkin
+   kosketaan.
+
+   **Huom polku:** juuritason sivuilla `href="favicon.svg"`, alikansioiden
+   sivuilla `href="../favicon.svg"`. Ei siis korjattavissa yhdellä
+   hae-korvaa-ajolla.
 
 2. **Konsolin 404 paikallisessa kehityksessä: `/_vercel/insights/script.js`.**
    Ei virhe — Vercelin kävijäseuranta tarjoillaan vasta tuotannossa. Skripti on
