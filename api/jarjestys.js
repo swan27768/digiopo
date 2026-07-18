@@ -124,6 +124,10 @@ export default async function handler(req, res) {
       const r = await sb(`jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=jarjestys,lukitut`);
       if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
       const rivi = (await r.json())[0];
+      // Edge-välimuisti: sama ryhmä+luokka on kaikilla luokan oppilailla identtinen.
+      // s-maxage=30 → CDN palvelee 30 s välimuistista (opettajan järjestysmuutos
+      // näkyy ~30 s viiveellä), stale-while-revalidate pitää vasteen nopeana piikissä.
+      res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=300');
       return res.status(200).json({
         ok: true,
         jarjestys: rivi ? rivi.jarjestys : null,

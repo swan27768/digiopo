@@ -43,13 +43,17 @@ function poistaLisenssiEvaste(res) {
 }
 
 // Redis-pohjainen rate limiter – toimii luotettavasti serverless-ympäristössä.
-// Kolme kerrosta brute-forcea vastaan:
-//   - per IP:     kaikki yritykset          (max 5 / 10 min)
-//   - per koodi:  saman koodin EPÄonnistuneet yritykset (max 8 / 10 min)
-//   - globaali:   EPÄonnistuneet yritykset yhteensä      (max 120 / 10 min)
-// Onnistuneita kirjautumisia ei lasketa epäonnistumisiin, joten laillinen
-// käyttö (koko koulu kirjautuu aamulla) ei laukaise koodi-/globaalirajaa.
-const MAX_IP = 5;
+// Kolme kerrosta brute-forcea vastaan – KAIKKI laskevat vain EPÄonnistuneita
+// yrityksiä, joten onnistunut kirjautuminen ei koskaan kuluta budjettia:
+//   - per IP:     saman IP:n epäonnistuneet yritykset   (max 40 / 10 min)
+//   - per koodi:  saman koodin epäonnistuneet yritykset (max 8  / 10 min)
+//   - globaali:   epäonnistuneet yritykset yhteensä     (max 120 / 10 min)
+// TÄRKEÄÄ: koko koulu on tyypillisesti yhden julkisen NAT-IP:n takana, joten
+// sadat oppilaat näkyvät palvelimelle SAMANA IP:nä. Siksi per-IP-raja EI saa
+// laskea onnistuneita kirjautumisia – muuten luokan kirjautuessa aamulla N:s
+// oppilas lukittuisi ulos vaikka koodi on oikea. Vain epäonnistumiset (väärä
+// koodi / väärä opettajatoken) kasvattavat per-IP-laskuria.
+const MAX_IP_FAIL = 40;
 const MAX_KOODI_FAIL = 8;
 const MAX_GLOBAL_FAIL = 120;
 const IKKUNA_S = 10 * 60; // 10 minuuttia sekunteina
@@ -80,22 +84,49 @@ async function incr(avain, ikkunaS) {
   }
 }
 
-// Per-IP-raja: lasketaan jokainen yritys. False = raja ylitetty.
-async function ipSallittu(ip) {
-  const maara = await incr(`rl:lisenssi:ip:${ip}`, IKKUNA_S);
-  return maara === null ? true : maara <= MAX_IP;
+// Lukee laskurin arvon KASVATTAMATTA sitä (Upstash GET). Palauttaa luvun tai
+// null jos Redis on poissa/virhetilassa (→ fail-open, ei rangaista käyttäjää).
+async function haeLaskuri(avain) {
+  if (!redisKaytossa()) return null;
+  try {
+    const r = await fetch(`${UPSTASH_REDIS_REST_URL}/get/${encodeURIComponent(avain)}`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}` },
+    });
+    const { result } = await r.json();
+    return result == null ? 0 : Number(result);
+  } catch {
+    return null;
+  }
 }
 
-// Kirjaa epäonnistuneen kooditarkistuksen. Palauttaa true jos koodikohtainen
-// tai globaali raja ylittyi (→ pyyntö kannattaa estää 429:llä).
-async function kirjaaEpaonnistuminen(koodi) {
-  const [g, k] = await Promise.all([
+// Per-IP-raja: tarkistetaan VAIN epäonnistumisten laskuri, kasvattamatta sitä.
+// true = IP estetään (liikaa epäonnistuneita yrityksiä), false = päästetään läpi.
+// Onnistuneet kirjautumiset eivät kasvata laskuria → koulun jaettu NAT-IP ei
+// lukitse oppilaita ulos.
+async function ipEstetty(ip) {
+  const maara = await haeLaskuri(`rl:lisenssi:ipfail:${ip}`);
+  return maara === null ? false : maara > MAX_IP_FAIL;
+}
+
+// Kirjaa epäonnistuneen kooditarkistuksen (per koodi, globaali JA per IP).
+// Palauttaa true jos koodikohtainen, globaali tai IP-raja ylittyi
+// (→ pyyntö kannattaa estää 429:llä).
+async function kirjaaEpaonnistuminen(koodi, ip) {
+  const [g, k, i] = await Promise.all([
     incr('rl:lisenssi:fail:global', IKKUNA_S),
     incr(`rl:lisenssi:fail:koodi:${koodi}`, IKKUNA_S),
+    incr(`rl:lisenssi:ipfail:${ip}`, IKKUNA_S),
   ]);
   const globaaliYli = g !== null && g > MAX_GLOBAL_FAIL;
   const koodiYli = k !== null && k > MAX_KOODI_FAIL;
-  return globaaliYli || koodiYli;
+  const ipYli = i !== null && i > MAX_IP_FAIL;
+  return globaaliYli || koodiYli || ipYli;
+}
+
+// Kirjaa epäonnistuneen opettajatoken-yrityksen per IP (brute-force-signaali).
+async function kirjaaIpEpaonnistuminen(ip) {
+  await incr(`rl:lisenssi:ipfail:${ip}`, IKKUNA_S);
 }
 
 async function haeSupabasesta(koodi) {
@@ -164,10 +195,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ virhe: 'Metodi ei sallittu' });
   }
 
-  // IP rate limiting (x-real-ip on Vercelissä luotettava, ei väärennettävissä)
+  // IP rate limiting (x-real-ip on Vercelissä luotettava, ei väärennettävissä).
+  // HUOM: raja koskee vain epäonnistuneita yrityksiä (ks. kommentti yllä) –
+  // onnistunut kirjautuminen ei kuluta budjettia, joten koulun jaettu NAT-IP
+  // ei lukitse oppilaita ulos.
   const ip = haeIp(req);
 
-  if (!await ipSallittu(ip)) {
+  if (await ipEstetty(ip)) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 
@@ -177,7 +211,10 @@ export default async function handler(req, res) {
     const token = authHeader.slice(7);
     try {
       const email = await tarkistaToken(token);
-      if (!email) return res.status(401).json({ ok: false, virhe: 'ei_valtuutusta' });
+      if (!email) {
+        await kirjaaIpEpaonnistuminen(ip);
+        return res.status(401).json({ ok: false, virhe: 'ei_valtuutusta' });
+      }
 
       const lisenssi = await haeOpettajaSupabasesta(email);
       if (!lisenssi || !lisenssi.aktiivinen) {
@@ -221,8 +258,8 @@ export default async function handler(req, res) {
 
     if (!lisenssi || !lisenssi.aktiivinen) {
       poistaLisenssiEvaste(res);
-      // Virheellinen koodi = mahdollinen brute-force-yritys → kirjataan.
-      if (await kirjaaEpaonnistuminen(koodi.toUpperCase())) {
+      // Virheellinen koodi = mahdollinen brute-force-yritys → kirjataan (per koodi + IP).
+      if (await kirjaaEpaonnistuminen(koodi.toUpperCase(), ip)) {
         return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
       }
       return res.status(200).json({ ok: false, virhe: 'virheellinen' });
