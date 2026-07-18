@@ -8,10 +8,6 @@
 //   jotka valtuutetaan opettajan istunnolla (ei PIN:iä). Legacy PIN-polut:
 //   { toiminto: "tallenna", ryhma, avain, luokka, jarjestys }
 //      → { ok: true }   (vain omistajattomille ryhmille; omistetulle 403)
-//   { toiminto: "admin_nollaa_pin", ryhma }   + header x-admin-key: <ADMIN_DASHBOARD_KEY>
-//      → { ok: true, ryhmakoodi, uusiPin }    (vaihtaa PIN:n, järjestys säilyy)
-//   { toiminto: "admin_nollaa_pin", ryhma }   + header x-admin-key: <ADMIN_DASHBOARD_KEY>
-//      → { ok: true, ryhmakoodi, uusiPin }    (vaihtaa PIN:n, järjestys säilyy)
 //
 // Selain ei koskaan puhu suoraan Supabaseen — tämä funktio käyttää service_keytä.
 
@@ -163,7 +159,7 @@ export default async function handler(req, res) {
 
   // ── ADMIN-toiminnot (x-admin-key-suojatut, sama avain kuin admin-tilastot) ──
   // Ryhmien hallinta admin-paneelista: listaa, nimeä, nollaa PIN, poista.
-  const ADMIN_TOIMINNOT = ['admin_nollaa_pin', 'admin_ryhmat_lista', 'admin_nimea', 'admin_poista'];
+  const ADMIN_TOIMINNOT = ['admin_ryhmat_lista', 'admin_nimea', 'admin_poista'];
   if (ADMIN_TOIMINNOT.includes(toiminto)) {
     if (!ADMIN_DASHBOARD_KEY || !vertaaSalaisuus(req.headers['x-admin-key'] || '', ADMIN_DASHBOARD_KEY)) {
       return res.status(403).json({ ok: false, virhe: 'ei_oikeutta' });
@@ -195,18 +191,6 @@ export default async function handler(req, res) {
         });
         if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
         return res.status(200).json({ ok: true, ryhmakoodi: ryhma, nimi });
-      }
-
-      // NOLLAA PIN: vaihda avain_hash, palauta uusi numeerinen PIN opettajalle
-      if (toiminto === 'admin_nollaa_pin') {
-        const uusiPin = arvoNumeroPin(8);
-        const r = await sb(`opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhma)}`, {
-          method: 'PATCH',
-          headers: { Prefer: 'return=minimal' },
-          body: JSON.stringify({ avain_hash: hashAvain(uusiPin) }),
-        });
-        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-        return res.status(200).json({ ok: true, ryhmakoodi: ryhma, uusiPin });
       }
 
       // POISTA (Delete): poistaa ryhmän + sen järjestykset ja aikataulut (ON DELETE
