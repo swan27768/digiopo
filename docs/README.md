@@ -15,7 +15,7 @@ ei tunne tätä projektia lainkaan.
 |---|---|---|---|
 | 01 | [Yleiskuvaus](01-yleiskuvaus.md) | Mikä DigiOpo on, kenelle, mistä osista koostuu | ⬜ |
 | 02 | [Käyttöönotto](02-kayttoonotto.md) | Ympäristömuuttujat, Vercel-pystytys, domain | ✅ |
-| 03 | [Tietokanta](03-tietokanta.md) | Supabase, taulut, SQL-tiedostojen ajojärjestys | ⬜ |
+| 03 | [Tietokanta](03-tietokanta.md) | Supabase, taulut, SQL-tiedostojen ajojärjestys | ✅ |
 | 04 | [Arkkitehtuuri ja turvamalli](04-arkkitehtuuri.md) | Maksumuuri, middleware, service_role-periaate | ⬜ |
 | 05 | [API-rajapinnat](05-api.md) | 12 palvelinfunktiota, parametrit, vastaukset | ⬜ |
 | 06 | [Lisenssijärjestelmä](06-lisenssit.md) | Koodit, laiteseuranta, ylikäyttöhälytys | ⬜ |
@@ -61,8 +61,10 @@ rikkoa:
 
 1. **Selain ei koskaan puhu suoraan Supabaseen.** Kaikki kulkee
    palvelinfunktion kautta service_role-avaimella.
-2. **Opettaja-avain tallennetaan vain SHA-256-tiivisteenä** (`avain_hash`),
-   ei koskaan selkokielisenä.
+2. **Hallintaoikeus todetaan allekirjoitetusta evästeestä.** Opettajan
+   sähköpostia verrataan ryhmän `omistaja_email`-kenttään
+   (`api/_lib/opettaja.js`). Aiempi PIN-pohjainen malli (`avain_hash`,
+   SHA-256) on poistettu heinäkuussa 2026 – ks. `supabase_poista_pin.sql`.
 
 Maksumuurin kulku: lisenssikoodi → `api/lisenssi.js` → allekirjoitettu token
 → HttpOnly-eväste `digiopo_lisenssi` → `middleware.js` tarkistaa ennen kuin

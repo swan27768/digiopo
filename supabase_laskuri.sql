@@ -14,6 +14,21 @@
 -- joten kokonaisluvut säilyvät ennallaan – näkymiä eikä admin-tilastoja
 -- tarvitse muuttaa (ne käyttävät jo SUM(maara):a).
 
+-- ─── 0) Perustaulu ─────────────────────────────────────────────────────────────
+-- HUOM: tämä lohko puuttui pitkään tiedostosta. Taulu oli luotu tuotantoon
+-- käsin, joten kaikki alla oleva toimi siellä mutta tyhjä kanta kaatui heti
+-- kohdan 1 alter tableen. Lisätty 19.7.2026 tuotannon rakenteen mukaisena.
+create table if not exists page_views (
+  id     uuid     primary key default gen_random_uuid(),
+  sivu   text     not null,
+  paiva  date     not null default current_date,
+  maara  integer  not null default 1,
+  bucket smallint not null default 0
+);
+
+-- Estä suora selainpääsy (vain palvelin kirjoittaa service_role-avaimella).
+alter table page_views enable row level security;
+
 -- ─── 1) Lisää bucket-sarake (oletus 0 → vanhat rivit säilyvät kelvollisina) ─────
 alter table page_views
   add column if not exists bucket smallint not null default 0;

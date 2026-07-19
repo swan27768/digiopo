@@ -9,8 +9,11 @@ create table if not exists lisenssit (
   koulu       text not null,                  -- koulun nimi
   yhteyshenkilö text,                         -- opettajan nimi
   email       text,                           -- opettajan sähköposti
-  tyyppi      text not null default 'testi'   -- 'testi' | 'vuosi' | 'kunta'
-              check (tyyppi in ('testi', 'vuosi', 'kunta')),
+  -- 'opettaja' on pakollinen: api/lisenssi.js hakee opettajalisenssin
+  -- kyselyllä ?email=eq.<email>&tyyppi=eq.opettaja. Ilman tätä arvoa
+  -- opettajakirjautuminen ei toimi lainkaan.
+  tyyppi      text not null default 'testi'   -- 'testi' | 'vuosi' | 'kunta' | 'opettaja'
+              check (tyyppi in ('testi', 'vuosi', 'kunta', 'opettaja')),
   voimassa_asti date not null,               -- esim. 2026-12-31
   aktiivinen  boolean not null default true,
   luotu_at    timestamptz not null default now(),
@@ -44,10 +47,16 @@ create policy "Ei julkista pääsyä" on lisenssit
   for all using (false);
 
 -- ─── Esimerkkidataa testaukseen ──────────────────────────────────────────────
--- Poista tai muuta ennen tuotantoa!
-
-insert into lisenssit (koodi, koulu, yhteyshenkilö, email, tyyppi, voimassa_asti)
-values
-  ('TESTI-2026',   'DigiOpo testaus',      'Admin',          'admin@digiopo.fi', 'testi', '2026-12-31'),
-  ('KOULU-2026',   'Esimerkkikoulu',       'Matti Meikäläinen', 'matti@koulu.fi', 'vuosi', '2027-05-31')
-on conflict (koodi) do nothing;
+-- ⚠️ TIETOISESTI KOMMENTOITU POIS.
+--
+-- Nämä koodit ovat arvattavia. Jos ne luodaan tuotantokantaan, kuka tahansa
+-- pääsee maksumuurin läpi kokeilemalla "TESTI-2026". Aiemmin rivit ajettiin
+-- automaattisesti, ja ne jäivät tuotantoon – poistettu 19.7.2026.
+--
+-- Ota käyttöön vain paikallisessa testauksessa, ja poista ennen julkaisua:
+--
+-- insert into lisenssit (koodi, koulu, yhteyshenkilö, email, tyyppi, voimassa_asti)
+-- values
+--   ('TESTI-2026', 'DigiOpo testaus', 'Admin', 'admin@digiopo.fi', 'testi', '2026-12-31'),
+--   ('KOULU-2026', 'Esimerkkikoulu', 'Matti Meikäläinen', 'matti@koulu.fi', 'vuosi', '2027-05-31')
+-- on conflict (koodi) do nothing;
