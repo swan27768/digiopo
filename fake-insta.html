@@ -741,13 +741,11 @@ body {
 ════════════════════════════════ -->
 <div class="modal-overlay" id="pinModal">
   <div class="modal-box">
-    <h2>🔒 Opettajan kirjautuminen</h2>
-    <p>Anna koulukoodisi päästäksesi opettajan näkymään. Koodi tarkistetaan DigiOpo-palvelimelta.</p>
-    <input type="text" class="pin-input" id="pinInput" placeholder="esim. KOULU-2026"
-      maxlength="40" autocapitalize="characters" spellcheck="false"
-      onkeydown="if(event.key==='Enter') checkPin()" style="letter-spacing:.05em; font-size:1rem;">
-    <div class="pin-error" id="pinError" style="display:none">Koodi ei kelpaa tai se on vanhentunut.</div>
-    <button class="pin-submit" id="pinSubmitBtn" onclick="checkPin()">Kirjaudu</button><br>
+    <h2>🔒 Opettajan näkymä</h2>
+    <p>Opettajan näkymä vaatii kirjautumisen omalla opettajatunnuksellasi.
+       Jos olet jo kirjautunut, pääset suoraan sisään.</p>
+    <div class="pin-error" id="pinError" style="display:none"></div>
+    <button class="pin-submit" id="pinSubmitBtn" onclick="checkPin()">Avaa opettajan näkymä</button><br>
     <button class="pin-cancel" onclick="closePinModal()">Peruuta</button>
   </div>
 </div>
@@ -789,6 +787,8 @@ function lueKouluNimi() {
 let aktivoituKoulu = lueKouluNimi();
 
 // Opettajan tunnistettu koodi – tallennetaan vain muistiin (ei localStorage:en)
+// Totuusarvoinen lippu: opettajaistunto voimassa (sisältää koulun nimen).
+// Ei enää koulukoodi – valtuutus tulee palvelimella istuntoevästeestä.
 let opettajaKoodi = null;
 
 // ═══════════════════════════════════════════════════════════
@@ -1079,7 +1079,7 @@ async function loadTeacher() {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'hae_kaikki', koodi: opettajaKoodi })
+      body:    JSON.stringify({ toiminto: 'hae_kaikki' })
     });
     const data = await res.json();
     if (!data.ok) return;
@@ -1136,7 +1136,7 @@ async function approveProfile(id) {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'hyvaksy', koodi: opettajaKoodi, id })
+      body:    JSON.stringify({ toiminto: 'hyvaksy', id })
     });
     const data = await res.json();
     if (data.ok) showToast('✅ Profiili hyväksytty!');
@@ -1151,7 +1151,7 @@ async function deleteProfile(id) {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'poista', koodi: opettajaKoodi, id })
+      body:    JSON.stringify({ toiminto: 'poista', id })
     });
     const data = await res.json();
     if (!data.ok) showToast('❌ Virhe: ' + data.virhe);
@@ -1165,7 +1165,7 @@ async function clearAll() {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'tyhjenna', koodi: opettajaKoodi })
+      body:    JSON.stringify({ toiminto: 'tyhjenna' })
     });
     const data = await res.json();
     if (data.ok) showToast('🗑 Kaikki poistettu');
@@ -1174,23 +1174,24 @@ async function clearAll() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  OPETTAJAMODAALI – koulukoodi tarkistetaan /api/fake-insta:sta
+//  OPETTAJAMODAALI – opettajaistunto tarkistetaan /api/fake-insta:sta
 // ═══════════════════════════════════════════════════════════
 function openPinModal() {
-  document.getElementById('pinInput').value = '';
   document.getElementById('pinError').style.display = 'none';
   document.getElementById('pinModal').classList.add('open');
-  setTimeout(() => document.getElementById('pinInput').focus(), 60);
+  setTimeout(() => document.getElementById('pinSubmitBtn').focus(), 60);
 }
 
 function closePinModal() {
   document.getElementById('pinModal').classList.remove('open');
 }
 
+// Opettajanäkymän avaus.
+//
+// Valtuutus tulee opettajan istunnosta (kirjautuminen kirjaudu.html-sivulla),
+// EI koulukoodista. Aiemmin tässä riitti koulukoodi – sama koodi, jonka jokainen
+// oppilas kirjoittaa päästäkseen sivustolle. Palvelin ei enää hyväksy koodia.
 async function checkPin() {
-  const koodi = document.getElementById('pinInput').value.trim().toUpperCase();
-  if (!koodi) { showToast('✏️ Syötä koulukoodi'); return; }
-
   const errEl     = document.getElementById('pinError');
   const submitBtn = document.getElementById('pinSubmitBtn');
   errEl.style.display = 'none';
@@ -1201,20 +1202,22 @@ async function checkPin() {
     const res  = await fetch('/api/fake-insta', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ toiminto: 'tarkista_opettaja', koodi })
+      body:    JSON.stringify({ toiminto: 'tarkista_opettaja' })
     });
     const data = await res.json();
 
     if (data.ok) {
-      opettajaKoodi  = koodi;
-      aktivoituKoulu = data.koulu;   // API palauttaa koulun nimen
+      opettajaKoodi  = data.koulu;   // totuusarvoinen lippu: opettajaistunto voimassa
+      aktivoituKoulu = data.koulu;
       teacherTimer   = null;         // Nollaa timer, käynnistyy uudelleen showView:ssa
       closePinModal();
       showView('view-teacher');
     } else {
-      errEl.textContent = 'Koodi ei kelpaa tai se on vanhentunut.';
+      errEl.innerHTML =
+        'Et ole kirjautunut opettajana. ' +
+        '<a href="/kirjaudu.html" style="text-decoration:underline">Kirjaudu tästä</a> ' +
+        'ja palaa takaisin.';
       errEl.style.display = 'block';
-      document.getElementById('pinInput').select();
     }
   } catch {
     errEl.textContent = 'Verkkovirhe. Tarkista yhteys.';

@@ -22,13 +22,25 @@ function haeEvaste(req, nimi) {
   return null;
 }
 
-// Palauttaa kirjautuneen opettajan sähköpostin (pienaakkosin) tai null.
+// Palauttaa koko opettajaistunnon { email, koulu } tai null.
 // tarkistaToken hoitaa sekä allekirjoituksen että vanhentumisen tarkistuksen.
-export async function haeKirjautunutOpettaja(req) {
+//
+// HUOM: `typ !== 'opettaja'` sulkee pois koulukoodilla kirjautuneen oppilaan,
+// vaikka eväste on sama. Koulukoodi-istunnossa ei ole email-kenttää.
+export async function haeOpettajaIstunto(req) {
   if (!LISENSSI_JWT_SECRET) return null; // maksumuuri/istunnot pois päältä
   const token = haeEvaste(req, 'digiopo_lisenssi');
   if (!token) return null;
   const payload = await tarkistaToken(token, LISENSSI_JWT_SECRET);
   if (!payload || payload.typ !== 'opettaja' || !payload.email) return null;
-  return String(payload.email).toLowerCase();
+  return {
+    email: String(payload.email).toLowerCase(),
+    koulu: payload.koulu || null,
+  };
+}
+
+// Palauttaa kirjautuneen opettajan sähköpostin (pienaakkosin) tai null.
+export async function haeKirjautunutOpettaja(req) {
+  const istunto = await haeOpettajaIstunto(req);
+  return istunto ? istunto.email : null;
 }

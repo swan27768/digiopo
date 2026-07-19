@@ -18,6 +18,7 @@
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { rateLimitSallittu } from './_lib/rate.js';
+import { haeOpettajaIstunto } from './_lib/opettaja.js';
 
 const SUPABASE_URL       = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -49,9 +50,21 @@ async function sb(polku, opts = {}) {
 }
 
 // ─── Koulukoodi → koulunimi (suoraan lisenssit-taulusta) ─────────────────────
-async function tarkistaKoodi(koodi) {
+// Palauttaa kirjautuneen opettajan koulun tai null.
+//
+// Valtuutus tulee allekirjoitetusta istuntoevästeestä (typ === 'opettaja').
+// Koulukoodilla kirjautunut oppilas EI läpäise tätä, vaikka eväste on sama.
+//
+// Koulu luetaan ensisijaisesti tokenista. Vanhoissa tokeneissa kenttää ei
+// välttämättä ole, joten varalla haetaan se lisenssistä sähköpostilla.
+async function opettajanKoulu(req) {
+  const istunto = await haeOpettajaIstunto(req);
+  if (!istunto) return null;
+  if (istunto.koulu) return istunto.koulu;
+
   const r = await sb(
-    `lisenssit?koodi=eq.${encodeURIComponent(koodi)}&select=koulu,voimassa_asti,aktiivinen&limit=1`
+    `lisenssit?email=eq.${encodeURIComponent(istunto.email)}&tyyppi=eq.opettaja` +
+    `&select=koulu,voimassa_asti,aktiivinen&limit=1`
   );
   if (!r.ok) return null;
   const [lis] = await r.json();
@@ -175,21 +188,21 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, id: tallennettu.id });
     }
 
-    // ── TARKISTA OPETTAJA: vahvista koulukoodi ────────────────────────────
+    // ── TARKISTA OPETTAJA: vahvista opettajaistunto ───────────────────────
+    // HUOM: valtuutus tulee allekirjoitetusta istuntoevästeestä, EI rungon
+    // koodikentästä. Aiemmin tässä riitti koulukoodi – sama koodi, jonka
+    // jokainen oppilas kirjoittaa päästäkseen sivustolle. Kuka tahansa
+    // oppilas pystyi siis hyväksymään, poistamaan ja tyhjentämään töitä.
     if (toiminto === 'tarkista_opettaja') {
-      const koodi = String(body.koodi || '').trim().toUpperCase();
-      if (!koodi) return res.status(400).json({ ok: false, virhe: 'koodi_puuttuu' });
-      const koulu = await tarkistaKoodi(koodi);
-      if (!koulu) return res.status(200).json({ ok: false, virhe: 'virheellinen_koodi' });
+      const koulu = await opettajanKoulu(req);
+      if (!koulu) return res.status(200).json({ ok: false, virhe: 'ei_opettajaistuntoa' });
       return res.status(200).json({ ok: true, koulu });
     }
 
     // ── HAE KAIKKI: opettaja hakee kaikki koulunsa profiilit ──────────────
     if (toiminto === 'hae_kaikki') {
-      const koodi = String(body.koodi || '').trim().toUpperCase();
-      if (!koodi) return res.status(400).json({ ok: false, virhe: 'koodi_puuttuu' });
-      const koulu = await tarkistaKoodi(koodi);
-      if (!koulu) return res.status(200).json({ ok: false, virhe: 'virheellinen_koodi' });
+      const koulu = await opettajanKoulu(req);
+      if (!koulu) return res.status(200).json({ ok: false, virhe: 'ei_opettajaistuntoa' });
 
       const r = await sb(
         `fake_insta_profiilit?koulu=eq.${encodeURIComponent(koulu)}&order=luotu_at.asc&select=*`
@@ -201,11 +214,10 @@ export default async function handler(req, res) {
 
     // ── HYVÄKSY: opettaja hyväksyy profiilin galleriaan ──────────────────
     if (toiminto === 'hyvaksy') {
-      const koodi = String(body.koodi || '').trim().toUpperCase();
-      const id    = String(body.id    || '').trim();
-      if (!koodi || !id) return res.status(400).json({ ok: false, virhe: 'puuttuvat_parametrit' });
-      const koulu = await tarkistaKoodi(koodi);
-      if (!koulu) return res.status(200).json({ ok: false, virhe: 'virheellinen_koodi' });
+      const id = String(body.id || '').trim();
+      if (!id) return res.status(400).json({ ok: false, virhe: 'puuttuvat_parametrit' });
+      const koulu = await opettajanKoulu(req);
+      if (!koulu) return res.status(200).json({ ok: false, virhe: 'ei_opettajaistuntoa' });
 
       // Varmistetaan että profiili kuuluu tälle koululle
       const r = await sb(
@@ -218,11 +230,10 @@ export default async function handler(req, res) {
 
     // ── POISTA: opettaja poistaa profiilin ───────────────────────────────
     if (toiminto === 'poista') {
-      const koodi = String(body.koodi || '').trim().toUpperCase();
-      const id    = String(body.id    || '').trim();
-      if (!koodi || !id) return res.status(400).json({ ok: false, virhe: 'puuttuvat_parametrit' });
-      const koulu = await tarkistaKoodi(koodi);
-      if (!koulu) return res.status(200).json({ ok: false, virhe: 'virheellinen_koodi' });
+      const id = String(body.id || '').trim();
+      if (!id) return res.status(400).json({ ok: false, virhe: 'puuttuvat_parametrit' });
+      const koulu = await opettajanKoulu(req);
+      if (!koulu) return res.status(200).json({ ok: false, virhe: 'ei_opettajaistuntoa' });
 
       const r = await sb(
         `fake_insta_profiilit?id=eq.${encodeURIComponent(id)}&koulu=eq.${encodeURIComponent(koulu)}`,
@@ -269,10 +280,8 @@ export default async function handler(req, res) {
 
     // ── TYHJENNÄ: opettaja tyhjentää koulun kaikki profiilit ──────────────
     if (toiminto === 'tyhjenna') {
-      const koodi = String(body.koodi || '').trim().toUpperCase();
-      if (!koodi) return res.status(400).json({ ok: false, virhe: 'koodi_puuttuu' });
-      const koulu = await tarkistaKoodi(koodi);
-      if (!koulu) return res.status(200).json({ ok: false, virhe: 'virheellinen_koodi' });
+      const koulu = await opettajanKoulu(req);
+      if (!koulu) return res.status(200).json({ ok: false, virhe: 'ei_opettajaistuntoa' });
 
       const r = await sb(
         `fake_insta_profiilit?koulu=eq.${encodeURIComponent(koulu)}`,

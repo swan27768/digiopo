@@ -83,8 +83,16 @@ POST /api/aikataulu  { toiminto: "lisaa" | "muokkaa" | "poista", ... }
 
 `maailma-taulu` ja `fake-insta` noudattavat samaa moderointimallia: oppilas
 lähettää työn, opettaja hyväksyy sen näkyviin, ja vain hyväksytyt palautuvat
-GET-pyynnöllä. Opettajan toiminnot (`hyvaksy`, `poista`, `hae_kaikki`,
-`tyhjenna`) valtuutetaan koulukoodilla, ei opettajaistunnolla.
+GET-pyynnöllä. Opettajan toiminnot (`tarkista_opettaja`, `hae_kaikki`,
+`hyvaksy`, `poista`, `tyhjenna`) vaativat **opettajaistunnon**, ja koulu
+luetaan istunnosta — ei pyynnön rungosta.
+
+> **Korjattu 19.7.2026.** Aiemmin nämä toiminnot valtuutettiin koulukoodilla,
+> eli samalla koodilla jonka jokainen oppilas kirjoittaa päästäkseen sivustolle.
+> Kuka tahansa oppilas pystyi yhdellä POST-pyynnöllä hyväksymään omat työnsä
+> ohi opettajan, poistamaan toisten töitä tai ajamaan `tyhjenna`-toiminnon ja
+> pyyhkimään koko luokan taulun. Valtuutus tulee nyt allekirjoitetusta
+> istuntoevästeestä (`typ === 'opettaja'`), jota oppilas ei voi saada.
 
 Tykkäykset ja tähdet deduplikoidaan laitekohtaisesti tietokannan puolella
 (`mt_tykkays_laite`, `fip_tykkays_laite`, `fip_tahti_laite`).

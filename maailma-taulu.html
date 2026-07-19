@@ -437,13 +437,11 @@ body {
 <!-- ── PIN-modal ── -->
 <div class="modal-overlay" id="pinModal" role="dialog" aria-modal="true" aria-label="Opettajan kirjautuminen">
   <div class="modal-box">
-    <h2>🔒 Opettajan kirjautuminen</h2>
-    <p>Anna koulukoodisi päästäksesi opettajan näkymään.</p>
-    <input type="text" class="pin-input" id="pinInput" placeholder="esim. KOULU-2026"
-      autocomplete="off" autocorrect="off" spellcheck="false"
-      onkeydown="if(event.key==='Enter') checkPin()">
+    <h2>🔒 Opettajan näkymä</h2>
+    <p>Opettajan näkymä vaatii kirjautumisen omalla opettajatunnuksellasi.
+       Jos olet jo kirjautunut, pääset suoraan sisään.</p>
     <div class="pin-error" id="pinError" aria-live="polite"></div>
-    <button class="pin-submit" onclick="checkPin()">Kirjaudu</button><br>
+    <button class="pin-submit" id="pinSubmitBtn" onclick="checkPin()">Avaa opettajan näkymä</button><br>
     <button class="pin-cancel" onclick="closePinModal()">Peruuta</button>
   </div>
 </div>
@@ -730,25 +728,30 @@ async function tykkaa(id, btn) {
 function openPinModal() {
   if (opettajaKoodi) { naytaNakyma('view-opettaja'); lataOpettajanData(); return; }
   document.getElementById('pinModal').classList.add('open');
-  document.getElementById('pinInput').focus();
   document.getElementById('pinError').textContent = '';
+  document.getElementById('pinSubmitBtn').focus();
 }
 function closePinModal() { document.getElementById('pinModal').classList.remove('open'); }
 
+// Valtuutus tulee opettajan istunnosta (kirjautuminen kirjaudu.html-sivulla),
+// EI koulukoodista. Aiemmin tässä riitti koulukoodi – sama koodi, jonka jokainen
+// oppilas kirjoittaa päästäkseen sivustolle. Palvelin ei enää hyväksy koodia.
 async function checkPin() {
-  const koodi = document.getElementById('pinInput').value.trim().toUpperCase();
   const errEl = document.getElementById('pinError');
   errEl.textContent = '';
-  if (!koodi) { errEl.textContent = 'Anna koodi.'; return; }
   try {
     const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'tarkista_opettaja', koodi })
+      body: JSON.stringify({ toiminto: 'tarkista_opettaja' })
     });
     const data = await r.json();
-    if (!data.ok) { errEl.textContent = 'Virheellinen koodi.'; return; }
-    opettajaKoodi = koodi;
+    if (!data.ok) {
+      errEl.innerHTML = 'Et ole kirjautunut opettajana. ' +
+        '<a href="/kirjaudu.html" style="text-decoration:underline">Kirjaudu tästä</a>.';
+      return;
+    }
+    opettajaKoodi = data.koulu;
     kouluNimi = data.koulu;
     localStorage.setItem('mt_koulu', kouluNimi);
     document.getElementById('galleriaKoulu').textContent = kouluNimi;
@@ -763,7 +766,7 @@ async function lataOpettajanData() {
     const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'hae_kaikki', koodi: opettajaKoodi })
+      body: JSON.stringify({ toiminto: 'hae_kaikki' })
     });
     const data = await r.json();
     if (!data.ok) return;
@@ -808,7 +811,7 @@ async function hyvaksy(id) {
     const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'hyvaksy', koodi: opettajaKoodi, id })
+      body: JSON.stringify({ toiminto: 'hyvaksy', id })
     });
     if ((await r.json()).ok) lataOpettajanData();
   } catch {}
@@ -819,7 +822,7 @@ async function poista(id) {
     const r = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'poista', koodi: opettajaKoodi, id })
+      body: JSON.stringify({ toiminto: 'poista', id })
     });
     if ((await r.json()).ok) {
       document.getElementById(`ope-${id}`)?.remove();
@@ -833,7 +836,7 @@ async function tyhjennaKaikki() {
     await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ toiminto: 'tyhjenna', koodi: opettajaKoodi })
+      body: JSON.stringify({ toiminto: 'tyhjenna' })
     });
     lataOpettajanData();
   } catch {}
