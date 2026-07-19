@@ -74,18 +74,84 @@ Saman koulun rivien on oltava täsmälleen samalla kirjoitusasulla.
 
 ## 3. Koodin muoto
 
-Koodi on salasana, joten sen on oltava arvaamaton. Käytä satunnaista:
+**Ostetut lisenssit luodaan automaattisesti**, ei käsin. Tilauslomake
+`digiopo.fi/tilauslomake.html` kutsuu `digiopo-home/api/tilaus.js`-funktiota,
+joka generoi koodin, tallentaa lisenssin, lähettää koodin asiakkaalle ja
+laskun erikseen.
+
+| Tyyppi | Muoto | Esimerkki |
+|---|---|---|
+| Koululisenssi | `KOULUNIMI-VUOSI-XXXX` | `MÄYRÄLÄN-2027-A7K2` |
+| Opettajalisenssi | `OPE-VUOSI-XXXXXX` | `OPE-2027-SF8QFH` |
+
+Satunnaisosa käytetään aakkostosta `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` –
+sekaantuvat merkit (I, O, 0, 1, L) on jätetty pois, jotta koodin voi sanella
+puhelimessa. Koululisenssissä 4 merkkiä (noin miljoona vaihtoehtoa),
+opettajalisenssissä 6 (noin miljardi).
+
+Koulun nimi koodin alussa on tarkoituksellinen: se tekee koodista
+tunnistettavan, eikä se heikennä turvallisuutta, koska koulun nimi on
+julkinen tieto. Arvaamattomuus tulee satunnaisosasta.
+
+Koodit tallennetaan **isoilla kirjaimilla**, koska haku muuntaa syötteen
+`toUpperCase()`-metodilla.
+
+### Käsin luodut koodit
+
+Jos luot koodin itse (testaajat, erikoistapaukset), käytä satunnaista:
 
 ```sql
 'DIGIOPO-' || upper(substr(md5(random()::text), 1, 8))
 ```
 
-**Älä käytä kaavaa.** Aiemmin koodeja luotiin muodossa `ELLSA-160626`
-(etunimi + päivämäärä) ja `TESTI-2026`. Molemmat ovat arvattavia: kun näkee
-yhden, kaavan päättelee. Ne on satunnaistettu 19.7.2026.
+**Älä käytä ennustettavaa kaavaa.** Aiemmin käsin luotuja koodeja oli muodossa
+`ELLSA-160626` (etunimi + päivämäärä) ja `TESTI-2026`. Kun näkee yhden, kaavan
+päättelee. Ne satunnaistettiin 19.7.2026.
 
-Koodit tallennetaan **isoilla kirjaimilla**, koska haku muuntaa syötteen
-`toUpperCase()`-metodilla.
+---
+
+## 3b. Tilausautomaatio (`digiopo-home/api/tilaus.js`)
+
+Lisenssit syntyvät kahdesta lähteestä: tilauslomakkeelta automaattisesti ja
+käsin SQL:llä. **Molemmat kirjoittavat samaan `lisenssit`-tauluun eri
+projekteista.** Kannan rajoitteita muutettaessa on tarkistettava molemmat.
+
+| Tilaustyyppi | Mitä syntyy |
+|---|---|
+| Koululisenssi | `tyyppi='vuosi'`, koodi generoidaan, `paikat` = tilattu oppilasmäärä |
+| Opettajalisenssi | `tyyppi='opettaja'`, koodi generoidaan (ei käytössä kirjautumisessa) |
+
+**Uusintatilaus päivittää olemassa olevaa opettajalisenssiä**, ei luo uutta.
+Voimassaolo jatkuu nykyisestä päättymispäivästä, jos lisenssi on yhä voimassa –
+näin ajoissa uusiva asiakas ei menetä jäljellä olevaa aikaa. Vanhentuneella
+lisenssillä lasketaan tilauspäivästä.
+
+### Korjattu 19.7.2026
+
+Kaksi vikaa löytyi, kun tilausautomaatio tarkistettiin osion 06 kirjoittamisen
+yhteydessä:
+
+1. **Opettajalisenssitilaus ei ollut koskaan voinut onnistua.** `INSERT` tehtiin
+   ilman `koodi`-kenttää, joka on `NOT NULL`. Jokainen tilaus kaatui, asiakas
+   näki "Palvelinvirhe – yritä uudelleen", eikä laskua lähetetty. Nyt koodi
+   generoidaan (`generoi_opettaja_koodi`).
+2. **Uusintatilaus olisi kaatunut uniikkiin indeksiin.** Duplikaattisuoja kattoi
+   vain 3 minuuttia (tuplaklikkauksen esto). Nyt olemassa oleva rivi päivitetään.
+
+Samalla korjattiin duplikaattisuoja huomioimaan lisenssin tyyppi: aiemmin sama
+henkilö ei voinut tilata koululisenssiä ja opettajalisenssiä kolmen minuutin
+sisällä – jälkimmäinen kuitattiin duplikaatiksi eikä lisenssiä syntynyt.
+
+### Tiedossa olevat rajoitteet
+
+- **Rate limit on muistipohjainen** (`Map`), joten se nollautuu cold startissa
+  eikä päde serverless-instanssien yli. Matalavolyymiselle lomakkeelle riittävä,
+  mutta ei todellinen suoja.
+- **Kolmen vuoden lisenssi merkitään tyypiksi `vuosi`.** `voimassa_asti` on
+  oikein, mutta raportointi näyttää sen vuosilisenssinä. Tyyppi `kunta` ei ole
+  käytössä lainkaan.
+- **Laskunumeroa ei tallenneta tietokantaan.** Se generoidaan, lähetetään
+  sähköpostissa ja unohtuu. Laskutushistoria on vain lähetetyissä viesteissä.
 
 ---
 
@@ -233,5 +299,5 @@ where tyyppi = 'opettaja' group by email having count(*) > 1;
 ```sql
 -- Arvattavat koodit
 select koodi, koulu, tyyppi from lisenssit
-where koodi !~ '^DIGIOPO-[0-9A-F]{8}$' and tyyppi <> 'opettaja';
+where koodi !~ '^(DIGIOPO-[0-9A-F]{8}|OPE-[0-9]{4}-[A-Z0-9]{6}|.+-[0-9]{4}-[A-Z0-9]{4})$';
 ```
