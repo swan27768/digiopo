@@ -16,7 +16,7 @@ ei tunne tätä projektia lainkaan.
 | 01 | [Yleiskuvaus](01-yleiskuvaus.md) | Mikä DigiOpo on, kenelle, mistä osista koostuu | ⬜ |
 | 02 | [Käyttöönotto](02-kayttoonotto.md) | Ympäristömuuttujat, Vercel-pystytys, domain | ✅ |
 | 03 | [Tietokanta](03-tietokanta.md) | Supabase, taulut, SQL-tiedostojen ajojärjestys | ✅ |
-| 04 | [Arkkitehtuuri ja turvamalli](04-arkkitehtuuri.md) | Maksumuuri, middleware, service_role-periaate | ⬜ |
+| 04 | [Arkkitehtuuri ja turvamalli](04-arkkitehtuuri.md) | Maksumuuri, middleware, service_role-periaate | ✅ |
 | 05 | [API-rajapinnat](05-api.md) | 12 palvelinfunktiota, parametrit, vastaukset | ⬜ |
 | 06 | [Lisenssijärjestelmä](06-lisenssit.md) | Koodit, laiteseuranta, ylikäyttöhälytys | ⬜ |
 | 07 | [Sisällön ylläpito](07-sisallon-yllapito.md) | Uusi tehtävä, käännösavaimet, kuvat | ⬜ |
