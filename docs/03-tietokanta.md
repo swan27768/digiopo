@@ -72,6 +72,37 @@ Tämä varoitus on kirjattu myös itse tiedostoon.
 | `lisenssi_kirjaukset` | Loki jokaisesta onnistuneesta kirjautumisesta: koodi, aika, IP, user agent |
 | `lisenssi_laitteet` | Laitekohtainen seuranta, yksi rivi per koodi + laite. Perustuu selaimen pysyvään satunnaistunnisteeseen `digiopo_laite` |
 
+### ⚠️ `koodi` ja `tyyppi` – kaksi helppoa väärinymmärrystä
+
+**`tyyppi` ei rajoita pääsyä mitenkään.** `api/lisenssi.js` hakee lisenssin
+pelkällä koodilla (`?koodi=eq.<koodi>`) ja tarkistaa vain `aktiivinen`- ja
+`voimassa_asti`-kentät. Tyyppi valitaan mukaan kyselyyn, mutta sitä ei käytetä
+porttina. Nimi `testi` antaa siis vaikutelman rajoitetusta oikeudesta, vaikka
+sellainen lisenssi avaa koko sisällön. Kenttä on raportointia varten.
+
+**`koodi` tarkoittaa eri asiaa eri lisenssityypeissä:**
+
+| Tyyppi | Mikä `koodi` on |
+|---|---|
+| `testi`, `vuosi`, `kunta` | Koulun jaettu **salasana**. Oppilas kirjoittaa sen `liity.html`-porttiin |
+| `opettaja` | Pelkkä rivin tunniste. Kirjautuminen tapahtuu sähköpostilla Supabase Authin kautta, koodia ei syötetä minnekään |
+
+Käytännön seuraus: koulukoodin on oltava arvaamaton. Koodit tallennetaan
+isoilla kirjaimilla, koska haku muuntaa syötteen `toUpperCase()`-metodilla.
+
+Arvaamattoman koodin voi luoda näin:
+
+```sql
+update lisenssit
+set koodi = 'DIGIOPO-' || upper(substr(md5(random()::text), 1, 8))
+where koodi = 'VANHA-KOODI'
+returning koodi, koulu;
+```
+
+`returning` näyttää uuden arvon vain kerran – ota se heti talteen.
+
+---
+
 **Laitemäärän tulkinta on suuntaa-antava**, ei päälukumäärä: yksi oppilas kahdella
 laitteella näkyy kahtena, selaimen tyhjennys luo uuden laitteen, ja luokan
 yhteiskone näkyy yhtenä vaikka käyttäjiä on monta. Seuranta ei estä mitään —
@@ -87,6 +118,13 @@ se vain vertaa käyttöä `paikat`-kenttään ylikäyttöhälytystä varten.
 
 Molemmat viimeiset viittaavat `opetusryhmat`-tauluun `on delete cascade`
 -säännöllä: ryhmän poisto vie mukanaan järjestykset ja tapahtumat.
+
+**Opettajalisenssejä rajoittaa osittainen uniikki-indeksi**
+`lisenssit_opettaja_email_idx`: yksi opettajalisenssi per sähköposti.
+`api/lisenssi.js` hakee lisenssin kyselyllä `?email=eq.<email>&tyyppi=eq.opettaja`
+ja ottaa `data[0]` ilman `order by` -lauseketta, joten duplikaatit tekisivät
+kirjautumisesta arvaamatonta. Koulukoodeja rajoite ei koske – sama
+yhteyshenkilö voi olla usean koulun lisenssissä.
 
 **Valtuutusmalli muuttui heinäkuussa 2026.** Aiemmin ryhmää hallittiin
 salaisella opettaja-avaimella, joka tallennettiin SHA-256-tiivisteenä

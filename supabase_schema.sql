@@ -23,6 +23,22 @@ create table if not exists lisenssit (
 -- Indeksi koodihaun nopeuttamiseen
 create index if not exists lisenssit_koodi_idx on lisenssit (koodi);
 
+-- Yksi opettajalisenssi per sähköposti.
+--
+-- MIKSI: api/lisenssi.js hakee opettajalisenssin kyselyllä
+--   ?email=eq.<email>&tyyppi=eq.opettaja  →  data[0]
+-- Haussa ei ole order by:tä, joten jos samalla sähköpostilla on useampi
+-- opettajalisenssi, palautuva rivi on käytännössä sattumanvarainen. Eri
+-- voimassaolopäivillä kirjautuminen toimisi tai ei toimisi arvaamattomasti.
+--
+-- Osittainen indeksi: koskee vain opettajalisenssejä. Koulukoodeilla sama
+-- sähköposti voi esiintyä monta kertaa (sama yhteyshenkilö, monta koulua).
+-- NULL-sähköpostit eivät ole keskenään ristiriidassa.
+--
+-- HUOM: luonti kaatuu, jos duplikaatteja on jo olemassa. Siivoa ensin.
+create unique index if not exists lisenssit_opettaja_email_idx
+  on lisenssit (email) where tyyppi = 'opettaja';
+
 -- Automaattinen muokattu_at-päivitys
 create or replace function paivita_muokattu_at()
 returns trigger language plpgsql as $$
