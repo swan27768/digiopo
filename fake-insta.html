@@ -1140,6 +1140,10 @@ function renderTeacherList(containerId, profiles, showApprove) {
     </div>`).join('');
 }
 
+// HUOM: nämä päivittävät listan heti onnistumisen jälkeen (loadTeacher).
+// Aiemmin ne luottivat pelkkään pollaukseen, jolloin painallus ei näyttänyt
+// tekevän mitään ennen seuraavaa hakua – ja kun pollausväli nostettiin
+// 20 sekuntiin, viive kasvoi sietämättömäksi.
 async function approveProfile(id) {
   if (!opettajaKoodi) return;
   try {
@@ -1149,7 +1153,7 @@ async function approveProfile(id) {
       body:    JSON.stringify({ toiminto: 'hyvaksy', id })
     });
     const data = await res.json();
-    if (data.ok) showToast('✅ Profiili hyväksytty!');
+    if (data.ok) { showToast('✅ Profiili hyväksytty!'); await loadTeacher(); }
     else showToast('❌ Virhe: ' + data.virhe);
   } catch { showToast('❌ Verkkovirhe'); }
 }
@@ -1164,7 +1168,8 @@ async function deleteProfile(id) {
       body:    JSON.stringify({ toiminto: 'poista', id })
     });
     const data = await res.json();
-    if (!data.ok) showToast('❌ Virhe: ' + data.virhe);
+    if (data.ok) { showToast('🗑 Profiili poistettu'); await loadTeacher(); }
+    else showToast('❌ Virhe: ' + data.virhe);
   } catch { showToast('❌ Verkkovirhe'); }
 }
 
@@ -1178,7 +1183,7 @@ async function clearAll() {
       body:    JSON.stringify({ toiminto: 'tyhjenna' })
     });
     const data = await res.json();
-    if (data.ok) showToast('🗑 Kaikki poistettu');
+    if (data.ok) { showToast('🗑 Kaikki poistettu'); await loadTeacher(); }
     else showToast('❌ Virhe: ' + data.virhe);
   } catch { showToast('❌ Verkkovirhe'); }
 }
