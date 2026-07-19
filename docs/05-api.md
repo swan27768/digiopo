@@ -93,6 +93,32 @@ luetaan istunnosta — ei pyynnön rungosta.
 > ohi opettajan, poistamaan toisten töitä tai ajamaan `tyhjenna`-toiminnon ja
 > pyyhkimään koko luokan taulun. Valtuutus tulee nyt allekirjoitetusta
 > istuntoevästeestä (`typ === 'opettaja'`), jota oppilas ei voi saada.
+>
+> Samalla korjattiin `laheta`: koulu luettiin aiemmin pyynnön rungosta, joten
+> oppilas pystyi lähettämään työn toisen koulun tauluun. Nyt koulu luetaan
+> istunnosta molemmissa istuntotyypeissä (`_lib/opettaja.js`,
+> `haeIstunnonKoulu`). Rungon `koulu`-kenttä on varapolku vain tilanteeseen,
+> jossa maksumuuri on kokonaan pois päältä.
+
+### ⚠️ `koulu` on rajausavain – merkkijonon on täsmättävä
+
+Työt rajataan `koulu`-kentän arvolla. Koulun lisenssin ja saman koulun
+opettajalisenssien `koulu`-arvon on oltava **täsmälleen sama merkkijono**.
+
+Jos koulukoodilla on `"Mäyrälän koulu"` ja opettajan lisenssillä `"Mäyrälä"`,
+opettaja ei näe yhtään oppilaan työtä. Virheilmoitusta ei tule – vain tyhjä
+lista. Tämä on tukipyyntöjen kannalta pahin mahdollinen vikatyyppi.
+
+Tarkistus:
+
+```sql
+select koulu, tyyppi, count(*)
+from lisenssit
+group by koulu, tyyppi
+order by koulu;
+```
+
+Jos samasta koulusta on rivejä eri kirjoitusasuilla, yhtenäistä ne.
 
 Tykkäykset ja tähdet deduplikoidaan laitekohtaisesti tietokannan puolella
 (`mt_tykkays_laite`, `fip_tykkays_laite`, `fip_tahti_laite`).

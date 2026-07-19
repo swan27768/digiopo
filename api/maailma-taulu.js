@@ -4,18 +4,26 @@
 //      → { ok: true, ilmoitukset: [...] }   (hyvaksytty-ilmoitukset galleriaan)
 //
 // POST /api/maailma-taulu
-//   { toiminto: "laheta",            koulu, ilmoitus }      → { ok, id }
-//   { toiminto: "tarkista_opettaja", koodi }                → { ok, koulu }
-//   { toiminto: "hae_kaikki",        koodi }                → { ok, ilmoitukset, koulu }
-//   { toiminto: "hyvaksy",           koodi, id }            → { ok }
-//   { toiminto: "poista",            koodi, id }            → { ok }
-//   { toiminto: "tykkaa",            id }                   → { ok, tykkaukset }
-//   { toiminto: "tyhjenna",          koodi }                → { ok }
+//   { toiminto: "laheta",            ilmoitus }   → { ok, id }
+//   { toiminto: "tarkista_opettaja" }             → { ok, koulu }
+//   { toiminto: "hae_kaikki" }                    → { ok, ilmoitukset, koulu }
+//   { toiminto: "hyvaksy",           id }         → { ok }
+//   { toiminto: "poista",            id }         → { ok }
+//   { toiminto: "tykkaa",            id }         → { ok, tykkaukset }
+//   { toiminto: "tyhjenna" }                      → { ok }
+//
+// VALTUUTUS (muutettu 19.7.2026):
+//   Moderointitoiminnot vaativat OPETTAJAISTUNNON (typ === 'opettaja').
+//   Aiemmin riitti koulukoodi – sama koodi, jonka jokainen oppilas kirjoittaa
+//   päästäkseen sivustolle. Kuka tahansa oppilas pystyi siis hyväksymään omat
+//   työnsä, poistamaan toisten töitä tai tyhjentämään koko luokan taulun.
+//
+//   Koulu luetaan aina istunnosta, ei pyynnön rungosta – myös lähetyksessä.
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { rateLimitSallittu } from './_lib/rate.js';
-import { haeOpettajaIstunto } from './_lib/opettaja.js';
+import { haeOpettajaIstunto, haeIstunnonKoulu } from './_lib/opettaja.js';
 
 const SUPABASE_URL        = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -139,7 +147,11 @@ export default async function handler(req, res) {
 
     // ── LÄHETÄ: oppilas lähettää ilmoituksen ────────────────────────────
     if (toiminto === 'laheta') {
-      const koulu = String(body.koulu || '').trim();
+      // Koulu luetaan ensisijaisesti istunnosta, ei pyynnön rungosta. Muuten
+      // oppilas voisi muokatulla pyynnöllä lähettää työn toisen koulun tauluun.
+      // Varapolku (body.koulu) koskee vain tilannetta jossa maksumuuri on pois
+      // päältä – silloin koko sisältö on muutenkin julkista.
+      const koulu = (await haeIstunnonKoulu(req)) || String(body.koulu || '').trim();
       const il    = body.ilmoitus || {};
 
       if (!koulu || koulu.length > 100) {

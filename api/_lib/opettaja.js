@@ -44,3 +44,18 @@ export async function haeKirjautunutOpettaja(req) {
   const istunto = await haeOpettajaIstunto(req);
   return istunto ? istunto.email : null;
 }
+
+// Palauttaa istunnon koulun tai null. Toimii MOLEMMILLE istuntotyypeille:
+// koulukoodilla kirjautuneelle oppilaalle (typ 'koulu') ja opettajalle.
+//
+// Käytetään oppilaiden lähetyksissä, jotta koulu ei tule selaimen kertomana.
+// Palauttaa null jos maksumuuri on pois päältä (ei evästettä) – kutsujan on
+// silloin päätettävä varapolku.
+export async function haeIstunnonKoulu(req) {
+  if (!LISENSSI_JWT_SECRET) return null;
+  const token = haeEvaste(req, 'digiopo_lisenssi');
+  if (!token) return null;
+  const payload = await tarkistaToken(token, LISENSSI_JWT_SECRET);
+  if (!payload || !payload.koulu) return null;
+  return String(payload.koulu);
+}
