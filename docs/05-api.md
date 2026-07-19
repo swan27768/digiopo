@@ -120,6 +120,21 @@ order by koulu;
 
 Jos samasta koulusta on rivejä eri kirjoitusasuilla, yhtenäistä ne.
 
+**Koulunimi leivotaan istuntoevästeeseen kirjautumishetkellä.** Lisenssin
+`koulu`-arvon muuttaminen ei siis vaikuta jo avattuihin istuntoihin heti.
+Vanhalla nimellä kirjautunut oppilas lähettää työnsä yhä vanhalla nimellä.
+
+Nimi päivittyy kahdella tavalla:
+
+- **Automaattisesti vuorokaudessa.** `js/lisenssiportti.js` tekee 24 tunnin
+  välein taustatarkistuksen, joka lähettää tallennetun koodin `/api/lisenssi`
+  -endpointiin ja saa vastauksena tuoreen evästeen nykyisellä koulunimellä.
+- **Heti**, jos käyttäjä syöttää koodin uudelleen puhtaassa selaimessa.
+
+Testatessa tämä hämää helposti: Chrome säilyttää incognito-evästeet niin kauan
+kuin yksikin incognito-ikkuna on auki, joten yhden ikkunan sulkeminen ei anna
+tuoretta istuntoa.
+
 Tykkäykset ja tähdet deduplikoidaan laitekohtaisesti tietokannan puolella
 (`mt_tykkays_laite`, `fip_tykkays_laite`, `fip_tahti_laite`).
 

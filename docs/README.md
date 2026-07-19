@@ -18,7 +18,7 @@ ei tunne tätä projektia lainkaan.
 | 03 | [Tietokanta](03-tietokanta.md) | Supabase, taulut, SQL-tiedostojen ajojärjestys | ✅ |
 | 04 | [Arkkitehtuuri ja turvamalli](04-arkkitehtuuri.md) | Maksumuuri, middleware, service_role-periaate | ✅ |
 | 05 | [API-rajapinnat](05-api.md) | 12 palvelinfunktiota, parametrit, vastaukset | ✅ |
-| 06 | [Lisenssijärjestelmä](06-lisenssit.md) | Koodit, laiteseuranta, ylikäyttöhälytys | ⬜ |
+| 06 | [Lisenssien hallinta](06-lisenssit.md) | Koodit, voimassaolo, laiteseuranta, ylikäyttö | ✅ |
 | 07 | [Sisällön ylläpito](07-sisallon-yllapito.md) | Uusi tehtävä, käännösavaimet, kuvat | ⬜ |
 | 08 | [Julkaisu ja välimuisti](08-julkaisu.md) | Deploy, service worker, cache-versiointi | ⬜ |
 | 09 | [Ylläpitorutiinit](09-yllapito.md) | Cronit, siivoukset, virhelokit, seuranta | ⬜ |
