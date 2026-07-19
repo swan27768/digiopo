@@ -906,7 +906,11 @@ async function loadGallery() {
 function startGalleryPolling() {
   loadGallery();                          // Lataa heti
   if (galleryTimer) return;              // Ei käynnistetä kahta timeria
-  galleryTimer = setInterval(loadGallery, 5000);
+  // Galleria käyttää GET-pyyntöä, jota rate limit ei koske, mutta turha
+  // kuormitus kannattaa silti välttää: piilossa oleva välilehti ei hae.
+  galleryTimer = setInterval(() => {
+    if (!document.hidden) loadGallery();
+  }, 10000);
 }
 
 // Profiilien välimuisti tähtimodaalia varten
@@ -1103,7 +1107,13 @@ function startTeacherPolling() {
 
   loadTeacher();
   if (teacherTimer) return;
-  teacherTimer = setInterval(loadTeacher, 5000);
+  // 20 s eikä 5 s: koko koulu on saman NAT-IP:n takana ja jakaa saman
+  // rate limit -budjetin (120 POSTia / 5 min). Viiden sekunnin pollaus söi
+  // yksin 60 pyyntöä ikkunassa, jolloin oppilaat alkoivat saada 429-virheitä
+  // kesken oppitunnin. Välilehden ollessa piilossa ei haeta lainkaan.
+  teacherTimer = setInterval(() => {
+    if (!document.hidden) loadTeacher();
+  }, 20000);
 }
 
 function renderTeacherList(containerId, profiles, showApprove) {

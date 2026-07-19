@@ -190,6 +190,24 @@ Rajat on mitoitettu koululuokan mukaan: `ping` sallii eniten, koska se laukeaa
 jokaisella sivulatauksella, ja koko luokka tulee ulos samasta NAT-osoitteesta.
 Kirjoituspainotteiset endpointit ovat tiukempia.
 
+### ⚠️ Koko koulu jakaa saman budjetin
+
+Rate limit on IP-kohtainen, ja koulussa kaikki laitteet ovat saman NAT-osoitteen
+takana. **Yhden luokan 25 oppilasta ja opettaja jakavat siis saman 120 pyynnön
+budjetin.** Tämä on syytä muistaa aina kun lisää automaattista pollausta.
+
+Konkreettinen esimerkki: `fake-insta.html`-sivun opettajanäkymä haki tiedot
+5 sekunnin välein POST-pyynnöllä. Se on 60 pyyntöä viiden minuutin ikkunassa
+eli puolet koko koulun budjetista — pelkästään siitä, että opettajalla oli
+välilehti auki. Oppilaat alkoivat saada `liikaa_yrityksia`-virheitä kesken
+oppitunnin.
+
+Korjattu 19.7.2026: pollausväli 20 sekuntiin ja haku pysäytetään kun välilehti
+on piilossa (`document.hidden`).
+
+Nyrkkisääntö uudelle pollaukselle: laske `(60 / väli_sekunteina) × 5` ja vertaa
+sitä endpointin rajaan. Jos tulos on yli 10 % rajasta, väli on liian tiheä.
+
 **Ilman Upstash-muuttujia rajat eivät päde.** Muistilaskuri on
 instanssikohtainen ja nollautuu cold startissa.
 
