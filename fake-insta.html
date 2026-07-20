@@ -90,6 +90,26 @@ body {
 }
 .back-btn:hover { background: #f5f5f5; }
 
+/* ── Nav-bottom (aina näkyvissä) ── */
+.nav-bottom {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff; border-top: 1.5px solid var(--ig-border);
+  display: flex; z-index: 150;
+  box-shadow: 0 -2px 12px rgba(0,0,0,.08);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-bottom .nav-btn {
+  flex: 1; background: none; border: none; cursor: pointer;
+  padding: .55rem .3rem .45rem; font-family: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: .15rem;
+  color: var(--ig-gray); transition: color .15s;
+  font-size: .72rem; font-weight: 600;
+}
+.nav-bottom .nav-btn .nav-bicon { font-size: 1.4rem; line-height: 1; }
+.nav-bottom .nav-btn.active, .nav-bottom .nav-btn:hover { color: #bc1888; }
+.nav-bottom .nav-btn:focus-visible { outline: 2px solid #bc1888; outline-offset: -2px; }
+body { padding-bottom: 62px; }
+
 /* ── Content wrap ── */
 .content-wrap { max-width: 600px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
 
@@ -487,7 +507,8 @@ body {
 
 /* ── Print ── */
 @media print {
-  .std-header, .submit-area, .emoji-picker, .avatar-hint { display: none !important; }
+  .std-header, .submit-area, .emoji-picker, .avatar-hint, .nav-bottom { display: none !important; }
+  body { padding-bottom: 0; }
   body { background: #fff; }
   .ig-phone { box-shadow: none; border-radius: 4px; }
   .content-wrap { padding: 0; max-width: 100%; }
@@ -737,6 +758,21 @@ body {
 </div>
 
 <!-- ════════════════════════════════
+     ALANAVIGAATIO (aina näkyvissä)
+════════════════════════════════ -->
+<nav class="nav-bottom" aria-label="Päänavigaatio">
+  <button class="nav-btn" id="nav-form" onclick="showView('view-form')" aria-label="Tee uusi profiili">
+    <span class="nav-bicon">✏️</span>Uusi profiili
+  </button>
+  <button class="nav-btn" id="nav-gallery" onclick="showView('view-gallery')" aria-label="Avaa taulu">
+    <span class="nav-bicon">🖼</span>Taulu
+  </button>
+  <button class="nav-btn" id="nav-teacher" onclick="openPinModal()" aria-label="Opettajan näkymä">
+    <span class="nav-bicon">🔒</span>Opettaja
+  </button>
+</nav>
+
+<!-- ════════════════════════════════
      MODAL: KOULUKOODI (opettaja)
 ════════════════════════════════ -->
 <div class="modal-overlay" id="pinModal">
@@ -798,8 +834,22 @@ function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  paivitaNavAktiivinen(id);
   if (id === 'view-gallery') startGalleryPolling();
   if (id === 'view-teacher') startTeacherPolling();
+}
+
+// Korostaa alanavigaation aktiivisen painikkeen
+function paivitaNavAktiivinen(id) {
+  const map = {
+    'view-form':      'nav-form',
+    'view-submitted': 'nav-form',
+    'view-gallery':   'nav-gallery',
+    'view-teacher':   'nav-teacher'
+  };
+  document.querySelectorAll('.nav-bottom .nav-btn').forEach(b => b.classList.remove('active'));
+  const btn = map[id] && document.getElementById(map[id]);
+  if (btn) btn.classList.add('active');
 }
 
 // ═══════════════════════════════════════════════════════════
