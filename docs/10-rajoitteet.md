@@ -113,6 +113,22 @@ Kannan rajoitteita muutettaessa on tarkistettava molemmat. Tämä on jo kerran
 aiheuttanut rikkoutumisen: uniikki-indeksi olisi kaatanut tilausautomaation
 uusintatilaukset.
 
+**Miksi kantaa ei ole jaettu kahtia:** `lisenssit` on sama liiketoiminnallinen
+objekti kahdesta suunnasta – tilauslomake luo, sovellus tarkistaa. Erillisissä
+kannoissa sovellus joutuisi kysymään lisenssin voimassaolon markkinointisivuston
+rajapinnalta jokaisella kirjautumisella. Se lisäisi viiveen ja uuden vikapisteen
+kriittisimmälle polulle: jos digiopo.fi olisi alhaalla, oppilaat eivät pääsisi
+oppitunnille.
+
+Riskiä hallitaan ristiviittauksilla sen sijaan. `digiopo-home`-projektin
+README ja molemmat kantaan kirjoittavat tiedostot kertovat, missä skeema asuu
+ja mihin rajoitteisiin ne nojaavat.
+
+⚠️ **Myyntiä ajatellen:** jaettu kanta sitoo projektit yhteen. Sovellusta ei
+voi myydä ilman tilausjärjestelmää eikä päinvastoin ilman että jotain
+rakennetaan uusiksi. Kokonaisuutena myytäessä tämä on etu – ostaja saa toimivan
+ketjun tilauksesta käyttöön.
+
 ### Tietokantamuutokset käsin
 
 Migraatiotyökalua ei ole. SQL-tiedostot ajetaan Supabasen SQL Editorissa käsin
