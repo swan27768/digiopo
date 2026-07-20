@@ -1,6 +1,7 @@
 // DigiOpo – Kirjautumis- ja lisenssivahti
 // Vercel Cron Job (ks. vercel.json). Tekee kaksi tarkistusta:
-//   1) Kirjautumispiikki: yli 50 kirjausta viimeisen tunnin aikana → hälytys.
+//   1) Laitepiikki: yli 50 UUTTA laitetta per koodi viimeisen vuorokauden
+//      aikana → hälytys (mahdollinen koodivuoto).
 //   2) Lisenssien ylikäyttö: koodit joilla 30 pv aktiivisia laitteita enemmän
 //      kuin myytyjä paikkoja → hälytys.
 // (Yhdistetty samaan funktioon Hobby-planin 12 funktion rajan takia.)
@@ -13,50 +14,79 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@digiopo.fi';
 
-const HALYTYSRAJA = 50; // kirjausta / tunti
+const HALYTYSRAJA = 50; // uutta laitetta / koodi / vrk
 
-async function haeKirjausmaara() {
+// Uudet laitteet koodeittain viimeisen vuorokauden ajalta.
+//
+// MIKSI lisenssi_laitteet EIKÄ lisenssi_kirjaukset:
+// Aiemmin tämä laski rivejä lisenssi_kirjaukset-taulusta, mutta mikään ei
+// koskaan kirjoittanut siihen tauluun – hälytys ei siis voinut laueta
+// kertaakaan. Laiteseuranta korvasi kirjautumislokin, mutta lukupuoli jäi
+// osoittamaan vanhaan tauluun. Korjattu 19.7.2026.
+//
+// Laitetunniste on deduplikoitu (yksi rivi per koodi + laite), joten sama
+// oppilas sivua päivittämässä ei näy piikkinä – toisin kuin raa'oissa
+// kirjautumisissa. Vuotanut koodi sen sijaan näkyy heti uusina laitteina.
+//
+// MIKSI VUOROKAUSI EIKÄ TUNTI: cron ajetaan kerran päivässä, joten tunnin
+// ikkuna näytti aina samaa kellonaikaa (08–09 Suomen aikaa) – eli täsmälleen
+// sitä hetkeä kun koulut aloittavat. Vuorokausi kattaa koko välin edellisestä
+// ajosta ilman katvetta tai päällekkäisyyttä.
+async function haeLaitepiikit() {
   const baseUrl = SUPABASE_URL.replace(/\/$/, '');
-  const tuntiSitten = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const vrkSitten = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const vastaus = await fetch(
-    `${baseUrl}/rest/v1/lisenssi_kirjaukset?kirjattu_klo=gte.${tuntiSitten}&select=id`,
+    `${baseUrl}/rest/v1/lisenssi_laitteet?ensi_nahty=gte.${vrkSitten}&select=koodi,koulu`,
     {
       headers: {
         apikey: SUPABASE_SERVICE_KEY,
         Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-        'Prefer': 'count=exact',
       },
     }
   );
+  if (!vastaus.ok) throw new Error(`Supabase virhe (laitepiikki): ${vastaus.status}`);
 
-  if (!vastaus.ok) throw new Error(`Supabase virhe: ${vastaus.status}`);
-
-  // Supabase palauttaa määrän Content-Range-otsikossa: "0-49/127"
-  const contentRange = vastaus.headers.get('content-range') || '';
-  const maara = parseInt(contentRange.split('/')[1] || '0', 10);
-  return maara;
+  const rivit = await vastaus.json();
+  const laskurit = new Map();
+  for (const r of rivit) {
+    const avain = r.koodi;
+    const nyk = laskurit.get(avain) || { koodi: r.koodi, koulu: r.koulu, uusia: 0 };
+    nyk.uusia += 1;
+    laskurit.set(avain, nyk);
+  }
+  return [...laskurit.values()]
+    .filter(x => x.uusia > HALYTYSRAJA)
+    .sort((a, b) => b.uusia - a.uusia);
 }
 
-async function laheta_halytys(maara) {
+async function laheta_halytys(piikit) {
   const aika = new Date().toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' });
+  const rivit = piikit.map(p => `
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #eee;font-weight:700">${p.koodi}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee">${p.koulu || '—'}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;color:#dc2626;font-weight:700">${p.uusia}</td>
+    </tr>`).join('');
+
   const html = `<!DOCTYPE html>
 <html lang="fi">
 <body style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px 20px;color:#0f2540">
-  <h2 style="color:#dc2626">⚠️ DigiOpo – Epätavallinen kirjautumispiikki</h2>
-  <p>Viimeisen tunnin aikana on tehty <strong>${maara} kirjautumista</strong>, mikä ylittää hälytysrajan (${HALYTYSRAJA}/tunti).</p>
+  <h2 style="color:#dc2626">⚠️ DigiOpo – Epätavallisen paljon uusia laitteita</h2>
+  <p>Seuraavilla koodeilla on aktivoitunut yli <strong>${HALYTYSRAJA}</strong> uutta laitetta viimeisen vuorokauden aikana.</p>
   <table style="width:100%;border-collapse:collapse;margin:20px 0">
-    <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#3a5a7a">Kirjauksia tunnissa</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:700;color:#dc2626">${maara}</td></tr>
-    <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#3a5a7a">Hälytysraja</td><td style="padding:8px;border-bottom:1px solid #eee">${HALYTYSRAJA}</td></tr>
-    <tr><td style="padding:8px;color:#3a5a7a">Aika</td><td style="padding:8px">${aika}</td></tr>
+    <thead><tr style="text-align:left;color:#3a5a7a;font-size:13px">
+      <th style="padding:8px">Koodi</th><th style="padding:8px">Koulu</th><th style="padding:8px;text-align:center">Uusia laitteita</th>
+    </tr></thead>
+    <tbody>${rivit}</tbody>
   </table>
-  <p>Tarkista tilanne Supabasessa:</p>
-  <ul style="line-height:1.8">
-    <li>Onko kyseessä normaali oppilaspäivä (kaikki ok)?</li>
-    <li>Onko sama IP-osoite tehnyt paljon pyyntöjä (brute force)?</li>
-    <li>Onko jokin koodi vuotanut julkisuuteen?</li>
+  <p style="font-size:13px;color:#3a5a7a">Tarkistettavaa:</p>
+  <ul style="line-height:1.8;font-size:13px">
+    <li>Onko koulu juuri ottamassa tuotetta käyttöön? Silloin tämä on normaalia.</li>
+    <li>Ylittääkö laitemäärä myydyt paikat? Katso <code>lisenssi_kaytto</code>-näkymä.</li>
+    <li>Onko koodi voinut vuotaa julkisuuteen?</li>
   </ul>
-  <p style="font-size:12px;color:#7a9ab5;margin-top:24px">Tämä on automaattinen hälytys DigiOpo-järjestelmästä.</p>
+  <p style="font-size:12px;color:#7a9ab5;margin-top:24px">Aika: ${aika}. Tämä on automaattinen hälytys DigiOpo-järjestelmästä.</p>
 </body>
 </html>`;
 
@@ -69,7 +99,7 @@ async function laheta_halytys(maara) {
     body: JSON.stringify({
       from: `DigiOpo Vahti <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
-      subject: `⚠️ DigiOpo: ${maara} kirjautumista tunnissa`,
+      subject: `⚠️ DigiOpo: ${piikit.length} koodilla poikkeuksellisen paljon uusia laitteita`,
       html,
     }),
   });
@@ -145,13 +175,13 @@ export default async function handler(req, res) {
 
   const sposti = Boolean(RESEND_API_KEY && ADMIN_EMAIL);
   try {
-    // 1) Kirjautumispiikki
-    const maara = await haeKirjausmaara();
+    // 1) Laitepiikki koodeittain
+    const piikit = await haeLaitepiikit();
     let kirjautumisHalytys = false;
-    if (maara > HALYTYSRAJA) {
-      if (sposti) await laheta_halytys(maara);
+    if (piikit.length > 0) {
+      if (sposti) await laheta_halytys(piikit);
       kirjautumisHalytys = true;
-      console.log(`Kirjautumishälytys: ${maara} kirjausta`);
+      console.log(`Laitepiikkihälytys: ${piikit.length} koodia`);
     }
 
     // 2) Lisenssien ylikäyttö (ei saa kaataa kirjautumisvahtia esim. jos

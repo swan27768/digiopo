@@ -86,9 +86,22 @@ select jobname, schedule, active from cron.job;
 
 | Hälytys | Laukeaa | Lähde |
 |---|---|---|
-| Kirjautumispiikki | yli 50 kirjausta tunnissa | `lisenssi_kirjaukset` |
+| Laitepiikki | yli 50 uutta laitetta / koodi / vrk | `lisenssi_laitteet` |
 | Lisenssien ylikäyttö | 30 pv laitteita enemmän kuin `paikat` | `lisenssi_kaytto` |
 | Virhekooste | uusia rivejä `api_virheet`-taulussa | `api_virheet` |
+
+> **Korjattu 19.7.2026.** Laitepiikki oli aiemmin "kirjautumispiikki" ja luki
+> `lisenssi_kirjaukset`-taulua, johon **mikään ei koskaan kirjoittanut** –
+> hälytys ei siis voinut laueta kertaakaan. Laiteseuranta oli korvannut
+> kirjautumislokin, mutta lukupuoli jäi osoittamaan vanhaan tauluun.
+>
+> Samalla ikkuna muuttui tunnista vuorokauteen. Cron ajetaan kerran päivässä,
+> joten tunnin ikkuna näytti aina samaa kellonaikaa (08–09 Suomen aikaa) eli
+> täsmälleen koulujen aloitushetkeä. Vuorokausi kattaa koko välin edellisestä
+> ajosta.
+>
+> Laitetunniste on deduplikoitu, joten sivua päivittävä oppilas ei näy
+> piikkinä – vuotanut koodi näkyy.
 
 Sähköpostit lähtevät **vain jos sekä `RESEND_API_KEY` että `ADMIN_EMAIL` on
 asetettu.** Toisen puuttuminen sammuttaa ne kokonaan ilman virheilmoitusta.

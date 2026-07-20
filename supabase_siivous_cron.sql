@@ -71,9 +71,14 @@ begin
           ) < now() - interval '24 months';
 
   -- ─── Vanhat kirjautumislokit (> 12 kk) ──────────────────────────────────
-  -- Nopeimmin kasvava taulu: yksi rivi per oppilaan kirjautuminen. Piikki-
-  -- hälytys katsoo vain viimeistä tuntia ja näkymät lähihistoriaa, joten
-  -- vuotta vanhempaa dataa ei tarvita mihinkään.
+  -- HUOM: taulu on käytännössä tyhjä – mikään ei kirjoita siihen. Kirjaus
+  -- korvattiin aikanaan laiteseurannalla (lisenssi_laitteet), mutta taulu ja
+  -- näkymät jäivät paikalleen. Siivous on tässä varmuuden vuoksi siltä
+  -- varalta, että kirjoitus joskus toteutetaan.
+  --
+  -- Jos päätät toteuttaa kirjautumislokin, huomaa että taulu tallentaa
+  -- ip- ja user_agent-kentät eli HENKILÖTIETOA ALAIKÄISISTÄ. Se on
+  -- tietosuojapäätös, ei tekninen – tietosuojaselosteen on vastattava sitä.
   delete from lisenssi_kirjaukset
     where kirjattu_klo < now() - interval '12 months';
 
