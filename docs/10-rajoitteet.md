@@ -28,11 +28,26 @@ siirtoa `digiopo-home`-projektiin (jossa on tilaa), tai Pro-tilausta.
 
 Ilmaistason tilaraja on 500 MB. Nykyinen käyttö on murto-osa siitä.
 
-**Varmuuskopiointi on käsityötä.** Käytäntö on olemassa – viikoittainen
-`pg_dump` ja kuukausittainen koodin ZIP – ja hallintapaneelin muistutuslista
-seuraa niitä. Automaattista ajastettua vientiä ei kuitenkaan ole, joten
-varmuuskopio riippuu siitä että joku muistaa tehdä sen. Ks.
-[09 – Ylläpito](09-yllapito.md).
+### ⚠️ Ilmaistasolla EI OLE varmuuskopioita
+
+Supabasen Free Plan ei sisällä ajastettuja varmuuskopioita eikä palautusta
+ajassa taaksepäin. Pro-taso antaa 7 päivän säilytyksen.
+
+**Käsin tehty `pg_dump` on siis ainoa turva, ei lisäturva.** Jos kanta
+menetetään eikä tuoretta dumppia ole, mitään ei ole mistä palata: lisenssit,
+opetusryhmät, oppilaiden työt ja koko myyntihistoria.
+
+Riski on tällä hetkellä pieni, koska maksavia asiakkaita ei vielä ole ja
+menetys koskisi lähinnä testidataa. **Se muuttuu heti kun ensimmäinen koulu
+aloittaa** – silloin kannassa on oppilaiden töitä, joita ei voi tuottaa
+uudelleen.
+
+Käytännön suositus: Pro-taso viimeistään ensimmäisen maksavan asiakkaan
+myötä. Se ei poista käsin tehdyn dumpin tarvetta – oma kopio on riippumaton
+Supabasesta ja säilyy pidempään kuin 7 päivää – mutta se poistaa yksittäisen
+unohtuneen viikon kohtalokkuuden.
+
+Varmuuskopiointiohje: [09 – Ylläpito](09-yllapito.md).
 
 ### Cold start
 

@@ -215,9 +215,48 @@ Jos vaihdat selainta, tyhjennät selaustiedot tai avaat paneelin eri polusta,
 merkinnät katoavat – itse varmuuskopiot eivät, mutta tieto siitä milloin ne on
 viimeksi tehty katoaa.
 
-Tämä on ainoa kohta koko järjestelmässä, jossa **menetys olisi peruuttamaton**.
-Jos varmuuskopio jää tekemättä ja kanta menetetään, mitään ei ole mistä palata.
-Muistutus auttaa, mutta se on silti muistin varassa.
+⚠️ **Supabasen ilmaistasolla ei ole varmuuskopioita lainkaan** – ei ajastettuja
+eikä palautusta ajassa taaksepäin. Käsin tehty `pg_dump` on siis ainoa turva,
+ei lisäturva. Jos se jää tekemättä ja kanta menetetään, mitään ei ole mistä
+palata.
+
+### Näin varmuuskopio tehdään
+
+Suora yhteys (`db.<projekti>.supabase.co`) on **IPv6-only**, eikä se toimi
+IPv4-verkosta. Käytä **Session pooleria**, joka on ilmainen ja IPv4-yhteensopiva.
+Osoite löytyy Supabasen **Connect**-painikkeesta → Session pooler.
+
+```bash
+cd ~/Documents/Varmuuskopiot
+
+export PGPASSWORD='salasana'
+
+pg_dump \
+  -h aws-0-<alue>.pooler.supabase.com \
+  -p 5432 \
+  -U postgres.<projektitunnus> \
+  -d postgres \
+  --clean --if-exists --no-owner --no-privileges \
+  -f digiopo_$(date +%Y-%m-%d).sql
+
+unset PGPASSWORD
+```
+
+Kaksi kohtaa, joissa erehtyy helposti:
+
+- **Käyttäjänimi on `postgres.<projektitunnus>`**, ei pelkkä `postgres`.
+  Poolerissa se on eri kuin suorassa yhteydessä.
+- **Alue on luettava Connect-ikkunasta.** Väärä alue antaa virheen
+  `(EAUTHQUERY) user not found in the database`, vaikka tunnus olisi oikein.
+
+Tarkista aina että kopio ei ole tyhjä:
+
+```bash
+grep -c "CREATE TABLE" digiopo_$(date +%Y-%m-%d).sql   # pitäisi olla 17
+```
+
+Ja vie kopio koneen ulkopuolelle. Kopio samalla koneella suojaa vahingossa
+tehdyltä poistolta, ei koneen hajoamiselta.
 
 Kestävämpi ratkaisu olisi ajastettu vienti Supabasesta ulkoiseen tallennukseen.
 Se on kirjattu osion [10 – Rajoitteet](10-rajoitteet.md) korjauslistan
