@@ -22,7 +22,7 @@ ei tunne tätä projektia lainkaan.
 | 07 | [Sisällön ylläpito](07-sisallon-yllapito.md) | Uusi tehtävä, käännösavaimet, kuvat | ✅ |
 | 08 | [Julkaisu ja välimuisti](08-julkaisu.md) | Deploy, service worker, cache-versiointi | ✅ |
 | 09 | [Ylläpitorutiinit](09-yllapito.md) | Cronit, siivoukset, virhelokit, seuranta | ✅ |
-| 10 | [Tunnetut rajoitteet](10-rajoitteet.md) | Rate limitit, Vercel Hobby, keskeneräiset asiat | ⬜ |
+| 10 | [Tunnetut rajoitteet](10-rajoitteet.md) | Rate limitit, Vercel Hobby, keskeneräiset asiat | ✅ |
 
 ⬜ = kesken · ✅ = valmis
 
