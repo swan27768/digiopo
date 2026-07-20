@@ -43,6 +43,43 @@ begin
     where paivitetty < extract(epoch from now() - interval '3 months') * 1000;
   delete from tiedontemppeli_tulostaulu
     where paivitetty < extract(epoch from now() - interval '3 months') * 1000;
+
+  -- ─── Hylätyt opetusryhmät (> 24 kk koskematta) ──────────────────────────
+  --
+  -- MIKSI: opetusryhmiä ei siivottu aiemmin lainkaan. Lisenssin päätyttyä
+  -- koulun ryhmät, järjestykset ja lukuvuosikalenterit jäivät kantaan
+  -- pysyvästi.
+  --
+  -- ⚠️ TÄMÄ POISTAA OPETTAJAN TYÖTÄ. Poisto vie cascade-säännöllä mukanaan
+  -- ryhmän järjestykset ja aikataulutapahtumat, eikä sitä voi perua.
+  --
+  -- Siksi "koskematta" katsotaan KOLMESTA lähteestä, ei vain ryhmäriviltä:
+  -- opettaja on voinut järjestää osiot tai päivittää kalenteria muuttamatta
+  -- itse ryhmää. Pelkkä opetusryhmat.muokattu_at olisi antanut väärän kuvan
+  -- ja tuhonnut aktiivisessa käytössä olevia ryhmiä.
+  --
+  -- HUOM: pelkkä KÄYTTÖ (oppilas avaa ryhmän) ei päivitä mitään aikaleimaa,
+  -- joten teoriassa vuosia muuttumattomana käytetty ryhmä voi poistua.
+  -- 24 kk on siksi tarkoituksella pitkä – lyhennä vain harkiten.
+  delete from opetusryhmat o
+    where greatest(
+            o.muokattu_at,
+            coalesce((select max(j.muokattu_at) from jarjestykset j
+                       where j.ryhmakoodi = o.ryhmakoodi), o.muokattu_at),
+            coalesce((select max(t.muokattu_at) from lukuvuosi_tapahtumat t
+                       where t.ryhmakoodi = o.ryhmakoodi), o.muokattu_at)
+          ) < now() - interval '24 months';
+
+  -- ─── Vanhat kirjautumislokit (> 12 kk) ──────────────────────────────────
+  -- Nopeimmin kasvava taulu: yksi rivi per oppilaan kirjautuminen. Piikki-
+  -- hälytys katsoo vain viimeistä tuntia ja näkymät lähihistoriaa, joten
+  -- vuotta vanhempaa dataa ei tarvita mihinkään.
+  delete from lisenssi_kirjaukset
+    where kirjattu_klo < now() - interval '12 months';
+
+  -- ─── Vanhat massaviestilokit (> 24 kk) ──────────────────────────────────
+  delete from admin_viestit
+    where laheta_at < now() - interval '24 months';
 end;
 $$;
 

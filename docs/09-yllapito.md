@@ -55,6 +55,15 @@ Pyörii tietokannan sisällä eikä kuluta Vercelin funktiokiintiötä.
 - yli 30 vrk hyväksymättä jääneet oppilastyöt (`maailma_ratkaisut`,
   `fake_insta_profiilit`, tila `odottaa`)
 - yli 3 kk vanhat pelitulokset
+- yli 24 kk koskemattomat `opetusryhmat` (lisätty 19.7.2026)
+- yli 12 kk vanhat `lisenssi_kirjaukset` (lisätty 19.7.2026)
+- yli 24 kk vanhat `admin_viestit` (lisätty 19.7.2026)
+
+⚠️ **Opetusryhmän poisto vie mukanaan järjestykset ja lukuvuosikalenterin**
+(cascade). "Koskematon" lasketaan kolmesta aikaleimasta – ryhmä, järjestykset
+ja kalenteritapahtumat – koska opettaja voi päivittää järjestystä muuttamatta
+itse ryhmää. Pelkkä käyttö ei kuitenkaan päivitä mitään aikaleimaa, joten 24 kk
+on tarkoituksella pitkä raja. Älä lyhennä sitä harkitsematta.
 
 **Suursiivous** tekee edellisen ja lisäksi:
 
