@@ -188,13 +188,37 @@ Ne kertovat suoraan mikä meni pieleen, ja säästävät arvailulta.
 
 Rehellisyyden vuoksi – nämä ovat käsityötä:
 
-- **Lisenssien luonti käsin** (testaajat, erikoistapaukset) – SQL:llä
+- **Lisenssien luonti** ilman laskutusta – hallintapaneelin lomakkeella
 - **Laskujen seuranta** – laskunumeroa ei tallenneta kantaan
-- **Uusintamyynti** – pian vanhenevat on haettava kyselyllä
-- **Varmuuskopiot** – Supabasen oman varmuuskopioinnin varassa, ei erillistä
-  vientiä
+- **Uusintamyynti** – pian vanhenevat on haettava kyselyllä tai paneelista
+- **Varmuuskopiot** – käsin, muistutusten varassa (ks. alla)
 - **Käännösten päivitys** – uusi avain lisättävä 11 tiedostoon käsin
 - **Sisältömuutokset** – tiedostoja editoimalla, ei hallintapaneelista
 
-Näistä varmuuskopiointi on se, joka kannattaa tarkistaa ennen kuin
-asiakasmäärä kasvaa. Supabasen ilmaistason varmuuskopiointi on rajallinen.
+---
+
+## 7. Varmuuskopiot ja avainten vaihto
+
+Hallintapaneelissa on **Ylläpitorytmi — muistutukset** -osio, joka seuraa
+toistuvia tehtäviä ja laskee seuraavan eräpäivän. Väri kertoo tilan.
+
+| Tehtävä | Väli | Miten |
+|---|---|---|
+| Tietokannan varmuuskopio | viikoittain | `pg_dump` → `Documents/Varmuuskopiot`, nimeä päivämäärällä |
+| Koodin varmuuskopio | kuukausittain | GitHub → Code → Download ZIP, talleta myös koneen ulkopuolelle |
+| Pian vanhenevat lisenssit | kuukausittain | Live-tilastot → "Vanhenee 30 pv" |
+| API-virhelokit | viikoittain | Live-tilastot → Vikatilanteet |
+| Admin- ja API-avainten vaihto | 6 kk | `ADMIN_DASHBOARD_KEY`, DB-salasana, API-avaimet → päivitä Verceliin |
+
+⚠️ **Muistutusten tila tallentuu vain yhden selaimen `localStorage`-muistiin.**
+Jos vaihdat selainta, tyhjennät selaustiedot tai avaat paneelin eri polusta,
+merkinnät katoavat – itse varmuuskopiot eivät, mutta tieto siitä milloin ne on
+viimeksi tehty katoaa.
+
+Tämä on ainoa kohta koko järjestelmässä, jossa **menetys olisi peruuttamaton**.
+Jos varmuuskopio jää tekemättä ja kanta menetetään, mitään ei ole mistä palata.
+Muistutus auttaa, mutta se on silti muistin varassa.
+
+Kestävämpi ratkaisu olisi ajastettu vienti Supabasesta ulkoiseen tallennukseen.
+Se on kirjattu osion [10 – Rajoitteet](10-rajoitteet.md) korjauslistan
+ykköseksi.

@@ -26,10 +26,13 @@ siirtoa `digiopo-home`-projektiin (jossa on tilaa), tai Pro-tilausta.
 
 ### Supabase
 
-Ilmaistason tilaraja on 500 MB. Nykyinen käyttö on murto-osa siitä, mutta
-**automaattista varmuuskopiointia ei ole erikseen järjestetty** – ollaan
-Supabasen oman varmuuskopioinnin varassa. Tämä on ensimmäinen asia, joka
-kannattaa korjata asiakasmäärän kasvaessa.
+Ilmaistason tilaraja on 500 MB. Nykyinen käyttö on murto-osa siitä.
+
+**Varmuuskopiointi on käsityötä.** Käytäntö on olemassa – viikoittainen
+`pg_dump` ja kuukausittainen koodin ZIP – ja hallintapaneelin muistutuslista
+seuraa niitä. Automaattista ajastettua vientiä ei kuitenkaan ole, joten
+varmuuskopio riippuu siitä että joku muistaa tehdä sen. Ks.
+[09 – Ylläpito](09-yllapito.md).
 
 ### Cold start
 
@@ -181,7 +184,7 @@ tiedostopalvelimella (VS Code Live Server ei riitä).
 | 3 vuoden lisenssi merkitään tyypiksi `vuosi` | Raportointi näyttää väärin; `voimassa_asti` on oikein | Matala |
 | Laskunumeroa ei tallenneta kantaan | Laskutushistoria vain lähetetyissä sähköposteissa | Keskitaso |
 | Tilauslomakkeen rate limit on muistipohjainen | Ei päde serverless-instanssien yli | Matala |
-| Ei automaattista varmuuskopiointia | Supabasen oman varmuuskopioinnin varassa | **Korkea** |
+| Varmuuskopiointi käsin, muistutusten varassa | Toimii, mutta riippuu siitä että joku muistaa | **Korkea** |
 | Lisenssin luonti vaati SQL-osaamista | Korjattu 19.7.2026: lomake hallintapaneelissa | Valmis |
 
 ---
@@ -201,7 +204,11 @@ tiedostopalvelimella (VS Code Live Server ei riitä).
 
 Jos projektia jatketaan tai se luovutetaan eteenpäin, tässä järjestyksessä:
 
-1. **Varmuuskopiointi.** Ainoa kohta jossa menetys olisi peruuttamaton.
+1. **Varmuuskopioinnin automatisointi.** Käytäntö on olemassa, mutta se on
+   muistin varassa – ja tämä on ainoa kohta jossa menetys olisi peruuttamaton.
+   Ajastettu vienti Supabasesta ulkoiseen tallennukseen poistaisi riippuvuuden
+   siitä että joku muistaa. Muistutusten tila elää lisäksi vain yhden selaimen
+   `localStorage`-muistissa.
 2. **Hyväksyttyjen oppilastöiden siivous.** Ainoa taulu joka kasvaa rajatta.
    Luonteva paikka on suursiivous elokuussa, pelien tulostaulujen tapaan.
 3. **Vercel Pro**, jos uusia toimintoja tarvitaan. Funktiokatto on täynnä ja
