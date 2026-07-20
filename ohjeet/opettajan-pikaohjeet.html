@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opettajan pikaohjeet – DigiOpo</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     OPETTAJAN PIKAOHJEET – PDF:N LÄHDETIEDOSTO
+
+     Tästä tiedostosta tuotetaan DigiOpo_opettajan_pikaohjeet.pdf, joka
+     liitetään koululisenssin tilausvahvistukseen (digiopo-home/api/tilaus.js).
+
+     PDF:N LUONTI:
+       1. Avaa tämä tiedosto selaimessa
+       2. Cmd/Ctrl + P
+       3. Kohde: "Tallenna PDF-tiedostona"
+       4. Paperikoko A4, marginaalit: Ei mitään (tulostus-CSS hoitaa ne)
+       5. Rastita "Taustagrafiikka"
+       6. Tallenna nimellä DigiOpo_opettajan_pikaohjeet.pdf
+       7. Kopioi MOLEMPIIN repoihin:
+            digiopo/DigiOpo_opettajan_pikaohjeet.pdf
+            digiopo-home/DigiOpo_opettajan_pikaohjeet.pdf
+
+     ⚠️ Molemmat kopiot on päivitettävä. Tilausvahvistus lukee
+     digiopo-home-projektin kopion, ja ne ovat kerran ehtineet ajautua
+     erilleen – asiakkaat saivat vanhentuneen ohjeen.
+
+     MUISTA PÄIVITTÄÄ myös tässä mainitut luvut, jos koodi muuttuu:
+       - tapahtumien enimmäismäärä  → api/aikataulu.js, MAX_TAPAHTUMIA
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+  :root {
+    --tumma:   #2b1b52;
+    --lila:    #6d3fd4;
+    --lila-va: #f3eefe;
+    --kulta:   #f5c842;
+    --teksti:  #1f2430;
+    --harmaa:  #5b6478;
+    --viiva:   #e3e6ef;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--teksti);
+    line-height: 1.6;
+    font-size: 11pt;
+    background: #f4f5f9;
+  }
+
+  .sivu {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 18mm 16mm 20mm;
+  }
+
+  /* ── Ylätunniste ─────────────────────────────────────────────── */
+  .hero {
+    background: var(--tumma);
+    color: #fff;
+    padding: 22px 26px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  .hero-yla {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 9pt; letter-spacing: .12em; text-transform: uppercase;
+    color: #c9bdf0; margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-size: 27pt; color: var(--kulta); line-height: 1.1; margin-bottom: 8px;
+  }
+  .hero p { font-style: italic; color: #ded6fa; font-size: 11pt; }
+  .hero .paiv {
+    margin-top: 10px; font-size: 8.5pt; letter-spacing: .1em;
+    text-transform: uppercase; color: #a99ae0; font-style: normal;
+  }
+
+  /* ── Laatikot ────────────────────────────────────────────────── */
+  .laatikko {
+    border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 10.5pt;
+  }
+  .laatikko h4 { font-size: 10.5pt; margin-bottom: 5px; }
+  .laatikko.vihrea { background: #eefaf1; border: 1px solid #9dd9b0; }
+  .laatikko.vihrea h4 { color: #1d7a42; }
+  .laatikko.lila   { background: var(--lila-va); border: 1px solid #c3aef2; }
+  .laatikko.lila h4 { color: var(--lila); }
+  .laatikko.kelta  { background: #fdf6e3; border: 1px solid #edc766; }
+  .laatikko.kelta h4 { color: #96690a; }
+
+  /* ── Otsikot ─────────────────────────────────────────────────── */
+  h2 {
+    font-size: 15.5pt; margin: 30px 0 12px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 2px solid var(--viiva); padding-bottom: 8px;
+  }
+  h2 .nro {
+    background: var(--lila); color: #fff; font-family: Arial, sans-serif;
+    font-size: 10pt; font-weight: 700; width: 22px; height: 22px;
+    border-radius: 5px; display: inline-flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  h3 { font-size: 12pt; color: var(--tumma); margin: 18px 0 7px; }
+  p  { margin-bottom: 10px; }
+  ul, ol { margin: 0 0 12px 20px; }
+  li { margin-bottom: 5px; }
+
+  code {
+    font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 9.5pt;
+    background: #f0f1f6; padding: 1px 5px; border-radius: 3px;
+  }
+
+  /* ── Taulukot ────────────────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 10.5pt; }
+  thead th {
+    background: var(--lila-va); color: var(--lila); text-align: left;
+    font-family: Arial, sans-serif; font-size: 8.5pt; letter-spacing: .08em;
+    text-transform: uppercase; padding: 8px 10px;
+  }
+  td { padding: 9px 10px; border-bottom: 1px solid var(--viiva); vertical-align: top; }
+  td:first-child { font-weight: 700; color: var(--tumma); white-space: nowrap; }
+
+  /* ── Luokkakortit ────────────────────────────────────────────── */
+  .luokat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0 20px; }
+  .luokka { border: 1px solid var(--viiva); border-radius: 8px; padding: 14px; }
+  .luokka .num { font-size: 20pt; font-weight: 700; line-height: 1; }
+  .luokka:nth-child(1) .num { color: #c2410c; }
+  .luokka:nth-child(2) .num { color: var(--lila); }
+  .luokka:nth-child(3) .num { color: #15803d; }
+  .luokka h4 { font-size: 10.5pt; margin: 6px 0 8px; color: var(--tumma); }
+  .luokka ul { margin: 0 0 0 15px; font-size: 9.5pt; line-height: 1.45; }
+  .luokka li { margin-bottom: 4px; }
+
+  footer {
+    margin-top: 34px; padding-top: 12px; border-top: 1px solid var(--viiva);
+    font-size: 9pt; color: var(--harmaa); font-style: italic; text-align: center;
+  }
+
+  /* ── Tulostus ────────────────────────────────────────────────── */
+  @page { size: A4; margin: 14mm 12mm 16mm; }
+
+  @media print {
+    body { background: #fff; font-size: 10.5pt; }
+    .sivu { padding: 0; max-width: none; }
+    .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .laatikko, thead th, h2 .nro, .luokka {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    /* Osio ei katkea kesken otsikon, eikä taulukon rivi jakaudu */
+    h2, h3 { break-after: avoid; page-break-after: avoid; }
+    table, .laatikko, .luokat { break-inside: avoid; page-break-inside: avoid; }
+    tr { break-inside: avoid; page-break-inside: avoid; }
+    .sivunvaihto { break-before: page; page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+<div class="sivu">
+
+  <div class="hero">
+    <div class="hero-yla">
+      <span>DigiOpo · Omilla jäljillä</span>
+      <span><em>app.digiopo.fi</em></span>
+    </div>
+    <h1>Opettajan pikaohjeet</h1>
+    <p>Digikirjan käyttö, opettajan hallintasivu ja sisällön jakaminen oppilaille.</p>
+    <div class="paiv">Päivitetty 20.7.2026 · Tilipohjainen kirjautuminen</div>
+  </div>
+
+  <div class="laatikko vihrea">
+    <h4>Mikä on muuttunut?</h4>
+    DigiOpo ei enää käytä <strong>PIN-koodia</strong> opettajan tunnistautumiseen.
+    Kirjaudut nyt omalla <strong>sähköpostillasi</strong>, ja ryhmäsi ovat tilisi
+    hallinnassa. Sama kirjautuminen toimii kaikilla laitteilla. Hallinta löytyy
+    <strong>Opettajan hallintasivu</strong> -painikkeesta.
+  </div>
+
+  <h2><span class="nro">1</span> Millä laitteella digikirjaa käytetään?</h2>
+  <p>
+    DigiOpon digikirja mukautuu automaattisesti kaikkiin näyttökokoihin, joten se
+    toimii periaatteessa millä laitteella tahansa. Parhaan luku- ja
+    oppimiskokemuksen oppilaat saavat kuitenkin isommalla näytöllä – esimerkiksi
+    tietokoneella, Chromebookilla tai tabletilla.
+  </p>
+  <p>
+    <strong>Puhelinta ei suositella:</strong> pieni näyttö tekee tekstin lukemisesta
+    ja tehtävien tekemisestä huomattavasti hankalampaa. Varaa oppitunnille
+    tietokoneita, Chromebookeja tai tabletteja aina kun mahdollista.
+  </p>
+
+  <h2><span class="nro">2</span> Digikirja Omilla Jäljillä</h2>
+  <p>
+    DigiOpo koostuu kolmesta osasta – yksi kullekin yläkouluvuodelle. Oppilas
+    valitsee oman luokkansa etusivulta ja etenee aiheesta toiseen sivupalkin
+    linkkejä klikkaamalla.
+  </p>
+
+  <div class="luokat">
+    <div class="luokka">
+      <div class="num">7</div>
+      <h4>Yläkoulun startti</h4>
+      <ul>
+        <li>Johdanto – Tervetuloa yläkouluun</li>
+        <li>Robo saapuu yläkouluun &amp; Operaatio Yläkoulu</li>
+        <li>Selviytymiskeinot 1–4 (oppiminen, motivaatio, itsetuntemus, tulevaisuus)</li>
+        <li>TEPPO</li>
+      </ul>
+    </div>
+    <div class="luokka">
+      <div class="num">8</div>
+      <h4>Sun suunta</h4>
+      <ul>
+        <li>Johdanto – tänä vuonna otat suunnan</li>
+        <li>Suomen koulutusjärjestelmä</li>
+        <li>AmmattiSet, Vahvuusmatka &amp; Fake Insta</li>
+        <li>TET – Duuniin! &amp; Maailma tarvitsee sinua</li>
+        <li>Oppimisklinikka &amp; Tulevaisuus</li>
+      </ul>
+    </div>
+    <div class="luokka">
+      <div class="num">9</div>
+      <h4>Sun valinta</h4>
+      <ul>
+        <li>Johdanto – opo-tunnit 9. lk</li>
+        <li>Ajattelutavat &amp; Salapoliisitehtävä</li>
+        <li>Duuniin! – TET-valmistautuminen</li>
+        <li>Hakustrategia &amp; Valinnat ratkaisee</li>
+        <li>Kolme minua tulevaisuudessa &amp; Case: Vesi 2045</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="nro">3</span> Sivun toiminnot oppitunnilla</h2>
+  <table>
+    <thead><tr><th>Toiminto</th><th>Miten</th></tr></thead>
+    <tbody>
+      <tr><td>Aihenavigointi</td><td>Vasen sivupalkki – klikkaa aiheen nimeä hypätäksesi suoraan osioon.</td></tr>
+      <tr><td>Tunnin tavoitteet</td><td>Jokaisen osion alussa "Tunnin tavoitteet" -palkki (klikkaa auki): rakenne, tavoitteet ja perustelu, miksi aihe on tärkeä.</td></tr>
+      <tr><td>Yhteenveto</td><td>Osion lopussa "Yhteenveto" -palkki – avaa vasta, kun oppilaat ovat tehneet tehtävät.</td></tr>
+      <tr><td>Opettajan ohjeet</td><td>Joissakin tehtävissä on sininen "Opettajalle" -painike, joka avaa lisäohjeet ja aikataulutuksen.</td></tr>
+      <tr><td>Lisähaaste</td><td>"Haluatko lisää haastetta?" -painike laajentaa tehtävää nopeammille oppilaille.</td></tr>
+      <tr><td>Teoria-ikkuna</td><td>Otsikon vieressä oleva kirja-ikoni avaa tieteellisen taustan modaali-ikkunassa.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sivunvaihto"><span class="nro">4</span> Opettajan hallintasivu — kirjautuminen ja ryhmät</h2>
+  <p><em>Tämä on tärkein muutos. Opettajan tunnistautuminen tapahtuu nyt sähköpostilla, ei PIN-koodilla.</em></p>
+
+  <h3>Mistä hallinta löytyy?</h3>
+  <p>Opettajan hallintasivu avautuu kahdesta paikasta – molemmat johtavat samaan näkymään:</p>
+  <ul>
+    <li><strong>Etusivulla</strong> (app.digiopo.fi): painike oikeassa alanurkassa.</li>
+    <li><strong>Luokkasivulla</strong> (esim. <code>app.digiopo.fi/7luokka</code>): painike oikeassa yläkulmassa.</li>
+  </ul>
+
+  <h3>Kirjautuminen (kertakirjautumislinkki sähköpostiin)</h3>
+  <ol>
+    <li>Klikkaa <strong>Opettajan hallintasivu</strong> → <strong>Kirjaudu opettajana</strong>.</li>
+    <li>Syötä opettajan sähköpostiosoitteesi ja lähetä.</li>
+    <li>Saat sähköpostiisi <strong>kirjautumislinkin</strong>. Avaa se – olet kirjautunut.</li>
+    <li>Kirjautuminen säilyy laitteella pitkään; teet sen yleensä vain kerran per laite.</li>
+  </ol>
+
+  <div class="laatikko lila">
+    <h4>Vinkki – linkki avautuu klikattuun selaimeen</h4>
+    Kirjautumislinkki avautuu siihen selaimeen, jossa <strong>klikkaat</strong> sitä.
+    Jos pyydät linkin yhdellä laitteella mutta avaat sähköpostin toisella, kirjaudut
+    sillä toisella. Pyydä ja avaa linkki samassa selaimessa. Jos linkkiä ei näy
+    muutamassa minuutissa, tarkista roskaposti.
+  </div>
+
+  <p>
+    <strong>Tili vs. lisenssi:</strong> sähköpostisi on opettajatunnuksesi. Ryhmäsi
+    tunnistetaan sähköpostillasi, joten hallitset vain omia ryhmiäsi. Käyttöoikeus
+    tulee opettaja- tai koululisenssistä – jos kirjautuminen ei onnistu, ota yhteys
+    ylläpitoon (<code>digiopo@digiopo.fi</code>).
+  </p>
+
+  <h3>Ryhmien hallinta</h3>
+  <p>Kun olet kirjautunut, hallintasivulla näkyy <strong>Omat ryhmät</strong> -lista. Siinä voit:</p>
+  <table>
+    <thead><tr><th>Toiminto</th><th>Mitä se tekee</th></tr></thead>
+    <tbody>
+      <tr><td>➕ Luo uusi ryhmä</td><td>Luo ryhmän ja antaa sille <strong>ryhmäkoodin</strong> (esim. <code>E4X-L6K2</code>), jonka jaat oppilaille. Voit antaa ryhmälle nimen (7A, 8B…).</td></tr>
+      <tr><td>✏️ Avaa</td><td>Avaa ryhmän <strong>osiojärjestyksen</strong> muokkaustilan luokkasivulla.</td></tr>
+      <tr><td>🗓 Aikataulu</td><td>Avaa kyseisen luokan <strong>lukuvuoden aikataulun</strong> (ks. kohta 6).</td></tr>
+      <tr><td>Kopioi koodi</td><td>Kopioi ryhmäkoodin, jonka jaat oppilaille.</td></tr>
+      <tr><td>🗑 Poista</td><td>Poistaa ryhmän sekä sen järjestyksen ja aikataulun. Ei voi perua.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Monta ryhmää? Yksi kirjautuminen riittää.</h3>
+  <ul>
+    <li>Jokaiselle ryhmälle luodaan oma <strong>ryhmäkoodi</strong>. Luokat 7, 8 ja 9 ovat täysin erillisiä – muutos yhdellä ei vaikuta muihin.</li>
+    <li>Useita saman asteen ryhmiä (esim. 7A ja 7B)? Luo kullekin oma ryhmä → oma koodi.</li>
+    <li>Kaikki ryhmäsi näkyvät <strong>samalla kirjautumisella</strong> Omat ryhmät -listassa, nimettyinä. Koodeja ei tarvitse muistaa ulkoa – ne säilyvät tililläsi.</li>
+  </ul>
+
+  <table>
+    <thead><tr><th>Tilanne</th><th>Miten toimitaan</th></tr></thead>
+    <tbody>
+      <tr><td>Ensimmäinen kerta</td><td>Opettajan hallintasivu → Kirjaudu opettajana → syötä sähköposti → avaa linkki → <strong>Luo uusi ryhmä</strong>. Saat ryhmäkoodin oppilaille.</td></tr>
+      <tr><td>Sama laite myöhemmin</td><td>Kirjautuminen on tallessa – Opettajan hallintasivu näyttää ryhmäsi suoraan.</td></tr>
+      <tr><td>Uusi laite tai selain</td><td>Kirjaudu <strong>samalla sähköpostilla</strong> → näet samat ryhmät.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="laatikko kelta">
+    <h4>PIN poistui käytöstä</h4>
+    Vanhaa PIN-koodia ei enää tarvita eikä kysytä. Jos joku vanha toiminto pyytää
+    kirjautumaan uudelleen, avaa Opettajan hallintasivu ja kirjaudu sähköpostilla.
+    Erillinen <code>aikataulu_ope.html</code> -sivu on poistettu – aikataulua
+    muokataan nyt hallintasivun kautta.
+  </div>
+
+  <h2><span class="nro">5</span> Osioiden järjestys ja lukitus</h2>
+  <p>Kun avaat ryhmän hallintasivulta (✏️ Avaa), luokkasivu siirtyy muokkaustilaan. Muokkaustilassa voit:</p>
+  <ul>
+    <li><strong>Järjestää osioita</strong> – raahaa osiota vetokahvasta (⠿). Järjestys tallentuu työversioon automaattisesti.</li>
+    <li><strong>Lukita osion oppilailta</strong> – klikkaa lukko-painiketta. Lukittu osio näkyy oppilaille suljettuna; avaa klikkaamalla uudelleen.</li>
+    <li><strong>Tallentaa oppilaille</strong> – klikkaa "Tallenna oppilaille". Oppilaat näkevät muutokset avatessaan sivun ryhmälinkillä.</li>
+    <li><strong>Palauttaa oletusjärjestyksen</strong> – "Palauta oletusjärjestys" nollaa tekemäsi muutokset.</li>
+    <li><strong>Jakaa ryhmälinkin</strong> – kopioi linkki paneelista ja jaa se oppilaille (ks. kohta 7).</li>
+  </ul>
+
+  <h2><span class="nro">6</span> Lukuvuoden aikataulu</h2>
+  <p>
+    Lukuvuoden aikataululla kokoat kunkin luokka-asteen tärkeät päivät yhteen
+    näkymään. Oppilaat näkevät oman luokkansa tapahtumat luokkasivullaan, ja
+    muutokset päivittyvät heille automaattisesti.
+  </p>
+
+  <h3>Miten avaat aikataulun</h3>
+  <ul>
+    <li><strong>Opettajan hallintasivulta:</strong> valitse ryhmän kohdalta 🗓 Aikataulu ja haluamasi luokka (7/8/9).</li>
+    <li><strong>Tai luokkasivulla</strong> muokkaustilan paneelista: klikkaa <strong>Muokkaa aikataulua</strong>.</li>
+  </ul>
+  <p>Aikataulu käyttää samaa ryhmää ja kirjautumista kuin osioiden järjestys – <strong>et tarvitse erillistä koodia</strong>.</p>
+
+  <h3>Lisää ja hallitse tapahtumia</h3>
+  <ul>
+    <li>Valitse luokka-aste: 7., 8. tai 9. – jokaisella on oma aikataulunsa.</li>
+    <li><strong>Lisää tapahtuma:</strong> otsikko, tyyppi (TET-jakso, yhteishaku, palautuspäivä, tapahtuma tai muu), alku- ja loppupäivä sekä halutessasi lyhyt kuvaus.</li>
+    <li><strong>Muokkaa tai poista</strong> tapahtumia milloin tahansa. Muutokset näkyvät oppilaille heti.</li>
+  </ul>
+
+  <div class="laatikko lila">
+    <h4>Huomio</h4>
+    Jokaisella luokalla voi olla enintään <strong>12 tulevaa tapahtumaa</strong>.
+    Menneet tapahtumat poistuvat näkymästä automaattisesti, joten taulu pysyy
+    selkeänä. Oppilas löytää aikataulun luokkasivultaan sekä navigaation
+    <strong>"Oman koulun lukuvuosi"</strong> -linkistä.
+  </div>
+
+  <h2 class="sivunvaihto"><span class="nro">7</span> Miten jaat sisällön oppilaille?</h2>
+  <p>Tee ensin valmistelut, jaa sitten linkki tai koodit:</p>
+  <ol>
+    <li>Järjestä osiot hallintasivulla haluamaasi järjestykseen.</li>
+    <li>Klikkaa <strong>Tallenna oppilaille</strong>.</li>
+    <li>Jaa oppilaille yksi seuraavista:</li>
+  </ol>
+
+  <table>
+    <thead><tr><th>Tapa</th><th>Miten oppilas toimii</th></tr></thead>
+    <tbody>
+      <tr><td>Suora ryhmälinkki</td><td>Kopioi linkki hallintasivun paneelista (esim. <code>app.digiopo.fi/7luokka?ryhma=KOODI</code>). Oppilas klikkaa linkkiä, syöttää vain koulukoodin ja näkee heti järjestyksesi.</td></tr>
+      <tr><td>Liittymissivu</td><td>Jaa osoite <code>app.digiopo.fi/liity.html</code> sekä koulukoodi ja ryhmäkoodi erikseen. Oppilas syöttää molemmat kerran.</td></tr>
+      <tr><td>Vain koulukoodi</td><td>Oppilas kirjautuu osoitteessa <code>app.digiopo.fi</code> ja näkee oletusrakenteen (ei sinun järjestystäsi).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="laatikko kelta">
+    <h4>Ryhmäkoodi vs. sinun kirjautumisesi</h4>
+    <strong>Ryhmäkoodi</strong> on tarkoitettu oppilaille – se näyttää heille sinun
+    järjestyksesi. <strong>Sinun sähköpostikirjautumisesi</strong> on vain sinua
+    varten muokkaamista varten – älä jaa sitä oppilaille.
+  </div>
+
+  <h2><span class="nro">8</span> Saavutettavuus</h2>
+  <table>
+    <thead><tr><th>Ominaisuus</th><th>Miten se toimii</th></tr></thead>
+    <tbody>
+      <tr><td>Näppäimistönavigointi</td><td>Sivun yläosassa on piilotettu "Siirry pääsisältöön" -linkki (näkyy Tab-näppäimellä). Kaikki interaktiiviset elementit ovat käytettävissä näppäimistöllä.</td></tr>
+      <tr><td>Ruudunlukijatuki</td><td>Navigaatioelementeillä on ARIA-labelit; piilotekstit selittävät visuaaliset elementit tekstinä.</td></tr>
+      <tr><td>Fokus-indikaattori</td><td>Näppäimistökäyttäjälle näkyy selkeä fokusreunus valitussa elementissä.</td></tr>
+      <tr><td>Fonttikoko</td><td>Oletusfonttikoko on 16 px. Selaimen zoom (Ctrl/Cmd + tai −) toimii normaalisti.</td></tr>
+      <tr><td>RTL-tuki</td><td>Arabia ja farsi vaihtavat sivun asettelun automaattisesti oikealta vasemmalle.</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="nro">9</span> Google Classroom -integraatio</h2>
+  <p>
+    DigiOpo ei integroidu teknisesti Classroomiin – oppilaat lataavat vastauksensa
+    tiedostona ja lähettävät ne itse. Luo palautuskansiot Classroomiin etukäteen.
+  </p>
+  <p>
+    <strong>Miten palautus toimii oppilaalle:</strong> oppilas tekee tehtävän
+    DigiOpossa, klikkaa tehtävän lopussa <strong>"Lataa vastauksesi"</strong> -nappia
+    (TXT tai kuvakaappaus) ja palauttaa tiedoston Classroomissa opettajan luomaan
+    tehtävään.
+  </p>
+
+  <table>
+    <thead><tr><th>Luokka</th><th>Tehtävä / palautuskansio</th></tr></thead>
+    <tbody>
+      <tr><td>7. lk</td><td>Kerro lyhyesti itsestäsi · Motivaation avain · Supervoimani</td></tr>
+      <tr><td>8. lk</td><td>Amispolku · Lukiopolku · Vaikuttaja ammattina · Vahvuusmatka</td></tr>
+      <tr><td>8./9. lk</td><td>TET-suunnitelma</td></tr>
+      <tr><td>9. lk</td><td>Hakustrategia · Lukiopolku / Amispolku (9. lk versio)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="laatikko kelta">
+    <h4>Vinkki</h4>
+    Luo Classroomiin kansiorakenne ennen ensimmäistä DigiOpo-tuntia. Nimeä tehtävät
+    niin, että oppilaat tunnistavat yhteyden: esim. "DigiOpo – Amispolku (8. lk)" tai
+    "DigiOpo – TET-suunnitelma".
+  </div>
+
+  <footer>DigiOpo Palvelut · app.digiopo.fi · digiopo@digiopo.fi</footer>
+
+</div>
+</body>
+</html>
