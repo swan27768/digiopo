@@ -295,6 +295,24 @@
             localStorage.removeItem("digiopo-ope-ryhma");
             localStorage.removeItem("digiopo-ryhma");
             localStorage.removeItem("digiopo-ryhmalista");
+
+            // ⚠️ PAKOLLINEN: myös Supabasen auth-istunto pois.
+            //
+            // opettaja-keskus.js:n varmistaOpettajaEvaste() lukee Supabase-
+            // istunnon localStoragesta ja luo sen perusteella lisenssievästeen
+            // UUDELLEEN. Pelkkä evästeen poisto ei siis riitä – käyttäjä
+            // kirjautuisi hiljaa takaisin sisään seuraavalla hallintasivun
+            // avauksella, ja yhteiskone jäisi kirjautuneeksi.
+            //
+            // supabase-js tallentaa avaimeen sb-<projekti>-auth-token.
+            // Poistetaan kaikki sitä muotoa olevat, jottei avain ole
+            // kovakoodattu projektitunnukseen.
+            var poistettavat = [];
+            for (var i = 0; i < localStorage.length; i++) {
+              var avain = localStorage.key(i);
+              if (avain && /^sb-.+-auth-token$/.test(avain)) poistettavat.push(avain);
+            }
+            poistettavat.forEach(function (a) { localStorage.removeItem(a); });
           } catch (e) {}
           // Kirjautumissivulle eikä etusivulle: jos opettaja on jo etusivulla,
           // ohjaus "/"-osoitteeseen ei näyttäisi tapahtuvan mitään ja käyttäjä
