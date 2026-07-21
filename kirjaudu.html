@@ -177,6 +177,11 @@
 
   <!-- Kirjautumislomake -->
   <div id="loginView">
+    <!-- Näytetään kun uloskirjautuminen onnistui (?uloskirjattu=1).
+         Ilman vahvistusta käyttäjä ei tiedä toimiko painike vai ei. -->
+    <div id="uloskirjattuIlmoitus" style="display:none;background:#eefaf1;border:1px solid #9dd9b0;color:#1d7a42;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:14px">
+      ✅ Olet kirjautunut ulos. Tämän laitteen pääsy sisältöön on päättynyt.
+    </div>
     <h1>Kirjaudu sisään</h1>
     <p class="subtitle">Syötä sähköpostiosoitteesi, johon opettajalisenssisi on sidottu.<br>Lähetämme sinulle kirjautumislinkin.</p>
 
@@ -210,6 +215,13 @@
   // ── Konfiguraatio ──────────────────────────────────────────────────────────
   // Korvaa nämä omilla Supabase-projektin arvoilla.
   // HUOM: tässä käytetään anon-avainta (julkinen) – ei service_role-avainta.
+  // Uloskirjautumisen vahvistus. Ilman tätä käyttäjä päätyy kirjautumissivulle
+  // ilman selitystä eikä tiedä onnistuiko uloskirjautuminen.
+  if (new URLSearchParams(location.search).get('uloskirjattu') === '1') {
+    const ilm = document.getElementById('uloskirjattuIlmoitus');
+    if (ilm) ilm.style.display = 'block';
+  }
+
   const SUPABASE_URL  = 'https://xltsuuovdrradlproonr.supabase.co';
   const SUPABASE_ANON = 'sb_publishable_OMQhHO_Bz_z1KhVC-tiIRw_WFIyOEn-';
   // ──────────────────────────────────────────────────────────────────────────

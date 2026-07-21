@@ -296,7 +296,11 @@
             localStorage.removeItem("digiopo-ryhma");
             localStorage.removeItem("digiopo-ryhmalista");
           } catch (e) {}
-          window.location.href = "/";
+          // Kirjautumissivulle eikä etusivulle: jos opettaja on jo etusivulla,
+          // ohjaus "/"-osoitteeseen ei näyttäisi tapahtuvan mitään ja käyttäjä
+          // luulisi painikkeen olevan rikki. replace() ei jätä historiamerkintää,
+          // joten paluunuoli ei vie takaisin kirjautuneeseen näkymään.
+          window.location.replace("/kirjaudu.html?uloskirjattu=1");
         }).catch(function () {
           ulos.disabled = false; ulos.textContent = "Kirjaudu ulos";
           window.alert("Uloskirjautuminen epäonnistui. Tarkista verkkoyhteys.");
