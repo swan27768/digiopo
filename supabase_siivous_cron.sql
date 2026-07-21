@@ -85,6 +85,26 @@ begin
   -- ─── Vanhat massaviestilokit (> 24 kk) ──────────────────────────────────
   delete from admin_viestit
     where laheta_at < now() - interval '24 months';
+
+  -- ─── Orvot oppilastyöt (koululla ei lisenssiä 6 kk) ─────────────────────
+  --
+  -- Kun koulun lisenssi poistetaan, oppilastyöt jäävät kantaan: ne on sidottu
+  -- koulun NIMEEN, ei lisenssikoodiin, eikä viite-eheyttä ole.
+  --
+  -- Kuuden kuukauden armonaika on tarkoituksellinen. Lisenssiä joutuu joskus
+  -- poistamaan ja luomaan uudelleen – kirjoitusvirhe koulunimessä, väärä
+  -- tyyppi, epäonnistunut uusinta. Ilman armonaikaa yksi korjausliike
+  -- pyyhkisi luokan työt saman tien.
+  --
+  -- Jos haluat poistaa koulun tiedot heti, käytä poista_koulu()-funktiota
+  -- (supabase_koulun_siivous.sql).
+  delete from fake_insta_profiilit f
+    where f.luotu_at < now() - interval '6 months'
+      and not exists (select 1 from lisenssit l where l.koulu = f.koulu);
+
+  delete from maailma_ratkaisut m
+    where m.created_at < now() - interval '6 months'
+      and not exists (select 1 from lisenssit l where l.koulu = m.koulu);
 end;
 $$;
 
@@ -98,6 +118,24 @@ begin
   -- Nollaa pelien tulostaulut KOKONAAN → tuore kilpailu uudelle lukuvuodelle.
   delete from ammattiset_tulostaulu;
   delete from tiedontemppeli_tulostaulu;
+
+  -- ─── Luokkataulut tyhjiksi uutta lukuvuotta varten ──────────────────────
+  --
+  -- Rutiinisiivous poistaa vain hyväksymättä jääneet työt (30 pv). HYVÄKSYTYT
+  -- jäivät aiemmin kantaan pysyvästi – ne olivat ainoa rajatta kasvava taulu.
+  --
+  -- Lukuvuoden vaihde on oikea hetki: uusi luokka aloittaa puhtaalta taululta,
+  -- eikä edellisen vuoden fake-insta-profiileilla ole enää merkitystä. Sama
+  -- periaate kuin pelien tulostauluilla yllä.
+  --
+  -- ⚠️ TÄMÄ POISTAA OPPILAIDEN TYÖT PYSYVÄSTI. Kerro opettajille, että
+  -- luokkataulut tyhjenevät 1.8. – jos he haluavat säilyttää esimerkkejä,
+  -- ne on otettava talteen ennen sitä (kuvakaappaus tai tuloste).
+  --
+  -- Tykkäysten dedupe-taulut (mt_tykkays_laite, fip_tykkays_laite,
+  -- fip_tahti_laite) tyhjenevät automaattisesti cascade-säännöllä.
+  delete from fake_insta_profiilit;
+  delete from maailma_ratkaisut;
 
   -- Poista vanha analytiikan raakadata (> 12 kk). Näkymät summaavat, joten
   -- kokonaisluvut eivät katoa lähihistorialta.

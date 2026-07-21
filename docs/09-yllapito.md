@@ -68,11 +68,41 @@ on tarkoituksella pitkä raja. Älä lyhennä sitä harkitsematta.
 **Suursiivous** tekee edellisen ja lisäksi:
 
 - **nollaa pelien tulostaulut kokonaan** – tuore kilpailu uudelle lukuvuodelle
+- **tyhjentää luokkataulut** (`fake_insta_profiilit`, `maailma_ratkaisut`)
 - poistaa yli 12 kk vanhan `page_views`-raakadatan
 - poistaa yli 12 kk käyttämättömät `lisenssi_laitteet`-rivit
 
-⚠️ Hyväksymättä jääneet oppilastyöt poistuvat 30 päivässä. Jos opettaja ei
-moderoi töitä ennen sitä, ne katoavat. Tämä on syytä kertoa opettajille.
+### ⚠️ Kaksi kohtaa, joista opettajille on kerrottava
+
+**Hyväksymättä jääneet työt poistuvat 30 päivässä.** Jos opettaja ei moderoi
+oppilaiden töitä ennen sitä, ne katoavat ilman ilmoitusta.
+
+**Luokkataulut tyhjenevät 1.8.** Myös hyväksytyt työt. Uusi lukuvuosi alkaa
+puhtaalta taululta – sama periaate kuin pelien tulostauluilla. Jos opettaja
+haluaa säilyttää hyviä esimerkkejä, ne on otettava talteen ennen elokuuta
+(kuvakaappaus tai tuloste).
+
+Tykkäysten dedupe-taulut tyhjenevät automaattisesti cascade-säännöllä, joten
+niitä ei tarvitse käsitellä erikseen.
+
+### Orvot oppilastyöt
+
+Oppilastyöt on sidottu koulun **nimeen**, ei lisenssikoodiin. Lisenssin poisto
+ei siis poista töitä. Rutiinisiivous poistaa ne, kun koululla ei ole ollut
+lisenssiä **6 kuukauteen**.
+
+Armonaika on tarkoituksellinen: lisenssiä joutuu joskus poistamaan ja luomaan
+uudelleen (kirjoitusvirhe koulunimessä, väärä tyyppi, epäonnistunut uusinta),
+eikä korjausliike saa pyyhkiä luokan töitä.
+
+Jos haluat poistaa koulun tiedot **heti**, käytä
+`supabase_koulun_siivous.sql`-tiedoston funktioita:
+
+```sql
+select * from koulun_tiedot('Koulun nimi');   -- katso ensin
+select * from poista_koulu('Koulun nimi');    -- poista kaikki
+select * from oppilastyot_ilman_lisenssia;    -- listaa orvot
+```
 
 Tarkista ajastukset:
 

@@ -219,7 +219,7 @@ tiedostopalvelimella (VS Code Live Server ei riitä).
 | Asia | Vaikutus | Prioriteetti |
 |---|---|---|
 | 18 HTML-sivua ilman favicon- ja manifest-linkitystä | Kosmeettinen; PWA-kehote ei laukea niiltä sivuilta | Matala |
-| Hyväksytyt oppilastyöt eivät poistu koskaan | Taulut kasvavat rajatta | Keskitaso |
+| ~~Hyväksytyt oppilastyöt eivät poistu koskaan~~ | Korjattu 21.7.2026: luokkataulut tyhjenevät suursiivouksessa 1.8. | Valmis |
 | `lisenssi_kirjaukset` on kuollut taulu | Mikään ei kirjoita siihen; näkymät aina tyhjiä | Matala |
 | 3 vuoden lisenssi merkitään tyypiksi `vuosi` | Raportointi näyttää väärin; `voimassa_asti` on oikein | Matala |
 | Laskunumeroa ei tallenneta kantaan | Laskutushistoria vain lähetetyissä sähköposteissa | Keskitaso |
@@ -249,9 +249,7 @@ Jos projektia jatketaan tai se luovutetaan eteenpäin, tässä järjestyksessä:
    Ajastettu vienti Supabasesta ulkoiseen tallennukseen poistaisi riippuvuuden
    siitä että joku muistaa. Muistutusten tila elää lisäksi vain yhden selaimen
    `localStorage`-muistissa.
-2. **Hyväksyttyjen oppilastöiden siivous.** Ainoa taulu joka kasvaa rajatta.
-   Luonteva paikka on suursiivous elokuussa, pelien tulostaulujen tapaan.
-3. **Vercel Pro**, jos uusia toimintoja tarvitaan. Funktiokatto on täynnä ja
+2. **Vercel Pro**, jos uusia toimintoja tarvitaan. Funktiokatto on täynnä ja
    kaikki kiertotiet on jo käytetty.
-4. **Migraatiokäytäntö tietokannalle.** Käsin ajaminen on toiminut yhden
+3. **Migraatiokäytäntö tietokannalle.** Käsin ajaminen on toiminut yhden
    ihmisen projektissa, mutta ei kestä useampaa tekijää.
