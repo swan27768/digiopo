@@ -156,6 +156,31 @@ Riski on ilmeinen: kantaan voi päätyä muutoksia, joita ei ole tiedostoissa.
 Näin on käynyt neljä kertaa. Osiossa 03 on skeemavertailukysely, joka paljastaa
 eron – aja se ennen kuin näytät projektia ulkopuoliselle.
 
+### Osa asetuksista on kovakoodattu selainpuolelle
+
+`SUPABASE_URL`, `SUPABASE_ANON` ja kirjautumislinkin paluuosoite ovat
+kovakoodattuja kolmeen tiedostoon (`js/lisenssiportti.js`,
+`js/opettaja-keskus.js`, `kirjaudu.html`). Kahdessa API-funktiossa on lisäksi
+kovakoodattu CORS-origin.
+
+Uuteen ympäristöön siirtäminen vaatii siis koodimuutoksia, ei pelkkiä
+ympäristömuuttujia. **Ilman niitä sivusto näyttää toimivan mutta puhuu väärään
+Supabase-projektiin** – vikatyypeistä pahin, koska mikään ei ilmoita siitä.
+
+Vaihdettavat kohdat on lueteltu osiossa
+[02 – Käyttöönotto](02-kayttoonotto.md), kohta 8b.
+
+Kestävämpi ratkaisu olisi koota arvot yhteen `js/config.js`-tiedostoon, josta
+muut lukevat ne. Silloin vaihdettavia paikkoja olisi yksi. Refaktorointi
+koskee maksumuurin polkua, joten se vaatii huolellisen testauksen.
+
+### Osa asetuksista elää vain Supabasessa
+
+Custom SMTP, Site URL ja Redirect URLs eivät ole koodissa eivätkä
+ympäristömuuttujissa. Ne on tehtävä Supabasen hallintapaneelista käsin, ja
+ilman niitä opettajakirjautuminen joko rajoittuu kahteen viestiin tunnissa tai
+ei toimi lainkaan.
+
 ### Sisältö on tiedostoissa
 
 Tehtävät, sivut ja tekstit ovat HTML-tiedostoissa, eivät tietokannassa.

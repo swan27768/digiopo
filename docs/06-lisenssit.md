@@ -49,8 +49,14 @@ values
    'matti@mayrala.fi', 'opettaja', '2027-07-31', true);
 ```
 
-Opettajan on lisäksi löydyttävä **Supabase Authentication → Users** -listalta
-samalla sähköpostilla. Pelkkä lisenssirivi ei riitä.
+**Pelkkä lisenssirivi riittää.** Supabase Auth -käyttäjää ei tarvitse luoda
+etukäteen: `kirjaudu.html` käyttää asetusta `shouldCreateUser: true`, joten
+tili syntyy automaattisesti ensimmäisen kirjautumislinkin myötä. Käyttöoikeus
+tarkistetaan palvelimella lisenssistä, ei Auth-käyttäjän olemassaolosta.
+
+Sama henkilö voi hyvin olla sekä koulukoodin haltija että opettajalisenssin
+omistaja – ne ovat eri rivejä ja eri tyyppejä. Uniikki-indeksi koskee vain
+opettajalisenssejä.
 
 ### ⚠️ Koulunimen on täsmättävä täsmälleen
 

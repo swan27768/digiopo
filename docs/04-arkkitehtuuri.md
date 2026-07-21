@@ -129,8 +129,11 @@ sisällön. Kenttä on raportointia varten. Ks. [03 – Tietokanta](03-tietokant
 tokenin Supabasen `/auth/v1/user`-rajapinnasta, saa sähköpostin, ja etsii
 lisenssin kyselyllä `?email=eq.<email>&tyyppi=eq.opettaja`. Koodia ei käytetä.
 
-Opettajakirjautuminen vaatii siis **kaksi asiaa**: Supabase Auth -käyttäjän ja
-lisenssirivin samalla sähköpostilla. Vain toisen olemassaolo ei riitä.
+Auth-käyttäjää ei tarvitse luoda etukäteen: `kirjaudu.html` käyttää asetusta
+`shouldCreateUser: true`, joten tili syntyy ensimmäisen kirjautumislinkin
+myötä. **Käyttöoikeus ratkeaa lisenssistä**, ei Auth-käyttäjän olemassaolosta –
+kuka tahansa voi pyytää kirjautumislinkin, mutta ilman `tyyppi = 'opettaja'`
+-lisenssiä istunto ei anna mitään oikeuksia.
 
 ---
 

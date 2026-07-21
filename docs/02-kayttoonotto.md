@@ -103,13 +103,79 @@ Ks. [10 – Rajoitteet](10-rajoitteet.md).
 
 ---
 
-## 5. Resend (valinnainen)
+## 5. Resend – EI valinnainen
 
-Tarvitaan vain hälytyssähköposteihin: ylikäyttövaroitus ja API-virhekooste.
+Resend hoitaa **kolme eri asiaa**, joista kaksi on kriittisiä:
+
+| Käyttö | Mitä rikkoutuu ilman |
+|---|---|
+| Tilausvahvistukset ja laskut | Asiakas maksaa eikä saa koodiaan |
+| Opettajien kirjautumislinkit (Supabase SMTP) | **Opettajat eivät pääse kirjautumaan** |
+| Hälytyssähköpostit | Ylikäyttö ja virheet jäävät huomaamatta |
+
+### Vaiheet
 
 1. Luo tili ja API-avain → `RESEND_API_KEY`
-2. Vahvista lähettäjädomain, jos käytät omaa osoitetta `FROM_EMAIL`-arvossa
-3. Aseta `ADMIN_EMAIL` – tänne hälytykset tulevat
+2. **Lisää ja vahvista domain** (Domains → Add Domain)
+3. Aseta `ADMIN_EMAIL` ja `FROM_EMAIL`
+
+### ⚠️ Domainin vahvistus vaatii DNS-tietueet
+
+Resend antaa **DKIM-, SPF- ja DMARC-tietueet**, jotka on lisättävä
+verkkotunnuksen DNS-asetuksiin TXT-tietueina. Vahvistus kestää minuuteista
+tunteihin.
+
+**Ennen vahvistusta yksikään sähköposti ei lähde** – ei tilausvahvistus, ei
+kirjautumislinkki, ei hälytys. Tämä on käyttöönoton hitain vaihe, joten
+aloita siitä.
+
+---
+
+## 5b. Supabase Auth – kolme asetusta jotka EIVÄT ole koodissa
+
+Nämä tehdään Supabasen hallintapaneelista. Ne eivät ole missään
+SQL-tiedostossa eivätkä ympäristömuuttujissa, joten pystytys epäonnistuu
+hiljaa ilman niitä.
+
+### 1. Custom SMTP (pakollinen)
+
+**Authentication → Emails → SMTP Settings → Enable custom SMTP**
+
+| Kenttä | Arvo |
+|---|---|
+| Host | `smtp.resend.com` |
+| Port | `465` |
+| Username | `resend` (kirjaimellisesti tämä sana, ei sähköposti) |
+| Password | Resendin API-avain, jolla on Sending access |
+| Sender email | Sama vahvistettu domain kuin `FROM_EMAIL` |
+| Sender name | `DigiOpo` |
+
+⚠️ **Ilman tätä Supabasen oma sähköposti lähettää vain 2 viestiä tunnissa
+koko projektissa.** Kolmas opettaja, joka pyytää kirjautumislinkkiä saman
+tunnin aikana, saa virheen `email rate limit exceeded` – eikä hänelle näy
+syytä. Tämä osuu ensimmäisen koulun ensimmäisellä oppitunnilla.
+
+Custom SMTP nostaa rajan 30 viestiin tunnissa (säädettävissä kohdasta
+**Authentication → Rate Limits**), ja sen jälkeen rajat tulevat Resendiltä.
+
+Suositus: luo Resendiin **oma API-avain nimellä `supabase-smtp`**. Silloin
+näet Resendin lokista kumpi järjestelmä lähetti mitäkin, ja voit perua toisen
+kaatamatta toista.
+
+### 2. Site URL ja Redirect URLs (pakollinen)
+
+**Authentication → URL Configuration**
+
+- **Site URL:** sovelluksen osoite, esim. `https://app.digiopo.fi`
+- **Redirect URLs:** salli `https://<domain>/kirjaudu.html`
+
+Kirjautumislinkki ohjaa tähän osoitteeseen. Jos domain ei ole sallittujen
+listalla, linkki ei toimi – käyttäjä saa virheen tai päätyy väärään paikkaan.
+
+### 3. Minimum interval per user
+
+Oletus 60 sekuntia on hyvä. Se estää saman käyttäjän toistuvat pyynnöt, mikä
+on tavallista hätäilyä eikä hyökkäys.
 
 ---
 
@@ -183,6 +249,68 @@ käyttöä täsmälleen.
 
 ---
 
+## 8b. ⚠️ Kovakoodatut arvot – vaihdettava uudessa ympäristössä
+
+Kaikki asetukset eivät ole ympäristömuuttujissa. **Selainpuolen koodissa on
+kovakoodattuja arvoja**, jotka osoittavat alkuperäiseen ympäristöön.
+
+Jos näitä ei vaihda, sivusto **näyttää toimivan** mutta selainpuoli puhuu
+väärään Supabase-projektiin ja kirjautumislinkit ohjaavat väärään domainiin.
+Mikään ei ilmoita virheestä – tämä on käyttöönoton vaarallisin kohta.
+
+### Supabasen osoite ja anon-avain
+
+Kolmessa tiedostossa, samat kaksi riviä kussakin:
+
+| Tiedosto | Rivit |
+|---|---|
+| `js/lisenssiportti.js` | `SUPABASE_URL`, `SUPABASE_ANON` |
+| `js/opettaja-keskus.js` | `SUPABASE_URL`, `SUPABASE_ANON` |
+| `kirjaudu.html` | `SUPABASE_URL`, `SUPABASE_ANON` |
+
+Arvot löytyvät Supabasesta: **Settings → API**. Anon-avain on tarkoitettu
+julkiseksi – se ei anna pääsyä dataan, koska RLS estää kaiken. Varsinainen
+suojaus on `service_role`-avaimessa, joka on vain palvelinpuolella.
+
+### Kirjautumislinkin paluuosoite
+
+`kirjaudu.html`, kohta `emailRedirectTo`:
+
+```js
+emailRedirectTo: 'https://app.digiopo.fi/kirjaudu.html',
+```
+
+Vaihda uuteen domainiin. Sama osoite on lisättävä myös Supabasen
+**Redirect URLs** -listalle (ks. kohta 5b).
+
+### CORS-rajaus
+
+Kaksi API-funktiota rajaa sallitun originin:
+
+```js
+res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
+```
+
+| Tiedosto |
+|---|
+| `api/fake-insta.js` |
+| `api/maailma-taulu.js` |
+
+Muut admin-rajapinnat käyttävät `'*'`-arvoa, koska valtuutus tulee
+`x-admin-key`-otsakkeesta eikä evästeestä – niitä ei tarvitse muuttaa.
+
+### Muut domain-viittaukset
+
+```bash
+grep -rn "app\.digiopo\.fi\|digiopo\.fi" --include="*.js" --include="*.html" . \
+  | grep -v node_modules
+```
+
+Aja tämä lopuksi ja käy tulokset läpi. Osa on tekstiä sähköposteissa ja
+ohjeissa – ne kannattaa päivittää samalla, vaikka ne eivät riko mitään.
+
+---
+
 ## 9. Käyttöönoton tarkistuslista
 
 Kun kaikki on pystyssä, varmista:
@@ -194,6 +322,20 @@ Kun kaikki on pystyssä, varmista:
 - [ ] Selaimen konsolissa ei CSP-virheitä
 - [ ] Application → Service Workers: `sw.js` aktiivinen (tuotannossa)
 - [ ] Supabasen `api_virheet`-taulu ei täyty virheistä
+
+**Uudessa ympäristössä lisäksi:**
+
+- [ ] Resendin domain vahvistettu (DKIM, SPF, DMARC) – tarkista Resendin
+      Domains-näkymästä että tila on *Verified*
+- [ ] Supabase custom SMTP päällä ja testattu: pyydä kirjautumislinkki ja
+      tarkista että viesti näkyy **Resendin lokissa**. Jos ei näy, viesti
+      kulki Supabasen kautta eikä asetus ole voimassa.
+- [ ] Site URL ja Redirect URLs asetettu uudelle domainille
+- [ ] Kovakoodatut arvot vaihdettu (kohta 8b) – varmista avaamalla
+      selaimen verkkovälilehti ja tarkistamalla, että pyynnöt menevät
+      **omaan** Supabase-projektiin
+- [ ] Opettajakirjautuminen toimii päästä päähän: linkki tulee, avautuu
+      oikeaan osoitteeseen ja hallintasivu aukeaa
 
 Jos suojattu sivu **ei** ohjaa portille, `LISENSSI_JWT_SECRET` puuttuu ja muuri
 on pois päältä. Tämä on tarkoituksellinen turvaventtiili: ympäristömuuttujan
