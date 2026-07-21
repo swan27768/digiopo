@@ -219,6 +219,27 @@ export default async function handler(req, res) {
     return res.status(405).json({ virhe: 'Metodi ei sallittu' });
   }
 
+  // ── ULOSKIRJAUTUMINEN ────────────────────────────────────────────────────
+  //
+  // MIKSI: lisenssieväste on pitkäikäinen (~300 vrk), jotta oppilaan ja
+  // opettajan ei tarvitse kirjautua joka kerta. Ilman uloskirjautumista se
+  // tarkoittaa, että KOULUN YHTEISKONE jää opettajana kirjautuneeksi lähes
+  // vuodeksi – ja kuka tahansa oppilas voisi järjestää osiot uudelleen,
+  // moderoida töitä tai poistaa opetusryhmiä pysyvästi.
+  //
+  // Eväste on HttpOnly, joten selaimen JavaScript ei voi tyhjentää sitä.
+  // Poisto vaatii siksi palvelinkutsun.
+  //
+  // Ei rate limitiä eikä valtuutusta: uloskirjautuminen on aina turvallinen
+  // toiminto, ja sen estäminen olisi haitallisempaa kuin salliminen.
+  try {
+    const runko = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    if (String(runko.toiminto || '') === 'kirjaudu_ulos') {
+      poistaLisenssiEvaste(res);
+      return res.status(200).json({ ok: true, uloskirjattu: true });
+    }
+  } catch { /* virheellinen runko käsitellään alempana normaalisti */ }
+
   // IP rate limiting (x-real-ip on Vercelissä luotettava, ei väärennettävissä).
   // HUOM: raja koskee vain epäonnistuneita yrityksiä (ks. kommentti yllä) –
   // onnistunut kirjautuminen ei kuluta budjettia, joten koulun jaettu NAT-IP

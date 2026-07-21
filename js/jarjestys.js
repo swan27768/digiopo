@@ -256,7 +256,12 @@
           }).join("")
         : '<p style="font-size:12px;color:#6b5f88;margin:.2rem 0 .5rem">Ei vielä omia ryhmiä. Luo ensimmäinen alta.</p>';
       sisalto.innerHTML =
-        (v.email ? '<div style="font-size:11px;color:#8b7fb0;margin-bottom:.55rem">Kirjautunut: <strong>' + esc(v.email) + '</strong></div>' : '') +
+        (v.email
+          ? '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:.55rem;flex-wrap:wrap">' +
+              '<span style="font-size:11px;color:#8b7fb0">Kirjautunut: <strong>' + esc(v.email) + '</strong></span>' +
+              '<button type="button" class="portti-tili-ulos" style="background:none;border:none;padding:0;font-size:11px;color:#b91c1c;text-decoration:underline;cursor:pointer">Kirjaudu ulos</button>' +
+            '</div>'
+          : '') +
         '<div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.04em;color:#7c6ba8;font-weight:700;margin-bottom:.35rem">Omat ryhmät</div>' +
         listaHTML +
         '<button type="button" class="jarjestys-nappi portti-luo-btn" style="width:100%;margin-top:.4rem">➕ Luo uusi ryhmä</button>' +
@@ -264,6 +269,39 @@
 
       var sx = sisalto.querySelector(".portti-sulje-x");
       if (sx) sx.addEventListener("click", sulje);
+
+      // Uloskirjautuminen. Lisenssieväste on pitkäikäinen (~300 vrk), joten
+      // ilman tätä koulun yhteiskone jäisi opettajana kirjautuneeksi lähes
+      // vuodeksi. Eväste on HttpOnly → tyhjennys vaatii palvelinkutsun.
+      var ulos = sisalto.querySelector(".portti-tili-ulos");
+      if (ulos) ulos.addEventListener("click", function () {
+        if (!window.confirm("Kirjaudutaanko ulos?\n\nTältä laitteelta poistuu myös pääsy sisältöön. Käytä tätä aina yhteiskoneella.")) return;
+        ulos.disabled = true; ulos.textContent = "Kirjataan ulos…";
+        fetch("/api/lisenssi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ toiminto: "kirjaudu_ulos" })
+        }).then(function () {
+          // Paikallinen tila pois, jottei selain luule olevansa kirjautunut.
+          // HUOM avainten nimet: lisenssiportti käyttää ALAVIIVAA
+          // (digiopo_lisenssi), ryhmätiedot VÄLIVIIVAA. Väärä nimi olisi
+          // hiljainen no-op ja selain luulisi yhä olevansa kirjautunut.
+          //
+          // digiopo_laite JÄTETÄÄN paikalleen: se on laitetunniste
+          // käytön seurantaa varten, ja sen poisto tuottaisi uuden
+          // "laitteen" joka uloskirjautumisella ja vääristäisi luvut.
+          try {
+            localStorage.removeItem("digiopo_lisenssi");
+            localStorage.removeItem("digiopo-ope-ryhma");
+            localStorage.removeItem("digiopo-ryhma");
+            localStorage.removeItem("digiopo-ryhmalista");
+          } catch (e) {}
+          window.location.href = "/";
+        }).catch(function () {
+          ulos.disabled = false; ulos.textContent = "Kirjaudu ulos";
+          window.alert("Uloskirjautuminen epäonnistui. Tarkista verkkoyhteys.");
+        });
+      });
 
       // Avaa oma ryhmä ilman PIN:iä
       Array.prototype.forEach.call(sisalto.querySelectorAll(".portti-tili-rivi"), function (btn) {
