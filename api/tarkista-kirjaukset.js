@@ -177,10 +177,9 @@ export default async function handler(req, res) {
   try {
     // 1) Laitepiikki koodeittain
     const piikit = await haeLaitepiikit();
-    let kirjautumisHalytys = false;
-    if (piikit.length > 0) {
+    const laitepiikkiHalytys = piikit.length > 0;
+    if (laitepiikkiHalytys) {
       if (sposti) await laheta_halytys(piikit);
-      kirjautumisHalytys = true;
       console.log(`Laitepiikkihälytys: ${piikit.length} koodia`);
     }
 
@@ -198,7 +197,12 @@ export default async function handler(req, res) {
       await kirjaaVirhe('tarkista-kirjaukset ylikaytto', e);
     }
 
-    return res.status(200).json({ ok: true, kirjautumiset: maara, kirjautumisHalytys, ylikayttoja });
+    return res.status(200).json({
+      ok: true,
+      piikkikoodeja: piikit.length,
+      laitepiikkiHalytys,
+      ylikayttoja,
+    });
   } catch (err) {
     console.error('Kirjausvahti virhe:', err.message);
     await kirjaaVirhe('tarkista-kirjaukset', err);
