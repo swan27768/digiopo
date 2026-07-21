@@ -66,3 +66,23 @@ CREATE OR REPLACE FUNCTION ammattiset_tyhjenna_tulostaulu()
 RETURNS void LANGUAGE sql SECURITY DEFINER AS $$
   DELETE FROM ammattiset_tulostaulu;
 $$;
+
+-- ─── Row Level Security ──────────────────────────────────────────────────────
+-- ⚠️ TÄMÄ PUUTTUI 21.7.2026 ASTI.
+--
+-- Anon-avain on julkinen (js/lisenssiportti.js) – sen turvallisuus perustuu
+-- YKSINOMAAN siihen, että jokaisessa taulussa on RLS päällä ja käytäntö
+-- using(false). Ilman sitä kuka tahansa sivun lähdekoodin avaava saa avaimen
+-- ja voi lukea taulun suoraan PostgREST-rajapinnan kautta.
+--
+-- Selain ei koskaan puhu suoraan Supabaseen: kaikki kulkee api/-funktioiden
+-- kautta service_role-avaimella, joka ohittaa RLS:n. Sovellus ei siis kärsi
+-- tästä mitenkään.
+
+ALTER TABLE ammattiset_tulostaulu ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Ei julkista paasya ammattiset_tulostaulu" ON ammattiset_tulostaulu;
+CREATE POLICY "Ei julkista paasya ammattiset_tulostaulu" ON ammattiset_tulostaulu FOR ALL USING (false);
+
+ALTER TABLE ammattiset_asetukset ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Ei julkista paasya ammattiset_asetukset" ON ammattiset_asetukset;
+CREATE POLICY "Ei julkista paasya ammattiset_asetukset" ON ammattiset_asetukset FOR ALL USING (false);

@@ -52,3 +52,19 @@ BEGIN
   RETURN 'tallennettu';
 END;
 $$;
+
+-- ─── Row Level Security ──────────────────────────────────────────────────────
+-- ⚠️ TÄMÄ PUUTTUI 21.7.2026 ASTI.
+--
+-- Anon-avain on julkinen (js/lisenssiportti.js) – sen turvallisuus perustuu
+-- YKSINOMAAN siihen, että jokaisessa taulussa on RLS päällä ja käytäntö
+-- using(false). Ilman sitä kuka tahansa sivun lähdekoodin avaava saa avaimen
+-- ja voi lukea taulun suoraan PostgREST-rajapinnan kautta.
+--
+-- Selain ei koskaan puhu suoraan Supabaseen: kaikki kulkee api/-funktioiden
+-- kautta service_role-avaimella, joka ohittaa RLS:n. Sovellus ei siis kärsi
+-- tästä mitenkään.
+
+ALTER TABLE tiedontemppeli_tulostaulu ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Ei julkista paasya tiedontemppeli_tulostaulu" ON tiedontemppeli_tulostaulu;
+CREATE POLICY "Ei julkista paasya tiedontemppeli_tulostaulu" ON tiedontemppeli_tulostaulu FOR ALL USING (false);

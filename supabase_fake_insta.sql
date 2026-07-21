@@ -72,3 +72,19 @@ BEGIN
   RETURN COALESCE(v, 0);
 END;
 $$;
+
+-- ─── Row Level Security ──────────────────────────────────────────────────────
+-- ⚠️ TÄMÄ PUUTTUI 21.7.2026 ASTI.
+--
+-- Anon-avain on julkinen (js/lisenssiportti.js) – sen turvallisuus perustuu
+-- YKSINOMAAN siihen, että jokaisessa taulussa on RLS päällä ja käytäntö
+-- using(false). Ilman sitä kuka tahansa sivun lähdekoodin avaava saa avaimen
+-- ja voi lukea taulun suoraan PostgREST-rajapinnan kautta.
+--
+-- Selain ei koskaan puhu suoraan Supabaseen: kaikki kulkee api/-funktioiden
+-- kautta service_role-avaimella, joka ohittaa RLS:n. Sovellus ei siis kärsi
+-- tästä mitenkään.
+
+ALTER TABLE fake_insta_profiilit ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Ei julkista paasya fake_insta_profiilit" ON fake_insta_profiilit;
+CREATE POLICY "Ei julkista paasya fake_insta_profiilit" ON fake_insta_profiilit FOR ALL USING (false);
