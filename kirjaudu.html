@@ -278,7 +278,58 @@
 
     if (error) {
       console.error('Magic link -virhe:', error.message);
-      submitBtn.textContent = 'Virhe – yritä uudelleen';
+
+      // Odotusaika EI ole virhe vaan normaali suoja: Supabasen asetus
+      // "Minimum interval per user" (60 s) estää saman käyttäjän toistuvat
+      // pyynnöt. Aiemmin tästä näytettiin punainen "Virhe – yritä uudelleen",
+      // mikä pelästyttää käyttäjää turhaan – hän ei ole tehnyt mitään väärin,
+      // vaan klikannut kahdesti.
+      // Supabase palauttaa saman tilanteen useassa muodossa: ihmisluettavana
+      // viestinä, virhekoodina tai pelkkänä 429-statuksena. Tarkistetaan
+      // kaikki, jottei yksikään muoto putoa "yleinen virhe" -haaraan.
+      const viesti = (String(error.message || '') + ' ' + String(error.code || '')).toLowerCase();
+      const liianTiheasti =
+        error.status === 429 ||
+        viesti.includes('security purposes') ||
+        viesti.includes('rate limit') ||
+        viesti.includes('rate_limit') ||
+        viesti.includes('only request this after');
+
+      if (liianTiheasti) {
+        // Poimitaan sekuntimäärä viestistä jos se löytyy ("after 41 seconds").
+        const osuma = viesti.match(/(\d+)\s*second/);
+        const sekunnit = osuma ? parseInt(osuma[1], 10) : 60;
+
+        virheTeksti.style.color = 'var(--text-mid)';
+        virheTeksti.textContent =
+          'Linkki lähetettiin juuri äsken. Odota noin 1 min ja yritä sitten uudelleen – ' +
+          'tarkista sillä välin myös roskapostikansio.';
+        virheTeksti.style.display = 'block';
+
+        // Painike lukitaan odotusajaksi ja avautuu itsestään, jottei käyttäjä
+        // jää arvailemaan milloin voi yrittää uudelleen.
+        let jaljella = sekunnit;
+        submitBtn.textContent = `Odota ${jaljella} s…`;
+        const ajastin = setInterval(() => {
+          jaljella -= 1;
+          if (jaljella > 0) {
+            submitBtn.textContent = `Odota ${jaljella} s…`;
+          } else {
+            clearInterval(ajastin);
+            submitBtn.textContent = 'Lähetä kirjautumislinkki →';
+            submitBtn.disabled = false;
+            virheTeksti.style.display = 'none';
+            virheTeksti.style.color = '';
+          }
+        }, 1000);
+        return;
+      }
+
+      virheTeksti.style.color = '';
+      virheTeksti.textContent =
+        'Linkin lähetys ei onnistunut. Tarkista verkkoyhteys ja yritä hetken kuluttua uudelleen.';
+      virheTeksti.style.display = 'block';
+      submitBtn.textContent = 'Lähetä kirjautumislinkki →';
       submitBtn.disabled = false;
       return;
     }
