@@ -116,7 +116,8 @@
     }
 
     function renderRyhmat(email, ryhmat) {
-      var html = '<p class="ok-email">Kirjautunut: <strong>' + esc(email || "") + '</strong></p>';
+      var html = '<p class="ok-email">Kirjautunut: <strong>' + esc(email || "") + '</strong>' +
+        ' <button type="button" class="ok-ulos" style="background:none;border:none;padding:0;margin-left:8px;font-size:.78rem;color:#b91c1c;text-decoration:underline;cursor:pointer">Kirjaudu ulos</button></p>';
       if (!ryhmat.length) {
         html += '<p style="color:#556;margin:.2rem 0 .6rem">Ei vielä ryhmiä. Luo ensimmäinen alta.</p>';
       } else {
@@ -137,6 +138,34 @@
     }
 
     function kytke() {
+      // Uloskirjautuminen. Lisenssieväste on pitkäikäinen (~300 vrk), joten
+      // ilman tätä koulun yhteiskone jäisi opettajana kirjautuneeksi lähes
+      // vuodeksi. Eväste on HttpOnly → tyhjennys vaatii palvelinkutsun.
+      var ulos = q(".ok-body").querySelector(".ok-ulos");
+      if (ulos) ulos.addEventListener("click", function () {
+        if (!window.confirm("Kirjaudutaanko ulos?\n\nTältä laitteelta poistuu myös pääsy sisältöön. Käytä tätä aina yhteiskoneella.")) return;
+        ulos.disabled = true; ulos.textContent = "Kirjataan ulos…";
+        fetch("/api/lisenssi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ toiminto: "kirjaudu_ulos" })
+        }).then(function () {
+          // HUOM avainten nimet: lisenssiportti käyttää ALAVIIVAA, ryhmätiedot
+          // VÄLIVIIVAA. digiopo_laite jätetään – se on laitetunniste käytön
+          // seurantaa varten, ja sen poisto vääristäisi laitemäärät.
+          try {
+            localStorage.removeItem("digiopo_lisenssi");
+            localStorage.removeItem("digiopo-ope-ryhma");
+            localStorage.removeItem("digiopo-ryhma");
+            localStorage.removeItem("digiopo-ryhmalista");
+          } catch (e) {}
+          window.location.href = "/";
+        }).catch(function () {
+          ulos.disabled = false; ulos.textContent = "Kirjaudu ulos";
+          window.alert("Uloskirjautuminen epäonnistui. Tarkista verkkoyhteys.");
+        });
+      });
+
       Array.prototype.forEach.call(q(".ok-body").querySelectorAll(".ok-kortti"), function (kortti) {
         var koodi = kortti.getAttribute("data-koodi");
         Array.prototype.forEach.call(kortti.querySelectorAll("[data-jarj]"), function (b) {
