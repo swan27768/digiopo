@@ -86,25 +86,80 @@ begin
   delete from admin_viestit
     where laheta_at < now() - interval '24 months';
 
-  -- ─── Orvot oppilastyöt (koululla ei lisenssiä 6 kk) ─────────────────────
+  -- ─── Päättyneiden asiakkuuksien tiedot (ei voimassa olevaa lisenssiä 6 kk) ──
   --
-  -- Kun koulun lisenssi poistetaan, oppilastyöt jäävät kantaan: ne on sidottu
-  -- koulun NIMEEN, ei lisenssikoodiin, eikä viite-eheyttä ole.
+  -- Oppilastyöt on sidottu koulun NIMEEN, ei lisenssikoodiin, eikä
+  -- viite-eheyttä ole. Kun asiakkuus päättyy, tiedot jäisivät kantaan
+  -- pysyvästi ilman tätä.
   --
-  -- Kuuden kuukauden armonaika on tarkoituksellinen. Lisenssiä joutuu joskus
-  -- poistamaan ja luomaan uudelleen – kirjoitusvirhe koulunimessä, väärä
-  -- tyyppi, epäonnistunut uusinta. Ilman armonaikaa yksi korjausliike
-  -- pyyhkisi luokan työt saman tien.
+  -- ⚠️ EHTO KATSOO VOIMASSAOLOA, EI RIVIN OLEMASSAOLOA.
+  -- Vanhentunut lisenssirivi JÄÄ tauluun myyntihistoriaksi. Jos ehto olisi
+  -- pelkkä "lisenssiriviä ei ole", se ei täyttyisi koskaan eivätkä työt
+  -- poistuisi – vain käsin poistetun lisenssin tapauksessa.
   --
-  -- Jos haluat poistaa koulun tiedot heti, käytä poista_koulu()-funktiota
-  -- (supabase_koulun_siivous.sql).
+  -- Kuuden kuukauden armonaika kattaa kaksi tilannetta:
+  --   · koulu uusii myöhässä (budjettikausi, kesäloma)
+  --   · lisenssi poistetaan ja luodaan uudelleen korjauksen vuoksi
+  -- Ilman sitä korjausliike tai myöhästynyt uusinta pyyhkisi luokan työt.
+  --
+  -- Lisenssirivi itse säilytetään: se on myyntihistoriaa ja tarvitaan
+  -- uusintamyyntiin. Jos haluat poistaa koulun kaiken heti, käytä
+  -- poista_koulu()-funktiota (supabase_koulun_siivous.sql).
+
+  -- Oppilastyöt
   delete from fake_insta_profiilit f
-    where f.luotu_at < now() - interval '6 months'
-      and not exists (select 1 from lisenssit l where l.koulu = f.koulu);
+    where not exists (
+      select 1 from lisenssit l
+       where l.koulu = f.koulu
+         and l.aktiivinen
+         and l.voimassa_asti > current_date - interval '6 months'
+    );
 
   delete from maailma_ratkaisut m
-    where m.created_at < now() - interval '6 months'
-      and not exists (select 1 from lisenssit l where l.koulu = m.koulu);
+    where not exists (
+      select 1 from lisenssit l
+       where l.koulu = m.koulu
+         and l.aktiivinen
+         and l.voimassa_asti > current_date - interval '6 months'
+    );
+
+  -- Opetusryhmät (cascade vie mukanaan järjestykset ja lukuvuoden aikataulun).
+  --
+  -- ⚠️ EHTO KATSOO KOULUA, EI KOODIA.
+  -- Ryhmä on sidottu lisenssin KOODIIN (koulukoodi-kenttä), mutta koululisenssin
+  -- uusinta luo aina UUDEN rivin ja UUDEN koodin – vanhaa ei päivitetä. Jos ehto
+  -- katsoisi pelkkää koodia, uusineen koulun ryhmät poistuisivat 6 kk uusimisen
+  -- jälkeen, koska ne osoittavat vanhaan koodiin. Opettaja menettäisi ryhmänsä,
+  -- järjestyksensä ja lukuvuosikalenterinsa vaikka koulu on maksava asiakas.
+  --
+  -- Siksi koodi ratkaistaan ensin kouluksi, ja voimassaolo tarkistetaan koulun
+  -- KAIKISTA lisensseistä.
+  --
+  -- Ryhmät joilla koulukoodi on tyhjä (kenttä on vapaaehtoinen) eivät kuulu
+  -- tähän – ne poistuvat 24 kk koskemattomuussäännöllä yllä.
+  delete from opetusryhmat o
+    where o.koulukoodi is not null
+      and exists (
+        select 1 from lisenssit l where l.koodi = o.koulukoodi
+      )
+      and not exists (
+        select 1
+          from lisenssit vanha
+          join lisenssit voimassa on voimassa.koulu = vanha.koulu
+         where vanha.koodi = o.koulukoodi
+           and voimassa.aktiivinen
+           and voimassa.voimassa_asti > current_date - interval '6 months'
+      );
+
+  -- Laiteseuranta: päättyneen asiakkuuden laitehistoria ei ole enää tarpeen
+  -- eikä sitä pidä säilyttää pidempään kuin on syytä.
+  delete from lisenssi_laitteet d
+    where not exists (
+      select 1 from lisenssit l
+       where l.koodi = d.koodi
+         and l.aktiivinen
+         and l.voimassa_asti > current_date - interval '6 months'
+    );
 end;
 $$;
 

@@ -5,6 +5,70 @@ kaikki kunnossa.
 
 ---
 
+## 0. Lukuvuoden ylläpitorytmi – yhteenveto
+
+### Mitä järjestelmä tekee itsestään
+
+| Milloin | Mitä |
+|---|---|
+| Joka yö 09:00 | Laitepiikin tarkistus – hälytys jos koodilla yli 50 uutta laitetta vrk:ssa |
+| Joka yö 10:00 | Virhekooste edellisen vuorokauden API-virheistä |
+| 1. ja 15. päivä 03:00 | **Rutiinisiivous** |
+| 1.8. klo 04:00 | **Suursiivous** – lukuvuoden vaihde |
+
+Sähköpostia tulee vain jos on jotain kerrottavaa. Hiljaisuus tarkoittaa että
+kaikki on kunnossa – mutta myös sitä, ettet huomaa jos sähköpostit lakkaavat
+toimimasta. Siksi virhelokien viikkotarkistus on listalla.
+
+### Rutiinisiivous – 2× kuussa
+
+| Mitä poistetaan | Raja |
+|---|---|
+| Menneet kalenteritapahtumat | heti kun päivä on ohi |
+| API-virhelokit | 90 pv |
+| Hyväksymättä jääneet oppilastyöt | 30 pv |
+| Pelien tulostaulurivit | 3 kk |
+| Koskemattomat opetusryhmät | 24 kk |
+| Kirjautumislokit | 12 kk |
+| Massaviestilokit | 24 kk |
+| **Päättyneen asiakkuuden tiedot** | 6 kk viimeisestä voimassa olleesta lisenssistä |
+
+### Suursiivous – 1.8.
+
+Tekee ensin rutiinisiivouksen, sitten lukuvuoden vaihteen työt:
+
+- **luokkataulut tyhjiksi** (fake-insta, maailma-taulu) – myös hyväksytyt
+- **pelien tulostaulut nollataan**
+- käyntidata yli 12 kk
+- laiteseuranta yli 12 kk
+
+### Mitä jatkavalle koululle jää
+
+| Säilyy | Poistuu |
+|---|---|
+| Opetusryhmät | Oppilastyöt |
+| Osiojärjestykset | Pelien tulostaulut |
+| Tulevat kalenteritapahtumat | Menneet kalenteritapahtumat |
+| Lisenssirivit (myyntihistoria) | Vanhan koodin laiteseuranta |
+
+Opettaja säilyttää siis työnsä, oppilaat aloittavat puhtaalta pöydältä.
+
+### Mitä sinun on tehtävä itse
+
+| Milloin | Mitä | Missä |
+|---|---|---|
+| Viikoittain | Tietokannan varmuuskopio | `varmuuskopio.command` |
+| Viikoittain | Virhelokit | Paneeli → Vikatilanteet |
+| Kuukausittain | Koodin varmuuskopio | GitHub → Download ZIP |
+| Kuukausittain | Pian vanhenevat lisenssit | Paneeli → Live-tilastot |
+| Kuukausittain | Maksamattomat tilaukset | Paneeli → Odottaa maksua |
+| 6 kk välein | Avainten vaihto | Vercel + Supabase |
+| Elokuussa | Lukuvuoden aloitustarkistus | Ks. kohta 4 |
+
+Muistutukset ja niiden tila löytyvät hallintapaneelin **Ylläpitorytmi**-osiosta.
+
+---
+
 ## 1. Hallintapaneeli
 
 Osoitteessa **digiopo.fi/admin-paneeli.html** (markkinointisivustolla, eri
@@ -85,15 +149,33 @@ haluaa säilyttää hyviä esimerkkejä, ne on otettava talteen ennen elokuuta
 Tykkäysten dedupe-taulut tyhjenevät automaattisesti cascade-säännöllä, joten
 niitä ei tarvitse käsitellä erikseen.
 
-### Orvot oppilastyöt
+### Päättyneen asiakkuuden tiedot
 
-Oppilastyöt on sidottu koulun **nimeen**, ei lisenssikoodiin. Lisenssin poisto
-ei siis poista töitä. Rutiinisiivous poistaa ne, kun koululla ei ole ollut
-lisenssiä **6 kuukauteen**.
+Kun koulun lisenssi vanhenee eikä sitä uusita, rutiinisiivous poistaa koulun
+tiedot **6 kuukauden kuluttua**:
 
-Armonaika on tarkoituksellinen: lisenssiä joutuu joskus poistamaan ja luomaan
-uudelleen (kirjoitusvirhe koulunimessä, väärä tyyppi, epäonnistunut uusinta),
-eikä korjausliike saa pyyhkiä luokan töitä.
+- oppilastyöt (`fake_insta_profiilit`, `maailma_ratkaisut`)
+- opetusryhmät ja niiden järjestykset sekä aikataulut (cascade)
+- laiteseuranta (`lisenssi_laitteet`)
+
+**Lisenssirivi säilyy.** Se on myyntihistoriaa ja tarvitaan uusintamyyntiin.
+
+⚠️ **Ehto katsoo voimassaoloa, ei rivin olemassaoloa.** Tämä on olennaista:
+vanhentunut lisenssi jää tauluun, joten ehto "lisenssiriviä ei ole" ei
+täyttyisi koskaan eivätkä tiedot poistuisi. Kriteeri on siksi *ei yhtään
+aktiivista lisenssiä, joka olisi ollut voimassa viimeisen 6 kk aikana*.
+
+| Tilanne | Tiedot |
+|---|---|
+| Lisenssi voimassa | säilyvät |
+| Vanheni alle 6 kk sitten | säilyvät |
+| Vanheni yli 6 kk sitten | **poistuvat** |
+| `aktiivinen = false` yli 6 kk | **poistuvat** |
+| Vanha ja uusi lisenssi, uusi voimassa | säilyvät |
+
+Armonaika kattaa kaksi tilannetta: koulu uusii myöhässä (budjettikausi,
+kesäloma), tai lisenssi poistetaan ja luodaan uudelleen korjauksen vuoksi.
+Kumpikaan ei saa pyyhkiä luokan töitä.
 
 Jos haluat poistaa koulun tiedot **heti**, käytä
 `supabase_koulun_siivous.sql`-tiedoston funktioita:
