@@ -23,8 +23,8 @@
   }
 
   // ─── Supabase-konfiguraatio ──────────────────────────────────────────────
-  const SUPABASE_URL  = 'https://xltsuuovdrradlproonr.supabase.co';
-  const SUPABASE_ANON = 'sb_publishable_OMQhHO_Bz_z1KhVC-tiIRw_WFIyOEn-';
+  const SUPABASE_URL  = 'https://uiqjrhaoumxwshnojtyn.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_hTXgi8AA2p94327GlrdjmA_aTrJOqCA';
 
   // Lataa Supabase JS SDK dynaamisesti (kerran)
   function lataaSuperbase() {

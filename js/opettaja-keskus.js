@@ -10,8 +10,8 @@
 
   var API_J = "/api/jarjestys";
   var API_L = "/api/lisenssi";
-  var SUPABASE_URL = "https://xltsuuovdrradlproonr.supabase.co";
-  var SUPABASE_ANON = "sb_publishable_OMQhHO_Bz_z1KhVC-tiIRw_WFIyOEn-";
+  var SUPABASE_URL = "https://uiqjrhaoumxwshnojtyn.supabase.co";
+  var SUPABASE_ANON = "sb_publishable_hTXgi8AA2p94327GlrdjmA_aTrJOqCA";
   var SB_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
 
   function esc(s) {
