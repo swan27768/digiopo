@@ -14,9 +14,9 @@
 
 set -u
 
-PALVELIN="aws-0-eu-west-1.pooler.supabase.com"
+PALVELIN="aws-0-eu-central-1.pooler.supabase.com"
 PORTTI="5432"
-KAYTTAJA="postgres.xltsuuovdrradlproonr"
+KAYTTAJA="postgres.uiqjrhaoumxwshnojtyn"
 KANTA="postgres"
 KOHDE="$HOME/Documents/Varmuuskopiot"
 
