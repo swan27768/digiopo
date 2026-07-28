@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Promptilaboratorio – Osaatko käskeä tekoälyä?</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#7c3aed" />
+<style>
+  :root{
+    --violetti:#7c3aed; --violetti-tumma:#5b21b6; --violetti-vaalea:#ede9fe;
+    --keltainen:#f0d870; --vihrea:#16a34a; --punainen:#dc2626; --harmaa:#6b7280;
+    --tausta:#faf9ff; --kortti:#ffffff; --reuna:#e5e0f5; --teksti:#1f2937;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--tausta); color:var(--teksti); line-height:1.5;
+    padding:16px;
+  }
+  .kehys{max-width:720px; margin:0 auto;}
+  header.paa{text-align:center; margin-bottom:18px;}
+  .taso-merkki{
+    display:inline-block; background:var(--violetti-vaalea); color:var(--violetti-tumma);
+    font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    border-radius:99px; padding:4px 14px; margin:0 0 8px;
+  }
+  header.paa h1{
+    color:var(--violetti-tumma); font-size:clamp(24px,5vw,34px); margin:0 0 6px;
+  }
+  header.paa p{color:var(--harmaa); margin:0; font-size:15px;}
+  .edistys{
+    display:flex; align-items:center; gap:8px; justify-content:center;
+    margin:14px 0 4px; font-size:14px; color:var(--harmaa); flex-wrap:wrap;
+  }
+  .palkki{flex:1; max-width:260px; height:8px; background:var(--reuna); border-radius:99px; overflow:hidden;}
+  .palkki > span{display:block; height:100%; background:var(--violetti); width:0; transition:width .3s;}
+  .kortti{
+    background:var(--kortti); border:1px solid var(--reuna); border-radius:16px;
+    padding:20px; margin:14px 0; box-shadow:0 2px 10px rgba(91,33,182,.05);
+  }
+  .lokero{font-size:13px; font-weight:700; color:var(--violetti); text-transform:uppercase; letter-spacing:.05em; margin:0 0 6px;}
+  .tavoite{font-size:18px; font-weight:700; color:var(--violetti-tumma); margin:0 0 4px;}
+  .laatikko{
+    background:#f4f2fb; border:1px solid var(--reuna); border-radius:12px;
+    padding:12px 14px; margin:10px 0; font-size:15px;
+  }
+  .laatikko .otsikko{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--harmaa); margin-bottom:4px; font-weight:700;}
+  .prompti{font-family:"SFMono-Regular",Consolas,monospace; color:var(--teksti);}
+  .heikko-tulos{color:var(--harmaa); font-style:italic;}
+  .ohje{font-weight:600; margin:16px 0 6px;}
+  .ryhma{margin:12px 0;}
+  .ryhma h3{font-size:14px; margin:0 0 6px; color:var(--violetti-tumma);}
+  .sirut{display:flex; flex-wrap:wrap; gap:8px;}
+  .siru{
+    border:1.5px solid var(--violetti); background:#fff; color:var(--violetti-tumma);
+    border-radius:99px; padding:8px 14px; font-size:14px; cursor:pointer;
+    transition:all .15s; font-family:inherit;
+  }
+  .siru:hover{background:var(--violetti-vaalea);}
+  .siru[aria-pressed="true"]{background:var(--violetti); color:#fff;}
+  .siru:focus-visible{outline:3px solid var(--keltainen); outline-offset:2px;}
+  .oma-prompti{
+    background:var(--violetti-vaalea); border-radius:12px; padding:12px 14px; margin:14px 0;
+    font-size:15px; min-height:48px;
+  }
+  .oma-prompti .otsikko{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--violetti-tumma); font-weight:700; margin-bottom:4px;}
+  .nappi{
+    background:var(--violetti); color:#fff; border:none; border-radius:12px;
+    padding:13px 22px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit;
+    transition:background .15s;
+  }
+  .nappi:hover{background:var(--violetti-tumma);}
+  .nappi:disabled{background:#c4b5e8; cursor:not-allowed;}
+  .nappi.toissijainen{background:#fff; color:var(--violetti-tumma); border:1.5px solid var(--violetti);}
+  .nappi:focus-visible{outline:3px solid var(--keltainen); outline-offset:2px;}
+  .napit{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .tulos{margin-top:16px; border-top:2px dashed var(--reuna); padding-top:16px;}
+  .tahdet{font-size:24px; letter-spacing:3px; margin-bottom:6px;}
+  .tahti-tayte{color:var(--keltainen);}
+  .tahti-tyhja{color:var(--reuna);}
+  .hyva-tulos{
+    background:#eefdf3; border:1px solid #bbf7d0; border-radius:12px; padding:12px 14px;
+    font-size:15px; white-space:pre-line;
+  }
+  .palaute{margin:10px 0 0; font-size:15px;}
+  .piilo{display:none !important;}
+  /* Ohjelmallisesti fokusoitu otsikko (tabindex=-1): ei häiritsevää reunaviivaa */
+  [tabindex="-1"]:focus{outline:none;}
+  textarea{
+    width:100%; border:1.5px solid var(--reuna); border-radius:12px; padding:12px;
+    font-family:inherit; font-size:15px; resize:vertical; min-height:90px;
+  }
+  .muista{background:var(--violetti-vaalea); border-radius:12px; padding:14px 16px; margin:14px 0;}
+  .muista strong{color:var(--violetti-tumma);}
+  /* Tehtävä 2 */
+  .vaite-teksti{font-size:18px; font-weight:700; margin:6px 0 14px;}
+  .vaihtoehdot{display:flex; flex-direction:column; gap:10px;}
+  .vaihtoehto{
+    text-align:left; border:1.5px solid var(--reuna); background:#fff; color:var(--teksti);
+    border-radius:12px; padding:13px 16px; font-size:16px; cursor:pointer; font-family:inherit;
+    transition:all .15s; font-weight:600;
+  }
+  .vaihtoehto:hover{border-color:var(--violetti); background:var(--violetti-vaalea);}
+  .vaihtoehto:focus-visible{outline:3px solid var(--keltainen); outline-offset:2px;}
+  .vaihtoehto.valittu{border-color:var(--violetti); background:var(--violetti-vaalea);}
+  .vaihtoehto.paras{border-color:var(--vihrea); background:#eefdf3;}
+  .vaihtoehto .merkki{float:right; font-weight:800;}
+  .vaihtoehto.paras .merkki{color:var(--vihrea);}
+  .t2-palaute{
+    margin-top:14px; background:#f4f2fb; border:1px solid var(--reuna); border-radius:12px;
+    padding:12px 14px; font-size:15px;
+  }
+  details.ope{margin-top:24px; font-size:14px; color:var(--harmaa);}
+  details.ope summary{cursor:pointer; font-weight:700; color:var(--violetti-tumma);}
+  details.ope ul{margin:8px 0;}
+  /* Tehtävä 3: Luokan AI-taulu */
+  .av-form label{display:block; font-weight:600; margin:10px 0 4px; font-size:14px;}
+  .av-input, .av-select, textarea.av-vinkki{
+    width:100%; border:1.5px solid var(--reuna); border-radius:10px; padding:10px;
+    font-family:inherit; font-size:15px;
+  }
+  textarea.av-vinkki{min-height:70px; resize:vertical;}
+  .av-tila{font-size:14px; margin:10px 0 0; min-height:18px; color:var(--violetti-tumma);}
+  .av-kortti{border:1px solid var(--reuna); border-radius:12px; padding:12px 14px; margin:10px 0; background:#fff;}
+  .av-kortti .aihe{display:inline-block; font-size:12px; font-weight:700; color:var(--violetti-tumma); background:var(--violetti-vaalea); border-radius:99px; padding:2px 10px; margin-bottom:6px;}
+  .av-kortti .nimi{color:var(--harmaa); font-size:13px; margin-top:4px;}
+  .av-tykkaa{border:1.5px solid var(--violetti); background:#fff; color:var(--violetti-tumma); border-radius:99px; padding:4px 14px; font-size:14px; cursor:pointer; font-family:inherit; margin-top:8px;}
+  .av-tykkaa:disabled{opacity:.6; cursor:default;}
+  .av-tyhja{color:var(--harmaa); font-style:italic;}
+  .av-ope-rivi{display:flex; gap:8px; align-items:flex-start; border-top:1px solid var(--reuna); padding:10px 0;}
+  .av-ope-rivi .sisalto{flex:1; font-size:14px;}
+  .av-ope-rivi button{font-size:13px; border-radius:8px; padding:6px 12px; cursor:pointer; border:none; font-family:inherit; font-weight:600;}
+  .hyvaksy-btn{background:var(--vihrea); color:#fff;}
+  .poista-btn{background:#fee2e2; color:#b91c1c;}
+</style>
+</head>
+<body>
+<div class="kehys">
+
+  <header class="paa">
+    <p class="taso-merkki">Aloittelija-taso</p>
+    <h1>Promptilaboratorio</h1>
+    <p>Osaatko käskeä tekoälyä, oppia sen avulla – ja jakaa oman vinkkisi?</p>
+  </header>
+
+  <div class="edistys" id="edistys">
+    <span id="kierros-teksti">Tehtävä 1 · Kierros 1 / 3</span>
+    <div class="palkki" id="palkki-alue" role="progressbar" aria-label="Edistyminen laboratoriossa" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="palkki"></span></div>
+  </div>
+
+  <!-- ============ TEHTÄVÄ 1: Promptilaboratorio ============ -->
+  <div id="peli">
+    <div class="kortti">
+      <p class="lokero">Tehtävä 1 · Käske tekoälyä</p>
+      <p class="tavoite" id="tavoite"></p>
+
+      <div class="laatikko">
+        <div class="otsikko">Epämääräinen pyyntö</div>
+        <div class="prompti" id="heikko-prompti"></div>
+      </div>
+      <div class="laatikko">
+        <div class="otsikko">Mitä tekoäly antaa</div>
+        <div class="heikko-tulos" id="heikko-tulos"></div>
+      </div>
+
+      <p class="ohje">Valitse palikat, jotka tekevät pyynnöstä tarkan:</p>
+      <div id="sirut-alue"></div>
+
+      <div class="oma-prompti">
+        <div class="otsikko">Sinun pyyntösi</div>
+        <div id="oma-prompti-teksti"></div>
+      </div>
+
+      <div class="napit">
+        <button class="nappi" id="nayta-nappi">Näytä tulos</button>
+      </div>
+
+      <div class="tulos piilo" id="tulos-alue" aria-live="polite">
+        <div class="tahdet" id="tahdet"></div>
+        <div class="laatikko" id="tulos-laatikko">
+          <div class="otsikko" id="tulos-otsikko"></div>
+          <div class="hyva-tulos" id="hyva-tulos"></div>
+        </div>
+        <div class="palaute" id="palaute"></div>
+        <div class="napit">
+          <button class="nappi toissijainen" id="muokkaa-nappi">← Muokkaa pyyntöä</button>
+          <button class="nappi" id="seuraava-nappi">Seuraava kierros →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VÄLINÄKYMÄ: Tehtävä 1 valmis ============ -->
+  <div id="tehtava1-loppu" class="piilo">
+    <div class="kortti">
+      <h2 id="t1loppu-otsikko" style="color:var(--violetti-tumma);margin-top:0;">Hienoa – läpäisit ensimmäisen tehtävän! 🎉</h2>
+      <div class="muista">
+        <p style="margin-top:0;"><strong>Hyvässä pyynnössä kerrot neljä asiaa:</strong></p>
+        <p style="margin:0;">1. <strong>Kenelle</strong> vastaus on &nbsp;·&nbsp; 2. <strong>Kuinka paljon</strong> tai kuinka pitkä &nbsp;·&nbsp; 3. <strong>Missä muodossa</strong> &nbsp;·&nbsp; 4. <strong>Mistä tarkalleen</strong></p>
+      </div>
+      <p>Nyt osaat käskeä tekoälyä. Seuraavaksi opetellaan käyttämään sitä fiksusti oppimiseen: <strong>miten tekoäly auttaa sinua oppimaan – ei tekemään puolestasi?</strong></p>
+      <div class="napit">
+        <button class="nappi" id="jatka-t2-nappi">Jatka tehtävään 2 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TEHTÄVÄ 2: Ajattele tekoälyä laajemmin ============ -->
+  <div id="tehtava2" class="piilo">
+    <div class="kortti">
+      <p class="lokero" id="t2-lokero">Tehtävä 2 · Tekoäly valmentajana</p>
+      <p class="tavoite" id="t2-otsikko"></p>
+      <p style="margin:2px 0 6px;color:var(--harmaa);">Rakenna pyyntö, joka saa tekoälyn <strong>valmentamaan sinua</strong> – ei tekemään puolestasi. Valitse palikat viisaasti: yksi niistä on houkutteleva oikopolku.</p>
+
+      <p class="ohje">Valitse palikat pyyntöösi:</p>
+      <div class="sirut" id="t2-sirut" role="group" aria-label="Valitse palikat"></div>
+
+      <div class="oma-prompti">
+        <div class="otsikko">Sinun pyyntösi</div>
+        <div id="t2-oma-prompti"></div>
+      </div>
+
+      <div class="napit">
+        <button class="nappi" id="t2-nayta">Näytä tulos</button>
+      </div>
+
+      <div class="tulos piilo" id="t2-tulos-alue" aria-live="polite">
+        <div class="laatikko" id="t2-tulos-laatikko">
+          <div class="otsikko" id="t2-tulos-otsikko"></div>
+          <div class="hyva-tulos" id="t2-tulos-teksti"></div>
+        </div>
+        <div class="palaute" id="t2-palaute"></div>
+        <div class="napit">
+          <button class="nappi toissijainen" id="t2-muokkaa">← Muokkaa pyyntöä</button>
+          <button class="nappi" id="t2-seuraava">Seuraava →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TEHTÄVÄ 3: Luokan AI-taulu ============ -->
+  <div id="tehtava3" class="piilo">
+    <div class="kortti">
+      <p class="lokero">Tehtävä 3 · Luokan AI-taulu</p>
+      <p class="tavoite" id="t3-otsikko-h">Jaa oma vinkkisi – opitaan yhdessä</p>
+      <p style="margin:2px 0 12px;color:var(--harmaa);">Miten sinä käytät tekoälyä opiskelussa tai harrastuksissa? Kirjoita oma vinkkisi luokan taululle. Opettaja hyväksyy sen, ja sitten kaikki näkevät ja voivat oppia siitä.</p>
+
+      <div class="av-form">
+        <label for="av-nimi">Nimimerkki (vapaaehtoinen)</label>
+        <input id="av-nimi" class="av-input" type="text" maxlength="40" placeholder="Esim. etunimi tai lempinimi" />
+
+        <label for="av-aihe">Aihe</label>
+        <select id="av-aihe" class="av-select">
+          <option value="Opiskelu">Opiskelu</option>
+          <option value="Harrastus">Harrastus</option>
+        </select>
+
+        <label for="av-vinkki">Vinkkini (enintään 200 merkkiä)</label>
+        <textarea id="av-vinkki" class="av-vinkki" maxlength="200" placeholder="Esim. Pyydän tekoälyä tekemään minulle harjoituskysymyksiä ennen koetta."></textarea>
+
+        <div class="napit">
+          <button class="nappi" id="av-laheta">Lähetä luokan tauluun</button>
+        </div>
+        <p class="av-tila" id="av-tila" aria-live="polite"></p>
+      </div>
+
+      <h3 style="color:var(--violetti-tumma);margin:20px 0 4px;font-size:16px;">🧠 Luokan vinkit</h3>
+      <div id="av-galleria"></div>
+
+      <details class="ope" style="margin-top:16px;">
+        <summary>🔒 Opettaja: hyväksy vinkit</summary>
+        <div style="margin-top:6px;">
+          <button class="nappi toissijainen" id="av-ope-paivita" style="padding:8px 16px;font-size:14px;">Näytä lähetetyt vinkit</button>
+          <div id="av-ope-sisalto" style="margin-top:8px;"></div>
+        </div>
+      </details>
+
+      <div class="napit">
+        <button class="nappi" id="t3-valmis">Valmis →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LOPPUNÄKYMÄ ============ -->
+  <div id="loppu" class="piilo">
+    <div class="kortti">
+      <h2 id="loppu-otsikko" style="color:var(--violetti-tumma);margin-top:0;">Valmista – läpäisit koko laboratorion! 🏁</h2>
+
+      <div class="muista">
+        <p style="margin-top:0;"><strong>Tehtävä 1 opetti:</strong> hyvä pyyntö kertoo kenelle, kuinka paljon, missä muodossa ja mistä tarkalleen.</p>
+      </div>
+      <div class="muista" style="background:#fff7ed;">
+        <p style="margin:0;"><strong>Tehtävä 2 opetti:</strong> paras tapa käyttää tekoälyä on antaa sen auttaa sinua OPPIMAAN – ei tehdä puolestasi. Pyydä sitä kyselemään sinulta, antamaan palautetta omaan työhösi tai selittämään toisin. Silloin tekoäly on valmentaja, ja taito jää sinulle.</p>
+      </div>
+      <div class="muista" style="background:#eff6ff;">
+        <p style="margin:0;"><strong>Tehtävä 3:</strong> jaoit oman vinkkisi luokan taululle. Kun kaikki jakavat omat tapansa käyttää tekoälyä, opitaan yhdessä paljon enemmän kuin yksin.</p>
+      </div>
+
+      <div class="napit">
+        <button class="nappi toissijainen" id="alusta-nappi">Aloita alusta</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="ope">
+    <summary>Opettajalle</summary>
+    <ul>
+      <li><strong>Tavoite:</strong> Tehtävä 1 harjoittaa tekoälyn ohjaamista (promptausta). Tehtävä 2 soveltaa: oppilas käyttää tekoälyä oppimisen valmentajana – pyytää sitä kyselemään, antamaan palautetta omaan työhön ja selittämään toisin, sen sijaan että tekoäly tekisi puolesta.</li>
+      <li><strong>Tehtävä 3 (Luokan AI-taulu):</strong> oppilaat jakavat omat tapansa käyttää tekoälyä opiskelussa tai harrastuksissa. Vinkit tulevat opettajan hyväksyttäväksi ennen kuin ne näkyvät luokalle. Sama taulu-koneisto kuin fake-insta- ja "maailma tarvitsee sinua" -tehtävissä. <strong>Hyväksy vinkit</strong> avaamalla peli omalla opettajatunnuksellasi ja klikkaamalla taulun "🔒 Opettaja"-osiota.</li>
+      <li><strong>Kesto:</strong> noin 20–25 min itsenäisesti tai pareittain.</li>
+      <li><strong>Huom:</strong> tämä täydentää AI-laboratoriota, joka käsittelee tekoälyn laajempia teemoja (algoritmit, disinformaatio, ihmisen taidot). Tässä pelissä keskitytään käytännön taitoon: miten tekoälyä oikeasti käytetään hyvin ja oppimista tukien.</li>
+      <li><strong>Keskustelu lopuksi:</strong> miten tekoälyä voi käyttää niin, että oppii itse? Mikä oli luokan paras vinkki?</li>
+    </ul>
+  </details>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Tehtävä 1: data ---------- */
+  var kierrokset = [
+    {
+      tavoite: "Pyydä tekoälyä auttamaan koirista kertovassa esitelmässä.",
+      heikkoPrompti: "kerro koirista",
+      heikkoTulos: "Koirat ovat eläimiä. Niitä on paljon erilaisia. Koirat ovat kivoja lemmikkejä ja ihmisen ystäviä jo pitkään... (pitkä ja yleinen jaaritus – ei sovi esitelmään).",
+      pohja: "Kerro koirista",
+      ryhmat: [
+        { nimi:"Kenelle", avain:"kenelle", sirut:["7-luokkalaisille"] },
+        { nimi:"Kuinka paljon", avain:"maara", sirut:["5 faktaa"] },
+        { nimi:"Missä muodossa", avain:"muoto", sirut:["listana"] },
+        { nimi:"Mistä tarkalleen", avain:"tarkennus", sirut:["koirien aisteista"] }
+      ],
+      hyvaTulos: "1. Koira haistaa jopa 100 000 kertaa tarkemmin kuin ihminen.\n2. Koira kuulee äänet, joita ihminen ei kuule.\n3. Koira tunnistaa ihmisen tunteita hajusta ja äänestä.\n4. Koiran viikset auttavat tuntemaan lähellä olevat asiat.\n5. Koira näkee hämärässä paremmin kuin me.\n(5 lyhyttä faktaa listana – valmista esitelmään.)",
+      keskiTulos: "Koira on ihmisen lemmikki ja hyvä ystävä. Koiria on monta rotua, ja ne haistavat tarkasti. Koira voi oppia temppuja ja auttaa ihmistä monella tavalla. (Parempi kuin ennen, mutta vielä aika yleinen – ei ihan esitelmävalmis.)",
+      vaikutus: {
+        kenelle: "Ilman kohderyhmää teksti voi olla liian vaikeaa tai liian helppoa.",
+        maara: "Ilman määrää tekoäly voi tuottaa liian pitkän tai liian lyhyen vastauksen.",
+        muoto: "Ilman muotoa saat ehkä sekavaa tekstiä valmiin listan sijaan.",
+        tarkennus: "Ilman tarkennusta faktat voivat olla mitä sattuu, eivät aiheestasi."
+      }
+    },
+    {
+      tavoite: "Pyydä tekoälyä auttamaan viestissä, jolla kysyt TET-paikkaa lähikaupasta.",
+      heikkoPrompti: "kirjoita viesti",
+      heikkoTulos: "Hei. Haluaisin töitä. Terveisin. (liian lyhyt eikä kerro mitään – kauppias ei tiedä kuka olet).",
+      pohja: "Kirjoita viesti",
+      ryhmat: [
+        { nimi:"Kenelle", avain:"kenelle", sirut:["kaupan johtajalle"] },
+        { nimi:"Kuinka paljon", avain:"maara", sirut:["lyhyt, noin 5 lausetta"] },
+        { nimi:"Missä muodossa", avain:"muoto", sirut:["kohteliaana sähköpostina"] },
+        { nimi:"Mistä tarkalleen", avain:"tarkennus", sirut:["kerro nimi, luokka ja TET-viikot"] }
+      ],
+      hyvaTulos: "Hei!\n\nOlen Aino, 15-vuotias ja käyn yläkoulun 9. luokkaa. Meillä on TET-jakso viikoilla 10–11.\n\nKysyisin, voisinko tulla teille TET-harjoitteluun. Olen kiinnostunut asiakaspalvelusta ja tekisin mielelläni myös hyllytystä.\n\nVoinko tulla käymään ensi viikolla juttelemassa? Ystävällisin terveisin, Aino.\n(kohtelias ja selkeä – kauppias tietää heti kuka olet ja mitä haluat.)",
+      keskiTulos: "Hei!\n\nOlisin kiinnostunut TET-paikasta teidän kaupassanne. Voisinko tulla harjoitteluun? Kiitos jo etukäteen.\n\nTerveisin.\n(Kohtelias, mutta ei kerro kuka olet etkä milloin – kauppias joutuu arvailemaan.)",
+      vaikutus: {
+        kenelle: "Ilman vastaanottajaa viesti voi mennä väärälle henkilölle.",
+        maara: "Ilman pituutta viestistä voi tulla liian pitkä tai liian lyhyt.",
+        muoto: "Ilman muotoa viesti voi kuulostaa töykeältä.",
+        tarkennus: "Ilman nimeä, luokkaa ja TET-viikkoja kauppias ei tiedä kuka olet."
+      }
+    },
+    {
+      tavoite: "Pyydä tekoälyä selittämään yhteyttäminen niin, että ymmärrät sen.",
+      heikkoPrompti: "mikä on yhteyttäminen",
+      heikkoTulos: "Yhteyttäminen eli fotosynteesi on biokemiallinen prosessi, jossa fotoautotrofit konvertoivat valoenergiaa kemialliseksi energiaksi kloroplasteissa... (vaikeita sanoja – et ymmärrä mitään).",
+      pohja: "Selitä yhteyttäminen",
+      ryhmat: [
+        { nimi:"Kenelle", avain:"kenelle", sirut:["minulle, 9-luokkalaiselle"] },
+        { nimi:"Kuinka paljon", avain:"maara", sirut:["kolmella lauseella"] },
+        { nimi:"Missä muodossa", avain:"muoto", sirut:["helpolla kielellä"] },
+        { nimi:"Mistä tarkalleen", avain:"tarkennus", sirut:["käytä esimerkkiä arjesta"] }
+      ],
+      hyvaTulos: "Kasvi tekee itselleen ruokaa auringonvalosta. Se ottaa ilmasta hiilidioksidia ja maasta vettä, ja valon avulla tekee niistä sokeria ja happea. Vähän niin kuin sinä teet voileivän aineksista – kasvi tekee ruokansa valosta.\n(lyhyt, helppo ja esimerkin kanssa – nyt ymmärrät.)",
+      keskiTulos: "Yhteyttäminen tarkoittaa, että kasvi käyttää auringonvaloa ja tekee siitä itselleen energiaa. Siihen liittyvät myös hiilidioksidi ja happi. (Vähän selkeämpi, mutta osa sanoista on yhä vaikeita eikä esimerkkiä ole.)",
+      vaikutus: {
+        kenelle: "Ilman kohderyhmää selitys voi olla liian vaikea.",
+        maara: "Ilman pituutta vastauksesta voi tulla liian pitkä ja raskas.",
+        muoto: "Ilman ohjetta ”helpolla kielellä” saat vaikeita sanoja.",
+        tarkennus: "Ilman esimerkkiä selitys jää abstraktiksi eikä jää mieleen."
+      }
+    }
+  ];
+
+  var kategoriaNimet = { kenelle:"kenelle", maara:"kuinka paljon", muoto:"missä muodossa", tarkennus:"mistä tarkalleen" };
+
+  /* ---------- Tehtävä 2: data (rakenna oma valmentaja-pyyntö) ---------- */
+  // Jokaisessa tilanteessa on valmennus-palikoita JA yksi houkutteleva
+  // "oikopolku" (valmiit vastaukset). Oikopolku johtaa aina huonoon tulokseen,
+  // vaikka valitsisit myös valmennuspalikoita – opetus: valitse oikea ohje.
+  var valmennustehtavat = [
+    {
+      otsikko: "Tilanne 1 / 3 · Kokeeseen kertaus",
+      tavoite: "Huomenna on biologian koe. Rakenna pyyntö, joka saa tekoälyn auttamaan sinua oppimaan.",
+      pohja: "Auta minua kokeeseen:",
+      palikat: [
+        { teksti: "kysele minulta kysymyksiä", tyyppi: "valmennus" },
+        { teksti: "anna palautetta vastauksiini", tyyppi: "valmennus" },
+        { teksti: "vaikeuta kysymyksiä vähitellen", tyyppi: "valmennus" },
+        { teksti: "anna minulle valmiit vastaukset", tyyppi: "oikopolku" }
+      ],
+      tulokset: {
+        valmennus: "Selvä! Kysymys 1: Mitä kasvi tarvitsee yhteyttääkseen?\n(tekoäly kyselee, odottaa vastaustasi ja antaa palautetta – sinä joudut muistelemaan itse ja opit)",
+        oikopolku: "Tässä valmiit vastaukset: 1) valoa, vettä, hiilidioksidia 2) happea 3) sokeria…\n(saat kaiken valmiina – mutta et joudu muistelemaan mitään, etkä osaa kokeessa)",
+        passiivinen: "Tässä on tiivistelmä biologian aiheesta.\n(luet sen kerran – helppoa, mutta unohtuu nopeasti)"
+      }
+    },
+    {
+      otsikko: "Tilanne 2 / 3 · Oma aine",
+      tavoite: "Kirjoitit itse aineen. Rakenna pyyntö, joka auttaa sinua kehittymään kirjoittajana.",
+      pohja: "Tässä on kirjoittamani aine.",
+      palikat: [
+        { teksti: "anna palautetta: mikä on hyvää ja mitä parantaisin", tyyppi: "valmennus" },
+        { teksti: "ehdota, älä korjaa puolestani", tyyppi: "valmennus" },
+        { teksti: "kysy, mitä halusin sanoa", tyyppi: "valmennus" },
+        { teksti: "kirjoita se uusiksi puolestani", tyyppi: "oikopolku" }
+      ],
+      tulokset: {
+        valmennus: "Hyvää: aloituksesi on selkeä. Mieti tätä: voisitko lisätä esimerkin toiseen kappaleeseen? Miten muuttaisit lopun?\n(saat palautetta, mutta kirjoitat itse – opit ja teksti pysyy sinun)",
+        oikopolku: "Tässä on uusi versio aineestasi: [valmis teksti]\n(näyttää hyvältä – mutta se ei ole enää sinun etkä opi kirjoittamaan)",
+        passiivinen: "Aineesi käsittelee aihetta ihan hyvin.\n(yleinen kommentti, joka ei auta sinua eteenpäin)"
+      }
+    },
+    {
+      otsikko: "Tilanne 3 / 3 · En ymmärrä",
+      tavoite: "Luet oppikirjaa etkä ymmärrä yhtä käsitettä. Rakenna pyyntö, joka auttaa sinua tajuamaan sen.",
+      pohja: "En ymmärrä yhteyttämistä.",
+      palikat: [
+        { teksti: "selitä helpolla kielellä", tyyppi: "valmennus" },
+        { teksti: "käytä arjen esimerkkiä", tyyppi: "valmennus" },
+        { teksti: "kysy lopuksi, ymmärsinkö", tyyppi: "valmennus" },
+        { teksti: "tee koko tehtävä puolestani", tyyppi: "oikopolku" }
+      ],
+      tulokset: {
+        valmennus: "Kasvi tekee ruokaa auringonvalosta – vähän kuin sinä teet voileivän aineksista. Kokeile omin sanoin: mitä kasvi tarvitsee?\n(selittää helposti, esimerkillä, ja tarkistaa ymmärsitkö – nyt tajuat itse)",
+        oikopolku: "Teen tehtäväsi puolestasi: [valmis vastaus]\n(tehtävä valmistuu, mutta et opi käsitettä – ja se voi tulla kokeessa)",
+        passiivinen: "Yhteyttäminen on prosessi, jossa kasvi muuntaa valoenergiaa kemialliseksi energiaksi.\n(määritelmä – mutta et ehkä tajua sitä yhtään paremmin)"
+      }
+    }
+  ];
+
+  var el = function(id){ return document.getElementById(id); };
+
+  // Saavutettavuus: aseta edistyspalkki (leveys + aria-valuenow)
+  function asetaEdistys(pct){
+    pct = Math.max(0, Math.min(100, pct));
+    el("palkki").style.width = pct + "%";
+    var alue = el("palkki-alue");
+    if(alue){ alue.setAttribute("aria-valuenow", Math.round(pct)); }
+  }
+
+  // Saavutettavuus: siirrä fokus näkymän otsikkoon, kun tehtävä vaihtuu
+  function fokusoi(id){
+    var e = el(id);
+    if(e){ e.setAttribute("tabindex", "-1"); e.focus({ preventScroll: true }); }
+  }
+
+  /* ---------- Tehtävä 1: logiikka ---------- */
+  var nykyinen = 0;
+  var valinnat = {};
+
+  function piirraKierros(){
+    var k = kierrokset[nykyinen];
+    valinnat = {};
+
+    el("kierros-teksti").textContent = "Tehtävä 1 · Kierros " + (nykyinen+1) + " / " + kierrokset.length;
+    asetaEdistys(nykyinen / kierrokset.length * 100);
+
+    el("tavoite").textContent = k.tavoite;
+    el("heikko-prompti").textContent = "”" + k.heikkoPrompti + "”";
+    el("heikko-tulos").textContent = k.heikkoTulos;
+
+    var alue = el("sirut-alue");
+    alue.innerHTML = "";
+    k.ryhmat.forEach(function(ryhma){
+      var wrap = document.createElement("div");
+      wrap.className = "ryhma";
+      var h = document.createElement("h3");
+      h.textContent = ryhma.nimi;
+      wrap.appendChild(h);
+      var sirutDiv = document.createElement("div");
+      sirutDiv.className = "sirut";
+      ryhma.sirut.forEach(function(teksti){
+        var b = document.createElement("button");
+        b.className = "siru";
+        b.type = "button";
+        b.textContent = teksti;
+        b.setAttribute("aria-pressed", "false");
+        b.addEventListener("click", function(){
+          var paalla = b.getAttribute("aria-pressed") === "true";
+          b.setAttribute("aria-pressed", paalla ? "false" : "true");
+          valinnat[ryhma.avain] = paalla ? null : teksti;
+          paivitaOmaPrompti();
+          el("tulos-alue").classList.add("piilo");
+          el("nayta-nappi").disabled = false;
+        });
+        sirutDiv.appendChild(b);
+      });
+      wrap.appendChild(sirutDiv);
+      alue.appendChild(wrap);
+    });
+
+    el("tulos-alue").classList.add("piilo");
+    el("nayta-nappi").classList.remove("piilo");
+    el("nayta-nappi").disabled = false;
+    paivitaOmaPrompti();
+  }
+
+  function paivitaOmaPrompti(){
+    var k = kierrokset[nykyinen];
+    var osat = [];
+    ["tarkennus","kenelle","maara","muoto"].forEach(function(avain){
+      if(valinnat[avain]) osat.push(valinnat[avain]);
+    });
+    var teksti = k.pohja;
+    if(osat.length){ teksti += " " + osat.join(", "); }
+    teksti += ".";
+    el("oma-prompti-teksti").textContent = "”" + teksti + "”";
+  }
+
+  function naytaTulos(){
+    var k = kierrokset[nykyinen];
+    var katetut = 0;
+    var puuttuuAvaimet = [];
+    ["kenelle","maara","muoto","tarkennus"].forEach(function(avain){
+      if(valinnat[avain]) katetut++;
+      else puuttuuAvaimet.push(avain);
+    });
+
+    // Tähdet
+    var tahdetHtml = "";
+    for(var i=0;i<4;i++){
+      tahdetHtml += (i<katetut) ? '<span class="tahti-tayte">★</span>' : '<span class="tahti-tyhja">★</span>';
+    }
+    el("tahdet").innerHTML = tahdetHtml;
+
+    // Tulos MUUTTUU valintojen mukaan: mitä tarkempi pyyntö, sitä parempi vastaus
+    var laatikko = el("tulos-laatikko");
+    var otsikko = el("tulos-otsikko");
+    var tulosTeksti, otsikkoTeksti, otsikkoVari, bg, reuna;
+
+    if(katetut >= 4){
+      tulosTeksti = k.hyvaTulos;
+      otsikkoTeksti = "Tarkka tulos ✓";
+      otsikkoVari = "var(--vihrea)"; bg = "#eefdf3"; reuna = "#bbf7d0";
+    } else if(katetut >= 2){
+      tulosTeksti = k.keskiTulos;
+      otsikkoTeksti = "Vastaus jäi puutteelliseksi";
+      otsikkoVari = "#c2410c"; bg = "#fff7ed"; reuna = "#fed7aa";
+    } else {
+      tulosTeksti = k.heikkoTulos;
+      otsikkoTeksti = "Vastaus jäi hyvin yleiseksi";
+      otsikkoVari = "var(--punainen)"; bg = "#fef2f2"; reuna = "#fecaca";
+    }
+    el("hyva-tulos").textContent = tulosTeksti;
+    otsikko.textContent = otsikkoTeksti;
+    otsikko.style.color = otsikkoVari;
+    laatikko.style.background = bg;
+    laatikko.style.borderColor = reuna;
+
+    // Palaute kertoo TÄSMÄLLEEN mikä puuttui ja miten se vaikuttaa
+    var palaute = el("palaute");
+    palaute.innerHTML = "";
+    if(katetut === 4){
+      var ok = document.createElement("p");
+      ok.style.margin = "0";
+      ok.innerHTML = "<strong>Täydellistä!</strong> Kerroit kaikki neljä asiaa, ja siksi vastaus osuu juuri oikein.";
+      palaute.appendChild(ok);
+    } else {
+      var alku = document.createElement("p");
+      alku.style.margin = "0 0 6px";
+      alku.innerHTML = "<strong>Tekoäly ei tiennyt kaikkea.</strong> Et kertonut näitä:";
+      palaute.appendChild(alku);
+
+      var lista = document.createElement("ul");
+      lista.style.margin = "0 0 6px";
+      lista.style.paddingLeft = "20px";
+      puuttuuAvaimet.forEach(function(avain){
+        var li = document.createElement("li");
+        li.innerHTML = "<strong>" + kategoriaNimet[avain] + "</strong> – " + k.vaikutus[avain];
+        lista.appendChild(li);
+      });
+      palaute.appendChild(lista);
+
+      var kehotus = document.createElement("p");
+      kehotus.style.margin = "0";
+      kehotus.textContent = "Lisää puuttuvat palikat ja paina Näytä tulos uudelleen.";
+      palaute.appendChild(kehotus);
+    }
+
+    var viimeinen = (nykyinen === kierrokset.length - 1);
+    el("seuraava-nappi").textContent = viimeinen ? "Tehtävä 1 valmis →" : "Seuraava kierros →";
+
+    el("tulos-alue").classList.remove("piilo");
+    el("nayta-nappi").disabled = true;
+    asetaEdistys((nykyinen + 1) / kierrokset.length * 100);
+  }
+
+  function muokkaaPyyntoa(){
+    el("tulos-alue").classList.add("piilo");
+    el("nayta-nappi").disabled = false;
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function seuraavaKierros(){
+    if(nykyinen < kierrokset.length - 1){
+      nykyinen++;
+      piirraKierros();
+      window.scrollTo({top:0, behavior:"smooth"});
+    } else {
+      // Tehtävä 1 valmis → välinäkymä
+      el("peli").classList.add("piilo");
+      el("edistys").classList.add("piilo");
+      el("tehtava1-loppu").classList.remove("piilo");
+      fokusoi("t1loppu-otsikko");
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+  }
+
+  /* ---------- Tehtävä 2: logiikka (rakenna valmentaja-pyyntö) ---------- */
+  var t2nykyinen = 0;
+  var t2valitut = [];   // valittujen palikoiden indeksit
+
+  function aloitaTehtava2(){
+    t2nykyinen = 0;
+    el("tehtava1-loppu").classList.add("piilo");
+    el("tehtava2").classList.remove("piilo");
+    el("edistys").classList.remove("piilo");
+    piirraValmennus();
+    fokusoi("t2-otsikko");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function piirraValmennus(){
+    var v = valmennustehtavat[t2nykyinen];
+    t2valitut = [];
+    el("kierros-teksti").textContent = "Tehtävä 2 · Tilanne " + (t2nykyinen+1) + " / " + valmennustehtavat.length;
+    asetaEdistys(t2nykyinen / valmennustehtavat.length * 100);
+
+    el("t2-lokero").textContent = "Tehtävä 2 · " + v.otsikko;
+    el("t2-otsikko").textContent = v.tavoite;
+
+    var alue = el("t2-sirut");
+    alue.innerHTML = "";
+    v.palikat.forEach(function(p, idx){
+      var b = document.createElement("button");
+      b.className = "siru";
+      b.type = "button";
+      b.textContent = p.teksti;
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function(){
+        var on = b.getAttribute("aria-pressed") === "true";
+        b.setAttribute("aria-pressed", on ? "false" : "true");
+        if(on){ t2valitut = t2valitut.filter(function(i){ return i !== idx; }); }
+        else  { t2valitut.push(idx); }
+        paivitaT2Prompti();
+        el("t2-tulos-alue").classList.add("piilo");
+        el("t2-nayta").disabled = false;
+      });
+      alue.appendChild(b);
+    });
+
+    el("t2-tulos-alue").classList.add("piilo");
+    el("t2-nayta").disabled = false;
+    paivitaT2Prompti();
+  }
+
+  function paivitaT2Prompti(){
+    var v = valmennustehtavat[t2nykyinen];
+    var jarj = t2valitut.slice().sort(function(a,b){ return a-b; });
+    var osat = jarj.map(function(i){ return v.palikat[i].teksti; });
+    var teksti = v.pohja;
+    if(osat.length){ teksti += " " + osat.join(", "); }
+    if(!/[.!?]$/.test(teksti)){ teksti += "."; }
+    el("t2-oma-prompti").textContent = "”" + teksti + "”";
+  }
+
+  function naytaT2Tulos(){
+    var v = valmennustehtavat[t2nykyinen];
+    var onOikopolku   = t2valitut.some(function(i){ return v.palikat[i].tyyppi === "oikopolku"; });
+    var valmennusMaara = t2valitut.filter(function(i){ return v.palikat[i].tyyppi === "valmennus"; }).length;
+
+    var laatikko = el("t2-tulos-laatikko");
+    var otsikko  = el("t2-tulos-otsikko");
+    var tulosTeksti, otsikkoTeksti, vari, bg, reuna, palaute;
+
+    if(onOikopolku){
+      tulosTeksti = v.tulokset.oikopolku;
+      otsikkoTeksti = "Tekoäly teki sen puolestasi";
+      vari = "var(--punainen)"; bg = "#fef2f2"; reuna = "#fecaca";
+      palaute = "Valitsit oikopolun (”valmiit vastaukset / tee puolestani”). Työ valmistui, mutta et oppinut mitään – etkä osaa, kun tekoälyä ei ole. Poista se palikka ja pyydä tekoälyä valmentamaan sinua.";
+    } else if(valmennusMaara >= 1){
+      tulosTeksti = v.tulokset.valmennus;
+      otsikkoTeksti = "Tekoäly toimii valmentajana ✓";
+      vari = "var(--vihrea)"; bg = "#eefdf3"; reuna = "#bbf7d0";
+      palaute = (valmennusMaara >= 2)
+        ? "Hienoa! Pyysit tekoälyä valmentamaan sinua – se kyselee, antaa palautetta ja ohjaa. Sinä teet työn itse ja opit."
+        : "Hyvä alku! Tekoäly valmentaa sinua. Kokeile lisätä vielä yksi valmennuspalikka, niin apu on vieläkin parempi.";
+    } else {
+      tulosTeksti = v.tulokset.passiivinen;
+      otsikkoTeksti = "Tekoäly jäi passiiviseksi";
+      vari = "#c2410c"; bg = "#fff7ed"; reuna = "#fed7aa";
+      palaute = "Et antanut tekoälylle valmennusohjetta, joten se vain latasi tietoa. Pyydä sitä esimerkiksi kyselemään sinulta tai antamaan palautetta – niin siitä tulee valmentaja.";
+    }
+
+    el("t2-tulos-teksti").textContent = tulosTeksti;
+    otsikko.textContent = otsikkoTeksti;
+    otsikko.style.color = vari;
+    laatikko.style.background = bg;
+    laatikko.style.borderColor = reuna;
+    el("t2-palaute").textContent = palaute;
+
+    var viimeinen = (t2nykyinen === valmennustehtavat.length - 1);
+    el("t2-seuraava").textContent = viimeinen ? "Jatka tehtävään 3 →" : "Seuraava →";
+
+    el("t2-tulos-alue").classList.remove("piilo");
+    el("t2-nayta").disabled = true;
+    asetaEdistys((t2nykyinen + 1) / valmennustehtavat.length * 100);
+  }
+
+  function muokkaaT2(){
+    el("t2-tulos-alue").classList.add("piilo");
+    el("t2-nayta").disabled = false;
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function seuraavaVaite(){
+    if(t2nykyinen < valmennustehtavat.length - 1){
+      t2nykyinen++;
+      piirraValmennus();
+      window.scrollTo({top:0, behavior:"smooth"});
+    } else {
+      // Tehtävä 2 valmis → Tehtävä 3 (Luokan AI-taulu)
+      el("tehtava2").classList.add("piilo");
+      el("tehtava3").classList.remove("piilo");
+      el("kierros-teksti").textContent = "Tehtävä 3 · Luokan AI-taulu";
+      asetaEdistys(100);
+      lataaGalleria();
+      fokusoi("t3-otsikko-h");
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+  }
+
+  /* ---------- Tehtävä 3: Luokan AI-taulu (palvelinpohjainen) ---------- */
+  var AV_API = "/api/ai-vinkit";
+
+  function avKoulu(){
+    try{
+      var raw = localStorage.getItem("digiopo_lisenssi");
+      if(!raw) return null;
+      var l = JSON.parse(raw);
+      if(!l || !l.ok) return null;
+      return l.koulu ? String(l.koulu).trim() : null;
+    }catch(e){ return null; }
+  }
+  function avLaite(){
+    try{
+      var v = localStorage.getItem("digiopo_laite");
+      if(!v){ v = Date.now().toString(36) + Math.random().toString(36).slice(2); localStorage.setItem("digiopo_laite", v); }
+      return v;
+    }catch(e){ return ""; }
+  }
+
+  async function lahetaVinkki(){
+    var tila = el("av-tila");
+    var vinkki = el("av-vinkki").value.trim();
+    if(!vinkki){ tila.textContent = "Kirjoita ensin vinkki."; return; }
+    var btn = el("av-laheta"); btn.disabled = true; tila.textContent = "Lähetetään...";
+    try{
+      var r = await fetch(AV_API, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          toiminto:"laheta",
+          nimimerkki: el("av-nimi").value.trim(),
+          aihe: el("av-aihe").value,
+          vinkki: vinkki,
+          koulu: avKoulu()
+        })
+      });
+      var d = await r.json();
+      if(d.ok){
+        tila.textContent = "Kiitos! Vinkkisi lähetettiin. Opettaja hyväksyy sen, ja sitten se näkyy luokan taululla.";
+        el("av-vinkki").value = "";
+      } else if(d.virhe === "virheellinen_koulu"){
+        tila.textContent = "Avaa sivu koulun tunnuksilla, niin voit lähettää vinkin.";
+      } else {
+        tila.textContent = "Lähetys ei onnistunut. Yritä uudelleen.";
+      }
+    }catch(e){ tila.textContent = "Verkkovirhe. Yritä hetken kuluttua uudelleen."; }
+    btn.disabled = false;
+  }
+
+  function avTyhjaViesti(kontti, teksti){
+    kontti.innerHTML = "";
+    var p = document.createElement("p"); p.className = "av-tyhja"; p.textContent = teksti;
+    kontti.appendChild(p);
+  }
+
+  async function lataaGalleria(){
+    var kontti = el("av-galleria");
+    var koulu = avKoulu();
+    if(!koulu){ avTyhjaViesti(kontti, "Avaa sivu koulun tunnuksilla nähdäksesi luokan taulun."); return; }
+    try{
+      var r = await fetch(AV_API + "?koulu=" + encodeURIComponent(koulu));
+      var d = await r.json();
+      if(!d.ok || !d.vinkit || !d.vinkit.length){ avTyhjaViesti(kontti, "Ei vielä hyväksyttyjä vinkkejä. Ole ensimmäinen!"); return; }
+      kontti.innerHTML = "";
+      d.vinkit.forEach(function(v){ kontti.appendChild(avKortti(v)); });
+    }catch(e){ avTyhjaViesti(kontti, "Taulua ei juuri nyt saatu ladattua."); }
+  }
+
+  function avKortti(v){
+    var kortti = document.createElement("div"); kortti.className = "av-kortti";
+    var aihe = document.createElement("span"); aihe.className = "aihe"; aihe.textContent = v.aihe; kortti.appendChild(aihe);
+    var teksti = document.createElement("div"); teksti.textContent = v.vinkki; kortti.appendChild(teksti);
+    if(v.nimimerkki){ var nimi = document.createElement("div"); nimi.className = "nimi"; nimi.textContent = "– " + v.nimimerkki; kortti.appendChild(nimi); }
+    var tyk = document.createElement("button"); tyk.className = "av-tykkaa"; tyk.type = "button";
+    tyk.textContent = "👍 " + (v.tykkaukset || 0);
+    tyk.addEventListener("click", function(){ tykkaaVinkki(v.id, tyk); });
+    kortti.appendChild(tyk);
+    return kortti;
+  }
+
+  async function tykkaaVinkki(id, nappi){
+    nappi.disabled = true;
+    try{
+      var r = await fetch(AV_API, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ toiminto:"tykkaa", id: id, laite: avLaite() })
+      });
+      var d = await r.json();
+      if(d.ok){ nappi.textContent = "👍 " + d.tykkaukset; }
+    }catch(e){ nappi.disabled = false; }
+  }
+
+  async function avOpettajaNaytA(){
+    var alue = el("av-ope-sisalto");
+    alue.innerHTML = "Ladataan...";
+    try{
+      var r = await fetch(AV_API, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ toiminto:"hae_kaikki" })
+      });
+      var d = await r.json();
+      if(!d.ok){ avTyhjaViesti(alue, "Kirjaudu opettajatunnuksilla nähdäksesi ja hyväksyäksesi vinkit."); return; }
+      if(!d.vinkit.length){ avTyhjaViesti(alue, "Ei vielä lähetettyjä vinkkejä."); return; }
+      alue.innerHTML = "";
+      d.vinkit.forEach(function(v){
+        var rivi = document.createElement("div"); rivi.className = "av-ope-rivi";
+        var sis = document.createElement("div"); sis.className = "sisalto";
+        var meta = document.createElement("div"); meta.className = "nimi";
+        meta.textContent = v.aihe + (v.nimimerkki ? (" · " + v.nimimerkki) : "") + " · " + (v.tila === "hyvaksytty" ? "hyväksytty" : "odottaa");
+        var t = document.createElement("div"); t.textContent = v.vinkki;
+        sis.appendChild(meta); sis.appendChild(t); rivi.appendChild(sis);
+        if(v.tila !== "hyvaksytty"){
+          var h = document.createElement("button"); h.className = "hyvaksy-btn"; h.textContent = "Hyväksy";
+          h.addEventListener("click", function(){ avModeroi("hyvaksy", v.id); });
+          rivi.appendChild(h);
+        }
+        var p = document.createElement("button"); p.className = "poista-btn"; p.textContent = "Poista";
+        p.addEventListener("click", function(){ avModeroi("poista", v.id); });
+        rivi.appendChild(p);
+        alue.appendChild(rivi);
+      });
+    }catch(e){ avTyhjaViesti(alue, "Vinkkejä ei juuri nyt saatu ladattua."); }
+  }
+
+  async function avModeroi(toiminto, id){
+    try{
+      await fetch(AV_API, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ toiminto: toiminto, id: id })
+      });
+    }catch(e){}
+    avOpettajaNaytA();
+    lataaGalleria();
+  }
+
+  /* ---------- Alusta ---------- */
+  function alusta(){
+    nykyinen = 0;
+    el("loppu").classList.add("piilo");
+    el("tehtava3").classList.add("piilo");
+    el("tehtava2").classList.add("piilo");
+    el("tehtava1-loppu").classList.add("piilo");
+    el("peli").classList.remove("piilo");
+    el("edistys").classList.remove("piilo");
+    piirraKierros();
+    fokusoi("tavoite");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  el("nayta-nappi").addEventListener("click", naytaTulos);
+  el("muokkaa-nappi").addEventListener("click", muokkaaPyyntoa);
+  el("seuraava-nappi").addEventListener("click", seuraavaKierros);
+  el("jatka-t2-nappi").addEventListener("click", aloitaTehtava2);
+  el("t2-nayta").addEventListener("click", naytaT2Tulos);
+  el("t2-muokkaa").addEventListener("click", muokkaaT2);
+  el("t2-seuraava").addEventListener("click", seuraavaVaite);
+  el("av-laheta").addEventListener("click", lahetaVinkki);
+  el("av-ope-paivita").addEventListener("click", avOpettajaNaytA);
+  el("t3-valmis").addEventListener("click", function(){
+    el("tehtava3").classList.add("piilo");
+    el("edistys").classList.add("piilo");
+    el("loppu").classList.remove("piilo");
+    fokusoi("loppu-otsikko");
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+  el("alusta-nappi").addEventListener("click", alusta);
+
+  piirraKierros();
+})();
+</script>
+</body>
+</html>
