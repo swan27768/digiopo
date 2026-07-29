@@ -58,6 +58,16 @@ h2 { font-size: 1.35rem; }
   font-weight: 800; letter-spacing: 0.08em; font-size: 0.95rem;
   padding: 0.25rem 0.9rem; border-radius: 0.5rem; margin: 0 0 0.5rem;
 }
+.valittu-keino-label {
+  text-align: center; font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #2e7d52;
+  margin: 0.2rem 0 0.1rem;
+}
+h2.valittu-keino {
+  background: rgba(78,225,160,0.16); border: 2px solid var(--mint);
+  border-radius: 0.75rem; padding: 0.6rem 1rem; margin: 0.1rem 0 0.6rem;
+  font-size: 1.15rem; line-height: 1.4;
+}
 .tehtava-ohje { font-weight: 600; }
 .tehtava-vinkki {
   font-style: italic; color: var(--violet);
@@ -338,7 +348,11 @@ function sivuKeinot(avain) {
 
 function sivuAvain(avain) {
   var a = AIHEET[avain];
-  return '<div class="story-section"><h2>' + a.emoji + ' Kokeillaan!</h2>' +
+  var keino = (vastaukset[avain] || {}).keino || '';
+  var keinoOtsikko = keino
+    ? '<div class="valittu-keino-label">Valitsemasi keino</div><h2 class="valittu-keino">' + escT(keino) + '</h2>'
+    : '<h2>' + a.emoji + ' Kokeillaan!</h2>';
+  return '<div class="story-section">' + keinoOtsikko +
     '<div class="tapahtumabox"><p>' + a.palaute + '</p></div>' +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
@@ -353,7 +367,8 @@ function sivuAvain(avain) {
     '</div>' +
     '<div class="choices" data-ei-sivutusta="1">' +
     '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'loppu\')">✅ Valmis – katso vastauksesi</a>' +
-    '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'alku\')">🔄 Kokeile toista aihetta</a>' +
+    '<a onclick="tallennaTekstit(\'' + avain + '\'); renderoi(sivuKeinot(\'' + avain + '\'))">🔄 Vaihda keino</a>' +
+    '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'alku\')">🔀 Kokeile toista aihetta</a>' +
     '</div></div>';
 }
 
