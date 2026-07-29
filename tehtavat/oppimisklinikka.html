@@ -144,6 +144,43 @@ textarea.vastauskentta:focus { outline: none; border-color: var(--violet); box-s
 var vastaukset = {};   /* {aihe: {tunnistus, keino, teko, reflektio}} */
 var nykyinenAihe = null;
 
+/* ---- Tallennus (localStorage) – jottei työ katoa ---- */
+var KLINIKKA_KEY = 'digiopo_oppimisklinikka_8lk';
+function tallennaKaikki() {
+  try { localStorage.setItem(KLINIKKA_KEY, JSON.stringify(vastaukset)); } catch (e) { /* ei saa kaataa peliä */ }
+}
+function lataaKaikki() {
+  try {
+    var raaka = localStorage.getItem(KLINIKKA_KEY);
+    if (raaka) { var o = JSON.parse(raaka); if (o && typeof o === 'object') vastaukset = o; }
+  } catch (e) { vastaukset = {}; }
+}
+function tyhjennaKaikki() {
+  vastaukset = {};
+  try { localStorage.removeItem(KLINIKKA_KEY); } catch (e) { /* ohita */ }
+  renderoi(sivuAlku());
+}
+function onVastauksia() {
+  for (var k in vastaukset) {
+    var v = vastaukset[k];
+    if (v && (v.tunnistus || v.keino || v.teko || v.reflektio)) return true;
+  }
+  return false;
+}
+function escT(s) {
+  return String(s == null ? '' : s).replace(/[&<>]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+  });
+}
+function autoTallenna(avain) {
+  if (!vastaukset[avain]) vastaukset[avain] = {};
+  var t = document.getElementById('kentta-teko');
+  var r = document.getElementById('kentta-reflektio');
+  if (t) vastaukset[avain].teko = t.value.trim();
+  if (r) vastaukset[avain].reflektio = r.value.trim();
+  tallennaKaikki();
+}
+
 var AIHEET = {
   kertaus: {
     nimi: "Kertaustekniikka", emoji: "🔁", taito: "Muistamisen taito",
@@ -229,12 +266,21 @@ var AIHEET = {
 
 /* ---- Sivujen rakentaminen ---- */
 function sivuAlku() {
+  var jatkoBanner = onVastauksia()
+    ? '<div class="tapahtumabox" style="border:2px solid var(--violet); background:#f6eefc;">' +
+        '<p style="margin:0 0 .5rem;"><strong>📌 Sinulla on tallessa aiempia vastauksia.</strong> Ne on tallennettu tähän laitteeseen. Voit jatkaa täydentämistä tai aloittaa puhtaalta pöydältä.</p>' +
+        '<div class="choices" data-ei-sivutusta="1" style="margin:0;">' +
+        '<a onclick="naytaSivu(\'loppu\')">📄 Katso omat vastaukseni</a>' +
+        '<a onclick="if(confirm(\'Haluatko varmasti tyhjentää kaikki vastauksesi? Tätä ei voi perua.\'))tyhjennaKaikki()">🗑️ Tyhjennä ja aloita alusta</a>' +
+        '</div></div>'
+    : '';
   var h = '<div class="story-section">' +
     '<h1>Oppimaan oppimisen klinikka <button class="info-nappi" onclick="document.getElementById(\'teoria-info\').style.display=\'flex\'" title="Tehtävän teoriapohja" aria-label="Tietoa tehtävän teoriapohjasta">ℹ️</button></h1>' +
     '<div class="tapahtumabox">' +
     '<p>Tervetuloa klinikalle! Täällä ei hoideta flunssaa vaan <strong>opiskelun pulmia</strong>.</p>' +
     '<p>Jokaisella on joskus vaikeuksia muistamisessa, kokeisiin valmistautumisessa, jännityksessä tai tekoälyn käytössä. Niihin kaikkiin on olemassa tutkittuja keinoja.</p>' +
     '</div>' +
+    jatkoBanner +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
     '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse aihe, joka tuntuu juuri nyt omimmalta.</p>' +
@@ -293,12 +339,12 @@ function sivuAvain(avain) {
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
     '<p><strong>🔑 Oppimisen avain</strong></p>' +
     '<p>' + a.avainOhje + '</p>' +
-    '<textarea class="vastauskentta" id="kentta-teko" rows="3" placeholder="' + a.placeholder + '"></textarea>' +
+    '<textarea class="vastauskentta" id="kentta-teko" rows="3" placeholder="' + a.placeholder + '" oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).teko) + '</textarea>' +
     '</div>' +
     '<div class="kysymysbox">' +
     '<p><strong>Mitä sinä ajattelet?</strong></p>' +
     '<p>Mitä opit tästä aiheesta? Auttaisiko valitsemasi keino sinua oikeasti?</p>' +
-    '<textarea class="vastauskentta" id="kentta-reflektio" rows="3" placeholder="Kirjoita ajatuksesi tähän..."></textarea>' +
+    '<textarea class="vastauskentta" id="kentta-reflektio" rows="3" placeholder="Kirjoita ajatuksesi tähän..." oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).reflektio) + '</textarea>' +
     '</div>' +
     '<div class="choices" data-ei-sivutusta="1">' +
     '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'loppu\')">✅ Valmis – katso vastauksesi</a>' +
@@ -343,18 +389,24 @@ function valitseAihe(avain) {
   renderoi(sivuTilanne(avain));
 }
 function tallennaTunnistus(avain, arvo) {
+  if (!vastaukset[avain]) vastaukset[avain] = {};
   vastaukset[avain].tunnistus = arvo;
+  tallennaKaikki();
   renderoi(sivuKeinot(avain));
 }
 function tallennaKeino(avain, arvo) {
+  if (!vastaukset[avain]) vastaukset[avain] = {};
   vastaukset[avain].keino = arvo;
+  tallennaKaikki();
   renderoi(sivuAvain(avain));
 }
 function tallennaTekstit(avain) {
+  if (!vastaukset[avain]) vastaukset[avain] = {};
   var t = document.getElementById('kentta-teko');
   var r = document.getElementById('kentta-reflektio');
   if (t && t.value.trim()) vastaukset[avain].teko = t.value.trim();
   if (r && r.value.trim()) vastaukset[avain].reflektio = r.value.trim();
+  tallennaKaikki();
 }
 function naytaSivu(nimi) {
   renderoi(nimi === 'loppu' ? sivuLoppu() : sivuAlku());
@@ -442,6 +494,7 @@ function lataaResepti() {
   if (vv) vv.style.display = 'block';
 }
 
+lataaKaikki();
 renderoi(sivuAlku());
 </script>
 
