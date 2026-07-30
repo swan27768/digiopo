@@ -635,46 +635,55 @@
             id="kortit-hero"
             style="
               position: relative; border-radius: 18px; overflow: hidden;
-              margin: 0 0 4px; min-height: 180px;
+              margin: 0 0 4px; min-height: 240px; display: flex; align-items: center;
               box-shadow: 0 8px 28px rgba(236, 72, 153, 0.22);
               background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
             "
           >
+            <!-- Taustakuva (koko laatikko, piirros oikealla) -->
+            <div
+              aria-hidden="true"
+              style="
+                position: absolute; inset: 0;
+                background-image: url(&quot;../images/tikkuhahmot_keskustelemassa.webp&quot;);
+                background-repeat: no-repeat;
+                background-position: right center;
+                background-size: contain;
+              "
+            ></div>
+            <!-- Gradientti-scrim: tummentaa vasemman (tekstipuolen) luettavaksi, oikea jää näkyviin -->
+            <div
+              aria-hidden="true"
+              style="
+                position: absolute; inset: 0;
+                background: linear-gradient(
+                  90deg,
+                  rgba(76, 29, 149, 0.92) 0%,
+                  rgba(109, 40, 217, 0.80) 42%,
+                  rgba(124, 58, 237, 0.30) 68%,
+                  rgba(236, 72, 153, 0.10) 100%
+                );
+              "
+            ></div>
             <div
               data-fi-only
-              style="
-                position: relative; z-index: 1; padding: 28px 32px; color: #fff;
-                display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-              "
+              style="position: relative; z-index: 1; padding: 28px 32px; color: #fff; max-width: 62%;"
             >
-              <div style="flex: 1 1 300px; min-width: 240px;">
-                <div class="hero-badge" data-tapa="ryhma" data-tyyppi="peli" style="margin-bottom: 12px">
-                  <span aria-hidden="true">🎴</span>
-                  <span>Tutustumispeli</span>
-                </div>
-                <h3 style="margin: 0 0 8px; font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-                  Kysymyskortit
-                </h3>
-                <p style="margin: 0 0 20px; font-size: 15px; line-height: 1.6; opacity: 0.95; text-shadow: 0 1px 4px rgba(0,0,0,0.25); max-width: 480px;">
-                  Nostakaa kysymyskortteja ja jutelkaa – hauskoja, rentoja ja vähän
-                  syvempiäkin kysymyksiä. Hyvä tapa tutustua luokkaan ja rikkoa jäätä.
-                </p>
-                <button class="btn-hero" onclick="avaaKortit()">
-                  Aloita peli
-                </button>
+              <div class="hero-badge" data-tapa="ryhma" data-tyyppi="peli" style="margin-bottom: 12px">
+                <span aria-hidden="true">🎴</span>
+                <span>Tutustumispeli</span>
               </div>
-              <div style="flex: 0 0 auto; margin: 0 auto;">
-                <img
-                  src="../images/tikkuhahmot_keskustelemassa.webp"
-                  alt="Piirros tikkuhahmoista keskustelemassa pöydän ääressä puhekuplien kanssa"
-                  width="200" height="200" loading="lazy"
-                  style="
-                    width: 190px; height: auto; display: block;
-                    background: #fff; border-radius: 16px; padding: 10px;
-                    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-                  "
-                />
-              </div>
+              <h3 style="margin: 0 0 8px; font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                Kysymyskortit
+              </h3>
+              <p style="margin: 0 0 20px; font-size: 15px; line-height: 1.6; opacity: 0.96; text-shadow: 0 1px 4px rgba(0,0,0,0.35); max-width: 380px;">
+                Juttele kavereiden kanssa ja tutustukaa rennosti. Nostakaa
+                kysymyskortteja ja vastatkaa vuorotellen – mukana hauskoja, rentoja
+                ja vähän syvempiäkin kysymyksiä.
+              </p>
+              <button class="btn-hero" onclick="avaaKortit()">
+                Aloita peli
+              </button>
             </div>
           </div>
 
