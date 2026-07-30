@@ -311,6 +311,20 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+  <!-- Takaisin luokkasivulle (piiloutuu iframe-upotuksessa) -->
+  <a href="../sivut/9luokka.html" id="peli-takaisin" aria-label="Takaisin 9. luokan sivulle"
+     style="position:fixed;top:12px;left:12px;z-index:99999;display:inline-flex;align-items:center;gap:6px;background:#ffffff;color:#1a2e4a;border:1px solid rgba(0,0,0,0.18);border-radius:999px;padding:8px 14px;font:600 0.85rem system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;">← Takaisin</a>
+  <script>
+    (function(){
+      var b=document.getElementById('peli-takaisin');
+      if(!b) return;
+      if(window.self!==window.top){ b.style.display='none'; return; }
+      b.addEventListener('click',function(e){
+        if(history.length>1){ e.preventDefault(); history.back(); }
+      });
+    })();
+  </script>
+
 
 <h1 class="game-title">Lukion ristikko</h1>
 <p class="subtitle">Täytä ristikko lukion käsitteillä. Klikkaa ruutua tai vihjettä aloittaaksesi.</p>
