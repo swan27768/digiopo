@@ -151,6 +151,8 @@
         <nav class="aihelista" aria-label="Sivun aiheet">
           <a href="#johdanto" data-i18n="sidebar.link_intro">Tervetuloa yläkouluun</a>
 
+          <a href="#rupattelu" id="nav-rupattelu" data-fi-only>Rupatteluhetki 💬</a>
+
           <a href="#opiskelutaidot" data-i18n="sidebar.link_opiskelutaidot">Selviytymiskeino 1: Opi oppimaan</a>
 
           <a href="#mina-oppijana" data-i18n="sidebar.link_motivaatio">Selviytymiskeino 2: Löydä motivaatiosi</a>
@@ -615,6 +617,80 @@
             </div>
           </div>
         </div>
+        </section>
+
+        <!-- Rupatteluhetki: kysymyskortit (oma osio – järjestys/lukko ryhmäkohtaisesti) -->
+        <section
+          id="rupattelu"
+          class="aihe-osio"
+          aria-labelledby="otsikko-rupattelu"
+        >
+          <div class="aihe-otsikko">
+            <h2 id="otsikko-rupattelu">Rupatteluhetki 💬</h2>
+            <p>Kysymyskortit tutustumiseen ja ryhmäytymiseen – rentoa juttelua yhdessä</p>
+          </div>
+
+          <!-- Peli-hero -->
+          <div
+            id="kortit-hero"
+            style="
+              position: relative; border-radius: 18px; overflow: hidden;
+              margin: 0 0 4px; min-height: 180px;
+              box-shadow: 0 8px 28px rgba(236, 72, 153, 0.22);
+              background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+            "
+          >
+            <div
+              data-fi-only
+              style="
+                position: relative; z-index: 1; padding: 28px 32px; color: #fff;
+                display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+              "
+            >
+              <div style="flex: 1 1 300px; min-width: 240px;">
+                <div class="hero-badge" data-tapa="ryhma" data-tyyppi="peli" style="margin-bottom: 12px">
+                  <span aria-hidden="true">🎴</span>
+                  <span>Tutustumispeli</span>
+                </div>
+                <h3 style="margin: 0 0 8px; font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                  Kysymyskortit
+                </h3>
+                <p style="margin: 0 0 20px; font-size: 15px; line-height: 1.6; opacity: 0.95; text-shadow: 0 1px 4px rgba(0,0,0,0.25); max-width: 480px;">
+                  Nostakaa kysymyskortteja ja jutelkaa – hauskoja, rentoja ja vähän
+                  syvempiäkin kysymyksiä. Hyvä tapa tutustua luokkaan ja rikkoa jäätä.
+                </p>
+                <button class="btn-hero" onclick="avaaKortit()">
+                  Aloita peli
+                </button>
+              </div>
+              <div style="flex: 0 0 auto; margin: 0 auto;">
+                <img
+                  src="../images/tikkuhahmot_keskustelemassa.webp"
+                  alt="Piirros tikkuhahmoista keskustelemassa pöydän ääressä puhekuplien kanssa"
+                  width="200" height="200" loading="lazy"
+                  style="
+                    width: 190px; height: auto; display: block;
+                    background: #fff; border-radius: 16px; padding: 10px;
+                    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <div id="korttiContainer" class="interactive-wrapper" style="display: none">
+            <div class="peli-sulje-rivi">
+              <button class="peli-sulje-btn" onclick="suljeKortit()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje peli
+              </button>
+            </div>
+            <iframe
+              id="korttiIframe"
+              data-src="../ryhmaytys-kortit.html"
+              style="width: 100%; height: 80vh; min-height: 560px; border: none; border-radius: 14px;"
+              title="Kysymyskortit – tutustumispeli"
+            ></iframe>
+          </div>
         </section>
 
         <!-- 2. Opiskelutaidot -->
@@ -2100,6 +2176,26 @@
         const peli = document.getElementById("peliContainer");
         peli.style.display = "none";
         document.getElementById("tervetuloa").scrollIntoView({ behavior: "smooth" });
+      }
+
+      /* ── Kysymyskortit (ryhmäytyspeli) ── */
+      function avaaKortit() {
+        const c = document.getElementById("korttiContainer");
+        const iframe = document.getElementById("korttiIframe");
+        if (!c || !iframe) return;
+        if (!iframe.src || iframe.src === "about:blank" || iframe.src === window.location.href) {
+          iframe.src = iframe.getAttribute("data-src");
+        }
+        c.style.display = "block";
+        setTimeout(() => c.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+      }
+
+      function suljeKortit() {
+        const c = document.getElementById("korttiContainer");
+        if (!c) return;
+        c.style.display = "none";
+        const t = document.getElementById("tervetuloa");
+        if (t) t.scrollIntoView({ behavior: "smooth" });
       }
 
       /* ── Tehtävät: Muisti, Lukeminen, Aikataulut ── */
