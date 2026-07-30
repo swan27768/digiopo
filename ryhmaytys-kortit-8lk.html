@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kysymyskortit – 8. luokka</title>
+  <link rel="icon" href="favicon.svg" />
+  <style>
+    :root {
+      --magenta: #db2777;
+      --magenta-dark: #9d174d;
+      --rose: #f43f5e;
+      --bg: #fdf2f8;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: #1f1420;
+      -webkit-text-size-adjust: 100%;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 18px 48px;
+    }
+    header.hero {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    header.hero h1 {
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      font-weight: 900;
+      color: var(--magenta-dark);
+      margin: 0 0 6px;
+    }
+    header.hero p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Kategoriasuodattimet */
+    .kategoriat {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 16px 0 20px;
+    }
+    .kat-btn {
+      border: 2px solid #fbcfe8;
+      background: #fff;
+      color: var(--magenta-dark);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .kat-btn[aria-pressed="true"] {
+      background: var(--magenta);
+      border-color: var(--magenta);
+      color: #fff;
+    }
+    .kat-btn:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+
+    /* Kortti */
+    .kortti-alue {
+      perspective: 1200px;
+      margin: 8px auto 20px;
+    }
+    .kortti {
+      position: relative;
+      width: 100%;
+      min-height: 260px;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 12px 40px rgba(219, 39, 119, 0.20);
+      border: 3px solid #fce7f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 28px;
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+    }
+    .kortti.pop { transform: translateY(-4px) scale(1.015); }
+    .kortti-ikoni { font-size: 3rem; line-height: 1; margin-bottom: 14px; }
+    .kortti-kat {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #fce7f3;
+      color: var(--magenta);
+    }
+    .kortti-teksti {
+      font-size: clamp(1.25rem, 4.5vw, 1.7rem);
+      font-weight: 800;
+      line-height: 1.35;
+      color: #1f1420;
+      margin: 0;
+    }
+    .kortti-tyhja { color: #9ca3af; font-weight: 600; }
+
+    /* Napit */
+    .nappirivi {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .nosta-btn {
+      background: linear-gradient(135deg, var(--magenta), var(--rose));
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 30px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(219, 39, 119, 0.35);
+      transition: transform 0.12s, box-shadow 0.12s;
+      font-family: inherit;
+    }
+    .nosta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(219,39,119,0.45); }
+    .nosta-btn:active { transform: translateY(0); }
+    .nosta-btn:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+    .pieni-btn {
+      background: #fce7f3;
+      color: var(--magenta);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .pieni-btn:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+
+    .laskuri {
+      text-align: center;
+      margin: 14px 0 0;
+      font-size: 0.85rem;
+      color: #6b7280;
+      min-height: 1.2em;
+    }
+
+    /* Ohjelaatikot */
+    details.ohje {
+      background: #fff;
+      border: 2px solid #fbcfe8;
+      border-radius: 16px;
+      margin-top: 28px;
+      overflow: hidden;
+    }
+    details.ohje > summary {
+      cursor: pointer;
+      padding: 16px 20px;
+      font-weight: 800;
+      color: var(--magenta-dark);
+      font-size: 0.95rem;
+      list-style: none;
+    }
+    details.ohje > summary::-webkit-details-marker { display: none; }
+    details.ohje > summary::after { content: " ▼"; float: right; color: #f9a8d4; font-size: 0.8rem; }
+    details.ohje[open] > summary::after { content: " ▲"; }
+    .ohje-sisalto { padding: 0 20px 20px; font-size: 0.9rem; line-height: 1.65; color: #374151; }
+    .ohje-sisalto h3 { font-size: 0.95rem; color: var(--magenta-dark); margin: 16px 0 6px; }
+    .ohje-sisalto ul { padding-left: 20px; margin: 6px 0; }
+    .ohje-sisalto li { margin-bottom: 6px; }
+    .pelitapa {
+      background: #fdf2f8;
+      border-left: 4px solid var(--magenta);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      margin: 10px 0;
+    }
+    .pelitapa strong { color: var(--magenta-dark); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>🎴 Kysymyskortit</h1>
+      <p>Nosta kortti ja vastaa. Ei oikeita tai vääriä vastauksia&nbsp;– vain juttelua ja ajatusten vaihtoa yhdessä.</p>
+    </header>
+
+    <div class="kategoriat" role="group" aria-label="Valitse korttien aiheet">
+      <button class="kat-btn" data-kat="kaikki" aria-pressed="true" type="button">🎲 Kaikki</button>
+      <button class="kat-btn" data-kat="tutustuminen" aria-pressed="false" type="button">😊 Tutustuminen</button>
+      <button class="kat-btn" data-kat="hauska" aria-pressed="false" type="button">😂 Hauskat</button>
+      <button class="kat-btn" data-kat="kumpi" aria-pressed="false" type="button">🤔 Kumpi mieluummin</button>
+      <button class="kat-btn" data-kat="syvempi" aria-pressed="false" type="button">💭 Vähän syvempi</button>
+    </div>
+
+    <div class="kortti-alue">
+      <div class="kortti" id="kortti" role="region" aria-live="polite" aria-label="Kysymyskortti">
+        <div class="kortti-ikoni" id="korttiIkoni" aria-hidden="true">🎴</div>
+        <div class="kortti-kat" id="korttiKat">Valmiina?</div>
+        <p class="kortti-teksti kortti-tyhja" id="korttiTeksti">Paina "Nosta kortti" ja aloita!</p>
+      </div>
+    </div>
+
+    <div class="nappirivi">
+      <button class="nosta-btn" id="nostaBtn" type="button">🎴 Nosta kortti</button>
+      <button class="pieni-btn" id="sekoitaBtn" type="button" title="Sekoita pakka uudelleen">🔀 Sekoita pakka</button>
+    </div>
+    <p class="laskuri" id="laskuri" role="status" aria-live="polite"></p>
+
+    <details class="ohje">
+      <summary>📖 Näin pelaatte – kaksi tapaa</summary>
+      <div class="ohje-sisalto">
+        <div class="pelitapa">
+          <strong>1) Pareittain tai pienissä ryhmissä (3–4 oppilasta)</strong><br>
+          Yksi nostaa kortin ja lukee sen ääneen. Kaikki vastaavat vuorotellen.
+          Sitten seuraava nostaa uuden kortin. Jatkakaa niin kauan kuin on kivaa.
+        </div>
+        <div class="pelitapa">
+          <strong>2) Koko luokka yhdessä (näytöllä)</strong><br>
+          Opettaja tai yksi oppilas nostaa kortin näytölle. Muutama vastaa,
+          tai vastataan ketjussa rivi kerrallaan. Hyvä alkulämmittely tunnin aluksi.
+        </div>
+        <h3>Kolme sääntöä</h3>
+        <ul>
+          <li>Kuuntele toista rauhassa – älä keskeytä.</li>
+          <li>Saat aina sanoa "ohi", jos et halua vastata johonkin.</li>
+          <li>Erilaiset mielipiteet ovat ok. Ei tarvitse olla samaa mieltä.</li>
+        </ul>
+        <h3>Vinkki opettajalle</h3>
+        <ul>
+          <li>Valitse yläpalkista aihe. "Kumpi mieluummin" ja "Vähän syvempi" sopivat hyvin kahdeksasluokkalaisten pohdintaan.</li>
+          <li>Yksi kortti per oppilas riittää usein hyvään aloitukseen (5–10 min).</li>
+          <li>Pakka ei toista samaa korttia ennen kuin kaikki on nostettu.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    // ── Korttidata (8. luokka, 14 v – vähän kypsempi taso) ─────────────────────
+    // cat: tutustuminen | hauska | kumpi | syvempi
+    var KORTIT = [
+      // — Tutustuminen —
+      { t: "Mikä on paras juttu, mitä olet tehnyt tänä vuonna?", c: "tutustuminen" },
+      { t: "Millainen musiikki kertoo sinusta eniten?", c: "tutustuminen" },
+      { t: "Mikä sarja, peli tai leffa on nyt sinun juttusi – ja miksi?", c: "tutustuminen" },
+      { t: "Miten lataat akkujasi, kun olet väsynyt?", c: "tutustuminen" },
+      { t: "Mikä asia saa sinut innostumaan ihan täysillä?", c: "tutustuminen" },
+      { t: "Millainen olet kaverina?", c: "tutustuminen" },
+      { t: "Mitä teet vapaa-ajalla, mistä et yleensä puhu koulussa?", c: "tutustuminen" },
+      { t: "Mikä on sinulle tärkein sovellus puhelimessa juuri nyt?", c: "tutustuminen" },
+      { t: "Aamu- vai iltaihminen – ja miten se näkyy sinussa?", c: "tutustuminen" },
+      { t: "Mikä paikka tuntuu sinusta omalta?", c: "tutustuminen" },
+      { t: "Mistä aiheesta voisit puhua vaikka koko välitunnin?", c: "tutustuminen" },
+
+      // — Hauskat / rennot —
+      { t: "Jos saisit yhdeksi päiväksi kenen tahansa julkkiksen elämän, kenen valitsisit?", c: "hauska" },
+      { t: "Mikä on oudoin taito, jonka osaat?", c: "hauska" },
+      { t: "Kerro nolo hetki, jolle voit nyt jo itse nauraa.", c: "hauska" },
+      { t: "Jos elämäsi olisi elokuva, mikä olisi sen nimi?", c: "hauska" },
+      { t: "Keksi täysin uusi juhlapyhä – mitä siinä juhlitaan?", c: "hauska" },
+      { t: "Mikä meemi kuvaa sinun kouluviikkoasi?", c: "hauska" },
+      { t: "Jos sinulla olisi oma podcast, mistä se kertoisi?", c: "hauska" },
+      { t: "Mikä ruoka on yliarvostettu – ja mikä aliarvostettu?", c: "hauska" },
+      { t: "Jos pääsisit heti mihin tahansa paikkaan, minne menisit?", c: "hauska" },
+      { t: "Mikä on paras tekosyy, jonka olet joskus keksinyt?", c: "hauska" },
+      { t: "Keksi supervoima, josta olisi oikeasti hyötyä koulussa.", c: "hauska" },
+      { t: "Jos saisit kieltää yhden turhan asian maailmasta, minkä kieltäisit?", c: "hauska" },
+      { t: "Mikä laulu jää soimaan päähäsi pahimmin?", c: "hauska" },
+
+      // — Kumpi mieluummin (dilemmat) —
+      { t: "Kumpi mieluummin: olla aina rehellinen vai aina kohtelias?", c: "kumpi" },
+      { t: "Kumpi mieluummin: tietää tulevaisuutesi vai voida muuttaa menneisyyttäsi?", c: "kumpi" },
+      { t: "Kumpi mieluummin: olla tunnettu jostain vai olla vapaa olemaan kuka vaan?", c: "kumpi" },
+      { t: "Kumpi mieluummin: iso kaveriporukka vai muutama tosi läheinen?", c: "kumpi" },
+      { t: "Kumpi mieluummin: elää ilman somea vai ilman musiikkia?", c: "kumpi" },
+      { t: "Kumpi mieluummin: onnistua helposti vai oppia yrittämällä?", c: "kumpi" },
+      { t: "Kumpi mieluummin: sanoa mielipiteesi ääneen vai pitää rauha?", c: "kumpi" },
+      { t: "Kumpi mieluummin: nähdä maailmaa vai tulla mestariksi yhdessä asiassa?", c: "kumpi" },
+      { t: "Kumpi mieluummin: enemmän vapaa-aikaa vai enemmän rahaa?", c: "kumpi" },
+      { t: "Kumpi mieluummin: olla se joka päättää vai se joka saa vaan olla mukana?", c: "kumpi" },
+      { t: "Kumpi mieluummin: kehua muita vai tulla itse kehutuksi?", c: "kumpi" },
+      { t: "Kumpi mieluummin: tehdä virhe ja oppia vai pelata varman päälle?", c: "kumpi" },
+      { t: "Kumpi mieluummin: että sinut ymmärretään vai että sinusta pidetään?", c: "kumpi" },
+      { t: "Kumpi mieluummin: tietää totuus vai elää mukavassa uskossa?", c: "kumpi" },
+
+      // — Vähän syvempi (turvallinen, pohtiva) —
+      { t: "Mistä asiasta olet ylpeä itsessäsi juuri nyt?", c: "syvempi" },
+      { t: "Millainen ihminen haluaisit olla parin vuoden päästä?", c: "syvempi" },
+      { t: "Mikä auttaa sinua, kun on rankka päivä?", c: "syvempi" },
+      { t: "Mikä tekee jostakusta hyvän kaverin – oikeasti?", c: "syvempi" },
+      { t: "Milloin viimeksi muutit mielesi jostain? Mikä sai sen muuttumaan?", c: "syvempi" },
+      { t: "Mistä olet eri mieltä kuin moni muu?", c: "syvempi" },
+      { t: "Mikä painaa nuorten mielessä nyt, mitä aikuiset eivät aina tajua?", c: "syvempi" },
+      { t: "Miten haluaisit, että sinut muistetaan tästä luokasta?", c: "syvempi" },
+      { t: "Mikä jännittää yläkoulun jälkeen – ja mikä innostaa?", c: "syvempi" },
+      { t: "Milloin tunnet olevasi täysin oma itsesi?", c: "syvempi" },
+      { t: "Mikä on sellainen asia itsessäsi, jota et vaihtaisi mihinkään?", c: "syvempi" },
+      { t: "Jos voisit sanoa yhden asian koko luokalle, mitä sanoisit?", c: "syvempi" }
+    ];
+
+    var KAT_TIEDOT = {
+      tutustuminen: { nimi: "Tutustuminen", ikoni: "😊", vari: "#0891b2" },
+      hauska:       { nimi: "Hauska",       ikoni: "😂", vari: "#db2777" },
+      kumpi:        { nimi: "Kumpi mieluummin", ikoni: "🤔", vari: "#9333ea" },
+      syvempi:      { nimi: "Vähän syvempi", ikoni: "💭", vari: "#059669" }
+    };
+
+    // ── Tila ────────────────────────────────────────────────────────────────────
+    var valittu = "kaikki";
+    var pakka = [];
+    var nostettu = 0;
+    var yhteensa = 0;
+
+    var korttiEl   = document.getElementById("kortti");
+    var ikoniEl    = document.getElementById("korttiIkoni");
+    var katEl      = document.getElementById("korttiKat");
+    var tekstiEl   = document.getElementById("korttiTeksti");
+    var laskuriEl  = document.getElementById("laskuri");
+    var nostaBtn   = document.getElementById("nostaBtn");
+    var sekoitaBtn = document.getElementById("sekoitaBtn");
+
+    function suodatettu() {
+      if (valittu === "kaikki") return KORTIT.slice();
+      return KORTIT.filter(function (k) { return k.c === valittu; });
+    }
+
+    function sekoita(arr) {
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+      }
+      return arr;
+    }
+
+    function uusiPakka() {
+      pakka = sekoita(suodatettu());
+      yhteensa = pakka.length;
+      nostettu = 0;
+      paivitaLaskuri();
+    }
+
+    function paivitaLaskuri() {
+      if (yhteensa === 0) { laskuriEl.textContent = ""; return; }
+      laskuriEl.textContent = "Kortti " + nostettu + " / " + yhteensa;
+    }
+
+    function nostaKortti() {
+      if (!pakka || pakka.length === 0) {
+        uusiPakka();
+      }
+      var kortti = pakka.pop();
+      nostettu++;
+      var tieto = KAT_TIEDOT[kortti.c] || { nimi: "", ikoni: "🎴", vari: "#db2777" };
+
+      ikoniEl.textContent = tieto.ikoni;
+      katEl.textContent = tieto.nimi;
+      katEl.style.background = "#fff";
+      katEl.style.color = tieto.vari;
+      korttiEl.style.borderColor = tieto.vari + "33";
+      tekstiEl.classList.remove("kortti-tyhja");
+      tekstiEl.textContent = kortti.t;
+
+      korttiEl.classList.remove("pop");
+      void korttiEl.offsetWidth;
+      korttiEl.classList.add("pop");
+
+      paivitaLaskuri();
+
+      if (pakka.length === 0) {
+        laskuriEl.textContent = "Kaikki " + yhteensa + " korttia nostettu – pakka sekoitetaan uudelleen 🔀";
+        setTimeout(uusiPakka, 50);
+      }
+    }
+
+    // ── Kategoriapainikkeet ─────────────────────────────────────────────────────
+    var katNapit = document.querySelectorAll(".kat-btn");
+    katNapit.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        katNapit.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+        btn.setAttribute("aria-pressed", "true");
+        valittu = btn.getAttribute("data-kat");
+        uusiPakka();
+        laskuriEl.textContent = "Pakassa " + yhteensa + " korttia. Paina Nosta kortti!";
+      });
+    });
+
+    nostaBtn.addEventListener("click", nostaKortti);
+    sekoitaBtn.addEventListener("click", function () {
+      uusiPakka();
+      laskuriEl.textContent = "Pakka sekoitettu 🔀 – " + yhteensa + " korttia valmiina.";
+    });
+
+    // Alusta
+    uusiPakka();
+    laskuriEl.textContent = "Pakassa " + yhteensa + " korttia. Paina Nosta kortti!";
+  </script>
+</body>
+</html>
