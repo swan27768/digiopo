@@ -1593,7 +1593,7 @@
                 <button onclick="nollaaAmisFil()" aria-label="Nollaa valinnat" style="padding:5px 12px;border-radius:20px;border:1.5px solid #e5e7eb;background:none;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;color:#9ca3af;">Nollaa <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
               </div>
 
-              <p class="tj-tulos-otsikko" id="amis-tulos-otsikko">Kaikki tutkinnot</p>
+              <p class="tj-tulos-otsikko" id="amis-tulos-otsikko">👆 Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.</p>
               <p class="tj-ei-tuloksia" id="amis-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
               <div class="tj-grid" id="amis-tutkinnot" role="list"></div>
 
@@ -4186,21 +4186,22 @@
     function paivitaAmis() {
       renderAmis();
       renderAmisV3();
+      const nolla = amisValitut.size === 0;
       const kortit = document.querySelectorAll('#amis-tutkinnot .tj-kortti');
       let n = 0;
       kortit.forEach(k => {
         const alat = JSON.parse(k.dataset.k);
-        const ok = amisValitut.size === 0 || alat.some(a => amisValitut.has(a));
+        const ok = !nolla && alat.some(a => amisValitut.has(a));
         k.classList.toggle('piilotettu', !ok);
         if (ok) n++;
       });
       const tjP = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       document.getElementById('amis-tulos-otsikko').textContent =
-        amisValitut.size === 0
-          ? `${tjP.kaikki_tutkinnot || 'Kaikki tutkinnot'} (${TJ_TUTKINNOT.length})`
+        nolla
+          ? (tjP.valitse_kiinnostus || '👆 Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.')
           : `${n} ${tjP.tutkintoja_loytyy || 'tutkintoa löytyi'}`;
-      document.getElementById('amis-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
-      document.getElementById('amis-tutkinnot').style.display  = n === 0 ? 'none'  : 'grid';
+      document.getElementById('amis-ei-tuloksia').style.display = (!nolla && n === 0) ? 'block' : 'none';
+      document.getElementById('amis-tutkinnot').style.display  = (nolla || n === 0) ? 'none'  : 'grid';
     }
     function toggleAmisTutkinto(btn) {
       const k = btn.closest('.tj-kortti');
