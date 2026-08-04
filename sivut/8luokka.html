@@ -4377,11 +4377,16 @@
         sisalto.dataset.ala = '';
         return;
       }
-      const ala = valittuAla || sisalto.dataset.alaValinta || valitut[0];
-      // Älä renderöi uudelleen vain jos ala EI muuttunut JA valittujen määrä EI muuttunut
-      const prevCount = Number(sisalto.dataset.alaCount || 0);
-      if (sisalto.dataset.ala === ala && prevCount === valitut.length && sisalto.querySelector('iframe')) return;
-      sisalto.dataset.alaCount = valitut.length;
+      // Näytettävä ala: klikattu (jos yhä validi), muuten muistettu (jos yhä validi), muuten ensimmäinen
+      let ala = valittuAla;
+      if (!ala || valitut.indexOf(ala) === -1) {
+        ala = (sisalto.dataset.alaValinta && valitut.indexOf(sisalto.dataset.alaValinta) !== -1)
+              ? sisalto.dataset.alaValinta : valitut[0];
+      }
+      // Renderöi uudelleen jos ala TAI valittujen alojen joukko muuttui
+      const sig = valitut.join(',');
+      if (sisalto.dataset.ala === ala && sisalto.dataset.sig === sig && sisalto.querySelector('iframe')) return;
+      sisalto.dataset.sig = sig;
       sisalto.dataset.ala = ala;
       sisalto.dataset.alaValinta = ala;
       const tiedosto = AMIS_V3_TIEDOSTOT[ala];
