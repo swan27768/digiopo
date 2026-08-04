@@ -184,11 +184,12 @@ function vaihdaMaskorinIlme(osioId) {
 
   const src = maskottiKuva.getAttribute("src") || "";
   const tiedostoNimi = src.split("/").pop() || "";
+  const ext = (tiedostoNimi.match(/\.(webp|png|jpe?g|svg|gif)$/i) || [".png"])[0];
   const perus = tiedostoNimi
-    .replace(/_miettiva|_yllattyy|_kannustaa/, "")
-    .replace(/\.png$/, "");
+    .replace(/\.(webp|png|jpe?g|svg|gif)$/i, "")
+    .replace(/_miettiva|_yllattyy|_kannustaa/, "");
 
-  const uusiTiedosto = `${perus}${paate}.png`;
+  const uusiTiedosto = `${perus}${paate}${ext}`;
   const uusiSrc = src.replace(tiedostoNimi, uusiTiedosto);
 
   if (uusiSrc === src) return;
