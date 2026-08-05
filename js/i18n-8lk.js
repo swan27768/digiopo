@@ -255,7 +255,7 @@
       vahHaasteBtns.forEach(function(el) { if (vah.haaste_toggle) el.textContent = vah.haaste_toggle; });
       var vahHaasteOhje = document.querySelector('#vahvuudet .haaste-ohje');
       if (vahHaasteOhje && vah.haaste_ohje) vahHaasteOhje.innerHTML = vah.haaste_ohje;
-      var vahHaasteVihje = document.querySelector('#vahvuudet .haaste-vihje');
+      var vahHaasteVihje = document.querySelector('#vahvuudet .haaste-vihje .haaste-vihje-teksti');
       if (vahHaasteVihje && vah.haaste_vihje) vahHaasteVihje.textContent = vah.haaste_vihje;
     }
 
@@ -538,7 +538,7 @@
       var tulHaaste = document.querySelector('#tulevaisuus .haaste-sisalto');
       if (tulHaaste) {
         var tulHaOhje  = tulHaaste.querySelector('.haaste-ohje');
-        var tulHaVihje = tulHaaste.querySelector('.haaste-vihje');
+        var tulHaVihje = tulHaaste.querySelector('.haaste-vihje .haaste-vihje-teksti');
         if (tulHaOhje  && tul.haaste_ohje_html) tulHaOhje.innerHTML  = tul.haaste_ohje_html;
         if (tulHaVihje && tul.haaste_vihje)     tulHaVihje.textContent = tul.haaste_vihje;
       }
