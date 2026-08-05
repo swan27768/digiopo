@@ -269,7 +269,7 @@ body { padding-bottom: 62px; }
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
 
-.gallery-wrap { padding: 1rem; max-width: 900px; margin: 0 auto; }
+.gallery-wrap { padding: 1rem; max-width: 1600px; margin: 0 auto; }
 .gallery-empty { text-align: center; padding: 3rem 1rem; color: var(--ig-gray); }
 .gallery-empty span { font-size: 2.8rem; display: block; margin-bottom: .8rem; }
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
@@ -1333,6 +1333,11 @@ function getLiked()     { try { return JSON.parse(sessionStorage.getItem('liked'
 function getStarred()   { try { return JSON.parse(sessionStorage.getItem('starred') ||'[]'); } catch { return []; } }
 function addLiked(id)   { const a=getLiked();  a.push(id); sessionStorage.setItem('liked',   JSON.stringify(a)); }
 function addStarred(id) { const a=getStarred();a.push(id); sessionStorage.setItem('starred', JSON.stringify(a)); }
+
+// Avaa suoraan taulu (galleria) jos sivu avataan esim. osoitteella /fake-insta.html#taulu
+if (['#taulu','#galleria','#gallery'].includes((location.hash || '').toLowerCase())) {
+  showView('view-gallery');
+}
 </script>
 </body>
 </html>
