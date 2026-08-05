@@ -1021,7 +1021,7 @@
             </div>
             <iframe
               id="tiedonTemppelijIframe"
-              src=""
+              src="about:blank"
               style="width: 100%; height: 85vh; min-height: 640px; border: none; border-radius: 14px;"
               title="Tiedon temppeli"
               loading="lazy"
@@ -2264,7 +2264,7 @@
       function aavaaTiedonTemppeli() {
         const c = document.getElementById('tiedonTemppelijContainer');
         const iframe = document.getElementById('tiedonTemppelijIframe');
-        if (!iframe.src || iframe.src === window.location.href) {
+        if (!iframe.src || !iframe.src.includes('tiedon-temppeli.html')) {
           iframe.src = '../pelit/tiedon-temppeli.html';
         }
         c.style.display = 'block';
@@ -2273,7 +2273,7 @@
       function suljeTiedonTemppeli() {
         const c = document.getElementById('tiedonTemppelijContainer');
         c.style.display = 'none';
-        document.getElementById('tiedonTemppelijIframe').src = '';
+        document.getElementById('tiedonTemppelijIframe').src = 'about:blank';
       }
       function suljeAiLabTehtava()     { suljeTehtavaYhteinen(); }
 
