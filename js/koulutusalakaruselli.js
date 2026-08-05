@@ -5,14 +5,13 @@
 (function () {
   const ALA_KUVAT = [
     { src: "../images/koulutusalat/kaupan-ala.webp",                alt: "Kaupan ala – infograafi",                nimi: "Kaupan ala" },
-    { src: "../images/koulutusalat/elintarvikeala-iso.webp",        alt: "Elintarvikeala – infograafi",            nimi: "Elintarvikeala" },
     { src: "../images/koulutusalat/it-ala-iso.webp",                alt: "IT-ala – infograafi",                    nimi: "IT-ala" },
     { src: "../images/koulutusalat/luonto-ymparisto-ala.webp",      alt: "Luonto- ja ympäristöalat – infograafi",  nimi: "Luonto- ja ympäristöalat" },
-    { src: "../images/koulutusalat/palvelu-ala.webp",               alt: "Palvelualat – infograafi",               nimi: "Palvelualat" },
+    { src: "../images/koulutusalat/maa-metsa-ala.webp",             alt: "Maa- ja metsätalousala – infograafi",    nimi: "Maa- ja metsätalousala" },
+    { src: "../images/koulutusalat/palvelualat.webp",               alt: "Palvelualat – infograafi",               nimi: "Palvelualat" },
     { src: "../images/koulutusalat/tekniikan-ala.webp",             alt: "Tekniikan alat – infograafi",            nimi: "Tekniikan alat" },
     { src: "../images/koulutusalat/taide-ja-humanistinen-ala.webp", alt: "Taide- ja humanistinen ala – infograafi",nimi: "Taide- ja humanistinen ala" },
     { src: "../images/koulutusalat/sote-ala-iso.webp",              alt: "Terveys- ja hyvinvointiala – infograafi",nimi: "Terveys- ja hyvinvointiala" },
-    { src: "../images/koulutusalat/merenkulkuala-iso.webp",         alt: "Merenkulkuala – infograafi",             nimi: "Merenkulkuala" },
   ];
 
   let nykyinenSivu = 0;

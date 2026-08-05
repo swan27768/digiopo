@@ -629,8 +629,8 @@
     var sidebarLinkTxt = t && t.g8 && t.g8.sidebar && t.g8.sidebar.link_tutkija;
     setTxt('.aihelista a[href="#tutkija-alue"]', sidebarLinkTxt);
 
-    /* Otsikko & alaotsikko */
-    setTxt('.ala-karuselli-otsikko', tj.heading);
+    /* Otsikko & alaotsikko (vain tutkija-alueen otsikko; ei koulutusalakarusellin) */
+    setTxt('#tutkija-alue .ala-karuselli-otsikko', tj.heading);
     var subtitleEl = document.querySelector('#tutkija-alue > p');
     if (subtitleEl && tj.subtitle) subtitleEl.textContent = tj.subtitle;
 
