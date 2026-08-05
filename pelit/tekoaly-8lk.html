@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lähdejahti – 8. luokka | DigiOpo</title>
+  <meta name="description" content="Tekoälytehtävä 8. luokalle: opettele tunnistamaan tekoälyn keksimät ja aidot lähteet." />
+  <link rel="stylesheet" href="tekoaly-yhteinen.css" />
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar" id="langBar" role="group" aria-label="Kielivalinta"></div>
+  <h1 class="sr-only" data-i18n="meta.h1">Lähdejahti – 8. luokan tehtävä</h1>
+
+  <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressWrap">
+    <div class="progress-label" id="progressLabel">–</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="stage" role="main"></div>
+</div>
+
+<script src="tekoaly-yhteinen.js"></script>
+
+<script>
+const LANG = {
+  fi: {
+    meta: { title: "Lähdejahti – 8. luokka | DigiOpo", h1: "Lähdejahti – 8. luokan tehtävä" },
+    cover: {
+      badge: "🔎 Lähdejahti · 8. luokka",
+      title: "Lähdejahti",
+      lead: "Tekoäly antaa usein vastaukselleen lähteitä. Mutta osa lähteistä voi olla keksittyjä! Sinun tehtäväsi on tutkia jokainen lähde ja päättää, onko se aito vai tekaistu.",
+      rulesTitle: "Näin peli toimii:",
+      rules: [
+        "🤖 Robo näyttää tekoälyn vastauksen ja sen lähteet.",
+        "🔎 Tutki jokainen lähde: onko se aito vai keksitty?",
+        "💡 Saat vihjeen, mistä tunnistat tekaistun lähteen."
+      ],
+      start: "Aloita jahti →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Tehtävä",
+      of: "/",
+      questionLabel: "Kysymys tekoälylle:",
+      aiTag: "Tekoälyn vastaus",
+      sourcesTitle: "Tekoälyn antamat lähteet – tutki jokainen:",
+      real: "✅ Aito",
+      fake: "❌ Tekaistu",
+      next: "Seuraava →",
+      last: "Katso tulos →",
+      revealReal: "Aito lähde",
+      revealFake: "Tekaistu lähde",
+      progress: "Tehtävä"
+    },
+    result: {
+      badge: "🔎 Lähdejahti · tulos",
+      max: "/ 9 lähdettä oikein",
+      gradeHigh: "🌟 Mahtavaa! Olet taitava lähdejahtaaja.",
+      gradeMid: "👍 Hyvä! Lähdekritiikki alkaa olla hallussa.",
+      gradeLow: "💪 Harjoitellaan lisää. Tarkista aina, kuka lähteen takaa vastaa.",
+      takeaway: "Muista tekaistun lähteen merkit: outo tai tuntematon julkaisija, liioiteltu väite, puuttuva tekijä, mahdoton vuosiluku tai osoite, jota ei voi tarkistaa. Tekoäly voi keksiä lähteitä, jotka kuulostavat aidoilta.",
+      reviewTitle: "Lähteiden läpikäynti",
+      retry: "Yritä uudelleen ↺",
+      back: "← Takaisin 8. luokan sivulle",
+      backHref: "../sivut/8luokka.html"
+    },
+    rounds: [
+      {
+        question: "Kuinka paljon suomalaisnuoret nukkuvat?",
+        ai: "Nuoret nukkuvat keskimäärin noin 7–8 tuntia yössä, mikä on hieman suosituksia vähemmän.",
+        sources: [
+          { text: "Terveyden ja hyvinvoinnin laitos (THL): Kouluterveyskysely 2023.", tell: "Aito: THL on tunnettu tutkimuslaitos ja Kouluterveyskysely on todellinen. Tämän voi tarkistaa THL:n sivuilta." },
+          { text: "Uniprofessori Aino Virtanen, Lapin Uniyliopisto (2026).", tell: "Tekaistu: 'Lapin Uniyliopisto' ei ole olemassa, ja vuosi 2026 on tulevaisuudessa. Nimi kuulostaa aidolta, mutta sitä ei voi tarkistaa." },
+          { text: "TikTok-video: \"99 % nuorista nukkuu liian vähän!\"", tell: "Tekaistu: some-video ei ole luotettava lähde, ja tarkka '99 %' ilman tutkimusta on hälytysmerkki." }
+        ]
+      },
+      {
+        question: "Kuinka moni nuori liikkuu tarpeeksi?",
+        ai: "Noin puolet nuorista liikkuu liikuntasuositusten mukaan.",
+        sources: [
+          { text: "Journal of Super Sports (2021): \"Liikunta nostaa älykkyyttä 30 pistettä.\"", tell: "Tekaistu: tällaista lehteä ei löydy, ja väite 30 pisteestä on liioiteltu. Uskomattoman hyvä väite kannattaa epäillä." },
+          { text: "UKK-instituutti: liikuntasuositukset lapsille ja nuorille.", tell: "Aito: UKK-instituutti on oikea liikunnan tutkimuslaitos ja suositukset ovat julkisia." },
+          { text: "WHO: liikuntasuositukset (2020).", tell: "Aito: WHO eli Maailman terveysjärjestö on luotettava, ja liikuntasuositukset ovat todelliset." }
+        ]
+      },
+      {
+        question: "Auttaako musiikki keskittymään?",
+        ai: "Musiikki voi auttaa joitakin keskittymään, mutta ei kaikkia – vaikutus on yksilöllinen.",
+        sources: [
+          { text: "Jyväskylän yliopisto: musiikkipsykologian tutkimus.", tell: "Aito: Jyväskylän yliopisto on todellinen ja tutkii musiikkia. Lähde on tarkistettavissa." },
+          { text: "prof. R. Robotti, Teknologiakampus X.", tell: "Tekaistu: 'Teknologiakampus X' ja 'prof. Robotti' ovat keksittyjä. Nimi kuulostaa hienolta, mutta sitä ei voi tarkistaa." },
+          { text: "www.faktaa-heti.net/musiikki", tell: "Tekaistu: tuntematon sivusto ilman tekijää tai lähteitä ei ole luotettava. Osoite ei kerro, kuka tiedosta vastaa." }
+        ]
+      }
+    ]
+  },
+
+  sv: {
+    meta: { title: "Källjakten – årskurs 8 | DigiOpo", h1: "Källjakten – uppgift för årskurs 8" },
+    cover: {
+      badge: "🔎 Källjakten · årskurs 8",
+      title: "Källjakten",
+      lead: "AI ger ofta källor till sitt svar. Men en del källor kan vara påhittade! Din uppgift är att granska varje källa och avgöra om den är äkta eller påhittad.",
+      rulesTitle: "Så här fungerar spelet:",
+      rules: [
+        "🤖 Robo visar AI:ns svar och dess källor.",
+        "🔎 Granska varje källa: är den äkta eller påhittad?",
+        "💡 Du får en ledtråd om hur du känner igen en påhittad källa."
+      ],
+      start: "Börja jakten →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Uppgift",
+      of: "/",
+      questionLabel: "Fråga till AI:n:",
+      aiTag: "AI:ns svar",
+      sourcesTitle: "Källor som AI:n gav – granska varje:",
+      real: "✅ Äkta",
+      fake: "❌ Påhittad",
+      next: "Nästa →",
+      last: "Se resultatet →",
+      revealReal: "Äkta källa",
+      revealFake: "Påhittad källa",
+      progress: "Uppgift"
+    },
+    result: {
+      badge: "🔎 Källjakten · resultat",
+      max: "/ 9 källor rätt",
+      gradeHigh: "🌟 Fantastiskt! Du är en skicklig källjägare.",
+      gradeMid: "👍 Bra! Källkritiken börjar sitta.",
+      gradeLow: "💪 Vi övar mera. Kontrollera alltid vem som står bakom källan.",
+      takeaway: "Kom ihåg tecknen på en påhittad källa: okänd utgivare, överdrivet påstående, saknad författare, omöjligt årtal eller en adress du inte kan kontrollera. AI kan hitta på källor som låter äkta.",
+      reviewTitle: "Genomgång av källorna",
+      retry: "Försök igen ↺",
+      back: "← Tillbaka till årskurs 8",
+      backHref: "../sivut/8luokka.html"
+    },
+    rounds: [
+      {
+        question: "Hur mycket sover finländska ungdomar?",
+        ai: "Ungdomar sover i genomsnitt cirka 7–8 timmar per natt, vilket är lite mindre än rekommendationerna.",
+        sources: [
+          { text: "Institutet för hälsa och välfärd (THL): Enkäten Hälsa i skolan 2023.", tell: "Äkta: THL är ett känt forskningsinstitut och enkäten är verklig. Den kan kontrolleras på THL:s webbplats." },
+          { text: "Sömnprofessor Aino Virtanen, Lapplands Uni-universitet (2026).", tell: "Påhittad: 'Lapplands Uni-universitet' finns inte, och år 2026 ligger i framtiden. Namnet låter äkta men går inte att kontrollera." },
+          { text: "TikTok-video: \"99 % av ungdomarna sover för lite!\"", tell: "Påhittad: en video är ingen pålitlig källa, och exakt '99 %' utan forskning är en varningssignal." }
+        ]
+      },
+      {
+        question: "Hur många ungdomar rör på sig tillräckligt?",
+        ai: "Ungefär hälften av ungdomarna rör på sig enligt rekommendationerna.",
+        sources: [
+          { text: "Journal of Super Sports (2021): \"Motion höjer intelligensen med 30 poäng.\"", tell: "Påhittad: en sådan tidskrift finns inte, och påståendet om 30 poäng är överdrivet. Ett otroligt bra påstående bör ifrågasättas." },
+          { text: "UKK-institutet: motionsrekommendationer för barn och unga.", tell: "Äkta: UKK-institutet är ett riktigt forskningsinstitut och rekommendationerna är offentliga." },
+          { text: "WHO: rekommendationer för fysisk aktivitet (2020).", tell: "Äkta: WHO, Världshälsoorganisationen, är pålitlig och rekommendationerna är verkliga." }
+        ]
+      },
+      {
+        question: "Hjälper musik en att koncentrera sig?",
+        ai: "Musik kan hjälpa vissa att koncentrera sig, men inte alla – effekten är individuell.",
+        sources: [
+          { text: "Jyväskylä universitet: forskning i musikpsykologi.", tell: "Äkta: Jyväskylä universitet är verkligt och forskar i musik. Källan kan kontrolleras." },
+          { text: "prof. R. Robotti, Teknologicampus X.", tell: "Påhittad: 'Teknologicampus X' och 'prof. Robotti' är påhittade. Namnet låter fint men går inte att kontrollera." },
+          { text: "www.fakta-nu.net/musik", tell: "Påhittad: en okänd webbplats utan författare eller källor är inte pålitlig. Adressen säger inte vem som ansvarar för informationen." }
+        ]
+      }
+    ]
+  },
+
+  en: {
+    meta: { title: "Source Hunt – Year 8 | DigiOpo", h1: "Source Hunt – Year 8 task" },
+    cover: {
+      badge: "🔎 Source Hunt · Year 8",
+      title: "Source Hunt",
+      lead: "AI often gives sources for its answer. But some sources can be made up! Your job is to examine each source and decide whether it is real or fake.",
+      rulesTitle: "How the game works:",
+      rules: [
+        "🤖 Robo shows the AI's answer and its sources.",
+        "🔎 Examine each source: is it real or invented?",
+        "💡 You get a clue on how to spot a fake source."
+      ],
+      start: "Start the hunt →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Task",
+      of: "/",
+      questionLabel: "Question to the AI:",
+      aiTag: "The AI's answer",
+      sourcesTitle: "Sources the AI gave – examine each:",
+      real: "✅ Real",
+      fake: "❌ Fake",
+      next: "Next →",
+      last: "See result →",
+      revealReal: "Real source",
+      revealFake: "Fake source",
+      progress: "Task"
+    },
+    result: {
+      badge: "🔎 Source Hunt · result",
+      max: "/ 9 sources correct",
+      gradeHigh: "🌟 Amazing! You're a skilled source hunter.",
+      gradeMid: "👍 Good! Your source criticism is getting sharp.",
+      gradeLow: "💪 Let's practise more. Always check who stands behind the source.",
+      takeaway: "Remember the signs of a fake source: an unknown publisher, an exaggerated claim, a missing author, an impossible year, or an address you can't verify. AI can invent sources that sound real.",
+      reviewTitle: "Review the sources",
+      retry: "Try again ↺",
+      back: "← Back to Year 8",
+      backHref: "../sivut/8luokka.html"
+    },
+    rounds: [
+      {
+        question: "How much do Finnish teenagers sleep?",
+        ai: "Teenagers sleep about 7–8 hours a night on average, a little less than recommended.",
+        sources: [
+          { text: "Finnish Institute for Health and Welfare (THL): School Health Promotion study 2023.", tell: "Real: THL is a well-known research institute and the study is real. You can check it on THL's website." },
+          { text: "Sleep professor Aino Virtanen, Lapland Uni-University (2026).", tell: "Fake: 'Lapland Uni-University' does not exist, and 2026 is in the future. The name sounds real but can't be verified." },
+          { text: "TikTok video: \"99% of teens sleep too little!\"", tell: "Fake: a video is not a reliable source, and an exact '99%' with no study is a warning sign." }
+        ]
+      },
+      {
+        question: "How many teenagers exercise enough?",
+        ai: "About half of teenagers exercise according to the guidelines.",
+        sources: [
+          { text: "Journal of Super Sports (2021): \"Exercise raises IQ by 30 points.\"", tell: "Fake: no such journal can be found, and the 30-point claim is exaggerated. An unbelievably good claim should be doubted." },
+          { text: "UKK Institute: physical activity guidelines for children and youth.", tell: "Real: the UKK Institute is a real exercise research institute and the guidelines are public." },
+          { text: "WHO: physical activity guidelines (2020).", tell: "Real: the WHO, the World Health Organization, is reliable and the guidelines are real." }
+        ]
+      },
+      {
+        question: "Does music help you concentrate?",
+        ai: "Music can help some people concentrate, but not everyone – the effect is individual.",
+        sources: [
+          { text: "University of Jyväskylä: research in music psychology.", tell: "Real: the University of Jyväskylä is real and studies music. The source can be verified." },
+          { text: "prof. R. Robotti, Technology Campus X.", tell: "Fake: 'Technology Campus X' and 'prof. Robotti' are made up. The name sounds fancy but can't be checked." },
+          { text: "www.facts-now.net/music", tell: "Fake: an unknown website with no author or sources is not reliable. The address doesn't say who is responsible for the information." }
+        ]
+      }
+    ]
+  }
+};
+
+// Logiikka: onko kukin lähde AITO? (kieliriippumaton, indeksit vastaavat rounds[].sources)
+const META = [
+  { reals: [true, false, false] },
+  { reals: [false, true, true] },
+  { reals: [true, false, false] }
+];
+const MASCOT = "../images/robo_maskotti_8lk.webp";
+const TOTAL = META.length;
+const SRC_TOTAL = META.reduce(function (a, r) { return a + r.reals.length; }, 0);
+
+let view = 'cover';
+let idx = 0;
+let picks = [];   // picks[round][srcIndex] = true(sanoi aito)/false(sanoi tekaistu)/undefined
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function paivitaProgress() {
+  var fill = document.getElementById('progressFill');
+  var label = document.getElementById('progressLabel');
+  var wrap = document.getElementById('progressWrap');
+  if (!fill || !label || !wrap) return;
+  var pct = 0, txt = '';
+  if (view === 'cover') { pct = 0; txt = T('cover.title'); }
+  else if (view === 'round') { pct = Math.round((idx / (TOTAL + 1)) * 100); txt = T('round.progress') + ' ' + (idx + 1) + ' / ' + TOTAL; }
+  else { pct = 100; txt = '✓'; }
+  fill.style.width = pct + '%';
+  label.textContent = txt;
+  wrap.setAttribute('aria-valuenow', pct);
+}
+
+function render() {
+  var stage = document.getElementById('stage');
+  if (!stage) return;
+  if (view === 'cover') renderCover(stage);
+  else if (view === 'round') renderRound(stage);
+  else renderResult(stage);
+  paivitaProgress();
+  stage.setAttribute('tabindex', '-1');
+  try { stage.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+}
+
+function renderCover(stage) {
+  var rules = T('cover.rules') || [];
+  var lis = '';
+  for (var i = 0; i < rules.length; i++) lis += '<li>' + esc(rules[i]) + '</li>';
+  stage.innerHTML =
+    '<div class="cover-card">' +
+      '<div class="cover-badge">' + esc(T('cover.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:100px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<h1>' + esc(T('cover.title')) + '</h1>' +
+      '<p style="margin-bottom:12px;">' + esc(T('cover.lead')) + '</p>' +
+      '<p style="font-weight:700;color:var(--color-primary);margin-bottom:6px;">' + esc(T('cover.rulesTitle')) + '</p>' +
+      '<ul class="rule-list">' + lis + '</ul>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:18px;">' +
+        '<button class="btn-primary" id="startBtn">' + esc(T('cover.start')) + '</button>' +
+      '</div>' +
+    '</div>';
+  var s = document.getElementById('startBtn');
+  if (s) s.onclick = function () { view = 'round'; idx = 0; render(); };
+}
+
+function renderRound(stage) {
+  var r = (T('rounds') || [])[idx] || {};
+  var reals = META[idx].reals;
+  if (!picks[idx]) picks[idx] = [];
+  var srcHtml = '';
+  for (var i = 0; i < (r.sources || []).length; i++) {
+    srcHtml +=
+      '<div class="card active" style="display:block;margin-bottom:12px;box-shadow:2px 2px 0 #000;padding:12px 14px;" data-src="' + i + '">' +
+        '<div style="font-weight:700;margin-bottom:8px;">📄 ' + esc(r.sources[i].text) + '</div>' +
+        '<div class="choice-row">' +
+          '<button class="choice-btn" data-src="' + i + '" data-pick="real">' + esc(T('round.real')) + '</button>' +
+          '<button class="choice-btn" data-src="' + i + '" data-pick="fake">' + esc(T('round.fake')) + '</button>' +
+        '</div>' +
+        '<div class="feedback" data-fb="' + i + '"></div>' +
+      '</div>';
+  }
+  stage.innerHTML =
+    '<div class="card active">' +
+      '<div class="chapter-tag">' + esc(T('cover.badge')) + ' · ' + esc(T('round.tag')) + ' ' + (idx + 1) + ' ' + esc(T('round.of')) + ' ' + TOTAL + '</div>' +
+      '<p class="q-meta">' + esc(T('round.questionLabel')) + ' <strong>' + esc(r.question) + '</strong></p>' +
+      '<div class="ai-answer"><span class="ai-tag">🤖 ' + esc(T('round.aiTag')) + '</span><div>' + esc(r.ai) + '</div></div>' +
+      '<h2 style="font-size:1em;">' + esc(T('round.sourcesTitle')) + '</h2>' +
+      srcHtml +
+      '<div class="btn-row" id="nextRow" style="display:none;">' +
+        '<button class="btn-primary" id="nextBtn">' + esc(idx === TOTAL - 1 ? T('round.last') : T('round.next')) + '</button>' +
+      '</div>' +
+    '</div>';
+
+  var btns = stage.querySelectorAll('.choice-btn');
+  for (var b = 0; b < btns.length; b++) {
+    btns[b].onclick = function () {
+      var si = parseInt(this.getAttribute('data-src'), 10);
+      var sanoiAito = this.getAttribute('data-pick') === 'real';
+      arvioiLahde(si, sanoiAito);
+    };
+  }
+  var nb = document.getElementById('nextBtn');
+  if (nb) nb.onclick = function () {
+    if (idx < TOTAL - 1) { idx++; render(); }
+    else { view = 'result'; render(); }
+  };
+
+  // Palauta jo tehdyt valinnat (kielenvaihto kesken kierroksen)
+  for (var k = 0; k < picks[idx].length; k++) {
+    if (picks[idx][k] !== undefined) naytaLahde(k, picks[idx][k], true);
+  }
+  tarkistaValmis();
+}
+
+function arvioiLahde(si, sanoiAito) {
+  if (picks[idx][si] !== undefined) return;
+  picks[idx][si] = sanoiAito;
+  naytaLahde(si, sanoiAito, false);
+  tarkistaValmis();
+}
+
+function naytaLahde(si, sanoiAito, hiljainen) {
+  var r = (T('rounds') || [])[idx] || {};
+  var aito = META[idx].reals[si];
+  var oikein = (sanoiAito === aito);
+  var wrapper = document.querySelector('.card[data-src="' + si + '"]');
+  if (!wrapper) return;
+  var btns = wrapper.querySelectorAll('.choice-btn');
+  for (var i = 0; i < btns.length; i++) {
+    var pickReal = btns[i].getAttribute('data-pick') === 'real';
+    btns[i].disabled = true;
+    if (pickReal === aito) btns[i].classList.add('correct');
+    if (pickReal === sanoiAito && !oikein) btns[i].classList.add('wrong');
+    if (pickReal === sanoiAito) btns[i].classList.add('chosen');
+  }
+  var fb = wrapper.querySelector('[data-fb="' + si + '"]');
+  if (fb) {
+    fb.className = 'feedback show ' + (oikein ? 'ok' : 'fail');
+    var otsikko = aito ? T('round.revealReal') : T('round.revealFake');
+    fb.innerHTML = '<strong>' + (oikein ? '✅ ' : '❌ ') + esc(otsikko) + '.</strong> ' + esc(r.sources[si].tell);
+  }
+}
+
+function tarkistaValmis() {
+  var reals = META[idx].reals;
+  var kaikki = true;
+  for (var i = 0; i < reals.length; i++) {
+    if (picks[idx][i] === undefined) { kaikki = false; break; }
+  }
+  var nextRow = document.getElementById('nextRow');
+  if (nextRow) nextRow.style.display = kaikki ? 'flex' : 'none';
+}
+
+function renderResult(stage) {
+  var oikeat = 0;
+  for (var ri = 0; ri < TOTAL; ri++) {
+    for (var si = 0; si < META[ri].reals.length; si++) {
+      if (picks[ri] && picks[ri][si] === META[ri].reals[si]) oikeat++;
+    }
+  }
+  var gradeClass, gradeText;
+  if (oikeat >= 8) { gradeClass = 'erinomainen'; gradeText = T('result.gradeHigh'); }
+  else if (oikeat >= 5) { gradeClass = 'hyva'; gradeText = T('result.gradeMid'); }
+  else { gradeClass = 'harjoitellaan'; gradeText = T('result.gradeLow'); }
+
+  var rounds = T('rounds') || [];
+  var review = '';
+  for (var r = 0; r < TOTAL; r++) {
+    var rd = rounds[r] || {};
+    for (var s = 0; s < META[r].reals.length; s++) {
+      var aito = META[r].reals[s];
+      var ok = picks[r] && picks[r][s] === aito;
+      review +=
+        '<div class="review-item ' + (ok ? 'ok' : 'fail') + '">' +
+          '<div class="review-q">' + (ok ? '✅' : '❌') + ' ' + esc((rd.sources[s] || {}).text) + '</div>' +
+          '<div style="font-size:0.88em;color:#333;">' + esc((rd.sources[s] || {}).tell) + '</div>' +
+        '</div>';
+    }
+  }
+
+  stage.innerHTML =
+    '<div class="result-card show">' +
+      '<div class="result-badge">' + esc(T('result.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:80px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<div class="result-score">' + oikeat + '</div>' +
+      '<div class="result-max">' + esc(T('result.max')) + '</div>' +
+      '<div class="result-grade ' + gradeClass + '">' + esc(gradeText) + '</div>' +
+      '<div class="feedback info show" style="text-align:left;">' + esc(T('result.takeaway')) + '</div>' +
+      '<div class="review-section"><h3>' + esc(T('result.reviewTitle')) + '</h3>' + review + '</div>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:20px;">' +
+        '<button class="btn-primary" id="retryBtn">' + esc(T('result.retry')) + '</button>' +
+        '<a href="' + esc(T('result.backHref')) + '"><button class="btn-primary btn-secondary">' + esc(T('result.back')) + '</button></a>' +
+      '</div>' +
+    '</div>';
+
+  var rb = document.getElementById('retryBtn');
+  if (rb) rb.onclick = function () { picks = []; idx = 0; view = 'cover'; render(); };
+}
+
+TekoalyI18n.init({
+  langs: ['fi', 'sv', 'en'],
+  labels: { fi: 'FI', sv: 'SV', en: 'EN' },
+  dict: LANG,
+  barSelector: '#langBar',
+  onChange: render
+});
+</script>
+</body>
+</html>

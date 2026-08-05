@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarkista tekoäly – 7. luokka | DigiOpo</title>
+  <meta name="description" content="Tekoälytehtävä 7. luokalle: opettele huomaamaan tekoälyn virheet oman tietosi avulla." />
+  <link rel="stylesheet" href="tekoaly-yhteinen.css" />
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar" id="langBar" role="group" aria-label="Kielivalinta"></div>
+  <h1 class="sr-only" data-i18n="meta.h1">Tarkista tekoäly – 7. luokan tehtävä</h1>
+
+  <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressWrap">
+    <div class="progress-label" id="progressLabel">–</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="stage" role="main"></div>
+</div>
+
+<!-- Jaettu i18n-moottori -->
+<script src="tekoaly-yhteinen.js"></script>
+
+<!-- Käännökset: suomi / ruotsi / englanti -->
+<script>
+const LANG = {
+  fi: {
+    meta: { title: "Tarkista tekoäly – 7. luokka | DigiOpo", h1: "Tarkista tekoäly – 7. luokan tehtävä" },
+    cover: {
+      badge: "⚗️ AI-laboratorio · 7. luokka",
+      title: "Tarkista tekoäly",
+      lead: "Tekoäly kuulostaa aina varmalta. Mutta se voi olla väärässä! Sinun oma tietosi on paras tapa huomata virhe.",
+      rulesTitle: "Näin peli toimii:",
+      rules: [
+        "🤖 Robo näyttää sinulle tekoälyn vastauksia.",
+        "🧠 Mieti: onko vastaus oikein vai onko siinä virhe?",
+        "✅ Saat heti palautteen ja opit, miksi."
+      ],
+      start: "Aloita →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Vastaus",
+      of: "/",
+      topicLabel: "Aihe, jonka olet opetellut:",
+      aiTag: "Tekoälyn vastaus",
+      question: "Onko tekoälyn vastaus oikein?",
+      yes: "✅ Oikein",
+      no: "❌ Virhe",
+      next: "Seuraava →",
+      last: "Katso tulos →",
+      leadOk: "Hienoa, huomasit oikein! ",
+      leadFail: "Ei aivan. ",
+      progress: "Vastaus"
+    },
+    result: {
+      badge: "⚗️ AI-laboratorio · tulos",
+      max: "/ 6 oikein",
+      gradeHigh: "🌟 Loistavaa! Osaat tarkistaa tekoälyn.",
+      gradeMid: "👍 Hyvä! Muista aina tarkistaa tärkeät tiedot.",
+      gradeLow: "💪 Harjoitellaan lisää. Oma tieto auttaa huomaamaan virheet.",
+      takeaway: "Muista: tekoäly voi erehtyä. Tarkista tärkeät asiat oppikirjasta tai luotettavasta lähteestä.",
+      reviewTitle: "Vastausten läpikäynti",
+      yourAnswer: "Vastasit:",
+      retry: "Yritä uudelleen ↺",
+      back: "← Takaisin 7. luokan sivulle",
+      backHref: "../sivut/7luokka.html",
+      answeredYes: "Oikein",
+      answeredNo: "Virhe"
+    },
+    // Kierrokset (teksti). Logiikka (onko väite tosi) on META-taulukossa.
+    rounds: [
+      { topic: "Veden kiehuminen", ai: "Vesi kiehuu 90 asteessa merenpinnan tasolla.", fact: "Vesi kiehuu 100 asteessa merenpinnan tasolla, ei 90:ssä." },
+      { topic: "Suomen pääkaupunki", ai: "Suomen pääkaupunki on Helsinki.", fact: "Tämä pitää paikkansa – Helsinki on Suomen pääkaupunki." },
+      { topic: "Kolmion kulmat", ai: "Kolmion kulmien summa on 360 astetta.", fact: "Kolmion kulmien summa on 180 astetta, ei 360." },
+      { topic: "Ihmisen luusto", ai: "Aikuisen ihmisen kehossa on noin 206 luuta.", fact: "Tämä on oikein – aikuisella on noin 206 luuta." },
+      { topic: "Aurinkokunta", ai: "Aurinko on planeetta.", fact: "Aurinko on tähti, ei planeetta. Planeetat kiertävät Aurinkoa." },
+      { topic: "Kasvit ja happi", ai: "Kasvit tuottavat happea yhteyttäessään.", fact: "Tämä pitää paikkansa – kasvit tuottavat happea yhteyttämisessä." }
+    ]
+  },
+
+  sv: {
+    meta: { title: "Kontrollera AI:n – årskurs 7 | DigiOpo", h1: "Kontrollera AI:n – uppgift för årskurs 7" },
+    cover: {
+      badge: "⚗️ AI-labbet · årskurs 7",
+      title: "Kontrollera AI:n",
+      lead: "AI låter alltid säker. Men den kan ha fel! Din egen kunskap är det bästa sättet att upptäcka ett fel.",
+      rulesTitle: "Så här fungerar spelet:",
+      rules: [
+        "🤖 Robo visar dig svar från en AI.",
+        "🧠 Fundera: är svaret rätt eller finns det ett fel?",
+        "✅ Du får genast respons och lär dig varför."
+      ],
+      start: "Börja →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Svar",
+      of: "/",
+      topicLabel: "Ämne som du har övat:",
+      aiTag: "AI:ns svar",
+      question: "Är AI:ns svar rätt?",
+      yes: "✅ Rätt",
+      no: "❌ Fel",
+      next: "Nästa →",
+      last: "Se resultatet →",
+      leadOk: "Bra, du märkte rätt! ",
+      leadFail: "Inte riktigt. ",
+      progress: "Svar"
+    },
+    result: {
+      badge: "⚗️ AI-labbet · resultat",
+      max: "/ 6 rätt",
+      gradeHigh: "🌟 Toppen! Du kan kontrollera AI:n.",
+      gradeMid: "👍 Bra! Kom ihåg att alltid kontrollera viktig information.",
+      gradeLow: "💪 Vi övar mera. Din egen kunskap hjälper dig upptäcka fel.",
+      takeaway: "Kom ihåg: AI kan ha fel. Kontrollera viktiga saker i läroboken eller en pålitlig källa.",
+      reviewTitle: "Genomgång av svaren",
+      yourAnswer: "Du svarade:",
+      retry: "Försök igen ↺",
+      back: "← Tillbaka till årskurs 7",
+      backHref: "../sivut/7luokka.html",
+      answeredYes: "Rätt",
+      answeredNo: "Fel"
+    },
+    rounds: [
+      { topic: "Vattnets kokpunkt", ai: "Vatten kokar vid 90 grader vid havsytan.", fact: "Vatten kokar vid 100 grader vid havsytan, inte 90." },
+      { topic: "Finlands huvudstad", ai: "Finlands huvudstad är Helsingfors.", fact: "Det stämmer – Helsingfors är Finlands huvudstad." },
+      { topic: "Triangelns vinklar", ai: "Summan av en triangels vinklar är 360 grader.", fact: "Summan är 180 grader, inte 360." },
+      { topic: "Människans skelett", ai: "En vuxen människa har cirka 206 ben.", fact: "Det stämmer – en vuxen har cirka 206 ben." },
+      { topic: "Solsystemet", ai: "Solen är en planet.", fact: "Solen är en stjärna, inte en planet. Planeterna kretsar kring solen." },
+      { topic: "Växter och syre", ai: "Växter producerar syre vid fotosyntesen.", fact: "Det stämmer – växter producerar syre vid fotosyntesen." }
+    ]
+  },
+
+  en: {
+    meta: { title: "Check the AI – Year 7 | DigiOpo", h1: "Check the AI – Year 7 task" },
+    cover: {
+      badge: "⚗️ AI lab · Year 7",
+      title: "Check the AI",
+      lead: "AI always sounds sure of itself. But it can be wrong! Your own knowledge is the best way to spot a mistake.",
+      rulesTitle: "How the game works:",
+      rules: [
+        "🤖 Robo shows you answers from an AI.",
+        "🧠 Think: is the answer right, or is there a mistake?",
+        "✅ You get instant feedback and learn why."
+      ],
+      start: "Start →",
+      roboName: "Robo"
+    },
+    round: {
+      tag: "Answer",
+      of: "/",
+      topicLabel: "A topic you have studied:",
+      aiTag: "The AI's answer",
+      question: "Is the AI's answer correct?",
+      yes: "✅ Correct",
+      no: "❌ Mistake",
+      next: "Next →",
+      last: "See result →",
+      leadOk: "Nice, you spotted it! ",
+      leadFail: "Not quite. ",
+      progress: "Answer"
+    },
+    result: {
+      badge: "⚗️ AI lab · result",
+      max: "/ 6 correct",
+      gradeHigh: "🌟 Excellent! You know how to check the AI.",
+      gradeMid: "👍 Good! Remember to always check important facts.",
+      gradeLow: "💪 Let's practise more. Your own knowledge helps you spot mistakes.",
+      takeaway: "Remember: AI can be wrong. Check important things in your textbook or a reliable source.",
+      reviewTitle: "Review your answers",
+      yourAnswer: "You answered:",
+      retry: "Try again ↺",
+      back: "← Back to Year 7",
+      backHref: "../sivut/7luokka.html",
+      answeredYes: "Correct",
+      answeredNo: "Mistake"
+    },
+    rounds: [
+      { topic: "Boiling water", ai: "Water boils at 90 degrees at sea level.", fact: "Water boils at 100 degrees at sea level, not 90." },
+      { topic: "Capital of Finland", ai: "The capital of Finland is Helsinki.", fact: "That's true – Helsinki is the capital of Finland." },
+      { topic: "Triangle angles", ai: "The angles of a triangle add up to 360 degrees.", fact: "They add up to 180 degrees, not 360." },
+      { topic: "The human skeleton", ai: "An adult human body has about 206 bones.", fact: "That's correct – an adult has about 206 bones." },
+      { topic: "The solar system", ai: "The Sun is a planet.", fact: "The Sun is a star, not a planet. Planets orbit the Sun." },
+      { topic: "Plants and oxygen", ai: "Plants produce oxygen during photosynthesis.", fact: "That's true – plants produce oxygen during photosynthesis." }
+    ]
+  }
+};
+
+// Logiikka: onko tekoälyn väite TOSI? (kieliriippumaton)
+const META = [
+  { aiTrue: false },
+  { aiTrue: true },
+  { aiTrue: false },
+  { aiTrue: true },
+  { aiTrue: false },
+  { aiTrue: true }
+];
+const MASCOT = "../images/robo_maskotti_7lk.webp";
+const TOTAL = META.length;
+
+let view = 'cover';   // 'cover' | 'round' | 'result'
+let idx = 0;          // nykyinen kierros
+let answered = false; // onko nykyiseen kierrokseen vastattu
+let answers = [];     // käyttäjän vastaukset (true = sanoi "oikein")
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function paivitaProgress() {
+  var fill = document.getElementById('progressFill');
+  var label = document.getElementById('progressLabel');
+  var wrap = document.getElementById('progressWrap');
+  if (!fill || !label || !wrap) return;
+  var pct = 0, txt = '';
+  if (view === 'cover') { pct = 0; txt = T('cover.title'); }
+  else if (view === 'round') { pct = Math.round((idx / (TOTAL + 1)) * 100); txt = T('round.progress') + ' ' + (idx + 1) + ' / ' + TOTAL; }
+  else { pct = 100; txt = '✓'; }
+  fill.style.width = pct + '%';
+  label.textContent = txt;
+  wrap.setAttribute('aria-valuenow', pct);
+}
+
+function render() {
+  var stage = document.getElementById('stage');
+  if (!stage) return;
+  if (view === 'cover') renderCover(stage);
+  else if (view === 'round') renderRound(stage);
+  else renderResult(stage);
+  paivitaProgress();
+  stage.setAttribute('tabindex', '-1');
+  try { stage.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+}
+
+function renderCover(stage) {
+  var rules = T('cover.rules') || [];
+  var lis = '';
+  for (var i = 0; i < rules.length; i++) lis += '<li>' + esc(rules[i]) + '</li>';
+  stage.innerHTML =
+    '<div class="cover-card">' +
+      '<div class="cover-badge">' + esc(T('cover.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:100px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<h1>' + esc(T('cover.title')) + '</h1>' +
+      '<p style="margin-bottom:12px;">' + esc(T('cover.lead')) + '</p>' +
+      '<p style="font-weight:700;color:var(--color-primary);margin-bottom:6px;">' + esc(T('cover.rulesTitle')) + '</p>' +
+      '<ul class="rule-list">' + lis + '</ul>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:18px;">' +
+        '<button class="btn-primary" id="startBtn">' + esc(T('cover.start')) + '</button>' +
+      '</div>' +
+    '</div>';
+  var s = document.getElementById('startBtn');
+  if (s) s.onclick = function () { view = 'round'; idx = 0; answered = false; render(); };
+}
+
+function renderRound(stage) {
+  var r = (T('rounds') || [])[idx] || {};
+  var chosen = answers[idx]; // true/false tai undefined
+  stage.innerHTML =
+    '<div class="card active">' +
+      '<div class="chapter-tag">' + esc(T('cover.badge')) + ' · ' + esc(T('round.tag')) + ' ' + (idx + 1) + ' ' + esc(T('round.of')) + ' ' + TOTAL + '</div>' +
+      '<p class="q-meta">' + esc(T('round.topicLabel')) + ' <strong>' + esc(r.topic) + '</strong></p>' +
+      '<div class="ai-answer">' +
+        '<span class="ai-tag">🤖 ' + esc(T('round.aiTag')) + '</span>' +
+        '<div>' + esc(r.ai) + '</div>' +
+      '</div>' +
+      '<h2>' + esc(T('round.question')) + '</h2>' +
+      '<div class="choice-row" id="choiceRow">' +
+        '<button class="choice-btn pick-yes" data-pick="yes">' + esc(T('round.yes')) + '</button>' +
+        '<button class="choice-btn pick-no" data-pick="no">' + esc(T('round.no')) + '</button>' +
+      '</div>' +
+      '<div class="feedback" id="feedback"></div>' +
+      '<div class="btn-row" id="nextRow" style="display:none;">' +
+        '<button class="btn-primary" id="nextBtn">' + esc(idx === TOTAL - 1 ? T('round.last') : T('round.next')) + '</button>' +
+      '</div>' +
+    '</div>';
+
+  var buttons = stage.querySelectorAll('.choice-btn');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = function () { vastaa(this.getAttribute('data-pick') === 'yes'); };
+  }
+  // Jos kierrokseen on jo vastattu (esim. kielenvaihto kesken), näytä tila uudelleen
+  if (chosen !== undefined) naytaVastaus(chosen, true);
+
+  var nb = document.getElementById('nextBtn');
+  if (nb) nb.onclick = function () {
+    if (idx < TOTAL - 1) { idx++; answered = false; render(); }
+    else { view = 'result'; render(); }
+  };
+}
+
+function vastaa(sanoiOikein) {
+  if (answered) return;
+  answered = true;
+  answers[idx] = sanoiOikein;
+  naytaVastaus(sanoiOikein, false);
+}
+
+function naytaVastaus(sanoiOikein, hiljainen) {
+  var r = (T('rounds') || [])[idx] || {};
+  var aiTrue = META[idx].aiTrue;
+  var oikein = (sanoiOikein === aiTrue);
+  var row = document.getElementById('choiceRow');
+  var fb = document.getElementById('feedback');
+  var nextRow = document.getElementById('nextRow');
+  if (!row || !fb || !nextRow) return;
+
+  var btns = row.querySelectorAll('.choice-btn');
+  for (var i = 0; i < btns.length; i++) {
+    var pickYes = btns[i].getAttribute('data-pick') === 'yes';
+    btns[i].disabled = true;
+    // Merkitse oikea totuus vihreäksi, väärä valinta punaiseksi
+    if (pickYes === aiTrue) btns[i].classList.add('correct');
+    if (pickYes === sanoiOikein && !oikein) btns[i].classList.add('wrong');
+    if (pickYes === sanoiOikein) btns[i].classList.add('chosen');
+  }
+  fb.className = 'feedback show ' + (oikein ? 'ok' : 'fail');
+  fb.textContent = (oikein ? T('round.leadOk') : T('round.leadFail')) + r.fact;
+  nextRow.style.display = 'flex';
+}
+
+function renderResult(stage) {
+  var oikeat = 0;
+  for (var i = 0; i < TOTAL; i++) {
+    if (answers[i] === META[i].aiTrue) oikeat++;
+  }
+  var gradeClass, gradeText;
+  if (oikeat >= 5) { gradeClass = 'erinomainen'; gradeText = T('result.gradeHigh'); }
+  else if (oikeat >= 3) { gradeClass = 'hyva'; gradeText = T('result.gradeMid'); }
+  else { gradeClass = 'harjoitellaan'; gradeText = T('result.gradeLow'); }
+
+  var rounds = T('rounds') || [];
+  var review = '';
+  for (var j = 0; j < TOTAL; j++) {
+    var r = rounds[j] || {};
+    var ok = (answers[j] === META[j].aiTrue);
+    var yourTxt = answers[j] === true ? T('result.answeredYes') : (answers[j] === false ? T('result.answeredNo') : '–');
+    review +=
+      '<div class="review-item ' + (ok ? 'ok' : 'fail') + '">' +
+        '<div class="review-q">' + (ok ? '✅' : '❌') + ' ' + esc(r.topic) + '</div>' +
+        '<div style="font-size:0.9em;margin-bottom:2px;">🤖 ' + esc(r.ai) + '</div>' +
+        '<div style="font-size:0.85em;color:#555;">' + esc(T('result.yourAnswer')) + ' ' + esc(yourTxt) + '</div>' +
+        '<div style="font-size:0.88em;color:#333;margin-top:4px;">' + esc(r.fact) + '</div>' +
+      '</div>';
+  }
+
+  stage.innerHTML =
+    '<div class="result-card show">' +
+      '<div class="result-badge">' + esc(T('result.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:80px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<div class="result-score">' + oikeat + '</div>' +
+      '<div class="result-max">' + esc(T('result.max')) + '</div>' +
+      '<div class="result-grade ' + gradeClass + '">' + esc(gradeText) + '</div>' +
+      '<div class="feedback info show" style="text-align:left;">' + esc(T('result.takeaway')) + '</div>' +
+      '<div class="review-section"><h3>' + esc(T('result.reviewTitle')) + '</h3>' + review + '</div>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:20px;">' +
+        '<button class="btn-primary" id="retryBtn">' + esc(T('result.retry')) + '</button>' +
+        '<a href="' + esc(T('result.backHref')) + '"><button class="btn-primary btn-secondary">' + esc(T('result.back')) + '</button></a>' +
+      '</div>' +
+    '</div>';
+
+  var rb = document.getElementById('retryBtn');
+  if (rb) rb.onclick = function () { answers = []; idx = 0; answered = false; view = 'cover'; render(); };
+}
+
+// Käynnistä i18n ja piirrä
+TekoalyI18n.init({
+  langs: ['fi', 'sv', 'en'],
+  labels: { fi: 'FI', sv: 'SV', en: 'EN' },
+  dict: LANG,
+  barSelector: '#langBar',
+  onChange: render
+});
+</script>
+</body>
+</html>

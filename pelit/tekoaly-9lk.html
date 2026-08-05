@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tekoäly työkaverina – 9. luokka | DigiOpo</title>
+  <meta name="description" content="Tekoälytehtävä 9. luokalle: tee valintoja vastuullisesta tekoälyn käytöstä projektissa." />
+  <link rel="stylesheet" href="tekoaly-yhteinen.css" />
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar" id="langBar" role="group" aria-label="Kielivalinta"></div>
+  <h1 class="sr-only" data-i18n="meta.h1">Tekoäly työkaverina – 9. luokan tehtävä</h1>
+
+  <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressWrap">
+    <div class="progress-label" id="progressLabel">–</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="stage" role="main"></div>
+</div>
+
+<script src="tekoaly-yhteinen.js"></script>
+
+<script>
+const LANG = {
+  fi: {
+    meta: { title: "Tekoäly työkaverina – 9. luokka | DigiOpo", h1: "Tekoäly työkaverina – 9. luokan tehtävä" },
+    cover: {
+      badge: "🤝 Tekoäly työkaverina · 9. luokka",
+      title: "Tekoäly työkaverina",
+      lead: "Teet yhteiskuntaopin projektin ja käytät apuna tekoälyä. Matkalla eteen tulee valintoja: tietosuoja, tekijänoikeus, rehellisyys ja oma ajattelu. Tee valintoja ja katso, kuinka vastuullinen tekoälyn käyttäjä olet.",
+      rulesTitle: "Näin peli toimii:",
+      rules: [
+        "🤖 Etenet projektissa vaihe vaiheelta.",
+        "🧭 Joka vaiheessa valitset, miten toimit.",
+        "📊 Vastuumittari kertoo, kuinka vastuullisesti käytät tekoälyä."
+      ],
+      start: "Aloita projekti →",
+      roboName: "Robo"
+    },
+    step: {
+      tag: "Vaihe",
+      of: "/",
+      meter: "Vastuumittari",
+      next: "Jatka →",
+      last: "Katso tulos →",
+      bestWas: "Vastuullisin valinta:"
+    },
+    result: {
+      badge: "🤝 Tekoäly työkaverina · tulos",
+      max: "/ 12 vastuupistettä",
+      gradeHigh: "🌟 Vastuullinen tekoälyn käyttäjä! Hienoa työtä.",
+      gradeMid: "👍 Hyvä suunta! Muutamassa kohdassa voi vielä tarkentaa.",
+      gradeLow: "💪 Kertaa vastuullisen käytön periaatteet ja kokeile uudelleen.",
+      takeaway: "Vastuullinen tekoälyn käyttö on: tarkista faktat, suojaa henkilötiedot, kunnioita tekijänoikeuksia, kerro avoimesti tekoälyn käytöstä ja käytä omaa ajatteluasi. Dokumentoi aina, missä ja miten käytit tekoälyä.",
+      reviewTitle: "Valintojesi läpikäynti",
+      yourChoice: "Sinun valintasi:",
+      retry: "Yritä uudelleen ↺",
+      back: "← Takaisin 9. luokan sivulle",
+      backHref: "../sivut/9luokka.html"
+    },
+    steps: [
+      {
+        situation: "Aloitat projektin ja tarvitset taustatietoa aiheesta.",
+        options: [
+          "Kysyn tekoälyltä yleiskuvan ja tarkistan faktat luotettavasta lähteestä.",
+          "Kopioin tekoälyn vastauksen suoraan projektiini.",
+          "En käytä tekoälyä lainkaan, teen kaiken yksin."
+        ],
+        feedback: [
+          "Hyvä! Tekoäly auttaa alkuun, mutta faktat kannattaa aina varmistaa.",
+          "Riski: tekoäly voi olla väärässä, etkä opi aiheesta. Tarkista ja kirjoita omin sanoin.",
+          "Ei väärin, mutta tekoäly voisi säästää aikaa alkuun – kunhan tarkistat tiedot."
+        ]
+      },
+      {
+        situation: "Haluat tehdä projektistasi henkilökohtaisemman ja miettiä, mitä tietoja syötät tekoälyyn.",
+        options: [
+          "Syötän kaverini nimen ja tiedot tekoälyyn, jotta saan osuvamman tekstin.",
+          "En syötä kenenkään henkilötietoja tekoälyyn.",
+          "Syötän omat tietoni – eihän siitä ole haittaa."
+        ],
+        feedback: [
+          "Ei näin: toisen henkilötietoja ei saa syöttää tekoälyyn. Se rikkoo tietosuojaa.",
+          "Juuri oikein! Henkilötiedot pidetään poissa tekoälypalveluista.",
+          "Ole varovainen: omiakaan henkilötietoja ei kannata syöttää – et tiedä, minne ne menevät."
+        ]
+      },
+      {
+        situation: "Projektiisi tarvitaan kuva.",
+        options: [
+          "Otan kuvan netistä ilman lupaa tai lähdettä.",
+          "Käytän tekoälyn tekemää kuvaa ja merkitsen sen tekoälyn tuottamaksi.",
+          "Käytän kuvaa, jolla on avoin lisenssi, mutta unohdan merkitä lähteen."
+        ],
+        feedback: [
+          "Ei näin: netin kuvilla on usein tekijänoikeus. Ilman lupaa tai lähdettä et saa käyttää.",
+          "Hyvä! Tekoälykuva on ok, kun merkitset sen selvästi tekoälyn tuottamaksi.",
+          "Lähes oikein: avoin lisenssi on hyvä, mutta muista aina merkitä lähde."
+        ]
+      },
+      {
+        situation: "Opettaja kysyy, miten teit projektin.",
+        options: [
+          "Salaan tekoälyn käytön – muuten arvosana voi laskea.",
+          "Kerron avoimesti, missä käytin tekoälyä ja mitä tein itse.",
+          "Mainitsen tekoälyn vain, jos opettaja erikseen kysyy."
+        ],
+        feedback: [
+          "Ei näin: tekoälyn käytön salaaminen on epärehellistä. Avoimuus on osa hyvää työtä.",
+          "Juuri oikein! Kerro aina avoimesti tekoälyn käytöstä.",
+          "Parempi kertoa oma-aloitteisesti – avoimuus kannattaa aina."
+        ]
+      },
+      {
+        situation: "Tekoäly antoi projektiisi tilastoluvun.",
+        options: [
+          "Tarkistan luvun alkuperäisestä lähteestä ennen kuin käytän sitä.",
+          "Käytän lukua sellaisenaan – kuulostaa oikealta.",
+          "Pyydän tekoälyä vahvistamaan luvun uudelleen."
+        ],
+        feedback: [
+          "Hyvä! Tekoälyn luvut voivat olla keksittyjä. Tarkista aina alkuperäisestä lähteestä.",
+          "Riski: tekoäly voi keksiä lukuja. Älä käytä tarkistamatta.",
+          "Ymmärrettävää, mutta tekoäly voi toistaa saman virheen. Tarkista muualta."
+        ]
+      },
+      {
+        situation: "Teksti on lähes valmis.",
+        options: [
+          "Palautan tekoälyn tekstin sellaisenaan – se on hyvää.",
+          "Muokkaan tekstin omin sanoin ja lisään oman johtopäätökseni.",
+          "Vaihdan muutaman sanan, muuten jätän ennalleen."
+        ],
+        feedback: [
+          "Näin et opi. Oppiminen tapahtuu, kun ajattelet ja kirjoitat itse.",
+          "Juuri oikein! Oma ajattelu ja johtopäätös tekevät työstä sinun.",
+          "Alku on hyvä, mutta muokkaa enemmän ja lisää oma näkemyksesi."
+        ]
+      }
+    ]
+  },
+
+  sv: {
+    meta: { title: "AI som arbetskamrat – årskurs 9 | DigiOpo", h1: "AI som arbetskamrat – uppgift för årskurs 9" },
+    cover: {
+      badge: "🤝 AI som arbetskamrat · årskurs 9",
+      title: "AI som arbetskamrat",
+      lead: "Du gör ett projekt i samhällslära och använder AI som hjälp. På vägen möter du val: dataskydd, upphovsrätt, ärlighet och eget tänkande. Gör dina val och se hur ansvarsfull AI-användare du är.",
+      rulesTitle: "Så här fungerar spelet:",
+      rules: [
+        "🤖 Du går framåt i projektet steg för steg.",
+        "🧭 I varje steg väljer du hur du gör.",
+        "📊 Ansvarsmätaren visar hur ansvarsfullt du använder AI."
+      ],
+      start: "Börja projektet →",
+      roboName: "Robo"
+    },
+    step: {
+      tag: "Steg",
+      of: "/",
+      meter: "Ansvarsmätare",
+      next: "Fortsätt →",
+      last: "Se resultatet →",
+      bestWas: "Det mest ansvarsfulla valet:"
+    },
+    result: {
+      badge: "🤝 AI som arbetskamrat · resultat",
+      max: "/ 12 ansvarspoäng",
+      gradeHigh: "🌟 En ansvarsfull AI-användare! Bra jobbat.",
+      gradeMid: "👍 Bra riktning! Några ställen kan ännu förbättras.",
+      gradeLow: "💪 Repetera principerna för ansvarsfull användning och prova igen.",
+      takeaway: "Ansvarsfull AI-användning är: kontrollera fakta, skydda personuppgifter, respektera upphovsrätt, berätta öppet om AI-användningen och använd ditt eget tänkande. Dokumentera alltid var och hur du använde AI.",
+      reviewTitle: "Genomgång av dina val",
+      yourChoice: "Ditt val:",
+      retry: "Försök igen ↺",
+      back: "← Tillbaka till årskurs 9",
+      backHref: "../sivut/9luokka.html"
+    },
+    steps: [
+      {
+        situation: "Du börjar projektet och behöver bakgrundsinformation om ämnet.",
+        options: [
+          "Jag ber AI:n om en översikt och kontrollerar fakta i en pålitlig källa.",
+          "Jag kopierar AI:ns svar direkt till mitt projekt.",
+          "Jag använder inte AI alls, jag gör allt själv."
+        ],
+        feedback: [
+          "Bra! AI hjälper i början, men fakta bör alltid bekräftas.",
+          "Risk: AI kan ha fel och du lär dig inte ämnet. Kontrollera och skriv med egna ord.",
+          "Inte fel, men AI kunde spara tid i början – så länge du kontrollerar informationen."
+        ]
+      },
+      {
+        situation: "Du vill göra projektet mer personligt och funderar på vilka uppgifter du matar in i AI:n.",
+        options: [
+          "Jag matar in min kompis namn och uppgifter för att få en bättre text.",
+          "Jag matar inte in någons personuppgifter i AI:n.",
+          "Jag matar in mina egna uppgifter – det gör väl inget."
+        ],
+        feedback: [
+          "Nej: en annans personuppgifter får inte matas in i AI:n. Det bryter mot dataskyddet.",
+          "Helt rätt! Personuppgifter hålls borta från AI-tjänster.",
+          "Var försiktig: inte ens egna personuppgifter bör matas in – du vet inte vart de hamnar."
+        ]
+      },
+      {
+        situation: "Ditt projekt behöver en bild.",
+        options: [
+          "Jag tar en bild från nätet utan tillstånd eller källa.",
+          "Jag använder en AI-skapad bild och märker den som AI-genererad.",
+          "Jag använder en bild med öppen licens, men glömmer att ange källan."
+        ],
+        feedback: [
+          "Nej: bilder på nätet har ofta upphovsrätt. Utan tillstånd eller källa får du inte använda dem.",
+          "Bra! En AI-bild går bra när du tydligt märker den som AI-genererad.",
+          "Nästan rätt: öppen licens är bra, men kom alltid ihåg att ange källan."
+        ]
+      },
+      {
+        situation: "Läraren frågar hur du gjorde projektet.",
+        options: [
+          "Jag döljer att jag använt AI – annars kan vitsordet sjunka.",
+          "Jag berättar öppet var jag använde AI och vad jag gjorde själv.",
+          "Jag nämner AI bara om läraren särskilt frågar."
+        ],
+        feedback: [
+          "Nej: att dölja AI-användning är oärligt. Öppenhet är en del av ett bra arbete.",
+          "Helt rätt! Berätta alltid öppet om AI-användningen.",
+          "Bättre att berätta på eget initiativ – öppenhet lönar sig alltid."
+        ]
+      },
+      {
+        situation: "AI:n gav en statistisk siffra till ditt projekt.",
+        options: [
+          "Jag kontrollerar siffran i originalkällan innan jag använder den.",
+          "Jag använder siffran som den är – den låter rätt.",
+          "Jag ber AI:n bekräfta siffran på nytt."
+        ],
+        feedback: [
+          "Bra! AI:ns siffror kan vara påhittade. Kontrollera alltid i originalkällan.",
+          "Risk: AI kan hitta på siffror. Använd dem inte utan kontroll.",
+          "Förståeligt, men AI kan upprepa samma fel. Kontrollera på annat håll."
+        ]
+      },
+      {
+        situation: "Texten är nästan färdig.",
+        options: [
+          "Jag lämnar in AI:ns text som den är – den är bra.",
+          "Jag bearbetar texten med egna ord och lägger till min egen slutsats.",
+          "Jag byter ut några ord, annars lämnar jag den som den är."
+        ],
+        feedback: [
+          "Så lär du dig inte. Lärandet sker när du tänker och skriver själv.",
+          "Helt rätt! Eget tänkande och en egen slutsats gör arbetet till ditt.",
+          "Bra början, men bearbeta mera och lägg till din egen syn."
+        ]
+      }
+    ]
+  },
+
+  en: {
+    meta: { title: "AI as a Coworker – Year 9 | DigiOpo", h1: "AI as a Coworker – Year 9 task" },
+    cover: {
+      badge: "🤝 AI as a Coworker · Year 9",
+      title: "AI as a Coworker",
+      lead: "You're doing a social studies project and using AI to help. Along the way you face choices: data protection, copyright, honesty and your own thinking. Make your choices and see how responsible an AI user you are.",
+      rulesTitle: "How the game works:",
+      rules: [
+        "🤖 You move through the project step by step.",
+        "🧭 At each step you choose how to act.",
+        "📊 The responsibility meter shows how responsibly you use AI."
+      ],
+      start: "Start the project →",
+      roboName: "Robo"
+    },
+    step: {
+      tag: "Step",
+      of: "/",
+      meter: "Responsibility meter",
+      next: "Continue →",
+      last: "See result →",
+      bestWas: "The most responsible choice:"
+    },
+    result: {
+      badge: "🤝 AI as a Coworker · result",
+      max: "/ 12 responsibility points",
+      gradeHigh: "🌟 A responsible AI user! Great work.",
+      gradeMid: "👍 Good direction! A few spots could still be sharper.",
+      gradeLow: "💪 Review the principles of responsible use and try again.",
+      takeaway: "Responsible AI use means: check the facts, protect personal data, respect copyright, be open about your AI use, and use your own thinking. Always document where and how you used AI.",
+      reviewTitle: "Review your choices",
+      yourChoice: "Your choice:",
+      retry: "Try again ↺",
+      back: "← Back to Year 9",
+      backHref: "../sivut/9luokka.html"
+    },
+    steps: [
+      {
+        situation: "You start the project and need background information on the topic.",
+        options: [
+          "I ask the AI for an overview and check the facts in a reliable source.",
+          "I copy the AI's answer straight into my project.",
+          "I don't use AI at all, I do everything myself."
+        ],
+        feedback: [
+          "Good! AI helps you get started, but facts should always be verified.",
+          "Risk: the AI can be wrong and you won't learn the topic. Check it and write in your own words.",
+          "Not wrong, but AI could save time at the start – as long as you check the facts."
+        ]
+      },
+      {
+        situation: "You want to make the project more personal and think about what data you enter into the AI.",
+        options: [
+          "I enter my friend's name and details into the AI to get a better text.",
+          "I don't enter anyone's personal data into the AI.",
+          "I enter my own details – surely that's harmless."
+        ],
+        feedback: [
+          "No: you must not enter someone else's personal data into the AI. It breaks data protection.",
+          "Exactly right! Personal data is kept out of AI services.",
+          "Be careful: even your own personal data shouldn't be entered – you don't know where it goes."
+        ]
+      },
+      {
+        situation: "Your project needs an image.",
+        options: [
+          "I take an image from the internet without permission or a source.",
+          "I use an AI-made image and label it as AI-generated.",
+          "I use an image with an open licence, but forget to credit the source."
+        ],
+        feedback: [
+          "No: images online are often copyrighted. Without permission or a source you may not use them.",
+          "Good! An AI image is fine when you clearly label it as AI-generated.",
+          "Almost right: an open licence is good, but always remember to credit the source."
+        ]
+      },
+      {
+        situation: "The teacher asks how you made the project.",
+        options: [
+          "I hide that I used AI – otherwise my grade might drop.",
+          "I openly explain where I used AI and what I did myself.",
+          "I mention AI only if the teacher specifically asks."
+        ],
+        feedback: [
+          "No: hiding AI use is dishonest. Openness is part of good work.",
+          "Exactly right! Always be open about your AI use.",
+          "Better to tell on your own – openness always pays off."
+        ]
+      },
+      {
+        situation: "The AI gave a statistic for your project.",
+        options: [
+          "I check the number in the original source before using it.",
+          "I use the number as is – it sounds right.",
+          "I ask the AI to confirm the number again."
+        ],
+        feedback: [
+          "Good! AI numbers can be made up. Always check the original source.",
+          "Risk: AI can invent numbers. Don't use them without checking.",
+          "Understandable, but the AI may repeat the same mistake. Check elsewhere."
+        ]
+      },
+      {
+        situation: "The text is almost finished.",
+        options: [
+          "I submit the AI's text as is – it's good.",
+          "I rework the text in my own words and add my own conclusion.",
+          "I swap a few words, otherwise I leave it unchanged."
+        ],
+        feedback: [
+          "You won't learn this way. Learning happens when you think and write yourself.",
+          "Exactly right! Your own thinking and conclusion make the work yours.",
+          "A good start, but rework it more and add your own view."
+        ]
+      }
+    ]
+  }
+};
+
+// Logiikka: pisteet per vaihtoehto (kieliriippumaton). Paras = suurin pistemäärä.
+const META = [
+  { points: [2, 0, 1] },
+  { points: [0, 2, 1] },
+  { points: [0, 2, 1] },
+  { points: [0, 2, 1] },
+  { points: [2, 0, 1] },
+  { points: [0, 2, 1] }
+];
+const MASCOT = "../images/robo_maskotti_9lk.webp";
+const TOTAL = META.length;
+const MAXSCORE = META.reduce(function (a, m) { return a + Math.max.apply(null, m.points); }, 0);
+
+function bestIndex(step) {
+  var p = META[step].points, bi = 0;
+  for (var i = 1; i < p.length; i++) if (p[i] > p[bi]) bi = i;
+  return bi;
+}
+
+let view = 'cover';
+let idx = 0;
+let answered = false;
+let choices = []; // choices[step] = valittu vaihtoehdon indeksi
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function nykyPisteet() {
+  var sum = 0;
+  for (var i = 0; i < choices.length; i++) {
+    if (choices[i] !== undefined) sum += META[i].points[choices[i]];
+  }
+  return sum;
+}
+
+function paivitaProgress() {
+  var fill = document.getElementById('progressFill');
+  var label = document.getElementById('progressLabel');
+  var wrap = document.getElementById('progressWrap');
+  if (!fill || !label || !wrap) return;
+  var pct = 0, txt = '';
+  if (view === 'cover') { pct = 0; txt = T('cover.title'); }
+  else if (view === 'step') { pct = Math.round((idx / (TOTAL + 1)) * 100); txt = T('step.tag') + ' ' + (idx + 1) + ' / ' + TOTAL; }
+  else { pct = 100; txt = '✓'; }
+  fill.style.width = pct + '%';
+  label.textContent = txt;
+  wrap.setAttribute('aria-valuenow', pct);
+}
+
+function render() {
+  var stage = document.getElementById('stage');
+  if (!stage) return;
+  if (view === 'cover') renderCover(stage);
+  else if (view === 'step') renderStep(stage);
+  else renderResult(stage);
+  paivitaProgress();
+  stage.setAttribute('tabindex', '-1');
+  try { stage.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+}
+
+function renderCover(stage) {
+  var rules = T('cover.rules') || [];
+  var lis = '';
+  for (var i = 0; i < rules.length; i++) lis += '<li>' + esc(rules[i]) + '</li>';
+  stage.innerHTML =
+    '<div class="cover-card">' +
+      '<div class="cover-badge">' + esc(T('cover.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:100px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<h1>' + esc(T('cover.title')) + '</h1>' +
+      '<p style="margin-bottom:12px;">' + esc(T('cover.lead')) + '</p>' +
+      '<p style="font-weight:700;color:var(--color-primary);margin-bottom:6px;">' + esc(T('cover.rulesTitle')) + '</p>' +
+      '<ul class="rule-list">' + lis + '</ul>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:18px;">' +
+        '<button class="btn-primary" id="startBtn">' + esc(T('cover.start')) + '</button>' +
+      '</div>' +
+    '</div>';
+  var s = document.getElementById('startBtn');
+  if (s) s.onclick = function () { view = 'step'; idx = 0; answered = false; render(); };
+}
+
+function meterHtml() {
+  var pct = MAXSCORE ? Math.round((nykyPisteet() / MAXSCORE) * 100) : 0;
+  return '<div class="meter-wrap">' +
+    '<div class="meter-label">📊 ' + esc(T('step.meter')) + ': ' + nykyPisteet() + ' / ' + MAXSCORE + '</div>' +
+    '<div class="meter-bar"><div class="meter-fill" style="width:' + pct + '%"></div></div>' +
+  '</div>';
+}
+
+function renderStep(stage) {
+  var s = (T('steps') || [])[idx] || {};
+  var letters = ['A', 'B', 'C', 'D'];
+  var optsHtml = '';
+  for (var i = 0; i < (s.options || []).length; i++) {
+    optsHtml +=
+      '<button class="opt-btn" data-opt="' + i + '">' +
+        '<span class="opt-letter" aria-hidden="true">' + letters[i] + '</span>' +
+        '<span>' + esc(s.options[i]) + '</span>' +
+      '</button>';
+  }
+  stage.innerHTML =
+    '<div class="card active">' +
+      '<div class="chapter-tag">' + esc(T('cover.badge')) + ' · ' + esc(T('step.tag')) + ' ' + (idx + 1) + ' ' + esc(T('step.of')) + ' ' + TOTAL + '</div>' +
+      meterHtml() +
+      '<div class="robo-intro" style="margin-bottom:16px;">' +
+        '<img src="' + MASCOT + '" alt="Robo" onerror="this.style.display=\'none\'" />' +
+        '<div class="robo-bubble"><div class="robo-name-tag">' + esc(T('cover.roboName')) + '</div>' + esc(s.situation) + '</div>' +
+      '</div>' +
+      '<div class="options" id="optRow">' + optsHtml + '</div>' +
+      '<div class="feedback" id="feedback"></div>' +
+      '<div class="btn-row" id="nextRow" style="display:none;">' +
+        '<button class="btn-primary" id="nextBtn">' + esc(idx === TOTAL - 1 ? T('step.last') : T('step.next')) + '</button>' +
+      '</div>' +
+    '</div>';
+
+  var btns = stage.querySelectorAll('.opt-btn');
+  for (var b = 0; b < btns.length; b++) {
+    btns[b].onclick = function () { valitse(parseInt(this.getAttribute('data-opt'), 10)); };
+  }
+  var nb = document.getElementById('nextBtn');
+  if (nb) nb.onclick = function () {
+    if (idx < TOTAL - 1) { idx++; answered = false; render(); }
+    else { view = 'result'; render(); }
+  };
+
+  if (choices[idx] !== undefined) { answered = true; naytaValinta(choices[idx], true); }
+}
+
+function valitse(oi) {
+  if (answered) return;
+  answered = true;
+  choices[idx] = oi;
+  naytaValinta(oi, false);
+}
+
+function naytaValinta(oi, hiljainen) {
+  var s = (T('steps') || [])[idx] || {};
+  var best = bestIndex(idx);
+  var pisteet = META[idx].points[oi];
+  var hyva = (pisteet === Math.max.apply(null, META[idx].points));
+  var row = document.getElementById('optRow');
+  var fb = document.getElementById('feedback');
+  var nextRow = document.getElementById('nextRow');
+  if (!row || !fb || !nextRow) return;
+
+  var btns = row.querySelectorAll('.opt-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    if (i === best) btns[i].classList.add('reveal-correct');
+    if (i === oi && !hyva) btns[i].classList.add('reveal-wrong');
+    if (i === oi) btns[i].classList.add('selected');
+  }
+  fb.className = 'feedback show ' + (hyva ? 'ok' : (pisteet === 0 ? 'fail' : 'info'));
+  var txt = s.feedback[oi];
+  if (!hyva) txt += ' — ' + T('step.bestWas') + ' ' + s.options[best];
+  fb.textContent = txt;
+
+  // Päivitä mittari valinnan jälkeen
+  var mf = document.querySelector('.meter-fill');
+  var ml = document.querySelector('.meter-label');
+  if (mf) mf.style.width = (MAXSCORE ? Math.round((nykyPisteet() / MAXSCORE) * 100) : 0) + '%';
+  if (ml) ml.textContent = '📊 ' + T('step.meter') + ': ' + nykyPisteet() + ' / ' + MAXSCORE;
+
+  nextRow.style.display = 'flex';
+}
+
+function renderResult(stage) {
+  var score = nykyPisteet();
+  var gradeClass, gradeText;
+  if (score >= 10) { gradeClass = 'erinomainen'; gradeText = T('result.gradeHigh'); }
+  else if (score >= 6) { gradeClass = 'hyva'; gradeText = T('result.gradeMid'); }
+  else { gradeClass = 'harjoitellaan'; gradeText = T('result.gradeLow'); }
+
+  var steps = T('steps') || [];
+  var review = '';
+  for (var i = 0; i < TOTAL; i++) {
+    var st = steps[i] || {};
+    var oi = choices[i];
+    var best = bestIndex(i);
+    var hyva = oi !== undefined && META[i].points[oi] === Math.max.apply(null, META[i].points);
+    review +=
+      '<div class="review-item ' + (hyva ? 'ok' : 'fail') + '">' +
+        '<div class="review-q">' + (hyva ? '✅' : '⚠️') + ' ' + esc(st.situation) + '</div>' +
+        '<div style="font-size:0.85em;color:#555;">' + esc(T('result.yourChoice')) + ' ' + esc(oi !== undefined ? st.options[oi] : '–') + '</div>' +
+        (hyva ? '' : '<div style="font-size:0.86em;color:#065f46;margin-top:3px;"><strong>' + esc(T('step.bestWas')) + '</strong> ' + esc(st.options[best]) + '</div>') +
+      '</div>';
+  }
+
+  stage.innerHTML =
+    '<div class="result-card show">' +
+      '<div class="result-badge">' + esc(T('result.badge')) + '</div>' +
+      '<img src="' + MASCOT + '" alt="Robo" style="width:80px;margin:0 auto 12px;display:block;" onerror="this.style.display=\'none\'" />' +
+      '<div class="result-score">' + score + '</div>' +
+      '<div class="result-max">' + esc(T('result.max')) + '</div>' +
+      '<div class="result-grade ' + gradeClass + '">' + esc(gradeText) + '</div>' +
+      '<div class="feedback info show" style="text-align:left;">' + esc(T('result.takeaway')) + '</div>' +
+      '<div class="review-section"><h3>' + esc(T('result.reviewTitle')) + '</h3>' + review + '</div>' +
+      '<div class="btn-row" style="justify-content:center;margin-top:20px;">' +
+        '<button class="btn-primary" id="retryBtn">' + esc(T('result.retry')) + '</button>' +
+        '<a href="' + esc(T('result.backHref')) + '"><button class="btn-primary btn-secondary">' + esc(T('result.back')) + '</button></a>' +
+      '</div>' +
+    '</div>';
+
+  var rb = document.getElementById('retryBtn');
+  if (rb) rb.onclick = function () { choices = []; idx = 0; answered = false; view = 'cover'; render(); };
+}
+
+TekoalyI18n.init({
+  langs: ['fi', 'sv', 'en'],
+  labels: { fi: 'FI', sv: 'SV', en: 'EN' },
+  dict: LANG,
+  barSelector: '#langBar',
+  onChange: render
+});
+</script>
+</body>
+</html>
