@@ -672,7 +672,9 @@
     .erikoislukio-kortti p  { font-size: 12px; color: #5b21b6; line-height: 1.5; }
 
     /* Apuotsikot */
-    .tj-osio-otsikko { font-size: 13px; font-weight: 700; color: #374151; margin: 16px 0 4px; padding-bottom: 5px; border-bottom: 1.5px solid #f3f4f6; }
+    .tj-osio-otsikko { font-size: 17px; font-weight: 800; color: #374151; margin: 20px 0 6px; padding-bottom: 6px; border-bottom: 2px solid #f3f4f6; letter-spacing: -.01em; }
+    #tutkija-amis .tj-osio-otsikko { color: #b45309; border-bottom-color: #fcd34d; }
+    #tutkija-lukio .tj-osio-otsikko { color: #1d4ed8; border-bottom-color: #bfdbfe; }
     .tj-kuvaus { font-size: 13px; color: #6b7280; line-height: 1.6; margin-bottom: 10px; }
     .tj-tulos-otsikko { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; }
     .tj-ei-tuloksia { display: none; text-align: center; padding: 20px; font-size: 13px; color: #9ca3af; }
@@ -909,7 +911,7 @@
     .tj-askel-nro.lv { background:#2563eb; }
     .tj-askel-teksti { font-size:10px; color:#6b7280; font-weight:600; line-height:1.3; max-width:66px; }
 
-    .tj-osio-vaihe { display:inline-block; background:#fef3c7; color:#92400e; font-size:10px; font-weight:800; padding:1px 7px; border-radius:20px; margin-right:5px; vertical-align:middle; letter-spacing:.3px; }
+    .tj-osio-vaihe { display:inline-block; background:#fef3c7; color:#92400e; font-size:11px; font-weight:800; padding:2px 9px; border-radius:20px; margin-right:7px; vertical-align:middle; letter-spacing:.3px; text-transform:uppercase; }
     .tj-osio-vaihe.lv { background:#dbeafe; color:#1e40af; }
 
     .tj-yhteenveto { background:#fefce8; border:2px solid #fde68a; border-radius:12px; padding:16px 18px; margin:16px 0; }
@@ -1508,7 +1510,7 @@
             <img src="../images/amis-kaksari-lukio.webp" alt="Kolme robottia esittelevät kolme reittiä: ammattikoulu (ammatti, nopeasti työelämään, oppii tekemällä), kaksoistutkinto (ammatti + lukion YO-tutkinto) ja lukio (yleissivistävä, valmistaa jatko-opintoihin)" style="display:block;width:100%;height:auto;">
             <div style="padding:18px 24px;background:linear-gradient(135deg,#fffdf5 0%,#fef3c7 100%);display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
               <div style="flex:1;min-width:220px;">
-                <span style="display:inline-block;background:#fde68a;color:#92400e;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 11px;border-radius:20px;margin-bottom:8px;">👇 Tutkimustehtävä</span>
+                <span style="display:inline-block;background:#fde68a;color:#92400e;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 11px;border-radius:20px;margin-bottom:8px;">Tutkimustehtävä</span>
                 <p style="margin:0 0 4px;font-size:20px;font-weight:800;color:#92400e;letter-spacing:.01em;">Oma reitti löytyy tutkimalla</p>
                 <p style="margin:0;font-size:14.5px;color:#78350f;line-height:1.5;">Löysitkö kiinnostavan alan? Tutustu tutkintoihin ja lukion painotuksiin — ja valitse Amispolku tai Lukiopolku.</p>
               </div>
@@ -1536,10 +1538,10 @@
             <!-- Tab-palkki -->
             <div class="tutkija-tabbar" role="tablist" aria-label="Valitse tutkija">
               <button type="button" class="tutkija-tab amis-tab aktiivinen" id="tab-amis" role="tab" aria-selected="true" aria-controls="tutkija-amis" onclick="vaihdaTutkija('amis',this)">
-                🔧 Amispolku
+                Amispolku
               </button>
               <button type="button" class="tutkija-tab lukio-tab" id="tab-lukio" role="tab" aria-selected="false" aria-controls="tutkija-lukio" onclick="vaihdaTutkija('lukio',this)">
-                📚 Lukiopolku
+                Lukiopolku
               </button>
             </div>
 
@@ -1549,7 +1551,7 @@
 
               <!-- Tavoitteet -->
               <div class="tj-tavoite" role="region" aria-label="Tehtävän tavoitteet">
-                <h5>🎯 Mitä teet tässä tehtävässä?</h5>
+                <h5>Mitä teet tässä tehtävässä?</h5>
                 <ul>
                   <li>Valitset sinua kiinnostavat asiat ja löydät sopivia ammatteja ja tutkintoja (Vaihe 1)</li>
                   <li>Kurkistat valittuun alaan ja teet oman alasi tehtävän (Vaihe 2)</li>
@@ -1576,27 +1578,27 @@
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe" aria-label="Vaihe 1">Vaihe 1</span>Valitse sinua kiinnostavat asiat</h4>
               <p style="font-size:13px;color:#6b7280;margin:0 0 10px;">Ei tarvitse vielä tietää aloista mitään — valitse vain, mikä kuulostaa kivalta. Voit valita useita. Näytämme sinulle sopivia ammatteja ja tutkintoja.</p>
               <div class="tj-kiinnostukset" role="group" aria-label="Valitse mikä sinua kiinnostaa">
-                <button type="button" class="tj-nappi" data-ala="ihmiset"      onclick="toggleAmisFil(this)" aria-pressed="false">🤝 Ihmiset ja auttaminen</button>
-                <button type="button" class="tj-nappi" data-ala="elaimet"      onclick="toggleAmisFil(this)" aria-pressed="false">🐾 Eläimet</button>
-                <button type="button" class="tj-nappi" data-ala="luonto"       onclick="toggleAmisFil(this)" aria-pressed="false">🌿 Luonto ja ympäristö</button>
-                <button type="button" class="tj-nappi" data-ala="ruoka"        onclick="toggleAmisFil(this)" aria-pressed="false">🍳 Ruoka ja leipominen</button>
-                <button type="button" class="tj-nappi" data-ala="auto"         onclick="toggleAmisFil(this)" aria-pressed="false">🚗 Autot ja liikenne</button>
-                <button type="button" class="tj-nappi" data-ala="rakentaminen" onclick="toggleAmisFil(this)" aria-pressed="false">🏗️ Rakentaminen ja talot</button>
-                <button type="button" class="tj-nappi" data-ala="tekniikka"    onclick="toggleAmisFil(this)" aria-pressed="false">⚙️ Koneet ja tekniikka</button>
-                <button type="button" class="tj-nappi" data-ala="pelit"        onclick="toggleAmisFil(this)" aria-pressed="false">🎮 Pelit ja ohjelmointi</button>
-                <button type="button" class="tj-nappi" data-ala="tietokone"    onclick="toggleAmisFil(this)" aria-pressed="false">💻 Tietokoneet ja IT</button>
-                <button type="button" class="tj-nappi" data-ala="media"        onclick="toggleAmisFil(this)" aria-pressed="false">🎬 Media ja video</button>
-                <button type="button" class="tj-nappi" data-ala="taide"        onclick="toggleAmisFil(this)" aria-pressed="false">🎨 Taide ja muotoilu</button>
-                <button type="button" class="tj-nappi" data-ala="musiikki"     onclick="toggleAmisFil(this)" aria-pressed="false">🎵 Musiikki ja esiintyminen</button>
-                <button type="button" class="tj-nappi" data-ala="kauppa"       onclick="toggleAmisFil(this)" aria-pressed="false">🛍️ Kauppa ja yrittäjyys</button>
-                <button type="button" class="tj-nappi" data-ala="matkailu"     onclick="toggleAmisFil(this)" aria-pressed="false">✈️ Matkailu</button>
-                <button type="button" class="tj-nappi" data-ala="liikunta"     onclick="toggleAmisFil(this)" aria-pressed="false">⚽ Liikunta ja urheilu</button>
-                <button type="button" class="tj-nappi" data-ala="kauneus"      onclick="toggleAmisFil(this)" aria-pressed="false">💇 Kauneus ja hyvinvointi</button>
-                <button type="button" class="tj-nappi" data-ala="turvallisuus" onclick="toggleAmisFil(this)" aria-pressed="false">🛡️ Turvallisuus</button>
-                <button type="button" onclick="nollaaAmisFil()" aria-label="Nollaa valinnat" style="padding:5px 12px;border-radius:20px;border:1.5px solid #e5e7eb;background:none;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;color:#6b7280;">Nollaa <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                <button type="button" class="tj-nappi" data-ala="ihmiset"      onclick="toggleAmisFil(this)" aria-pressed="false">Ihmiset ja auttaminen</button>
+                <button type="button" class="tj-nappi" data-ala="elaimet"      onclick="toggleAmisFil(this)" aria-pressed="false">Eläimet</button>
+                <button type="button" class="tj-nappi" data-ala="luonto"       onclick="toggleAmisFil(this)" aria-pressed="false">Luonto ja ympäristö</button>
+                <button type="button" class="tj-nappi" data-ala="ruoka"        onclick="toggleAmisFil(this)" aria-pressed="false">Ruoka ja leipominen</button>
+                <button type="button" class="tj-nappi" data-ala="auto"         onclick="toggleAmisFil(this)" aria-pressed="false">Autot ja liikenne</button>
+                <button type="button" class="tj-nappi" data-ala="rakentaminen" onclick="toggleAmisFil(this)" aria-pressed="false">Rakentaminen ja talot</button>
+                <button type="button" class="tj-nappi" data-ala="tekniikka"    onclick="toggleAmisFil(this)" aria-pressed="false">Koneet ja tekniikka</button>
+                <button type="button" class="tj-nappi" data-ala="pelit"        onclick="toggleAmisFil(this)" aria-pressed="false">Pelit ja ohjelmointi</button>
+                <button type="button" class="tj-nappi" data-ala="tietokone"    onclick="toggleAmisFil(this)" aria-pressed="false">Tietokoneet ja IT</button>
+                <button type="button" class="tj-nappi" data-ala="media"        onclick="toggleAmisFil(this)" aria-pressed="false">Media ja video</button>
+                <button type="button" class="tj-nappi" data-ala="taide"        onclick="toggleAmisFil(this)" aria-pressed="false">Taide ja muotoilu</button>
+                <button type="button" class="tj-nappi" data-ala="musiikki"     onclick="toggleAmisFil(this)" aria-pressed="false">Musiikki ja esiintyminen</button>
+                <button type="button" class="tj-nappi" data-ala="kauppa"       onclick="toggleAmisFil(this)" aria-pressed="false">Kauppa ja yrittäjyys</button>
+                <button type="button" class="tj-nappi" data-ala="matkailu"     onclick="toggleAmisFil(this)" aria-pressed="false">Matkailu</button>
+                <button type="button" class="tj-nappi" data-ala="liikunta"     onclick="toggleAmisFil(this)" aria-pressed="false">Liikunta ja urheilu</button>
+                <button type="button" class="tj-nappi" data-ala="kauneus"      onclick="toggleAmisFil(this)" aria-pressed="false">Kauneus ja hyvinvointi</button>
+                <button type="button" class="tj-nappi" data-ala="turvallisuus" onclick="toggleAmisFil(this)" aria-pressed="false">Turvallisuus</button>
+                <button type="button" onclick="nollaaAmisFil()" aria-label="Nollaa valinnat" style="padding:5px 14px;border-radius:20px;border:1.5px solid #f59e0b;background:#fef3c7;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:#b45309;">Nollaa <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
               </div>
 
-              <p class="tj-tulos-otsikko" id="amis-tulos-otsikko" aria-live="polite">👆 Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.</p>
+              <p class="tj-tulos-otsikko" id="amis-tulos-otsikko" aria-live="polite">Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.</p>
               <p class="tj-ei-tuloksia" id="amis-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
               <div class="tj-grid" id="amis-tutkinnot" role="list"></div>
 
@@ -1607,12 +1609,12 @@
                   <span aria-hidden="true" style="font-size:18px;flex-shrink:0;">⚠️</span>
                   <span id="tutkija-lang-warning-text"></span>
                 </div>
-                <h4 class="tj-osio-otsikko" style="margin-top:20px;"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>🎮 Kurkista valittuun alaan ja tee tehtävä</h4>
+                <h4 class="tj-osio-otsikko" style="margin-top:20px;"><span class="tj-osio-vaihe" aria-label="Vaihe 2">Vaihe 2</span>Kurkista valittuun alaan ja tee tehtävä</h4>
                 <p style="font-size:13px;color:#6b7280;margin:0 0 10px;">Valittuasi kiinnostuksen yltä, tee alaan liittyvä tehtävä. Tarkista ajankohtaiset tiedot <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;">Opintopolku.fi</a>-sivuilta.</p>
                 <div id="amis-v3-sisalto">
                   <!-- renderAmisV3() täyttää tämän -->
                   <div class="amis-v3-ohje" id="amis-v3-ohje">
-                    <p>👆 Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva ammattitilanne ilmestyy tähän automaattisesti.</p>
+                    <p>Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva ammattitilanne ilmestyy tähän automaattisesti.</p>
                   </div>
                 </div>
               </div>
@@ -1629,17 +1631,14 @@
                 <!-- a) Näin amiksessa opitaan -->
                 <div class="tj-arki" role="list">
                   <div class="tj-arki-kortti" role="listitem">
-                    <div class="ik" aria-hidden="true">🔧</div>
                     <h5>Käytännön harjoittelu</h5>
                     <p>Pajassa, keittiössä tai hoitoympäristössä — teet oikeita töitä ohjatusti.</p>
                   </div>
                   <div class="tj-arki-kortti" role="listitem">
-                    <div class="ik" aria-hidden="true">🏢</div>
                     <h5>Työssäoppiminen</h5>
                     <p>Olet oikealla työpaikalla viikkoja kerrallaan. Se on usein paras osa amisesta.</p>
                   </div>
                   <div class="tj-arki-kortti" role="listitem">
-                    <div class="ik" aria-hidden="true">📋</div>
                     <h5>Näytöt — ei kokeita</h5>
                     <p>Et kirjoita yo-kirjoituksia. Näytät osaamisen tekemällä oikeita töitä.</p>
                   </div>
@@ -1647,26 +1646,26 @@
 
                 <!-- b) YTO-aineet -->
                 <div class="yto-boksi">
-                  <p class="yto-otsikko">📚 Amissakin on "kouluaineita" — YTO-aineet</p>
+                  <p class="yto-otsikko">Amissakin on "kouluaineita" — YTO-aineet</p>
                   <p class="yto-kuvaus">Ammatillisiin opintoihin kuuluu pakollisia yleissivistäviä aineita:</p>
                   <div class="yto-lista" role="list">
-                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🔢</span><span>Matematiikka ja luonnontieteet</span></div>
-                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🗣️</span><span>Viestintä ja vuorovaikutus</span></div>
-                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🌍</span><span>Kielet (suomi, ruotsi, englanti)</span></div>
-                    <div class="yto-aine" role="listitem"><span aria-hidden="true">🏛️</span><span>Yhteiskunta- ja työelämäosaaminen</span></div>
+                    <div class="yto-aine" role="listitem"><span>Matematiikka ja luonnontieteet</span></div>
+                    <div class="yto-aine" role="listitem"><span>Viestintä ja vuorovaikutus</span></div>
+                    <div class="yto-aine" role="listitem"><span>Kielet (suomi, ruotsi, englanti)</span></div>
+                    <div class="yto-aine" role="listitem"><span>Yhteiskunta- ja työelämäosaaminen</span></div>
                   </div>
                   <a href="https://opintopolku.fi/konfo/fi/sivu/opinnot-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" class="yto-linkki">Lue lisää opintopolku.fi →</a>
                 </div>
 
                 <!-- c) Oppisopimus -->
                 <div style="border:1.5px solid #fde68a;border-radius:12px;padding:14px 16px;margin:10px 0;background:#fff;">
-                  <h5 style="font-size:14px;font-weight:700;color:#1f2937;margin:0 0 4px;">🤝 Oppisopimus</h5>
+                  <h5 style="font-size:14px;font-weight:700;color:#1f2937;margin:0 0 4px;">Oppisopimus</h5>
                   <p style="font-size:13px;color:#6b7280;line-height:1.55;margin:0;">Jos sinulla on työpaikka, voit opiskella oppisopimuksella — opit pääosin töissä ja saat palkkaa. <a href="https://oppisopimus.fi/" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;">Katso lisää: oppisopimus.fi →</a></p>
                 </div>
 
                 <!-- Kaksoistutkinto -->
                 <div style="border:1.5px solid #fde68a;border-radius:12px;padding:14px 16px;margin:10px 0;background:#fff;">
-                  <h5 style="font-size:14px;font-weight:700;color:#1f2937;margin:0 0 4px;">🎓 Kaksoistutkinto — ammatti + ylioppilastutkinto</h5>
+                  <h5 style="font-size:14px;font-weight:700;color:#1f2937;margin:0 0 4px;">Kaksoistutkinto — ammatti + ylioppilastutkinto</h5>
                   <p style="font-size:13px;color:#6b7280;line-height:1.55;margin:0 0 8px;">Amiksessa voit tehdä ammatillisen tutkinnon <strong>lisäksi</strong> lukio-opintoja ja kirjoittaa ylioppilaaksi. Näin saat kaksi tutkintoa yhdellä kertaa. Ylioppilastutkintoon kuuluu vähintään 5 koetta. Opiskelu kestää yleensä 3–4 vuotta ja vaatii vähän enemmän — mutta se parantaa mahdollisuuksiasi hakea jatko-opintoihin (AMK tai yliopisto).</p>
                   <p style="font-size:12.5px;color:#6b7280;line-height:1.55;margin:0 0 8px;">Kerro kiinnostuksesta jo yhteishaussa tai kysy asiasta omasta oppilaitoksesta. Valinnan voi tehdä myös opintojen aikana.</p>
                   <a href="https://opintopolku.fi/konfo/fi/sivu/kaksoistutkinto" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;font-size:12.5px;">Lue lisää: opintopolku.fi →</a>
@@ -1682,7 +1681,6 @@
                   aria-controls="erityis-sisalto"
                 >
                   <span class="amis-sivupolku-vasen">
-                    <span class="amis-sivupolku-ikoni" aria-hidden="true">🔀</span>
                     <span class="amis-sivupolku-teksti">
                       <span class="amis-sivupolku-otsikko">Erityisammattioppilaitokset</span>
                       <span class="amis-sivupolku-kuvaus">Tarvitsetko enemmän tukea opiskelussa? Katso tästä</span>
@@ -1724,7 +1722,7 @@
                       <a href="https://www.optimaedu.fi" target="_blank" rel="noopener" aria-label="Optiman verkkosivut (avautuu uuteen välilehteen)">www.optimaedu.fi →</a>
                     </div>
                   </div>
-                  <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;">🔗 Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
+                  <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;">Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
                 </div>
               </div>
 
@@ -1735,10 +1733,10 @@
 
               <!-- Yhteenveto -->
               <div class="tj-yhteenveto" id="amis-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
-                <h5>✅ Hyvä työ!</h5>
+                <h5>Hyvä työ!</h5>
                 <p>Olet tutustunut ammatillisiin tutkintoihin, tehnyt oman alasi tehtävän ja saanut kuvan amisarjesta.</p>
-                <p>💡 <strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
-                <p>🔍 Haluatko tutkia lisää? Katso tutkintoja ja AMK-hakua <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#92400e;font-weight:700;">opintopolku.fi</a>:stä.</p>
+                <p><strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
+                <p>Haluatko tutkia lisää? Katso tutkintoja ja AMK-hakua <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#92400e;font-weight:700;">opintopolku.fi</a>:stä.</p>
               </div>
 
               <div style="margin-top:20px;padding-top:12px;border-top:1px solid #f3f4f6;font-size:11px;color:#6b7280;line-height:1.7;">
@@ -4076,7 +4074,7 @@
       const tjP = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       document.getElementById('amis-tulos-otsikko').textContent =
         nolla
-          ? (tjP.valitse_kiinnostus || '👆 Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.')
+          ? (tjP.valitse_kiinnostus || 'Valitse yltä, mikä sinua kiinnostaa — näytämme sinulle sopivat ammatit.')
           : `${n} ${tjP.tutkintoja_loytyy || 'tutkintoa löytyi'}`;
       document.getElementById('amis-ei-tuloksia').style.display = (!nolla && n === 0) ? 'block' : 'none';
       document.getElementById('amis-tutkinnot').style.display  = (nolla || n === 0) ? 'none'  : 'grid';
