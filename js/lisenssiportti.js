@@ -50,6 +50,21 @@
     });
   }
 
+  // Onko laitteella opettajan Supabase-kirjautumis-token? Supabase tallentaa
+  // session localStorageen avaimella "sb-<ref>-auth-token". Jos tokenia ei ole,
+  // laite ei ole opettajan → ohitetaan raskas Supabase-SDK:n lataus kokonaan.
+  // Näin oppilaat (valtaosa) eivät koskaan lataa SDK:ta CDN:stä, mikä nopeuttaa
+  // ja toimii myös hitailla / CDN:n estävillä kouluverkoilla.
+  function onMahdollinenOpettajaSessio() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("sb-") && k.endsWith("-auth-token")) return true;
+      }
+    } catch {}
+    return false;
+  }
+
   // Tarkistaa onko opettajalla validi Supabase-sessio ja aktiivinen lisenssi
   async function tarkistaOpettajaSessio() {
     try {
@@ -308,9 +323,12 @@
   async function tarkistaLisenssi() {
     if (onVapaaPolku()) return;
 
-    // 1. Opettajalisenssi: tarkistetaan Supabase-sessio
-    const opettajaOk = await tarkistaOpettajaSessio();
-    if (opettajaOk) return; // Pääsy myönnetty
+    // 1. Opettajalisenssi: tarkistetaan Supabase-sessio – vain jos laitteella on
+    // opettajan kirjautumis-token (muuten ei ladata Supabase-SDK:ta turhaan).
+    if (onMahdollinenOpettajaSessio()) {
+      const opettajaOk = await tarkistaOpettajaSessio();
+      if (opettajaOk) return; // Pääsy myönnetty
+    }
 
     // 2. Koululisenssi: tarkistetaan localStorage
     const tallennettu = lueListenssi();
