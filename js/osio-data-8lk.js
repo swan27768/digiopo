@@ -6,7 +6,7 @@ window.OSIO_DATA = {
   osiot: {
     "koulutus": {
       rakenne: [
-        "Aloitus: koulutusjärjestelmä-kaavio ja koulutusalakaruselli (10 min)",
+        "Aloitus: koulutusjärjestelmä-kaavio ja koulutusalakaruselli",
         "Valitse polku: Amispolku tai Lukiopolku — tutki tutkintoja tai linjoja ja tee tehtävä (20 min)",
         "AmmattiSet: korttipeli koulutusaloista (10 min)",
         "Ryhmätehtävä: Maailma tarvitsee sinua (20–30 min)"
@@ -27,7 +27,7 @@ window.OSIO_DATA = {
 
     "vahvuudet": {
       rakenne: [
-        "Aloitus: mitä vahvuuksia muistat 7. luokalta? (5 min)",
+        "Aloitus: mitä vahvuuksia muistat 7. luokalta?",
         "Interaktiivinen tarina: Vahvuusmatka (20 min)",
         "Paritehtävä: Fake Insta — ammatti-identiteetti somessa (20 min)",
         "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen? (10–15 min)"
@@ -48,7 +48,7 @@ window.OSIO_DATA = {
 
     "tet": {
       rakenne: [
-        "Aloitus: mitä TET tarkoittaa ja miksi se tehdään? (5 min)",
+        "Aloitus: mitä TET tarkoittaa ja miksi se tehdään?",
         "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen (15 min)",
         "Kirjoitustehtävä: Ota yhteyttä työnantajaan (15 min)",
         "Keskustelutehtävä: Mikä tekee työstä hyvän työn? (10 min)"
@@ -69,10 +69,10 @@ window.OSIO_DATA = {
     "klinikka": {
       teoria: "oppimisklinikka",
       rakenne: [
-        "Aloitus: mikä opiskelussa tökkii juuri nyt? (5 min)",
+        "Aloitus: mikä opiskelussa tökkii juuri nyt?",
         "Oppimisklinikka: valitse oma korttisi ja tutustu keinoihin (15 min)",
         "Klinikkapäivystys: kokeile keinoa käytännössä (15 min)",
-        "Oppimisresepti opettajalle (5 min)"
+        "Oppimisresepti opettajalle"
       ],
       tavoitteet: [
         "Tunnistat oman opiskelusi pullonkaulan: kertaus, kokeisiin luku, keskittyminen tai jaksaminen",
@@ -90,10 +90,10 @@ window.OSIO_DATA = {
     "tulevaisuus": {
       teoria: "tulevaisuustuumailu",
       rakenne: [
-        "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä? (5 min)",
+        "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä?",
         "Toiminnallinen lämmittely: Pyörä pyörii – satunnainen ura (20 min)",
         "Tiimitehtävä: Tulevaisuuden työpaikka (45 min)",
-        "Purku: ryhmät esittelevät, luokka äänestää (10 min)"
+        "Purku: ryhmät esittelevät, luokka äänestää"
       ],
       tavoitteet: [
         "Harjoittelet kuvittelemaan ja perustelemaan vaihtoehtoisia tulevaisuuksia",

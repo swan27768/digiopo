@@ -6,7 +6,7 @@ window.OSIO_DATA = {
   osiot: {
     "johdanto": {
       rakenne: [
-        "Aloitus: mitä 9. luokan opinto-ohjauksessa tehdään? (5 min)",
+        "Aloitus: mitä 9. luokan opinto-ohjauksessa tehdään?",
         "Tutustuminen: kuka olen oppijana juuri nyt? (10 min)",
         "Maskottitehtävä: mitä ajattelen peruskoulun jälkeen? (15 min)"
       ],
@@ -25,8 +25,8 @@ window.OSIO_DATA = {
 
     "jatko": {
       rakenne: [
-        "Aloitus: mitä 9. luokan vuoteen kuuluu? (5 min)",
-        "Eri polut: lukio, ammatillinen, TUVA (10 min)",
+        "Aloitus: mitä 9. luokan vuoteen kuuluu?",
+        "Eri polut: lukio, ammatillinen, TUVA",
         "Yksilötehtävä: laske keskiarvosi ja hakupisteesi (15 min)",
         "Oma vuosikello: merkitse vuoden tärkeät päivät (10 min)"
       ],
@@ -46,9 +46,9 @@ window.OSIO_DATA = {
     "ajattelu": {
       teoria: "ajattelutyylit",
       rakenne: [
-        "Aloitus: voiko omaan ajatteluun luottaa? (5 min)",
+        "Aloitus: voiko omaan ajatteluun luottaa?",
         "Ryhmäpeli: Salapoliisitehtävä — Kadonnut kultainen kello (25–30 min)",
-        "Purku: mikä johti harhaan, mikä auttoi ratkaisuun? (10 min)"
+        "Purku: mikä johti harhaan, mikä auttoi ratkaisuun?"
       ],
       tavoitteet: [
         "Harjoittelet päättelyä: erotat havainnon, tulkinnan ja johtopäätöksen",
@@ -66,10 +66,10 @@ window.OSIO_DATA = {
     "tet": {
       teoria: "duuniin",
       rakenne: [
-        "Aloitus: mitä odotat TET-jaksolta? (5 min)",
+        "Aloitus: mitä odotat TET-jaksolta?",
         "Duuniin! — opas työelämään (15 min)",
         "Keskustelutehtävä: Millainen työkaveri haluaisit olla? (10 min)",
-        "TET-jakson jälkeen: mitä opit? -reflektio (15 min)",
+        "TET-jakson jälkeen: mitä opit? -reflektio",
         "DuuniMinä-tehtävä (15 min)",
         "Reppu + CV: pakkaa vahvuudet reppuusi ja kirjoita oma CV (20 min)",
         "Keskustelutehtävä: Harrastuksesta ammatti? (10 min)"
@@ -93,7 +93,7 @@ window.OSIO_DATA = {
 
     "yhteishaku": {
       rakenne: [
-        "Aloitus: miten yhteishaku toimii Opintopolussa? (10 min)",
+        "Aloitus: miten yhteishaku toimii Opintopolussa?",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet (20 min)",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
@@ -112,10 +112,10 @@ window.OSIO_DATA = {
 
     "paatoksenteko": {
       rakenne: [
-        "Johdanto: mitä päätöksenteko tarkoittaa? (5 min)",
+        "Johdanto: mitä päätöksenteko tarkoittaa?",
         "Neuvonantaja-ryhmätehtävä: auta fiktiivistä henkilöä (20–25 min)",
         "Skenaariotehtävä yksilötehtävänä (10–15 min)",
-        "Purku: mitä hyvä päätös vaatii? (5 min)"
+        "Purku: mitä hyvä päätös vaatii?"
       ],
       tavoitteet: [
         "Opit neljän kohdan päätösmallin: puolesta · vastaan · en tiedä · miltä tuntuu",
@@ -173,7 +173,7 @@ window.OSIO_DATA = {
     "valinnat": {
       teoria: "valinnat-peli",
       rakenne: [
-        "Aloitus: millaisia valintoja teet joka päivä? (5 min)",
+        "Aloitus: millaisia valintoja teet joka päivä?",
         "Elämänvalintapeli: Mitä sitten? (20 min)",
         "Lisähaaste: analysoi kolme merkittävintä valintaasi (10 min)"
       ],
@@ -214,7 +214,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Vaihe 1: Onnenpyörä — Mitä jos... (yksin, 5–8 min)",
         "Vaiheet 2–3: tiimityö ja ratkaisut (25–30 min)",
-        "Purku: mitä yksi ihminen voi tehdä? (10 min)"
+        "Purku: mitä yksi ihminen voi tehdä?"
       ],
       tavoitteet: [
         "Harjoittelet globaalia ajattelua: miten minä liityn maailman ilmiöihin",
