@@ -694,10 +694,15 @@
 
       /* Suodatinnapit */
       var filMap = {
-        ihmiset: tj.amis_fil_ihmiset, tekniikka: tj.amis_fil_tekniikka,
-        data: tj.amis_fil_data, ruoka: tj.amis_fil_ruoka,
-        luonto: tj.amis_fil_luonto, taide: tj.amis_fil_taide,
-        kauppa: tj.amis_fil_kauppa, liikunta: tj.amis_fil_liikunta
+        ihmiset: tj.amis_fil_ihmiset, elaimet: tj.amis_fil_elaimet,
+        luonto: tj.amis_fil_luonto, ruoka: tj.amis_fil_ruoka,
+        auto: tj.amis_fil_auto, rakentaminen: tj.amis_fil_rakentaminen,
+        tekniikka: tj.amis_fil_tekniikka, pelit: tj.amis_fil_pelit,
+        tietokone: tj.amis_fil_tietokone, media: tj.amis_fil_media,
+        taide: tj.amis_fil_taide, musiikki: tj.amis_fil_musiikki,
+        kauppa: tj.amis_fil_kauppa, matkailu: tj.amis_fil_matkailu,
+        liikunta: tj.amis_fil_liikunta, kauneus: tj.amis_fil_kauneus,
+        turvallisuus: tj.amis_fil_turvallisuus
       };
       amisPanel.querySelectorAll('.tj-kiinnostukset .tj-nappi[data-ala]').forEach(function(btn) {
         var ala = btn.dataset.ala;
