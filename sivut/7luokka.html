@@ -33,7 +33,7 @@
       .ak-hero{position:relative;overflow:hidden;border-radius:20px;
         background:linear-gradient(150deg,#4c1d95,#6d28d9 60%,#7c3aed);
         padding:0;box-shadow:0 16px 36px -14px rgba(76,29,149,.45);
-        width:100%;border:none;text-align:left;cursor:pointer;color:#fff;
+        width:100%;max-width:640px;border:none;text-align:left;cursor:pointer;color:#fff;
         font-family:inherit;display:block;transition:transform .15s, box-shadow .15s;}
       .ak-hero:hover{transform:translateY(-2px);box-shadow:0 22px 44px -14px rgba(76,29,149,.55);}
       .ak-hero:focus-visible{outline:3px solid #fbbf24;outline-offset:3px;}
@@ -60,20 +60,6 @@
       .opettajalle-pallero:hover .opettajalle-ikoni{transform:translateY(-2px);box-shadow:0 4px 14px rgba(109,40,217,.28);}
       .opettajalle-pallero:focus-visible .opettajalle-ikoni{outline:3px solid #c4b5fd;outline-offset:3px;}
       .opettajalle-teksti{color:#6d28d9;font-weight:800;font-size:14px;letter-spacing:.02em;}
-      .tiede-info-btn{width:34px;height:34px;border-radius:50%;border:2px solid #c4b5fd;background:#faf5ff;color:#6d28d9;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:700;font-size:17px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-top:15px;transition:all .12s;}
-      .tiede-info-btn:hover{border-color:#6d28d9;background:#f3e8ff;}
-      .tiede-info-btn[aria-expanded="true"]{background:#6d28d9;color:#fff;border-color:#6d28d9;}
-      .tiede-paneeli{background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:20px 22px;margin:8px 0 0;}
-      .tiede-paneeli h4{color:#3b0764;font-size:.98rem;margin:0 0 8px;}
-      .tiede-paneeli > p{font-size:.86rem;color:#4c1d95;line-height:1.6;margin:0 0 12px;}
-      .tiede-paneeli .tiede-kohta{font-size:.83rem;color:#6b7280;line-height:1.55;margin:0 0 8px;padding-left:15px;position:relative;}
-      .tiede-paneeli .tiede-kohta::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:#7c3aed;}
-      .tiede-paneeli .tiede-kohta strong{color:#3b0764;}
-      .tiede-paneeli .lahteet{margin-top:14px;padding-top:12px;border-top:1px solid #e9d5ff;}
-      .tiede-paneeli .lahteet-otsikko{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;margin-bottom:8px;}
-      .tiede-paneeli .lahteet ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;}
-      .tiede-paneeli .lahteet li{font-size:.78rem;color:#6b7280;line-height:1.5;}
-      .tiede-paneeli .lahteet a{color:#6d28d9;}
     /* ── Hampurilaisvalikko: vasen aihevalikko mobiilissa ── */
     .nav-hamburger { display: none; }
     @media (max-width: 768px) {
@@ -1700,17 +1686,8 @@
 
               </div><!-- /tulevaisuus-tehtava-sisalto -->
 
-              <!-- Opettajalle + tehtävän tieteellinen pohja — näkyy heti, myös kun tehtävä on kiinni -->
+              <!-- Opettajalle-nappi — näkyy heti, myös kun tehtävä on kiinni -->
               <div class="aikakone-ope-rivi">
-                <button
-                  type="button"
-                  class="tiede-info-btn"
-                  onclick="toggleTiede(this)"
-                  aria-expanded="false"
-                  aria-controls="tiede-paneeli-aikakone"
-                  aria-label="Tehtävän tieteellinen pohja ja lähteet"
-                  title="Tehtävän tieteellinen pohja ja lähteet"
-                >i</button>
                 <a
                   class="opettajalle-pallero"
                   href="/sivut/tulevaisuus_7lk_aikamatka_ope.html"
@@ -1722,25 +1699,6 @@
                 </a>
               </div>
 
-              <!-- Piilotettu: tehtävän tieteellinen pohja ja lähteet -->
-              <div id="tiede-paneeli-aikakone" class="tiede-paneeli" hidden>
-                <h4>🔬 Tehtävän tieteellinen pohja</h4>
-                <p>Aikamatka ei ole ennustamista vaan <strong>tulevaisuusajattelun</strong> harjoittelua: kykyä kuvitella erilaisia mahdollisia tulevaisuuksia ja nähdä itsensä osana niitä. Rakenne nojaa muutamaan vakiintuneeseen kasvatustieteen ja psykologian ajatukseen:</p>
-                <div class="tiede-kohta"><strong>Mahdolliset minät (possible selves):</strong> kuva omasta tulevasta itsestä ohjaa motivaatiota ja valintoja jo nyt (Markus &amp; Nurius, 1986).</div>
-                <div class="tiede-kohta"><strong>Toimijuus ja ennakointi:</strong> oppiminen vahvistuu, kun oppilas ennakoi, toimii ja pohtii — tehtävän "pieni askel jo nyt" nojaa tähän (OECD, Learning Compass 2030).</div>
-                <div class="tiede-kohta"><strong>Tulevaisuuslukutaito (futures literacy):</strong> taitoa kuvitella tulevaisuuksia voi harjoitella; UNESCO pitää sitä 2000-luvun perustaitona (Miller / UNESCO).</div>
-                <div class="tiede-kohta"><strong>Toivo ja kasvun ajattelutapa:</strong> toivo rakentuu tavoitteesta, poluista ja uskosta omaan toimintaan (Snyder); "haaveilu on taito, ei lahjakkuutta" nojaa kasvun ajattelutapaan (Dweck).</div>
-                <div class="lahteet">
-                  <div class="lahteet-otsikko">Lähteet</div>
-                  <ul>
-                    <li>Markus, H. &amp; Nurius, P. (1986). Possible selves. <em>American Psychologist, 41</em>(9), 954–969. <a href="https://doi.org/10.1037/0003-066X.41.9.954" target="_blank" rel="noopener">doi.org/10.1037/0003-066X.41.9.954</a></li>
-                    <li>OECD (2019). <em>OECD Future of Education and Skills 2030 — Learning Compass 2030.</em> <a href="https://www.oecd.org/education/2030-project/" target="_blank" rel="noopener">oecd.org/education/2030-project</a></li>
-                    <li>Miller, R. (toim.) (2018). <em>Transforming the Future: Anticipation in the 21st Century.</em> UNESCO / Routledge. <a href="https://www.unesco.org/en/futures-literacy" target="_blank" rel="noopener">unesco.org/en/futures-literacy</a></li>
-                    <li>Snyder, C. R. (2002). Hope theory. <em>Psychological Inquiry, 13</em>(4), 249–275.</li>
-                    <li>Dweck, C. S. (2006). <em>Mindset: The New Psychology of Success.</em> Random House.</li>
-                  </ul>
-                </div>
-              </div>
 
             </div>
           </div>
@@ -2225,14 +2183,6 @@
       }
 
       /* ── Tehtävän tieteellinen pohja (i-linkki) ── */
-      function toggleTiede(btn) {
-        var paneeli = document.getElementById(btn.getAttribute('aria-controls'));
-        if (!paneeli) return;
-        var auki = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', auki ? 'false' : 'true');
-        paneeli.hidden = auki;
-      }
-
       /* ── Koulupäivän jälkeen ── */
       function toggleKoulunJalkeen() {
         var sisalto = document.getElementById('koulunjalkeen-sisalto');
