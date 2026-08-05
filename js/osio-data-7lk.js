@@ -124,20 +124,6 @@ window.OSIO_DATA = {
       ]
     },
 
-    "teppo": {
-      tavoitteet: [
-        "Tiedät, mikä TEPPO eli työelämäpainotteinen perusopetus on",
-        "Tiedät, kenelle se sopii ja miten siihen haetaan",
-        "Osaat arvioida, voisiko TEPPO olla sinun juttusi"
-      ],
-      miksi: "Osa oppii parhaiten tekemällä. TEPPO on virallinen tapa suorittaa peruskoulua niin, että työssäoppiminen ja koulu vuorottelevat. Tämä tieto kannattaa olla taskussa jo 7. luokalla, koska haku on keväisin — ja päätös koskee sinun arkeasi.",
-      yhteenveto: [
-        "Tiedät TEPPOn perusasiat: kenelle, mitä ja milloin haetaan",
-        "Osaat kertoa huoltajalle, mistä TEPPOssa on kyse",
-        "Tiedät, keneltä kysyä lisää, jos kiinnostuit"
-      ]
-    },
-
     "koulun-jalkeen": {
       tavoitteet: [],
       miksi: "",
