@@ -93,8 +93,8 @@
       alku.innerHTML =
         summaryHTML("fa-solid fa-bullseye", lblObjTitle, lblObjSub) +
         '<div class="osio-info-sisalto">' +
-        (rakenne && rakenne.length ? "<h4>" + esc(lblStructH) + "</h4><ul>" + lista(rakenne) + "</ul>" : "") +
         "<h4>" + esc(lblGoalsH) + "</h4><ul>" + lista(tavoitteet) + "</ul>" +
+        (rakenne && rakenne.length ? "<h4>" + esc(lblStructH) + "</h4><ul>" + lista(rakenne) + "</ul>" : "") +
         (miksi ? '<div class="osio-miksi"><strong>' + esc(lblWhyH) + '</strong><br>' + miksi + "</div>" : "") +
         "</div>";
       var otsikko = osio.querySelector(".aihe-otsikko") || osio.querySelector("h2, h3");
