@@ -208,26 +208,6 @@ window.OSIO_DATA = {
         "Osaat suhtautua tulevaisuuteen aktiivisesti, et vain odottaen"
       ]
     },
-
-    "tulevaisuus-vesi": {
-      teoria: "vesi2045",
-      rakenne: [
-        "Vaihe 1: Onnenpyörä — Mitä jos... (yksin, 5–8 min)",
-        "Vaiheet 2–3: tiimityö ja ratkaisut (25–30 min)",
-        "Purku: mitä yksi ihminen voi tehdä?"
-      ],
-      tavoitteet: [
-        "Harjoittelet globaalia ajattelua: miten minä liityn maailman ilmiöihin",
-        "Ratkot ryhmässä aitoa tulevaisuuden ongelmaa (vesi 2045)",
-        "Huomaat, että isotkin ongelmat tarvitsevat monenlaisia osaajia"
-      ],
-      miksi: "Ilmastonmuutos ja luonnonvarojen riittävyys ovat megatrendejä, jotka muokkaavat juuri sinun työelämääsi. Tutkimusten mukaan nuoret kokevat vähemmän ympäristöahdistusta, kun he pääsevät käsittelemään ongelmia ratkaisujen kautta — tekemällä, ei vain murehtimalla. Samalla näet, että jokaisella alalla on rooli ratkaisuissa.",
-      yhteenveto: [
-        "Osaat yhdistää globaalin ilmiön omaan elämääsi ja ammatteihin",
-        "Olet ideoinut ratkaisuja ryhmässä ja perustellut niitä",
-        "Tiedät, että tulevaisuuden ongelmat ovat myös tulevaisuuden työpaikkoja"
-      ]
-    }
   },
 
   teoriat: {
@@ -316,17 +296,5 @@ window.OSIO_DATA = {
         "Amara, R. (1981). The futures field. <em>The Futurist</em>. (todennäköiset, toivottavat ja mahdolliset tulevaisuudet)"
       ]
     },
-    "vesi2045": {
-      otsikko: "Case: Vesi 2045",
-      teksti: [
-        "Tehtävä perustuu ilmiöpohjaiseen oppimiseen ja tulevaisuuslukutaitoon: aitoa, monimutkaista ongelmaa tarkastellaan monesta näkökulmasta ja ratkaisuja ideoidaan tiimissä. Ratkaisukeskeinen käsittely vähentää tutkitusti nuorten ympäristöahdistusta verrattuna pelkkään uhkien käsittelyyn.",
-        "Onnenpyörä-aloitus hyödyntää satunnaisuutta luovuuden käynnistäjänä: yllättävä näkökulma pakottaa irti valmiista vastauksista."
-      ],
-      lahteet: [
-        "Miller, R. (toim.) (2018). <em>Transforming the Future</em>. UNESCO/Routledge.",
-        "Pihkala, P. (2020). Eco-anxiety and environmental education. <em>Sustainability</em>.",
-        "Sitra (2023). <em>Megatrendit 2023</em>."
-      ]
-    }
   }
 };
