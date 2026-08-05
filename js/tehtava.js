@@ -293,14 +293,14 @@ window.addEventListener("load", async function () {
 
       const summaryH = document.createElement("h3");
       summaryH.id = "yhteenveto-otsikko";
-      summaryH.textContent = "✏️ Kirjoita lyhyt yhteenveto";
+      summaryH.textContent = "✏️ Kirjoita lyhyt yhteenveto keskustelusta";
       summaryH.style.cssText =
         "font-size:1rem;font-weight:800;color:#065f46;margin:0 0 6px;";
       summaryBox.appendChild(summaryH);
 
       const summaryDesc = document.createElement("p");
       summaryDesc.id = "yhteenveto-kuvaus";
-      summaryDesc.textContent = "Mitä opit tänään? Kirjoita 2–3 lausetta omin sanoin.";
+      summaryDesc.textContent = "Kirjoita oma mielipide keskustelun aiheesta.";
       summaryDesc.style.cssText =
         "font-size:0.88rem;color:#374151;margin:0 0 12px;";
       summaryBox.appendChild(summaryDesc);
@@ -315,7 +315,7 @@ window.addEventListener("load", async function () {
       const summaryTA = document.createElement("textarea");
       summaryTA.id = summaryId;
       summaryTA.setAttribute("aria-describedby", "yhteenveto-kuvaus");
-      summaryTA.placeholder = "Tänään opin, että…";
+      summaryTA.placeholder = "Mielestäni…";
       summaryTA.style.cssText =
         "width:100%;min-height:100px;border:2px solid #d1fae5;border-radius:10px;" +
         "padding:12px;font-size:0.9rem;font-family:inherit;color:#1e1b4b;" +
