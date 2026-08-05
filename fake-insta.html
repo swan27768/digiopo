@@ -1336,7 +1336,22 @@ function addStarred(id) { const a=getStarred();a.push(id); sessionStorage.setIte
 
 // Avaa suoraan taulu (galleria) jos sivu avataan esim. osoitteella /fake-insta.html#taulu
 if (['#taulu','#galleria','#gallery'].includes((location.hash || '').toLowerCase())) {
-  showView('view-gallery');
+  if (aktivoituKoulu) {
+    showView('view-gallery');
+  } else {
+    // Uusi ikkuna ilman koulukoodi-lisenssiä (esim. opettaja Supabase-istunnolla):
+    // haetaan koulun nimi opettajaistunnosta (jaettu eväste) ennen gallerian avaamista,
+    // muuten galleria ei tietäisi mille koululle profiilit haetaan.
+    fetch('/api/fake-insta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ toiminto: 'tarkista_opettaja' })
+    })
+      .then(r => r.json())
+      .then(d => { if (d && d.ok && d.koulu) aktivoituKoulu = d.koulu; })
+      .catch(() => {})
+      .finally(() => showView('view-gallery'));
+  }
 }
 </script>
 </body>
