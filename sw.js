@@ -8,7 +8,7 @@
 // HUOM: nosta tätä versionumeroa AINA kun muutat esiladattua tiedostoa
 // (PRECACHE_ASSETS) tai muuta staattista sisältöä. Muuten selaimet tarjoilevat
 // vanhaa versiota välimuistista eikä korjaus näy käyttäjille.
-const CACHE_VERSION = "digiopo-v20";
+const CACHE_VERSION = "digiopo-v21";
 
 // Maksumuurin takana oleva sisältö: EI koskaan välimuistiin, jotta middleware
 // hallitsee pääsyä eikä suojattua sisältöä voi lukea offline ilman lisenssiä.
