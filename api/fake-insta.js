@@ -92,6 +92,12 @@ function riviProfiiliksi(rivi) {
     bio2:     rivi.bio2,
     bio3:     rivi.bio3,
     hashtags: rivi.hashtags,
+    post1:    rivi.post1,
+    post2:    rivi.post2,
+    post3:    rivi.post3,
+    post4:    rivi.post4,
+    post5:    rivi.post5,
+    post6:    rivi.post6,
     likes:    rivi.tykkayksiat,
     starredStrengths: {
       bio1: rivi.tahdet_bio1,
