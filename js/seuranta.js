@@ -44,7 +44,6 @@
     if (polku.includes("8luokka"))             return "8luokka";
     if (polku.includes("9luokka"))             return "9luokka";
     if (polku.includes("vuosikello"))          return "sivu-vuosikello";
-    if (polku.includes("yhteishakulaskuri"))   return "sivu-yhteishakulaskuri";
     if (polku.includes("duuniin-tet") ||
         polku.includes("tet_tehtava"))         return "sivu-tet";
     if (polku.includes("valinnat"))            return "sivu-valinnat";

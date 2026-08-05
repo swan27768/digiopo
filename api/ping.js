@@ -18,7 +18,7 @@ const SALLITUT_SIVUT = new Set([
   "peli-amissanasto", "peli-lukiosanasto", "peli-ajattelutavat",
   "peli-koulutusalat", "peli-kadonnut-motivaatio", "peli-duunimina",
   "peli-oppimisen-pakopeli", "peli-tiedon-temppeli", "peli-robo-tarina",
-  "sivu-vuosikello", "sivu-yhteishakulaskuri", "sivu-tet",
+  "sivu-vuosikello", "sivu-tet",
   "sivu-valinnat", "sivu-tulevaisuus",
 ]);
 
