@@ -386,7 +386,7 @@
                 var d=new Date(), t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
                 return (lista||[]).filter(function(x){ return (x.loppu_pvm||x.alku_pvm) >= t; }).length;
               }
-              fetch("/api/aikataulu?ryhma="+encodeURIComponent(ryhma)+"&luokka=7")
+              fetch("/api/aikataulu?ryhma="+encodeURIComponent(ryhma)+"&luokka=7", {cache:"no-store"})
                 .then(function(r){ return r.json(); })
                 .then(function(dd){
                   if (dd && dd.ok && tulevia(dd.tapahtumat) > 0){

@@ -259,7 +259,7 @@
 
   function lataa(ryhma){
     sisalto.innerHTML = '<p class="tila">Ladataan aikataulua…</p>';
-    fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
+    fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA, {cache:"no-store"})
       .then(function(r){ return r.json(); })
       .then(function(data){
         if (!data || !data.ok){
