@@ -205,7 +205,7 @@
     try {
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.startsWith("sb-") && k.endsWith("-auth-token")) return true;
+        if (k && k.startsWith("sb-") && /-auth-token(\.\d+)?$/.test(k)) return true;
       }
     } catch (e) {}
     return false;
@@ -322,7 +322,7 @@
             var poistettavat = [];
             for (var i = 0; i < localStorage.length; i++) {
               var avain = localStorage.key(i);
-              if (avain && /^sb-.+-auth-token$/.test(avain)) poistettavat.push(avain);
+              if (avain && /^sb-.+-auth-token(\.\d+)?$/.test(avain)) poistettavat.push(avain);
             }
             poistettavat.forEach(function (a) { localStorage.removeItem(a); });
           } catch (e) {}

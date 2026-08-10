@@ -59,7 +59,7 @@
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && k.startsWith("sb-") && k.endsWith("-auth-token")) return true;
+        if (k && k.startsWith("sb-") && /-auth-token(\.\d+)?$/.test(k)) return true;
       }
     } catch {}
     return false;

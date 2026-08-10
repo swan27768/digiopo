@@ -173,7 +173,7 @@
             var poistettavat = [];
             for (var i = 0; i < localStorage.length; i++) {
               var avain = localStorage.key(i);
-              if (avain && /^sb-.+-auth-token$/.test(avain)) poistettavat.push(avain);
+              if (avain && /^sb-.+-auth-token(\.\d+)?$/.test(avain)) poistettavat.push(avain);
             }
             poistettavat.forEach(function (a) { localStorage.removeItem(a); });
           } catch (e) {}
