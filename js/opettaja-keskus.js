@@ -121,6 +121,7 @@
       if (!ryhmat.length) {
         html += '<p style="color:#556;margin:.2rem 0 .6rem">Ei vielä ryhmiä. Luo ensimmäinen alta.</p>';
       } else {
+        html += '<p class="ok-ohje" style="margin:.2rem 0 .8rem;font-size:.82rem;line-height:1.5;color:#5b4f78;background:#faf8ff;border:1px solid #e6ddf5;border-radius:.55rem;padding:.55rem .7rem">💡 <strong>Osiojärjestys</strong> ja <strong>Aikataulu</strong> avaavat luokan sivun muokattavaksi: valitse luokka-aste (7./8./9. lk), niin voit muuttaa osioiden järjestystä, piilottaa osioita oppilailta tai muokata lukuvuoden aikataulua.</p>';
         html += ryhmat.map(function (r) {
           var nimi = r.nimi ? esc(r.nimi) : "(nimetön ryhmä)";
           return '<div class="ok-kortti" data-koodi="' + esc(r.ryhmakoodi) + '">' +
