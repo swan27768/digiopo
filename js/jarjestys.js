@@ -201,15 +201,27 @@
     if (avaaPortti) avaaPinPortti();
   });
 
+  function onOpettajaSessio() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.startsWith("sb-") && k.endsWith("-auth-token")) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
   function lisaaOpeLinkki() {
     if (document.querySelector(".jarjestys-opelinkki")) return;
+    // Näytä Hallintapaneeli vain kirjautuneelle opettajalle — piilota oppilailta
+    if (!onOpettajaSessio()) return;
     var a = document.createElement("button");
     a.type = "button";
     a.className = "jarjestys-opelinkki";
     a.textContent = "Hallintapaneeli";
     a.title = "Hallintapaneeli";
     a.addEventListener("click", avaaPinPortti);
-    document.body.appendChild(a);
+    var host = document.querySelector(".navbar .nav-right") || document.body;
+    host.appendChild(a);
   }
 
   // ---------- PIN-portti (modaali) ----------

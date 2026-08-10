@@ -177,16 +177,14 @@
 
   /* ── Rakenna kielivalitsin ── */
   function buildPicker() {
-    var navbar = document.querySelector('.navbar');
-    if (!navbar) return;
+    var host = document.querySelector('.navbar .nav-right') || document.querySelector('.navbar');
+    if (!host) return;
 
     var wrapper = document.createElement('div');
     wrapper.id = 'i18n-wrapper';
     wrapper.style.cssText = [
       'display:flex',
-      'align-items:center',
-      'margin-left:auto',
-      'padding-right:180px'
+      'align-items:center'
     ].join(';');
 
     var select = document.createElement('select');
@@ -224,7 +222,7 @@
     });
 
     wrapper.appendChild(select);
-    navbar.appendChild(wrapper);
+    host.appendChild(wrapper);
   }
 
   /* ── Käynnistys ── */
