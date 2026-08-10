@@ -444,7 +444,7 @@
   function ladataSortable(cb) {
     if (window.Sortable) return cb();
     var s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.6/Sortable.min.js";
+    s.src = "/vendor/sortable/Sortable.min.js";
     s.onload = cb;
     s.onerror = function () { console.warn("SortableJS ei latautunut."); };
     document.head.appendChild(s);
