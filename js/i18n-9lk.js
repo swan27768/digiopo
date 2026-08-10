@@ -297,14 +297,13 @@
         }
       })();
 
-      /* Tehtävä 2 badge */
+      /* Tehtävä 2 (AI-laboratorio) ja Tehtävä 3 (salapoliisi) badget */
       (function () {
+        var map = { 'Tehtävä 2': aj.badge2, 'Tehtävä 3': aj.badge3 };
         var allSpans = document.querySelectorAll('#ajattelu > div > span');
         for (var i = 0; i < allSpans.length; i++) {
-          if (allSpans[i].textContent.trim() === 'Tehtävä 2') {
-            allSpans[i].textContent = aj.badge2;
-            break;
-          }
+          var t = allSpans[i].textContent.trim();
+          if (map[t]) allSpans[i].textContent = map[t];
         }
       })();
 

@@ -193,7 +193,7 @@ window.OSIO_DATA = {
 
   teoriat: {
     "ajattelutyylit": {
-      otsikko: "Mikä ajattelija sinä olet? — viisi ajattelutapaa",
+      otsikko: "Ajattelupeli — viisi ajattelutapaa",
       teksti: [
         "Tehtävä perustuu ajattelutaitojen tutkimukseen: ajattelu ei ole synnynnäinen, muuttumaton ominaisuus vaan joukko harjoiteltavia taitoja, ja eri tilanteet vaativat eri ajattelutapaa. Kriittinen ajattelu tarkoittaa väitteiden arviointia ja kyseenalaistamista, looginen ajattelu järjestelmällistä päättelyä, luova ajattelu uusien ideoiden tuottamista (divergentti ajattelu), lateraalinen ajattelu ongelman lähestymistä yllättävästä suunnasta ja reflektiivinen ajattelu oman ajattelun tarkastelua.",
         "Oman vahvuuden tunnistaminen tukee metakognitiota — tietoisuutta siitä, miten itse ajattelee. Tutkimusten mukaan tämä tietoisuus parantaa oppimista ja päätöksentekoa. Tavoite ei ole leimata itseään yhdeksi tyypiksi vaan oppia käyttämään kaikkia tapoja joustavasti tilanteen mukaan."
