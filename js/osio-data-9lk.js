@@ -28,15 +28,18 @@ window.OSIO_DATA = {
       teoria: "ajattelutyylit",
       rakenne: [
         "Aloitus: voiko omaan ajatteluun luottaa?",
+        "Ajattelupeli: viisi ajattelutapaa (yksin tai parina, 15–20 min)",
+        "AI-laboratorio: kriittinen ajattelu tekoälyn aikana (20–30 min)",
         "Ryhmäpeli: Salapoliisitehtävä — Kadonnut kultainen kello (25–30 min)",
         "Purku: mikä johti harhaan, mikä auttoi ratkaisuun?"
       ],
       tavoitteet: [
         "Harjoittelet päättelyä: erotat havainnon, tulkinnan ja johtopäätöksen",
         "Tunnistat ajattelun oikopolkuja, jotka johtavat harhaan",
+        "Arvioit tekoälyä ja verkkotietoa kriittisesti: tunnistat suodatinkuplan ja verkossa leviävän valheellisen tiedon",
         "Ratkaisette ongelman ryhmänä — kuuntelu kuuluu päättelyyn"
       ],
-      miksi: "Ihmisen ajattelussa on kaksi järjestelmää: nopea ja automaattinen sekä hidas ja punnitseva. Nopea järjestelmä hutiloi juuri isoissa päätöksissä — kuten koulutusvalinnassa. Kun opit huomaamaan omat oikopolkusi, teet yhteishaussa valintoja, jotka perustuvat tietoon eivätkä ensivaikutelmaan.",
+      miksi: "Ihmisen ajattelussa on kaksi järjestelmää: nopea ja automaattinen sekä hidas ja punnitseva. Nopea järjestelmä hutiloi juuri isoissa päätöksissä — kuten koulutusvalinnassa. Kun opit huomaamaan omat oikopolkusi, teet elämässä valintoja, jotka perustuvat tietoon eivätkä ensivaikutelmaan. Juuri nyt tämä on tärkeämpää kuin koskaan: tekoäly tuottaa tekstiä, kuvia ja väitteitä, ja tieto tulvii joka suunnasta valmiiksi pureskeltuna. Kun osaat käyttää omia aivojasi — kysyä, epäillä ja päätellä itse — et ole algoritmien etkä ensivaikutelmien vietävissä.",
       yhteenveto: [
         "Osaat erottaa todisteen ja olettamuksen toisistaan",
         "Tunnistat ainakin yhden ajatusvinouman omassa päättelyssäsi",
