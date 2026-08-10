@@ -1,6 +1,8 @@
 // DigiOpo – Service Worker
 // Strategia:
-//   - Staattiset resurssit (CSS, JS, kuvat): cache-first
+//   - Vendor-kirjastot (/vendor/*): cache-first (nopea; versionnosto flushaa)
+//   - Sovelluksen oma JS/CSS: network-first (pysyy tuoreena, EI vanhene välimuistiin)
+//   - Kuvat/fontit/ikonit: cache-first (nopea)
 //   - JSON-datatiedostot (tehtavat.json, fi.json jne.): network-first (pysyy aina tuoreena)
 //   - HTML-sivut: network-first (sisältö pysyy tuoreena)
 //   - API-kutsut (/api/*): ei välimuistitusta
@@ -8,7 +10,7 @@
 // HUOM: nosta tätä versionumeroa AINA kun muutat esiladattua tiedostoa
 // (PRECACHE_ASSETS) tai muuta staattista sisältöä. Muuten selaimet tarjoilevat
 // vanhaa versiota välimuistista eikä korjaus näy käyttäjille.
-const CACHE_VERSION = "digiopo-v32";
+const CACHE_VERSION = "digiopo-v33";
 
 // Maksumuurin takana oleva sisältö: EI koskaan välimuistiin, jotta middleware
 // hallitsee pääsyä eikä suojattua sisältöä voi lukea offline ilman lisenssiä.
@@ -102,7 +104,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Staattiset resurssit: cache-first (nopea, välimuisti päivittyy taustalla)
+  // Vendor-kirjastot (/vendor/*): cache-first — isot, harvoin muuttuvat.
+  // Versionnosto (CACHE_VERSION) flushaa nämä. Pitää slow-network-latauksen nopeana.
+  if (url.pathname.startsWith("/vendor/")) {
+    event.respondWith(cacheFirst(request, STATIC_CACHE));
+    return;
+  }
+
+  // Sovelluksen oma JS/CSS: network-first — pysyy aina tuoreena eikä jää
+  // vanhentuneena välimuistiin (ei tarvita CACHE_VERSION-nostoa joka muutoksella).
+  // Offline-tilassa tarjoillaan välimuistista.
+  if (url.pathname.endsWith(".js") || url.pathname.endsWith(".css")) {
+    event.respondWith(networkFirst(request, STATIC_CACHE));
+    return;
+  }
+
+  // Muut staattiset (kuvat, fontit, ikonit): cache-first (nopea).
   event.respondWith(cacheFirst(request, STATIC_CACHE));
 });
 
