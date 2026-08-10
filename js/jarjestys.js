@@ -117,7 +117,7 @@
 
   // ---- API ----
   function haeServer(ryhma) {
-    return fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
+    return fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA, { cache: "no-store" })
       .then(function (r) { return r.json(); }).catch(function () { return { ok: false }; });
   }
   function postServer(payload) {
@@ -139,6 +139,7 @@
   if (opeRyhma) {
     // Opettajan laite: näytä oma työversio
     sovella(yhdista(lue(LS_LOCAL)));
+    naytaRyhmaMerkki();
   } else if (liittymaRyhma) {
     // Oppilas: välimuisti heti, sitten palvelimelta
     sovella(yhdista(lue(LS_CACHE)) || yhdista(lue(LS_LOCAL)));
@@ -210,6 +211,34 @@
     } catch (e) {}
     return false;
   }
+
+  // ---- Aktiivisen ryhmän merkki (opettajan laitteella) ----
+  var LS_OPE_NIMI = "digiopo-ope-ryhma-nimi"; // aktiivisen ryhmän nimi näyttöä varten
+  function ryhmaLabelHtml(koodi) {
+    var nimi = lueRaaka(LS_OPE_NIMI) || "";
+    return (nimi ? '<strong>' + esc(nimi) + '</strong> · ' : '') + '<code style="font-size:.95em">' + esc(koodi) + '</code>';
+  }
+  function naytaRyhmaMerkki() {
+    var koodi = lueRaaka(LS_OPE_R);
+    if (!koodi) return;
+    var el = document.querySelector(".jarjestys-ryhmamerkki");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "jarjestys-ryhmamerkki";
+      el.style.cssText = "position:fixed;left:12px;bottom:12px;z-index:9997;background:#2b3350;color:#f4f5fb;border:1px solid rgba(255,255,255,.14);border-radius:.6rem;padding:.45rem .7rem;font-size:.82rem;line-height:1.35;box-shadow:0 6px 20px rgba(20,18,48,.32);max-width:72vw;font-family:inherit";
+      document.body.appendChild(el);
+    }
+    var sisus = function () { el.innerHTML = '<span style="opacity:.7">Aktiivinen ryhmä:</span> ' + ryhmaLabelHtml(koodi); };
+    sisus();
+    if (!lueRaaka(LS_OPE_NIMI)) {
+      postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
+        if (v && v.ok && v.ryhmat) {
+          var r = v.ryhmat.filter(function (x) { return x.ryhmakoodi === koodi; })[0];
+          if (r && r.nimi) { kirjoitaRaaka(LS_OPE_NIMI, r.nimi); sisus(); }
+        }
+      });
+    }
+  }
   function lisaaOpeLinkki() {
     if (document.querySelector(".jarjestys-opelinkki")) return;
     // Näytä Hallintapaneeli vain kirjautuneelle opettajalle — piilota oppilailta
@@ -260,7 +289,7 @@
         ? ryhmat.map(function (r) {
             var nimi = r.nimi ? '<span class="portti-lista-nimi">' + esc(r.nimi) + '</span>' : '';
             return '<div style="display:flex;gap:6px;margin-bottom:.3rem">' +
-              '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '" style="flex:1;margin-bottom:0">' +
+              '<button type="button" class="portti-lista-rivi portti-tili-rivi" data-koodi="' + esc(r.ryhmakoodi) + '" data-nimi="' + esc(r.nimi || '') + '" style="flex:1;margin-bottom:0">' +
                 '<span class="portti-tili-avaa">✏️ Avaa</span>' + nimi +
                 '<span class="portti-lista-koodi">' + esc(r.ryhmakoodi) + '</span></button>' +
               '<button type="button" class="portti-tili-poista" data-koodi="' + esc(r.ryhmakoodi) + '" title="Poista ryhmä" style="flex:0 0 auto;background:#fff;border:1px solid #e0a3a3;color:#b91c1c;border-radius:.5rem;padding:0 .55rem;cursor:pointer;font-size:15px">🗑</button>' +
@@ -341,6 +370,7 @@
       Array.prototype.forEach.call(sisalto.querySelectorAll(".portti-tili-rivi"), function (btn) {
         btn.addEventListener("click", function () {
           kirjoitaRaaka(LS_OPE_R, btn.getAttribute("data-koodi"));
+          kirjoitaRaaka(LS_OPE_NIMI, btn.getAttribute("data-nimi") || "");
           tiliMoodi = true;
           sulje();
           kaynnistaMuokkaus();
@@ -386,6 +416,7 @@
     document.body.classList.add("ope-muokkaustila");
     lisaaKahvat();
     naytaPaneeli();
+    naytaRyhmaMerkki();
     ladataSortable(kaynnistaSortable);
   }
   function lopetaMuokkaus() {
@@ -496,7 +527,7 @@
       // 4. Jaettava linkki oppilaille (viimeisenä)
       '<div class="jp-block">' +
         '<div class="jp-h">Jaa linkki oppilaille</div>' +
-        '<p class="jp-koodi">Ryhmäkoodi: <strong>' + (ryhma || "—") + '</strong></p>' +
+        '<p class="jp-koodi">Ryhmä: ' + (ryhma ? ryhmaLabelHtml(ryhma) : "—") + '</p>' +
         '<code class="jarjestys-linkki-teksti">' + linkki + '</code>' +
         '<button type="button" class="jarjestys-nappi jarjestys-kopioi">Kopioi linkki</button>' +
       '</div>';
@@ -541,7 +572,7 @@
     overlay.className = "aikataulu-modaali-overlay";
     overlay.innerHTML =
       '<div class="aikataulu-modaali">' +
-        '<div class="am-head"><span>🗓️ Lukuvuoden aikataulu — ' + LUOKKA + '. luokka</span>' +
+        '<div class="am-head"><span>🗓️ Lukuvuoden aikataulu — ' + LUOKKA + '. luokka <span style="opacity:.75;font-weight:600">· ' + ryhmaLabelHtml(ryhma) + '</span></span>' +
         '<button type="button" class="am-sulje" title="Sulje">✕</button></div>' +
         '<div class="am-lomake">' +
           '<input class="am-otsikko" type="text" maxlength="80" placeholder="Otsikko (esim. TET-jakso)">' +
@@ -570,7 +601,7 @@
     function tyhjennaLomake() { muokattavaId = null; q(".am-otsikko").value = ""; q(".am-tyyppi").value = "tet"; q(".am-alku").value = ""; q(".am-loppu").value = ""; q(".am-kuvaus").value = ""; q(".am-tallenna").textContent = "Lisää tapahtuma"; q(".am-peru").hidden = true; }
 
     function lataa() {
-      fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA)
+      fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA, { cache: "no-store" })
         .then(function (r) { return r.json(); })
         .then(function (d) { if (!d || !d.ok) { q(".am-lista").innerHTML = '<p class="am-tyhja">Lataus epäonnistui.</p>'; return; } renderoi(d.tapahtumat || []); })
         .catch(function () { q(".am-lista").innerHTML = '<p class="am-tyhja">Yhteysvirhe.</p>'; });
