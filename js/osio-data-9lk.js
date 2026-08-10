@@ -4,25 +4,6 @@ window.OSIO_DATA = {
   luokka: "9",
 
   osiot: {
-    "johdanto": {
-      rakenne: [
-        "Aloitus: mitä 9. luokan opinto-ohjauksessa tehdään?",
-        "Tutustuminen: kuka olen oppijana juuri nyt? (10 min)",
-        "Maskottitehtävä: mitä ajattelen peruskoulun jälkeen? (15 min)"
-      ],
-      tavoitteet: [
-        "Tiedät, mitä tämän vuoden opinto-ohjaus sisältää",
-        "Pohdit, missä olet juuri nyt — kiinnostukset, vahvuudet, epävarmuudet",
-        "Hahmotat, mitä asioita pitää päättää tämän lukuvuoden aikana"
-      ],
-      miksi: "Tutkimusten mukaan oppilaat, jotka tietävät mitä odottaa, kokevat prosessin hallittavampana. Johdantotunti ei anna valmiita vastauksia — se antaa kartan. Kun tiedät, mihin päätöstä tarvitaan ja milloin, se tuntuu paljon vähemmän ylivoimaiselta.",
-      yhteenveto: [
-        "Tiedät, mitä tämän vuoden opo-tunnit sisältävät",
-        "Olet pysähtynyt miettimään, missä itse olet juuri nyt",
-        "Sinulla on ensimmäinen ajatusten kartta tulevaisuudensuunnitelmistasi"
-      ]
-    },
-
     "jatko": {
       rakenne: [
         "Aloitus: mitä 9. luokan vuoteen kuuluu?",
