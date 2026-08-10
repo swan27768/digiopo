@@ -187,15 +187,19 @@
       var figs = document.querySelectorAll('#jatko .opo-esimerkit figure');
       if (figs[0]) {
         var img0 = figs[0].querySelector('img');
-        var cap0 = figs[0].querySelector('figcaption');
+        var ohje0 = figs[0].querySelector('.opo-ohje');
+        var lahde0 = figs[0].querySelector('.opo-lahde');
         if (img0 && op.kuva1_alt) img0.setAttribute('alt', op.kuva1_alt);
-        if (cap0 && op.kuva1_caption) cap0.textContent = op.kuva1_caption;
+        if (ohje0 && op.kuva1_caption) ohje0.textContent = op.kuva1_caption;
+        if (lahde0 && op.kuvalahde) lahde0.textContent = op.kuvalahde;
       }
       if (figs[1]) {
         var img1 = figs[1].querySelector('img');
-        var cap1 = figs[1].querySelector('figcaption');
+        var ohje1 = figs[1].querySelector('.opo-ohje');
+        var lahde1 = figs[1].querySelector('.opo-lahde');
         if (img1 && op.kuva2_alt) img1.setAttribute('alt', op.kuva2_alt);
-        if (cap1 && op.kuva2_caption) cap1.textContent = op.kuva2_caption;
+        if (ohje1 && op.kuva2_caption) ohje1.textContent = op.kuva2_caption;
+        if (lahde1 && op.kuvalahde) lahde1.textContent = op.kuvalahde;
       }
     })();
 
