@@ -238,7 +238,8 @@ const RUBRICS = {
   Jokaisessa tehtävässä on monivalinta. Pisteet (0–5) tulevat VAIN oikeista valinnoista.
   mc.multi = true  -> valitse kaikki oikeat
   mc.multi = false -> valitse yksi oikea vaihtoehto
-  Kirjoituskenttä on vapaaehtoinen pohdinta, eikä vaikuta pisteisiin.
+  Oikeita vastauksia EI paljasteta pelin aikana (estää pelin toistamisen "oikeilla"
+  vastauksilla). Pisteet ja ajatteluprofiili näytetään vasta yhteenvedossa.
 */
 const ALL_TASKS = {
   1: [
@@ -441,10 +442,7 @@ const LVL_NAMES  = {1:'Perustaso', 2:'Edistynyt taso'};
 /* ── State ── */
 let gLvl = 1, cur = 0;
 let mcSel      = {1:[[],[],[],[],[]], 2:[[],[],[],[],[]]};   // valitut vaihtoehdot per tehtävä
-let mcChecked  = {1:Array(5).fill(false), 2:Array(5).fill(false)}; // onko vastaus tarkistettu
-let reflect    = {1:Array(5).fill(''),  2:Array(5).fill('')}; // vapaaehtoinen pohdinta
-let peerChecks = {1:Array(5).fill(null),2:Array(5).fill(null)}; // vertaispalaute (ei pisteitä)
-let peerComments= {1:Array(5).fill(''), 2:Array(5).fill('')};
+let mcChecked  = {1:Array(5).fill(false), 2:Array(5).fill(false)}; // onko vastaus vahvistettu
 let hintsUsed   = {1:Array(5).fill(false),2:Array(5).fill(false)};
 let hintsShown  = {1:Array(5).fill(false),2:Array(5).fill(false)};
 let history = [];
@@ -549,8 +547,6 @@ function render(){
   const screens = {
     start:    () => renderStart(app),
     game:     () => renderGame(app),
-    passdevice:() => renderPassDevice(app),
-    peer:     () => renderPeer(app),
     summary1: () => renderSummary(app, 1),
     levelup:  () => renderLevelUp(app),
     summary2: () => renderSummary(app, 2),
@@ -573,18 +569,18 @@ function renderStart(app){
         <div class="play-mode-box">
           <div class="play-mode-icon">👤</div>
           <div class="play-mode-title">Yksin</div>
-          <div class="play-mode-desc">Lue tilanne, mieti, ja valitse oikeat vaihtoehdot. Pisteet tulevat oikeista valinnoista.</div>
+          <div class="play-mode-desc">Lue tilanne, mieti rauhassa ja valitse oikeat vaihtoehdot. Pisteet tulevat vain oikeista valinnoista.</div>
         </div>
         <div class="play-mode-box">
           <div class="play-mode-icon">👥</div>
-          <div class="play-mode-title">Pareittain tai ryhmässä</div>
-          <div class="play-mode-desc">Lopuksi kaveri voi lukea pohdintasi ja antaa sinulle palautetta.</div>
+          <div class="play-mode-title">Yhdessä pohtien</div>
+          <div class="play-mode-desc">Voitte miettiä tilanteita ääneen parin kanssa ennen kuin valitsette vastauksen.</div>
         </div>
       </div>
 
       <div class="info-box">
         ✅ Jokaisessa tehtävässä valitset oikeat vaihtoehdot. Pisteet tulevat vain oikeista valinnoista.<br>
-        ✍️ Voit halutessasi kirjoittaa oman pohdinnan – se ei vaikuta pisteisiin.<br>
+        🔒 Oikeita vastauksia ei näytetä. Pistesi ja ajatteluprofiilisi näet vasta pelin lopussa.<br>
         💡 Perustasolla voit pyytää vinkkiä (se rajaa tehtävän enintään 4 pisteeseen). Edistyneellä tasolla ei ole vinkkejä.
       </div>
 
@@ -608,34 +604,24 @@ function renderMcBlock(lvl){
   const checked = mcChecked[lvl][cur];
   const help = mc.multi ? 'Valitse kaikki oikeat (yksi tai useampi).' : 'Valitse yksi oikea vaihtoehto.';
 
+  // Vahvistuksen jälkeen valinnat lukitaan, mutta oikeita vastauksia EI paljasteta.
   let optsHtml = mc.options.map((o, i) => {
     const isSel = sel.includes(i);
-    let cls = 'mc-option' + (mc.multi ? '' : ' mc-radio');
+    let cls = 'mc-option' + (mc.multi ? '' : ' mc-radio') + (isSel ? ' selected' : '');
     let box = isSel ? (mc.multi ? '✓' : '●') : '';
-    let tag = '';
-    if(checked){
-      if(o.correct && isSel){ cls += ' correct-pick'; box = '✓'; tag = '<span class="mc-tag ok">Oikein</span>'; }
-      else if(!o.correct && isSel){ cls += ' wrong-pick'; box = '✕'; tag = '<span class="mc-tag no">Väärin</span>'; }
-      else if(o.correct && !isSel){ cls += ' missed'; box = '✓'; tag = '<span class="mc-tag miss">Oikea vastaus</span>'; }
-    } else if(isSel){ cls += ' selected'; }
     return `<button type="button" class="${cls}" ${checked?'disabled':''}
         role="${mc.multi?'checkbox':'radio'}" aria-checked="${isSel}"
         onclick="toggleMc(${i})">
         <span class="mc-box">${box}</span>
         <span class="mc-text">${o.t}</span>
-        ${tag}
       </button>`;
   }).join('');
 
-  let feedback = '';
+  let confirm = '';
   if(checked){
-    const s = mcScore(lvl, cur);
-    const tone = s >= 5 ? 'good' : s >= 1 ? 'partial' : 'bad';
-    const head = s >= 5 ? '🎉 Täydet pisteet!' : s >= 1 ? '👍 Osittain oikein.' : '❌ Ei pisteitä tästä.';
-    const capNote = (hintsUsed[lvl][cur] && s === 4) ? ' (vinkki rajasi enintään 4 pisteeseen)' : '';
-    feedback = `<div class="mc-feedback ${tone}" role="status">
-        <strong>${head}</strong> Sait <span class="mc-score-pill">${s} / 5 p</span>${capNote}<br>
-        ${mc.explain}
+    confirm = `<div class="mc-feedback" style="background:#FAEEDA;border-left:3px solid #EF9F27;color:#633806" role="status">
+        <strong>✓ Vastauksesi on tallennettu.</strong><br>
+        Oikeita vastauksia ei näytetä. Pistesi ja ajatteluprofiilisi näet pelin lopussa.
       </div>`;
   }
 
@@ -650,17 +636,17 @@ function renderMcBlock(lvl){
     ${!checked
       ? `<div class="btn-row">
            <button class="primary-btn" style="background:${LVL_COLORS[lvl]}" onclick="checkMc()" ${canCheck?'':'disabled aria-disabled="true"'}>
-             Tarkista vastaus
+             Vahvista vastaus
            </button>
            ${!canCheck?'<span class="error-note" role="note">Valitse ainakin yksi vaihtoehto.</span>':''}
          </div>`
       : ''}
-    ${feedback}`;
+    ${confirm}`;
 }
 
 function renderGame(app){
   const tasks = ALL_TASKS[gLvl], t = tasks[cur], m = getMode(t.mode);
-  const color = LVL_COLORS[gLvl], score = calcScore(gLvl);
+  const color = LVL_COLORS[gLvl];
   const checked = mcChecked[gLvl][cur];
   const canAdvance = checked;
 
@@ -672,23 +658,12 @@ function renderGame(app){
         ${renderMap(cur, gLvl)}
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
-        <div class="card-warm" style="padding:1rem">
-          <div class="section-label">XP-mittari</div>
-          ${renderXP(gLvl)}
-        </div>
-        <div class="card-warm" style="padding:1rem;text-align:center">
-          <div class="section-label">Aivoaktiivisuus</div>
-          ${renderBrain(gLvl)}
-        </div>
-      </div>
-
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
           <span style="font-size:12px;font-weight:500;color:${color};background:${color}18;border-radius:99px;padding:3px 10px;border:1px solid ${color}44">
             ${LVL_NAMES[gLvl]}
           </span>
-          <div class="score-chip" aria-label="Pisteet: ${score} / 25">⭐ <strong>${score}</strong> / 25 p</div>
+          <span class="step-counter" aria-hidden="true">Tehtävä ${cur+1} / 5</span>
         </div>
 
         <h2 class="mode-badge" style="background:${m.bg};color:${m.tc}">${m.icon} ${m.label}${gLvl===2?' – edistynyt':''}</h2>
@@ -708,17 +683,6 @@ function renderGame(app){
              <div class="hint-box" id="hintbox" role="note" ${hintsShown[gLvl][cur]?'':'hidden'}>${t.hint}</div>`
           : `<p class="no-hint-note" role="note">🔒 Edistyneellä tasolla ei ole vinkkejä. Luota omaan ajatteluusi!</p>`
         }
-
-        ${checked ? `
-          <div class="divider" role="separator"></div>
-          <label for="reflect-input" style="font-size:13px;font-weight:500;color:#412402;display:block;margin-bottom:6px">
-            ✍️ Halutessasi: kirjoita oma vastauksesi tai pohdintasi
-          </label>
-          <textarea id="reflect-input" rows="4"
-            placeholder="Vapaaehtoinen – tähän voit kirjoittaa omin sanoin…"
-            oninput="onReflect(this.value)">${reflect[gLvl][cur]}</textarea>
-          <p class="reflect-hint">Vapaaehtoinen kenttä. Ei vaikuta pisteisiin, mutta kaveri voi antaa siitä palautetta.</p>
-        ` : ''}
       </div>
 
       <div class="btn-row">
@@ -729,87 +693,19 @@ function renderGame(app){
         ${cur < 4
           ? `<button class="primary-btn" style="background:${color}" onclick="nextT()"
                ${!canAdvance?'disabled aria-disabled="true"':''}
-               aria-label="${!canAdvance?'Tarkista vastaus ennen etenemistä':'Seuraava tehtävä'}">
+               aria-label="${!canAdvance?'Vahvista vastaus ennen etenemistä':'Seuraava tehtävä'}">
                Seuraava →
              </button>`
-          : `<button class="primary-btn" style="background:${color}" onclick="goToPeer()"
+          : `<button class="primary-btn" style="background:${color}" onclick="finishLevel()"
                ${!canAdvance?'disabled aria-disabled="true"':''}
-               aria-label="${!canAdvance?'Tarkista vastaus ennen etenemistä':'Valmis'}">
+               aria-label="${!canAdvance?'Vahvista vastaus ennen etenemistä':'Näytä tulokset'}">
                Valmis →
              </button>`
         }
       </div>
 
       ${!canAdvance
-        ? `<p class="error-note" role="alert">Tarkista vastauksesi ("Tarkista vastaus") ennen kuin voit jatkaa.</p>` : ''}
-    </div>`;
-}
-
-function renderPassDevice(app){
-  const m = getMode(ALL_TASKS[gLvl][cur].mode);
-  const hasReflection = MODES.some((_, i) => (reflect[gLvl][i] || '').trim().length > 0);
-  app.innerHTML = `
-    <div class="card">
-      <div class="pass-screen">
-        <div class="pass-emoji" role="img" aria-label="Anna laite">📲</div>
-        <h2 class="pass-title">Haluatko palautetta kaverilta?</h2>
-        <p class="pass-sub">
-          Kaverisi voi lukea pohdintasi ja antaa sinulle palautetta.<br>
-          ${hasReflection ? 'Anna laite kaverille.' : 'Et kirjoittanut omaa pohdintaa – voit silti pyytää palautetta tai siirtyä suoraan tuloksiin.'}
-        </p>
-        <div class="levelup-btns">
-          <button class="primary-btn" style="background:#7F77DD;font-size:15px;padding:11px 24px"
-            onclick="cur=0;screen='peer';render()">
-            Anna kaverille arvioitavaksi →
-          </button>
-          <button class="next-btn" onclick="finishLevel()">Siirry suoraan tuloksiin</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderPeer(app){
-  const t = ALL_TASKS[gLvl][cur], m = getMode(t.mode);
-  const rubric = RUBRICS[t.mode];
-  if(!peerChecks[gLvl][cur]) peerChecks[gLvl][cur] = Array(rubric.length).fill(false);
-  const checks = peerChecks[gLvl][cur];
-  const checkedCount = checks.filter(Boolean).length;
-
-  app.innerHTML = `
-    <div class="peer-card" role="region" aria-label="Vertaispalaute – ${m.label}">
-      <span class="peer-phase-badge">👥 Vertaispalaute · tehtävä ${cur+1} / 5</span>
-      <h2 style="font-size:16px;font-weight:500;margin-bottom:8px;color:#412402">${m.icon} ${m.label}</h2>
-
-      <p style="font-size:13px;color:#633806;margin-bottom:8px">Kaverin pohdinta:</p>
-      <div class="peer-answer-box" aria-label="Kaverin pohdinta">${(reflect[gLvl][cur]||'').trim() || '(Kaveri ei kirjoittanut omaa pohdintaa)'}</div>
-
-      <p style="font-size:13px;font-weight:500;color:#412402;margin-bottom:8px">
-        Rastita kohdat, jotka löydät pohdinnasta (tämä on palautetta, ei pisteitä):
-      </p>
-      <div class="peer-rubric" role="group" aria-label="Palautekriteerit">
-        ${rubric.map((item, i) => `
-          <div class="peer-rubric-item">
-            <button class="peer-rubric-check ${checks[i]?'checked':''}" id="chk${i}"
-              role="checkbox" aria-checked="${checks[i]}" aria-label="${item}"
-              onclick="toggleCheck(${i})">${checks[i]?'✓':''}</button>
-            <span class="peer-rubric-text">${item}</span>
-          </div>`).join('')}
-      </div>
-
-      <p style="font-size:12px;color:#BA7517;margin-bottom:1rem">${checkedCount} / ${rubric.length} kohtaa löytyi</p>
-
-      <p style="font-size:13px;color:#633806;margin-bottom:6px">Vapaa palaute (valinnainen):</p>
-      <textarea id="peer-comment" rows="2"
-        placeholder="Kirjoita lyhyt palaute kaverille…"
-        oninput="savePeerComment(this.value)">${peerComments[gLvl][cur]||''}</textarea>
-
-      <div class="btn-row" style="margin-top:1rem">
-        <button class="next-btn" onclick="prevPeer()" ${cur===0?'disabled aria-disabled="true"':''}>← Edellinen</button>
-        <span class="step-counter" aria-hidden="true">${cur+1} / 5</span>
-        ${cur < 4
-          ? `<button class="primary-btn" style="background:#7F77DD" onclick="nextPeer()">Seuraava →</button>`
-          : `<button class="primary-btn" style="background:#7F77DD" onclick="finishLevel()">Valmis – näytä tulokset ✓</button>`}
-      </div>
+        ? `<p class="error-note" role="alert">Vahvista vastauksesi ("Vahvista vastaus") ennen kuin voit jatkaa.</p>` : ''}
     </div>`;
 }
 
@@ -995,30 +891,12 @@ function checkMc(){
   render();
 }
 
-function onReflect(v){ reflect[gLvl][cur] = v; }
-
 function toggleHint(){
   if(mcChecked[gLvl][cur]) return;
   hintsShown[gLvl][cur] = !hintsShown[gLvl][cur];
   if(hintsShown[gLvl][cur]) hintsUsed[gLvl][cur] = true;
   render();
 }
-
-function toggleCheck(i){
-  const checks = peerChecks[gLvl][cur];
-  checks[i] = !checks[i];
-  render();
-}
-
-function savePeerComment(v){ peerComments[gLvl][cur] = v; }
-
-function goToPeer(){
-  if(!mcChecked[gLvl][cur]) return;
-  screen = 'passdevice'; render();
-}
-
-function nextPeer(){ if(cur < 4){ cur++; render(); } }
-function prevPeer(){ if(cur > 0){ cur--; render(); } }
 
 function finishLevel(){
   cur = 4;
@@ -1047,9 +925,6 @@ function restartAll(){
   gLvl=1; cur=0; screen='start';
   mcSel        = {1:[[],[],[],[],[]], 2:[[],[],[],[],[]]};
   mcChecked    = {1:Array(5).fill(false), 2:Array(5).fill(false)};
-  reflect      = {1:Array(5).fill(''),   2:Array(5).fill('')};
-  peerChecks   = {1:Array(5).fill(null), 2:Array(5).fill(null)};
-  peerComments = {1:Array(5).fill(''),   2:Array(5).fill('')};
   hintsUsed    = {1:Array(5).fill(false),2:Array(5).fill(false)};
   hintsShown   = {1:Array(5).fill(false),2:Array(5).fill(false)};
   render();
