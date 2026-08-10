@@ -601,7 +601,9 @@
     function tyhjennaLomake() { muokattavaId = null; q(".am-otsikko").value = ""; q(".am-tyyppi").value = "tet"; q(".am-alku").value = ""; q(".am-loppu").value = ""; q(".am-kuvaus").value = ""; q(".am-tallenna").textContent = "Lisää tapahtuma"; q(".am-peru").hidden = true; }
 
     function lataa() {
-      fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA, { cache: "no-store" })
+      // Cache-buster (_=aikaleima): ohittaa Vercelin reunavälimuistin, jotta
+      // opettaja näkee omat lisäykset/muokkaukset/poistot HETI (ei 30 s viivettä).
+      fetch(API_A + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA + "&_=" + Date.now(), { cache: "no-store" })
         .then(function (r) { return r.json(); })
         .then(function (d) { if (!d || !d.ok) { q(".am-lista").innerHTML = '<p class="am-tyhja">Lataus epäonnistui.</p>'; return; } renderoi(d.tapahtumat || []); })
         .catch(function () { q(".am-lista").innerHTML = '<p class="am-tyhja">Yhteysvirhe.</p>'; });
