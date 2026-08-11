@@ -228,10 +228,29 @@
     lataa();
   }
 
-  // ── Kelluva nappi etusivulle ──
+  // Onko laitteella opettajan Supabase-kirjautumis-token? Supabase tallentaa
+  // session localStorageen avaimella "sb-<ref>-auth-token". Vain opettaja
+  // kirjautuu sähköpostilla, joten pelkällä koulukoodilla (oppilaat, myös
+  // testi-lisenssi) tokenia ei ole. Sama kevyt tunniste kuin lisenssiportti.js:ssä
+  // – ei palvelinkutsua, joten oppilaita ei rasiteta. Todellinen valtuutus
+  // tarkistetaan silti palvelimella opettajaevästeestä (api/jarjestys).
+  function onMahdollinenOpettajaSessio() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf("sb-") === 0 && /-auth-token(\.\d+)?$/.test(k)) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  // ── Kelluva nappi etusivulle (vain opettajille) ──
   document.addEventListener("DOMContentLoaded", function () {
     lisaaTyylit();
     if (document.querySelector(".ope-keskus-nappi")) return;
+    // Nappi näytetään vain jos laitteella on opettajan kirjautumissessio.
+    // Näin oppilaat (myös testi-lisenssillä) eivät näe hallintapaneeli-nappia.
+    if (!onMahdollinenOpettajaSessio()) return;
     var b = document.createElement("button");
     b.type = "button";
     b.className = "ope-keskus-nappi";
