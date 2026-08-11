@@ -22,8 +22,18 @@ raportointia varten. Ainoat portit ovat `aktiivinen` ja `voimassa_asti`.
 
 ## 2. Uuden koulun lisenssi
 
-Kun kunta tai koulu ostaa, luodaan **kaksi asiaa**: koulukoodi oppilaille ja
+Kun kunta tai koulu ostaa, tarvitaan **kaksi asiaa**: koulukoodi oppilaille ja
 opettajalisenssi jokaiselle opettajalle.
+
+> **Tilauslomakkeen kautta nämä syntyvät automaattisesti.** Kun koulu tilaa
+> `digiopo.fi/tilauslomake.html`-lomakkeella, tilausautomaatio luo koulukoodin
+> **ja** opettajalisenssin yhteyshenkilölle sekä jokaiselle lomakkeen "muiden
+> opettajien sähköpostit" -kentässä listatulle opettajalle (ks. osio 3b). Käsin
+> SQL:llä luonti on tarpeen enää vain **erikoistapauksissa**: pilottikoulut,
+> testaajat, sekä opettajat jotka lisätään vasta tilauksen jälkeen.
+
+Alla oleva käsin luonti kannattaa siis tehdä lähinnä silloin kun lisäät
+yksittäisen opettajan jo tilanneelle koululle tai luot testilisenssin.
 
 ### Vaihe 1 – koulukoodi
 
@@ -57,6 +67,21 @@ tarkistetaan palvelimella lisenssistä, ei Auth-käyttäjän olemassaolosta.
 Sama henkilö voi hyvin olla sekä koulukoodin haltija että opettajalisenssin
 omistaja – ne ovat eri rivejä ja eri tyyppejä. Uniikki-indeksi koskee vain
 opettajalisenssejä.
+
+### Miten opettaja kirjautuu ja näkee hallintapaneelin
+
+Opettaja kirjautuu `app.digiopo.fi/kirjaudu.html`-sivulla **sähköpostilla**
+(magic link), ei koodilla. Kirjautuminen sekä avaa maksumuurin että antaa
+opettajaoikeudet, joten opettaja ei tarvitse koulukoodia lainkaan. Pääsy
+edellyttää, että sähköpostilla on `opettaja`-tyyppinen lisenssi.
+
+"Hallintapaneeli"-nappi (`js/opettaja-keskus.js`) näytetään **vain laitteilla
+joilla on opettajan Supabase-kirjautumissessio** (`sb-*-auth-token`
+localStoragessa). Pelkällä koulukoodilla kirjautuneet oppilaat – myös
+`testi`-lisenssillä – eivät näe nappia. Tämä on kevyt selainpuolen suodatus;
+todellinen valtuutus tarkistetaan silti palvelimella opettajaevästeestä
+(`api/jarjestys` → `haeKirjautunutOpettaja`). Jos opettajan Supabase-sessio
+katoaa selaimesta, nappi piiloutuu kunnes hän kirjautuu uudelleen.
 
 ### ⚠️ Koulunimen on täsmättävä täsmälleen
 
@@ -116,48 +141,81 @@ päättelee. Ne satunnaistettiin 19.7.2026.
 
 ---
 
-## 3b. Tilausautomaatio (`digiopo-home/api/tilaus.js`)
+## 3b. Tilausautomaatio (`digiopo-home/api/tilaus.js` + `_lib/tilaus-taytto.js`)
 
 Lisenssit syntyvät kahdesta lähteestä: tilauslomakkeelta automaattisesti ja
 käsin SQL:llä. **Molemmat kirjoittavat samaan `lisenssit`-tauluun eri
 projekteista.** Kannan rajoitteita muutettaessa on tarkistettava molemmat.
 
-| Tilaustyyppi | Mitä syntyy |
-|---|---|
-| Koululisenssi | `tyyppi='vuosi'`, koodi generoidaan, `paikat` = tilattu oppilasmäärä |
-| Opettajalisenssi | `tyyppi='opettaja'`, koodi generoidaan (ei käytössä kirjautumisessa) |
+Tilauslomakkeella on **yksi tuote** – koululisenssi, kaudella `vuosi`
+(1 lukuvuosi) tai `3vuotta`. Kausi vaikuttaa vain hintaan ja `voimassa_asti`-
+päivään, ei tyyppiin (myös 3 vuoden lisenssi tallentuu tyypillä `vuosi`).
 
-**Uusintatilaus päivittää olemassa olevaa opettajalisenssiä**, ei luo uutta.
-Voimassaolo jatkuu nykyisestä päättymispäivästä, jos lisenssi on yhä voimassa –
-näin ajoissa uusiva asiakas ei menetä jäljellä olevaa aikaa. Vanhentuneella
-lisenssillä lasketaan tilauspäivästä.
+Yhdestä tilauksesta syntyy:
 
-### Korjattu 19.7.2026
+| Rivi | tyyppi | Kenelle |
+|---|---|---|
+| Koulukoodi | `vuosi` | Oppilaille (jaettu koodi), `paikat` = tilattu oppilasmäärä |
+| Opettajalisenssi | `opettaja` | Tilaajalle (yhteyshenkilön sähköposti) |
+| Opettajalisenssi | `opettaja` | Jokaiselle lomakkeen "muut opettajat" -sähköpostille |
 
-Kaksi vikaa löytyi, kun tilausautomaatio tarkistettiin osion 06 kirjoittamisen
-yhteydessä:
+Opettajalisenssien koodi (`OPE-VUOSI-XXXXXX`) generoidaan mutta **ei ole
+käytössä kirjautumisessa** – opettaja kirjautuu sähköpostilla (magic link), ei
+koodilla. Jokainen automaattisesti luotu opettaja saa sähköpostiinsa
+kirjautumisohjeen, ja tilaaja näkee ohjeen myös koulukoodisähköpostissaan.
 
-1. **Opettajalisenssitilaus ei ollut koskaan voinut onnistua.** `INSERT` tehtiin
-   ilman `koodi`-kenttää, joka on `NOT NULL`. Jokainen tilaus kaatui, asiakas
-   näki "Palvelinvirhe – yritä uudelleen", eikä laskua lähetetty. Nyt koodi
-   generoidaan (`generoi_opettaja_koodi`).
-2. **Uusintatilaus olisi kaatunut uniikkiin indeksiin.** Duplikaattisuoja kattoi
-   vain 3 minuuttia (tuplaklikkauksen esto). Nyt olemassa oleva rivi päivitetään.
+### Maksutavan vaikutus voimassaoloon
 
-Samalla korjattiin duplikaattisuoja huomioimaan lisenssin tyyppi: aiemmin sama
-henkilö ei voinut tilata koululisenssiä ja opettajalisenssiä kolmen minuutin
-sisällä – jälkimmäinen kuitattiin duplikaatiksi eikä lisenssiä syntynyt.
+| Maksutapa | Koulukoodi | Opettajalisenssit |
+|---|---|---|
+| Verkkomaksu (Paytrail) | Täysi kausi heti, `maksettu=true` | Täysi kausi |
+| Lasku (kunnat) | 30 pv aluksi, jatkuu täyteen kun lasku maksetaan | **Täysi kausi heti** |
 
-### Tiedossa olevat rajoitteet
+Laskupolussa opettajalisenssit saavat täyden kauden heti (ei 30 pv):
+koulukoodin voimassaoloa jatketaan maksun tullessa `koodi`n perusteella, mutta
+opettajalisenssillä on eri koodi eikä jatkomekanismia, joten 30 pv vanhentaisi
+opettajan pääsyn ennen laskun maksua.
 
+### Tiedossa olevat rajoitteet ja käyttäytyminen
+
+- **Yksi opettajalisenssi per sähköposti** (`lisenssit_opettaja_email_idx`). Jos
+  listattu opettaja on jo opettajana toisella koululla, uutta lisenssiä ei luoda
+  eikä hän saa ohjeviestiä – vanha lisenssi säilyy. Automaatti ei siirrä
+  opettajaa koulusta toiseen.
+- **"Muut opettajat" -kenttä on rajattu:** palvelin pudottaa virheelliset ja
+  duplikaatit, poistaa tilaajan oman osoitteen ja hyväksyy enintään 15 osoitetta
+  (`normalisoiOpettajaEmailit` osoitteessa `api/tilaus.js`).
+- **Ei uusintalogiikkaa:** jokainen tilaus luo uuden koulukoodin. Vanhaa koodia
+  ei suljeta automaattisesti eikä opettajalisenssin voimassaoloa jatketa. Kun
+  koulu uusii, sulje vanha koodi käsin (osio 6) ja päivitä opettajien
+  `voimassa_asti` tarvittaessa.
 - **Rate limit on muistipohjainen** (`Map`), joten se nollautuu cold startissa
   eikä päde serverless-instanssien yli. Matalavolyymiselle lomakkeelle riittävä,
   mutta ei todellinen suoja.
 - **Kolmen vuoden lisenssi merkitään tyypiksi `vuosi`.** `voimassa_asti` on
   oikein, mutta raportointi näyttää sen vuosilisenssinä. Tyyppi `kunta` ei ole
   käytössä lainkaan.
-- **Laskunumeroa ei tallenneta tietokantaan.** Se generoidaan, lähetetään
-  sähköpostissa ja unohtuu. Laskutushistoria on vain lähetetyissä viesteissä.
+
+### Päivitetty 2026-08-11
+
+Tilausautomaatio laajennettiin luomaan opettajaoikeudet automaattisesti:
+
+1. **Opettajalisenssi luodaan nyt jokaisesta tilauksesta.** Aiemmin tilaus loi
+   vain koulukoodin (`vuosi`), joka antaa vain oppilastason pääsyn – tilaaja ei
+   saanut opettajan hallintapaneelia ilman erikseen käsin luotua
+   opettajalisenssiä.
+2. **Lomakkeelle lisättiin "muiden opettajien sähköpostit" -kenttä** (dynaamiset
+   rivit). Kullekin luodaan opettajalisenssi ja lähetetään kirjautumisohje.
+3. Molemmat maksupolut käyttävät samaa `luoOpettajalisenssiJosPuuttuu`-apua,
+   joka tarkistaa uniikkiuden, sietää törmäykset eikä kaada tilausta jos
+   opettajalisenssi on jo olemassa tai luonti epäonnistuu (virhe kirjataan
+   `api_virheet`-tauluun).
+
+> **Historiaa (19.7.2026):** tilausautomaation aiemmasta, ennen Paytrailia
+> olleesta versiosta korjattiin kaksi vikaa: opettajalisenssin `INSERT` tehtiin
+> ilman `NOT NULL`-`koodi`-kenttää (jokainen tilaus kaatui), ja uusintatilaus
+> olisi kaatunut uniikkiin indeksiin. Nykyinen Paytrail-pohjainen flow on
+> rakennettu uudelleen, joten nuo koodipolut eivät enää ole olemassa.
 
 ---
 
