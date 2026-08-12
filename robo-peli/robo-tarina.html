@@ -1050,6 +1050,14 @@
         </div>
       </div>
 
+      <!-- Kiinnostuksen valinta (Luku 6) näkyviin tälle sivulle -->
+      <div
+        class="feedback show success"
+        id="interest-result-7"
+        style="display: none"
+        aria-live="polite"
+      ></div>
+
       <!-- Tehtävä -->
       <div class="question-card" role="form" aria-labelledby="q7-title">
         <h2 id="q7-title">Kerro lyhyesti itsestäsi</h2>
@@ -1169,6 +1177,8 @@
         "page-end",
       ];
       let robotName = "Robo";
+      let interestChoice = "";
+      let interestFeedback = "";
 
       function getProgress(pageId) {
         const idx = pageOrder.indexOf(pageId);
@@ -1303,9 +1313,20 @@
             if (b === btn) b.classList.add("correct");
           });
 
+        // Tallenna oppilaan valinta ja palaute
+        interestChoice = (btn.getAttribute("aria-label") || btn.textContent).trim();
+        interestFeedback = msg;
+
         const fb = document.getElementById("fb-q6");
         fb.innerHTML = `<div class="feedback-title">💡 Hienoa!</div>${msg}`;
         fb.className = "feedback show success";
+
+        // Näytä valinta seuraavalla sivulla (Luku 7)
+        const res7 = document.getElementById("interest-result-7");
+        if (res7) {
+          res7.innerHTML = `<div class="feedback-title">💡 Sinä valitsit: ${interestChoice}</div>${msg}`;
+          res7.style.display = "block";
+        }
 
         document.getElementById("nav-q6").style.display = "flex";
       }
@@ -1356,6 +1377,15 @@
           list.appendChild(li);
         });
 
+        // Näytä kiinnostuksen valinta ja palaute yhteenvedossa
+        if (interestChoice) {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>💡 Mikä sinua kiinnostaa:</strong> ${interestChoice}${
+            interestFeedback ? `<br><em>${interestFeedback}</em>` : ""
+          }`;
+          list.appendChild(li);
+        }
+
         goTo("page-end");
       }
 
@@ -1371,6 +1401,7 @@
         const future =
           document.getElementById("future").value.trim() || "Ei vastausta";
 
+        const interestVal = interestChoice || "Ei valintaa";
         const date = new Date().toLocaleDateString("fi-FI");
         const content =
           "ROBO SAAPUU KOULUUN – Omat vastaukseni\n" +
@@ -1378,7 +1409,9 @@
           `Päivämäärä: ${date}\n\n` +
           `🌟 Unelmani:\n${dream}\n\n` +
           `📖 Mitä haluan oppia:\n${learn}\n\n` +
-          `🚀 Tulevaisuuden minä:\n${future}\n`;
+          `🚀 Tulevaisuuden minä:\n${future}\n\n` +
+          `💡 Mikä minua kiinnostaa:\n${interestVal}\n` +
+          (interestFeedback ? `${interestFeedback}\n` : "");
 
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
@@ -1393,6 +1426,13 @@
 
       function restart() {
         robotName = "Robo";
+        interestChoice = "";
+        interestFeedback = "";
+        const res7 = document.getElementById("interest-result-7");
+        if (res7) {
+          res7.style.display = "none";
+          res7.innerHTML = "";
+        }
         document.getElementById("robotNameInput").value = "";
         document.getElementById("dream").value = "";
         document.getElementById("learn").value = "";
