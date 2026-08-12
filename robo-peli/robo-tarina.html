@@ -1217,10 +1217,10 @@
         const input = document.getElementById("robotNameInput").value.trim();
         if (input.length > 0) robotName = input;
 
-        // Päivitä Robon nimi kaikkialle
-        document.querySelectorAll('[id^="robo-label-"]').forEach((el) => {
-          el.textContent = robotName + " sanoo:";
-        });
+        // Näytä oppilaan antama nimi vain seuraavalla sivulla (Luku 2).
+        // Kolmannesta sivusta eteenpäin robotti on taas "Robo".
+        const label2 = document.getElementById("robo-label-2");
+        if (label2) label2.textContent = robotName + " sanoo:";
 
         goTo("page-2");
       }
@@ -1340,9 +1340,7 @@
         document.getElementById("end-msg-2").textContent = msg2;
         document.getElementById("end-msg-3").textContent = msg3;
 
-        // Päivitä Robon nimi
-        document.getElementById("robo-label-end").textContent =
-          robotName + " sanoo:";
+        // Loppusivulla robotti on taas "Robo" (label pysyy oletuksena).
 
         // Näytä oppilaan vastaukset
         const list = document.getElementById("end-answers-list");

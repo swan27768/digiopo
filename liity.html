@@ -297,6 +297,13 @@
 
       // Maksumuuri-tila: lisenssi ok (ja eväste asetettu) → takaisin sivulle.
       if (redirectTarget) {
+        // Jos oppilas syötti myös ryhmäkoodin, tallenna se ennen ohjausta.
+        // Ilman tätä maksumuurin kautta tulleen oppilaan ryhmäkoodi jäi
+        // huomiotta, jolloin opettajan järjestys ja osioiden piilotukset eivät
+        // tulleet voimaan (jarjestys.js lukee ryhmän digiopo-ryhma-avaimesta).
+        if (ryhmakoodi && /^[A-Z0-9-]{4,16}$/.test(ryhmakoodi)) {
+          try { localStorage.setItem(LS_RYHMA, ryhmakoodi); } catch (e) {}
+        }
         nayta('Ohjataan…', 'ok');
         window.location.href = redirectTarget;
         return;
