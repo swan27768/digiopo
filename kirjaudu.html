@@ -116,6 +116,32 @@
     margin-top: 6px;
   }
 
+  /* Koodikirjautuminen (hybridi: linkki tai koodi) */
+  .koodi-erotin {
+    display: flex; align-items: center; gap: 12px;
+    margin: 24px 0 14px;
+    color: var(--text-light); font-size: 12.5px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .koodi-erotin::before, .koodi-erotin::after {
+    content: ""; flex: 1; height: 1px; background: rgba(107,163,216,0.3);
+  }
+  input.koodi-input {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 24px; font-weight: 600;
+    letter-spacing: 8px; text-align: center;
+    color: var(--text-dark); background: var(--white);
+    border: 1.5px solid rgba(107,163,216,0.35);
+    border-radius: 10px; padding: 13px 16px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input.koodi-input:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(37,99,168,0.1);
+  }
+  input.koodi-input::placeholder { color: var(--text-light); letter-spacing: 8px; }
+
   /* Onnistumisnäkymä */
   .success {
     display: none;
@@ -196,11 +222,19 @@
   <!-- Onnistuminen -->
   <div class="success" id="successView">
     <div class="success-icon">📬</div>
-    <h2>Linkki lähetetty!</h2>
-    <p>Kirjautumislinkki on lähetetty osoitteeseen</p>
+    <h2>Viesti lähetetty!</h2>
+    <p>Lähetimme kirjautumislinkin ja 6-numeroisen koodin osoitteeseen</p>
     <span class="email-highlight" id="sentEmail"></span>
-    <p>Avaa sähköpostisi ja klikkaa linkkiä kirjautuaksesi sisään. Linkki on voimassa 15 minuuttia.</p>
-    <p class="note">Eikö linkki tullut? Tarkista roskapostikansio.<br>Varmista myös, että sähköpostiosoitteesi on sama kuin tilauksessa käytetty.</p>
+    <p>Klikkaa sähköpostin linkkiä <strong>tai</strong> syötä koodi alle. Voimassa 15 minuuttia.</p>
+
+    <div class="koodi-erotin">Syötä koodi</div>
+    <form id="koodiForm" novalidate>
+      <input type="text" id="koodiInput" class="koodi-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" aria-label="Kirjautumiskoodi">
+      <div class="virhe-teksti" id="koodiVirhe">Tarkista koodi ja yritä uudelleen.</div>
+      <button type="submit" class="btn" id="koodiBtn">Kirjaudu koodilla →</button>
+    </form>
+
+    <p class="note">Eikö viesti tullut? Tarkista roskapostikansio.<br>Varmista myös, että sähköpostiosoitteesi on sama kuin lisenssissä.</p>
     <button class="btn-retry" id="retryBtn">Yritä uudelleen eri osoitteella</button>
   </div>
 </div>
@@ -237,6 +271,13 @@
   const successView = document.getElementById('successView');
   const sentEmail  = document.getElementById('sentEmail');
   const retryBtn   = document.getElementById('retryBtn');
+  const koodiForm  = document.getElementById('koodiForm');
+  const koodiInput = document.getElementById('koodiInput');
+  const koodiBtn   = document.getElementById('koodiBtn');
+  const koodiVirhe = document.getElementById('koodiVirhe');
+
+  // Sähköposti, johon linkki/koodi lähetettiin. verifyOtp tarvitsee sen.
+  let kirjautuvaEmail = '';
 
   // Jos käyttäjä palaa magic link -klikkauksesta, Supabase hoitaa session automaattisesti.
   // Tässä voidaan ohjata suojattuun näkymään.
@@ -335,9 +376,54 @@
     }
 
     // Näytetään onnistumisviesti
+    kirjautuvaEmail = email;
     sentEmail.textContent = email;
     loginView.style.display = 'none';
     successView.style.display = 'block';
+    koodiInput.focus();
+  });
+
+  // ── Koodilla kirjautuminen (hybridi) ─────────────────────────────────────
+  // Sama sähköposti kuin linkissä, mutta ilman linkkiä: turvaskanneri ei voi
+  // kuluttaa koodia, ja se toimii missä tahansa selaimessa/laitteessa.
+  // Salli vain numerot ja enintään 6 merkkiä.
+  koodiInput.addEventListener('input', () => {
+    koodiInput.value = koodiInput.value.replace(/\D/g, '').slice(0, 6);
+  });
+
+  koodiForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const koodi = koodiInput.value.replace(/\D/g, '');
+    koodiVirhe.style.display = 'none';
+
+    if (koodi.length !== 6 || !kirjautuvaEmail) {
+      koodiVirhe.textContent = 'Syötä sähköpostiisi tullut 6-numeroinen koodi.';
+      koodiVirhe.style.display = 'block';
+      return;
+    }
+
+    koodiBtn.disabled = true;
+    koodiBtn.textContent = 'Kirjaudutaan…';
+
+    // type: 'email' = signInWithOtp-sähköpostin kertakäyttökoodi.
+    const { error } = await db.auth.verifyOtp({
+      email: kirjautuvaEmail,
+      token: koodi,
+      type: 'email',
+    });
+
+    if (error) {
+      console.error('verifyOtp-virhe:', error.message);
+      koodiBtn.disabled = false;
+      koodiBtn.textContent = 'Kirjaudu koodilla →';
+      koodiVirhe.textContent = 'Koodi on virheellinen tai vanhentunut. Tarkista koodi tai pyydä uusi linkki.';
+      koodiVirhe.style.display = 'block';
+      return;
+    }
+
+    // Onnistui: onAuthStateChange(SIGNED_IN) ohjaa sovellukseen. Varmistetaan
+    // ohjaus myös tässä, jottei jäädä kirjautumissivulle jos tapahtuma viivästyy.
+    window.location.href = 'https://app.digiopo.fi';
   });
 
   retryBtn.addEventListener('click', () => {
