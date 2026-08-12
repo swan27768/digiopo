@@ -129,18 +129,18 @@
   input.koodi-input {
     width: 100%;
     font-family: 'Inter', sans-serif;
-    font-size: 24px; font-weight: 600;
-    letter-spacing: 8px; text-align: center;
+    font-size: 22px; font-weight: 600;
+    letter-spacing: 5px; text-align: center;
     color: var(--text-dark); background: var(--white);
     border: 1.5px solid rgba(107,163,216,0.35);
-    border-radius: 10px; padding: 13px 16px; outline: none;
+    border-radius: 10px; padding: 13px 12px; outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   input.koodi-input:focus {
     border-color: var(--blue-mid);
     box-shadow: 0 0 0 3px rgba(37,99,168,0.1);
   }
-  input.koodi-input::placeholder { color: var(--text-light); letter-spacing: 8px; }
+  input.koodi-input::placeholder { color: var(--text-light); letter-spacing: 5px; }
 
   /* Onnistumisnäkymä */
   .success {
@@ -229,7 +229,7 @@
 
     <div class="koodi-erotin">Syötä koodi</div>
     <form id="koodiForm" novalidate>
-      <input type="text" id="koodiInput" class="koodi-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" aria-label="Kirjautumiskoodi">
+      <input type="text" id="koodiInput" class="koodi-input" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="12345678" aria-label="Kirjautumiskoodi">
       <div class="virhe-teksti" id="koodiVirhe">Tarkista koodi ja yritä uudelleen.</div>
       <button type="submit" class="btn" id="koodiBtn">Kirjaudu koodilla →</button>
     </form>
@@ -388,7 +388,7 @@
   // kuluttaa koodia, ja se toimii missä tahansa selaimessa/laitteessa.
   // Salli vain numerot ja enintään 6 merkkiä.
   koodiInput.addEventListener('input', () => {
-    koodiInput.value = koodiInput.value.replace(/\D/g, '').slice(0, 6);
+    koodiInput.value = koodiInput.value.replace(/\D/g, '').slice(0, 8);
   });
 
   koodiForm.addEventListener('submit', async (e) => {
@@ -396,8 +396,8 @@
     const koodi = koodiInput.value.replace(/\D/g, '');
     koodiVirhe.style.display = 'none';
 
-    if (koodi.length !== 6 || !kirjautuvaEmail) {
-      koodiVirhe.textContent = 'Syötä sähköpostiisi tullut 6-numeroinen koodi.';
+    if (koodi.length < 6 || !kirjautuvaEmail) {
+      koodiVirhe.textContent = 'Syötä sähköpostiisi tullut koodi kokonaisuudessaan.';
       koodiVirhe.style.display = 'block';
       return;
     }
