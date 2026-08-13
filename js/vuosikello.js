@@ -1,8 +1,14 @@
-//const KALENTERI_ORIGIN = 'https://osoite-jossa-kalenteri-sijaitsee.fi';
-const KALENTERI_ORIGIN = '*'; // VAIN testausvaiheessa!
+// HUOM: Tätä tiedostoa EI käytetä tuotannossa. Varsinainen host-silta on
+// upotettu suoraan sivut/9luokka.html:ään (avaaVuosikello + message-kuuntelija).
+// Jäljellä referenssiksi. Jos otat käyttöön, aseta KALENTERI_ORIGIN oikeaan
+// osoitteeseen tuotannossa.
+//
+// const KALENTERI_ORIGIN = 'https://app.digiopo.fi';
+const KALENTERI_ORIGIN = '*'; // '*' = älä rajaa originia (vain testaus!)
 
 window.addEventListener('message', e => {
-  if (e.origin !== KALENTERI_ORIGIN) return;
+  // Kun origin on '*', ei rajata; muuten vaaditaan täsmäävä origin.
+  if (KALENTERI_ORIGIN !== '*' && e.origin !== KALENTERI_ORIGIN) return;
 
   // Kalenteri pyytää tallennettua dataa
   if (e.data?.type === 'vuosikello-load-request') {

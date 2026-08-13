@@ -243,7 +243,7 @@
   <!-- Tallennusbanneri -->
   <div id="storage-banner" class="storage-banner storage-ok" role="status">
     <div class="storage-dot" aria-hidden="true"></div>
-    <span id="storage-msg">Yhdistetään digikirjaan — hetki...</span>
+    <span id="storage-msg">Ladataan tapahtumia…</span>
   </div>
 
   <main>
@@ -402,60 +402,85 @@ function requestFromHost(){
   try{window.parent.postMessage({type:'vuosikello-load-request'},'*');}catch(e){}
 }
 
+let hostResponded=false;
+function setBanner(kind,msg){
+  const b=document.getElementById('storage-banner');
+  if(!b)return;
+  b.className='storage-banner '+(kind==='warn'?'storage-warn':'storage-ok');
+  document.getElementById('storage-msg').textContent=msg;
+}
 window.addEventListener('message',e=>{
   if(e.data?.type==='vuosikello-load-response'){
-    try{
-      const d=JSON.parse(e.data.payload);
-      if(d&&Array.isArray(d.events)){
-        events=d.events;nextId=d.nextId||200;render();
-        const b=document.getElementById('storage-banner');
-        b.className='storage-banner storage-ok';
-        document.getElementById('storage-msg').textContent='Tiedot ladattu digikirjasta — muutokset tallentuvat automaattisesti.';
-      }
-    }catch(err){}
+    hostResponded=true;
+    let d=null;
+    try{d=JSON.parse(e.data.payload);}catch(err){}
+    if(d&&Array.isArray(d.events)&&d.events.length){
+      // Digikirjasta löytyi tallennettuja tapahtumia → ne voittavat.
+      events=d.events;nextId=d.nextId||nextId;render();
+      setBanner('ok','Tiedot ladattu digikirjasta — muutokset tallentuvat automaattisesti.');
+    }else{
+      // Yhteys ok, mutta digikirjassa ei vielä tallennettua dataa.
+      // Säilytä se, mitä jo näytetään (paikallinen tai oletukset).
+      if(events.length===0){resetToDefaults(false);render();}
+      setBanner('ok','Yhdistetty digikirjaan — muutokset tallentuvat automaattisesti.');
+    }
   }
 });
 
 function load(){
   checkStorage();
-  if(IN_IFRAME){
-    storageMode='bridge';
-    requestFromHost();
-    setTimeout(()=>{
-      if(events.length===0){
-        if(storageAvailable){
-          try{const s=localStorage.getItem(STORAGE_KEY);if(s){const d=JSON.parse(s);events=d.events;nextId=d.nextId||200;}else resetToDefaults(false);}catch(e){resetToDefaults(false);}
-        }else resetToDefaults(false);
-        render();
-      }
-    },600);
-  }else{
-    storageMode='local';
-    if(!storageAvailable){resetToDefaults(false);return;}
+  // 1) Näytä sisältö HETI paikallisesta tallennuksesta (tai oletuksista),
+  //    jottei jäädä tuijottamaan tyhjää "yhdistetään"-tilaa.
+  let hadLocal=false;
+  if(storageAvailable){
     try{
       const s=localStorage.getItem(STORAGE_KEY);
-      if(s){const d=JSON.parse(s);events=d.events;nextId=d.nextId||200;}
-      else resetToDefaults(false);
-    }catch(e){resetToDefaults(false);}
-    const b=document.getElementById('storage-banner');
-    b.className='storage-banner storage-ok';
-    document.getElementById('storage-msg').textContent='Tiedot tallennetaan automaattisesti tähän selaimeen.';
+      if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.events)){events=d.events;nextId=d.nextId||200;hadLocal=true;}}
+    }catch(e){}
+  }
+  if(!hadLocal)resetToDefaults(false);
+  render();
+
+  // 2) Aseta tallennusmoodi ja banneri.
+  if(IN_IFRAME){
+    storageMode='bridge';
+    setBanner('ok','Tiedot tallentuvat automaattisesti.');
+    requestFromHost();
+    // Varmistus: jos digikirja ei vastaa kohtuuajassa, ei jäädä roikkumaan.
+    setTimeout(()=>{
+      if(!hostResponded){
+        setBanner(storageAvailable?'ok':'warn',
+          storageAvailable?'Tiedot tallennetaan tähän selaimeen.'
+                           :'Huom: tiedot säilyvät vain tämän istunnon ajan.');
+      }
+    },1500);
+  }else{
+    storageMode='local';
+    setBanner(storageAvailable?'ok':'warn',
+      storageAvailable?'Tiedot tallennetaan automaattisesti tähän selaimeen.'
+                       :'Huom: tiedot tallennetaan vain tämän istunnon ajaksi.');
   }
 }
 
-function save(){
+function doSave(){
   const payload={events,nextId};
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{
-    if(storageMode==='bridge'){
-      sendToHost(payload);
-      if(storageAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}}
-    }else{
-      if(!storageAvailable)return;
-      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}
-    }
-  },DEBOUNCE_MS);
+  if(storageMode==='bridge'){
+    sendToHost(payload);
+    if(storageAvailable){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}}
+  }else{
+    if(!storageAvailable)return;
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));}catch(e){}
+  }
 }
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(doSave,DEBOUNCE_MS);
+}
+// Flushaa keskeneräinen tallennus, jos sivu suljetaan/piilotetaan ennen
+// debouncen laukeamista — muuten juuri lisätty tapahtuma katoaisi reloadissa.
+function flushSave(){ if(saveTimer){clearTimeout(saveTimer);saveTimer=null;} doSave(); }
+window.addEventListener('pagehide',flushSave);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushSave();});
 
 function resetToDefaults(ask){
   if(ask){
