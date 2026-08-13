@@ -116,8 +116,9 @@
   .type-btn[aria-pressed="true"].sel-tet{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
 
   /* Lomake */
-  .add-row{display:grid;grid-template-columns:160px 1fr auto;gap:8px;align-items:end}
-  @media(max-width:520px){.add-row{grid-template-columns:1fr 1fr}.add-row .add-btn-wrap{grid-column:span 2}}
+  .add-row{display:grid;grid-template-columns:150px 72px 1fr auto;gap:8px;align-items:end}
+  .field-day input{text-align:center}
+  @media(max-width:520px){.add-row{grid-template-columns:1fr 1fr}.add-row .field-name{grid-column:span 2}.add-row .add-btn-wrap{grid-column:span 2}}
   .field label{font-size:13px;color:var(--text3);display:block;margin-bottom:4px;font-weight:500}
   select,input[type=text]{width:100%;padding:0 10px;height:38px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text2);font-size:14px;font-family:inherit;outline:none;transition:border .12s}
   select:focus,input[type=text]:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,0.15)}
@@ -165,6 +166,7 @@
   .ev-own{background:var(--own-bg);color:var(--own-text);border-color:var(--own-bd)}
   .ev-tet{background:var(--tet-bg);color:var(--tet-text);border-color:var(--tet-bd)}
   .ev-name{flex:1;font-size:14px;color:var(--text2)}
+  .ev-date{font-size:12px;color:var(--text3);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0;min-width:40px;text-align:right}
   .ev-done .ev-name{text-decoration:line-through;color:var(--text3)}
   .ev-del{font-size:12px;padding:2px 8px;height:auto;flex-shrink:0;color:var(--text3);border-color:transparent;border-radius:50px}
   .ev-del:hover{background:var(--red-bg);color:var(--red-text);border-color:var(--red-bd)}
@@ -277,12 +279,18 @@
             <option value="8">Huhtikuu</option><option value="9">Toukokuu</option>
           </select>
         </div>
-        <div class="field">
+        <div class="field field-day">
+          <label for="f-day">Päivä</label>
+          <input type="text" id="f-day" inputmode="numeric" maxlength="2"
+                 placeholder="pv" aria-label="Päivä (valinnainen, 1–31)"
+                 onkeydown="if(event.key==='Enter')addEvent()">
+        </div>
+        <div class="field field-name">
           <label for="f-name">Tapahtuman nimi</label>
           <input type="text" id="f-name" placeholder="Kirjoita tapahtuma..."
                  aria-describedby="f-name-hint"
                  onkeydown="if(event.key==='Enter')addEvent()">
-          <span id="f-name-hint" class="sr-only">Paina Enter tai Lisää-painiketta tallentaaksesi</span>
+          <span id="f-name-hint" class="sr-only">Paina Enter tai Lisää-painiketta tallentaaksesi. Päivä on valinnainen.</span>
         </div>
         <div class="add-btn-wrap" style="align-self:end">
           <button class="btn-primary" onclick="addEvent()" style="margin-top:20px">Lisää</button>
@@ -347,30 +355,10 @@ const MONTH_COLORS=['#0d9488','#0f766e','#854F0B','#7c3aed','#dc2626','#059669',
 const STORAGE_KEY='vuosikello9lk';
 
 const DEFAULTS=[
-  {id:1,month:0,type:'school',name:'Lukuvuosi alkaa',done:false},
-  {id:2,month:0,type:'school',name:'Luokan esittäytyminen ja ryhmäyttäminen',done:false},
-  {id:3,month:0,type:'national',name:'Jatko-opintojen infotilaisuus koulussa',done:false},
-  {id:4,month:1,type:'national',name:'Avoimet ovet: ammatilliset oppilaitokset',done:false},
-  {id:5,month:1,type:'school',name:'Vanhempainilta',done:false},
-  {id:6,month:1,type:'national',name:'Tutustuminen yhteishakuun (Studyinfo.fi)',done:false},
-  {id:7,month:2,type:'tet',name:'TET-jakso — lisää oma ajankohtasi',done:false},
-  {id:8,month:2,type:'national',name:'Avoimet ovet: lukiot',done:false},
-  {id:9,month:2,type:'school',name:'Väliarviointi ja kehityskeskustelut',done:false},
-  {id:10,month:3,type:'national',name:'Tutustumiskäynnit oppilaitoksiin',done:false},
-  {id:11,month:3,type:'school',name:'Opo-tunnit: jatko-opintojen suunnittelu',done:false},
-  {id:12,month:4,type:'school',name:'Joulu- ja lukukauden päätösviikko',done:false},
-  {id:13,month:4,type:'school',name:'Joulutodistus',done:false},
-  {id:14,month:5,type:'national',name:'Yhteishaku alkaa (hakuaika n. 2 viikkoa)',done:false},
-  {id:15,month:5,type:'national',name:'Tarkista hakukohteet ja pisteet',done:false},
-  {id:16,month:6,type:'national',name:'Yhteishaku päättyy — hakemus jätettävä!',done:false},
-  {id:17,month:6,type:'school',name:'Arviointikeskustelut',done:false},
-  {id:18,month:7,type:'national',name:'Opiskelupaikkojen valintatulokset julki',done:false},
-  {id:19,month:7,type:'national',name:'Opiskelupaikan vastaanottaminen',done:false},
-  {id:20,month:7,type:'school',name:'Päättöarvioinnin loppusuora',done:false},
-  {id:21,month:8,type:'national',name:'Opiskelupaikan vahvistaminen (deadline)',done:false},
-  {id:22,month:8,type:'school',name:'Kevätjuhla',done:false},
-  {id:23,month:9,type:'school',name:'Päättötodistus',done:false},
-  {id:24,month:9,type:'school',name:'Yläkoulun päätösjuhla',done:false},
+  {id:1,month:0,day:11,type:'school',name:'Kouluvuosi alkaa',done:false},
+  {id:2,month:4,day:20,type:'school',name:'Syyslukukausi loppuu',done:false},
+  {id:3,month:4,day:20,type:'school',name:'Joulutodistus',done:false},
+  {id:4,month:9,day:30,type:'school',name:'Kevätjuhla',done:false},
 ];
 
 let events=[],nextId=200,selectedType='national',currentView='months',activeFilter='all';
@@ -539,7 +527,7 @@ function buildExportText(onlyUpcoming){
     hasContent=true;
     const isCurrent=onlyUpcoming&&nowIdx!==null&&i===nowIdx;
     txt+=MONTHS[i].toUpperCase()+(isCurrent?' (TÄMÄ KUUKAUSI)':'')+'\n'+'-'.repeat(25)+'\n';
-    mevs.forEach(e=>{txt+=(e.done?'[X]':'[ ]')+' '+TYPE_LABEL[e.type]+': '+e.name+'\n';});
+    mevs.forEach(e=>{const ds=hasDay(e)?e.day+'.'+realMonthNum(e.month)+'. ':'';txt+=(e.done?'[X]':'[ ]')+' '+ds+TYPE_LABEL[e.type]+': '+e.name+'\n';});
     txt+='\n';
   }
   if(!hasContent)txt+='Ei tulevia tapahtumia.\n';
@@ -590,13 +578,17 @@ function addEvent(){
   const name=nameEl.value.trim();
   if(!name){nameEl.focus();announce('Anna tapahtumalle nimi.');return;}
   const month=parseInt(document.getElementById('f-month').value);
-  events.push({id:nextId++,month,type:selectedType,name,done:false,reg:selectedReg});
-  nameEl.value='';
+  const dayEl=document.getElementById('f-day');
+  let day=parseInt(dayEl.value,10);
+  if(!Number.isFinite(day)||day<1||day>31)day=null;
+  events.push({id:nextId++,month,day,type:selectedType,name,done:false,reg:selectedReg});
+  nameEl.value='';dayEl.value='';
   // reset reg buttons
   document.querySelectorAll('.reg-btn').forEach(b=>b.setAttribute('aria-pressed','false'));
   selectedReg='none';
   save();render();
-  announce('Lisätty: '+name+', '+MONTHS[month]);showToast('Tapahtuma lisätty!');
+  const dateStr=day!=null?' '+day+'.'+realMonthNum(month)+'.':'';
+  announce('Lisätty: '+name+', '+MONTHS[month]+dateStr);showToast('Tapahtuma lisätty!');
 }
 function toggleDone(id){
   const e=events.find(x=>x.id===id);
@@ -630,14 +622,20 @@ function toggleMonth(idx){
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+function realMonthNum(monthIdx){return ((monthIdx+7)%12)+1;}
+function hasDay(e){return e.day!=null&&Number.isFinite(e.day);}
+
 function evRow(e){
   const cbId='cb-'+e.id;
-  const fullLabel=(e.done?'Tehty — ':'')+TYPE_LABEL[e.type]+': '+e.name;
+  const dateTxt=hasDay(e)?e.day+'.'+realMonthNum(e.month)+'. ':'';
+  const fullLabel=(e.done?'Tehty — ':'')+dateTxt+TYPE_LABEL[e.type]+': '+e.name;
+  const dateBadge=hasDay(e)?'<span class="ev-date" aria-hidden="true">'+e.day+'.'+realMonthNum(e.month)+'.</span>':'';
   const regBadge=e.reg==='yes'?'<span class="ev-reg-yes" title="Muista ilmoittautua!">⚠️ Ilmoittaudu</span>':e.reg==='no'?'<span class="ev-reg-no" title="Ei ilmoittautumista">✅ Ei ilm.</span>':'';
   return`<div class="event-row${e.done?' ev-done':''}">
     <input type="checkbox" class="ev-cb" id="${cbId}" ${e.done?'checked':''}
            onchange="toggleDone(${e.id})" aria-label="${escHtml(fullLabel)}">
     <span class="ev-badge ev-${e.type}" aria-hidden="true">${TYPE_LABEL[e.type]}</span>
+    ${dateBadge}
     <label for="${cbId}" class="ev-name">${escHtml(e.name)}</label>
     ${regBadge}
     <button class="ev-del" onclick="deleteEvent(${e.id})"
@@ -649,7 +647,10 @@ function renderMonths(){
   const typeOrder=['national','school','tet','own'];
   let html='<div class="months-list">';
   for(let i=0;i<MONTHS.length;i++){
-    const mevs=events.filter(e=>e.month===i).sort((a,b)=>typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type));
+    const mevs=events.filter(e=>e.month===i).sort((a,b)=>{
+      const da=hasDay(a)?a.day:99,db=hasDay(b)?b.day:99;
+      return da-db||typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type);
+    });
     const done=mevs.filter(e=>e.done).length;
     const open=openMonths.has(i);
     const dotColor=mevs.length>0?MONTH_COLORS[i]:'#d1d5db';
@@ -676,7 +677,10 @@ function renderMonths(){
 function renderAll(){
   const typeOrder=['national','school','tet','own'];
   const filtered=activeFilter==='all'?events:events.filter(e=>e.type===activeFilter);
-  const sorted=[...filtered].sort((a,b)=>a.month-b.month||(typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type)));
+  const sorted=[...filtered].sort((a,b)=>{
+    const da=hasDay(a)?a.day:99,db=hasDay(b)?b.day:99;
+    return a.month-b.month||da-db||typeOrder.indexOf(a.type)-typeOrder.indexOf(b.type);
+  });
   if(!sorted.length){document.getElementById('main-view').innerHTML='<p style="font-size:14px;color:var(--text3);padding:1rem;text-align:center;font-style:italic">Ei tapahtumia valitussa kategoriassa.</p>';return;}
   let html='<div class="all-list">',lastMonth=-1;
   sorted.forEach(e=>{
