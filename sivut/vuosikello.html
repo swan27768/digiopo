@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minun 9. luokan vuosikello – Lukuvuosi 2024–2025</title>
+<title>Minun 9. luokan vuosikello</title>
 <style>
   /* ── DigiOpo 9. lk teal-teema ── */
   *{box-sizing:border-box;margin:0;padding:0}
@@ -170,6 +170,8 @@
   .ev-done .ev-name{text-decoration:line-through;color:var(--text3)}
   .ev-del{font-size:12px;padding:2px 8px;height:auto;flex-shrink:0;color:var(--text3);border-color:transparent;border-radius:50px}
   .ev-del:hover{background:var(--red-bg);color:var(--red-text);border-color:var(--red-bd)}
+  .ev-gcal{font-size:12px;padding:2px 9px;flex-shrink:0;color:var(--teal-dk);background:var(--teal-bg2);border:1px solid var(--teal-bd);border-radius:50px;text-decoration:none;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+  .ev-gcal:hover{background:var(--teal-bg);text-decoration:underline}
   .empty-month{padding:.75rem;font-size:13px;color:var(--text3);text-align:center;font-style:italic}
 
   /* Suodatuspalkki */
@@ -239,7 +241,7 @@
   <!-- Otsikko DigiOpo-tyyliin -->
   <header class="app-header">
     <h1>Minun 9. luokan vuosikello</h1>
-    <p>Lukuvuosi 2024–2025 — seuraa tapahtumiasi ja valmistaudu yhteishakuun</p>
+    <p id="header-sub">Lukuvuosi — seuraa tapahtumiasi ja valmistaudu yhteishakuun</p>
   </header>
 
   <!-- Tallennusbanneri -->
@@ -303,8 +305,8 @@
       <button class="view-btn" aria-pressed="true" onclick="setView('months',this)">Kuukausittain</button>
       <button class="view-btn" aria-pressed="false" onclick="setView('all',this)">Kaikki tapahtumat</button>
       <div class="toolbar-right">
-        <button class="btn-secondary" onclick="exportData(false)" aria-label="Vie kaikki tapahtumat">Vie kaikki</button>
-        <button class="btn-primary" onclick="exportData(true)" style="font-size:13px" aria-label="Vie vain tulevat tapahtumat">Tulosta tuleva</button>
+        <button class="btn-primary" onclick="printCalendar()" style="font-size:13px" aria-label="Tulosta kalenteri kuukausiruudukkona">🖨️ Tulosta kalenteri</button>
+        <button class="btn-secondary" onclick="exportData(false)" aria-label="Vie kaikki tapahtumat tekstitiedostona">Vie tekstinä</button>
         <button onclick="askReset()" style="color:var(--text3);font-size:13px;border-color:transparent" aria-label="Palauta oletustapahtumat">Palauta oletukset</button>
       </div>
     </div>
@@ -353,6 +355,15 @@ const MONTHS=['Elokuu','Syyskuu','Lokakuu','Marraskuu','Joulukuu','Tammikuu','He
 const TYPE_LABEL={national:'Valtakunnallinen',school:'Koulun tapahtuma',tet:'TET-jakso',own:'Oma merkintä'};
 const MONTH_COLORS=['#0d9488','#0f766e','#854F0B','#7c3aed','#dc2626','#059669','#0369a1','#0d9488','#0f766e','#7c3aed'];
 const STORAGE_KEY='vuosikello9lk';
+
+/* ── Lukuvuosi lasketaan automaattisesti nykyisestä päivämäärästä ──
+   Lukuvuosi alkaa elokuussa. Jos ollaan elo–joulukuussa, aloitusvuosi on
+   kuluva vuosi; muuten (tammi–heinä) edellinen vuosi. Kuukausi-indeksit 0–4
+   (Elokuu–Joulukuu) kuuluvat aloitusvuoteen, 5–9 (Tammikuu–Toukokuu) sitä
+   seuraavaan kalenterivuoteen. */
+const SCHOOL_YEAR_START=(()=>{const n=new Date();return n.getMonth()>=7?n.getFullYear():n.getFullYear()-1;})();
+const SCHOOL_YEAR_LABEL=SCHOOL_YEAR_START+'–'+(SCHOOL_YEAR_START+1);
+function calYear(monthIdx){return SCHOOL_YEAR_START+(monthIdx>=5?1:0);}
 
 const DEFAULTS=[
   {id:1,month:0,day:11,type:'school',name:'Kouluvuosi alkaa',done:false},
@@ -516,7 +527,7 @@ function buildExportText(onlyUpcoming){
   const nowIdx=currentMonthIndex();
   const dateStr=new Date().toLocaleDateString('fi-FI');
   function filterMonth(i,evs){if(!onlyUpcoming||nowIdx===null)return evs;if(i>=nowIdx)return evs;return [];}
-  let txt='MINUN 9. LUOKAN VUOSIKELLO\nLukuvuosi 2024-2025\n'+'='.repeat(40)+'\n';
+  let txt='MINUN 9. LUOKAN VUOSIKELLO\nLukuvuosi '+SCHOOL_YEAR_LABEL+'\n'+'='.repeat(40)+'\n';
   txt+=onlyUpcoming&&nowIdx!==null?'Tulevat tapahtumat — '+dateStr+' alkaen\n\n':'\n';
   const done=events.filter(e=>e.done).length;
   txt+='Edistyminen: '+done+'/'+events.length+' tapahtumaa suoritettu\n\n';
@@ -560,6 +571,99 @@ function copyExport(){
   catch(e){document.execCommand('copy');showToast('Kopioitu!');}
 }
 function closeExport(){document.getElementById('export-wrap').style.display='none';}
+
+/* ── Tulostettava kuukausiruudukko ── */
+const PRINT_TYPE_COLOR={national:'#93c5fd',school:'#5eead4',tet:'#fde047',own:'#d8b4fe'};
+const WEEKDAYS=['Ma','Ti','Ke','To','Pe','La','Su'];
+function buildMonthGrid(i){
+  const year=calYear(i),rm=realMonthNum(i);
+  const offset=(new Date(year,rm-1,1).getDay()+6)%7; // maanantai ensin
+  const days=new Date(year,rm,0).getDate();
+  let cells='';
+  for(let k=0;k<offset;k++)cells+='<td class="pc-empty"></td>';
+  for(let d=1;d<=days;d++){
+    const dow=(offset+d-1)%7;
+    const evs=events.filter(e=>e.month===i&&hasDay(e)&&e.day===d)
+      .sort((a,b)=>['national','school','tet','own'].indexOf(a.type)-['national','school','tet','own'].indexOf(b.type));
+    let evHtml='';
+    evs.forEach(e=>{
+      evHtml+=`<div class="pc-ev${e.done?' pc-done':''}"><span class="pc-dot" style="background:${PRINT_TYPE_COLOR[e.type]}"></span>${e.done?'✓ ':''}${escHtml(e.name)}</div>`;
+    });
+    cells+=`<td class="pc-day${dow>=5?' pc-weekend':''}"><div class="pc-num">${d}</div>${evHtml}</td>`;
+    if(dow===6&&d<days)cells+='</tr><tr>';
+  }
+  // täytä viimeinen rivi loppuun
+  const lastDow=(offset+days-1)%7;
+  for(let k=lastDow+1;k<7;k++)cells+='<td class="pc-empty"></td>';
+  const undated=events.filter(e=>e.month===i&&!hasDay(e));
+  let undatedHtml='';
+  if(undated.length){
+    undatedHtml='<div class="pc-undated"><strong>Ilman päivämäärää:</strong> '
+      +undated.map(e=>`<span class="pc-ev-inline"><span class="pc-dot" style="background:${PRINT_TYPE_COLOR[e.type]}"></span>${(e.done?'✓ ':'')+escHtml(e.name)}</span>`).join(' · ')+'</div>';
+  }
+  return `<section class="pc-month">
+    <h2 class="pc-month-title">${MONTHS[i]} ${year}</h2>
+    <table class="pc-grid"><thead><tr>${WEEKDAYS.map(w=>`<th>${w}</th>`).join('')}</tr></thead>
+    <tbody><tr>${cells}</tr></tbody></table>
+    ${undatedHtml}
+  </section>`;
+}
+function buildPrintHtml(){
+  let months='';for(let i=0;i<MONTHS.length;i++)months+=buildMonthGrid(i);
+  const legend=`<div class="pc-legend">
+    <span><span class="pc-dot" style="background:${PRINT_TYPE_COLOR.national}"></span>Valtakunnallinen</span>
+    <span><span class="pc-dot" style="background:${PRINT_TYPE_COLOR.school}"></span>Koulun tapahtuma</span>
+    <span><span class="pc-dot" style="background:${PRINT_TYPE_COLOR.tet}"></span>TET-jakso</span>
+    <span><span class="pc-dot" style="background:${PRINT_TYPE_COLOR.own}"></span>Oma merkintä</span>
+  </div>`;
+  return `<!DOCTYPE html><html lang="fi"><head><meta charset="utf-8">
+  <title>Minun 9. luokan vuosikello – Lukuvuosi ${SCHOOL_YEAR_LABEL}</title>
+  <style>
+    *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#134e4a;margin:24px;font-size:12px}
+    h1{font-size:20px;margin:0 0 2px}
+    .pc-sub{color:#0f766e;margin:0 0 14px;font-size:13px}
+    .pc-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;margin-bottom:16px;color:#374151}
+    .pc-legend span{display:inline-flex;align-items:center;gap:5px}
+    .pc-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;border:1px solid rgba(0,0,0,.15)}
+    .pc-month{page-break-inside:avoid;margin-bottom:20px}
+    .pc-month-title{font-size:14px;color:#0d9488;margin:0 0 6px;border-bottom:2px solid #99f6e4;padding-bottom:3px}
+    table.pc-grid{width:100%;border-collapse:collapse;table-layout:fixed}
+    .pc-grid th{background:#f0fdfa;color:#0f766e;font-size:11px;padding:4px 0;border:1px solid #d1d5db;text-align:center}
+    .pc-grid td{border:1px solid #d1d5db;vertical-align:top;height:74px;width:14.28%;padding:3px}
+    .pc-empty{background:#fafafa}
+    .pc-weekend{background:#f9fafb}
+    .pc-num{font-size:11px;font-weight:700;color:#6b7280;margin-bottom:2px}
+    .pc-ev{font-size:9.5px;line-height:1.25;margin-bottom:2px;display:flex;align-items:flex-start;gap:3px;word-break:break-word}
+    .pc-ev .pc-dot{margin-top:2px;width:7px;height:7px}
+    .pc-done{color:#9ca3af;text-decoration:line-through}
+    .pc-undated{font-size:10px;color:#374151;margin-top:5px;padding:4px 6px;background:#f0fdfa;border-radius:6px}
+    .pc-ev-inline{display:inline-flex;align-items:center;gap:3px}
+    @page{margin:14mm}
+    @media print{body{margin:0}}
+  </style></head><body>
+  <h1>Minun 9. luokan vuosikello</h1>
+  <p class="pc-sub">Lukuvuosi ${SCHOOL_YEAR_LABEL} — tulostettu ${new Date().toLocaleDateString('fi-FI')}</p>
+  ${legend}
+  ${months}
+  </body></html>`;
+}
+function printCalendar(){
+  const w=window.open('','_blank');
+  if(!w){showToast('Salli ponnahdusikkunat tulostaaksesi');announce('Tulostus vaatii ponnahdusikkunoiden sallimisen.');return;}
+  w.document.open();w.document.write(buildPrintHtml());w.document.close();
+  const doPrint=()=>{try{w.focus();w.print();}catch(e){}};
+  w.onload=doPrint;setTimeout(doPrint,600);
+  announce('Tulostusnäkymä avattu.');
+}
+
+/* Aseta lukuvuosi otsikkoon ja sivun titleen. */
+function applyYearLabels(){
+  document.title='Minun 9. luokan vuosikello – Lukuvuosi '+SCHOOL_YEAR_LABEL;
+  const sub=document.getElementById('header-sub');
+  if(sub)sub.textContent='Lukuvuosi '+SCHOOL_YEAR_LABEL+' — seuraa tapahtumiasi ja valmistaudu yhteishakuun';
+}
+applyYearLabels();
 
 /* Toiminnot */
 function selType(btn){
@@ -625,12 +729,30 @@ function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(
 function realMonthNum(monthIdx){return ((monthIdx+7)%12)+1;}
 function hasDay(e){return e.day!=null&&Number.isFinite(e.day);}
 
+/* ── Kalenterivienti ── */
+function pad2(n){return String(n).padStart(2,'0');}
+function eventDate(e){return hasDay(e)?new Date(calYear(e.month),realMonthNum(e.month)-1,e.day):null;}
+function ymd(d){return d.getFullYear()+pad2(d.getMonth()+1)+pad2(d.getDate());}
+function gcalUrl(e){
+  const d=eventDate(e);if(!d)return null;
+  const end=new Date(d);end.setDate(d.getDate()+1);
+  const details=TYPE_LABEL[e.type]+(e.reg==='yes'?' — Muista ilmoittautua!':'');
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    +'&text='+encodeURIComponent(e.name)
+    +'&dates='+ymd(d)+'/'+ymd(end)
+    +'&details='+encodeURIComponent(details);
+}
+
 function evRow(e){
   const cbId='cb-'+e.id;
   const dateTxt=hasDay(e)?e.day+'.'+realMonthNum(e.month)+'. ':'';
   const fullLabel=(e.done?'Tehty — ':'')+dateTxt+TYPE_LABEL[e.type]+': '+e.name;
   const dateBadge=hasDay(e)?'<span class="ev-date" aria-hidden="true">'+e.day+'.'+realMonthNum(e.month)+'.</span>':'';
   const regBadge=e.reg==='yes'?'<span class="ev-reg-yes" title="Muista ilmoittautua!">⚠️ Ilmoittaudu</span>':e.reg==='no'?'<span class="ev-reg-no" title="Ei ilmoittautumista">✅ Ei ilm.</span>':'';
+  const g=gcalUrl(e);
+  const gLink=g?`<a class="ev-gcal" href="${g}" target="_blank" rel="noopener"
+            title="Lisää Google-kalenteriin"
+            aria-label="Lisää Google-kalenteriin: ${escHtml(e.name)}">📅 Google</a>`:'';
   return`<div class="event-row${e.done?' ev-done':''}">
     <input type="checkbox" class="ev-cb" id="${cbId}" ${e.done?'checked':''}
            onchange="toggleDone(${e.id})" aria-label="${escHtml(fullLabel)}">
@@ -638,6 +760,7 @@ function evRow(e){
     ${dateBadge}
     <label for="${cbId}" class="ev-name">${escHtml(e.name)}</label>
     ${regBadge}
+    ${gLink}
     <button class="ev-del" onclick="deleteEvent(${e.id})"
             aria-label="Poista tapahtuma: ${escHtml(e.name)}">Poista</button>
   </div>`;
