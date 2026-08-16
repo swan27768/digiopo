@@ -236,16 +236,19 @@
   /* Siirrä palkki osion Yhteenveto-laatikon jälkeen (viimeiseksi). Yhteenvedon
      lisää js/osio-rakenne.js DOMContentLoaded-hetkellä, joten tämä ajetaan sen
      jälkeen ja vielä uudelleen 'load'-tapahtumassa varmuuden vuoksi. */
-  function siirraYhteenvedonJalkeen(slot) {
+  function jarjestaOsionLoppu(slot) {
     var osio = slot.closest('.aihe-osio') || slot.closest('[data-osio]');
     if (!osio) return;
-    // Jos osiossa on (ajon aikana lisätty) Yhteenveto-laatikko, siirretään palkki
-    // osion viimeiseksi lapseksi — Yhteenvedon ja mahdollisen haaste-palkin jälkeen.
-    if (osio.querySelector('.osio-yhteenveto')) osio.appendChild(slot);
+    var yht = osio.querySelector('.osio-yhteenveto');
+    if (yht) {
+      // Selkeä, johdonmukainen loppu: Päiväkirjani ensin, Yhteenveto viimeiseksi.
+      osio.appendChild(slot);
+      osio.appendChild(yht);
+    }
   }
   function repositionAll() {
     var slots = document.querySelectorAll('[data-paivakirja]');
-    for (var i = 0; i < slots.length; i++) siirraYhteenvedonJalkeen(slots[i]);
+    for (var i = 0; i < slots.length; i++) jarjestaOsionLoppu(slots[i]);
   }
 
   function init() {
