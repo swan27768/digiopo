@@ -233,11 +233,30 @@
     slot.appendChild(kortti);
   }
 
+  /* Siirrä palkki osion Yhteenveto-laatikon jälkeen (viimeiseksi). Yhteenvedon
+     lisää js/osio-rakenne.js DOMContentLoaded-hetkellä, joten tämä ajetaan sen
+     jälkeen ja vielä uudelleen 'load'-tapahtumassa varmuuden vuoksi. */
+  function siirraYhteenvedonJalkeen(slot) {
+    var osio = slot.closest('.aihe-osio') || slot.closest('[data-osio]');
+    if (!osio) return;
+    var yht = osio.querySelector('.osio-yhteenveto');
+    if (yht && yht.parentNode) yht.parentNode.insertBefore(slot, yht.nextSibling);
+  }
+  function repositionAll() {
+    var slots = document.querySelectorAll('[data-paivakirja]');
+    for (var i = 0; i < slots.length; i++) siirraYhteenvedonJalkeen(slots[i]);
+  }
+
   function init() {
     var slots = document.querySelectorAll('[data-paivakirja]');
     for (var i = 0; i < slots.length; i++) rakenna(slots[i], i);
+    repositionAll();
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  if (document.readyState === 'complete') init();
+  else document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', repositionAll);
+  // osio-rakenne.js rakentaa Yhteenveto-laatikot uudelleen kielen vaihtuessa
+  // (myös ensilatauksen async-fetchissä) — siirretään palkki taas sen perään.
+  document.addEventListener('digiopo:langchange', repositionAll);
 })();
