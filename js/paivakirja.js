@@ -239,8 +239,9 @@
   function siirraYhteenvedonJalkeen(slot) {
     var osio = slot.closest('.aihe-osio') || slot.closest('[data-osio]');
     if (!osio) return;
-    var yht = osio.querySelector('.osio-yhteenveto');
-    if (yht && yht.parentNode) yht.parentNode.insertBefore(slot, yht.nextSibling);
+    // Jos osiossa on (ajon aikana lisätty) Yhteenveto-laatikko, siirretään palkki
+    // osion viimeiseksi lapseksi — Yhteenvedon ja mahdollisen haaste-palkin jälkeen.
+    if (osio.querySelector('.osio-yhteenveto')) osio.appendChild(slot);
   }
   function repositionAll() {
     var slots = document.querySelectorAll('[data-paivakirja]');
