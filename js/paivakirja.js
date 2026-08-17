@@ -59,6 +59,43 @@
       'Millaisen tulevaisuuden työpaikan kuvittelit?',
       'Mikä yllättävä ala alkoi tuntua kiinnostavalta?',
       'Mitä toivot tulevaisuudeltasi?'
+    ]},
+
+    // ── 9. luokka ──
+    '9-ajattelu': { teema: 'Ajattelu', kysymykset: [
+      'Mikä sai sinut tänään pysähtymään ja miettimään uudelleen?',
+      'Missä huomasit tekeväsi liian nopean johtopäätöksen?',
+      'Missä käytät tekoälyä – ja milloin kannattaa silti käyttää omaa päätä?'
+    ]},
+    '9-tet': { teema: 'TET', kysymykset: [
+      'Mitä TET opetti sinusta itsestäsi?',
+      'Vahvistiko vai muuttiko TET kiinnostustasi johonkin alaan?',
+      'Minkä vahvuuden haluat laittaa CV:hesi?'
+    ]},
+    '9-yhteishaku': { teema: 'Yhteishaku', kysymykset: [
+      'Mikä hakukohde tuntuu sinulle varmalta, mikä unelmalta?',
+      'Mikä yhteishaussa jännittää sinua?',
+      'Mitä haluat vielä selvittää ennen hakua?'
+    ]},
+    '9-paatoksenteko': { teema: 'Päätöksenteko', kysymykset: [
+      'Mikä iso päätös sinulla on juuri nyt mielessä?',
+      'Miten muiden mielipiteet vaikuttavat valintoihisi?',
+      'Mikä auttaa sinua tekemään hyvän päätöksen?'
+    ]},
+    '9-epavarmuus': { teema: 'Epävarmuus', kysymykset: [
+      'Mikä tulevaisuudessa tuntuu epävarmalta?',
+      'Mikä auttaa sinua, kun asiat eivät mene suunnitellusti?',
+      'Mikä kuuluu sinun resilienssipakkiisi?'
+    ]},
+    '9-valinnat': { teema: 'Valinnat', kysymykset: [
+      'Mikä valinta sinulla on juuri nyt edessä?',
+      'Teetkö jotain tottumuksesta – haluaisitko muuttaa sen?',
+      'Minkä valinnan haluaisit tehdä rohkeammin?'
+    ]},
+    '9-tulevaisuus': { teema: 'Tulevaisuus', kysymykset: [
+      'Millainen on toivottava tulevaisuutesi?',
+      'Mikä yksi askel veisi sinua sitä kohti jo nyt?',
+      'Mitä uutta ajattelit tulevaisuudestasi tänään?'
     ]}
   };
   var OLETUS = 'opiskelu';
