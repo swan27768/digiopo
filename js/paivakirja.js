@@ -96,6 +96,16 @@
       'Millainen on toivottava tulevaisuutesi?',
       'Mikä yksi askel veisi sinua sitä kohti jo nyt?',
       'Mitä uutta ajattelit tulevaisuudestasi tänään?'
+    ]},
+    '9-jatko': { teema: 'Suunnitelma', kysymykset: [
+      'Mikä polku peruskoulun jälkeen kiinnostaa sinua nyt eniten?',
+      'Mikä keskiarvossasi tai hakupisteissäsi yllätti sinut?',
+      'Mitä haluat tehdä tänä vuonna tavoitteesi eteen?'
+    ]},
+    '9-testi': { teema: 'Valmius', kysymykset: [
+      'Mikä toisen asteen sana tai käytäntö oli sinulle uusi?',
+      'Missä tunnet olevasi jo valmis, missä et vielä?',
+      'Mikä seuraavassa vaiheessa jännittää tai kiinnostaa?'
     ]}
   };
   var OLETUS = 'opiskelu';
