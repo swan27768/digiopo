@@ -32,6 +32,33 @@
       'Mikä sai sinut tällä viikolla innostumaan?',
       'Millaisesta tulevaisuudesta haaveilet juuri nyt?',
       'Mitä uutta opit itsestäsi?'
+    ]},
+
+    // ── 8. luokka ──
+    '8-koulutus': { teema: 'Koulutus', kysymykset: [
+      'Mikä ala tai reitti alkoi kiinnostaa sinua tänään?',
+      'Mikä amiksen ja lukion erossa yllätti sinut?',
+      'Mistä alasta haluaisit tietää lisää?'
+    ]},
+    '8-vahvuudet': { teema: 'Vahvuudet', kysymykset: [
+      'Minkä vahvuuden tunnistit itsessäsi?',
+      'Mihin ammattiin vahvuutesi voisi sopia?',
+      'Mitä haluaisit kertoa itsestäsi muille?'
+    ]},
+    '8-tet': { teema: 'TET', kysymykset: [
+      'Millaiseen TET-paikkaan haluaisit?',
+      'Mikä työnantajalle viestimisessä jännittää?',
+      'Mikä tekee sinulle työstä hyvän: palkka, kiinnostus vai kaverit?'
+    ]},
+    '8-klinikka': { teema: 'Opiskelutaidot', kysymykset: [
+      'Mikä omassa opiskelussasi tökkii juuri nyt?',
+      'Minkä keinon haluaisit kokeilla?',
+      'Mikä auttaisi sinua jaksamaan tai keskittymään paremmin?'
+    ]},
+    '8-tulevaisuus': { teema: 'Tulevaisuus', kysymykset: [
+      'Millaisen tulevaisuuden työpaikan kuvittelit?',
+      'Mikä yllättävä ala alkoi tuntua kiinnostavalta?',
+      'Mitä toivot tulevaisuudeltasi?'
     ]}
   };
   var OLETUS = 'opiskelu';
