@@ -36,6 +36,16 @@ body {
 .hero-icon { font-size: 2.8rem; line-height: 1; }
 .hero h1 { font-size: 1.9rem; font-weight: 900; margin-top: .3rem; letter-spacing: -.5px; }
 .hero-sub { font-size: 1rem; opacity: .9; margin-top: .3rem; }
+.alkuun-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(255,255,255,.2); color: #fff;
+  border: 1.5px solid rgba(255,255,255,.6); border-radius: 999px;
+  padding: .45rem 1rem; font-size: .9rem; font-weight: 700;
+  font-family: inherit; cursor: pointer; margin-bottom: .9rem;
+  transition: background .15s;
+}
+.alkuun-btn:hover { background: rgba(255,255,255,.32); }
+.alkuun-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
 /* ── Nav-bottom ── */
 .nav-bottom {
@@ -303,6 +313,7 @@ body {
 ══════════════════════════════════════ -->
 <div id="view-lomake" class="view active">
   <header class="hero">
+    <button type="button" class="alkuun-btn" onclick="palaaAlkuun()">← Palaa alkuun</button>
     <div class="hero-icon">🌍</div>
     <h1>Maailma tarvitsee sinua</h1>
     <p class="hero-sub">Ilmoita ryhmänne idea luokan tauluun</p>
@@ -372,6 +383,7 @@ body {
 ══════════════════════════════════════ -->
 <div id="view-galleria" class="view">
   <header class="hero" style="padding:1.3rem 1.5rem 1.2rem;">
+    <button type="button" class="alkuun-btn" onclick="palaaAlkuun()">← Palaa alkuun</button>
     <h1 style="font-size:1.4rem;">🖼 Luokan galleria</h1>
     <p class="hero-sub" id="galleriaKoulu" style="font-size:.88rem;"></p>
   </header>
@@ -449,6 +461,15 @@ body {
 <script>
 // ── Konfiguraatio ──────────────────────────────────────────────────────────
 const API = '/api/maailma-taulu';
+
+// ── Palaa alkuun (takaisin tehtävään) ──────────────────────────────────────
+function palaaAlkuun() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = 'tehtavat/maailma_tarvitsee_sinua.html';
+  }
+}
 
 // ── Lue koulunimi DigiOpon lisenssiportilta ─────────────────────────────────
 function lueKouluNimi() {
