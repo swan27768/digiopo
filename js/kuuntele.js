@@ -131,31 +131,80 @@
     });
   }
 
+  // Vastausvaihtoehdot (napit/valinnat): luetaan kysymyksen jälkeen muodossa
+  // "Vaihtoehto A, …". Napit ovat muuten luvun ulkopuolella, joten nämä ovat
+  // poikkeus. Tunnistetaan yleisimmillä vaihtoehtoluokilla.
+  var OPTION_SELECTOR =
+    ".valinta,.opt-btn,.radio-option,.vaihtoehto," +
+    ".quiz-options .btn,.quiz-options button,.options .opt-btn,.options button";
+  // Vaihtoehdoille erillinen poissulku (EI sulje pois pelkän napin takia).
+  var OPTION_EXCLUDE =
+    "script,style,noscript,nav,.nav,.progress-bar,.kuuntele-widget,.kuuntele-skip," +
+    ".teoria-modal,.teoria-nappi,.ope-osio,.ope-paneeli,.ope-vihje," +
+    ".opettaja-osio,.opettaja-sisalto,.opettaja-toggle";
+
   // Lohkon luettava teksti: poistetaan suljetut lapset (esim. "i"-teorianappi,
-  // opettajaosiot), jottei niiden tekstiä (kuten pelkkä "i") lueta mukana.
+  // opettajaosiot) SEKÄ vaihtoehdot (jotta niitä ei lueta kahteen kertaan).
   function blockText(el) {
+    var strip = EXCLUDE_SELECTOR + "," + OPTION_SELECTOR;
     var src = el;
-    if (el.querySelector(EXCLUDE_SELECTOR)) {
+    if (el.querySelector(strip)) {
       src = el.cloneNode(true);
-      var bad = src.querySelectorAll(EXCLUDE_SELECTOR);
+      var bad = src.querySelectorAll(strip);
       for (var i = 0; i < bad.length; i++) if (bad[i].parentNode) bad[i].parentNode.removeChild(bad[i]);
     }
     return normalize(src.textContent);
   }
 
-  function collectSegments() {
-    var nodes = document.body.querySelectorAll(READABLE_SELECTOR);
+  // Vaihtoehdon teksti (ilman erillistä kirjaintunnusta, jos sellainen on).
+  function optionText(el) {
+    var clone = el.cloneNode(true);
+    var bad = clone.querySelectorAll(".choice-letter,.opt-letter," + OPTION_EXCLUDE);
+    for (var i = 0; i < bad.length; i++) if (bad[i].parentNode) bad[i].parentNode.removeChild(bad[i]);
+    return normalize(clone.textContent);
+  }
+
+  // Kirjain (A, B, C…) vaihtoehdon paikan mukaan lähimmässä ryhmässä.
+  function optionLetter(el) {
+    var group = el.parentElement;
+    while (group && group !== document.body) {
+      var opts = group.querySelectorAll(OPTION_SELECTOR);
+      if (opts.length >= 2) {
+        var idx = Array.prototype.indexOf.call(opts, el);
+        return idx >= 0 ? String.fromCharCode(65 + idx) : "";
+      }
+      group = group.parentElement;
+    }
+    return "";
+  }
+
+  // Yhtenäinen poiminta: luettavat lohkot + vaihtoehdot dokumenttijärjestyksessä.
+  function buildSegments(visibleOnly) {
+    var nodes = document.body.querySelectorAll(READABLE_SELECTOR + "," + OPTION_SELECTOR);
     var out = [];
     Array.prototype.forEach.call(nodes, function (el) {
-      if (el.closest(EXCLUDE_SELECTOR)) return;
-      if (el.querySelector(READABLE_SELECTOR)) return;
-      if (!isVisible(el)) return;
-      var text = blockText(el);
-      if (!text) return;
-      out.push({ el: el, text: text, hash: hashText(text) });
+      var isOpt = el.matches && el.matches(OPTION_SELECTOR);
+      if (isOpt) {
+        if (el.closest(OPTION_EXCLUDE)) return;
+        if (visibleOnly && !isVisible(el)) return;
+        var ot = optionText(el);
+        if (!ot) return;
+        var letter = optionLetter(el);
+        var text = normalize(letter ? ("Vaihtoehto " + letter + ", " + ot) : ot);
+        out.push({ el: el, text: text, hash: hashText(text) });
+      } else {
+        if (el.closest(EXCLUDE_SELECTOR)) return;
+        if (el.querySelector(READABLE_SELECTOR)) return;
+        if (visibleOnly && !isVisible(el)) return;
+        var t = blockText(el);
+        if (!t) return;
+        out.push({ el: el, text: t, hash: hashText(t) });
+      }
     });
     return out;
   }
+
+  function collectSegments() { return buildSegments(true); }
 
   function chunk(text) {
     var parts = text.match(/[^.!?…]+[.!?…]*\s*/g) || [text];
@@ -513,16 +562,7 @@
   // slidet) tekstinä + hashina. Käytössä vain kun window.KUUNTELE_EXPOSE on tosi.
   if (window.KUUNTELE_EXPOSE) {
     window.__kuunteleAll = function () {
-      var nodes = document.body.querySelectorAll(READABLE_SELECTOR);
-      var out = [];
-      Array.prototype.forEach.call(nodes, function (el) {
-        if (el.closest(EXCLUDE_SELECTOR)) return;
-        if (el.querySelector(READABLE_SELECTOR)) return;
-        var text = blockText(el); // poistaa suljetut lapset (esim. "i")
-        if (!text) return;
-        out.push({ text: text, hash: hashText(text) });
-      });
-      return out;
+      return buildSegments(false).map(function (s) { return { text: s.text, hash: s.hash }; });
     };
   }
 
