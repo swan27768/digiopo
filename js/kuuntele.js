@@ -228,13 +228,7 @@
   // kerta uudelleen.
   var armed = false;
   var prevVisible = [];              // edellisen skannauksen näkyvät hashit
-  var persistent = Object.create(null); // ruudusta toiseen näkyvänä pysyvät
 
-  function hasPersistent() { for (var k in persistent) return true; return false; }
-  function firstNonPersistent(segs) {
-    for (var i = 0; i < segs.length; i++) if (!persistent[segs[i].hash]) return i;
-    return -1;
-  }
   function sameList(a, b) {
     if (a.length !== b.length) return false;
     for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
@@ -274,7 +268,10 @@
     beginRead(segs, firstInViewport(segs));
   }
 
-  // DOM muuttui (esim. ruutu vaihtui) → tunnista uusi sisältö ja lue se.
+  // DOM muuttui. Automaattinen jatko käynnistyy VAIN aidossa ruudun vaihdossa:
+  // vanhaa näkyvää sisältöä katosi JA uutta tuli tilalle. Pelkkä paneelin tai
+  // tehtävän avaaminen (vain lisäystä) tai sulkeminen (vain poistoa) ei keskeytä
+  // lukua eikä hyppää mihinkään.
   var scanTimer = null;
   function onDomChange() {
     if (!armed) return;
@@ -284,14 +281,14 @@
       var segs = collectSegments();
       var cur = segs.map(function (s) { return s.hash; });
       if (sameList(cur, prevVisible)) return;   // näkyvyys ei muuttunut (esim. vain korostus)
-      // Päivitä pysyvä sisältö: edellisen ja nykyisen näkyvän leikkaus.
-      var prevSet = Object.create(null);
-      prevVisible.forEach(function (h) { prevSet[h] = 1; });
-      cur.forEach(function (h) { if (prevSet[h]) persistent[h] = 1; });
+      var prevSet = Object.create(null); prevVisible.forEach(function (h) { prevSet[h] = 1; });
+      var curSet = Object.create(null); cur.forEach(function (h) { curSet[h] = 1; });
+      var removed = false;
+      for (var i = 0; i < prevVisible.length; i++) { if (!curSet[prevVisible[i]]) { removed = true; break; } }
+      var addedIdx = -1;
+      for (var j = 0; j < segs.length; j++) { if (!prevSet[segs[j].hash]) { addedIdx = j; break; } }
       prevVisible = cur;
-      var idx = firstNonPersistent(segs);
-      if (idx === -1) return;                    // vain vanhaa/pysyvää näkyvissä → ei lueta
-      beginRead(segs, idx);                       // automaattinen jatko uuteen ruutuun
+      if (removed && addedIdx !== -1) beginRead(segs, addedIdx); // aito ruudun vaihto → lue uusi ruutu
     }, 280);
   }
 
