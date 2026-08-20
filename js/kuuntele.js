@@ -253,18 +253,25 @@
     speakSegment(state.segIndex);
   }
 
-  // Käyttäjän painallus: aloita luku. Ohita pysyvä yläosa, jos se on jo tunnistettu.
+  // Ensimmäinen segmentti, joka on tällä hetkellä näkyvissä ruudulla (viewportissa).
+  // Näin pitkillä vieritettävillä sivuilla luku alkaa siitä, mitä oppilas katsoo,
+  // eikä aina sivun ylimmästä rivistä.
+  function firstInViewport(segs) {
+    var top = 64; // varaa tilaa mahdolliselle kiinteälle yläpalkille
+    for (var i = 0; i < segs.length; i++) {
+      var r = segs[i].el.getBoundingClientRect();
+      if (r.bottom > top && r.top < window.innerHeight) return i;
+    }
+    return 0;
+  }
+
+  // Käyttäjän painallus: aloita luku näkyvästä kohdasta (ei sivun alusta).
   function manualStart() {
     armed = true;
     var segs = collectSegments();
     if (!segs.length) return;
     prevVisible = segs.map(function (s) { return s.hash; });
-    var idx = 0;
-    if (hasPersistent()) {
-      var i = firstNonPersistent(segs);
-      if (i > 0) idx = i;
-    }
-    beginRead(segs, idx);
+    beginRead(segs, firstInViewport(segs));
   }
 
   // DOM muuttui (esim. ruutu vaihtui) → tunnista uusi sisältö ja lue se.
