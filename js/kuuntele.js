@@ -121,7 +121,7 @@
       if (!isVisible(el)) return;
       var text = normalize(el.innerText || el.textContent);
       if (!text) return;
-      out.push({ el: el, text: text });
+      out.push({ el: el, text: text, hash: hashText(text) });
     });
     return out;
   }
@@ -222,15 +222,70 @@
   }
 
   // --- Toisto ---------------------------------------------------------------
-  function start() {
+  // Automaattinen jatko: kun oppilas on kerran painanut Kuuntele (armed=true),
+  // ruudun vaihtuessa lukija alkaa lukea uutta sisältöä itsestään. Aina näkyvä
+  // yläosa (nimikortti, otsikko) tunnistetaan "pysyväksi" eikä sitä lueta joka
+  // kerta uudelleen.
+  var armed = false;
+  var prevVisible = [];              // edellisen skannauksen näkyvät hashit
+  var persistent = Object.create(null); // ruudusta toiseen näkyvänä pysyvät
+
+  function hasPersistent() { for (var k in persistent) return true; return false; }
+  function firstNonPersistent(segs) {
+    for (var i = 0; i < segs.length; i++) if (!persistent[segs[i].hash]) return i;
+    return -1;
+  }
+  function sameList(a, b) {
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+
+  function beginRead(segs, fromIndex) {
     if (synth) synth.cancel();
-    state.segments = collectSegments();
+    if (audioEl) { try { audioEl.pause(); } catch (e) {} }
+    state.segments = segs;
     if (!state.segments.length) return;
     state.lang = pickLang();
-    state.segIndex = 0;
+    state.segIndex = fromIndex || 0;
     state.playing = true;
     updateButton();
-    speakSegment(0);
+    speakSegment(state.segIndex);
+  }
+
+  // Käyttäjän painallus: aloita luku. Ohita pysyvä yläosa, jos se on jo tunnistettu.
+  function manualStart() {
+    armed = true;
+    var segs = collectSegments();
+    if (!segs.length) return;
+    prevVisible = segs.map(function (s) { return s.hash; });
+    var idx = 0;
+    if (hasPersistent()) {
+      var i = firstNonPersistent(segs);
+      if (i > 0) idx = i;
+    }
+    beginRead(segs, idx);
+  }
+
+  // DOM muuttui (esim. ruutu vaihtui) → tunnista uusi sisältö ja lue se.
+  var scanTimer = null;
+  function onDomChange() {
+    if (!armed) return;
+    if (scanTimer) return;
+    scanTimer = setTimeout(function () {
+      scanTimer = null;
+      var segs = collectSegments();
+      var cur = segs.map(function (s) { return s.hash; });
+      if (sameList(cur, prevVisible)) return;   // näkyvyys ei muuttunut (esim. vain korostus)
+      // Päivitä pysyvä sisältö: edellisen ja nykyisen näkyvän leikkaus.
+      var prevSet = Object.create(null);
+      prevVisible.forEach(function (h) { prevSet[h] = 1; });
+      cur.forEach(function (h) { if (prevSet[h]) persistent[h] = 1; });
+      prevVisible = cur;
+      var idx = firstNonPersistent(segs);
+      if (idx === -1) return;                    // vain vanhaa/pysyvää näkyvissä → ei lueta
+      beginRead(segs, idx);                       // automaattinen jatko uuteen ruutuun
+    }, 280);
   }
 
   function stop() {
@@ -357,7 +412,16 @@
       }
     };
 
-    btn.addEventListener("click", function () { if (state.playing) stop(); else start(); });
+    btn.addEventListener("click", function () { if (state.playing) stop(); else manualStart(); });
+
+    // Seuraa ruudun vaihtumista automaattista jatkoa varten.
+    try {
+      var mo = new MutationObserver(onDomChange);
+      mo.observe(document.body, {
+        subtree: true, childList: true, attributes: true,
+        attributeFilter: ["class", "style", "hidden"]
+      });
+    } catch (e) {}
 
     speedBtn.addEventListener("click", function () {
       var idx = 0;
