@@ -112,6 +112,25 @@
     return (h >>> 0).toString(16).padStart(8, "0");
   }
 
+  // Järjestysluvut: "7. luokka" → "seitsemäs luokka". Muunnetaan vain kun perässä
+  // (välin/väliviivan jälkeen) on pienellä alkava sana → lauseenloput ("…on 7.")
+  // ja isolla alkavat uudet lauseet eivät muutu.
+  var ORDINALS = {
+    1:"ensimmäinen",2:"toinen",3:"kolmas",4:"neljäs",5:"viides",6:"kuudes",7:"seitsemäs",
+    8:"kahdeksas",9:"yhdeksäs",10:"kymmenes",11:"yhdestoista",12:"kahdestoista",13:"kolmastoista",
+    14:"neljästoista",15:"viidestoista",16:"kuudestoista",17:"seitsemästoista",18:"kahdeksastoista",
+    19:"yhdeksästoista",20:"kahdeskymmenes",21:"kahdeskymmenesensimmäinen",22:"kahdeskymmenestoinen",
+    23:"kahdeskymmeneskolmas",24:"kahdeskymmenesneljäs",25:"kahdeskymmenesviides",26:"kahdeskymmeneskuudes",
+    27:"kahdeskymmenesseitsemäs",28:"kahdeskymmeneskahdeksas",29:"kahdeskymmenesyhdeksäs",30:"kolmaskymmenes",
+    31:"kolmaskymmenesensimmäinen"
+  };
+  function speakable(text) {
+    return (text || "").replace(/(\d+)\.(?=[\s-]*[a-zäöåé])/g, function (m, n) {
+      var o = ORDINALS[parseInt(n, 10)];
+      return o ? o : m;
+    });
+  }
+
   function collectSegments() {
     var nodes = document.body.querySelectorAll(READABLE_SELECTOR);
     var out = [];
@@ -318,7 +337,7 @@
 
   function speakViaSpeech(text, done) {
     if (!synth) { done(); return; } // ei äänitiedostoa eikä puhesynteesiä
-    speakChunks(chunk(text), 0, done);
+    speakChunks(chunk(speakable(text)), 0, done);
   }
 
   function speakChunks(chunks, ci, done) {
