@@ -101,6 +101,7 @@
     return (raw || "")
       .replace(/[\u{1F000}-\u{1FAFF}]/gu, " ")
       .replace(/[\u{2600}-\u{27BF}]/gu, " ")
+      .replace(/[\u{2300}-\u{23FF}]/gu, " ")   // kellot/ajastimet ⏱⏰⌚ ym.
       .replace(/[\u{2190}-\u{21FF}]/gu, " ")
       .replace(/[\u{2B00}-\u{2BFF}]/gu, " ")
       .replace(/️/gu, "")
@@ -187,6 +188,24 @@
     return "";
   }
 
+  // Opettajan logistiikkalaatikko: iso sekuntikello-ikoni + "Aika: … min" ja
+  // ryhmittely. Tätä ei lueta oppilaalle. Tunnistus: lähiesivanhemmalla on
+  // pelkkä kello-ikoni-lapsi JA laatikon tekstissä on "aika" (erottaa esim.
+  // oppilaan ⏰-vinkistä "Aseta hälytyksiä!", jossa ei ole "aika").
+  var TIMER_ICON_RE = /^[⌚⌛⏰-⏳]️?$/;
+  function isInTimerBox(el) {
+    var node = el.parentElement, hops = 0;
+    while (node && node !== document.body && hops < 3) {
+      var kids = node.children, hasIcon = false;
+      for (var i = 0; i < kids.length; i++) {
+        if (TIMER_ICON_RE.test((kids[i].textContent || "").trim())) { hasIcon = true; break; }
+      }
+      if (hasIcon && /aika/i.test(node.textContent || "")) return true;
+      node = node.parentElement; hops++;
+    }
+    return false;
+  }
+
   // Yhtenäinen poiminta: luettavat lohkot + vaihtoehdot dokumenttijärjestyksessä.
   function buildSegments(visibleOnly) {
     var nodes = document.body.querySelectorAll(READABLE_SELECTOR + "," + OPTION_SELECTOR);
@@ -204,6 +223,12 @@
       } else {
         if (el.closest(EXCLUDE_SELECTOR)) return;
         if (el.querySelector(READABLE_SELECTOR)) return;
+        if (isInTimerBox(el)) return; // opettajan "Aika: … min" -logistiikkalaatikko
+        // Myös rivit, joissa on kello-emoji JA aika/ryhmä-logistiikkaa (esim.
+        // "⏱ 20–25 min · Ryhmäkoko 3–4"). Oppilaan ⏰-vinkit eivät osu tähän.
+        var raw = el.textContent || "";
+        if (/[⌚⌛⏰-⏳]/.test(raw) &&
+            /(\baika|\bmin\b|minuut|ryhmäko|kesto)/i.test(raw)) return;
         if (visibleOnly && !isVisible(el)) return;
         var t = blockText(el);
         if (!t) return;
