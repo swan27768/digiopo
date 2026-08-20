@@ -131,6 +131,18 @@
     });
   }
 
+  // Lohkon luettava teksti: poistetaan suljetut lapset (esim. "i"-teorianappi,
+  // opettajaosiot), jottei niiden tekstiä (kuten pelkkä "i") lueta mukana.
+  function blockText(el) {
+    var src = el;
+    if (el.querySelector(EXCLUDE_SELECTOR)) {
+      src = el.cloneNode(true);
+      var bad = src.querySelectorAll(EXCLUDE_SELECTOR);
+      for (var i = 0; i < bad.length; i++) if (bad[i].parentNode) bad[i].parentNode.removeChild(bad[i]);
+    }
+    return normalize(src.textContent);
+  }
+
   function collectSegments() {
     var nodes = document.body.querySelectorAll(READABLE_SELECTOR);
     var out = [];
@@ -138,7 +150,7 @@
       if (el.closest(EXCLUDE_SELECTOR)) return;
       if (el.querySelector(READABLE_SELECTOR)) return;
       if (!isVisible(el)) return;
-      var text = normalize(el.innerText || el.textContent);
+      var text = blockText(el);
       if (!text) return;
       out.push({ el: el, text: text, hash: hashText(text) });
     });
@@ -506,7 +518,7 @@
       Array.prototype.forEach.call(nodes, function (el) {
         if (el.closest(EXCLUDE_SELECTOR)) return;
         if (el.querySelector(READABLE_SELECTOR)) return;
-        var text = normalize(el.textContent); // textContent → myös piilotetut slidet
+        var text = blockText(el); // poistaa suljetut lapset (esim. "i")
         if (!text) return;
         out.push({ text: text, hash: hashText(text) });
       });
