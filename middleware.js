@@ -19,6 +19,7 @@ export const config = {
     '/pelit/:path*',
     '/tehtavat/:path*',
     '/robo-peli/:path*',
+    '/audio/:path*',
     '/7luokka',
     '/8luokka',
     '/9luokka',
