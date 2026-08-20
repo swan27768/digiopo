@@ -42,8 +42,17 @@
     ".task-intro", ".task-body", ".highlight-quote", ".pair-box",
     ".radio-option", ".role-title", ".role-desc", ".vaihe-tag",
     ".situation-label", ".header-title", ".header-label",
-    ".name-card-hint", ".save-step", "label"
+    ".name-card-hint", ".save-step", "label",
+    // Pelin/tehtävän palaute (oikein/väärin, selitys)
+    ".feedback", ".feedback-title", ".quiz-feedback", ".result-card",
+    ".result-badge", ".order-check-result", ".drag-result"
   ].join(",");
+
+  // Palaute-elementit: kun tällainen ilmestyy vastauksen jälkeen, se luetaan
+  // automaattisesti (vaikka kyseessä olisi vain lisäys eikä ruudun vaihto).
+  var FEEDBACK_SELECTOR =
+    ".feedback,.feedback-title,.quiz-feedback,.result-card,.result-badge," +
+    ".order-check-result,.drag-result";
 
   var EXCLUDE_SELECTOR =
     "script,style,noscript,textarea,input,select,button,nav,.nav," +
@@ -368,7 +377,11 @@
       var addedIdx = -1;
       for (var j = 0; j < segs.length; j++) { if (!prevSet[segs[j].hash]) { addedIdx = j; break; } }
       prevVisible = cur;
-      if (removed && addedIdx !== -1) beginRead(segs, addedIdx); // aito ruudun vaihto → lue uusi ruutu
+      if (removed && addedIdx !== -1) { beginRead(segs, addedIdx); return; } // aito ruudun vaihto
+      // Palaute ilmestyi (vain lisäys) → lue se automaattisesti.
+      for (var k = 0; k < segs.length; k++) {
+        if (!prevSet[segs[k].hash] && segs[k].el.closest(FEEDBACK_SELECTOR)) { beginRead(segs, k); return; }
+      }
     }, 280);
   }
 
