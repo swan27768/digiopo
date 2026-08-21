@@ -62,7 +62,10 @@
     ".opo-otsikko,.opo-rivi,.opo-pisteet-otsikko,.saanto-rivi," +
     // Opettajan ohje-/logistiikka-/tulostuslohkot
     ".ohje-osio,.ohje-askel,.ohje-numero,.ohje-teksti,.vaihelista," +
-    ".meta-row,.meta-pill,.meta-chip,[class*=tulosta],[class*=print]";
+    ".meta-row,.meta-pill,.meta-chip,[class*=tulosta],[class*=print]," +
+    // Visuaaliset numeromerkit (lista/askel-badget) — ei lueta (esim. "1 Toista"
+    // → Azure lukisi "yksitoista"). Numero on vain silmää varten.
+    ".rs-num,.step-number,.step-num,.num-badge";
 
   var speedId = DEFAULT_SPEED; // kiinteä: nopea (nopeusvalitsin poistettu)
   var chosenVoiceURI = readVoicePref();
