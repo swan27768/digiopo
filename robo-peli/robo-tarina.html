@@ -566,14 +566,13 @@
   <body>
     <!-- Edistymispalkki -->
     <div class="progress-wrap" aria-label="Edistyminen" role="region">
-      <div class="progress-label" id="progressLabel">Aloitus</div>
       <div
         class="progress-bar"
         role="progressbar"
         aria-valuenow="0"
         aria-valuemin="0"
         aria-valuemax="100"
-        aria-labelledby="progressLabel"
+        aria-label="Edistyminen"
       >
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
@@ -1203,16 +1202,8 @@
           .getElementById("progressFill")
           .parentElement.setAttribute("aria-valuenow", pct);
 
-        const idx = pageOrder.indexOf(pageId);
-        const total = pageOrder.length - 2; // ei lasketa kansi- eikä loppusivua
-        if (idx > 0 && idx < pageOrder.length - 1) {
-          document.getElementById("progressLabel").textContent =
-            `Luku ${idx} / ${total - 1}`;
-        } else if (pageId === "page-cover") {
-          document.getElementById("progressLabel").textContent = "Aloitus";
-        } else {
-          document.getElementById("progressLabel").textContent = "Valmis!";
-        }
+        // Ylhäällä ollut luku-merkintä (progressLabel) poistettu –
+        // lukunumero näkyy vain sivun sisällä olevassa chapter-tagissa.
 
         // Vie fokus sivun alkuun saavutettavuutta varten
         target.setAttribute("tabindex", "-1");
