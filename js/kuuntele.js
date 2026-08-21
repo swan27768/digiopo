@@ -42,16 +42,14 @@
     ".task-intro", ".task-body", ".highlight-quote", ".pair-box",
     ".radio-option", ".role-title", ".role-desc", ".vaihe-tag",
     ".situation-label", ".header-title", ".header-label",
-    ".name-card-hint", ".save-step", "label",
-    // Pelin/tehtävän palaute (oikein/väärin, selitys)
-    ".feedback", ".feedback-title", ".quiz-feedback", ".result-card",
-    ".result-badge", ".order-check-result", ".drag-result"
+    ".name-card-hint", ".save-step", "label"
   ].join(",");
 
-  // Palaute-elementit: kun tällainen ilmestyy vastauksen jälkeen, se luetaan
-  // automaattisesti (vaikka kyseessä olisi vain lisäys eikä ruudun vaihto).
+  // Palautelaatikot (oikein/väärin + selitys). Luetaan KOKONAISUUTENA yhtenä
+  // pätkänä (otsikko + selitysteksti), ja niiden sisältöä ei lueta erikseen.
+  // Kun tällainen ilmestyy vastauksen jälkeen, se luetaan automaattisesti.
   var FEEDBACK_SELECTOR =
-    ".feedback,.feedback-title,.quiz-feedback,.result-card,.result-badge," +
+    ".feedback,.quiz-feedback,.result-card,.result-badge," +
     ".order-check-result,.drag-result";
 
   var EXCLUDE_SELECTOR =
@@ -228,6 +226,16 @@
         if (otext) out.push({ el: el, text: otext, hash: hashText(otext) });
         return;
       }
+      // 1b) Palautelaatikko: lue koko teksti (otsikko + selitys) yhtenä pätkänä.
+      if (el.matches(FEEDBACK_SELECTOR)) {
+        if (el.parentElement && el.parentElement.closest(FEEDBACK_SELECTOR)) return; // sisempi, uloin riittää
+        if (el.closest(EXCLUDE_SELECTOR)) return;
+        if (visibleOnly && !isVisible(el)) return;
+        var ft = blockText(el);
+        if (ft) out.push({ el: el, text: ft, hash: hashText(ft) });
+        return;
+      }
+      if (el.closest(FEEDBACK_SELECTOR)) return;     // palautelaatikon sisältö luettu jo kokonaisuutena
       if (el.closest(EXCLUDE_SELECTOR)) return;
       if (isInTimerBox(el)) return;                 // opettajan sekuntikello-logistiikka
       var raw = el.textContent || "";
