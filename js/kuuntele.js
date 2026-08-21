@@ -27,7 +27,7 @@
     { id: "normaali", label: "Normaali", rate: 0.9  },
     { id: "nopea",    label: "Nopea",    rate: 1.15 }
   ];
-  var DEFAULT_SPEED = "normaali";
+  var DEFAULT_SPEED = "nopea";
   var STORAGE_KEY = "digiopo_kuuntele_nopeus";
   var VOICE_KEY = "digiopo_kuuntele_aani";
 
@@ -66,7 +66,7 @@
     ".ohje-osio,.ohje-askel,.ohje-numero,.ohje-teksti,.vaihelista," +
     ".meta-row,.meta-pill,.meta-chip,[class*=tulosta],[class*=print]";
 
-  var speedId = readSpeed();
+  var speedId = DEFAULT_SPEED; // kiinteä: nopea (nopeusvalitsin poistettu)
   var chosenVoiceURI = readVoicePref();
   var state = { playing: false, segments: [], segIndex: 0, hl: null, lang: "fi-FI" };
 
@@ -489,16 +489,14 @@
     var css =
       ".kuuntele-widget{position:fixed;right:16px;z-index:2147483000;display:flex;" +
       "gap:8px;align-items:center;font-family:inherit}" +
-      ".kuuntele-btn,.kuuntele-speed{border:none;cursor:pointer;border-radius:999px;" +
-      "font-family:inherit;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.18);" +
-      "-webkit-tap-highlight-color:transparent}" +
-      ".kuuntele-btn{display:flex;align-items:center;gap:8px;padding:12px 18px;" +
-      "background:#0F6E56;color:#fff;font-size:15px;min-height:44px}" +
+      ".kuuntele-btn{border:none;cursor:pointer;border-radius:50%;" +
+      "font-family:inherit;box-shadow:0 4px 14px rgba(0,0,0,.18);" +
+      "-webkit-tap-highlight-color:transparent;" +
+      "width:44px;height:44px;display:flex;align-items:center;justify-content:center;" +
+      "background:#0F6E56;color:#fff;padding:0}" +
       ".kuuntele-btn.playing{background:#BA7517}" +
       ".kuuntele-btn:hover{filter:brightness(1.06)}" +
-      ".kuuntele-ico{font-size:18px;line-height:1}" +
-      ".kuuntele-speed{padding:0 14px;min-height:44px;background:#fff;color:#0F6E56;" +
-      "font-size:13px;border:1.5px solid rgba(15,110,86,.25)}" +
+      ".kuuntele-ico{font-size:20px;line-height:1}" +
       ".kuuntele-voice{max-width:140px;min-height:44px;padding:0 10px;border-radius:999px;" +
       "background:#fff;color:#0F6E56;font-family:inherit;font-weight:600;font-size:12px;" +
       "border:1.5px solid rgba(15,110,86,.25);box-shadow:0 4px 14px rgba(0,0,0,.18);cursor:pointer}" +
@@ -521,14 +519,9 @@
     btn.className = "kuuntele-btn";
     btn.type = "button";
     btn.setAttribute("aria-pressed", "false");
-    btn.innerHTML = '<span class="kuuntele-ico" aria-hidden="true">🔊</span>' +
-                    '<span class="kuuntele-label">Kuuntele</span>';
-
-    var speedBtn = document.createElement("button");
-    speedBtn.className = "kuuntele-speed";
-    speedBtn.type = "button";
-    speedBtn.setAttribute("aria-label", "Lukunopeus");
-    speedBtn.textContent = speed().label;
+    btn.setAttribute("aria-label", "Kuuntele sivun teksti");
+    btn.title = "Kuuntele";
+    btn.innerHTML = '<span class="kuuntele-ico" aria-hidden="true">🔊</span>';
 
     var voiceSel = document.createElement("select");
     voiceSel.className = "kuuntele-voice";
@@ -536,24 +529,22 @@
     voiceSel.style.display = "none";
 
     widget.appendChild(btn);
-    widget.appendChild(speedBtn);
     widget.appendChild(voiceSel);
     document.body.appendChild(widget);
 
     var icoEl = btn.querySelector(".kuuntele-ico");
-    var labelEl = btn.querySelector(".kuuntele-label");
 
     window._kuunteleUpdateButton = function () {
       if (state.playing) {
         btn.classList.add("playing");
-        labelEl.textContent = "Pysäytä";
         icoEl.textContent = "⏹";
         btn.setAttribute("aria-pressed", "true");
+        btn.title = "Pysäytä";
       } else {
         btn.classList.remove("playing");
-        labelEl.textContent = "Kuuntele";
         icoEl.textContent = "🔊";
         btn.setAttribute("aria-pressed", "false");
+        btn.title = "Kuuntele";
       }
     };
 
@@ -567,19 +558,6 @@
         attributeFilter: ["class", "style", "hidden"]
       });
     } catch (e) {}
-
-    speedBtn.addEventListener("click", function () {
-      var idx = 0;
-      for (var i = 0; i < SPEEDS.length; i++) if (SPEEDS[i].id === speedId) { idx = i; break; }
-      speedId = SPEEDS[(idx + 1) % SPEEDS.length].id;
-      saveSpeed();
-      speedBtn.textContent = speed().label;
-      if (audioEl && !audioEl.paused) {
-        audioEl.playbackRate = speed().rate;            // MP3: muuta nopeus lennossa
-      } else if (state.playing && synth) {
-        var i2 = state.segIndex; synth.cancel(); speakSegment(i2); // puhe: aloita lohko uusiksi
-      }
-    });
 
     function populateVoices() {
       // Äänivalitsin näkyy vain selainäänitilassa (ei kun MP3:t käytössä).
