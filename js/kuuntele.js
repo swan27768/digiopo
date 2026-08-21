@@ -338,7 +338,7 @@
     try {
       if (!audioEl) audioEl = new Audio();
       audioEl.src = url;
-      audioEl.playbackRate = speed().rate;
+      audioEl.playbackRate = 1.0; // valmiit äänitiedostot: natiivinopeus (ei venytystä)
       audioEl.onended = function () { if (state.playing) onend(); };
       audioEl.onerror = function () { if (state.playing) onerror(); };
       var p = audioEl.play();
