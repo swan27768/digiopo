@@ -56,10 +56,15 @@
 
   var EXCLUDE_SELECTOR =
     "script,style,noscript,textarea,input,select,button,nav,.nav," +
-    ".progress-bar,.kuuntele-widget,.kuuntele-skip," +
+    ".progress-bar,.kuuntele-widget,.kuuntele-skip,.sr-only,.progress-label," +
+    ".navbar,header .nav-right,footer,.footer,.site-footer," +
     // Ei oppilaan ääneenluettavaa: "i"-teoriaikkunat ja opettajan ohjeet
     ".teoria-modal,.teoria-nappi,.ope-osio,.ope-paneeli,.ope-vihje," +
-    ".opettaja-osio,.opettaja-sisalto,.opettaja-toggle";
+    ".opettaja-osio,.opettaja-sisalto,.opettaja-toggle,[class*=opettaja]," +
+    ".opo-otsikko,.opo-rivi,.opo-pisteet-otsikko,.saanto-rivi," +
+    // Opettajan ohje-/logistiikka-/tulostuslohkot
+    ".ohje-osio,.ohje-askel,.ohje-numero,.ohje-teksti,.vaihelista," +
+    ".meta-row,.meta-pill,.meta-chip,[class*=tulosta],[class*=print]";
 
   var speedId = readSpeed();
   var chosenVoiceURI = readVoicePref();
@@ -208,32 +213,50 @@
 
   // Yhtenäinen poiminta: luettavat lohkot + vaihtoehdot dokumenttijärjestyksessä.
   function buildSegments(visibleOnly) {
-    var nodes = document.body.querySelectorAll(READABLE_SELECTOR + "," + OPTION_SELECTOR);
+    var nodes = document.body.querySelectorAll(
+      READABLE_SELECTOR + "," + OPTION_SELECTOR + ",div,span,section,article,summary");
     var out = [];
     Array.prototype.forEach.call(nodes, function (el) {
-      var isOpt = el.matches && el.matches(OPTION_SELECTOR);
-      if (isOpt) {
+      // 1) Vastausvaihtoehdot
+      if (el.matches(OPTION_SELECTOR)) {
         if (el.closest(OPTION_EXCLUDE)) return;
         if (visibleOnly && !isVisible(el)) return;
         var ot = optionText(el);
         if (!ot) return;
         var letter = optionLetter(el);
-        var text = normalize(letter ? ("Vaihtoehto " + letter + ", " + ot) : ot);
-        out.push({ el: el, text: text, hash: hashText(text) });
-      } else {
-        if (el.closest(EXCLUDE_SELECTOR)) return;
-        if (el.querySelector(READABLE_SELECTOR)) return;
-        if (isInTimerBox(el)) return; // opettajan "Aika: … min" -logistiikkalaatikko
-        // Myös rivit, joissa on kello-emoji JA aika/ryhmä-logistiikkaa (esim.
-        // "⏱ 20–25 min · Ryhmäkoko 3–4"). Oppilaan ⏰-vinkit eivät osu tähän.
-        var raw = el.textContent || "";
-        if (/[⌚⌛⏰-⏳]/.test(raw) &&
-            /(\baika|\bmin\b|minuut|ryhmäko|kesto)/i.test(raw)) return;
+        var otext = normalize(letter ? ("Vaihtoehto " + letter + ", " + ot) : ot);
+        if (otext) out.push({ el: el, text: otext, hash: hashText(otext) });
+        return;
+      }
+      if (el.closest(EXCLUDE_SELECTOR)) return;
+      if (isInTimerBox(el)) return;                 // opettajan sekuntikello-logistiikka
+      var raw = el.textContent || "";
+      if (/[⌚⌛⏰-⏳]/.test(raw) &&
+          /(\baika|\bmin\b|minuut|ryhmäko|kesto)/i.test(raw)) return;
+      // Tulostus-/leikkausohjeet (opettajalle/valmisteluun)
+      if (/^\W*(leikkaa|tulosta)\b/i.test(raw) || /tulostettava/i.test(raw)) return;
+      // 2) Luettavat lohkot (whitelist-tagit/luokat)
+      if (el.matches(READABLE_SELECTOR)) {
+        if (el.querySelector(READABLE_SELECTOR)) return; // vain lehtilohko
         if (visibleOnly && !isVisible(el)) return;
         var t = blockText(el);
-        if (!t) return;
-        out.push({ el: el, text: t, hash: hashText(t) });
+        if (t) out.push({ el: el, text: t, hash: hashText(t) });
+        return;
       }
+      // 3) Laatikot/kortit: div/span joissa on SUORAA tekstiä (esim. .example-item,
+      //    .skill-title, .kortti-*). Ei jos ollaan luettavan lohkon sisällä (ei
+      //    tuplausta) eikä jos sisältää jo luettavan lohkon.
+      if (el.closest(READABLE_SELECTOR)) return;
+      if (el.querySelector(READABLE_SELECTOR + "," + OPTION_SELECTOR)) return;
+      if (/ryhmäko/i.test(raw)) return;             // opettajan ryhmäkoko-logistiikka
+      var direct = "";
+      for (var i = 0; i < el.childNodes.length; i++) {
+        if (el.childNodes[i].nodeType === 3) direct += el.childNodes[i].textContent;
+      }
+      if (!/[A-Za-zÄÖÅäöå]/.test(direct)) return;    // vaadi suoraa tekstiä (ei pelkkä ikoni/kontti)
+      if (visibleOnly && !isVisible(el)) return;
+      var bt = blockText(el);
+      if (bt && bt.length >= 2) out.push({ el: el, text: bt, hash: hashText(bt) });
     });
     return out;
   }
