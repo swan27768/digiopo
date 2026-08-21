@@ -286,6 +286,9 @@
     if (/google/.test(n)) s += 5;
     if (v.localService) s += 2;
     if (/compact|eloquence|espeak/.test(n)) s -= 6;
+    // Suosi naisääntä (valmiit äänet ovat Noora) → yhtenäisempi kokemus.
+    if (/noora|selma|satu/.test(n)) s += 12;
+    if (/harri|onni|matti/.test(n)) s -= 10;
     return s;
   }
   function voicesForLang(lang) {
