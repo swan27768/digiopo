@@ -15133,49 +15133,9 @@ body {
             /* Oikea vastaus: suoraan eteenpäin */
             naytaJatkanappi(sv.currentRoom);
           } else {
-            /* Väärä tai osittain oikea: perustelukenttä pakollinen */
-            naytaSelityskentta(room);
+            /* Väärä tai osittain oikea: suoraan eteenpäin, ei perustelukenttää */
+            naytaJatkanappi(sv.currentRoom);
           }
-        };
-
-        /* ===== SELITYSKENTTÄ ===== */
-        function naytaSelityskentta(room) {
-          var fb = document.getElementById('feedback-box');
-          if (!fb) return;
-          var sv     = State.variables;
-          var choice = room.choices; /* ei käytetä suoraan, label vaihtelee */
-
-          var wrap = document.createElement('div');
-          wrap.className = 'selitys-wrap';
-          wrap.innerHTML =
-            '<label class="selitys-label">Kirjoita omin sanoin:<br>' +
-            '<span style="font-weight:normal;font-size:0.95rem;">Miksi tämä ei ollut paras valinta? (väh. 20 merkkiä)</span></label>' +
-            '<textarea class="selitys-kentta" id="selitys-teksti" rows="3" ' +
-            'placeholder="Kirjoita tähän..."></textarea>' +
-            '<div class="selitys-laskuri" id="selitys-laskuri">0 / 20 merkkiä</div>' +
-            '<button class="btn-jatka" id="selitys-btn" disabled onclick="tarkistaSelitys()">Jatka →</button>';
-          fb.appendChild(wrap);
-          setTimeout(function() {
-            var ta  = document.getElementById('selitys-teksti');
-            var btn = document.getElementById('selitys-btn');
-            var lsk = document.getElementById('selitys-laskuri');
-            if (ta) {
-              ta.addEventListener('input', function() {
-                var n = ta.value.trim().length;
-                lsk.textContent = n + ' / 20 merkkiä';
-                lsk.style.color = n >= 20 ? 'var(--vihrea)' : 'var(--teksti2)';
-                btn.disabled    = n < 20;
-              });
-            }
-          }, 50);
-        }
-
-        window.tarkistaSelitys = function() {
-          var ta = document.getElementById('selitys-teksti');
-          if (!ta || ta.value.trim().length < 20) return;
-          var wrap = document.querySelector('.selitys-wrap');
-          if (wrap) wrap.remove();
-          naytaJatkanappi(State.variables.currentRoom);
         };
 
 
@@ -15409,9 +15369,7 @@ body {
         tags=""
         position="625,250"
         size="100,100"
-        >&lt;div class=&quot;page-start&quot;&gt; &lt;div
-        class=&quot;start-badge&quot;&gt;Yläkoulun pakopeli — 7.
-        luokka&lt;/div&gt; &lt;h1&gt;Yläkoulun pakopeli!&lt;/h1&gt; &lt;p
+        >&lt;div class=&quot;page-start&quot;&gt; &lt;h1&gt;Yläkoulun pakopeli!&lt;/h1&gt; &lt;p
         class=&quot;start-story&quot;&gt; Selviätkö ulos koulurakennuksesta?
         Pelissä on 10 kysymystä, jotka liittyvät opiskeluun. Jos saat
         tarvittavan määrän pisteitä, pääset ulos koulusta! &lt;/p&gt; &lt;div
@@ -15426,9 +15384,7 @@ body {
         class=&quot;saanto-rivi&quot;&gt;Oikea vastaus tuo &lt;strong&gt;10
         pistettä&lt;/strong&gt;&lt;/div&gt; &lt;div
         class=&quot;saanto-rivi&quot;&gt;Väärä vastaus voi vähentää
-        pisteitä&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;✏️
-        Väärästä vastauksesta sinun täytyy perustella miksi se ei ollut
-        paras&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;Jos
+        pisteitä&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;Jos
         pisteitä ei riitä, käyt lisäluokissa&lt;/div&gt; &lt;/div&gt; &lt;button
         class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;Aloita
         pakomatka&lt;/button&gt; &lt;button class=&quot;btn-opo&quot;
@@ -15487,11 +15443,7 @@ body {
         position="625,400"
         size="100,100"
         >&lt;div class=&quot;page-luokka&quot;&gt; &lt;div
-        class=&quot;luokka-header&quot;&gt; &lt;span
-        class=&quot;luokka-icon&quot;
-        id=&quot;room-icon-big&quot;&gt;&lt;/span&gt; &lt;div&gt; &lt;div
-        class=&quot;luokka-label&quot;
-        id=&quot;room-subject-label&quot;&gt;&lt;/div&gt; &lt;h2
+        class=&quot;luokka-header&quot;&gt; &lt;div&gt; &lt;h2
         id=&quot;room-title&quot;&gt;&lt;/h2&gt; &lt;/div&gt; &lt;div
         class=&quot;luokka-edistyminen&quot;
         id=&quot;room-progress&quot;&gt;&lt;/div&gt; &lt;/div&gt; &lt;p
@@ -15555,10 +15507,7 @@ body {
         position="625,650"
         size="100,100"
         >&lt;div class=&quot;page-luokka&quot;&gt; &lt;div
-        class=&quot;luokka-header&quot;&gt; &lt;span
-        class=&quot;luokka-icon&quot; id=&quot;sakko-icon&quot;&gt;&lt;/span&gt;
-        &lt;div&gt; &lt;div class=&quot;luokka-label&quot;
-        id=&quot;sakko-subject&quot;&gt;&lt;/div&gt; &lt;h2
+        class=&quot;luokka-header&quot;&gt; &lt;div&gt; &lt;h2
         id=&quot;sakko-title&quot;&gt;&lt;/h2&gt; &lt;/div&gt; &lt;div
         class=&quot;luokka-edistyminen&quot;&gt;Lisätehtävä&lt;/div&gt;
         &lt;/div&gt; &lt;p class=&quot;luokka-kysymys&quot;
