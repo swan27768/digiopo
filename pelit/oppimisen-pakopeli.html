@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Pakopeli</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/vendor/fonts/fonts.css" />
     <meta name="application-name" content="SugarCube" />
     <meta name="version" content="2.37.3" />
     <!--
@@ -14169,888 +14170,459 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         id="twine-user-stylesheet"
         type="text/twine-css"
       >
-        /* ===== SUGARCUBE UI PIILOTUS ===== */
-        #ui-bar,
-        #ui-bar-toggle,
-        #ui-bar-history,
-        #ui-bar-body,
-        #ui-bar-footer,
-        #sidebar,
-        #toolbar,
-        .ui-close {
-          display: none !important;
-        }
+/* ==========================================================
+   KOULUN PAKOPELI — ilme "Selkeät lohkot" (1c)
+   Paksut ääriviivat, DigiOpon violetti, pelkkä typografia.
+   Kaikki tekstikontrastit >= WCAG AA.
+   ========================================================== */
 
-        #story {
-          margin-left: 0 !important;
-        }
-        /*
-==========================================================
-  KOULUN PAKOPELI — iframe-optimoitu CSS
-  Rakenne per passage: 4 elementtiä max
-  - Ei HUD-palkkia
-  - Ei marginaaleja ylhäällä
-  - Selkeä, iso teksti
-  - WCAG AA -kontrasti
-==========================================================
-*/
+/* ===== SUGARCUBE UI PIILOTUS ===== */
+#ui-bar, #ui-bar-toggle, #ui-bar-history, #ui-bar-body,
+#ui-bar-footer, #sidebar, #toolbar, .ui-close { display: none !important; }
+#story { margin-left: 0 !important; }
 
-        /* ===== MUUTTUJAT ===== */
-        :root {
-          --bg: #0a0a0f;
-          --bg2: #12121a;
-          --bg3: #1a1a26;
-          --kulta: #c9a84c;
-          --kulta2: #e8c96a;
-          --vihrea: #27ae60;
-          --puna: #c0392b;
-          --teksti: #d4c9a8;
-          --teksti2: #8a8070;
-          --reuna: #2a2a3a;
-          --accent: #4a3a6a;
-        }
+:root {
+  --viiva: #1e1b4b;
+  --violetti: #7c3aed;
+  --violetti-tumma: #5b21b6;
+  --violetti-vaalea: #ede9fe;
+  --sivu: #f5f3ff;
+  --valk: #ffffff;
+  --teksti: #1e1b4b;
+  --teksti2: #4c1d95;
+  --vihrea: #15803d;
+  --vihrea-tumma: #14532d;
+  --vihrea-bg: #dcfce7;
+  --puna: #b91c1c;
+  --puna-tumma: #7f1d1d;
+  --puna-bg: #fee2e2;
+  --kelt-bg: #fef9c3;
+  --kelt-reuna: #ca8a04;
+  --otsikko: "Space Grotesk", "Plus Jakarta Sans", system-ui, sans-serif;
+  --leipa: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
 
-        /* ===== NOLLAUS ===== */
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* ===== SUGARCUBE UI PIILOTUS ===== */
-        #ui-bar,
-        #ui-bar-toggle,
-        #ui-bar-history,
-        #ui-bar-body,
-        #ui-bar-footer,
-        #sidebar,
-        #toolbar,
-        .ui-close {
-          display: none !important;
-        }
-        #story {
-          margin-left: 0 !important;
-        }
+body {
+  background: var(--sivu);
+  color: var(--teksti);
+  font-family: var(--leipa);
+  font-size: 18px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.passage { padding: 0 !important; max-width: none !important; }
+*:focus-visible { outline: 4px solid var(--violetti); outline-offset: 3px; }
 
-        /* ===== BODY ===== */
-        body {
-          background: var(--bg);
-          color: var(--teksti);
-          font-family: "Special Elite", serif;
-          font-size: 18px;
-          line-height: 1.7;
-          min-height: 100vh;
-        }
+/* piilota emoji-ikonit: pelkkä typografia */
+.luokka-icon, .penalty-task-icon, .luokka-edistyminen { display: none !important; }
 
-        .passage {
-          padding: 0 !important;
-          max-width: none !important;
-        }
+/* ===== SIVUPOHJA ===== */
+.page-start, .page-kartta, .page-luokka, .page-sakko, .page-voitto {
+  min-height: 100vh;
+  padding: 28px 24px 48px;
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
 
-        /* ===== FOCUS ===== */
-        *:focus-visible {
-          outline: 3px solid var(--kulta);
-          outline-offset: 2px;
-        }
-
-        /* ===== SIVUPOHJA: kaikille passágeille ===== */
-        /* Jokainen page-* div täyttää koko näkymän */
-        .page-start,
-        .page-kartta,
-        .page-luokka,
-        .page-sakko,
-        .page-voitto {
-          min-height: 100vh;
-          padding: 32px 28px;
-          max-width: 720px;
-          margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        /* ============================================
-   START-SIVU
+/* ============================================
+   START
    ============================================ */
-        .page-start {
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          gap: 20px;
-        }
+.page-start { align-items: center; justify-content: center; text-align: center; gap: 22px; }
 
-        .start-badge {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.95rem;
-          letter-spacing: 0.2em;
-          color: var(--teksti2);
-          text-transform: uppercase;
-        }
+.start-badge {
+  background: var(--viiva);
+  color: #fff;
+  font-family: var(--otsikko);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+}
 
-        .page-start h1 {
-          font-family: "Creepster", cursive;
-          font-size: clamp(2.8rem, 8vw, 5rem);
-          color: var(--kulta);
-          text-shadow: 0 0 30px rgba(242, 202, 90, 0.35);
-          line-height: 1.1;
-        }
+.page-start h1 {
+  font-family: var(--otsikko);
+  font-size: clamp(2.2rem, 6vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--viiva);
+  text-transform: uppercase;
+  width: 100%;
+}
 
-        .start-story {
-          font-size: 1.1rem;
-          color: var(--teksti);
-          line-height: 1.8;
-          max-width: 520px;
-        }
+.start-story { font-size: 1.1rem; line-height: 1.65; color: var(--teksti); max-width: 46ch; }
 
-        .start-stats {
-          display: flex;
-          gap: 20px;
-          justify-content: center;
-        }
-        .stat-item {
-          background: var(--bg2);
-          border: 2px solid var(--reuna);
-          padding: 16px 24px;
-          border-radius: 6px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          min-width: 90px;
-        }
-        .stat-item strong {
-          font-family: "Creepster", cursive;
-          font-size: 2.2rem;
-          color: var(--kulta);
-          line-height: 1;
-        }
-        .stat-item span {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.8rem;
-          color: var(--teksti2);
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-        }
+.start-stats { display: flex; gap: 0; border: 3px solid var(--viiva); }
+.stat-item {
+  padding: 14px 26px;
+  border-right: 3px solid var(--viiva);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  min-width: 108px;
+}
+.stat-item:last-child { border-right: none; background: var(--violetti); }
+.stat-item strong {
+  font-family: var(--otsikko);
+  font-size: 2rem; font-weight: 700; line-height: 1; color: var(--viiva);
+}
+.stat-item:last-child strong { color: #fff; }
+.stat-item span {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--teksti2);
+}
+.stat-item:last-child span { color: #f5f3ff; }
 
-        .btn-start {
-          padding: 18px 48px;
-          background: var(--kulta);
-          border: none;
-          color: #0d0d18;
-          font-family: "Special Elite", serif;
-          font-size: 1.2rem;
-          font-weight: bold;
-          letter-spacing: 0.1em;
-          cursor: pointer;
-          border-radius: 4px;
-          transition:
-            background 0.2s,
-            transform 0.1s;
-          min-height: 56px;
-        }
-        .btn-start:hover {
-          background: var(--kulta2);
-          transform: translateY(-2px);
-        }
-        .btn-start:active {
-          transform: translateY(0);
-        }
+.start-oppiaineet { width: 100%; max-width: 560px; }
+.start-oppiaineet-otsikko {
+  font-family: var(--otsikko); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--teksti2); margin-bottom: 10px;
+}
+.oppiaine-lista { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.oppiaine-pill {
+  background: var(--valk); border: 2px solid var(--viiva);
+  padding: 6px 14px; font-size: 0.9rem; color: var(--teksti); white-space: nowrap; font-weight: 600;
+}
 
-        /* ===== EDISTYMISLASKURI LUOKKAHUONEESSA ===== */
-        .luokka-edistyminen {
-          margin-left: auto;
-          font-family: "Courier Prime", monospace;
-          font-size: 1rem;
-          color: var(--teksti2);
-          background: var(--bg2);
-          border: 1px solid var(--reuna);
-          border-radius: 20px;
-          padding: 6px 14px;
-          white-space: nowrap;
-        }
+.start-saannot {
+  background: var(--valk); border: 3px solid var(--viiva);
+  padding: 18px 22px; width: 100%; max-width: 500px; text-align: left;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.saanto-rivi { font-size: 1rem; color: var(--teksti); line-height: 1.5; }
+.saanto-rivi strong { color: var(--viiva); }
 
-        .btn-tarkista {
-          width: 100%;
-          padding: 18px;
-          background: transparent;
-          border: 2px solid var(--kulta);
-          color: var(--kulta);
-          font-family: "Special Elite", serif;
-          font-size: 1.1rem;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.2s;
-          min-height: 56px;
-          letter-spacing: 0.05em;
-        }
-        .btn-tarkista:hover {
-          background: var(--kulta);
-          color: var(--bg);
-        }
+.btn-start {
+  padding: 18px 44px;
+  background: var(--violetti);
+  border: 3px solid var(--viiva);
+  box-shadow: 5px 5px 0 var(--viiva);
+  color: #fff;
+  font-family: var(--otsikko);
+  font-size: 1.2rem; font-weight: 700; letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer; min-height: 56px;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+}
+.btn-start:hover { background: var(--violetti-tumma); }
+.btn-start:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--viiva); }
 
-        /* ============================================
-   LUOKKA-SIVU — 4 elementtiä
+.btn-tarkista {
+  width: 100%; padding: 18px;
+  background: var(--valk); border: 3px solid var(--viiva);
+  color: var(--viiva); font-family: var(--otsikko);
+  font-size: 1.05rem; font-weight: 700; text-transform: uppercase;
+  cursor: pointer; min-height: 56px;
+}
+.btn-tarkista:hover { background: var(--violetti-vaalea); }
+
+/* ============================================
+   TILAPALKKI: edistyminen + pisteet
    ============================================ */
-        .page-luokka {
-          gap: 20px;
-        }
+.statusbar { background: var(--viiva); padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
+.statusbar-rivi { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.sb-luokka {
+  font-family: var(--otsikko); font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.14em; color: #c4b5fd; text-transform: uppercase;
+}
+.sb-pisteet { display: flex; align-items: baseline; gap: 8px; }
+.sb-pts-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #c4b5fd;
+}
+.sb-pisteet strong { font-family: var(--otsikko); font-size: 1.5rem; font-weight: 700; color: #fff; }
+.sb-pts-max { font-size: 0.85rem; color: #a78bfa; }
+.sb-ura { height: 14px; background: #312e81; display: flex; }
+.sb-taytto { background: #c4b5fd; width: 0; transition: width 0.35s ease; }
 
-        /* 1. HEADER: oppiaine + nimi */
-        .luokka-header {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          padding-bottom: 16px;
-          border-bottom: 2px solid var(--kulta);
-        }
-        .luokka-icon {
-          font-size: 2.4rem;
-          line-height: 1;
-        }
-        .luokka-label {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.85rem;
-          letter-spacing: 0.15em;
-          color: var(--teksti2);
-          text-transform: uppercase;
-          margin-bottom: 2px;
-        }
-        .luokka-header h2 {
-          font-family: "Creepster", cursive;
-          font-size: 1.8rem;
-          color: var(--kulta);
-          line-height: 1.1;
-        }
+/* ============================================
+   LUOKKA
+   ============================================ */
+.page-luokka { gap: 0; padding: 0 0 48px; }
+.page-luokka > *:not(.statusbar) { max-width: 820px; width: 100%; margin: 0 auto; }
+.page-luokka > .luokka-header { margin-top: 26px; }
+.page-luokka > .luokka-kysymys,
+.page-luokka > .vastaukset,
+.page-luokka > .palaute { margin-top: 20px; }
 
-        /* 2. KYSYMYS */
-        .luokka-kysymys {
-          font-size: 1.2rem;
-          font-weight: bold;
-          color: var(--teksti);
-          line-height: 1.6;
-          background: var(--bg2);
-          border-left: 4px solid var(--kulta);
-          padding: 18px 20px;
-          border-radius: 0 6px 6px 0;
-        }
+.luokka-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 24px; }
+.luokka-label {
+  display: inline-block;
+  background: var(--violetti); color: #fff;
+  font-family: var(--otsikko); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase; padding: 6px 12px;
+}
+.luokka-header h2 {
+  font-family: var(--otsikko); font-size: 1.7rem; font-weight: 700;
+  line-height: 1.15; color: var(--viiva); letter-spacing: -0.01em;
+}
 
-        /* 3. VASTAUSNAPIT */
-        .vastaukset {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
+.luokka-kysymys {
+  font-family: var(--otsikko);
+  font-size: 1.45rem; font-weight: 700; line-height: 1.3;
+  color: var(--viiva); padding: 0 24px; text-wrap: pretty;
+}
 
-        .btn-choice {
-          width: 100%;
-          padding: 18px 20px;
-          background: var(--bg2);
-          border: 2px solid var(--reuna);
-          color: var(--teksti);
-          font-family: "Special Elite", serif;
-          font-size: 1.05rem;
-          line-height: 1.6;
-          cursor: pointer;
-          text-align: left;
-          transition: all 0.15s;
-          border-radius: 6px;
-          min-height: 56px;
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-        }
-        .btn-choice:hover {
-          border-color: var(--kulta);
-          background: var(--bg3);
-          color: var(--kulta2);
-        }
-        .choice-letter {
-          font-family: "Courier Prime", monospace;
-          font-size: 1.05rem;
-          font-weight: bold;
-          color: var(--kulta);
-          flex-shrink: 0;
-          width: 28px;
-        }
-        .btn-choice.correct {
-          border-color: var(--vihrea);
-          background: rgba(62, 207, 114, 0.1);
-          color: var(--vihrea);
-          cursor: default;
-        }
-        .btn-choice.wrong {
-          border-color: var(--puna);
-          background: rgba(224, 85, 85, 0.1);
-          color: var(--puna);
-          cursor: default;
-        }
-        .btn-choice:disabled {
-          pointer-events: none;
-        }
+.vastaukset { display: flex; flex-direction: column; gap: 12px; padding: 0 24px; }
 
-        /* 4. PALAUTE (näkyy vastauksen jälkeen) */
-        .palaute {
-          background: var(--bg2);
-          border: 2px solid var(--reuna);
-          border-radius: 6px;
-          padding: 20px;
-          display: none;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .palaute.nakyva {
-          display: flex;
-          animation: ilmesty 0.3s ease;
-        }
-        .palaute.oikein {
-          border-color: var(--vihrea);
-        }
-        .palaute.vaarin {
-          border-color: var(--puna);
-        }
+.btn-choice {
+  width: 100%; padding: 0;
+  background: var(--valk); border: 3px solid var(--viiva);
+  color: var(--teksti); font-family: var(--leipa);
+  font-size: 1.05rem; line-height: 1.5; text-align: left;
+  cursor: pointer; min-height: 56px;
+  display: flex; align-items: stretch; gap: 0;
+  transition: background 0.12s;
+}
+.btn-choice > *:last-child { padding: 16px 18px; }
+.btn-choice:hover:not(:disabled) { background: var(--violetti-vaalea); }
+.choice-letter {
+  font-family: var(--otsikko); font-size: 1.25rem; font-weight: 700;
+  background: var(--violetti-vaalea); color: var(--teksti2);
+  border-right: 3px solid var(--viiva);
+  width: 56px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 !important;
+}
+.btn-choice.correct {
+  border-color: var(--vihrea-tumma); background: var(--vihrea-bg);
+  color: var(--vihrea-tumma); font-weight: 600; cursor: default;
+}
+.btn-choice.correct .choice-letter { background: var(--vihrea); color: #fff; border-right-color: var(--vihrea-tumma); }
+.btn-choice.wrong {
+  border-color: var(--puna-tumma); background: var(--puna-bg);
+  color: var(--puna-tumma); font-weight: 600; cursor: default;
+}
+.btn-choice.wrong .choice-letter { background: var(--puna); color: #fff; border-right-color: var(--puna-tumma); }
+.btn-choice:disabled { pointer-events: none; }
+.btn-choice:disabled:not(.correct):not(.wrong) { opacity: 0.55; }
 
-        @keyframes ilmesty {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+/* ===== PALAUTE ===== */
+.palaute {
+  background: var(--valk); border: 3px solid var(--viiva);
+  display: none; flex-direction: column; padding: 0;
+  margin: 20px 24px 0 !important; width: auto !important;
+}
+.palaute.nakyva { display: flex; animation: ilmesty 0.25s ease; }
+.palaute.oikein { border-color: var(--vihrea); }
+.palaute.vaarin { border-color: var(--puna); }
 
-        .palaute-otsikko {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.9rem;
-          font-weight: bold;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-        }
-        .oikein .palaute-otsikko {
-          color: var(--vihrea);
-        }
-        .vaarin .palaute-otsikko {
-          color: var(--puna);
-        }
+@keyframes ilmesty { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-        #fb-text {
-          font-size: 1rem;
-          color: var(--teksti);
-          line-height: 1.6;
-        }
+.palaute-otsikko {
+  font-family: var(--otsikko); font-size: 0.88rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 11px 20px; color: #fff;
+}
+.oikein .palaute-otsikko { background: var(--vihrea); }
+.vaarin .palaute-otsikko { background: var(--puna); }
 
-        .palaute-pisteet {
-          font-family: "Creepster", cursive;
-          font-size: 1.6rem;
-        }
-        .oikein .palaute-pisteet {
-          color: var(--vihrea);
-        }
-        .vaarin .palaute-pisteet {
-          color: var(--puna);
-        }
+#fb-text, #sakko-fb-text { font-size: 1.05rem; line-height: 1.6; color: var(--teksti); padding: 20px 20px 0; }
 
-        .vinkki {
-          font-size: 0.95rem;
-          color: var(--teksti2);
-          border-top: 1px solid var(--reuna);
-          padding-top: 10px;
-          line-height: 1.6;
-        }
-        .vinkki::before {
-          content: "💡 ";
-        }
+.palaute-pisteet {
+  font-family: var(--otsikko); font-size: 1.3rem; font-weight: 700;
+  padding: 14px 20px 0;
+}
+.oikein .palaute-pisteet { color: var(--vihrea); }
+.vaarin .palaute-pisteet { color: var(--puna); }
 
-        .btn-jatka {
-          align-self: flex-end;
-          padding: 14px 32px;
-          background: var(--kulta);
-          border: none;
-          color: #0d0d18;
-          font-family: "Special Elite", serif;
-          font-size: 1rem;
-          font-weight: bold;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: background 0.2s;
-          min-height: 48px;
-        }
-        .btn-jatka:hover {
-          background: var(--kulta2);
-        }
+.vinkki {
+  font-size: 1rem; line-height: 1.6; color: var(--teksti);
+  background: var(--kelt-bg); border-left: 6px solid var(--kelt-reuna);
+  margin: 18px 20px 0; padding: 12px 16px;
+}
 
-        /* ============================================
+.btn-jatka {
+  align-self: flex-end; margin: 18px 20px 20px;
+  padding: 14px 30px;
+  background: var(--violetti); border: 3px solid var(--viiva);
+  color: #fff; font-family: var(--otsikko);
+  font-size: 1rem; font-weight: 700; text-transform: uppercase;
+  cursor: pointer; min-height: 48px;
+}
+.btn-jatka:hover { background: var(--violetti-tumma); }
+.btn-jatka:disabled { background: var(--violetti-vaalea); color: var(--teksti2); border-color: var(--teksti2); cursor: not-allowed; }
+
+/* ===== SELITYSKENTTÄ ===== */
+.selitys-wrap {
+  margin: 18px 20px 20px; padding-top: 18px;
+  border-top: 3px solid var(--violetti-vaalea);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.selitys-label { font-size: 1.05rem; font-weight: 700; color: var(--viiva); line-height: 1.5; }
+.selitys-kentta {
+  width: 100%; padding: 14px 16px;
+  background: var(--valk); border: 3px solid var(--viiva);
+  color: var(--teksti); font-family: var(--leipa);
+  font-size: 1rem; line-height: 1.6; resize: vertical; min-height: 96px;
+}
+.selitys-kentta:focus { outline: 4px solid var(--violetti); outline-offset: 2px; }
+.selitys-laskuri {
+  font-family: var(--otsikko); font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--teksti2); text-align: right;
+}
+.selitys-wrap .btn-jatka { margin: 0; align-self: flex-end; }
+
+/* ============================================
    SAKKOKIERROS
    ============================================ */
-        .page-sakko {
-          gap: 20px;
-        }
+.page-sakko { gap: 22px; }
+.sakko-header {
+  background: var(--valk); border: 3px solid var(--viiva);
+  box-shadow: 6px 6px 0 var(--viiva); padding: 22px 24px;
+}
+.sakko-header h2 {
+  font-family: var(--otsikko); font-size: 1.9rem; font-weight: 700;
+  color: var(--viiva); text-transform: uppercase; margin-bottom: 8px;
+}
+.sakko-header p { font-size: 1.05rem; line-height: 1.6; color: var(--teksti); }
+.sakko-header strong { color: var(--violetti-tumma); font-size: 1.15rem; }
 
-        .sakko-header {
-          border-bottom: 1px solid var(--reuna);
-          padding-bottom: 16px;
-        }
-        .sakko-header h2 {
-          font-family: "Creepster", cursive;
-          font-size: 1.8rem;
-          color: var(--puna);
-          margin-bottom: 8px;
-        }
-        .sakko-header p {
-          font-size: 1rem;
-          color: var(--teksti);
-          line-height: 1.6;
-        }
-        .sakko-header strong {
-          color: var(--kulta);
-          font-size: 1.1rem;
-        }
+.sakko-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.penalty-task {
+  background: var(--valk); border: 3px solid var(--viiva);
+  padding: 16px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: flex-start;
+  text-align: left; gap: 8px;
+  transition: background 0.12s, transform 0.1s;
+}
+.penalty-task:hover:not(.done-pt) { background: var(--violetti-vaalea); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--viiva); }
+.penalty-task.done-pt { border-color: var(--vihrea); background: var(--vihrea-bg); cursor: default; }
+.penalty-task h4 {
+  font-family: var(--otsikko); font-size: 1.15rem; font-weight: 700;
+  color: var(--viiva); text-transform: uppercase;
+}
+.penalty-task-kuvaus { font-size: 0.92rem; color: var(--teksti2); line-height: 1.45; }
+.penalty-pts {
+  font-family: var(--otsikko); font-size: 0.95rem; font-weight: 700;
+  color: var(--vihrea); text-transform: uppercase;
+}
+.penalty-task-cta { font-size: 0.85rem; color: var(--teksti2); }
 
-        .sakko-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-        }
-        .penalty-task {
-          background: var(--bg2);
-          border: 2px solid var(--reuna);
-          border-radius: 6px;
-          padding: 20px;
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-        .penalty-task:hover:not(.done-pt) {
-          border-color: var(--puna);
-          background: var(--bg3);
-        }
-        .penalty-task.done-pt {
-          border-color: var(--vihrea);
-          background: rgba(62, 207, 114, 0.08);
-          cursor: default;
-        }
-        .penalty-task h4 {
-          font-size: 1rem;
-          color: var(--kulta);
-          margin-bottom: 8px;
-        }
-        .penalty-task p {
-          font-size: 0.95rem;
-          color: var(--teksti);
-          line-height: 1.6;
-        }
-        .penalty-pts {
-          margin-top: 10px;
-          font-family: "Courier Prime", monospace;
-          font-size: 0.9rem;
-        }
-
-        /* ============================================
+/* ============================================
    VOITTO
    ============================================ */
-        .page-voitto {
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          gap: 24px;
-        }
+.page-voitto { align-items: center; justify-content: center; text-align: center; gap: 24px; }
+.page-voitto h1 {
+  font-family: var(--otsikko);
+  font-size: clamp(2.2rem, 6vw, 3rem); font-weight: 700;
+  letter-spacing: -0.02em; text-transform: uppercase; color: var(--viiva);
+  width: 100%;
+}
+.voitto-teksti { font-size: 1.1rem; line-height: 1.7; color: var(--teksti); max-width: 46ch; }
 
-        .page-voitto h1 {
-          font-family: "Creepster", cursive;
-          font-size: clamp(2.5rem, 7vw, 4.5rem);
-          color: var(--kulta);
-          text-shadow: 0 0 30px rgba(242, 202, 90, 0.4);
-        }
+.salakoodi-kehys {
+  background: var(--violetti); border: 3px solid var(--viiva);
+  box-shadow: 8px 8px 0 var(--viiva); padding: 24px 40px;
+}
+.salakoodi-label {
+  font-family: var(--otsikko); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #ede9fe; margin-bottom: 8px;
+}
+.salakoodi {
+  font-family: var(--otsikko); font-size: 2.6rem; font-weight: 700;
+  color: #fff; letter-spacing: 0.24em;
+}
 
-        .voitto-teksti {
-          font-size: 1.1rem;
-          color: var(--teksti);
-          line-height: 1.7;
-          max-width: 500px;
-        }
+.opo-ohje {
+  background: var(--viiva); color: #fff;
+  padding: 12px 22px; font-family: var(--otsikko);
+  font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
 
-        .salakoodi-kehys {
-          background: var(--bg2);
-          border: 3px solid var(--kulta);
-          border-radius: 8px;
-          padding: 24px 40px;
-          animation: hehku 2s ease-in-out infinite;
-        }
-        .salakoodi-label {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.85rem;
-          letter-spacing: 0.2em;
-          color: var(--teksti2);
-          text-transform: uppercase;
-          margin-bottom: 8px;
-        }
-        .salakoodi {
-          font-family: "Courier Prime", monospace;
-          font-size: 3rem;
-          font-weight: bold;
-          color: var(--kulta2);
-          letter-spacing: 0.5em;
-        }
-        @keyframes hehku {
-          0%,
-          100% {
-            box-shadow: 0 0 16px rgba(242, 202, 90, 0.2);
-          }
-          50% {
-            box-shadow: 0 0 40px rgba(242, 202, 90, 0.5);
-          }
-        }
+.taidot {
+  width: 100%; max-width: 560px; text-align: left;
+  background: var(--valk); border: 3px solid var(--viiva); padding: 20px 24px;
+}
+.skill-item {
+  font-size: 1rem; color: var(--teksti); line-height: 1.5;
+  padding: 9px 0; border-bottom: 2px solid var(--violetti-vaalea);
+}
+.skill-item:last-child { border-bottom: none; }
 
-        .taidot {
-          width: 100%;
-          max-width: 500px;
-          text-align: left;
-          background: var(--bg2);
-          border: 1px solid var(--reuna);
-          border-radius: 6px;
-          padding: 20px;
-        }
-        .skill-item {
-          font-size: 0.95rem;
-          color: var(--teksti);
-          padding: 8px 0;
-          border-bottom: 1px solid var(--reuna);
-          line-height: 1.5;
-        }
-        .skill-item:last-child {
-          border-bottom: none;
-        }
+/* ============================================
+   OPETTAJAN KOODIAVAIN
+   ============================================ */
+.btn-opo {
+  background: none; border: none; color: var(--teksti2);
+  font-family: var(--otsikko); font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: underline; cursor: pointer; padding: 8px;
+}
+.btn-opo:hover { color: var(--violetti); }
 
-        /* ============================================
+.opo-panel {
+  display: none;
+  background: var(--valk); border: 3px solid var(--viiva);
+  padding: 24px; margin-top: 8px; width: 100%; max-width: 640px; text-align: left;
+}
+.opo-panel.auki { display: block; }
+.opo-otsikko {
+  font-family: var(--otsikko); font-size: 1.3rem; font-weight: 700;
+  text-transform: uppercase; color: var(--viiva); margin-bottom: 8px;
+}
+.opo-teksti { font-size: 0.98rem; color: var(--teksti2); margin-bottom: 16px; line-height: 1.55; }
+.opo-taulukko { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 20px; }
+.opo-taulukko th {
+  background: var(--viiva); color: #fff; padding: 9px 12px; text-align: left;
+  font-family: var(--otsikko); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.opo-taulukko td {
+  padding: 10px 12px; border-bottom: 2px solid var(--violetti-vaalea);
+  color: var(--teksti); vertical-align: top; line-height: 1.5;
+}
+.opo-taulukko tr:last-child td { border-bottom: none; }
+.opo-taulukko td:first-child { font-family: var(--otsikko); font-weight: 700; color: var(--violetti-tumma); white-space: nowrap; }
+.opo-taulukko td:nth-child(2) { font-family: var(--otsikko); color: var(--teksti2); white-space: nowrap; }
+
+.opo-pisteet { background: var(--sivu); border: 2px solid var(--violetti-vaalea); padding: 16px; margin-bottom: 16px; }
+.opo-pisteet-otsikko {
+  font-family: var(--otsikko); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--teksti2); margin-bottom: 10px;
+}
+.opo-rivi {
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: 0.95rem; color: var(--teksti); padding: 6px 0;
+  border-bottom: 1px solid var(--violetti-vaalea);
+}
+.opo-rivi:last-child { border-bottom: none; }
+.opo-rivi span { font-family: var(--otsikko); font-weight: 700; color: var(--violetti-tumma); }
+
+.btn-opo-sulje {
+  background: var(--valk); border: 3px solid var(--viiva); color: var(--viiva);
+  font-family: var(--otsikko); font-size: 0.9rem; font-weight: 700;
+  text-transform: uppercase; padding: 10px 22px; cursor: pointer;
+}
+.btn-opo-sulje:hover { background: var(--puna-bg); border-color: var(--puna); color: var(--puna-tumma); }
+
+/* ============================================
    MOBIILI
    ============================================ */
-        @media (max-width: 560px) {
-          .page-start,
-          .page-kartta,
-          .page-luokka,
-          .page-sakko,
-          .page-voitto {
-            padding: 20px 16px;
-            gap: 16px;
-          }
+@media (max-width: 700px) {
+  .sakko-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  body { font-size: 17px; }
+  .page-start, .page-sakko, .page-voitto { padding: 20px 16px 40px; }
+  .page-luokka > *:not(.statusbar) { padding-left: 16px; padding-right: 16px; }
+  .palaute { margin-left: 16px !important; margin-right: 16px !important; }
+  .vastaukset { padding: 0 16px; }
+  .sakko-grid { grid-template-columns: 1fr; }
+  .start-stats { flex-wrap: wrap; }
+  .salakoodi { font-size: 1.9rem; letter-spacing: 0.16em; }
+  .salakoodi-kehys { padding: 18px 20px; }
+  .choice-letter { width: 46px; font-size: 1.1rem; }
+}
 
-          .map-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-          .sakko-grid {
-            grid-template-columns: 1fr;
-          }
-          .start-stats {
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-          .salakoodi {
-            font-size: 2.2rem;
-            letter-spacing: 0.3em;
-          }
-          .salakoodi-kehys {
-            padding: 18px 20px;
-          }
-          .btn-choice {
-            font-size: 1rem;
-          }
-        }
-
-        /* ===== VÄHENNETTY LIIKE ===== */
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-
-        /* ============================================
-   HAASTE 1: SELITYSKENTTÄ
-   ============================================ */
-        .selitys-wrap {
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid var(--reuna);
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .selitys-label {
-          font-size: 1rem;
-          color: var(--teksti);
-          font-weight: bold;
-          line-height: 1.5;
-        }
-        .selitys-kentta {
-          width: 100%;
-          padding: 14px 16px;
-          background: var(--bg3);
-          border: 2px solid var(--reuna);
-          border-radius: 6px;
-          color: var(--teksti);
-          font-family: "Special Elite", serif;
-          font-size: 1rem;
-          line-height: 1.6;
-          resize: vertical;
-          min-height: 90px;
-          transition: border-color 0.2s;
-        }
-        .selitys-kentta:focus {
-          outline: none;
-          border-color: var(--kulta);
-        }
-        .selitys-laskuri {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.9rem;
-          color: var(--teksti2);
-          text-align: right;
-        }
-
-        /* ============================================
-   START-SIVUN LISÄTYYLIT
-   ============================================ */
-        .start-oppiaineet {
-          width: 100%;
-          max-width: 560px;
-        }
-        .start-oppiaineet-otsikko {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.85rem;
-          letter-spacing: 0.15em;
-          color: var(--teksti2);
-          text-transform: uppercase;
-          margin-bottom: 10px;
-        }
-        .oppiaine-lista {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          justify-content: center;
-        }
-        .oppiaine-pill {
-          background: var(--bg2);
-          border: 1px solid var(--reuna);
-          border-radius: 20px;
-          padding: 6px 14px;
-          font-size: 0.9rem;
-          color: var(--teksti);
-          white-space: nowrap;
-        }
-
-        .start-saannot {
-          background: var(--bg2);
-          border: 1px solid var(--reuna);
-          border-radius: 8px;
-          padding: 18px 22px;
-          width: 100%;
-          max-width: 480px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        .saanto-rivi {
-          font-size: 0.95rem;
-          color: var(--teksti2);
-          line-height: 1.5;
-        }
-        .saanto-rivi strong {
-          color: var(--vihrea);
-        }
-
-        /* ============================================
-   SAKKOKORTTIEN TYYLIT
-   ============================================ */
-        .penalty-task {
-          background: var(--bg2);
-          border: 2px solid var(--reuna);
-          border-radius: 6px;
-          padding: 20px;
-          cursor: pointer;
-          transition: all 0.15s;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          gap: 8px;
-        }
-        .penalty-task:hover {
-          border-color: var(--kulta);
-          background: var(--bg3);
-          transform: translateY(-2px);
-        }
-        .penalty-task-icon {
-          font-size: 2.2rem;
-          line-height: 1;
-        }
-        .penalty-task h4 {
-          font-family: "Creepster", cursive;
-          font-size: 1.3rem;
-          color: var(--kulta);
-          margin: 0;
-        }
-        .penalty-task-kuvaus {
-          font-size: 0.9rem;
-          color: var(--teksti2);
-          line-height: 1.5;
-        }
-        .penalty-pts {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.95rem;
-          color: var(--kulta);
-          font-weight: bold;
-        }
-        .penalty-task-cta {
-          font-size: 0.85rem;
-          color: var(--teksti2);
-          margin-top: 4px;
-        }
-
-        /* ============================================
-   OPETTAJAN KOODIAVAIN -PANEELI
-   ============================================ */
-        .btn-opo {
-          background: none;
-          border: none;
-          color: var(--teksti2);
-          font-family: "Courier Prime", monospace;
-          font-size: 0.8rem;
-          cursor: pointer;
-          padding: 8px 0;
-          opacity: 0.5;
-          transition: opacity 0.2s;
-          letter-spacing: 0.1em;
-        }
-        .btn-opo:hover {
-          opacity: 1;
-          color: var(--kulta);
-        }
-
-        .opo-panel {
-          display: none;
-          background: var(--bg2);
-          border: 2px solid var(--kulta);
-          border-radius: 8px;
-          padding: 24px;
-          margin-top: 8px;
-          width: 100%;
-          max-width: 600px;
-          text-align: left;
-          animation: fadeIn 0.3s ease;
-        }
-        .opo-panel.auki {
-          display: block;
-        }
-
-        .opo-otsikko {
-          font-family: "Creepster", cursive;
-          font-size: 1.4rem;
-          color: var(--kulta);
-          margin-bottom: 8px;
-        }
-        .opo-teksti {
-          font-size: 0.95rem;
-          color: var(--teksti2);
-          margin-bottom: 16px;
-          line-height: 1.5;
-        }
-
-        .opo-taulukko {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.9rem;
-          margin-bottom: 20px;
-        }
-        .opo-taulukko th {
-          background: var(--bg3);
-          color: var(--kulta);
-          padding: 8px 12px;
-          text-align: left;
-          font-family: "Courier Prime", monospace;
-          font-size: 0.8rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          border-bottom: 2px solid var(--kulta);
-        }
-        .opo-taulukko td {
-          padding: 10px 12px;
-          border-bottom: 1px solid var(--reuna);
-          color: var(--teksti);
-          vertical-align: top;
-          line-height: 1.5;
-        }
-        .opo-taulukko tr:last-child td {
-          border-bottom: none;
-        }
-        .opo-taulukko td:first-child {
-          font-family: "Courier Prime", monospace;
-          color: var(--kulta2);
-          white-space: nowrap;
-        }
-        .opo-taulukko td:nth-child(2) {
-          font-family: "Courier Prime", monospace;
-          color: var(--teksti2);
-          white-space: nowrap;
-        }
-
-        .opo-pisteet {
-          background: var(--bg3);
-          border-radius: 6px;
-          padding: 16px;
-          margin-bottom: 16px;
-        }
-        .opo-pisteet-otsikko {
-          font-family: "Courier Prime", monospace;
-          font-size: 0.8rem;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: var(--teksti2);
-          margin-bottom: 10px;
-        }
-        .opo-rivi {
-          display: flex;
-          justify-content: space-between;
-          font-size: 0.9rem;
-          color: var(--teksti);
-          padding: 5px 0;
-          border-bottom: 1px solid var(--reuna);
-        }
-        .opo-rivi:last-child {
-          border-bottom: none;
-        }
-        .opo-rivi span {
-          font-family: "Courier Prime", monospace;
-          color: var(--kulta);
-          font-weight: bold;
-        }
-
-        .btn-opo-sulje {
-          background: none;
-          border: 1px solid var(--reuna);
-          color: var(--teksti2);
-          font-family: "Special Elite", serif;
-          font-size: 0.9rem;
-          padding: 8px 20px;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.2s;
-        }
-        .btn-opo-sulje:hover {
-          border-color: var(--puna);
-          color: var(--puna);
-        }
-
-        .opo-ohje {
-          background: var(--bg2);
-          border: 2px solid var(--kulta);
-          border-radius: 6px;
-          padding: 14px 24px;
-          font-size: 1.1rem;
-          color: var(--kulta);
-          font-family: "Special Elite", serif;
-          letter-spacing: 0.05em;
-        }
-      </style>
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
       <script role="script" id="twine-user-script" type="text/twine-javascript">
         /*
         ==========================================================
@@ -15451,6 +15023,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           Engine.play('Luokka');
         };
 
+        /* ===== TILAPALKKI: edistyminen + pisteet ===== */
+        window.renderStatus = function(label, pct, score) {
+          var page = document.querySelector('.page-luokka');
+          if (!page) return;
+          var bar = document.getElementById('status-bar');
+          if (!bar) {
+            bar = document.createElement('div');
+            bar.id = 'status-bar';
+            bar.className = 'statusbar';
+            bar.innerHTML =
+              '<div class="statusbar-rivi">' +
+                '<span class="sb-luokka" id="sb-label"></span>' +
+                '<span class="sb-pisteet"><span class="sb-pts-label">Pisteet</span>' +
+                '<strong id="sb-score">0</strong><span class="sb-pts-max">/ 80</span></span>' +
+              '</div>' +
+              '<div class="sb-ura"><div class="sb-taytto" id="sb-fill"></div></div>';
+            page.insertBefore(bar, page.firstChild);
+          }
+          document.getElementById('sb-label').textContent = label;
+          document.getElementById('sb-score').textContent = score;
+          document.getElementById('sb-fill').style.width =
+            Math.max(0, Math.min(100, pct)) + '%';
+        };
+
+        function luokkaLabel(idx, total) {
+          return 'Luokka ' + (idx + 1) + ' / ' + total;
+        }
+
         /* ===== LUOKKAHUONEEN RENDERÖINTI ===== */
         window.renderRoom = function() {
           var sv   = State.variables;
@@ -15469,6 +15069,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           if (titleEl) titleEl.textContent = room.name;
           if (questEl) questEl.textContent = room.question;
           if (progEl)  progEl.textContent  = (idx + 1) + ' / ' + ROOMS.length;
+          renderStatus(luokkaLabel(idx, ROOMS.length),
+            (idx / ROOMS.length) * 100, sv.score);
 
           if (!sv.shuffledChoices[idx]) {
             sv.shuffledChoices[idx] = sekoita([0, 1, 2, 3]);
@@ -15512,12 +15114,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           sv.score += choice.pts;
           sv.roomScores[sv.currentRoom] = choice.pts;
+          renderStatus(luokkaLabel(sv.currentRoom, ROOMS.length),
+            ((sv.currentRoom + 1) / ROOMS.length) * 100, sv.score);
 
           var fb = document.getElementById('feedback-box');
           if (fb) {
             fb.className = 'palaute nakyva ' + (choice.correct ? 'oikein' : 'vaarin');
             document.getElementById('fb-title').textContent =
-              choice.correct ? '✓ Erinomainen valinta!' : '✗ Ei paras vaihtoehto';
+              choice.correct ? 'Erinomainen valinta!' : 'Ei paras vaihtoehto';
             document.getElementById('fb-text').textContent = choice.feedback;
             document.getElementById('fb-pts').textContent  =
               (choice.pts > 0 ? '+' : '') + choice.pts + ' pistettä  |  Yhteensä: ' + sv.score;
@@ -15544,7 +15148,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var wrap = document.createElement('div');
           wrap.className = 'selitys-wrap';
           wrap.innerHTML =
-            '<label class="selitys-label">✏️ Kirjoita omin sanoin:<br>' +
+            '<label class="selitys-label">Kirjoita omin sanoin:<br>' +
             '<span style="font-weight:normal;font-size:0.95rem;">Miksi tämä ei ollut paras valinta? (väh. 20 merkkiä)</span></label>' +
             '<textarea class="selitys-kentta" id="selitys-teksti" rows="3" ' +
             'placeholder="Kirjoita tähän..."></textarea>' +
@@ -15618,7 +15222,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               '<p style="color:var(--teksti);padding:16px 0;">Olet suorittanut kaikki lisätehtävät. Pisteitä ei silti riitä.</p>';
             var uusiBtn = document.createElement('button');
             uusiBtn.className   = 'btn-tarkista';
-            uusiBtn.textContent = '↺ Aloita alusta';
+            uusiBtn.textContent = 'Aloita alusta';
             uusiBtn.style.marginTop = '16px';
             uusiBtn.onclick = function() { restartGame(); };
             grid.appendChild(uusiBtn);
@@ -15661,6 +15265,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           if (subjEl)  subjEl.textContent  = task.subject;
           if (titleEl) titleEl.textContent = task.kuvaus;
           if (questEl) questEl.textContent = task.question;
+          renderStatus('Lisätehtävä', (sv.score / 80) * 100, sv.score);
 
           /* Sekoita vastaukset */
           if (!sv.shuffledChoices['p' + taskId]) {
@@ -15706,7 +15311,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           if (fb) {
             fb.className = 'palaute nakyva ' + (choice.correct ? 'oikein' : 'vaarin');
             document.getElementById('sakko-fb-title').textContent =
-              choice.correct ? '✓ Erinomainen valinta!' : '✗ Ei paras vaihtoehto';
+              choice.correct ? 'Erinomainen valinta!' : 'Ei paras vaihtoehto';
             document.getElementById('sakko-fb-text').textContent  = choice.feedback;
             document.getElementById('sakko-fb-tip').textContent   = choice.tip;
 
@@ -15716,10 +15321,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               sv.score += task.pts;
               sv.penaltyDone.push(task.id);
               if (ptsEl) ptsEl.textContent = '+' + task.pts + ' pistettä  |  Yhteensä: ' + sv.score;
+              renderStatus('Lisätehtävä', (sv.score / 80) * 100, sv.score);
             } else {
               /* Väärä — voi yrittää uudelleen tai palataan valintaan */
               if (ptsEl) ptsEl.textContent = (choice.pts < 0 ? choice.pts : '0') + ' pistettä  |  Yhteensä: ' + sv.score;
               if (choice.pts < 0) sv.score += choice.pts;
+              renderStatus('Lisätehtävä', (sv.score / 80) * 100, sv.score);
             }
           }
 
@@ -15751,23 +15358,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var codeEl = document.getElementById('secret-code');
           if (codeEl) codeEl.textContent = code;
           var msg = sv.score >= 90
-            ? '🏆 Upea suoritus! Sinulla on erinomaiset oppimisen taidot.'
+            ? 'Upea suoritus! Sinulla on erinomaiset oppimisen taidot.'
             : sv.score >= 75
-              ? '⭐ Hyvä tulos! Olet oppinut paljon oppimisesta.'
-              : '✓ Hyvä työ! Sait tarpeeksi pisteitä ja pääset ulos.';
+              ? 'Hyvä tulos! Olet oppinut paljon oppimisesta.'
+              : 'Hyvä työ! Sait tarpeeksi pisteitä ja pääset ulos.';
           var descEl = document.getElementById('win-desc');
           if (descEl) descEl.textContent = msg + ' Sait ' + sv.score + ' pistettä sadasta.';
           var skills = [
-            '🔢 Jaa vaikea tehtävä pieniin osiin (Matematiikka)',
-            '🌿 Kokeile ja havainnoi itse (Ympäristöoppi)',
-            '📖 Suunnittele ennen kirjoittamista (Äidinkieli)',
-            '🇬🇧 Käytä sanoja heti lauseissa (Englanti)',
-            '🇸🇪 Puhu rohkeasti, vaikka tekisit virheitä (Ruotsi)',
-            '🧬 Yhdistä termit omaan kehoosi (Biologia)',
-            '🌍 Kysy aina: miksi? (Maantieto)',
-            '🕊️ Vertaile asioita rinnakkain (Uskonto/ET)',
-            '📜🏛️ Muista tapahtumat tarinoiden kautta (Historia & Yhteiskunta)',
-            '🏃 Aseta pieni ja selkeä tavoite (Terveystieto)'
+            'Matematiikka — jaa vaikea tehtävä pieniin osiin',
+            'Ympäristöoppi — kokeile ja havainnoi itse',
+            'Äidinkieli — suunnittele ennen kirjoittamista',
+            'Englanti — käytä sanoja heti lauseissa',
+            'Ruotsi — puhu rohkeasti, vaikka tekisit virheitä',
+            'Biologia — yhdistä termit omaan kehoosi',
+            'Maantieto — kysy aina: miksi?',
+            'Uskonto / ET — vertaile asioita rinnakkain',
+            'Historia ja yhteiskuntaoppi — muista tapahtumat tarinoiden kautta',
+            'Terveystieto — aseta pieni ja selkeä tavoite'
           ];
           var ssEl = document.getElementById('skills-summary');
           if (ssEl) {
@@ -15803,7 +15410,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         position="625,250"
         size="100,100"
         >&lt;div class=&quot;page-start&quot;&gt; &lt;div
-        class=&quot;start-badge&quot;&gt;🗝️ Yläkoulun pakopeli — 7.
+        class=&quot;start-badge&quot;&gt;Yläkoulun pakopeli — 7.
         luokka&lt;/div&gt; &lt;h1&gt;Yläkoulun pakopeli!&lt;/h1&gt; &lt;p
         class=&quot;start-story&quot;&gt; Selviätkö ulos koulurakennuksesta?
         Pelissä on 10 kysymystä, jotka liittyvät opiskeluun. Jos saat
@@ -15816,18 +15423,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         class=&quot;stat-item&quot;&gt; &lt;strong&gt;80&lt;/strong&gt;
         &lt;span&gt;pistettä vaaditaan&lt;/span&gt; &lt;/div&gt; &lt;/div&gt;
         &lt;div class=&quot;start-saannot&quot;&gt; &lt;div
-        class=&quot;saanto-rivi&quot;&gt;✓ Oikea vastaus tuo &lt;strong&gt;10
+        class=&quot;saanto-rivi&quot;&gt;Oikea vastaus tuo &lt;strong&gt;10
         pistettä&lt;/strong&gt;&lt;/div&gt; &lt;div
-        class=&quot;saanto-rivi&quot;&gt;✗ Väärä vastaus voi vähentää
+        class=&quot;saanto-rivi&quot;&gt;Väärä vastaus voi vähentää
         pisteitä&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;✏️
         Väärästä vastauksesta sinun täytyy perustella miksi se ei ollut
-        paras&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;⚠ Jos
+        paras&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;Jos
         pisteitä ei riitä, käyt lisäluokissa&lt;/div&gt; &lt;/div&gt; &lt;button
-        class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;▶ Aloita
+        class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;Aloita
         pakomatka&lt;/button&gt; &lt;button class=&quot;btn-opo&quot;
-        onclick=&quot;toggleOpo()&quot;&gt;🔑 Opettajan avain&lt;/button&gt;
+        onclick=&quot;toggleOpo()&quot;&gt;Opettajan avain&lt;/button&gt;
         &lt;div class=&quot;opo-panel&quot; id=&quot;opo-panel&quot;&gt; &lt;div
-        class=&quot;opo-otsikko&quot;&gt;🔑 Opettajan koodiavain&lt;/div&gt;
+        class=&quot;opo-otsikko&quot;&gt;Opettajan koodiavain&lt;/div&gt;
         &lt;p class=&quot;opo-teksti&quot;&gt;Oppilas näyttää koodin pelin
         lopussa. Tarkista koodi alta.&lt;/p&gt; &lt;table
         class=&quot;opo-taulukko&quot;&gt;
@@ -15851,15 +15458,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         Lähes täydet pisteet.&lt;/td&gt;&lt;/tr&gt; &lt;/table&gt; &lt;div
         class=&quot;opo-pisteet&quot;&gt; &lt;div
         class=&quot;opo-pisteet-otsikko&quot;&gt;Pisteiden laskenta&lt;/div&gt;
-        &lt;div class=&quot;opo-rivi&quot;&gt;✓ Oikea vastaus &lt;span&gt;+10
+        &lt;div class=&quot;opo-rivi&quot;&gt;Oikea vastaus &lt;span&gt;+10
         pistettä&lt;/span&gt;&lt;/div&gt; &lt;div
-        class=&quot;opo-rivi&quot;&gt;◑ Osittain oikea &lt;span&gt;0–7
+        class=&quot;opo-rivi&quot;&gt;Osittain oikea &lt;span&gt;0–7
         pistettä&lt;/span&gt;&lt;/div&gt; &lt;div
-        class=&quot;opo-rivi&quot;&gt;✗ Väärä vastaus &lt;span&gt;−2 – −5
+        class=&quot;opo-rivi&quot;&gt;Väärä vastaus &lt;span&gt;−2 – −5
         pistettä&lt;/span&gt;&lt;/div&gt; &lt;div
-        class=&quot;opo-rivi&quot;&gt;⚠ Sakkokierros (oikea) &lt;span&gt;+8
+        class=&quot;opo-rivi&quot;&gt;Sakkokierros (oikea) &lt;span&gt;+8
         pistettä&lt;/span&gt;&lt;/div&gt; &lt;div
-        class=&quot;opo-rivi&quot;&gt;🏁 Läpäisyraja &lt;span&gt;80 / 100
+        class=&quot;opo-rivi&quot;&gt;Läpäisyraja &lt;span&gt;80 / 100
         pistettä&lt;/span&gt;&lt;/div&gt; &lt;/div&gt; &lt;button
         class=&quot;btn-opo-sulje&quot; onclick=&quot;toggleOpo()&quot;&gt;✕
         Sulje&lt;/button&gt; &lt;/div&gt; &lt;/div&gt;</tw-passagedata
@@ -15911,7 +15518,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         position="625,525"
         size="100,100"
         >&lt;div class=&quot;page-sakko&quot;&gt; &lt;div
-        class=&quot;sakko-header&quot;&gt; &lt;h2&gt;⚠ Lisätehtävät&lt;/h2&gt;
+        class=&quot;sakko-header&quot;&gt; &lt;h2&gt;Lisätehtävät&lt;/h2&gt;
         &lt;p&gt;Sinulla on &lt;strong
         id=&quot;penalty-current&quot;&gt;0&lt;/strong&gt; pistettä. Tarvitset
         80 pistettä päästäksesi ulos. Valitse luokka alta. Mene luokkaan ja
@@ -15927,17 +15534,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         tags=""
         position="625,775"
         size="100,100"
-        >&lt;div class=&quot;page-voitto&quot;&gt; &lt;h1&gt;🎉 Olet
+        >&lt;div class=&quot;page-voitto&quot;&gt; &lt;h1&gt;Olet
         vapaa!&lt;/h1&gt; &lt;p class=&quot;voitto-teksti&quot;
         id=&quot;win-desc&quot;&gt;&lt;/p&gt; &lt;div
-        class=&quot;opo-ohje&quot;&gt;📋 Kerro opollesi minkä koodin
+        class=&quot;opo-ohje&quot;&gt;Kerro opollesi minkä koodin
         sait!&lt;/div&gt; &lt;div class=&quot;salakoodi-kehys&quot;&gt; &lt;div
         class=&quot;salakoodi-label&quot;&gt;Ulko-oven koodi&lt;/div&gt; &lt;div
         class=&quot;salakoodi&quot;
         id=&quot;secret-code&quot;&gt;????&lt;/div&gt; &lt;/div&gt; &lt;div
         class=&quot;taidot&quot; id=&quot;skills-summary&quot;&gt;&lt;/div&gt;
         &lt;button class=&quot;btn-start&quot;
-        onclick=&quot;restartGame()&quot;&gt;↺ Pelaa uudelleen&lt;/button&gt;
+        onclick=&quot;restartGame()&quot;&gt;Pelaa uudelleen&lt;/button&gt;
         &lt;/div&gt; &lt;&lt;script&gt;&gt; $(document).ready(function() {
         setTimeout(function() { if (typeof renderWin === &#39;function&#39;)
         renderWin(); }, 100); }); &lt;&lt;/script&gt;&gt;</tw-passagedata
