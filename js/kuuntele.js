@@ -140,11 +140,31 @@
     27:"kahdeskymmenesseitsemäs",28:"kahdeskymmeneskahdeksas",29:"kahdeskymmenesyhdeksäs",30:"kolmaskymmenes",
     31:"kolmaskymmenesensimmäinen"
   };
+  // Genetiivimuotoiset perusluvut (aikayksiköitä varten: "1 viikon" → "yhden viikon").
+  var GEN_NUM = {
+    1:"yhden",2:"kahden",3:"kolmen",4:"neljän",5:"viiden",6:"kuuden",7:"seitsemän",
+    8:"kahdeksan",9:"yhdeksän",10:"kymmenen",11:"yhdentoista",12:"kahdentoista"
+  };
+  var GEN_UNITS = "vuorokauden|vuorokautta|viikon|viikkoa|kuukauden|kuukautta|" +
+    "päivän|päivää|vuoden|vuotta|tunnin|tuntia|minuutin|minuuttia|sekunnin|sekuntia";
   function speakable(text) {
-    return (text || "").replace(/(\d+)\.(?=[\s-]*[a-zäöåé])/g, function (m, n) {
+    text = (text || "").replace(/(\d+)\.(?=[\s-]*[a-zäöåé])/g, function (m, n) {
       var o = ORDINALS[parseInt(n, 10)];
       return o ? o : m;
     });
+    // Lukuväli + aikayksikkö (esim. "3, 6 kuukauden" alkup. "3–6") → molemmat
+    // luvut genetiivissä: "kolmen, kuuden kuukauden".
+    text = text.replace(new RegExp("(\\d+),\\s*(\\d+)\\s+(" + GEN_UNITS + ")", "gi"), function (m, a, bb, u) {
+      var ga = GEN_NUM[parseInt(a, 10)], gb = GEN_NUM[parseInt(bb, 10)];
+      return (ga && gb) ? (ga + ", " + gb + " " + u) : m;
+    });
+    // Luku + genetiivimuotoinen aikayksikkö → luku genetiivissä (oikea taivutus
+    // äänelle; näkyvä teksti pysyy numerona). Esim. "1 viikon" → "yhden viikon".
+    text = text.replace(new RegExp("(\\d+)\\s+(" + GEN_UNITS + ")", "gi"), function (m, n, u) {
+      var g = GEN_NUM[parseInt(n, 10)];
+      return g ? (g + " " + u) : m;
+    });
+    return text;
   }
 
   // Vastausvaihtoehdot (napit/valinnat): luetaan kysymyksen jälkeen muodossa
