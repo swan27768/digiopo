@@ -7,9 +7,9 @@ window.OSIO_DATA = {
     "koulutus": {
       rakenne: [
         "Aloitus: koulutusjärjestelmä-kaavio ja koulutusalakaruselli",
-        "Valitse polku: Amispolku tai Lukiopolku — tutki tutkintoja tai linjoja ja tee tehtävä (20 min)",
-        "AmmattiSet: korttipeli koulutusaloista (10 min)",
-        "Ryhmätehtävä: Maailma tarvitsee sinua (20–30 min)"
+        "Valitse polku: Amispolku tai Lukiopolku — tutki tutkintoja tai linjoja ja tee tehtävä",
+        "AmmattiSet: korttipeli koulutusaloista",
+        "Ryhmätehtävä: Maailma tarvitsee sinua"
       ],
       tavoitteet: [
         "Hahmotat Suomen koulutusjärjestelmän: ammatillinen koulutus, lukio ja jatko-opintomahdollisuudet",
@@ -28,9 +28,9 @@ window.OSIO_DATA = {
     "vahvuudet": {
       rakenne: [
         "Aloitus: mitä vahvuuksia muistat 7. luokalta?",
-        "Interaktiivinen tarina: Vahvuusmatka (20 min)",
-        "Paritehtävä: Fake Insta — ammatti-identiteetti somessa (20 min)",
-        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen? (10–15 min)"
+        "Interaktiivinen tarina: Vahvuusmatka",
+        "Paritehtävä: Fake Insta — ammatti-identiteetti somessa",
+        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen?"
       ],
       tavoitteet: [
         "Syvennät kuvaa omista vahvuuksistasi ja kiinnostuksistasi",
@@ -49,9 +49,9 @@ window.OSIO_DATA = {
     "tet": {
       rakenne: [
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään?",
-        "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen (15 min)",
-        "Kirjoitustehtävä: Ota yhteyttä työnantajaan (15 min)",
-        "Keskustelutehtävä: Mikä tekee työstä hyvän työn? (10 min)"
+        "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen",
+        "Kirjoitustehtävä: Ota yhteyttä työnantajaan",
+        "Keskustelutehtävä: Mikä tekee työstä hyvän työn?"
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
@@ -70,8 +70,8 @@ window.OSIO_DATA = {
       teoria: "oppimisklinikka",
       rakenne: [
         "Aloitus: mikä opiskelussa tökkii juuri nyt?",
-        "Oppimisklinikka: valitse oma korttisi ja tutustu keinoihin (15 min)",
-        "Klinikkapäivystys: kokeile keinoa käytännössä (15 min)",
+        "Oppimisklinikka: valitse oma korttisi ja tutustu keinoihin",
+        "Klinikkapäivystys: kokeile keinoa käytännössä",
         "Oppimisresepti opettajalle"
       ],
       tavoitteet: [
@@ -91,8 +91,8 @@ window.OSIO_DATA = {
       teoria: "tulevaisuustuumailu",
       rakenne: [
         "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä?",
-        "Toiminnallinen lämmittely: Pyörä pyörii – satunnainen ura (20 min)",
-        "Tiimitehtävä: Tulevaisuuden työpaikka (45 min)",
+        "Toiminnallinen lämmittely: Pyörä pyörii – satunnainen ura",
+        "Tiimitehtävä: Tulevaisuuden työpaikka",
         "Purku: ryhmät esittelevät, luokka äänestää"
       ],
       tavoitteet: [

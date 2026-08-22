@@ -67,9 +67,9 @@
       t.sections[sId]
     )) || {};
 
-    var lblObjTitle  = tl.objectives_title   || "Tunnin tavoitteet";
+    var lblObjTitle  = tl.objectives_title   || "Osion tavoitteet";
     var lblObjSub    = tl.objectives_subtitle || "Avaa ja katso, mitä tällä tunnilla tehdään";
-    var lblStructH   = tl.structure_heading  || "Tunnin rakenne";
+    var lblStructH   = tl.structure_heading  || "Osion rakenne";
     var lblGoalsH    = tl.goals_heading      || "Tavoitteet";
     var lblWhyH      = tl.why_heading        || "Miksi tämä kannattaa?";
     var lblSumTitle  = tl.summary_title      || "Yhteenveto — mitä opit tällä oppitunnilla";

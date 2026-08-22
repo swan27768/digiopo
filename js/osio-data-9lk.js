@@ -8,8 +8,8 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä 9. luokan vuoteen kuuluu?",
         "Eri polut: lukio, ammatillinen, TUVA",
-        "Yksilötehtävä: laske keskiarvosi ja hakupisteesi (15 min)",
-        "Oma vuosikello: merkitse vuoden tärkeät päivät (10 min)"
+        "Yksilötehtävä: laske keskiarvosi ja hakupisteesi",
+        "Oma vuosikello: merkitse vuoden tärkeät päivät"
       ],
       tavoitteet: [
         "Tiedät, mitä vaihtoehtoja sinulla on peruskoulun jälkeen",
@@ -28,9 +28,9 @@ window.OSIO_DATA = {
       teoria: "ajattelutyylit",
       rakenne: [
         "Aloitus: voiko omaan ajatteluun luottaa?",
-        "Ajattelupeli: viisi ajattelutapaa (yksin tai parina, 15–20 min)",
-        "AI-laboratorio: kriittinen ajattelu tekoälyn aikana (20–30 min)",
-        "Ryhmäpeli: Salapoliisitehtävä — Kadonnut kultainen kello (25–30 min)",
+        "Ajattelupeli: viisi ajattelutapaa (yksin tai parina)",
+        "AI-laboratorio: kriittinen ajattelu tekoälyn aikana",
+        "Ryhmäpeli: Salapoliisitehtävä — Kadonnut kultainen kello",
         "Purku: mikä johti harhaan, mikä auttoi ratkaisuun?"
       ],
       tavoitteet: [
@@ -51,12 +51,12 @@ window.OSIO_DATA = {
       teoria: "duuniin",
       rakenne: [
         "Aloitus: mitä odotat TET-jaksolta?",
-        "Duuniin! — opas työelämään (15 min)",
-        "Keskustelutehtävä: Millainen työkaveri haluaisit olla? (10 min)",
+        "Duuniin! — opas työelämään",
+        "Keskustelutehtävä: Millainen työkaveri haluaisit olla?",
         "TET-jakson jälkeen: mitä opit? -reflektio",
-        "DuuniMinä-tehtävä (15 min)",
-        "Reppu + CV: pakkaa vahvuudet reppuusi ja kirjoita oma CV (20 min)",
-        "Keskustelutehtävä: Harrastuksesta ammatti? (10 min)"
+        "DuuniMinä-tehtävä",
+        "Reppu + CV: pakkaa vahvuudet reppuusi ja kirjoita oma CV",
+        "Keskustelutehtävä: Harrastuksesta ammatti?"
       ],
       tavoitteet: [
         "Tiedät työelämän pelisäännöt: ajat, käytöstavat, oma-aloitteisuus",
@@ -78,7 +78,7 @@ window.OSIO_DATA = {
     "yhteishaku": {
       rakenne: [
         "Aloitus: miten yhteishaku toimii Opintopolussa?",
-        "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet (20 min)",
+        "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
       tavoitteet: [
@@ -97,8 +97,8 @@ window.OSIO_DATA = {
     "paatoksenteko": {
       rakenne: [
         "Johdanto: mitä päätöksenteko tarkoittaa?",
-        "Neuvonantaja-ryhmätehtävä: auta fiktiivistä henkilöä (20–25 min)",
-        "Skenaariotehtävä yksilötehtävänä (10–15 min)",
+        "Neuvonantaja-ryhmätehtävä: auta fiktiivistä henkilöä",
+        "Skenaariotehtävä yksilötehtävänä",
         "Purku: mitä hyvä päätös vaatii?"
       ],
       tavoitteet: [
@@ -117,10 +117,10 @@ window.OSIO_DATA = {
     "epavarmuus": {
       teoria: "epavarmuus",
       rakenne: [
-        "Vaihe 1: Kartta epävarmuuteen — yksin (10–12 min)",
-        "Vaihe 2: Kaksi polkua — sama tavoite, parin kanssa (15–20 min)",
-        "Vaihe 3: Oma resilienssipakki — yksin, sitten luokka (10–15 min)",
-        "Vaihe 4: Näkymättömät askelmat — yksilö (10 min)"
+        "Vaihe 1: Kartta epävarmuuteen — yksin",
+        "Vaihe 2: Kaksi polkua — sama tavoite, parin kanssa",
+        "Vaihe 3: Oma resilienssipakki — yksin, sitten luokka",
+        "Vaihe 4: Näkymättömät askelmat — yksilö"
       ],
       tavoitteet: [
         "Tunnistat, miltä epävarmuus tuntuu ja että se on normaalia",
@@ -158,8 +158,8 @@ window.OSIO_DATA = {
       teoria: "valinnat-peli",
       rakenne: [
         "Aloitus: millaisia valintoja teet joka päivä?",
-        "Elämänvalintapeli: Mitä sitten? (20 min)",
-        "Lisähaaste: analysoi kolme merkittävintä valintaasi (10 min)"
+        "Elämänvalintapeli: Mitä sitten?",
+        "Lisähaaste: analysoi kolme merkittävintä valintaasi"
       ],
       tavoitteet: [
         "Harjoittelet valintojen tekemistä ja niiden seurausten arviointia",
@@ -177,7 +177,7 @@ window.OSIO_DATA = {
     "tulevaisuus": {
       teoria: "kolme-minua",
       rakenne: [
-        "Tehtävä 1: Kolme minua tulevaisuudessa — yksin (15 min)",
+        "Tehtävä 1: Kolme minua tulevaisuudessa — yksin",
         "Jatkotehtävät: toivottava tulevaisuus ja ensimmäinen askel"
       ],
       tavoitteet: [

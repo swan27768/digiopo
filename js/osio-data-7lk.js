@@ -8,9 +8,9 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: Uudet aineet yläkoulussa – lukujärjestys muuttuu",
         "Mitä on oppilaanohjaus? – infograafi ja lyhyt esittely",
-        "Yläkoulun selviytymisopas – mitä neljää keinoa tarvitset? (5 min)",
-        "Interaktiivinen tarina: Robo saapuu yläkouluun (20–25 min)",
-        "Operaatio Yläkoulu – ryhmätehtävä rastiradalla (20–25 min)"
+        "Yläkoulun selviytymisopas – mitä neljää keinoa tarvitset?",
+        "Interaktiivinen tarina: Robo saapuu yläkouluun",
+        "Operaatio Yläkoulu – ryhmätehtävä rastiradalla"
       ],
       tavoitteet: [
         "Tiedät, mitä uusia oppiaineita 7. luokalla on odottamassa",
@@ -34,7 +34,7 @@ window.OSIO_DATA = {
     "opiskelutaidot": {
       rakenne: [
         "Aloitus: miten sinä opit parhaiten?",
-        "Pakopeli: opi oppimaan (20 min)",
+        "Pakopeli: opi oppimaan",
         "Tehtäväpisteet: muisti, lukeminen, aikataulut, tekoäly (valinnan mukaan)",
         "Lopetus: yksi uusi tekniikka käyttöön tällä viikolla"
       ],
@@ -54,8 +54,8 @@ window.OSIO_DATA = {
     "mina-oppijana": {
       rakenne: [
         "Aloitus: milloin viimeksi innostuit jostain?",
-        "Peli: Kadonnut motivaatio (20–25 min)",
-        "Keskustelu: mistä motivaatio syntyy ja mihin se katoaa? (10 min)"
+        "Peli: Kadonnut motivaatio",
+        "Keskustelu: mistä motivaatio syntyy ja mihin se katoaa?"
       ],
       tavoitteet: [
         "Tiedät, että motivaatio ei ole pysyvä ominaisuus vaan tila, johon voi vaikuttaa",
@@ -73,8 +73,8 @@ window.OSIO_DATA = {
     "omat-vahvuudet": {
       rakenne: [
         "Aloitus: missä olet hyvä — koulun ulkopuolellakin?",
-        "Tehtävä: Supervoimat — löydä omat vahvuutesi (20 min)",
-        "Parikeskustelu: minkä vahvuuden kaveri näkee sinussa? (10 min)"
+        "Tehtävä: Supervoimat — löydä omat vahvuutesi",
+        "Parikeskustelu: minkä vahvuuden kaveri näkee sinussa?"
       ],
       tavoitteet: [
         "Tunnistat vähintään kolme omaa luonteenvahvuuttasi",
@@ -107,7 +107,7 @@ window.OSIO_DATA = {
       teoria: "tulevaisuus-taito",
       rakenne: [
         "Aloitus: mitä haluaisit kokeilla joskus?",
-        "Aikamatka tulevaisuuteen -tehtävä: matka Robon kanssa vuoteen 2045, valinnat ja omat unelmat (10–15 min, yksin tai parin kanssa)",
+        "Aikamatka tulevaisuuteen -tehtävä: matka Robon kanssa vuoteen 2045, valinnat ja omat unelmat (yksin tai parin kanssa)",
         "Purku: jaetaan unelmat — mikä toistui monella?"
       ],
       tavoitteet: [
