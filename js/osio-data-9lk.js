@@ -39,7 +39,7 @@ window.OSIO_DATA = {
         "Arvioit tekoälyä ja verkkotietoa kriittisesti: tunnistat suodatinkuplan ja verkossa leviävän valheellisen tiedon",
         "Ratkaisette ongelman ryhmänä — kuuntelu kuuluu päättelyyn"
       ],
-      miksi: "Ihmisen ajattelussa on kaksi järjestelmää: nopea ja automaattinen sekä hidas ja punnitseva. Nopea järjestelmä hutiloi juuri isoissa päätöksissä — kuten koulutusvalinnassa. Kun opit huomaamaan omat oikopolkusi, teet elämässä valintoja, jotka perustuvat tietoon eivätkä ensivaikutelmaan. Juuri nyt tämä on tärkeämpää kuin koskaan: tekoäly tuottaa tekstiä, kuvia ja väitteitä, ja tieto tulvii joka suunnasta valmiiksi pureskeltuna. Kun osaat käyttää omia aivojasi — kysyä, epäillä ja päätellä itse — et ole algoritmien etkä ensivaikutelmien vietävissä.",
+      miksi: "Ihmisen ajattelussa on kaksi järjestelmää: nopea ja automaattinen sekä hidas ja punnitseva. Nopea järjestelmä saa sinut hutiloimaan juuri isoissa päätöksissä — kuten koulutusvalinnassa. Kun opit tunnistamaan ne tilanteet, joissa mielesi houkuttelee hutiloimaan, teet parempia päätöksiä, jotka perustuvat tietoon eivätkä ensivaikutelmaan. Juuri nyt tämä on tärkeämpää kuin koskaan: tekoäly tuottaa tekstiä, kuvia ja väitteitä, ja tieto tulvii joka suunnasta valmiiksi pureskeltuna. Kun osaat käyttää omia aivojasi — kysyä, epäillä ja päätellä itse — et ole algoritmien etkä ensivaikutelmien vietävissä.",
       yhteenveto: [
         "Osaat erottaa todisteen ja olettamuksen toisistaan",
         "Tunnistat ainakin yhden ajatusvinouman omassa päättelyssäsi",
