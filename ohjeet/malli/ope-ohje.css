@@ -1,0 +1,123 @@
+/* ============================================================
+   DigiOpo · opettajan ohjeiden jaettu tyyli — ope-ohje.css
+   Yksi tiedosto kaikille opettajan ohjeille (osio + tehtävä).
+   Muuta ulkoasua täällä kerran — muutos näkyy kaikissa ohjeissa.
+   Liitä ohjeeseen:  <link rel="stylesheet" href="ope-ohje.css">
+   ============================================================ */
+
+/* ---- väri- ja tyylitokenit (vaalea) ---- */
+:root{
+  --paper:#f6f7f9; --card:#fff; --ink:#1a1e26; --ink-soft:#4a5160; --ink-faint:#79808f;
+  --line:#e2e5ea; --line-soft:#eceef2; --accent:#34518a; --accent-soft:#e9eef7; --accent-ink:#26406f;
+  --keep:#2f7d5b; --keep-bg:#e7f2eb; --fix:#b07d1e; --fix-bg:#f8f0dd;
+  --shadow:0 1px 2px rgba(26,30,38,.04),0 8px 24px rgba(26,30,38,.05);
+}
+/* ---- tumma tila (järjestelmän mukaan) ---- */
+:root:not([data-theme="light"]){ @media (prefers-color-scheme: dark){
+  --paper:#14171d; --card:#1c2129; --ink:#eef0f4; --ink-soft:#b3bac7; --ink-faint:#828b9b;
+  --line:#2c333f; --line-soft:#242a33; --accent:#8fb0e6; --accent-soft:#22304a; --accent-ink:#bcd0f2;
+  --keep:#6fc49a; --keep-bg:#1c3329; --fix:#e0b661; --fix-bg:#33290f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);
+}}
+/* ---- tumma tila (nimenomainen valinta) ---- */
+:root[data-theme="dark"]{
+  --paper:#14171d; --card:#1c2129; --ink:#eef0f4; --ink-soft:#b3bac7; --ink-faint:#828b9b;
+  --line:#2c333f; --line-soft:#242a33; --accent:#8fb0e6; --accent-soft:#22304a; --accent-ink:#bcd0f2;
+  --keep:#6fc49a; --keep-bg:#1c3329; --fix:#e0b661; --fix-bg:#33290f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.sheet{max-width:820px;margin:0 auto;padding:22px 22px 60px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;text-wrap:balance;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:0 0 .8rem}
+strong{font-weight:600;color:var(--ink)}
+a{color:var(--accent);text-underline-offset:2px}
+code{font-family:"IBM Plex Mono",monospace;font-size:.85em;background:var(--accent-soft);color:var(--accent-ink);padding:.08em .4em;border-radius:5px}
+
+/* ---- ohjeen ylätunniste ---- */
+.doc-top{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px 26px;margin-bottom:22px}
+.badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.32em .8em;border-radius:7px}
+.badge.osio{background:var(--accent);color:#fff}
+.badge.tehtava{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.backlink{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--accent);text-decoration:none;margin-bottom:.6rem}
+.backlink:hover{text-decoration:underline}
+.doc-h{font-size:clamp(1.7rem,4.5vw,2.4rem);font-weight:700;margin:.55rem 0 .1rem}
+.doc-sub{color:var(--ink-soft);font-size:1.02rem;margin:.1rem 0 1rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font-size:.82rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.22em .85em;color:var(--ink-soft)}
+.print{margin-left:auto;font:inherit;font-size:.85rem;font-weight:500;cursor:pointer;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:.42em 1.05em}
+.print:hover{filter:brightness(1.06)}
+
+/* ---- osiolaatikot ---- */
+section.blk{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px}
+.lab{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 .7rem}
+section.blk h2{font-size:1.2rem;font-weight:600;margin:0 0 .55rem}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{position:relative;padding-left:1.5rem;margin-bottom:.55rem;color:var(--ink-soft)}
+ul.clean li:last-child{margin-bottom:0}
+ul.clean li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+ul.clean li strong{color:var(--ink)}
+
+/* ---- oppitunti-/tehtävälista (osion ohjeessa) ---- */
+.lessons{display:grid;gap:12px}
+.lesson{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:15px 16px;background:var(--paper)}
+.lesson .n{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--accent);color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.lesson .body{flex:1}
+.lesson .t{font-weight:600;color:var(--ink)}
+.lesson .d{font-size:.9rem;color:var(--ink-soft);margin-top:.15rem}
+.lesson .lnk{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;font-weight:500;color:var(--accent);text-decoration:none;margin-top:.45rem;border:1px solid var(--line);border-radius:8px;padding:.2em .6em;background:var(--card)}
+.lesson .lnk:hover{border-color:var(--accent)}
+.lesson .lnk.none{color:var(--ink-faint);border-style:dashed;pointer-events:none}
+
+/* ---- vaiheet (tehtävän kulku) ---- */
+.steps{display:grid;gap:12px}
+.step{border:1px solid var(--line);border-radius:12px;padding:15px 16px 16px;background:var(--paper)}
+.step .head{display:flex;gap:12px;align-items:center;margin-bottom:.5rem}
+.step .n{flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.step .t{font-weight:600;color:var(--ink)}
+.step p{font-size:.92rem;color:var(--ink-soft);margin:0 0 .5rem}
+.q{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:.5em .8em;font-size:.88rem;color:var(--accent-ink)}
+.q b{font-weight:600}
+
+/* ---- eriyttäminen (kaksi saraketta) ---- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mini{border:1px solid var(--line);border-radius:11px;padding:14px 16px;background:var(--paper)}
+.mini h3{font-size:.98rem;font-weight:600;margin:0 0 .4rem}
+.mini p{font-size:.88rem;color:var(--ink-soft);margin:0}
+.mini .tag{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--keep)}
+.mini.harder .tag{color:var(--fix)}
+
+/* ---- apuelementit ---- */
+.ops{font-size:.85rem;color:var(--ink-faint);border-top:1px solid var(--line-soft);margin-top:.9rem;padding-top:.7rem}
+.ops strong{color:var(--ink-soft)}
+.hint{background:var(--accent-soft);border-radius:9px;padding:.7em .9em;font-size:.9rem;color:var(--accent-ink);margin-top:.7rem}
+footer{color:var(--ink-faint);font-size:.82rem;text-align:center;padding:14px 0 0}
+
+@media(max-width:620px){ .split{grid-template-columns:1fr} .print{margin-left:0} }
+
+/* ---- tehtävälohkot (osion ohjeessa, kun pienet tehtävät kuvataan sisällä) ---- */
+.tasks{display:grid;gap:14px}
+.taskblock{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:16px 18px 17px}
+.taskblock .head{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-bottom:.4rem}
+.taskblock .n{flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.taskblock .n.extra{background:var(--keep)}
+.taskblock .t{font-weight:600;font-size:1.02rem;color:var(--ink)}
+.taskblock .mode{font-size:.75rem;color:var(--ink-faint);border:1px solid var(--line);border-radius:999px;padding:.12em .65em;background:var(--card);margin-left:auto}
+.subl{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:.75rem 0 .35rem}
+.q ul{margin:.25rem 0 0;padding-left:1.15rem}
+.q li{margin:.15rem 0}
+.warn{background:var(--fix-bg);border-radius:9px;padding:.7em .9em;font-size:.88rem;color:var(--fix);margin-top:.7rem}
+
+/* ---- tulostus ---- */
+@media print{
+  :root{--paper:#fff;--card:#fff;--line:#c9ccd3;--line-soft:#dfe1e6;--shadow:none}
+  body{font-size:11.5pt}
+  .sheet{max-width:none;padding:0}
+  .print,.backlink{display:none!important}
+  section.blk,.doc-top{box-shadow:none;break-inside:avoid;border-radius:0;border:0;border-bottom:1px solid #d3d6dc;padding:12px 0;margin:0}
+  .lesson,.step,.mini,.taskblock{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+}
