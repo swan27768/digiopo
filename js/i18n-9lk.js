@@ -119,7 +119,7 @@
 
     /* Theory card */
     setTxt('#jatko .theory-card h3', g(g9, 'jatko.theory.h3'));
-    setTxt('#jatko .theory-card .theory-text p:first-of-type', g(g9, 'jatko.theory.p'));
+    setHTML('#jatko .theory-card .theory-text p:first-of-type', g(g9, 'jatko.theory.p'));
     setTxt('#jatko .theory-card .theory-text strong', g(g9, 'jatko.theory.strong'));
 
     /* Kaavio-painike */
