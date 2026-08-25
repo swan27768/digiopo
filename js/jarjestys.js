@@ -537,6 +537,9 @@
       try { localStorage.removeItem(LS_LOCAL); localStorage.removeItem(LS_LOCK); } catch (e) {}
       sovella(OLETUS);
       paivitaKaikkiLukot();
+      // Muistuta ettei palautus mene oppilaille ennen "Tallenna oppilaille" -painallusta
+      // (sama muistutus kuin raahauksessa ja lukon vaihdossa).
+      if (julkaisuTila) { julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila odottaa"; }
     });
     b.querySelector(".jarjestys-julkaise").addEventListener("click", julkaise);
     var aikatauluNappi = b.querySelector(".jarjestys-aikataulu");
