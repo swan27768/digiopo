@@ -108,11 +108,12 @@ export default async function handler(req, res) {
       if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
       const rivi = (await r.json())[0];
       // Edge-välimuisti: sama ryhmä+luokka on kaikilla luokan oppilailla identtinen.
-      // s-maxage=30 → CDN palvelee 30 s välimuistista (opettajan järjestysmuutos
-      // näkyy ~30 s viiveellä). Pitkä stale-while-revalidate (1 h) tarkoittaa, että
-      // 30 s jälkeen CDN palauttaa vanhan vastauksen HETI ja päivittää sen taustalla
-      // → oppilaan pyyntö ei koskaan jää odottamaan funktion cold startia piikissä.
-      res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=3600');
+      // Oppilaan haku (js/jarjestys.js) lisää cache-busterin (&_=aikaleima), joten se
+      // ohittaa reunavälimuistin ja saa opettajan avaus-/järjestysmuutokset HETI.
+      // Aiemmin pitkä stale-while-revalidate (1 h) sai CDN:n tarjoilemaan vanhaa
+      // (lukittua) tilaa vielä pitkään julkaisun jälkeen. Tämä otsake on nyt vain
+      // kevyt puolustus muille pyynnöille: lyhyt s-maxage ja rajattu SWR.
+      res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=20');
       return res.status(200).json({
         ok: true,
         jarjestys: rivi ? rivi.jarjestys : null,

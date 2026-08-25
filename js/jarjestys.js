@@ -117,7 +117,7 @@
 
   // ---- API ----
   function haeServer(ryhma) {
-    return fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA, { cache: "no-store" })
+    return fetch(API + "?ryhma=" + encodeURIComponent(ryhma) + "&luokka=" + LUOKKA + "&_=" + Date.now(), { cache: "no-store" })
       .then(function (r) { return r.json(); }).catch(function () { return { ok: false }; });
   }
   function postServer(payload) {
