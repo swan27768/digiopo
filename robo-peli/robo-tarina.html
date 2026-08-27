@@ -435,12 +435,21 @@
       }
 
       /* Taidot */
+      /* Vakaa ruudukko: 2 saraketta mobiilissa, 4 isommalla näytöllä.
+         Kiinteä ruudukko + aina näkyvä selitys = ei hover-vaihtoa,
+         ei korkeuden muutosta, joten kortit eivät hyppää eivätkä
+         tärise kosketusnäytöllä (esim. Chromebook). */
       .skill-grid {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--space-sm);
         margin-top: var(--space-sm);
-        justify-content: center;
+      }
+
+      @media (min-width: 640px) {
+        .skill-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
       }
 
       .skill-item {
@@ -450,43 +459,34 @@
         padding: 12px 14px;
         font-size: 0.95em;
         text-align: center;
-        min-width: 140px;
-        min-height: 70px;
         box-shadow: 2px 2px 0 #000;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 6px;
       }
 
       .skill-title {
         font-weight: 700;
-        transition: opacity 0.2s;
       }
 
+      /* Selitys näkyy aina kaikilla laitteilla. */
       .skill-desc {
         font-size: 0.84em;
         color: #444;
         line-height: 1.4;
         font-weight: normal;
-        display: none;
       }
 
-      /* Desktop: näytä selitys hoverilla */
-      @media (hover: hover) {
-        .skill-item:hover .skill-title {
-          opacity: 0.25;
+      /* Kevyt korostus hiirellä – ei muuta asettelua, ei tärinää. */
+      @media (hover: hover) and (pointer: fine) {
+        .skill-item {
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        .skill-item:hover .skill-desc {
-          display: block;
-        }
-      }
-
-      /* Mobiili: näytä molemmat aina */
-      @media (hover: none) {
-        .skill-desc {
-          display: block;
+        .skill-item:hover {
+          border-color: var(--color-accent);
+          box-shadow: 3px 3px 0 var(--color-accent);
         }
       }
 
@@ -940,7 +940,8 @@
           <div class="skill-item">
             <div class="skill-title">❤️ Tunneäly</div>
             <div class="skill-desc">
-              Ymmärrät omia ja toisten tunteita. Osaat olla empaattinen.
+              Ymmärrät omia ja toisten tunteita. Osaat asettua toisen
+              asemaan ja tukea kaveria.
             </div>
           </div>
           <div class="skill-item">
