@@ -12,7 +12,7 @@
  * Ei riippuvuuksia, ei build-vaihetta. Liitä sivulle:
  *   <script src="/js/kuuntele.js" defer></script>
  *
- * © Olga Lenskaya — osa DigiOpo-oppimateriaalia.
+ * © Olga Lenskaja — osa DigiOpo-oppimateriaalia.
  */
 (function () {
   "use strict";

@@ -87,6 +87,6 @@ sisällön ylläpito ja tunnetut rajoitteet.
 
 ## Lisenssi ja oikeudet
 
-© Olga Lenskaya. Kaikki oikeudet pidätetään.
+© Olga Lenskaja. Kaikki oikeudet pidätetään.
 Sisältö, koodi ja tavaramerkki ovat tekijän omaisuutta eikä niitä saa
 kopioida tai levittää ilman kirjallista lupaa.
