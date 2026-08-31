@@ -16,7 +16,6 @@
 // Valtuutus kirjoituksiin tulee opettajan istunnosta (omistajuus).
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
-import { sbFetch } from './_lib/supabase.js';
 import { haeIp } from './_lib/turva.js';
 import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
 import { rateLimitSallittu } from './_lib/rate.js';
@@ -70,8 +69,18 @@ function validoiKentat(k) {
 }
 
 async function sb(path, opts = {}) {
-  // Kelloheitto-suojattu kutsu (uusii 401/PGRST303 "issued at future"). Ks. _lib/supabase.js
-  return sbFetch(path, opts);
+  const base = SUPABASE_URL.replace(/\/$/, '');
+  const r = await fetch(`${base}/rest/v1/${path}`, {
+    ...opts,
+    headers: {
+      apikey: SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+  return r;
 }
 
 // Poistaa menneet tapahtumat (viimeinen pvm eilinen tai vanhempi).

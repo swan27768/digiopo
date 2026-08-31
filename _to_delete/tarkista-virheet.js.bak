@@ -17,14 +17,6 @@ const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@digiopo.fi';
 // jää aukkoja jos cron joskus viivästyy muutamalla minuutilla.
 const TARKASTELUIKKUNA_H = 25;
 
-// Ohimenevä Supabasen kelloheitto (401/PGRST303 "JWT issued at future") ei ole
-// meidän vikamme eikä vaadi toimia: se uusitaan automaattisesti (api/_lib/supabase.js).
-// Ei hälytetä pelkistä kelloheitoista ellei niitä ole poikkeuksellisen paljon.
-const KELLOHEITTO_KYNNYS = 25;
-function onKelloheitto(v) {
-  return /PGRST303|issued at future/i.test((v && v.viesti) || '');
-}
-
 async function haeVirheet() {
   const baseUrl = SUPABASE_URL.replace(/\/$/, '');
   const rajaAika = new Date(Date.now() - TARKASTELUIKKUNA_H * 60 * 60 * 1000).toISOString();
@@ -122,19 +114,14 @@ export default async function handler(req, res) {
   try {
     const virheet = await haeVirheet();
 
-    // Erottele ohimenevät kelloheitot varsinaisista virheistä.
-    const kelloheitot = virheet.filter(onKelloheitto).length;
-    const muut = virheet.length - kelloheitot;
-    const halyta = muut > 0 || kelloheitot >= KELLOHEITTO_KYNNYS;
-
-    if (halyta && virheet.length > 0 && RESEND_API_KEY && ADMIN_EMAIL) {
+    if (virheet.length > 0 && RESEND_API_KEY && ADMIN_EMAIL) {
       await laheta_halytys(virheet);
-      console.log(`Virhehälytys lähetetty: ${virheet.length} virhettä (muut: ${muut}, kelloheitot: ${kelloheitot})`);
-      return res.status(200).json({ ok: true, halytys: true, maara: virheet.length, muut, kelloheitot });
+      console.log(`Virhehälytys lähetetty: ${virheet.length} virhettä`);
+      return res.status(200).json({ ok: true, halytys: true, maara: virheet.length });
     }
 
-    console.log(`Virheitä ${TARKASTELUIKKUNA_H}h aikana: ${virheet.length} (muut: ${muut}, kelloheitot: ${kelloheitot}) – ${halyta ? 'ei RESEND_API_KEY/ADMIN_EMAIL' : 'ei hälytyskynnystä, hälytystä ei lähetetty'}`);
-    return res.status(200).json({ ok: true, halytys: false, maara: virheet.length, muut, kelloheitot });
+    console.log(`Virheitä ${TARKASTELUIKKUNA_H}h aikana: ${virheet.length} – ${virheet.length > 0 ? 'ei RESEND_API_KEY/ADMIN_EMAIL, hälytystä ei lähetetty' : 'ok'}`);
+    return res.status(200).json({ ok: true, halytys: false, maara: virheet.length });
   } catch (err) {
     console.error('tarkista-virheet virhe:', err.message);
     await kirjaaVirhe('tarkista-virheet', err);

@@ -6,7 +6,6 @@
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { rateLimitSallittu } from './_lib/rate.js';
-import { sbFetch } from './_lib/supabase.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -59,8 +58,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const vastaus = await sbFetch('rpc/kasvata_laskuri', {
+    const baseUrl = SUPABASE_URL.replace(/\/$/, '');
+    const vastaus = await fetch(`${baseUrl}/rest/v1/rpc/kasvata_laskuri`, {
       method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ p_sivu: sivu }),
     });
     if (!vastaus.ok) {

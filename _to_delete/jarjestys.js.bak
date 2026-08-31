@@ -13,7 +13,6 @@ import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
 import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
-import { sbFetch } from './_lib/supabase.js';
 import { rateLimitSallittu } from './_lib/rate.js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -40,8 +39,18 @@ function validiJarjestys(arr) {
 }
 
 async function sb(path, opts = {}) {
-  // Kelloheitto-suojattu kutsu (uusii 401/PGRST303 "issued at future"). Ks. _lib/supabase.js
-  return sbFetch(path, opts);
+  const base = SUPABASE_URL.replace(/\/$/, '');
+  const r = await fetch(`${base}/rest/v1/${path}`, {
+    ...opts,
+    headers: {
+      apikey: SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+  return r;
 }
 
 async function haeRyhma(ryhmakoodi) {
