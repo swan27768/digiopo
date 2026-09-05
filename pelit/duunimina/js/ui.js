@@ -223,10 +223,14 @@ function showResult() {
     box.innerHTML = `
       <div class="result-card">
 
-        <h1>Olet ${main.title}</h1>
+        <h1>Juuri nyt sinussa korostuu: ${main.title}</h1>
 
         <div class="interpretation-box">
           ${interpretation}
+        </div>
+
+        <div class="lokero-varaus" style="background:#f3e8ff; border-left:4px solid #7c3aed; border-radius:10px; padding:12px 16px; margin:14px 0; font-size:0.92rem; line-height:1.55; text-align:left; color:#3b2560;">
+          <strong>Tämä ei ole lokero.</strong> Se kertoo, mikä tapa sinulla korostuu juuri nyt — ja voi muuttua, kun kokeilet ja opit uutta.
         </div>
 
         <p class="lead">${main.lead}</p>

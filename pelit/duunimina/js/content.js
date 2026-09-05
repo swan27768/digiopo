@@ -76,16 +76,16 @@ window.buildInterpretation = function(primary, secondary) {
 
   // Vain päätyyppi
   if (!secondary) {
-    return `Olet ${primary}. Sinussa on ${main.essence}.`;
+    return `Sinussa on ${main.essence}.`;
   }
 
   const support = TYPE_PROFILES[secondary];
 
   if (!support) {
-    return `Olet ${primary}. Sinussa on ${main.essence}.`;
+    return `Sinussa on ${main.essence}.`;
   }
 
-  return `Olet ${primary}. Sinussa on ${main.essence} — ja myös ${support.essence}.`;
+  return `Sinussa on ${main.essence} — ja myös ${support.essence}.`;
 };
 
 
