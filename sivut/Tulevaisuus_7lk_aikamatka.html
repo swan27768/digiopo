@@ -443,6 +443,9 @@
     <label class="kentta-otsikko" for="k_unelma">Yksi unelmani tulevaisuudessa on…</label>
     <textarea id="k_unelma" placeholder="Esimerkiksi: Haluan matkustaa, oppia uuden kielen tai..."></textarea>
 
+    <label class="kentta-otsikko" for="k_hyva">Mitä hyvää unelmastasi voisi olla muille tai maailmalle?</label>
+    <textarea id="k_hyva" placeholder="Esimerkiksi: voin auttaa muita, tehdä jotain hyödyllistä, ilahduttaa ihmisiä…"></textarea>
+
     <label class="kentta-otsikko" for="k_askel">Yksi pieni asia, jonka voin tehdä jo nyt sitä kohti, on… Ja kuka voisi auttaa sinua matkalla?</label>
     <textarea id="k_askel" placeholder="Esimerkiksi: Harjoittelen, kysyn neuvoa tai kokeilen..."></textarea>
 
@@ -470,6 +473,7 @@
       <div class="koonti-rivi"><span class="koonti-otsikko">Tulevaisuudessa kiinnostaa:</span><span class="koonti-teksti" id="n_arki"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Haluamani työ ja oma ammatti-idea:</span><span class="koonti-teksti" id="n_tyo"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Unelmani:</span><span class="koonti-teksti" id="n_unelma"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Hyötyä muille:</span><span class="koonti-teksti" id="n_hyva"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Pieni askel jo nyt:</span><span class="koonti-teksti" id="n_askel"></span></div>
     </div>
 
@@ -553,6 +557,7 @@ function rakennaKoonti() {
   document.getElementById("n_arki").textContent   = valittuTeksti("arki") + " — " + arvo("k_arki");
   document.getElementById("n_tyo").textContent    = valittuTeksti("tyo") + " — " + arvo("k_tyo");
   document.getElementById("n_unelma").textContent = arvo("k_unelma");
+  document.getElementById("n_hyva").textContent   = arvo("k_hyva");
   document.getElementById("n_askel").textContent  = arvo("k_askel");
 }
 
@@ -568,6 +573,7 @@ function lataaKoonti() {
 "Tulevaisuudessa kiinnostaa:\n" + valittuTeksti("arki") + "\nMiksi: " + arvo("k_arki") + "\n\n" +
 "Haluamani työ:\n" + valittuTeksti("tyo") + "\nOma ammatti-idea: " + arvo("k_tyo") + "\n\n" +
 "Unelmani:\n" + arvo("k_unelma") + "\n\n" +
+"Hyötyä muille:\n" + arvo("k_hyva") + "\n\n" +
 "Pieni askel jo nyt:\n" + arvo("k_askel") + "\n\n" +
 "==========================================\n" +
 "DigiOpo · Tulevaisuus · 7. luokka\n";
@@ -585,7 +591,7 @@ function lataaKoonti() {
 }
 
 function aloitaAlusta() {
-  ["k_nyt","k_arki","k_tyo","k_unelma","k_askel"].forEach(function (id) {
+  ["k_nyt","k_arki","k_tyo","k_unelma","k_hyva","k_askel"].forEach(function (id) {
     var el = document.getElementById(id); if (el) el.value = "";
   });
   document.querySelectorAll(".valinta.valittu").forEach(function (el) {
