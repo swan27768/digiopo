@@ -236,6 +236,11 @@ function showResult() {
         <p class="lead">${main.lead}</p>
         <p>${main.meaning}</p>
 
+        <div style="background:#ecfdf5; border-left:4px solid #0d9488; border-radius:10px; padding:12px 16px; margin:14px 0; text-align:left; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+          <div style="font-size:0.82rem; font-weight:700; color:#065f46; margin-bottom:4px;">Mihin tästä on hyötyä muille?</div>
+          <div style="font-size:1rem; color:#134e4a;">${main.promise}</div>
+        </div>
+
         ${
           secondary
             ? `
