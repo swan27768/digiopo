@@ -331,6 +331,16 @@ function openInfo() {
         jolla puhua itsestään realistisesti.
       </p>
 
+      <h3>6. Yksilöllisyys ei ole lokero – suomalainen tutkimus</h3>
+      <p>
+        Suomalainen temperamenttitutkimus muistuttaa, että yksilölliset erot
+        ovat todellisia mutta eivät lokeroita: tyyppi on lähtökohta, ei tuomio.
+      </p>
+      <ul>
+        <li>Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys.</em> Helsinki: WSOY.</li>
+        <li>Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika.</em> Helsinki: WSOY.</li>
+      </ul>
+
       <div class="info-footer">
         <strong>Ydinajatus:</strong><br>
         DuuniMinä ei arvioi nuorta – se näyttää,
@@ -394,6 +404,16 @@ function openInfo() {
         Sosio-kognitiivinen urateoria korostaa minäkäsitystä
         ja pystyvyysuskomuksia.
       </p>
+
+      <h3>6. Yksilöllisyys ei ole lokero – suomalainen tutkimus</h3>
+      <p>
+        Suomalainen temperamenttitutkimus muistuttaa, että yksilölliset erot
+        ovat todellisia mutta eivät lokeroita: tyyppi on lähtökohta, ei tuomio.
+      </p>
+      <ul>
+        <li>Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys.</em> Helsinki: WSOY.</li>
+        <li>Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika.</em> Helsinki: WSOY.</li>
+      </ul>
 
       <div class="info-footer">
         <strong>Ydinajatus:</strong><br>
