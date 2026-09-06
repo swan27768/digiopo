@@ -142,7 +142,9 @@ window.OSIO_DATA = {
       ],
       lahteet: [
         "Peterson, C. & Seligman, M. (2004). <em>Character Strengths and Virtues</em>. Oxford University Press.",
-        "Uusitalo-Malmivaara, L. & Vuorinen, K. (2016). <em>Huomaa hyvä!</em> PS-kustannus."
+        "Uusitalo-Malmivaara, L. & Vuorinen, K. (2016). <em>Huomaa hyvä!</em> PS-kustannus.",
+        "Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys</em>. WSOY.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
     "fake-insta": {
@@ -154,7 +156,9 @@ window.OSIO_DATA = {
       lahteet: [
         "Markus, H. & Nurius, P. (1986). Possible selves. <em>American Psychologist</em>.",
         "Oyserman, D. ym. (2006). Possible selves and academic outcomes. <em>Journal of Personality and Social Psychology</em>.",
-        "Mediakasvatusseura: mediakasvatus.fi."
+        "Mediakasvatusseura: mediakasvatus.fi.",
+        "Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys</em>. WSOY.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
     "pyora-pyorii": {

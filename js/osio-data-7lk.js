@@ -192,7 +192,9 @@ window.OSIO_DATA = {
       lahteet: [
         "Peterson, C. & Seligman, M. (2004). <em>Character Strengths and Virtues</em>. Oxford University Press.",
         "Uusitalo-Malmivaara, L. & Vuorinen, K. (2016). <em>Huomaa hyvä!</em> PS-kustannus.",
-        "viacharacter.org — VIA Institute on Character."
+        "viacharacter.org — VIA Institute on Character.",
+        "Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys</em>. WSOY.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
     "tulevaisuus-taito": {

@@ -229,7 +229,9 @@ window.OSIO_DATA = {
       lahteet: [
         "Kolb, D. (1984). <em>Experiential Learning</em>. Prentice Hall.",
         "Lent, R., Brown, S. & Hackett, G. (1994). Social cognitive career theory. <em>Journal of Vocational Behavior</em>.",
-        "Opetushallitus (2014). POPS: työelämään tutustuminen."
+        "Opetushallitus (2014). POPS: työelämään tutustuminen.",
+        "Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys</em>. WSOY.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
     "hakustrategia": {
@@ -277,7 +279,9 @@ window.OSIO_DATA = {
       lahteet: [
         "Markus, H. & Nurius, P. (1986). Possible selves. <em>American Psychologist</em>.",
         "Oyserman, D., Bybee, D. & Terry, K. (2006). Possible selves and academic outcomes. <em>JPSP</em>.",
-        "Amara, R. (1981). The futures field. <em>The Futurist</em>. (todennäköiset, toivottavat ja mahdolliset tulevaisuudet)"
+        "Amara, R. (1981). The futures field. <em>The Futurist</em>. (todennäköiset, toivottavat ja mahdolliset tulevaisuudet)",
+        "Keltikangas-Järvinen, L. (2004). <em>Temperamentti – ihmisen yksilöllisyys</em>. WSOY.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
   }
