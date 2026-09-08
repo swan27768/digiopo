@@ -22,6 +22,7 @@
   var LS_OPE_R = "digiopo-ope-ryhma";                 // opettajan jakoryhmä (laite)
   var LS_LOCK = "digiopo-lukitut-" + LUOKKA;          // opettajan lukot (työversio)
   var LS_LOCK_CACHE = "digiopo-lukitut-cache-" + LUOKKA; // oppilaan välimuisti
+  var LS_OPE_VIIM = "digiopo-ope-esikatselu-" + LUOKKA;  // muistettu esikatseluryhmä (opettaja) per luokka
 
   // ---- apurit ----
   function osiot() {
@@ -154,6 +155,65 @@
     });
   } else {
     sovella(yhdista(lue(LS_LOCAL)));
+    // Kirjautunut opettaja ilman ryhmäsidosta → hae ryhmä istunnosta ja
+    // näytä julkaistu näkymä (järjestys + lukot). Ei vaikuta oppilaisiin.
+    autoEsikatseluOpettajalle();
+  }
+
+  // ── Opettajan automaattinen ryhmä-esikatselu (istunnosta) ──────────────────
+  // Kun kirjautunut opettaja avaa luokkasivun ILMAN ryhmäsidosta (ei ?ryhma=,
+  // ei ?tili_ryhma, ei digiopo-ope-ryhma), haetaan hänen ryhmänsä istunnosta ja
+  // näytetään julkaistu näkymä. Näin näkymä ei riipu hauraasta localStorage-
+  // sidoksesta. Oppilaisiin ei vaikuta: onOpettajaSessio() on epätosi ilman
+  // opettajan kirjautumista.
+  function haeJaSovellaPalvelin(ryhma) {
+    return haeServer(ryhma).then(function (v) {
+      if (v && v.ok) {
+        sovella(yhdista(v.jarjestys || OLETUS));
+        applyLukot(v.lukitut || []);
+      }
+      return v;
+    });
+  }
+
+  function autoEsikatseluOpettajalle() {
+    if (!onOpettajaSessio()) return;                       // vain kirjautunut opettaja
+    if (ryhmaParam || params.get("tili_ryhma")) return;    // eksplisiittiset polut hoitavat itse
+    postServer({ toiminto: "omat_ryhmat" }).then(function (v) {
+      if (!v || !v.ok || !v.ryhmat || !v.ryhmat.length) return;
+      var ryhmat = v.ryhmat;
+      var muistettu = lueRaaka(LS_OPE_VIIM);
+      var valittu = (muistettu && ryhmat.some(function (r) { return r.ryhmakoodi === muistettu; }))
+        ? muistettu
+        : ryhmat[0].ryhmakoodi;                            // oletus: uusin ryhmä (omat_ryhmat: luotu_at desc)
+      aktivoiEsikatselu(valittu, ryhmat);
+    });
+  }
+
+  function aktivoiEsikatselu(koodi, ryhmat) {
+    kirjoitaRaaka(LS_OPE_VIIM, koodi);
+    haeJaSovellaPalvelin(koodi);
+    // Kalenteri (luokkasivun upotus) kuuntelee tätä ja lataa oikean ryhmän.
+    try { document.dispatchEvent(new CustomEvent("digiopo:ryhma", { detail: { ryhma: koodi, ope: true } })); } catch (e) {}
+    naytaEsikatseluPalkki(koodi, ryhmat);
+  }
+
+  function naytaEsikatseluPalkki(koodi, ryhmat) {
+    var el = document.querySelector(".jarjestys-esikatselu");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "jarjestys-esikatselu";
+      el.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:12px;z-index:9997;background:#2b3350;color:#f4f5fb;border:1px solid rgba(255,255,255,.14);border-radius:.6rem;padding:.5rem .7rem;font-size:.82rem;line-height:1.3;box-shadow:0 6px 20px rgba(20,18,48,.32);display:flex;align-items:center;gap:.5rem;font-family:inherit;max-width:92vw;flex-wrap:wrap";
+      document.body.appendChild(el);
+    }
+    var opts = ryhmat.map(function (r) {
+      var nimi = r.nimi ? (r.nimi + " · " + r.ryhmakoodi) : r.ryhmakoodi;
+      return '<option value="' + esc(r.ryhmakoodi) + '"' + (r.ryhmakoodi === koodi ? " selected" : "") + '>' + esc(nimi) + '</option>';
+    }).join("");
+    el.innerHTML = '<span aria-hidden="true">👁️</span><span>Esikatselu oppilaan näkymästä:</span>' +
+      '<select class="jarjestys-esikatselu-valinta" style="font-family:inherit;font-size:.82rem;padding:.2rem .35rem;border-radius:.4rem;border:1px solid #ccc;max-width:60vw">' + opts + '</select>';
+    var sel = el.querySelector(".jarjestys-esikatselu-valinta");
+    sel.addEventListener("change", function () { aktivoiEsikatselu(sel.value, ryhmat); });
   }
 
   // ============================================================

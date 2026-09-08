@@ -1059,6 +1059,31 @@
               }
             });
           </script>
+          <script>
+            // Opettajan esikatselu: kun jarjestys.js hakee ryhmän istunnosta,
+            // ladataan lukuvuoden aikataulu oikealle ryhmälle ilman localStorage-sidosta.
+            document.addEventListener("digiopo:ryhma", function(ev){
+              if (!ev || !ev.detail || !ev.detail.ryhma) return;
+              var ryhma = ev.detail.ryhma;
+              if (!/^[A-Z0-9-]{4,16}$/.test(ryhma)) return;
+              function tulevia(lista){ var d=new Date(), t=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); return (lista||[]).filter(function(x){return (x.loppu_pvm||x.alku_pvm)>=t;}).length; }
+              fetch("/api/aikataulu?ryhma="+encodeURIComponent(ryhma)+"&luokka=9",{cache:"no-store"})
+                .then(function(r){return r.json();})
+                .then(function(dd){
+                  var taulu=document.getElementById("oponInfotaulu"), tyhja=document.getElementById("lukuvuosiTyhja"), up=document.getElementById("lukuvuosiUpotus"), f=document.getElementById("lukuvuosiFrame");
+                  if (taulu) taulu.style.display="block";
+                  var on = dd && dd.ok && tulevia(dd.tapahtumat) > 0;
+                  if (on){
+                    if (tyhja) tyhja.style.display="none";
+                    if (up) up.style.display="block";
+                    if (f) f.setAttribute("src","../sivut/lukuvuosi.html?embed=1&kehys=0&luokka=9&ryhma="+encodeURIComponent(ryhma)+"&preview=1");
+                  } else {
+                    if (up) up.style.display="none";
+                    if (tyhja) tyhja.style.display="";
+                  }
+                }).catch(function(){});
+            });
+          </script>
         </section>
 
         <!-- Rupatteluhetki: kysymyskortit (oma osio – järjestys/lukko ryhmäkohtaisesti) -->

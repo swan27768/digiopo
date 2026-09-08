@@ -287,7 +287,7 @@
 
   var ryhmaParam = (params.get("ryhma") || "").trim().toUpperCase();
   if (ryhmaParam && /^[A-Z0-9-]{4,16}$/.test(ryhmaParam)){
-    tallennaRyhma(ryhmaParam);
+    if (params.get("preview") !== "1") tallennaRyhma(ryhmaParam);
     lataa(ryhmaParam);
   } else {
     // Käytä jo tallennettua ryhmää: oppilaan liittymä TAI opettajan oma ryhmä.
