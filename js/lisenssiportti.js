@@ -320,6 +320,49 @@
 
   // ─── Päätarkistuslogiikka ────────────────────────────────────────────────
 
+  // ── Automaattinen avaus ryhmälinkillä (?ryhma=) ────────────────────────────
+  // Jos URLissa on ryhmäkoodi eikä lisenssiä ole, avataan sisältö sillä
+  // automaattisesti (palvelin: ryhmä → koulukoodi → lisenssi). Näin luokkalinkki
+  // toimii myös jos client-maksumuuri tulee vastaan (esim. middleware pois päältä).
+  // Sitkeä uudelleenyritys + hajonta heikolle verkolle.
+  function ryhmaUrlista() {
+    try {
+      var r = (new URLSearchParams(location.search).get("ryhma") || "").trim().toUpperCase();
+      return /^[A-Z0-9-]{4,16}$/.test(r) ? r : null;
+    } catch (e) { return null; }
+  }
+
+  async function avaaKoodilla(koodi, yritykset) {
+    yritykset = yritykset || 3;
+    for (var i = 0; i < yritykset; i++) {
+      try {
+        var vastaus = await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ koodi: koodi, laite: laiteTunnus() }),
+        });
+        var data = await vastaus.json();
+        if (data && data.ok) { tallenneLisenssi({ ...data, koodi: koodi }); return { ok: true, data: data }; }
+        return { ok: false, data: data }; // koodi virheellinen/vanhentunut → ei uusintayritystä
+      } catch (e) {
+        if (i < yritykset - 1) await new Promise(function (r) { setTimeout(r, 400 * Math.pow(2, i) + Math.random() * 400); });
+      }
+    }
+    return { ok: false, verkko: true };
+  }
+
+  async function naytaPorttiTaiAvaaRyhma() {
+    var ryhma = ryhmaUrlista();
+    if (!ryhma) { luoPortti(); return; }
+    var tulos = await avaaKoodilla(ryhma, 3);
+    if (tulos.ok) {
+      try { localStorage.setItem("digiopo-ryhma", ryhma); } catch (e) {}
+      piilotaPortti();
+      return;
+    }
+    luoPortti(); // verkko/koodi ei kelpaa → näytä normaali portti
+  }
+
   async function tarkistaLisenssi() {
     if (onVapaaPolku()) return;
 
@@ -333,16 +376,16 @@
     // 2. Koululisenssi: tarkistetaan localStorage
     const tallennettu = lueListenssi();
 
-    // Ei tallennettua lisenssiä → näytä portti heti
+    // Ei tallennettua lisenssiä → yritä avata ryhmälinkillä (?ryhma=), muuten portti
     if (!tallennettu) {
-      luoPortti();
+      await naytaPorttiTaiAvaaRyhma();
       return;
     }
 
-    // Lisenssi on vanhentunut paikallisesti → näytä portti
+    // Lisenssi on vanhentunut paikallisesti → yritä avata ryhmälinkillä, muuten portti
     if (!onVoimassa(tallennettu)) {
       poistaLisenssi();
-      luoPortti();
+      await naytaPorttiTaiAvaaRyhma();
       return;
     }
 
