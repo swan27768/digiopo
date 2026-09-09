@@ -50,6 +50,26 @@ async function haeRyhma(ryhmakoodi) {
   return (await r.json())[0] || null;
 }
 
+// Päättelee opettajan koulukoodin luotettavimmasta lähteestä:
+//   1) eksplisiittinen kytkös: opettajalisenssin koulukoodi-kenttä
+//   2) nimimätsäys: opettajan koulu-nimi → aktiivinen koululisenssi (uusin voimassaolo)
+// Palauttaa koulukoodin tai null. Kytkös on luotettavin, koska se on tallennettu
+// tosiasia (ei pääteltävissä nimestä, joka voi vaihdella tai olla kunta-lisenssi).
+async function haeOpettajanKoulukoodi(email) {
+  const r = await sb(`lisenssit?email=eq.${encodeURIComponent(String(email).toLowerCase())}&tyyppi=eq.opettaja&select=koulukoodi,koulu`);
+  if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+  const rivi = (await r.json())[0];
+  if (rivi && rivi.koulukoodi) return rivi.koulukoodi; // eksplisiittinen kytkös
+  if (rivi && rivi.koulu) {
+    const r2 = await sb(`lisenssit?koulu=eq.${encodeURIComponent(rivi.koulu)}&tyyppi=in.(vuosi,kunta,testi)&aktiivinen=eq.true&select=koodi,voimassa_asti&order=voimassa_asti.desc`);
+    if (r2.ok) {
+      const k = (await r2.json())[0];
+      if (k && k.koodi) return k.koodi; // nimimätsäys (vara)
+    }
+  }
+  return null;
+}
+
 // ─── Handler ─────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   // Sallitaan kaikki alkuperät, jotta paikallinen admin-paneeli (file://, origin
@@ -212,7 +232,14 @@ export default async function handler(req, res) {
       // ryhmäkoodin, jonka opettaja jakaa oppilaille.
       if (toiminto === 'luo_oma') {
         const nimi = body.nimi ? String(body.nimi).trim().slice(0, 80) || null : null;
-        const koulukoodi = body.koulukoodi ? String(body.koulukoodi).trim().slice(0, 40) : null;
+        // Koulukoodin lähde robustissa järjestyksessä: 1) eksplisiittinen kytkös /
+        // nimimätsäys opettajan lisenssistä (palvelin), 2) selaimen antama (vara),
+        // 3) muuten KOVA VIRHE — ei luoda orpo-ryhmää ilman koulukoodia.
+        let koulukoodi = await haeOpettajanKoulukoodi(opettaja);
+        if (!koulukoodi && body.koulukoodi) koulukoodi = String(body.koulukoodi).trim().slice(0, 40) || null;
+        if (!koulukoodi) {
+          return res.status(400).json({ ok: false, virhe: 'koulua_ei_loydy' });
+        }
         for (let i = 0; i < 5; i++) {
           const ryhmakoodi = arvoRyhmakoodi();
           const r = await sb('opetusryhmat', {
