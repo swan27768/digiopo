@@ -204,6 +204,25 @@ async function haeOpettajaSupabasesta(email) {
   return data[0] || null;
 }
 
+// Hakee ryhmäkoodia vastaavan koulukoodin (opetusryhmat.koulukoodi). Näin oppilas
+// voi avata sisällön pelkällä ryhmäkoodilla (Classroom-linkki): ryhmä → koulukoodi
+// → koululisenssi. Palauttaa koulukoodin tai null.
+async function haeRyhmaKoulukoodi(ryhmakoodi) {
+  const baseUrl = SUPABASE_URL.replace(/\/$/, '');
+  const url = `${baseUrl}/rest/v1/opetusryhmat?ryhmakoodi=eq.${encodeURIComponent(ryhmakoodi.toUpperCase())}&select=koulukoodi`;
+  const vastaus = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  });
+  if (!vastaus.ok) throw new Error(`Tietokantavirhe: ${vastaus.status}`);
+  const data = await vastaus.json();
+  return (data[0] && data[0].koulukoodi) || null;
+}
+
 export default async function handler(req, res) {
   // CORS-otsikot
   res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
@@ -301,7 +320,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const lisenssi = await haeSupabasesta(koodi);
+    let lisenssi = await haeSupabasesta(koodi);
+    let ryhmaKoodi = null;
+
+    // Jos koodi ei ole koulukoodi, kokeile ryhmäkoodia: ryhmä → koulukoodi →
+    // koululisenssi. Näin oppilas avaa sisällön pelkällä ryhmäkoodilla (Classroom-linkki).
+    if (!lisenssi) {
+      const koulukoodi = await haeRyhmaKoulukoodi(koodi);
+      if (koulukoodi) {
+        lisenssi = await haeSupabasesta(koulukoodi);
+        if (lisenssi) ryhmaKoodi = koodi.toUpperCase();
+      }
+    }
 
     if (!lisenssi || !lisenssi.aktiivinen) {
       poistaLisenssiEvaste(res);
@@ -327,6 +357,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       koodi: lisenssi.koodi,
+      ryhma: ryhmaKoodi,
       voimassa_asti: lisenssi.voimassa_asti,
       koulu: lisenssi.koulu,
     });

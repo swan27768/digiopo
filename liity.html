@@ -339,6 +339,130 @@
       if (e.key === 'Enter') nappi.click();
     });
   });
+
+  // ── Automaattinen avaus ryhmälinkillä (Classroom) ──────────────────────────
+  // Middleware ohjaa suojatulta sivulta tänne (?redirect=/9luokka?ryhma=CODE).
+  // Jos ryhmäkoodi on saatavilla (redirectistä tai omasta ?ryhma=:sta), avataan
+  // sisältö sillä automaattisesti — oppilaan ei tarvitse kirjoittaa mitään.
+  function laiteTunnus() {
+    try {
+      var v = localStorage.getItem('digiopo_laite');
+      if (!v) {
+        v = (self.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : (Date.now() + '-' + Math.random().toString(16).slice(2));
+        localStorage.setItem('digiopo_laite', v);
+      }
+      return v;
+    } catch (e) { return ''; }
+  }
+
+  function ryhmaKoodiSaatavilla() {
+    try {
+      var r = (new URLSearchParams(location.search).get('ryhma') || '').trim().toUpperCase();
+      if (/^[A-Z0-9-]{4,16}$/.test(r)) return r;
+    } catch (e) {}
+    if (redirectTarget) {
+      try {
+        var q = redirectTarget.indexOf('?');
+        if (q !== -1) {
+          var rp = (new URLSearchParams(redirectTarget.slice(q + 1)).get('ryhma') || '').trim().toUpperCase();
+          if (/^[A-Z0-9-]{4,16}$/.test(rp)) return rp;
+        }
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  var lomakeElementit = [
+    document.querySelector('label[for="koulukoodi"]'), koulukoodiEl,
+    document.querySelector('label[for="ryhmakoodi"]'), ryhmakoodiEl, nappi
+  ];
+  function naytaLomake(nakyy) {
+    lomakeElementit.forEach(function (el) { if (el) el.style.display = nakyy ? '' : 'none'; });
+  }
+
+  async function avaaKoodilla(koodi, yritykset) {
+    yritykset = yritykset || 3;
+    for (var i = 0; i < yritykset; i++) {
+      try {
+        var data = await fetch('/api/lisenssi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ koodi: koodi, laite: laiteTunnus() }),
+        }).then(function (r) { return r.json(); });
+        if (data && data.ok) return { ok: true, data: data };
+        return { ok: false, data: data }; // koodi virheellinen/vanhentunut → ei uusintayritystä
+      } catch (e) {
+        // Verkkovirhe → porrastettu odotus + hajonta (jitter), ettei koko luokka hakkaa tahdissa
+        if (i < yritykset - 1) await new Promise(function (res) { setTimeout(res, 400 * Math.pow(2, i) + Math.random() * 400); });
+      }
+    }
+    return { ok: false, verkko: true };
+  }
+
+  function tallennaLisenssiPaikallisesti(data, koodi) {
+    try {
+      localStorage.setItem(LS_LISENSSI, JSON.stringify({
+        ok: true, koodi: (data && data.koodi) || koodi, koulu: data && data.koulu,
+        tyyppi: data && data.tyyppi, voimassa_asti: data && data.voimassa_asti, tarkistettu: Date.now(),
+      }));
+    } catch (e) {}
+  }
+
+  async function autoAvaus() {
+    var ryhma = ryhmaKoodiSaatavilla();
+    if (!ryhma) return; // ei ryhmäkoodia → näytä normaali lomake
+
+    naytaLomake(false);
+    document.querySelector('h1').textContent = 'Avataan…';
+    document.querySelector('.desc').textContent = 'Kirjaudutaan sisään, hetki.';
+    nayta('', '');
+
+    var tulos = await avaaKoodilla(ryhma, 3);
+
+    if (tulos.ok) {
+      try { localStorage.setItem(LS_RYHMA, ryhma); } catch (e) {}
+      tallennaLisenssiPaikallisesti(tulos.data, ryhma);
+      if (redirectTarget) { nayta('Ohjataan…', 'ok'); window.location.href = redirectTarget; return; }
+      // Ei redirect-kohdetta → päättele luokka ryhmäkoodista
+      try {
+        var lv = await fetch('/api/jarjestys?ryhma=' + encodeURIComponent(ryhma) + '&luokat=1').then(function (r) { return r.json(); });
+        var luokat = (lv && lv.ok && Array.isArray(lv.luokat)) ? lv.luokat : [];
+        if (luokat.length === 1) { nayta('Ohjataan…', 'ok'); ohjaa(luokat[0], ryhma); return; }
+        naytaLomake(true);
+        document.querySelector('h1').textContent = 'Liity opettajan ryhmään';
+        naytaLuokkavalinta(luokat, ryhma);
+      } catch (e) {
+        naytaLomake(true);
+        document.querySelector('h1').textContent = 'Liity opettajan ryhmään';
+      }
+      return;
+    }
+
+    if (tulos.verkko) {
+      document.querySelector('h1').textContent = 'Verkko on hidas';
+      document.querySelector('.desc').textContent = 'Yhteys ei juuri nyt vastannut.';
+      naytaLomake(false);
+      var uusi = document.getElementById('digiopo-uudelleen');
+      if (!uusi) {
+        uusi = document.createElement('button');
+        uusi.id = 'digiopo-uudelleen';
+        uusi.className = 'btn';
+        uusi.textContent = 'Yritä uudelleen';
+        uusi.addEventListener('click', function () { uusi.remove(); autoAvaus(); });
+        viestiEl.parentNode.insertBefore(uusi, viestiEl);
+      }
+      return;
+    }
+
+    // Koodi ei kelpaa (esim. lisenssi vanhentunut / ryhmä poistettu) → normaali lomake
+    naytaLomake(true);
+    document.querySelector('h1').textContent = 'Liity opettajan ryhmään';
+    nayta('Linkki ei toiminut. Syötä koulukoodi opettajaltasi.', 'virhe');
+  }
+
+  autoAvaus();
 })();
 </script>
 </body>
