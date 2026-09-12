@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DigiOpo Pelihuone – pelaa ja kilpaile työelämän ja tulevaisuuden taidoissa.">
+<title>Pelihuone – DigiOpo</title>
+<style>
+  :root{
+    --bg1:#eef2fb; --bg2:#e7f6f3;
+    --ink:#20324f; --muted:#5b6b86;
+    --card:#ffffff; --line:#e4e8f0;
+    --shadow:rgba(32,50,79,.14);
+    --teal:#0f766e; --indigo:#4f46e5; --coral:#ff6b4a; --gold:#f3b430;
+    --accent:var(--indigo);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg1:#141726; --bg2:#101a22;
+      --ink:#eef1fb; --muted:#a6b0c8;
+      --card:#1d2233; --line:#2d3450;
+      --shadow:rgba(0,0,0,.45);
+      --teal:#2bbdb1; --indigo:#8b83f0; --coral:#ff7d5e; --gold:#f5c04a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; padding:20px 16px 48px;
+    background:radial-gradient(1200px 600px at 20% -10%, var(--bg2), transparent 60%), linear-gradient(160deg,var(--bg1),var(--bg2));
+  }
+  .wrap{max-width:940px; margin:0 auto;}
+
+  .takaisin-rivi{margin:0 0 14px;}
+  .takaisin-linkki{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--card); color:var(--ink); text-decoration:none;
+    font-size:.85rem; font-weight:700; padding:8px 14px; border-radius:999px;
+    box-shadow:0 2px 8px var(--shadow); border:1px solid var(--line);
+  }
+  .takaisin-linkki:hover{border-color:var(--indigo);}
+
+  header.hero{ text-align:center; margin:6px 0 26px; }
+  .hero .kruunu{ font-size:2.6rem; line-height:1; }
+  .hero h1{ font-size:clamp(1.8rem,5vw,2.5rem); margin:6px 0 4px; letter-spacing:-.01em; }
+  .hero p{ color:var(--muted); font-size:1rem; max-width:46ch; margin:0 auto; font-weight:600; }
+
+  .ruudukko{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+
+  .peli-kortti{
+    position:relative; display:flex; flex-direction:column;
+    background:var(--card); border:1px solid var(--line); border-radius:20px;
+    padding:20px 20px 18px; text-decoration:none; color:inherit;
+    box-shadow:0 6px 20px var(--shadow); overflow:hidden;
+    transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+  }
+  .peli-kortti::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:6px;
+    background:linear-gradient(90deg,var(--accent),var(--teal));
+  }
+  a.peli-kortti:hover{ transform:translateY(-3px); box-shadow:0 12px 28px var(--shadow); border-color:var(--accent); }
+  .peli-kortti .ikoni{
+    width:56px; height:56px; border-radius:16px; display:grid; place-items:center;
+    font-size:30px; margin:6px 0 12px;
+    background:color-mix(in srgb, var(--accent) 16%, var(--card));
+  }
+  .peli-kortti h2{ font-size:1.2rem; margin:0 0 6px; }
+  .peli-kortti .kuvaus{ color:var(--muted); font-size:.9rem; font-weight:600; margin:0 0 14px; flex:1; }
+  .tagit{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; }
+  .tagi{
+    font-size:.72rem; font-weight:800; letter-spacing:.02em;
+    padding:4px 9px; border-radius:999px;
+    background:color-mix(in srgb, var(--accent) 12%, var(--card));
+    color:var(--accent);
+  }
+  .pelaa{
+    display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+    background:linear-gradient(135deg,var(--indigo),var(--teal)); color:#fff;
+    font-weight:800; font-size:.95rem; padding:10px 18px; border-radius:12px;
+    box-shadow:0 4px 12px color-mix(in srgb, var(--indigo) 45%, transparent);
+  }
+
+  /* Tuleva peli -paikkakortti */
+  .peli-kortti.tulossa{
+    border-style:dashed; background:transparent; box-shadow:none;
+    align-items:center; justify-content:center; text-align:center; color:var(--muted);
+    min-height:220px;
+  }
+  .peli-kortti.tulossa::before{ display:none; }
+  .peli-kortti.tulossa .ikoni{ background:color-mix(in srgb, var(--muted) 14%, transparent); }
+  .peli-kortti.tulossa h2{ font-size:1.05rem; color:var(--ink); }
+  .peli-kortti.tulossa .kuvaus{ flex:none; }
+
+  footer{ text-align:center; color:var(--muted); font-size:.8rem; margin-top:34px; font-weight:600; }
+
+  @media (max-width:480px){
+    .ruudukko{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="takaisin-rivi">
+    <a class="takaisin-linkki" id="takaisin" href="/9luokka">← Takaisin luokan sivulle</a>
+  </div>
+
+  <header class="hero">
+    <div class="kruunu" aria-hidden="true">🎮</div>
+    <h1>Pelihuone</h1>
+    <p>Pelaa yksin tai kilpaile luokkakavereita vastaan. Uusia pelejä lisätään tänne matkan varrella.</p>
+  </header>
+
+  <div class="ruudukko">
+
+    <!-- Peli: Duuniskaba – työelämätaidot -->
+    <a class="peli-kortti" href="/pelit/duuniskaba.html" style="--accent:var(--indigo)">
+      <div class="ikoni" aria-hidden="true">🏙️</div>
+      <h2>Duuniskaba – työelämätaidot</h2>
+      <p class="kuvaus">Kierrä kaupunkia, heitä noppaa ja ratkaise työelämän tehtäviä. Kerää rahaa, nouse tasoja – ja kilpaile luokkakoodilla, kuka pärjää parhaiten!</p>
+      <div class="tagit">
+        <span class="tagi">9. luokka</span>
+        <span class="tagi">Työelämä</span>
+        <span class="tagi">Kilpailu</span>
+      </div>
+      <span class="pelaa">Pelaa →</span>
+    </a>
+
+    <!-- Paikkakortti tuleville peleille -->
+    <div class="peli-kortti tulossa" aria-hidden="true">
+      <div class="ikoni">✨</div>
+      <h2>Lisää pelejä tulossa</h2>
+      <p class="kuvaus">Tähän ilmestyy uusia pelejä myöhemmin.</p>
+    </div>
+
+  </div>
+
+  <footer>DigiOpo · Pelihuone</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // Paluulinkki oikealle luokka-asteelle (?luokka=7|8|9), oletus 9.
+  try{
+    var p = new URLSearchParams(location.search);
+    var lk = p.get("luokka");
+    if (["7","8","9"].indexOf(lk) !== -1){
+      var el = document.getElementById("takaisin");
+      if (el) el.setAttribute("href", "/" + lk + "luokka");
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
