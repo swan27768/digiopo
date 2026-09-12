@@ -351,8 +351,8 @@ button{font-family:inherit;}
         <input id="kNimi" maxlength="24" autocomplete="off" placeholder="Etunimi tai nimimerkki">
       </div>
       <div class="kfield">
-        <label for="kKoodi">Luokkakoodi</label>
-        <input id="kKoodi" maxlength="40" autocomplete="off" placeholder="esim. 9A-KEVAT">
+        <label for="kKoodi">Kilpailu (luokkasi koodi)</label>
+        <input id="kKoodi" maxlength="40" autocomplete="off" readonly aria-readonly="true" style="opacity:.8;cursor:default" placeholder="Avataan pelikoodilla">
       </div>
       <button type="button" class="next-btn" id="kSave">Liity kilpailuun</button>
       <p class="kstatus" id="kStatus"></p>
@@ -1640,9 +1640,9 @@ updateHud();
 msg.textContent = "Heitä noppaa ja lähde liikkeelle!";
 
 /* ================= KILPAILU / TULOSTAULU ================= */
-/* Kevyt kilpailu: pelaaja liittyy nimellä + luokkakoodilla, ja tulos tallentuu
-   yhteiseen tulostauluun. Toimii kun peli on julkaistu (DigiOpo/Vercel).
-   Paikallisesti avattuna peli toimii normaalisti, mutta tulostaulua ei voi hakea. */
+/* Kevyt kilpailu: pelaaja syöttää vain nimen. Luokkakoodi tulee pelin
+   avaamisen pelikoodista (esitäytetty ja lukittu). Palvelin sitoo tuloksen
+   AINA pelikoodi-evästeen ryhmään, joten koodia ei voi vaihtaa selaimessa. */
 const API_TULOKSET = '/api/tulokset';
 state.kilpailu = { nimi:'', koodi:'' };
 try{ var _pk=localStorage.getItem('digiopo-peliryhma'); if(_pk) state.kilpailu.koodi=_pk; }catch(e){}
@@ -1656,11 +1656,17 @@ const kStatus  = document.getElementById('kStatus');
 const kBoard   = document.getElementById('kBoard');
 const kEmpty   = document.getElementById('kEmpty');
 
+function paivitaKoodiKentta(koodi){
+  if(!koodi) return;
+  state.kilpailu.koodi = koodi;
+  if(kKoodiEl) kKoodiEl.value = koodi;
+}
+
 function openKisa(){
   kscrim.classList.add('open');
   kNimiEl.value = state.kilpailu.nimi;
   kKoodiEl.value = state.kilpailu.koodi;
-  if(state.kilpailu.koodi) lataaTulostaulu();
+  lataaTulostaulu();
 }
 function closeKisa(){ kscrim.classList.remove('open'); }
 
@@ -1672,38 +1678,48 @@ function renderBoard(list){
     if(state.kilpailu.nimi && t.nimi===state.kilpailu.nimi) li.className='me';
     const rank=document.createElement('span'); rank.className='rank'; rank.textContent=(i+1);
     const nm=document.createElement('span'); nm.className='nm'; nm.textContent=t.nimi;
-    const sc=document.createElement('span'); sc.className='sc'; sc.textContent='Taso '+t.taso+' \u00b7 '+t.oikein+' oikein';
-    const mo=document.createElement('span'); mo.className='money'; mo.textContent=t.raha+' \u20ac';
+    const sc=document.createElement('span'); sc.className='sc'; sc.textContent='Taso '+t.taso+' · '+t.oikein+' oikein';
+    const mo=document.createElement('span'); mo.className='money'; mo.textContent=t.raha+' €';
     li.append(rank,nm,sc,mo);
     kBoard.appendChild(li);
   });
 }
 
 async function lataaTulostaulu(){
-  const koodi=(kKoodiEl.value||state.kilpailu.koodi||'').trim();
-  if(koodi.length<3){ renderBoard([]); kStatus.textContent='Sy\u00f6t\u00e4 luokkakoodi n\u00e4hd\u00e4ksesi tulostaulun.'; return; }
-  kStatus.textContent='Haetaan tulostaulua\u2026';
+  const koodi=(state.kilpailu.koodi||'').trim();
+  kStatus.textContent='Haetaan tulostaulua…';
   try{
-    const r=await fetch(API_TULOKSET+'?koodi='+encodeURIComponent(koodi),{headers:{'Accept':'application/json'}});
-    const d=await r.json();
-    if(d && d.ok){ renderBoard(d.tulokset||[]); kStatus.textContent=''; }
-    else { renderBoard([]); kStatus.textContent='Tulostaulua ei saatu haettua.'; }
+    const r=await fetch(API_TULOKSET+(koodi?('?koodi='+encodeURIComponent(koodi)):''),{headers:{'Accept':'application/json'}});
+    const d=await r.json().catch(()=>null);
+    if(r.ok && d && d.ok){
+      paivitaKoodiKentta(d.koodi);
+      renderBoard(d.tulokset||[]);
+      kStatus.textContent='';
+    } else if(r.status===401){
+      renderBoard([]); kStatus.textContent='Avaa peli ensin pelikoodilla nähdäksesi tulostaulun.';
+    } else {
+      renderBoard([]); kStatus.textContent='Tulostaulua ei saatu haettua.';
+    }
   }catch(e){
     renderBoard([]);
-    kStatus.textContent='Tulostaulu toimii, kun peli on julkaistu palvelimelle (DigiOpo/Vercel). Paikallisesti avattuna sit\u00e4 ei voi hakea.';
+    kStatus.textContent='Tulostaulu toimii, kun peli on julkaistu palvelimelle (DigiOpo/Vercel).';
   }
 }
 
 async function lahetaTulos(){
   const k=state.kilpailu;
-  if(!k.nimi || !k.koodi) return;
+  if(!k.nimi) return;
   try{
     const r=await fetch(API_TULOKSET,{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({koodi:k.koodi, nimi:k.nimi, raha:state.money, taso:state.level, oikein:state.oikeatYhteensa})
     });
-    const d=await r.json();
-    if(d && d.ok){ renderBoard(d.tulokset||[]); if(kscrim.classList.contains('open')) kStatus.textContent='Tuloksesi l\u00e4hetettiin tulostauluun!'; }
+    const d=await r.json().catch(()=>null);
+    if(r.ok && d && d.ok){
+      paivitaKoodiKentta(d.koodi);
+      renderBoard(d.tulokset||[]);
+      if(kscrim.classList.contains('open')) kStatus.textContent='Tuloksesi lähetettiin tulostauluun!';
+    }
   }catch(e){ /* offline: yksinpeli jatkuu normaalisti */ }
 }
 
@@ -1714,12 +1730,12 @@ if(kisaBtn){
   document.getElementById('kRefresh').addEventListener('click', lataaTulostaulu);
   document.getElementById('kSave').addEventListener('click', ()=>{
     const nimi=kNimiEl.value.trim().slice(0,24);
-    const koodi=kKoodiEl.value.trim().slice(0,40);
     if(!nimi){ kStatus.textContent='Kirjoita ensin nimesi.'; kNimiEl.focus(); return; }
-    if(koodi.length<3){ kStatus.textContent='Kirjoita luokkakoodi (v\u00e4hint\u00e4\u00e4n 3 merkki\u00e4).'; kKoodiEl.focus(); return; }
-    state.kilpailu.nimi=nimi; state.kilpailu.koodi=koodi;
-    kisaBtn.textContent='\ud83c\udfc6 '+nimi;
-    kStatus.textContent='Liityit kilpailuun koodilla '+koodi+'. Tuloksesi p\u00e4ivittyy tulostauluun automaattisesti.';
+    state.kilpailu.nimi=nimi;
+    kisaBtn.textContent='🏆 '+nimi;
+    kStatus.textContent = state.kilpailu.koodi
+      ? 'Liityit kilpailuun. Tuloksesi päivittyy tulostauluun automaattisesti.'
+      : 'Nimi tallennettu. Tulostaulu avautuu, kun peli on avattu pelikoodilla.';
     lahetaTulos();
   });
 }
