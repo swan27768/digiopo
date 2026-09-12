@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Työelämän kaupunki</title>
+<style>
+/* ---------- Fonttipinot (ei ulkoisia riippuvuuksia) ---------- */
+/* --font-body: luettava leipätekstifontti; --font-display: pyöreä otsikkofontti
+   (ui-rounded antaa Applella pyöreän Baloo-tyylisen ilmeen). */
+:root{
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Teemavärit ---------- */
+:root{
+  --sky-top:#cfe6f3; --sky-bot:#f4e8d4;
+  --ground:#faf6f1;
+  --ink:#2a2440; --ink-soft:#6b6480;
+  --surface:#ffffff; --surface-2:#f4efe8;
+  --line:#e7dfd1;
+  --coral:#ff6b4a; --teal:#12a5a0; --gold:#f3b430;
+  --green:#5bb84f; --blue:#4c8df0; --purple:#8b6de0;
+  --pink:#f06b9a; --amber:#f0902f; --well:#16b5c6; --summer:#a6c62b; --entre:#b14ad6;
+  --good:#219a63; --bad:#e0524b;
+  --shadow:rgba(42,36,64,.16);
+  --tile-line:rgba(255,255,255,.55);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --sky-top:#171a3d; --sky-bot:#0d1226;
+    --ground:#14121f;
+    --ink:#f3eeff; --ink-soft:#a79fc4;
+    --surface:#221d38; --surface-2:#2b2647;
+    --line:#39325c;
+    --coral:#ff7d5e; --teal:#22bdb7; --gold:#f5c04a;
+    --green:#6fca5f; --blue:#6aa2f6; --purple:#a488ee;
+    --pink:#f584ac; --amber:#f7a552; --well:#38ccdd; --summer:#c2dd45; --entre:#c66ae6;
+    --good:#3cc082; --bad:#f0685f;
+    --shadow:rgba(0,0,0,.45);
+    --tile-line:rgba(255,255,255,.18);
+  }
+}
+:root[data-theme="dark"]{
+  --sky-top:#171a3d; --sky-bot:#0d1226;
+  --ground:#14121f;
+  --ink:#f3eeff; --ink-soft:#a79fc4;
+  --surface:#221d38; --surface-2:#2b2647;
+  --line:#39325c;
+  --coral:#ff7d5e; --teal:#22bdb7; --gold:#f5c04a;
+  --green:#6fca5f; --blue:#6aa2f6; --purple:#a488ee;
+  --pink:#f584ac; --amber:#f7a552;
+  --good:#3cc082; --bad:#f0685f;
+  --shadow:rgba(0,0,0,.45);
+  --tile-line:rgba(255,255,255,.18);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:var(--font-display);}
+button{font-family:inherit;}
+
+.wrap{max-width:940px; margin:0 auto; padding-inline:16px; padding-block:18px 40px;}
+
+/* ---------- Ylätunniste ---------- */
+.top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px;}
+.logo{
+  width:46px;height:46px;border-radius:14px;flex:none;
+  background:linear-gradient(150deg,var(--coral),var(--gold));
+  display:grid;place-items:center;font-size:26px;
+  box-shadow:0 6px 16px var(--shadow);
+}
+.top h1{font-size:clamp(1.5rem,4.4vw,2.1rem); margin:0; line-height:1; letter-spacing:-.01em; text-wrap:balance;}
+.top .sub{margin:3px 0 0; color:var(--ink-soft); font-size:.9rem; font-weight:600;}
+.theme-btn{
+  margin-left:auto; border:1px solid var(--line); background:var(--surface);
+  color:var(--ink); border-radius:999px; padding:8px 14px; font-weight:700;
+  cursor:pointer; font-size:.85rem; box-shadow:0 2px 6px var(--shadow);
+}
+.theme-btn:hover{border-color:var(--coral);}
+
+/* ---------- Mittaristo ---------- */
+.hud{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;
+}
+.stat{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:12px 14px; box-shadow:0 3px 10px var(--shadow); position:relative; overflow:hidden;
+}
+.stat::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px;}
+.stat.money::before{background:var(--teal);}
+.stat.level::before{background:var(--purple);}
+.stat.goal::before{background:var(--gold);}
+.stat .k{font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:800;}
+.stat .v{font-family:var(--font-display); font-size:1.5rem; line-height:1.1; margin-top:2px; font-variant-numeric:tabular-nums;}
+.stat .v small{font-size:.8rem; color:var(--ink-soft); font-weight:700;}
+
+/* ---------- Lauta ---------- */
+.board-card{
+  position:relative;
+  background:linear-gradient(180deg,var(--sky-top),var(--sky-bot));
+  border:1px solid var(--line); border-radius:22px; padding:6px;
+  box-shadow:0 8px 26px var(--shadow); overflow:hidden;
+}
+#board{position:relative; z-index:1; display:block; width:100%; height:auto;}
+.tile-top{stroke:var(--tile-line); stroke-width:1.2;}
+.pawn{filter:drop-shadow(0 4px 3px rgba(0,0,0,.28)); transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.pawn .marker{animation:bob 1.1s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.5px)}}
+
+/* ---------- Ohjaus ---------- */
+.controls{
+  display:flex; align-items:center; gap:14px; margin-top:14px; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--line); border-radius:18px;
+  padding:12px 16px; box-shadow:0 3px 10px var(--shadow);
+}
+.die{
+  width:58px;height:58px;flex:none;border-radius:14px;
+  background:var(--surface-2); border:2px solid var(--line);
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  padding:9px; gap:3px;
+}
+.die span{border-radius:50%; background:transparent;}
+.die span.on{background:var(--coral);}
+.die.rolling{animation:shake .5s ease;}
+@keyframes shake{
+  0%,100%{transform:translateY(0) rotate(0)}
+  25%{transform:translateY(-6px) rotate(-8deg)}
+  50%{transform:translateY(0) rotate(6deg)}
+  75%{transform:translateY(-3px) rotate(-4deg)}
+}
+.msg{flex:1; min-width:150px; font-weight:700; color:var(--ink-soft); font-size:.95rem;}
+.roll-btn{
+  border:none; cursor:pointer; color:#fff; font-weight:800; font-size:1.05rem;
+  font-family:"Baloo 2",sans-serif; padding:14px 22px; border-radius:14px;
+  background:linear-gradient(150deg,var(--coral),var(--amber));
+  box-shadow:0 5px 14px rgba(255,107,74,.4); transition:transform .12s, filter .12s;
+}
+.roll-btn:hover{filter:brightness(1.05);}
+.roll-btn:active{transform:translateY(2px);}
+.roll-btn:disabled{opacity:.5; cursor:default; box-shadow:none; filter:grayscale(.3);}
+
+/* ---------- Selite ---------- */
+.legend{display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:14px; padding:0 4px;}
+.legend .li{display:flex; align-items:center; gap:6px; font-size:.82rem; font-weight:700; color:var(--ink-soft);}
+.legend .dot{width:15px;height:15px;border-radius:5px; flex:none; box-shadow:0 1px 2px var(--shadow);}
+
+/* ---------- Modaali ---------- */
+.scrim{
+  position:fixed; inset:0; background:rgba(20,17,32,.55); backdrop-filter:blur(3px);
+  display:grid; place-items:center; padding:16px; z-index:50; opacity:0; pointer-events:none;
+  transition:opacity .2s;
+}
+.scrim.open{opacity:1; pointer-events:auto;}
+.card{
+  width:100%; max-width:460px; max-height:90vh; overflow-y:auto;
+  background:var(--surface); border-radius:22px; box-shadow:0 20px 50px rgba(0,0,0,.4);
+  transform:translateY(14px) scale(.98); transition:transform .25s cubic-bezier(.34,1.4,.64,1);
+  border:1px solid var(--line);
+}
+.scrim.open .card{transform:none;}
+.card-head{padding:18px 20px 14px; color:#fff; position:relative;}
+.card-head .cat{font-size:.75rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; opacity:.9;}
+.card-head h2{margin:4px 0 0; font-size:1.35rem; line-height:1.1; text-wrap:balance;}
+.card-head .ico{position:absolute; right:18px; top:14px; font-size:30px;}
+.card-body{padding:18px 20px 22px;}
+.q{font-size:1.05rem; font-weight:700; line-height:1.4; margin:0 0 14px;}
+.opts{display:flex; flex-direction:column; gap:9px;}
+.opt{
+  text-align:left; border:2px solid var(--line); background:var(--surface-2);
+  color:var(--ink); border-radius:13px; padding:12px 14px; font-size:.98rem; font-weight:700;
+  cursor:pointer; transition:border-color .12s, background .12s, transform .08s;
+}
+.opt:hover:not(:disabled){border-color:var(--coral);}
+.opt:active:not(:disabled){transform:scale(.99);}
+.opt:disabled{cursor:default;}
+.opt.correct{border-color:var(--good); background:color-mix(in srgb,var(--good) 16%,var(--surface));}
+.opt.wrong{border-color:var(--bad); background:color-mix(in srgb,var(--bad) 14%,var(--surface));}
+.opt .tag{float:right; font-family:"Baloo 2",sans-serif; font-weight:800;}
+.opt.correct .tag{color:var(--good);}
+.opt.wrong .tag{color:var(--bad);}
+
+/* toimintatehtävä: järjestä */
+.order-list{list-style:none; margin:0 0 6px; padding:0; display:flex; flex-direction:column; gap:8px;}
+.order-item{
+  display:flex; align-items:center; gap:10px; background:var(--surface-2);
+  border:2px solid var(--line); border-radius:13px; padding:10px 12px; font-weight:700;
+}
+.order-item .txt{flex:1; font-size:.95rem;}
+.order-item .num{width:26px;height:26px;flex:none;border-radius:8px;background:var(--purple);color:#fff;
+  display:grid;place-items:center;font-family:"Baloo 2";font-weight:800;font-size:.9rem;}
+.mv{width:30px;height:28px;border:1px solid var(--line);background:var(--surface);border-radius:8px;
+  cursor:pointer;font-weight:900;color:var(--ink-soft);font-size:.85rem;}
+.mv:hover:not(:disabled){border-color:var(--purple);color:var(--purple);}
+.mv:disabled{opacity:.3;cursor:default;}
+.order-item.ok{border-color:var(--good);}
+.order-item.no{border-color:var(--bad);}
+
+/* toimintatehtävä: sijoitus */
+.invest .amt{font-family:"Baloo 2";font-size:1.6rem;text-align:center;font-variant-numeric:tabular-nums;margin:2px 0 6px;}
+.slider{width:100%; accent-color:var(--teal); height:26px;}
+.pick{display:flex; gap:9px; margin:12px 0 4px;}
+.pick .opt{flex:1; text-align:center;}
+.pick .opt.sel{border-color:var(--teal); background:color-mix(in srgb,var(--teal) 16%,var(--surface));}
+.hint{font-size:.85rem; color:var(--ink-soft); font-weight:600; line-height:1.4; margin:8px 0 0;}
+
+/* palaute */
+.fb{margin-top:16px; border-radius:14px; padding:13px 15px; font-weight:700; line-height:1.45; font-size:.95rem;
+  border:1px solid var(--line); background:var(--surface-2); display:none;}
+.fb.show{display:block; animation:pop .25s ease;}
+.fb .head{font-family:"Baloo 2"; font-size:1.05rem; margin-bottom:3px; display:flex; align-items:center; gap:7px;}
+.fb.good .head{color:var(--good);} .fb.bad .head{color:var(--bad);}
+.fb .money{font-family:"Baloo 2"; font-variant-numeric:tabular-nums;}
+@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}
+.next-btn{
+  margin-top:15px; width:100%; border:none; cursor:pointer; color:#fff; font-weight:800;
+  font-family:"Baloo 2"; font-size:1.05rem; padding:13px; border-radius:13px;
+  background:linear-gradient(150deg,var(--teal),var(--green)); box-shadow:0 5px 14px rgba(18,165,160,.35);
+}
+.next-btn:active{transform:translateY(2px);}
+.act-btn{margin-top:6px;}
+
+/* tason yhteenveto */
+.summary .card-head{background:linear-gradient(150deg,var(--purple),var(--blue));}
+.summary ul{margin:10px 0 0; padding-left:20px;}
+.summary li{margin:6px 0; font-weight:600; line-height:1.4;}
+.stars{font-size:1.8rem; text-align:center; margin:6px 0 2px; letter-spacing:4px;}
+
+.foot{margin-top:22px; text-align:center; color:var(--ink-soft); font-size:.8rem; font-weight:600; line-height:1.5;}
+
+@media (max-width:520px){
+  .hud{grid-template-columns:1fr 1fr;}
+  .stat.goal{grid-column:1/-1;}
+  .roll-btn{flex:1;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important;}
+}
+
+/* ---------- Kilpailu / tulostaulu ---------- */
+.topbtns{margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.topbtns .theme-btn{margin-left:0;}
+.mini-btn{border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  border-radius:999px; padding:8px 14px; font-weight:700; cursor:pointer; font-size:.85rem;
+  box-shadow:0 2px 6px var(--shadow); font-family:inherit;}
+.mini-btn:hover{border-color:var(--coral);}
+.kfield{display:flex; flex-direction:column; gap:4px; margin:0 0 12px;}
+.kfield label{font-weight:800; font-size:.75rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em;}
+.kfield input{border:2px solid var(--line); background:var(--surface-2); color:var(--ink);
+  border-radius:12px; padding:11px 13px; font-size:1rem; font-weight:700; font-family:inherit;}
+.kfield input:focus{outline:none; border-color:var(--coral);}
+.kstatus{font-size:.85rem; color:var(--ink-soft); font-weight:600; margin:10px 0 0; min-height:1.1em; line-height:1.4;}
+.lb-title{margin:16px 0 0; font-size:1rem; font-family:var(--font-display);}
+.lb{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:6px;}
+.lb li{display:flex; align-items:center; gap:10px; background:var(--surface-2);
+  border:1px solid var(--line); border-radius:12px; padding:9px 11px; font-weight:700;}
+.lb li.me{border-color:var(--coral); background:color-mix(in srgb,var(--coral) 12%,var(--surface));}
+.lb .rank{width:26px; height:26px; flex:none; border-radius:8px; background:var(--purple); color:#fff;
+  display:grid; place-items:center; font-family:var(--font-display); font-weight:800; font-size:.9rem;}
+.lb li:nth-child(1) .rank{background:var(--gold);}
+.lb li:nth-child(2) .rank{background:#b9c0cc;}
+.lb li:nth-child(3) .rank{background:#cf9b63;}
+.lb .nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.lb .sc{font-size:.78rem; color:var(--ink-soft); font-weight:700; white-space:nowrap;}
+.lb .money{font-family:var(--font-display); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.lb-empty{color:var(--ink-soft); font-weight:600; font-size:.9rem; margin:10px 0 0;}
+.card-head .close{position:absolute; right:14px; top:12px; border:none; background:rgba(255,255,255,.25);
+  color:#fff; width:30px; height:30px; border-radius:50%; font-size:20px; line-height:1; cursor:pointer;}
+.card-head .close:hover{background:rgba(255,255,255,.4);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="27" height="27">
+        <g fill="#fff">
+          <rect x="2.5" y="12" width="4.5" height="9" rx="1"/>
+          <rect x="8.2" y="5.5" width="4.6" height="15.5" rx="1"/>
+          <path d="M14.5 21V9.5l3-2 3 2V21z"/>
+        </g>
+        <g fill="rgba(255,255,255,.45)">
+          <rect x="3.6" y="13.4" width="2.3" height="1.4"/>
+          <rect x="9.4" y="7.2" width="2.2" height="1.3"/><rect x="9.4" y="10" width="2.2" height="1.3"/>
+          <rect x="16" y="11.4" width="2.6" height="1.3"/><rect x="16" y="14.2" width="2.6" height="1.3"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <h1>Työelämän kaupunki</h1>
+      <p class="sub">Kierrä kaupunki ja opi työelämän taidot &middot; 9. luokka</p>
+    </div>
+    <div class="topbtns">
+      <button class="mini-btn" id="kisaBtn" type="button">🏆 Kilpailu</button>
+      <button class="theme-btn" id="themeBtn" type="button">Tumma teema</button>
+    </div>
+  </header>
+
+  <section class="hud" aria-label="Pelin tilanne">
+    <div class="stat money"><div class="k">Rahaa</div><div class="v" id="sMoney">120 <small>€</small></div></div>
+    <div class="stat level"><div class="k">Taso</div><div class="v" id="sLevel">1</div></div>
+    <div class="stat goal"><div class="k">Tavoite</div><div class="v" id="sGoal">Kierrä lauta</div></div>
+  </section>
+
+  <div class="board-card">
+    <svg id="board" viewBox="-235 -104 470 300" role="img" aria-label="Isometrinen pelilauta"></svg>
+  </div>
+
+  <div class="controls">
+    <div class="die" id="die" aria-hidden="true"></div>
+    <p class="msg" id="msg">Heitä noppaa ja lähde liikkeelle!</p>
+    <button class="roll-btn" id="rollBtn" type="button">Heitä noppaa</button>
+  </div>
+
+  <div class="legend" id="legend" aria-label="Ruutujen selitykset"></div>
+
+  <p class="foot">
+    Prototyyppi &middot; Yksi taso, yksi lauta. Peli tukee useampia tasoja: kun kierrät laudan,
+    siirryt seuraavalle tasolle ja tehtävät vaihtuvat.
+  </p>
+</div>
+
+<!-- Tehtävämodaali -->
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="taskTitle">
+  <div class="card" id="card">
+    <div class="card-head" id="cardHead">
+      <div class="cat" id="taskCat">Tehtävä</div>
+      <h2 id="taskTitle">Otsikko</h2>
+      <div class="ico" id="taskIco" aria-hidden="true">📋</div>
+    </div>
+    <div class="card-body" id="cardBody"></div>
+  </div>
+</div>
+
+<!-- Kilpailumodaali (kevyt kilpailu luokkakoodilla) -->
+<div class="scrim" id="kscrim" role="dialog" aria-modal="true" aria-labelledby="kTitle">
+  <div class="card">
+    <div class="card-head" style="background:linear-gradient(150deg,var(--purple),var(--blue))">
+      <div class="cat">Kilpailu</div>
+      <h2 id="kTitle">Luokan tulostaulu</h2>
+      <button type="button" class="close" id="kClose" aria-label="Sulje">×</button>
+    </div>
+    <div class="card-body">
+      <div class="kfield">
+        <label for="kNimi">Nimesi</label>
+        <input id="kNimi" maxlength="24" autocomplete="off" placeholder="Etunimi tai nimimerkki">
+      </div>
+      <div class="kfield">
+        <label for="kKoodi">Luokkakoodi</label>
+        <input id="kKoodi" maxlength="40" autocomplete="off" placeholder="esim. 9A-KEVAT">
+      </div>
+      <button type="button" class="next-btn" id="kSave">Liity kilpailuun</button>
+      <p class="kstatus" id="kStatus"></p>
+      <h3 class="lb-title">Tulostaulu</h3>
+      <ol class="lb" id="kBoard"></ol>
+      <p class="lb-empty" id="kEmpty" hidden>Ei vielä tuloksia tällä koodilla.</p>
+      <button type="button" class="mini-btn" id="kRefresh" style="margin-top:12px">Päivitä tulostaulu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ---- Kategoriat: väri + ikoni + nimi ---- */
+const CAT = {
+  start:  {name:"Palkkapäivä",         color:getVar('--gold'),  ico:"💰"},
+  tyonhaku:{name:"Työnhaku",           color:getVar('--blue'),  ico:"📄"},
+  saannot:{name:"Työpaikan pelisäännöt",color:getVar('--coral'), ico:"⏰"},
+  vuoro:  {name:"Vuorovaikutus & tiimi",color:getVar('--green'), ico:"💬"},
+  raha:   {name:"Raha & sopimukset",   color:getVar('--purple'),ico:"📝"},
+  porssi: {name:"Pörssi & sijoittaminen",color:getVar('--teal'), ico:"📈"},
+  riski:  {name:"Riskit & houkutukset",color:getVar('--amber'), ico:"⚠️"},
+  sattuma:{name:"Sattuma",             color:getVar('--pink'),  ico:"🎁"},
+  vero:   {name:"Verottaja",           color:getVar('--ink-soft'),ico:"🧾"},
+  tet:    {name:"TET-tori",            color:getVar('--green'), ico:"🤝"},
+  hyvinvointi:{name:"Hyvinvointi & palautuminen", color:getVar('--well'), ico:"🛋️"},
+  kesatyo:{name:"Kesätyö", color:getVar('--summer'), ico:"☀️"},
+  yrittaminen:{name:"Yrittäminen", color:getVar('--entre'), ico:"💡"},
+};
+function getVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+
+/* ---- Laudan ruudut (16 kpl, myötäpäivään) ---- */
+const TILES = [
+  {g:[0,0], cat:"start"},
+  {g:[1,0], cat:"tyonhaku"},
+  {g:[2,0], cat:"saannot"},
+  {g:[3,0], cat:"vuoro"},
+  {g:[4,0], cat:"sattuma"},
+  {g:[4,1], cat:"raha"},
+  {g:[4,2], cat:"porssi"},
+  {g:[4,3], cat:"riski"},
+  {g:[4,4], cat:"vero"},
+  {g:[3,4], cat:"kesatyo"},
+  {g:[2,4], cat:"vuoro"},
+  {g:[1,4], cat:"hyvinvointi"},
+  {g:[0,4], cat:"tet"},
+  {g:[0,3], cat:"porssi"},
+  {g:[0,2], cat:"riski"},
+  {g:[0,1], cat:"yrittaminen"},
+];
+
+/* ---- Pelin tila ---- */
+const state = {
+  money:120,
+  level:1,
+  pos:0,
+  salary:60,
+  busy:false,
+  bankPools:{},   // sekoitetut tehtävät per kategoria
+  learned:new Set(),
+  correctThisLap:0,
+  tasksThisLap:0,
+};
+
+/* ================= LAUDAN PIIRTO ================= */
+const TW=64, TH=32, BLK=15, CBLK=24;
+const svg=document.getElementById('board');
+const SVGNS="http://www.w3.org/2000/svg";
+const SPREAD=1.28;                 // ruutujen väljyys -> isompi keskiaukio
+const isoX=(c,r)=> (c-r)*(TW/2)*SPREAD;
+const isoY=(c,r)=> (c+r)*(TH/2)*SPREAD;
+let tileNodes=[];
+
+function shade(hex,amt){ // tummenna/vaalenna hex
+  let h=hex.replace('#',''); if(h.length===3)h=h.split('').map(x=>x+x).join('');
+  let r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+  r=Math.max(0,Math.min(255,Math.round(r+amt)));
+  g=Math.max(0,Math.min(255,Math.round(g+amt)));
+  b=Math.max(0,Math.min(255,Math.round(b+amt)));
+  return `rgb(${r},${g},${b})`;
+}
+function mk(tag,attrs){const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+/* Rakennukset per kategoria: tavalliset talot, oma silhuetti kullekin.
+   Verottaja ja pörssi ovat korkeita torneja, osa on matalia. */
+const BUILD = {
+  start:      {style:"object", kind:"wallet"},     // lompakko + setelit
+  tyonhaku:   {style:"object", kind:"cv"},         // CV + kynä
+  saannot:    {style:"object", kind:"clock"},      // herätyskello
+  vuoro:      {style:"object", kind:"talk"},       // puhekuplat
+  raha:       {style:"object", kind:"contract"},   // sopimus + sinetti
+  porssi:     {style:"object", kind:"coins"},      // kolikkopinot + nuoli ylös
+  riski:      {style:"object", kind:"warning"},    // varoituskolmio
+  sattuma:    {style:"object", kind:"gift"},       // lahjapaketti
+  vero:       {style:"object", kind:"receipt"},    // verolomake
+  tet:        {style:"object", kind:"briefcase"},  // salkku
+  hyvinvointi:{style:"object", kind:"sofa"},       // sohva + tyynyt
+  kesatyo:    {style:"object", kind:"summer"},     // aurinko + jäätelö
+  yrittaminen:{style:"object", kind:"idea"},       // hehkulamppu
+};
+const pts = a => a.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ');
+
+
+/* Kaupungin siluetti laudan taakse.
+   Päivä: vaaleat talot ja vihreät puut. Yö: tummat talot, valot ikkunoissa. */
+function drawSkyline(dark){
+  const g=mk("g",{}); svg.appendChild(g);
+  const put=(t,a)=>g.appendChild(mk(t,a));
+  const baseY=-46;
+  const wall = dark?"#2b2d55":"#b7c4d3";
+  const wall2= dark?"#232549":"#a6b5c7";
+  const roof = dark?"#363a6b":"#c9d5e0";
+  const winOff = dark?"#3b3f72":"#dce6f0";
+  const winOn  = "#ffd97a";
+  let seed=7; const rnd=()=> (seed=(seed*9301+49297)%233280)/233280;
+  // maanpinta siluetin alle
+  put("rect",{x:-250,y:baseY,width:500,height:14,fill:dark?"#1a1b36":"#c6ccd6",opacity:.95});
+  const houses=[]; let hx=-252;
+  while(hx<252){ const w=15+Math.round(rnd()*19); houses.push({x:hx,w,h:18+Math.round(rnd()*32)}); hx+=w+3+Math.round(rnd()*7); }
+  houses.forEach((b,i)=>{
+    put("rect",{x:b.x,y:baseY-b.h,width:b.w,height:b.h,fill:(i%2)?wall:wall2});
+    put("rect",{x:b.x-1.6,y:baseY-b.h-3.4,width:b.w+3.2,height:3.6,rx:1,fill:roof});
+    const cols=Math.max(2,Math.floor((b.w-5)/6)), rows=Math.max(2,Math.floor((b.h-7)/8));
+    for(let c=0;c<cols;c++) for(let r=0;r<rows;r++){
+      const on = dark && rnd()<0.58;
+      put("rect",{x:b.x+3.5+c*6,y:baseY-b.h+5.5+r*8,width:3.2,height:4.4,rx:.6,
+        fill:on?winOn:winOff, opacity:on?.95:(dark?.35:.6)});
+      if(on) put("rect",{x:b.x+2.6+c*6,y:baseY-b.h+4.6+r*8,width:5,height:6.2,rx:1.4,fill:winOn,opacity:.18});
+    }
+  });
+  // puut siluetin eteen: päivällä kirkkaan vihreät
+  const trunk=dark?"#3a2e29":"#6b4a2c";
+  const leaf =dark?"#1e4633":"#4f9e46";
+  const leaf2=dark?"#27593f":"#6cbd5c";
+  const tree=(tx,s)=>{
+    put("rect",{x:tx-1.4*s,y:baseY-6*s,width:2.8*s,height:6.6*s,rx:1,fill:trunk});
+    put("circle",{cx:tx,cy:baseY-9.5*s,r:5.6*s,fill:leaf});
+    put("circle",{cx:tx-2.5*s,cy:baseY-11.6*s,r:3.4*s,fill:leaf2});
+    put("circle",{cx:tx+2.9*s,cy:baseY-10.4*s,r:3*s,fill:leaf2});
+  };
+  seed=19; let tx=-246;
+  while(tx<250){ tree(tx, 0.85+rnd()*0.75); tx+=15+rnd()*17; }
+}
+
+function drawBoard(){
+  svg.textContent="";
+  tileNodes=[];
+  const cx=isoX(2,2), cy=isoY(2,2);
+  const dark=currentDark();
+  drawSkyline(dark);
+  // katupohja (asfaltti) korttelien väliin
+  svg.appendChild(mk("polygon",{points:facePoints(cx,cy,470,235,0).top, fill: dark?"#2b2e3a":"#c3c6ce", opacity:0.8}));
+  drawStreets(cx,cy,dark);
+  // istutukset ja eläimet (suoraan kadulle, ei nurmea)
+  drawPark(cx,cy);
+  // autot: takaryhmä (rakennusten taakse)
+  carsBack=mk("g",{}); svg.appendChild(carsBack);
+
+  // ruudut takaa eteen (painter's algorithm)
+  const order=TILES.map((t,i)=>i).sort((a,b)=>{
+    const A=TILES[a].g, B=TILES[b].g; return (A[0]+A[1])-(B[0]+B[1]);
+  });
+  for(const i of order){
+    const t=TILES[i], [c,r]=t.g;
+    const cat=CAT[t.cat];
+    const isCorner=(c===0||c===4)&&(r===0||r===4);
+    const h=isCorner?CBLK:BLK;
+    const x=isoX(c,r), y=isoY(c,r);
+    const P=facePoints(x,y,TW,TH,h);
+    const g=mk("g",{class:"tile-g","data-i":i});
+    // alusta (värikoodi säilyy)
+    g.appendChild(mk("polygon",{points:P.left, fill:shade(cat.color,-58)}));
+    g.appendChild(mk("polygon",{points:P.right,fill:shade(cat.color,-30)}));
+    g.appendChild(mk("polygon",{points:P.top, fill:shade(cat.color,18), class:"tile-top"}));
+    // rakennus
+    drawBuilding(g, x, y-h, t.cat);
+    svg.appendChild(g);
+    tileNodes[i]={x,y,h};
+  }
+  // autot: eturyhmä (rakennusten eteen)
+  carsFront=mk("g",{}); svg.appendChild(carsFront);
+  startCars(cx,cy,dark);
+  drawPawn();
+}
+
+/* Keskuspuisto: pelto, lampi, kasvit, kukat ja eläimet */
+function drawPark(cx,cy){
+  // istutukset, kukat ja eläimet keskiaukiolla — ei nurmea, suoraan kadulle
+  drawFlowers(cx-13,cy-3); drawFlowers(cx+11,cy-9); drawFlowers(cx+2,cy+11);
+  const items=[
+    {y:cy-14, f:()=>drawTree(cx-2, cy-14,"round",1.15)},
+    {y:cy-8,  f:()=>drawTree(cx+15,cy-8, "pine", 1.05)},
+    {y:cy-2,  f:()=>drawTree(cx-16,cy-2, "round",1.05)},
+    {y:cy+3,  f:()=>drawRabbit(cx+8, cy+3)},
+    {y:cy+8,  f:()=>drawTree(cx+16,cy+8, "round",1.1)},
+    {y:cy+12, f:()=>drawDog(cx-15, cy+12)},
+    {y:cy+15, f:()=>drawTree(cx-1, cy+15,"bush", 1.15)},
+  ].sort((a,b)=>a.y-b.y);
+  items.forEach(o=>o.f());
+}
+/* Kadut: keskiaukio + kaistaviivat + reunakivet */
+function drawStreets(cx,cy,dark){
+  const lane = dark?"#5c6274":"#eef0f4";
+  const plaza = dark?"#232634":"#b6b9c2";
+  // keskiaukio (kiertoliittymä)
+  svg.appendChild(mk("ellipse",{cx,cy,rx:70,ry:35,fill:plaza}));
+  // kaistaviivat kahta iso-akselia pitkin
+  const L=150, u=2/Math.sqrt(5), v=1/Math.sqrt(5);
+  svg.appendChild(mk("line",{x1:cx-u*L,y1:cy-v*L,x2:cx+u*L,y2:cy+v*L,stroke:lane,"stroke-width":"2.2","stroke-dasharray":"7 9",opacity:.85}));
+  svg.appendChild(mk("line",{x1:cx-u*L,y1:cy+v*L,x2:cx+u*L,y2:cy-v*L,stroke:lane,"stroke-width":"2.2","stroke-dasharray":"7 9",opacity:.85}));
+  // kiertoliittymän kaistaviiva
+  svg.appendChild(mk("ellipse",{cx,cy,rx:58,ry:29,fill:"none",stroke:lane,"stroke-width":"1.8","stroke-dasharray":"6 8",opacity:.7}));
+  // suojatiet kiertoliittymän uloskäynneillä
+  const d1=[u,v], d2=[u,-v];
+  const crossing=(px,py,along,across)=>{
+    for(let j=-1;j<=1;j++){
+      const bx=px+j*4.5*along[0], by=py+j*4.5*along[1];
+      svg.appendChild(mk("line",{x1:bx-across[0]*7,y1:by-across[1]*7,x2:bx+across[0]*7,y2:by+across[1]*7,
+        stroke:lane,"stroke-width":"2.6",opacity:.9}));
+    }
+  };
+  crossing(cx+u*82,cy+v*82,d1,d2); crossing(cx-u*82,cy-v*82,d1,d2);
+  crossing(cx+u*82,cy-v*82,d2,d1); crossing(cx-u*82,cy+v*82,d2,d1);
+  // katulamput kiertoliittymän ympärillä
+  [[92,46],[-92,46],[92,-46],[-92,-46]].forEach(o=>drawStreetlight(cx+o[0],cy+o[1]));
+}
+function drawStreetlight(x,ybase){
+  svg.appendChild(mk("line",{x1:x,y1:ybase,x2:x,y2:ybase-16,stroke:"#7b8291","stroke-width":"1.6"}));
+  svg.appendChild(mk("line",{x1:x,y1:ybase-16,x2:x+4,y2:ybase-16,stroke:"#7b8291","stroke-width":"1.4"}));
+  svg.appendChild(mk("circle",{cx:x+4,cy:ybase-14.5,r:4,fill:"#ffda4d",opacity:.28}));
+  svg.appendChild(mk("circle",{cx:x+4,cy:ybase-14.5,r:2.1,fill:"#ffda4d"}));
+}
+/* Auto (yksinkertainen) */
+function drawCar(g,x,y,col){
+  g.appendChild(mk("ellipse",{cx:x,cy:y+3.4,rx:7.5,ry:2.4,fill:"rgba(0,0,0,.22)"}));
+  g.appendChild(mk("rect",{x:x-6.5,y:y-1,width:13,height:2,rx:0.8,fill:"#2b2b2b"}));
+  g.appendChild(mk("rect",{x:x-6.8,y:y-4,width:13.6,height:5.2,rx:2.4,fill:col}));
+  g.appendChild(mk("rect",{x:x-3.6,y:y-6,width:7.6,height:3.4,rx:1.6,fill:shade(col,60)}));
+  g.appendChild(mk("circle",{cx:x+6.2,cy:y-1.4,r:1.1,fill:"#ffe59a"}));
+  g.appendChild(mk("circle",{cx:x-6.2,cy:y-1.4,r:1,fill:"#c23b3b"}));
+}
+/* Autot: kiertoliittymä + reunakatujen kehä. Syvyys jaettu (taakse/eteen). */
+function startCars(cx,cy,dark){
+  if(carAnim){cancelAnimationFrame(carAnim); carAnim=null;}
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const cars=[
+    // kiertoliittymä (keskellä)
+    {a:0,   rx:58, ry:29, sp:0.006,  c:"#e0524b"},
+    {a:2.1, rx:58, ry:29, sp:0.006,  c:"#4c8df0"},
+    {a:4.2, rx:58, ry:29, sp:0.006,  c:"#f3b430"},
+    // reunakadut (kehä laudan reunalla)
+    {a:0.3, rx:196, ry:98, sp:0.0026, c:"#5bb84f"},
+    {a:1.6, rx:196, ry:98, sp:0.0026, c:"#8b6de0"},
+    {a:2.9, rx:196, ry:98, sp:0.0026, c:"#e0524b"},
+    {a:4.1, rx:196, ry:98, sp:0.0026, c:"#f0902f"},
+    {a:5.3, rx:196, ry:98, sp:0.0026, c:"#4c8df0"},
+  ];
+  const u=2/Math.sqrt(5), v=1/Math.sqrt(5);
+  const statics=[
+    // pysäköidyt autot poikkikaduilla
+    {x:cx+u*112,y:cy+v*112,kind:"car",c:"#e0524b"},
+    {x:cx-u*112,y:cy-v*112,kind:"car",c:"#4c8df0"},
+    {x:cx-u*112,y:cy+v*112,kind:"car",c:"#8b6de0"},
+    {x:cx+u*112,y:cy-v*112,kind:"car",c:"#5bb84f"},
+    // jalankulkijat (keskiaukiolla ja suojateiden luona)
+    {x:cx-16,y:cy+28,kind:"ped",sh:"#e0524b",s:0.9},
+    {x:cx+19,y:cy+24,kind:"ped",sh:"#4c8df0",s:0.85},
+    {x:cx+u*82+5,y:cy+v*82+5,kind:"ped",sh:"#f3b430",s:0.8},
+    {x:cx-u*82,y:cy-v*82,kind:"ped",sh:"#5bb84f",s:0.8},
+    {x:cx+u*80,y:cy-v*80,kind:"ped",sh:"#8b6de0",s:0.8},
+    {x:cx-u*82,y:cy+v*82+4,kind:"ped",sh:"#f0902f",s:0.85},
+  ];
+  function frame(){
+    if(!carsBack||!carsFront) return;
+    carsBack.textContent=""; carsFront.textContent="";
+    const items=cars.map(c=>({x:cx+c.rx*Math.cos(c.a), y:cy+c.ry*Math.sin(c.a), kind:"car", c:c.c})).concat(statics);
+    items.sort((a,b)=>a.y-b.y).forEach(it=>{
+      const grp = it.y<cy ? carsBack : carsFront;
+      if(it.kind==="ped") drawPerson(grp,it.x,it.y,it.sh,it.s);
+      else drawCar(grp,it.x,it.y,it.c);
+    });
+    if(!reduce){ cars.forEach(c=>c.a+=c.sp); carAnim=requestAnimationFrame(frame); }
+  }
+  frame();
+}
+function drawField(fx,fy){
+  const hw=26,hh=13, tan="#c9ad72", dk="#a98d54";
+  const N=[fx,fy-hh],E=[fx+hw,fy],S=[fx,fy+hh],W=[fx-hw,fy];
+  svg.appendChild(mk("polygon",{points:pts([N,E,S,W]),fill:tan}));
+  [0.2,0.4,0.6,0.8].forEach(p=>{
+    const A=[fx-hw+p*hw, fy-p*hh], B=[fx+p*hw, fy+hh-p*hh];
+    svg.appendChild(mk("line",{x1:A[0],y1:A[1],x2:B[0],y2:B[1],stroke:dk,"stroke-width":"1.5",opacity:.8}));
+  });
+  // pieniä kasveja vaoissa
+  const veg=["#4f9d3a","#4f9d3a","#c0553f"];
+  for(let i=0;i<7;i++){
+    const t=0.18+i*0.1;
+    svg.appendChild(mk("circle",{cx:fx-hw+ t*hw*1.4 + (i%2)*6, cy:fy - (t-0.5)*hh*0.6 + (i%3)*2, r:1.3, fill:veg[i%3]}));
+  }
+  svg.appendChild(mk("polygon",{points:pts([N,E,S,W]),fill:"none",stroke:dk,"stroke-width":"1",opacity:.5}));
+}
+function drawTree(x,y,type,s){
+  const grass=getVar('--green');
+  if(type==="bush"){
+    svg.appendChild(mk("ellipse",{cx:x,cy:y,rx:6*s,ry:4*s,fill:shade(grass,-14)}));
+    svg.appendChild(mk("ellipse",{cx:x-1.5*s,cy:y-1.2*s,rx:3*s,ry:2*s,fill:shade(grass,34),opacity:.85}));
+    // marjat/kukat
+    svg.appendChild(mk("circle",{cx:x+2*s,cy:y-1*s,r:1,fill:"#ff5d73"}));
+    svg.appendChild(mk("circle",{cx:x-3*s,cy:y+0.5*s,r:1,fill:"#ffd23f"}));
+    return;
+  }
+  svg.appendChild(mk("rect",{x:x-1.5,y:y-6*s,width:3,height:6*s,rx:1,fill:"#7a5230"}));
+  if(type==="pine"){
+    svg.appendChild(mk("polygon",{points:pts([[x-6*s,y-4*s],[x+6*s,y-4*s],[x,y-15*s]]),fill:shade(grass,-26)}));
+    svg.appendChild(mk("polygon",{points:pts([[x-4.6*s,y-9*s],[x+4.6*s,y-9*s],[x,y-18*s]]),fill:shade(grass,-6)}));
+  }else{
+    svg.appendChild(mk("circle",{cx:x,cy:y-8.5*s,r:6.6*s,fill:shade(grass,-16)}));
+    svg.appendChild(mk("circle",{cx:x-2*s,cy:y-10*s,r:3.4*s,fill:shade(grass,34),opacity:.9}));
+  }
+}
+function drawFlowers(x,y){
+  const cols=["#ff5d73","#ffd23f","#ffffff","#ff8f4a","#c98bff"];
+  for(let i=0;i<5;i++){
+    const fx=x+(i-2)*4.2, fy=y+((i%2)?2:0);
+    svg.appendChild(mk("line",{x1:fx,y1:fy,x2:fx,y2:fy-5,stroke:shade(getVar('--green'),-20),"stroke-width":"1"}));
+    svg.appendChild(mk("circle",{cx:fx,cy:fy-6,r:1.9,fill:cols[i%cols.length]}));
+    svg.appendChild(mk("circle",{cx:fx,cy:fy-6,r:0.7,fill:"#fff8d8"}));
+  }
+}
+function drawDuck(x,y,s){
+  svg.appendChild(mk("ellipse",{cx:x,cy:y,rx:4*s,ry:2.4*s,fill:"#f4f0e6"}));
+  svg.appendChild(mk("circle",{cx:x+3.2*s,cy:y-2.6*s,r:1.7*s,fill:"#f4f0e6"}));
+  svg.appendChild(mk("polygon",{points:pts([[x+4.4*s,y-2.8*s],[x+6.4*s,y-2.3*s],[x+4.4*s,y-1.9*s]]),fill:"#f0932b"}));
+  svg.appendChild(mk("circle",{cx:x+3.5*s,cy:y-3.1*s,r:0.5*s,fill:"#2a2440"}));
+}
+function drawRabbit(x,y){
+  const g="#e9e4d8", d="#c9c2b2";
+  svg.appendChild(mk("circle",{cx:x-4.6,cy:y-0.4,r:1.3,fill:d}));            // häntä
+  svg.appendChild(mk("ellipse",{cx:x,cy:y,rx:5,ry:3.3,fill:g}));            // vartalo
+  svg.appendChild(mk("circle",{cx:x+4,cy:y-3,r:2.4,fill:g}));               // pää
+  svg.appendChild(mk("ellipse",{cx:x+3.4,cy:y-6.6,rx:0.9,ry:3,fill:g}));    // korva
+  svg.appendChild(mk("ellipse",{cx:x+4.9,cy:y-6.6,rx:0.9,ry:3,fill:g}));    // korva
+  svg.appendChild(mk("circle",{cx:x+4.9,cy:y-3.2,r:0.5,fill:"#2a2440"}));   // silmä
+}
+function drawDog(x,y){
+  const b="#a9713e", d="#875a2e";
+  svg.appendChild(mk("path",{d:`M ${x-6} ${y-3.5} q -3.4 -0.6 -2.2 -4`,fill:"none",stroke:b,"stroke-width":"1.6","stroke-linecap":"round"})); // häntä
+  svg.appendChild(mk("rect",{x:x-3.4,y:y-1,width:1.5,height:3.4,fill:d}));  // jalka
+  svg.appendChild(mk("rect",{x:x+2.4,y:y-1,width:1.5,height:3.4,fill:d}));  // jalka
+  svg.appendChild(mk("ellipse",{cx:x,cy:y-3,rx:6,ry:3,fill:b}));            // vartalo
+  svg.appendChild(mk("circle",{cx:x+6,cy:y-5,r:2.4,fill:b}));               // pää
+  svg.appendChild(mk("ellipse",{cx:x+7.3,cy:y-6.7,rx:1,ry:2,fill:d}));      // korva
+  svg.appendChild(mk("polygon",{points:pts([[x+7.6,y-5.2],[x+9.8,y-4.7],[x+7.6,y-4.2]]),fill:b})); // kuono
+  svg.appendChild(mk("circle",{cx:x+6.7,cy:y-5.3,r:0.5,fill:"#2a2440"}));   // silmä
+}
+function drawBird(x,y,s,c){
+  svg.appendChild(mk("path",{d:`M ${x-6*s} ${y} Q ${x-3*s} ${y-4*s} ${x} ${y-1*s} Q ${x+3*s} ${y-4*s} ${x+6*s} ${y}`,
+    fill:"none",stroke:c,"stroke-width":1.6*s,"stroke-linecap":"round"}));
+}
+
+/* Piirrä yksi tavallinen talo ruudun päälle. Silhuetti kategorian mukaan. */
+function drawBuilding(g, x, cyTop, catKey){
+  const col=CAT[catKey].color, spec=BUILD[catKey];
+  if(spec.style==="open"){ drawOpenPlot(g,x,cyTop,spec); return; }
+  if(spec.style==="object"){ drawObjectPlot(g,x,cyTop,spec); return; }
+  const HW=spec.hw, HH=HW/2, bh=spec.h;
+  const faceL=shade(col,-52), faceR=shade(col,-14), roofc=shade(col,26), glass=shade(col,86);
+  // seinät
+  g.appendChild(mk("polygon",{points:pts([[x-HW,cyTop],[x,cyTop+HH],[x,cyTop+HH-bh],[x-HW,cyTop-bh]]),fill:faceL}));
+  g.appendChild(mk("polygon",{points:pts([[x,cyTop+HH],[x+HW,cyTop],[x+HW,cyTop-bh],[x,cyTop+HH-bh]]),fill:faceR}));
+  // ikkunat (oikea seinä)
+  let rows;
+  if(spec.style==="tower") rows=Math.round(bh/8);
+  else if(spec.style==="apartment"||spec.style==="office"||spec.style==="bank") rows=Math.round(bh/10);
+  else if(spec.style==="shop") rows=1;
+  else rows=Math.max(1,Math.round(bh/13));
+  for(let k=1;k<=rows;k++){
+    const off=bh*k/(rows+1);
+    g.appendChild(mk("polygon",{points:pts([[x+3,cyTop+HH-off-2],[x+HW-2,cyTop-off-2],[x+HW-2,cyTop-off-4.6],[x+3,cyTop+HH-off-4.6]]),fill:glass,opacity:.5}));
+  }
+  const ry=cyTop-bh;
+  const N=[x,ry-HH],E=[x+HW,ry],S=[x,ry+HH],W=[x-HW,ry];
+  if(spec.style==="house"){
+    const rh=spec.wide?12:15, apex=[x,ry-rh];
+    g.appendChild(mk("polygon",{points:pts([W,N,apex]),fill:shade(col,12)}));
+    g.appendChild(mk("polygon",{points:pts([N,E,apex]),fill:shade(col,22)}));
+    g.appendChild(mk("polygon",{points:pts([W,S,apex]),fill:shade(col,-8)}));
+    g.appendChild(mk("polygon",{points:pts([S,E,apex]),fill:shade(col,4)}));
+    if(spec.chimney) g.appendChild(mk("rect",{x:x-HW*0.5,y:ry-rh-1,width:3,height:9,fill:shade(col,-44)}));
+  } else {
+    // litteä katto
+    g.appendChild(mk("polygon",{points:pts([N,E,S,W]),fill:roofc}));
+    if(spec.style==="tower"){
+      const t=8;
+      g.appendChild(mk("polygon",{points:pts([[x-HW*0.5,ry],[x,ry+HH*0.5],[x,ry+HH*0.5-t],[x-HW*0.5,ry-t]]),fill:shade(col,-46)}));
+      g.appendChild(mk("polygon",{points:pts([[x,ry+HH*0.5],[x+HW*0.5,ry],[x+HW*0.5,ry-t],[x,ry+HH*0.5-t]]),fill:shade(col,-12)}));
+      g.appendChild(mk("polygon",{points:pts([[x,ry-HH*0.5-t],[x+HW*0.5,ry-t],[x,ry+HH*0.5-t],[x-HW*0.5,ry-t]]),fill:roofc}));
+      g.appendChild(mk("line",{x1:x,y1:ry-t,x2:x,y2:ry-t-14,stroke:shade(col,-26),"stroke-width":"1.4"}));
+      g.appendChild(mk("circle",{cx:x,cy:ry-t-14,r:1.7,fill:shade(col,95)}));
+    }
+    if(spec.style==="bank"){ // frontoni etukulman ylle
+      g.appendChild(mk("polygon",{points:pts([[x-HW*0.72,ry+HH*0.28],[x+HW*0.72,ry+HH*0.28],[x,ry+HH*0.28-9]]),fill:shade(col,16)}));
+    }
+    if(spec.style==="apartment"){ // parvekkeet
+      [0.42,0.72].forEach(p=>{const off=bh*p;
+        g.appendChild(mk("polygon",{points:pts([[x+2,cyTop+HH-off],[x+HW,cyTop-off],[x+HW,cyTop-off-1.8],[x+2,cyTop+HH-off-1.8]]),fill:shade(col,-40)}));});
+    }
+    if(spec.style==="shop"){ // markiisi
+      const off=bh*0.14;
+      g.appendChild(mk("polygon",{points:pts([[x+2,cyTop+HH-off],[x+HW,cyTop-off],[x+HW,cyTop-off-3.5],[x+2,cyTop+HH-off-3.5]]),fill:"#f6f6f6",opacity:.9}));
+      g.appendChild(mk("polygon",{points:pts([[x+2,cyTop+HH-off-3.5],[x+HW,cyTop-off-3.5],[x+HW,cyTop-off-5.5],[x+2,cyTop+HH-off-5.5]]),fill:shade(col,42),opacity:.9}));
+    }
+    if(spec.sign){ // kyltti katolle
+      g.appendChild(mk("line",{x1:x,y1:ry,x2:x,y2:ry-8,stroke:shade(col,-30),"stroke-width":"1.3"}));
+      g.appendChild(mk("rect",{x:x-HW*0.6,y:ry-14,width:HW*1.2,height:6,rx:1.5,fill:shade(col,48)}));
+    }
+  }
+  // ovi (alaseinälle)
+  const dy=cyTop+HH;
+  g.appendChild(mk("polygon",{points:pts([[x+HW*0.5,dy-3],[x+HW*0.82,dy-4.6],[x+HW*0.82,dy-11],[x+HW*0.5,dy-9.4]]),fill:shade(col,-60)}));
+}
+
+/* Avoin ruutu ilman taloa: pieni puisto tai tori */
+function drawOpenPlot(g,x,cyTop,spec){
+  const grass=getVar('--green');
+  const put=(t,a)=>g.appendChild(mk(t,a));
+  const lamp=(lx,ly)=>{
+    put("line",{x1:lx,y1:ly,x2:lx,y2:ly-15,stroke:"#7b8291","stroke-width":"1.5"});
+    put("line",{x1:lx,y1:ly-15,x2:lx+4,y2:ly-15,stroke:"#7b8291","stroke-width":"1.3"});
+    put("circle",{cx:lx+4,cy:ly-13.5,r:3.6,fill:"#ffda4d",opacity:.28});
+    put("circle",{cx:lx+4,cy:ly-13.5,r:2,fill:"#ffda4d"});
+  };
+  if(spec.kind==="market"){
+    const stall=(sx,sy,col)=>{
+      put("rect",{x:sx-6,y:sy-3,width:12,height:6,rx:1,fill:"#efe7d6"});
+      put("polygon",{points:pts([[sx-7.5,sy-3.5],[sx+7.5,sy-3.5],[sx+5.5,sy-8.5],[sx-5.5,sy-8.5]]),fill:col});
+      for(let i=0;i<3;i++) put("rect",{x:sx-5+i*4,y:sy-8,width:1.6,height:4.4,fill:"#ffffff",opacity:.85});
+    };
+    stall(x-7,cyTop+3,"#e0524b");
+    stall(x+7,cyTop-2,"#4c8df0");
+    lamp(x+11,cyTop+6);
+  } else { // park
+    const tree=(tx,ty,s)=>{
+      put("rect",{x:tx-1,y:ty-4*s,width:2,height:4*s,fill:"#7a5230"});
+      put("circle",{cx:tx,cy:ty-6.5*s,r:4.6*s,fill:shade(grass,-14)});
+      put("circle",{cx:tx-1.4*s,cy:ty-7.6*s,r:2.4*s,fill:shade(grass,32),opacity:.9});
+    };
+    tree(x-8,cyTop+3,1.05); tree(x+7,cyTop-2,0.85);
+    put("rect",{x:x-4,y:cyTop+7,width:8,height:2,rx:1,fill:"#8a6b45"});
+    put("rect",{x:x-4,y:cyTop+9,width:1.5,height:2.5,fill:"#6f552f"});
+    put("rect",{x:x+2.6,y:cyTop+9,width:1.5,height:2.5,fill:"#6f552f"});
+    lamp(x+11,cyTop+5);
+  }
+}
+
+/* ---------------------------------------------------------
+   Ruudun päällä oleva kuva. Yhtenäinen tyyli:
+   - iso ja yksinkertainen silhuetti (luettava pienenäkin)
+   - tumma ääriviiva joka kappaleessa -> erottuu sekä vaaleassa että tummassa
+   - litteät värit, pehmeä varjo alla
+   --------------------------------------------------------- */
+const ICON_INK = "#241f38";
+function drawObjectPlot(g,x,cyTop,spec){
+  const put=(t,a)=>g.appendChild(mk(t,a));
+  // S = outlined shape
+  const S=(t,a)=>put(t,Object.assign({stroke:ICON_INK,"stroke-width":1.5,"stroke-linejoin":"round","stroke-linecap":"round"},a));
+  const flat=(t,a)=>put(t,a);
+  const shadow=(rx)=>put("ellipse",{cx:x,cy:cyTop+11,rx:rx||14,ry:3.8,fill:"rgba(0,0,0,.22)"});
+  const txt=(s2,tx,ty,size,fill)=>{
+    const t=mk("text",{x:tx,y:ty,"text-anchor":"middle","font-family":"ui-rounded, 'SF Pro Rounded', system-ui, sans-serif","font-weight":"800","font-size":size,fill});
+    t.textContent=s2; g.appendChild(t);
+  };
+  const k=spec.kind;
+
+  if(k==="wallet"){
+    // siirretty vasemmalle, jotta pelaajahahmo ei peitä sitä lähtöruudussa
+    const wx=x-9, wy=cyTop-4;
+    put("ellipse",{cx:wx,cy:wy+14,rx:16,ry:3.8,fill:"rgba(0,0,0,.22)"});
+    const bill=(bx,rot,col)=>S("rect",{x:bx-5,y:wy-15,width:10,height:14,rx:1.5,fill:col,transform:`rotate(${rot} ${bx} ${wy-4})`});
+    bill(wx-7,-12,"#9ad18a"); bill(wx+7,12,"#f5c46a"); bill(wx,0,"#8fbdea");
+    S("rect",{x:wx-15,y:wy-3,width:30,height:16,rx:3.5,fill:"#a9702f"});      // runko
+    S("rect",{x:wx-15,y:wy-3,width:30,height:7,rx:3,fill:"#88561f"});          // läppä
+    S("rect",{x:wx-4,y:wy+1.5,width:8,height:6,rx:2,fill:"#f3b430"});          // lukko
+    return;
+  }
+  if(k==="coins"){
+    shadow(17);
+    const coin=(sx,sy)=>{ S("ellipse",{cx:sx,cy:sy,rx:7.4,ry:3,fill:"#f3b430"}); };
+    const stack=(sx,n)=>{ let y=cyTop+6; for(let i=0;i<n;i++){ coin(sx,y); y-=3.6; } return y+3.6; };
+    stack(x-14,3); const topY=stack(x,5); stack(x+14,4);
+    txt("€", x, topY+2.2, 8, "#8d6410");
+    // nuoli ylös -> kasvu
+    const ad=`M ${x-14} ${cyTop-12} L ${x-3} ${cyTop-22} L ${x+11} ${cyTop-16}`;
+    put("path",{d:ad,fill:"none",stroke:"#fdfbf4","stroke-width":6,"stroke-linecap":"round","stroke-linejoin":"round"});
+    put("path",{d:ad,fill:"none",stroke:"#0f8f8a","stroke-width":3,"stroke-linecap":"round","stroke-linejoin":"round"});
+    S("polygon",{points:pts([[x+15,cyTop-23],[x+14,cyTop-12],[x+5,cyTop-16]]),fill:"#0f8f8a",stroke:"#fdfbf4","stroke-width":1.6});
+    return;
+  }
+  if(k==="cv"){
+    shadow(12);
+    S("rect",{x:x-11,y:cyTop-20,width:22,height:28,rx:2.5,fill:"#fdfbf4"});
+    S("rect",{x:x-7,y:cyTop-16,width:8,height:8,rx:1.5,fill:"#6aa2f6","stroke-width":1.2});
+    for(let i=0;i<3;i++) flat("rect",{x:x+3,y:cyTop-16+i*3.1,width:6,height:1.8,rx:.9,fill:"#b8b3a4"});
+    for(let i=0;i<4;i++) flat("rect",{x:x-7,y:cyTop-5+i*3.1,width:16,height:1.8,rx:.9,fill:"#c4c0b1"});
+    S("rect",{x:x+7,y:cyTop-2,width:3.4,height:15,rx:1.4,fill:"#4c8df0",transform:`rotate(26 ${x+9} ${cyTop+6})`});
+    S("polygon",{points:pts([[x+7,cyTop+13],[x+10.4,cyTop+13],[x+8.7,cyTop+17.5]]),fill:ICON_INK,transform:`rotate(26 ${x+9} ${cyTop+6})`});
+    return;
+  }
+  if(k==="clock"){
+    shadow(13);
+    S("rect",{x:x-3,y:cyTop+4,width:6,height:5,rx:1.5,fill:"#b9452f"});          // jalka
+    S("circle",{cx:x-9.5,cy:cyTop-18,r:4.2,fill:"#e0524b"});                     // soittokello
+    S("circle",{cx:x+9.5,cy:cyTop-18,r:4.2,fill:"#e0524b"});
+    S("circle",{cx:x,cy:cyTop-7,r:14,fill:"#fff3df"});                           // kellotaulu
+    for(let i=0;i<4;i++){ const a=i*Math.PI/2;
+      flat("line",{x1:x+Math.cos(a)*10.5,y1:cyTop-7+Math.sin(a)*10.5,x2:x+Math.cos(a)*12.4,y2:cyTop-7+Math.sin(a)*12.4,stroke:ICON_INK,"stroke-width":1.6,"stroke-linecap":"round",opacity:.8}); }
+    flat("line",{x1:x,y1:cyTop-7,x2:x+6.5,y2:cyTop-4,stroke:ICON_INK,"stroke-width":2.4,"stroke-linecap":"round"});
+    flat("line",{x1:x,y1:cyTop-7,x2:x,y2:cyTop-16.5,stroke:ICON_INK,"stroke-width":2.4,"stroke-linecap":"round"});
+    flat("circle",{cx:x,cy:cyTop-7,r:1.7,fill:ICON_INK});
+    return;
+  }
+  if(k==="talk"){
+    shadow(14);
+    // takakupla
+    S("rect",{x:x-2,y:cyTop-22,width:20,height:14,rx:5,fill:"#6fca5f"});
+    S("polygon",{points:pts([[x+4,cyTop-9],[x+10,cyTop-9],[x+4.5,cyTop-3.5]]),fill:"#6fca5f"});
+    for(let i=0;i<2;i++) flat("rect",{x:x+2,y:cyTop-18+i*4.4,width:12-i*4,height:2,rx:1,fill:"rgba(255,255,255,.85)"});
+    // etukupla
+    S("rect",{x:x-17,y:cyTop-11,width:21,height:15,rx:5,fill:"#fdfbf4"});
+    S("polygon",{points:pts([[x-12,cyTop+3],[x-5,cyTop+3],[x-11,cyTop+9.5]]),fill:"#fdfbf4"});
+    for(let i=0;i<2;i++) flat("rect",{x:x-13,y:cyTop-7+i*4.6,width:13-i*4,height:2.1,rx:1,fill:"#b8b3a4"});
+    return;
+  }
+  if(k==="contract"){
+    shadow(12);
+    S("rect",{x:x-11,y:cyTop-20,width:22,height:28,rx:2.5,fill:"#fdfbf4"});
+    S("rect",{x:x-7,y:cyTop-16,width:14,height:2.8,rx:1,fill:"#a488ee","stroke-width":1});
+    for(let i=0;i<4;i++) flat("rect",{x:x-7,y:cyTop-10+i*3.1,width:15,height:1.8,rx:.9,fill:"#c4c0b1"});
+    flat("path",{d:`M ${x-7} ${cyTop+4} q 2.6 -3.4 5 0 t 5 -0.6`,fill:"none",stroke:"#4c8df0","stroke-width":1.8,"stroke-linecap":"round"});
+    S("circle",{cx:x+6.5,cy:cyTop+6.5,r:4,fill:"#d64545"});
+    S("rect",{x:x-14,y:cyTop-1,width:3.4,height:15,rx:1.4,fill:"#12a5a0",transform:`rotate(-24 ${x-12} ${cyTop+6})`});
+    return;
+  }
+  if(k==="warning"){
+    shadow(11);
+    S("rect",{x:x-2,y:cyTop-4,width:4,height:14,rx:1.2,fill:"#8a8f9c"});
+    S("polygon",{points:pts([[x-15,cyTop-3],[x+15,cyTop-3],[x,cyTop-27]]),fill:"#f4c020","stroke-width":2});
+    flat("rect",{x:x-1.8,y:cyTop-21,width:3.6,height:10,rx:1.5,fill:ICON_INK});
+    flat("circle",{cx:x,cy:cyTop-8.2,r:2,fill:ICON_INK});
+    return;
+  }
+  if(k==="gift"){
+    shadow(15);
+    S("rect",{x:x-13,y:cyTop-6,width:26,height:15,rx:2.5,fill:"#f06b9a"});       // laatikko
+    S("rect",{x:x-15.5,y:cyTop-12,width:31,height:7,rx:2.5,fill:"#d8497b"});     // kansi
+    flat("rect",{x:x-2.2,y:cyTop-12,width:4.4,height:21,fill:"#ffd76a"});         // nauha
+    S("path",{d:`M ${x} ${cyTop-12} C ${x-11} ${cyTop-14} ${x-10} ${cyTop-22} ${x-2.5} ${cyTop-14}`,fill:"#ffd76a"});
+    S("path",{d:`M ${x} ${cyTop-12} C ${x+11} ${cyTop-14} ${x+10} ${cyTop-22} ${x+2.5} ${cyTop-14}`,fill:"#ffd76a"});
+    return;
+  }
+  if(k==="receipt"){
+    shadow(12);
+    const L=x-11, R=x+11, T=cyTop-21, B=cyTop+5;
+    let d=`M ${L} ${T} L ${R} ${T} L ${R} ${B}`;
+    for(let i=0;i<4;i++){ const step=(R-L)/4; d+=` L ${R-step*(i+0.5)} ${B+3.6} L ${R-step*(i+1)} ${B}`; }
+    d+=" Z";
+    S("path",{d,fill:"#fdfbf4"});
+    for(let i=0;i<4;i++) flat("rect",{x:x-7,y:cyTop-17+i*3.4,width:i===0?14:11,height:1.9,rx:.9,fill:"#bdb8a9"});
+    txt("%", x+4, cyTop+2, 10, "#6b6480");
+    S("circle",{cx:x-5,cy:cyTop-1,r:4.2,fill:"#e0524b",opacity:.92});
+    return;
+  }
+  if(k==="briefcase"){
+    shadow(16);
+    S("path",{d:`M ${x-6} ${cyTop-9} l 0 -5 a 6 4 0 0 1 12 0 l 0 5`,fill:"none","stroke-width":2.2}); // kahva
+    S("rect",{x:x-16,y:cyTop-9,width:32,height:18,rx:3,fill:"#a9702f"});
+    flat("rect",{x:x-16,y:cyTop-3,width:32,height:4,fill:"#88561f"});
+    S("rect",{x:x-4,y:cyTop-4,width:8,height:6,rx:1.5,fill:"#f3b430","stroke-width":1.2});
+    return;
+  }
+  if(k==="sofa"){
+    shadow(17);
+    S("rect",{x:x-15,y:cyTop-14,width:30,height:11,rx:4.5,fill:"#3a6fc0"});       // selkänoja
+    S("rect",{x:x-17,y:cyTop-8,width:6,height:13,rx:3,fill:"#3a6fc0"});           // käsinoja
+    S("rect",{x:x+11,y:cyTop-8,width:6,height:13,rx:3,fill:"#3a6fc0"});
+    S("rect",{x:x-16,y:cyTop-4,width:32,height:9,rx:3.5,fill:"#4c8df0"});         // istuin
+    flat("rect",{x:x-9.5,y:cyTop-7,width:9,height:5,rx:2,fill:"#8dbcf5"});        // tyynyt
+    flat("rect",{x:x+0.5,y:cyTop-7,width:9,height:5,rx:2,fill:"#8dbcf5"});
+    S("rect",{x:x-13,y:cyTop+4.5,width:3,height:4,rx:1,fill:"#2f2a45","stroke-width":1});
+    S("rect",{x:x+10,y:cyTop+4.5,width:3,height:4,rx:1,fill:"#2f2a45","stroke-width":1});
+    return;
+  }
+  if(k==="summer"){
+    shadow(14);
+    const sx=x-9, sy=cyTop-16;
+    for(let i=0;i<8;i++){ const a=i*Math.PI/4;
+      flat("line",{x1:sx+Math.cos(a)*8.5,y1:sy+Math.sin(a)*8.5,x2:sx+Math.cos(a)*12.5,y2:sy+Math.sin(a)*12.5,stroke:"#f2a20a","stroke-width":2.2,"stroke-linecap":"round"}); }
+    S("circle",{cx:sx,cy:sy,r:8,fill:"#ffd21f"});
+    const ix=x+9, iy=cyTop+8;
+    S("polygon",{points:pts([[ix-5.5,iy-11],[ix+5.5,iy-11],[ix,iy]]),fill:"#e0b877"});
+    S("circle",{cx:ix-2.4,cy:iy-13.5,r:4.6,fill:"#ff9ec4"});
+    S("circle",{cx:ix+2.6,cy:iy-16,r:4.2,fill:"#fff0d6"});
+    S("circle",{cx:ix+2.6,cy:iy-20.5,r:2,fill:"#e0524b","stroke-width":1.2});
+    return;
+  }
+  // idea (yrittäminen)
+  shadow(11);
+  const by=cyTop-11;
+  for(let i=0;i<8;i++){ const a=-Math.PI/2 + (i-3.5)*0.42;
+    flat("line",{x1:x+Math.cos(a)*13,y1:by+Math.sin(a)*13,x2:x+Math.cos(a)*17.5,y2:by+Math.sin(a)*17.5,stroke:"#f2b70a","stroke-width":2.2,"stroke-linecap":"round"}); }
+  S("circle",{cx:x,cy:by,r:11,fill:"#ffe27a"});
+  S("path",{d:`M ${x-4} ${by+1} Q ${x} ${by+6} ${x+4} ${by+1}`,fill:"none","stroke-width":1.8});
+  S("rect",{x:x-5,y:by+9,width:10,height:5,rx:1.5,fill:"#9098a6"});
+  S("rect",{x:x-4,y:by+13,width:8,height:4,rx:1.5,fill:"#767d8c","stroke-width":1.2});
+  return;
+}
+/* Yksi jalankulkija/hahmo annettuun ryhmään */
+function drawPerson(g,px,py,sh,s){
+  const put=(t,a)=>g.appendChild(mk(t,a));
+  put("ellipse",{cx:px,cy:py+1.5,rx:5*s,ry:1.8*s,fill:"rgba(0,0,0,.16)"});
+  put("rect",{x:px-2.4*s,y:py-3*s,width:1.8*s,height:4*s,fill:"#3a3550"});
+  put("rect",{x:px+0.6*s,y:py-3*s,width:1.8*s,height:4*s,fill:"#3a3550"});
+  put("rect",{x:px-3.4*s,y:py-9*s,width:6.8*s,height:7*s,rx:2.4*s,fill:sh});
+  put("circle",{cx:px,cy:py-11.4*s,r:2.9*s,fill:"#f1c9a5"});
+  put("path",{d:`M ${px-2.9*s} ${py-11.8*s} A ${2.9*s} ${2.9*s} 0 0 1 ${px+2.9*s} ${py-12.3*s}`,fill:"#5a3f2a"});
+}
+function facePoints(x,y,tw,th,h){
+  const top=[[x,y-th/2-h],[x+tw/2,y-h],[x,y+th/2-h],[x-tw/2,y-h]];
+  const left=[[x-tw/2,y-h],[x,y+th/2-h],[x,y+th/2],[x-tw/2,y]];
+  const right=[[x,y+th/2-h],[x+tw/2,y-h],[x+tw/2,y],[x,y+th/2]];
+  const s=a=>a.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ');
+  return {top:s(top),left:s(left),right:s(right)};
+}
+let pawnEl=null, carsBack=null, carsFront=null, carAnim=null;
+function drawPawn(){
+  if(pawnEl) pawnEl.remove();
+  const n=tileNodes[state.pos];
+  pawnEl=mk("g",{class:"pawn"});
+  const px=n.x, fy=n.y-n.h+13;          // laudan etureunalle, ei rakennuksen päälle
+  const P=(t,a)=>pawnEl.appendChild(mk(t,a));
+  const coral=getVar('--coral'), teal=shade(getVar('--teal'),14);
+  const s=1.55, py=fy-3;
+  // sama ääriviivatyyli kuin ruutujen kuvissa
+  const O=(t,a)=>P(t,Object.assign({stroke:ICON_INK,"stroke-width":1.6,"stroke-linejoin":"round","stroke-linecap":"round"},a));
+  // sijaintirengas laudalla
+  P("ellipse",{cx:px,cy:fy+3,rx:13,ry:4.4,fill:coral,opacity:.22});
+  P("ellipse",{cx:px,cy:fy+3,rx:13,ry:4.4,fill:"none",stroke:coral,"stroke-width":"2.4",opacity:.95});
+  // kengät
+  O("rect",{x:px-3.6*s,y:py-1.6*s,width:3.4*s,height:2.2*s,rx:1.1*s,fill:"#f7f3ea"});
+  O("rect",{x:px+0.2*s,y:py-1.6*s,width:3.4*s,height:2.2*s,rx:1.1*s,fill:"#f7f3ea"});
+  // housut
+  O("rect",{x:px-3.2*s,y:py-7*s,width:2.6*s,height:6*s,rx:1.1*s,fill:"#3f4a6b"});
+  O("rect",{x:px+0.6*s,y:py-7*s,width:2.6*s,height:6*s,rx:1.1*s,fill:"#3f4a6b"});
+  // reppu hartioiden takaa
+  O("rect",{x:px+2.2*s,y:py-13*s,width:3.6*s,height:7.4*s,rx:1.6*s,fill:teal});
+  // huppari + kädet
+  O("rect",{x:px-4.4*s,y:py-13.4*s,width:8.8*s,height:8.4*s,rx:3*s,fill:coral});
+  O("rect",{x:px-5.9*s,y:py-12.4*s,width:2.6*s,height:6.4*s,rx:1.3*s,fill:coral});
+  O("rect",{x:px+3.3*s,y:py-12.4*s,width:2.6*s,height:6.4*s,rx:1.3*s,fill:coral});
+  P("path",{d:`M ${px-2.2*s} ${py-13.2*s} Q ${px} ${py-10.6*s} ${px+2.2*s} ${py-13.2*s}`,fill:"none",stroke:ICON_INK,"stroke-width":1.2,opacity:.55}); // kaula-aukko
+  // pää
+  O("rect",{x:px-3.5*s,y:py-20*s,width:7*s,height:7*s,rx:3.2*s,fill:"#f6d0ad"});
+  // hiukset (yläosa)
+  O("path",{d:`M ${px-3.6*s} ${py-16.6*s} A ${3.6*s} ${3.6*s} 0 0 1 ${px+3.6*s} ${py-16.6*s} Z`,fill:"#4a3323"});
+  P("path",{d:`M ${px-3.4*s} ${py-16.4*s} q ${1.6*s} ${-1.4*s} ${3.6*s} ${-1.2*s}`,fill:"none",stroke:"#5d4230","stroke-width":1.1,"stroke-linecap":"round",opacity:.8});
+  P("circle",{cx:px-1.3*s,cy:py-15.4*s,r:0.62*s,fill:ICON_INK});                      // silmä
+  P("circle",{cx:px+1.3*s,cy:py-15.4*s,r:0.62*s,fill:ICON_INK});                      // silmä
+  P("path",{d:`M ${px-1.5*s} ${py-13.6*s} Q ${px} ${py-12.2*s} ${px+1.5*s} ${py-13.6*s}`,fill:"none",stroke:ICON_INK,"stroke-width":1.1,"stroke-linecap":"round"}); // hymy
+  P("ellipse",{cx:px-2.6*s,cy:py-14.2*s,rx:0.8*s,ry:0.55*s,fill:"#f09a8a",opacity:.55});
+  P("ellipse",{cx:px+2.6*s,cy:py-14.2*s,rx:0.8*s,ry:0.55*s,fill:"#f09a8a",opacity:.55});
+  // kelluva osoitin (pomppii)
+  const m=mk("g",{class:"marker"});
+  const ty=py-21.5*s;
+  m.appendChild(mk("path",{d:`M ${px} ${ty} C ${px-6} ${ty-6.5} ${px-6} ${ty-15} ${px} ${ty-15} C ${px+6} ${ty-15} ${px+6} ${ty-6.5} ${px} ${ty} Z`,fill:"#ff2e63",stroke:"#fff","stroke-width":"2.2"}));
+  m.appendChild(mk("circle",{cx:px,cy:ty-8.5,r:2.5,fill:"#fff"}));
+  pawnEl.appendChild(m);
+  svg.appendChild(pawnEl);
+}
+function movePawnTo(i){
+  const n=tileNodes[i];
+  drawPawn();
+}
+
+/* ---- Teema ---- */
+const themeBtn=document.getElementById('themeBtn');
+function currentDark(){
+  const set=document.documentElement.getAttribute('data-theme');
+  if(set) return set==='dark';
+  return matchMedia('(prefers-color-scheme:dark)').matches;
+}
+function varOf(k){
+  return {start:'--gold',tyonhaku:'--blue',saannot:'--coral',vuoro:'--green',raha:'--purple',
+    porssi:'--teal',riski:'--amber',sattuma:'--pink',vero:'--ink-soft',tet:'--green',
+    hyvinvointi:'--well',kesatyo:'--summer',yrittaminen:'--entre'}[k];
+}
+function refreshColors(){
+  for(const k in CAT){ CAT[k].color=getVar(varOf(k)); }
+  drawBoard(); buildLegend();
+}
+function syncThemeBtn(){ themeBtn.textContent = currentDark() ? 'Vaalea teema' : 'Tumma teema'; }
+themeBtn.addEventListener('click',()=>{
+  document.documentElement.setAttribute('data-theme', currentDark()?'light':'dark');
+  syncThemeBtn(); refreshColors();
+});
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{
+  if(!document.documentElement.getAttribute('data-theme')){ syncThemeBtn(); refreshColors(); }
+});
+
+/* ================= TEHTÄVÄPANKKI ================= */
+const BANK = {
+  tyonhaku:[
+    {type:"choice", title:"Ensivaikutelma haastattelussa",
+     q:"Olet työhaastattelussa kesätyöpaikkaan. Mikä tekee parhaan ensivaikutelman?",
+     opts:[
+       {t:"Tulet ajoissa, tervehdit ja katsot silmiin", ok:true},
+       {t:"Tulet vähän myöhässä, mutta rennosti", ok:false},
+       {t:"Selaat puhelinta odotellessasi vuoroasi", ok:false},
+     ],
+     fb:"Ajoissa tuleminen ja rento tervehdys kertovat, että olet kiinnostunut. Se on ilmaista ja tekee ison vaikutuksen.", reward:40},
+    {type:"choice", title:"Mikä kuuluu CV:hen?",
+     q:"Teet ensimmäistä CV:tä. Mitä siihen kannattaa laittaa?",
+     opts:[
+       {t:"Nimi, yhteystiedot, koulutus ja taidot", ok:true},
+       {t:"Vain nimi ja puhelinnumero", ok:false},
+       {t:"Kaverien nimet ja lempimusiikki", ok:false},
+     ],
+     fb:"CV kertoo lyhyesti kuka olet ja mitä osaat. Yhteystiedot, koulutus ja taidot riittävät hyvin alkuun.", reward:35},
+    {type:"order", title:"Työnhaun vaiheet",
+     q:"Laita työnhaun vaiheet oikeaan järjestykseen. Mikä tulee ensin?",
+     items:["Etsi avoin työpaikka","Tee hakemus ja CV","Mene haastatteluun","Aloita työt"],
+     fb:"Ensin löydät paikan, sitten haet, sitten haastattelu ja lopuksi työt alkavat. Näin homma etenee.", reward:45},
+  ],
+  saannot:[
+    {type:"choice", title:"Myöhästyt töistä",
+     q:"Huomaat aamulla, että myöhästyt bussista etkä ehdi töihin ajoissa. Mitä teet?",
+     opts:[
+       {t:"Soitat heti esihenkilölle ja kerrot", ok:true},
+       {t:"Et sano mitään ja toivot, ettei kukaan huomaa", ok:false},
+       {t:"Keksit myöhemmin hyvän selityksen", ok:false},
+     ],
+     fb:"Kaikille sattuu. Tärkeintä on kertoa heti itse. Rehellisyys ja ilmoittaminen ovat työelämän perusasioita.", reward:40},
+    {type:"choice", title:"Saat palautetta",
+     q:"Esihenkilö sanoo, että tapasi siivota jäi kesken. Miten reagoit?",
+     opts:[
+       {t:"Kiität vinkistä ja korjaat asian", ok:true},
+       {t:"Suutut, koska teit jo parhaasi", ok:false},
+       {t:"Sanot, että se on jonkun muun vika", ok:false},
+     ],
+     fb:"Palaute ei ole hyökkäys. Kun otat sen rauhassa vastaan ja korjaat, opit ja sinuun luotetaan enemmän.", reward:35},
+    {type:"order", title:"Hyvä työpäivä",
+     q:"Järjestä hyvän työntekijän aamu oikeaan järjestykseen.",
+     items:["Tule ajoissa paikalle","Kysy päivän tehtävät","Tee työt huolella","Kerro kun olet valmis"],
+     fb:"Ajoissa paikalla, selvitä mitä pitää tehdä, tee huolella ja kerro kun valmis. Näin työ sujuu ja saat lisää vastuuta.", reward:45},
+  ],
+  vuoro:[
+    {type:"choice", title:"Asiakas on vihainen",
+     q:"Asiakas on tyytymätön ja korottaa ääntään. Mikä on paras tapa toimia?",
+     opts:[
+       {t:"Kuuntelet rauhassa ja yrität auttaa", ok:true},
+       {t:"Korotat itsekin ääntä takaisin", ok:false},
+       {t:"Käännät selän ja jätät hänet", ok:false},
+     ],
+     fb:"Rauhallisuus tarttuu. Kun kuuntelet ja yrität auttaa, tilanne yleensä rauhoittuu. Se on tärkeä taito joka alalla.", reward:40},
+    {type:"choice", title:"Tiimissä on ongelma",
+     q:"Ryhmätyössä yksi ei tee osuuttaan. Mitä teet ensin?",
+     opts:[
+       {t:"Juttelet hänen kanssaan asiasta rauhassa", ok:true},
+       {t:"Puhut hänestä pahaa muille", ok:false},
+       {t:"Teet kaiken itse ja hiljaa harmistut", ok:false},
+     ],
+     fb:"Ongelmat ratkeavat puhumalla, ei selän takana. Suora ja ystävällinen juttelu on aina paras alku.", reward:40},
+    {type:"choice", title:"Et ymmärrä ohjetta",
+     q:"Saat tehtävän, mutta et ymmärrä ohjetta. Mitä teet?",
+     opts:[
+       {t:"Kysyt tarkennusta heti", ok:true},
+       {t:"Arvaat ja teet miten sattuu", ok:false},
+       {t:"Jätät tehtävän tekemättä", ok:false},
+     ],
+     fb:"Kysyminen ei ole tyhmää – se on fiksua. Parempi kysyä kerran kuin tehdä koko homma väärin.", reward:35},
+  ],
+  raha:[
+    {type:"choice", title:"Verokortti",
+     q:"Saat kesätyöpaikan. Mitä tarvitset, että palkka maksetaan oikein?",
+     opts:[
+       {t:"Verokortin ja tilinumeron", ok:true},
+       {t:"Vain hyvän asenteen", ok:false},
+       {t:"Passin ja ajokortin", ok:false},
+     ],
+     fb:"Ilman verokorttia palkasta menee enemmän veroa. Verokortin saat OmaVerosta, ja tilinumero tarvitaan palkkaa varten.", reward:40},
+    {type:"choice", title:"Työsopimus",
+     q:"Työnantaja sanoo: “eipä tehdä sopimusta, maksan käteisellä”. Mitä ajattelet?",
+     opts:[
+       {t:"Pyydän kirjallisen työsopimuksen", ok:true},
+       {t:"Hyvä juttu, saan rahat heti", ok:false},
+       {t:"Ei väliä, kunhan saan töitä", ok:false},
+     ],
+     fb:"Kirjallinen sopimus suojaa sinua: siitä näkee palkan, työajat ja tehtävät. Ilman sitä oikeutesi ovat heikoilla.", reward:45},
+    {type:"order", title:"Mihin palkka menee?",
+     q:"Sait 200 € palkkaa. Järjestä rahankäyttö fiksuun järjestykseen: mikä ensin?",
+     items:["Laita osa säästöön","Maksa pakolliset menot","Käytä osa omaan iloon","Loput odottamaan"],
+     fb:"Fiksu tapa: säästä ensin vähän, hoida pakolliset menot, palkitse itseäsi kohtuudella ja jätä puskuria. Näin raha riittää.", reward:45},
+  ],
+  porssi:[
+    {type:"invest", title:"Ensimmäinen sijoitus",
+     q:"Sinulla on rahaa. Voit sijoittaa osan ja ehkä kasvattaa sitä – tai menettää. Paljonko sijoitat?",
+     hint:"Vinkki: älä koskaan sijoita rahaa, jota et voi menettää. Hajauttaminen pienentää riskiä.", reward:0},
+    {type:"choice", title:"Mikä on hajauttaminen?",
+     q:"Sijoittamisessa puhutaan hajauttamisesta. Mitä se tarkoittaa?",
+     opts:[
+       {t:"Rahat jaetaan moneen eri kohteeseen", ok:true},
+       {t:"Kaikki rahat laitetaan yhteen osakkeeseen", ok:false},
+       {t:"Raha piilotetaan patjan alle", ok:false},
+     ],
+     fb:"Hajauttaminen tarkoittaa, ettet laita kaikkia munia samaan koriin. Jos yksi kohde laskee, muut voivat nousta.", reward:40},
+    {type:"choice", title:"Nopea tuplaus?",
+     q:"Somessa mainostetaan: “tuplaa rahasi viikossa!” Mitä ajattelet?",
+     opts:[
+       {t:"Se on lähes varmasti huijaus", ok:true},
+       {t:"Kokeilen heti kaikilla rahoillani", ok:false},
+       {t:"Jaan mainoksen kavereille", ok:false},
+     ],
+     fb:"Jos jokin kuulostaa liian hyvältä ollakseen totta, se on sitä. Oikea sijoittaminen on hidasta, ei pikavoittoja.", reward:45},
+  ],
+  riski:[
+    {type:"choice", title:"Kaveri lainaisi rahaa",
+     q:"Kaveri pyytää lainaksi kaikki säästösi ja lupaa maksaa “joskus” takaisin. Mitä teet?",
+     opts:[
+       {t:"Lainaan vain sen, minkä kestän menettää", ok:true},
+       {t:"Annan kaikki, kaveri on kaveri", ok:false},
+       {t:"Otan itse lainaa, että voin auttaa", ok:false},
+     ],
+     fb:"Kavereita saa auttaa, mutta ei omaa talouttaan vaarantaen. Lainaa vain summa, jonka menettäminen ei kaada sinua.", reward:40},
+    {type:"choice", title:"Rahapelit",
+     q:"Netissä houkutellaan pelaamaan rahapelejä: “voit voittaa isosti!” Mikä on totta?",
+     opts:[
+       {t:"Pitkässä juoksussa pelaaja lähes aina häviää", ok:true},
+       {t:"Se on hyvä tapa tienata rahaa", ok:false},
+       {t:"Voittaminen on pelkkää taitoa", ok:false},
+     ],
+     fb:"Rahapelit on tehty niin, että talo voittaa. Ne eivät ole tapa tienata – ne ovat tapa menettää rahaa. Alle 18-v pelaaminen on myös kielletty.", reward:45},
+    {type:"choice", title:"Liian hyvä työtarjous",
+     q:"Saat viestin: “Tienaa 500 €/päivä kotoa, maksa vain 50 € aloitusmaksu.” Mitä teet?",
+     opts:[
+       {t:"En maksa mitään – se on huijaus", ok:true},
+       {t:"Maksan, koska palkka on iso", ok:false},
+       {t:"Annan tilitietoni varmuuden vuoksi", ok:false},
+     ],
+     fb:"Oikea työnantaja ei koskaan pyydä sinua maksamaan päästäksesi töihin. Aloitusmaksu on aina hälytysmerkki.", reward:45},
+  ],
+};
+
+/* Kulmat / erikoisruudut (ei tehtävää, tapahtuu heti) */
+const EVENTS = {
+  start:  {msg:"Palkkapäivä! Sait palkkaa.", money:()=>state.salary},
+  sattuma:{msg:null}, // arvotaan
+  vero:   {msg:"Verottaja perii veroa palkastasi.", money:()=> -Math.round(state.salary*0.25)},
+  tet:    {msg:"TET-tori! Kävit tutustumassa työhön ja sait kokemusbonuksen.", money:()=>30},
+};
+const SATTUMA = [
+  {msg:"Löysit hyvän kesätyön ilmoituksen ja sait sen! +50 €", money:50},
+  {msg:"Autoit naapuria muutossa ja sait kiitokseksi rahaa. +40 €", money:40},
+  {msg:"Puhelimesi näyttö hajosi ja korjaus maksoi. -30 €", money:-30},
+  {msg:"Sait stipendin hyvästä asenteesta koulussa! +60 €", money:60},
+  {msg:"Unohdit bussilipun ja jouduit ostamaan uuden. -15 €", money:-15},
+];
+
+/* ---- Uudet ruudut: tehtävät (hyvinvointi, kesätyö, yrittäminen) ---- */
+Object.assign(BANK, {
+  hyvinvointi:[
+    {type:"choice", title:"Univelka kasautuu",
+     q:"Valvot öisin myöhään ja koulussa tai töissä väsyttää koko ajan. Mikä auttaa parhaiten?",
+     opts:[
+       {t:"Menet nukkumaan säännöllisesti ja rajaat ruutuaikaa illalla", ok:true},
+       {t:"Juot energiajuomia jaksaaksesi päivän läpi", ok:false},
+       {t:"Nukut viikonloppuna koko päivän ja kuittaat velan pois", ok:false},
+     ],
+     fb:"Riittävä ja säännöllinen uni on jaksamisen perusta. Energiajuomat tai pitkät viikonloppu-unet eivät korvaa menetettyä unta.", reward:40},
+    {type:"choice", title:"Kaikkea on liikaa",
+     q:"Sinulla on koulu, harrastus ja kesätyö – tuntuu että et jaksa. Mitä teet?",
+     opts:[
+       {t:"Kerrot kuormituksesta aikuiselle ja karsit jotain", ok:true},
+       {t:"Yrität vain puskea läpi vaikka väsyttää", ok:false},
+       {t:"Lopetat kaiken kerralla", ok:false},
+     ],
+     fb:"Kun kaikkea on liikaa, on fiksua pysähtyä, priorisoida ja pyytää apua. Lepo ja tauot kuuluvat hyvään suoritukseen, eivät ole laiskuutta.", reward:40},
+    {type:"order", title:"Hyvä palautuminen",
+     q:"Järjestä hyvä ilta työ- tai koulupäivän jälkeen. Mikä kannattaa tehdä ensin?",
+     items:["Pidä tauko ja syö kunnolla","Liiku tai ulkoile hetki","Tee jotain mukavaa","Mene ajoissa nukkumaan"],
+     fb:"Palautuminen rakentuu pienistä asioista: ruoka, liike, mukava hetki ja uni. Näin akut latautuvat seuraavaan päivään.", reward:45},
+  ],
+  kesatyo:[
+    {type:"choice", title:"Minkä ikäisenä töihin?",
+     q:"Haluat kesätöihin. Mikä pitää paikkansa?",
+     opts:[
+       {t:"Yleensä voit tehdä kesätöitä sinä vuonna, kun täytät 15", ok:true},
+       {t:"Töihin pääsee vasta 18-vuotiaana", ok:false},
+       {t:"Ikä ei vaikuta työntekoon mitenkään", ok:false},
+     ],
+     fb:"Kevytä työtä voi tehdä jo aiemmin, mutta varsinaiset kesätyöt alkavat yleensä sinä vuonna kun täytät 15. Alaikäisen työaikaa myös rajoitetaan lailla.", reward:40},
+    {type:"choice", title:"Ensimmäinen työpäivä",
+     q:"On ensimmäinen kesätyöpäivä etkä tiedä mitä tehdä. Miten aloitat?",
+     opts:[
+       {t:"Pyydät perehdytystä ja kysyt ohjeita", ok:true},
+       {t:"Odotat hiljaa, että joku huomaa sinut", ok:false},
+       {t:"Teet omia juttuja puhelimella", ok:false},
+     ],
+     fb:"Uudessa työssä saa ja pitää kysyä. Perehdytys on sinun oikeutesi, ja kysyminen tekee hyvän vaikutuksen – se ei ole tyhmää.", reward:35},
+    {type:"order", title:"Näin haet kesätyötä",
+     q:"Järjestä kesätyön haku fiksuun järjestykseen. Mitä teet ensin?",
+     items:["Mieti mikä ala kiinnostaa","Tee CV valmiiksi","Ota rohkeasti yhteyttä työpaikkoihin","Valmistaudu haastatteluun"],
+     fb:"Ensin mietit alan, teet CV:n, otat yhteyttä ja valmistaudut haastatteluun. Aktiivisuus ja oma yhteydenotto kannattavat kesätyön haussa.", reward:45},
+  ],
+  yrittaminen:[
+    {type:"choice", title:"Mistä yrittäminen alkaa?",
+     q:"Mikä on yrittämisen ydin?",
+     opts:[
+       {t:"Ratkaiset jonkun ongelman tai tarpeen ja saat siitä maksun", ok:true},
+       {t:"Sinun pitää olla heti rikas ja kuuluisa", ok:false},
+       {t:"Yrittäjä ei tarvitse asiakkaita lainkaan", ok:false},
+     ],
+     fb:"Yrittäminen lähtee siitä, että keksit tuotteen tai palvelun, jota joku tarvitsee ja josta on valmis maksamaan.", reward:40},
+    {type:"choice", title:"Kesäbisnes",
+     q:"Haluat myydä kotitekoista limsaa tapahtumassa. Mikä on fiksua tehdä ensin?",
+     opts:[
+       {t:"Laske paljonko ainekset maksavat ja mihin hintaan myyt", ok:true},
+       {t:"Osta kaikki mahdollisimman kalliilla ja toivo parasta", ok:false},
+       {t:"Älä mieti hintaa lainkaan", ok:false},
+     ],
+     fb:"Kannattava idea vaatii laskemista: kun tiedät kulut, osaat hinnoitella niin että jää voittoa. Erotusta kutsutaan katteeksi.", reward:45},
+    {type:"choice", title:"Idea ei toiminut",
+     q:"Ensimmäinen yritysideasi ei tuottanut rahaa. Miten fiksu yrittäjä ajattelee?",
+     opts:[
+       {t:"Oppii virheestä ja kokeilee muokattua ideaa", ok:true},
+       {t:"Luovuttaa lopullisesti", ok:false},
+       {t:"Syyttää asiakkaita epäonnistumisesta", ok:false},
+     ],
+     fb:"Moni menestynyt yrittäjä on epäonnistunut monta kertaa. Tärkeintä on oppia, muokata ideää ja yrittää uudelleen.", reward:40},
+  ],
+});
+
+/* ================= NOPPA ================= */
+const die=document.getElementById('die');
+const PIP={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+function renderDie(v){
+  die.textContent="";
+  for(let i=0;i<9;i++){const s=document.createElement('span');if(PIP[v].includes(i))s.className='on';die.appendChild(s);}
+}
+renderDie(1);
+
+/* ================= PELISILMUKKA ================= */
+const rollBtn=document.getElementById('rollBtn');
+const msg=document.getElementById('msg');
+rollBtn.addEventListener('click', roll);
+
+function roll(){
+  if(state.busy)return;
+  state.busy=true; rollBtn.disabled=true;
+  die.classList.add('rolling');
+  let ticks=0;
+  const iv=setInterval(()=>{ renderDie(1+Math.floor(Math.random()*6)); if(++ticks>8){clearInterval(iv);finishRoll();} },60);
+  function finishRoll(){
+    die.classList.remove('rolling');
+    const v=1+Math.floor(Math.random()*6);
+    renderDie(v);
+    msg.textContent=`Heitit ${v}. Nappula liikkuu...`;
+    hop(v);
+  }
+}
+
+function hop(steps){
+  let left=steps;
+  const step=()=>{
+    const prev=state.pos;
+    state.pos=(state.pos+1)%TILES.length;
+    // pieni hyppyanimaatio
+    drawPawn();
+    if(pawnEl){ pawnEl.style.transform="translateY(-10px)"; setTimeout(()=>{if(pawnEl)pawnEl.style.transform="";},140); }
+    // ohitetaanko START (palkkapäivä) -> palkka, paitsi jos pysähdyt siihen
+    if(state.pos===0 && left>1){
+      changeMoney(state.salary, "Ohitit palkkapäivän! Sait palkkaa.");
+    }
+    left--;
+    if(left>0){ setTimeout(step,260); }
+    else { setTimeout(landed,320); }
+  };
+  setTimeout(step,180);
+}
+
+function landed(){
+  const t=TILES[state.pos];
+  const cat=t.cat;
+  if(EVENTS[cat]){ handleEvent(cat); }
+  else { openTask(cat); }
+}
+
+function endTurn(extraMsg){
+  state.busy=false; rollBtn.disabled=false;
+  if(extraMsg) msg.textContent=extraMsg;
+  else msg.textContent="Heitä uudelleen!";
+  // tason tarkistus tehdään lap-laskurin kautta erikseen
+}
+
+/* ---- Kulmatapahtumat ---- */
+function handleEvent(cat){
+  if(cat==="sattuma"){
+    const s=SATTUMA[Math.floor(Math.random()*SATTUMA.length)];
+    changeMoney(s.money, s.msg);
+    flashEvent(CAT.sattuma, "Sattuma", s.msg, s.money);
+    return;
+  }
+  const ev=EVENTS[cat];
+  const amt=ev.money();
+  changeMoney(amt, ev.msg);
+  flashEvent(CAT[cat], CAT[cat].name, ev.msg, amt);
+}
+
+/* ================= MODAALI ================= */
+const scrim=document.getElementById('scrim');
+const cardHead=document.getElementById('cardHead');
+const cardBody=document.getElementById('cardBody');
+const taskCat=document.getElementById('taskCat');
+const taskTitle=document.getElementById('taskTitle');
+const taskIco=document.getElementById('taskIco');
+
+function openModal(cat,catName,title){
+  cardHead.style.background=`linear-gradient(150deg, ${cat.color}, ${shade(cat.color,-40)})`;
+  taskCat.textContent=catName;
+  taskTitle.textContent=title;
+  taskIco.textContent="";
+  scrim.classList.add('open');
+}
+function closeModal(){ scrim.classList.remove('open'); }
+
+/* Kulmatapahtuman ilmoitus modaalissa (yksinkertainen) */
+function flashEvent(cat, catName, text, money){
+  openModal(cat, catName, catName);
+  cardBody.innerHTML="";
+  const p=document.createElement('p'); p.className='q'; p.textContent=text; cardBody.appendChild(p);
+  const fb=document.createElement('div'); fb.className='fb show '+(money>=0?'good':'bad');
+  fb.innerHTML=`<div class="head">${money>=0?'Hienoa!':'Harmi'}</div>
+    <div>Rahatilanne muuttui <span class="money">${money>=0?'+':''}${money} €</span>.</div>`;
+  cardBody.appendChild(fb);
+  addNext(()=>{ closeModal(); afterTask(); });
+}
+
+/* ---- Tehtävän avaus ---- */
+function drawFromPool(cat){
+  if(!state.bankPools[cat] || state.bankPools[cat].length===0){
+    state.bankPools[cat]=shuffle(BANK[cat].slice());
+  }
+  return state.bankPools[cat].shift();
+}
+function openTask(cat){
+  const task=drawFromPool(cat);
+  const c=CAT[cat];
+  openModal(c, c.name, task.title);
+  state.tasksThisLap++;
+  updateHud();
+  if(task.type==="choice") renderChoice(task,c);
+  else if(task.type==="order") renderOrder(task,c);
+  else if(task.type==="invest") renderInvest(task,c);
+}
+
+/* ---- Valintatehtävä ---- */
+function renderChoice(task,c){
+  cardBody.innerHTML="";
+  const q=document.createElement('p'); q.className='q'; q.textContent=task.q; cardBody.appendChild(q);
+  const wrap=document.createElement('div'); wrap.className='opts';
+  const opts=shuffle(task.opts.slice());
+  let answered=false;
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=o.t;
+    b.addEventListener('click',()=>{
+      if(answered)return; answered=true;
+      Array.from(wrap.children).forEach(x=>x.disabled=true);
+      if(o.ok){
+        b.classList.add('correct'); b.insertAdjacentHTML('beforeend','<span class="tag">✔</span>');
+        showFeedback(true, task.fb, task.reward, c);
+      }else{
+        b.classList.add('wrong'); b.insertAdjacentHTML('beforeend','<span class="tag">✕</span>');
+        // näytä oikea
+        Array.from(wrap.children).forEach((x,idx)=>{ if(opts[idx].ok){x.classList.add('correct');} });
+        showFeedback(false, task.fb, Math.round(task.reward*0.25), c);
+      }
+    });
+    wrap.appendChild(b);
+  });
+  cardBody.appendChild(wrap);
+}
+
+/* ---- Järjestä-tehtävä ---- */
+function renderOrder(task,c){
+  cardBody.innerHTML="";
+  const q=document.createElement('p'); q.className='q'; q.textContent=task.q; cardBody.appendChild(q);
+  const correct=task.items.slice();
+  let cur=shuffle(task.items.slice());
+  if(cur.join('|')===correct.join('|')) cur=shuffle(cur); // varmista sekoitus
+  const ul=document.createElement('ul'); ul.className='order-list'; cardBody.appendChild(ul);
+  function paint(){
+    ul.innerHTML="";
+    cur.forEach((txt,idx)=>{
+      const li=document.createElement('li'); li.className='order-item';
+      li.innerHTML=`<span class="num">${idx+1}</span><span class="txt"></span>`;
+      li.querySelector('.txt').textContent=txt;
+      const up=document.createElement('button'); up.type='button'; up.className='mv'; up.textContent='▲'; up.setAttribute('aria-label','Siirrä ylös');
+      const dn=document.createElement('button'); dn.type='button'; dn.className='mv'; dn.textContent='▼'; dn.setAttribute('aria-label','Siirrä alas');
+      up.disabled=idx===0; dn.disabled=idx===cur.length-1;
+      up.addEventListener('click',()=>{[cur[idx-1],cur[idx]]=[cur[idx],cur[idx-1]];paint();});
+      dn.addEventListener('click',()=>{[cur[idx+1],cur[idx]]=[cur[idx],cur[idx+1]];paint();});
+      const ctr=document.createElement('div'); ctr.style.display='flex'; ctr.style.flexDirection='column'; ctr.style.gap='3px';
+      ctr.appendChild(up); ctr.appendChild(dn);
+      li.appendChild(ctr);
+      ul.appendChild(li);
+    });
+  }
+  paint();
+  const check=document.createElement('button'); check.type='button'; check.className='next-btn act-btn'; check.textContent='Tarkista järjestys';
+  check.addEventListener('click',()=>{
+    const ok=cur.join('|')===correct.join('|');
+    Array.from(ul.children).forEach((li,idx)=>{
+      li.querySelectorAll('.mv').forEach(m=>m.disabled=true);
+      li.classList.add(cur[idx]===correct[idx]?'ok':'no');
+    });
+    check.remove();
+    showFeedback(ok, task.fb, ok?task.reward:Math.round(task.reward*0.3), c);
+  });
+  cardBody.appendChild(check);
+}
+
+/* ---- Sijoita-tehtävä ---- */
+function renderInvest(task,c){
+  cardBody.innerHTML="";
+  const q=document.createElement('p'); q.className='q'; q.textContent=task.q; cardBody.appendChild(q);
+  const box=document.createElement('div'); box.className='invest';
+  const max=Math.max(0,Math.min(state.money, 150));
+  const amt=document.createElement('div'); amt.className='amt'; amt.textContent='0 €';
+  const sl=document.createElement('input'); sl.type='range'; sl.className='slider'; sl.min=0; sl.max=max; sl.step=5; sl.value=0;
+  sl.setAttribute('aria-label','Sijoitettava summa');
+  sl.addEventListener('input',()=>{amt.textContent=sl.value+' €';});
+  box.appendChild(amt); box.appendChild(sl);
+  const pick=document.createElement('div'); pick.className='pick';
+  let strat='hajauta';
+  const b1=document.createElement('button'); b1.type='button'; b1.className='opt sel'; b1.textContent='Hajauta (turvallisempi)';
+  const b2=document.createElement('button'); b2.type='button'; b2.className='opt'; b2.textContent='Kaikki yhteen (riski)';
+  b1.addEventListener('click',()=>{strat='hajauta';b1.classList.add('sel');b2.classList.remove('sel');});
+  b2.addEventListener('click',()=>{strat='yhteen';b2.classList.add('sel');b1.classList.remove('sel');});
+  pick.appendChild(b1); pick.appendChild(b2); box.appendChild(pick);
+  const hint=document.createElement('p'); hint.className='hint'; hint.textContent=task.hint; box.appendChild(hint);
+  cardBody.appendChild(box);
+  const go=document.createElement('button'); go.type='button'; go.className='next-btn act-btn'; go.textContent='Sijoita';
+  go.addEventListener('click',()=>{
+    const sum=parseInt(sl.value,10)||0;
+    sl.disabled=true; b1.disabled=true; b2.disabled=true; go.remove();
+    let change=0, txt="";
+    if(sum===0){
+      txt="Et sijoittanut mitään. Ihan ok – ei ole pakko. Sijoittaminen kannattaa aloittaa vasta kun on ylimääräistä rahaa.";
+      showFeedback(true, txt, 10, c);
+      return;
+    }
+    // tuotto: hajauta = pienempi vaihtelu, yhteen = iso vaihtelu
+    let pct;
+    if(strat==='hajauta'){ pct = -0.1 + Math.random()*0.35; } // -10%..+25%
+    else { pct = -0.5 + Math.random()*1.1; }                 // -50%..+60%
+    change=Math.round(sum*pct);
+    const good=change>=0;
+    txt = good
+      ? `Sijoituksesi kasvoi! Voittoa tuli ${change} €. `
+      : `Sijoituksesi laski. Menetit ${Math.abs(change)} €. `;
+    txt += strat==='hajauta'
+      ? "Hajauttaminen piti vaihtelun maltillisena – juuri niin kuin pitääkin."
+      : "Kaikki yhteen kohteeseen = iso heilunta. Joskus voitat isosti, joskus häviät isosti.";
+    showFeedback(good, txt, 0, c, change);
+  });
+  cardBody.appendChild(go);
+}
+
+/* ---- Palaute + jatka ---- */
+function showFeedback(ok, text, reward, c, rawMoney){
+  const fb=document.createElement('div'); fb.className='fb show '+(ok?'good':'bad');
+  let moneyLine="";
+  const delta = (typeof rawMoney==='number') ? rawMoney : reward;
+  if(typeof rawMoney==='number'){
+    moneyLine=`Rahatilanne: <span class="money">${rawMoney>=0?'+':''}${rawMoney} €</span>`;
+  }else{
+    moneyLine=`Palkkio: <span class="money">+${reward} €</span>`;
+  }
+  fb.innerHTML=`<div class="head">${ok?'Oikein!':'Näin se menee'}</div>
+    <div>${text}</div><div style="margin-top:8px">${moneyLine}</div>`;
+  cardBody.appendChild(fb);
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(ok){ state.correctThisLap++; state.oikeatYhteensa=(state.oikeatYhteensa||0)+1; }
+  changeMoney(delta, null, true);
+  addNext(()=>{ closeModal(); afterTask(); });
+}
+function addNext(fn){
+  const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn'; btn.textContent='Jatka →';
+  btn.addEventListener('click',fn);
+  cardBody.appendChild(btn);
+  btn.focus();
+}
+
+/* ---- Tehtävän jälkeen: tarkista taso ---- */
+function afterTask(){
+  // Kierros valmis, kun nappula on käynyt takaisin lähdössä.
+  // Yksinkertaistus: taso valmistuu kun on tehnyt vähintään 8 tehtävää tällä kierroksella.
+  if(state.tasksThisLap>=8){
+    levelComplete();
+  }else{
+    endTurn();
+  }
+}
+
+/* ================= RAHA ================= */
+function changeMoney(amt, message, silent){
+  state.money=Math.max(0, state.money+amt);
+  updateHud();
+  if(message && !silent) msg.textContent=message;
+}
+function updateHud(){
+  document.getElementById('sMoney').innerHTML=`${state.money} <small>€</small>`;
+  document.getElementById('sLevel').textContent=state.level;
+  const done=Math.min(state.tasksThisLap,8);
+  document.getElementById('sGoal').innerHTML=`${done} / 8 <small>tehtävää</small>`;
+}
+
+/* ================= TASON YHTEENVETO ================= */
+function levelComplete(){
+  const pts=state.correctThisLap;
+  const total=state.tasksThisLap;
+  const stars = pts>=total*0.85 ? 3 : pts>=total*0.55 ? 2 : 1;
+  openModal(CAT.tet, `Taso ${state.level} suoritettu`, `Taso ${state.level} suoritettu!`);
+  cardHead.style.background="linear-gradient(150deg,var(--purple),var(--blue))";
+  cardBody.innerHTML=`
+    <div class="stars">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+    <p class="q" style="text-align:center">Sinulla on nyt <b>${state.money} €</b>.</p>
+    <p style="font-weight:600;line-height:1.5">Kävit läpi ${total} tehtävää ja vastasit oikein ${pts} kertaa. Opit tällä tasolla mm. näitä työelämän taitoja:</p>
+    <ul class="summary" style="padding-left:20px">
+      <li>Miten teet hyvän ensivaikutelman ja haet töitä.</li>
+      <li>Työpaikan pelisäännöt: ajoissa, rehellisyys, palaute.</li>
+      <li>Vuorovaikutus: kuuntelu, kysyminen, tiimityö.</li>
+      <li>Raha: verokortti, työsopimus ja fiksu rahankäyttö.</li>
+      <li>Sijoittaminen ja riskit: hajauta, varo huijauksia.</li>
+    </ul>`;
+  const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn';
+  btn.textContent=`Seuraava taso (${state.level+1}) →`;
+  btn.addEventListener('click',()=>{ nextLevel(); closeModal(); });
+  cardBody.appendChild(btn);
+  btn.focus();
+}
+function nextLevel(){
+  state.level++;
+  state.salary+=15;                 // isommat panokset
+  state.correctThisLap=0;
+  state.tasksThisLap=0;
+  state.bankPools={};               // sekoita tehtävät uudelleen
+  updateHud();
+  msg.textContent=`Taso ${state.level} alkaa! Palkka on nyt ${state.salary} €. Heitä noppaa.`;
+  endTurn(msg.textContent);
+}
+
+/* ================= APURIT ================= */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ---- Selite: kaikki laudalla esiintyvät kategoriat ---- */
+function buildLegend(){
+  const wrap=document.getElementById('legend'); wrap.textContent="";
+  const seen=new Set(); const order=[];
+  TILES.forEach(t=>{ if(!seen.has(t.cat)){ seen.add(t.cat); order.push(t.cat); } });
+  order.forEach(k=>{
+    const c=CAT[k];
+    const li=document.createElement('div'); li.className='li';
+    const dot=document.createElement('span'); dot.className='dot'; dot.style.background=c.color;
+    li.appendChild(dot); li.append((c.ico? c.ico+' ':'')+c.name);
+    wrap.appendChild(li);
+  });
+}
+
+/* ================= KÄYNNISTYS ================= */
+scrim.addEventListener('click', e=>{ /* ei vahinkosulkua kesken tehtävän */ });
+drawBoard();
+buildLegend();
+syncThemeBtn();
+updateHud();
+msg.textContent = "Heitä noppaa ja lähde liikkeelle!";
+
+/* ================= KILPAILU / TULOSTAULU ================= */
+/* Kevyt kilpailu: pelaaja liittyy nimellä + luokkakoodilla, ja tulos tallentuu
+   yhteiseen tulostauluun. Toimii kun peli on julkaistu (DigiOpo/Vercel).
+   Paikallisesti avattuna peli toimii normaalisti, mutta tulostaulua ei voi hakea. */
+const API_TULOKSET = '/api/tulokset';
+state.kilpailu = { nimi:'', koodi:'' };
+state.oikeatYhteensa = 0;
+
+const kscrim   = document.getElementById('kscrim');
+const kisaBtn  = document.getElementById('kisaBtn');
+const kNimiEl  = document.getElementById('kNimi');
+const kKoodiEl = document.getElementById('kKoodi');
+const kStatus  = document.getElementById('kStatus');
+const kBoard   = document.getElementById('kBoard');
+const kEmpty   = document.getElementById('kEmpty');
+
+function openKisa(){
+  kscrim.classList.add('open');
+  kNimiEl.value = state.kilpailu.nimi;
+  kKoodiEl.value = state.kilpailu.koodi;
+  if(state.kilpailu.koodi) lataaTulostaulu();
+}
+function closeKisa(){ kscrim.classList.remove('open'); }
+
+function renderBoard(list){
+  kBoard.innerHTML='';
+  kEmpty.hidden = list.length>0;
+  list.forEach((t,i)=>{
+    const li=document.createElement('li');
+    if(state.kilpailu.nimi && t.nimi===state.kilpailu.nimi) li.className='me';
+    const rank=document.createElement('span'); rank.className='rank'; rank.textContent=(i+1);
+    const nm=document.createElement('span'); nm.className='nm'; nm.textContent=t.nimi;
+    const sc=document.createElement('span'); sc.className='sc'; sc.textContent='Taso '+t.taso+' \u00b7 '+t.oikein+' oikein';
+    const mo=document.createElement('span'); mo.className='money'; mo.textContent=t.raha+' \u20ac';
+    li.append(rank,nm,sc,mo);
+    kBoard.appendChild(li);
+  });
+}
+
+async function lataaTulostaulu(){
+  const koodi=(kKoodiEl.value||state.kilpailu.koodi||'').trim();
+  if(koodi.length<3){ renderBoard([]); kStatus.textContent='Sy\u00f6t\u00e4 luokkakoodi n\u00e4hd\u00e4ksesi tulostaulun.'; return; }
+  kStatus.textContent='Haetaan tulostaulua\u2026';
+  try{
+    const r=await fetch(API_TULOKSET+'?koodi='+encodeURIComponent(koodi),{headers:{'Accept':'application/json'}});
+    const d=await r.json();
+    if(d && d.ok){ renderBoard(d.tulokset||[]); kStatus.textContent=''; }
+    else { renderBoard([]); kStatus.textContent='Tulostaulua ei saatu haettua.'; }
+  }catch(e){
+    renderBoard([]);
+    kStatus.textContent='Tulostaulu toimii, kun peli on julkaistu palvelimelle (DigiOpo/Vercel). Paikallisesti avattuna sit\u00e4 ei voi hakea.';
+  }
+}
+
+async function lahetaTulos(){
+  const k=state.kilpailu;
+  if(!k.nimi || !k.koodi) return;
+  try{
+    const r=await fetch(API_TULOKSET,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({koodi:k.koodi, nimi:k.nimi, raha:state.money, taso:state.level, oikein:state.oikeatYhteensa})
+    });
+    const d=await r.json();
+    if(d && d.ok){ renderBoard(d.tulokset||[]); if(kscrim.classList.contains('open')) kStatus.textContent='Tuloksesi l\u00e4hetettiin tulostauluun!'; }
+  }catch(e){ /* offline: yksinpeli jatkuu normaalisti */ }
+}
+
+if(kisaBtn){
+  kisaBtn.addEventListener('click', openKisa);
+  document.getElementById('kClose').addEventListener('click', closeKisa);
+  kscrim.addEventListener('click', e=>{ if(e.target===kscrim) closeKisa(); });
+  document.getElementById('kRefresh').addEventListener('click', lataaTulostaulu);
+  document.getElementById('kSave').addEventListener('click', ()=>{
+    const nimi=kNimiEl.value.trim().slice(0,24);
+    const koodi=kKoodiEl.value.trim().slice(0,40);
+    if(!nimi){ kStatus.textContent='Kirjoita ensin nimesi.'; kNimiEl.focus(); return; }
+    if(koodi.length<3){ kStatus.textContent='Kirjoita luokkakoodi (v\u00e4hint\u00e4\u00e4n 3 merkki\u00e4).'; kKoodiEl.focus(); return; }
+    state.kilpailu.nimi=nimi; state.kilpailu.koodi=koodi;
+    kisaBtn.textContent='\ud83c\udfc6 '+nimi;
+    kStatus.textContent='Liityit kilpailuun koodilla '+koodi+'. Tuloksesi p\u00e4ivittyy tulostauluun automaattisesti.';
+    lahetaTulos();
+  });
+}
+
+/* Auto-lähetys aina kun taso valmistuu (kierros täynnä). */
+if(typeof levelComplete==='function'){
+  const _levelComplete=levelComplete;
+  levelComplete=function(){ _levelComplete.apply(this,arguments); try{ lahetaTulos(); }catch(e){} };
+}
+</script>
+</body>
+</html>
