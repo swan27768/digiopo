@@ -30,6 +30,10 @@ export const config = {
   ],
 };
 
+// Pelikohtaiset lukot: näille poluille vaaditaan lisenssin LISÄKSI
+// voimassa oleva pelikoodi-eväste (digiopo_peli). Lisää uusia pelejä tähän.
+const PELILUKKO = new Set(['/pelit/duuniskaba.html']);
+
 function haeEvaste(req, nimi) {
   const cookie = req.headers.get('cookie') || '';
   for (const osa of cookie.split(';')) {
@@ -46,11 +50,23 @@ export default async function middleware(req) {
   // Turvaventtiili: ilman salaisuutta muuri on pois päältä.
   if (!secret) return next();
 
+  const url = new URL(req.url);
   const token = haeEvaste(req, 'digiopo_lisenssi');
   const payload = token ? await tarkistaToken(token, secret) : null;
-  if (payload) return next(); // valtuutus kunnossa
 
-  const url = new URL(req.url);
+  if (payload) {
+    // Lisenssi kunnossa – tarkista lisäksi pelikohtainen lukko tietyillä poluilla
+    if (PELILUKKO.has(url.pathname)) {
+      const pelitoken = haeEvaste(req, 'digiopo_peli');
+      const pelip = pelitoken ? await tarkistaToken(pelitoken, secret) : null;
+      if (!pelip || pelip.typ !== 'peli') {
+        const portti = new URL('/sivut/peliportti.html', req.url);
+        portti.searchParams.set('redirect', url.pathname + url.search);
+        return Response.redirect(portti, 302);
+      }
+    }
+    return next(); // valtuutus kunnossa
+  }
 
   // Data-/JSON-pyynnöt: fetch ei hyödy redirectistä → estetään 401:llä.
   if (url.pathname.startsWith('/js/') || url.pathname.endsWith('.json')) {

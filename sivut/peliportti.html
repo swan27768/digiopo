@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Syötä opettajan antama pelikoodi avataksesi Duuniskaba-pelin.">
+<title>Pelikoodi – Duuniskaba</title>
+<style>
+  :root{
+    --bg1:#eef2fb; --bg2:#e7f6f3;
+    --ink:#20324f; --muted:#5b6b86;
+    --card:#ffffff; --line:#e4e8f0;
+    --shadow:rgba(32,50,79,.14);
+    --teal:#0f766e; --indigo:#4f46e5; --bad:#e0524b;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg1:#141726; --bg2:#101a22;
+      --ink:#eef1fb; --muted:#a6b0c8;
+      --card:#1d2233; --line:#2d3450;
+      --shadow:rgba(0,0,0,.45);
+      --teal:#2bbdb1; --indigo:#8b83f0; --bad:#f0685f;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; display:grid; place-items:center; padding:24px 16px;
+    background:radial-gradient(1000px 500px at 50% -10%, var(--bg2), transparent 60%), linear-gradient(160deg,var(--bg1),var(--bg2));
+  }
+  .kortti{
+    width:100%; max-width:420px; background:var(--card); border:1px solid var(--line);
+    border-radius:22px; box-shadow:0 10px 30px var(--shadow); overflow:hidden;
+  }
+  .logo{ display:flex; justify-content:center; padding:18px 18px 14px;
+    background:radial-gradient(120% 130% at 50% 0, #14224e, #090d1a); }
+  .logo img{ display:block; width:100%; max-width:260px; height:auto; }
+  .sisalto{ padding:22px 22px 24px; }
+  h1{ font-size:1.25rem; margin:0 0 4px; text-align:center; }
+  .ohje{ color:var(--muted); font-size:.92rem; font-weight:600; text-align:center; margin:0 0 18px; }
+  label{ display:block; font-weight:800; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 5px; }
+  input{
+    width:100%; border:2px solid var(--line); background:transparent; color:var(--ink);
+    border-radius:12px; padding:13px 14px; font-size:1.1rem; font-weight:800; font-family:inherit;
+    text-transform:uppercase; letter-spacing:.03em; text-align:center;
+  }
+  input:focus{ outline:none; border-color:var(--indigo); }
+  button{
+    margin-top:14px; width:100%; border:none; cursor:pointer; color:#fff; font-weight:800;
+    font-size:1.05rem; padding:14px; border-radius:13px; font-family:inherit;
+    background:linear-gradient(135deg,var(--indigo),var(--teal));
+    box-shadow:0 6px 16px color-mix(in srgb, var(--indigo) 40%, transparent);
+  }
+  button:active{ transform:translateY(1px); }
+  button:disabled{ opacity:.6; cursor:default; }
+  .tila{ margin:12px 0 0; min-height:1.2em; font-size:.9rem; font-weight:700; text-align:center; color:var(--muted); }
+  .tila.virhe{ color:var(--bad); }
+  .takaisin{ display:block; text-align:center; margin-top:16px; color:var(--muted); font-size:.85rem; font-weight:700; text-decoration:none; }
+  .takaisin:hover{ color:var(--indigo); }
+</style>
+</head>
+<body>
+  <div class="kortti">
+    <div class="logo"><img src="/images/duuniskaba-logo.webp" alt="Duuniskaba-logo"></div>
+    <div class="sisalto">
+      <h1>Syötä pelikoodi</h1>
+      <p class="ohje">Avaa Duuniskaba opettajasi antamalla ryhmäkoodilla.</p>
+      <label for="koodi">Pelikoodi</label>
+      <input id="koodi" type="text" inputmode="latin" autocomplete="off" maxlength="20" placeholder="esim. 9A-K3M9" aria-describedby="tila">
+      <button id="avaa" type="button">Avaa peli</button>
+      <p class="tila" id="tila" role="status"></p>
+      <a class="takaisin" id="takaisin" href="/9luokka">← Takaisin luokan sivulle</a>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var API = "/api/pelikoodi";
+  var input = document.getElementById("koodi");
+  var btn = document.getElementById("avaa");
+  var tila = document.getElementById("tila");
+
+  // Turvallinen paluuosoite: vain sivuston sisäinen polku sallitaan.
+  var params = new URLSearchParams(location.search);
+  var redir = params.get("redirect") || "/pelit/duuniskaba.html";
+  if (!/^\/[A-Za-z0-9_\-./?=&%]*$/.test(redir)) redir = "/pelit/duuniskaba.html";
+
+  var lk = params.get("luokka");
+  if (["7","8","9"].indexOf(lk) !== -1) {
+    document.getElementById("takaisin").setAttribute("href", "/" + lk + "luokka");
+  }
+
+  function aseta(viesti, virhe){
+    tila.textContent = viesti || "";
+    tila.classList.toggle("virhe", !!virhe);
+  }
+
+  async function avaa(){
+    var koodi = (input.value || "").trim().toUpperCase();
+    if (!/^[A-Z0-9-]{4,20}$/.test(koodi)){
+      aseta("Tarkista koodi – siinä on 4–20 merkkiä (kirjaimia, numeroita, väliviiva).", true);
+      input.focus(); return;
+    }
+    btn.disabled = true; aseta("Tarkistetaan koodia…", false);
+    try{
+      var r = await fetch(API, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ ryhma: koodi })
+      });
+      var d = await r.json();
+      if (d && d.ok){
+        // Tallenna ryhmä kilpailun tulostaulua varten (sama koodi esitäytetään pelissä)
+        try { localStorage.setItem("digiopo-peliryhma", d.ryhma || koodi); } catch(e){}
+        aseta("Koodi kelpaa! Avataan peli…", false);
+        location.href = redir;
+      } else if (r.status === 429){
+        aseta("Liian monta yritystä. Odota hetki ja yritä uudelleen.", true);
+        btn.disabled = false;
+      } else {
+        aseta("Koodi ei kelpaa. Tarkista opettajaltasi oikea pelikoodi.", true);
+        btn.disabled = false;
+      }
+    }catch(e){
+      aseta("Yhteysvirhe. Kokeile uudelleen hetken kuluttua.", true);
+      btn.disabled = false;
+    }
+  }
+
+  btn.addEventListener("click", avaa);
+  input.addEventListener("keydown", function(e){ if (e.key === "Enter") avaa(); });
+  input.focus();
+})();
+</script>
+</body>
+</html>
