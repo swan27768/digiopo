@@ -438,7 +438,11 @@ body{
     <div style="font-size:19px;font-weight:900;margin-bottom:6px" id="end-title">Mahtava suoritus!</div>
     <div class="big-score" id="end-score">0</div>
     <div style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:16px">kokonaispistettä</div>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:4px">🏅 Olet saavuttanut temppelin huipun! Katso sijoituksesi tulostaulusta alta.</div>
+    <div id="aarre-box" style="width:100%;background:linear-gradient(135deg,rgba(250,204,21,.14),rgba(250,204,21,.04));border:1.5px solid var(--yellow);border-radius:14px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--yellow);font-weight:800;margin-bottom:8px">🏆 Temppelin aarre</div>
+      <div id="end-aarre" style="font-size:16px;font-weight:700;line-height:1.5;font-style:italic;color:var(--text)">…</div>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:4px">🏅 Olet saavuttanut temppelin huipun! Katso sijoituksesi tulostaulusta alta.</div>
   </div>
 
   <div style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px">
@@ -1518,6 +1522,29 @@ const BASE_PTS_K2 = 150;   // pistettä oikeasta vastauksesta (K2)
 const BASE_PTS_K3 = 200;   // pistettä oikeasta vastauksesta (K3)
 const MAX_BONUS   = 60;    // maksimi aikabonus
 
+/* Temppelin aarre: satunnainen kannustava viisaus jokaiselle huipulle päässeelle.
+   Omia aforismeja + klassisia suomalaisia sananlaskuja (oppimis- ja kasvuteema). */
+const AARRE_VIISAUDET = [
+  "Jokainen mestari oli joskus aloittelija.",
+  "Virhe on todiste siitä, että yrität.",
+  "Ei kukaan ole seppä syntyessään.",
+  "Ei oppi ojaan kaada.",
+  "Pienikin askel eteenpäin on silti eteenpäin.",
+  "Aivot ovat kuin lihas — ne vahvistuvat käytössä.",
+  "Uteliaisuus on oppimisen paras kaveri.",
+  "Hyvä kysymys on jo puoliksi vastattu.",
+  "Ahkeruus vie pidemmälle kuin pelkkä lahjakkuus.",
+  "Vertaa itseäsi eiliseen itseesi, älä muihin.",
+  "Rohkeus ei ole pelon puutetta vaan sen voittamista.",
+  "Se mitä harjoittelet, siinä kehityt.",
+  "Alku on aina hankalin — ja sinä pääsit jo huipulle.",
+  "Kärsivällisyys on taito, jonka voi opetella.",
+  "Voittaja on se, joka nousee kerran enemmän kuin kaatuu.",
+  "Niin kauan kuin opit uutta, sinä kasvat.",
+  "Yritys on hyvän alku.",
+  "Tieto on aarre, jota kukaan ei voi viedä sinulta."
+];
+
 /* ═══════════════════════════════════════
    TILA
 ═══════════════════════════════════════ */
@@ -1935,6 +1962,8 @@ async function endGame() {
     score >= 5000 ? "Legendaarinen suoritus!" :
     score >= 3500 ? "Mahtava suoritus!" :
     score >= 2000 ? "Hyvä yritys!" : "Harjoitus tekee mestarin!";
+  document.getElementById("end-aarre").textContent =
+    AARRE_VIISAUDET[Math.floor(Math.random() * AARRE_VIISAUDET.length)];
   document.getElementById("stat-correct").textContent = S.correctCount + "/30";
   document.getElementById("stat-time").textContent =
     Math.floor(elapsed/60) + ":" + String(elapsed%60).padStart(2,"0");
