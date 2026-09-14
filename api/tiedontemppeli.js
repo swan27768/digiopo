@@ -71,8 +71,8 @@ function riviTulokseksi(r) {
 }
 
 // ── Peli-token: allekirjoitettu, tamper-proof pelisessio ──────
-function luoPeliToken(tila) {
-  return luoToken({
+async function luoPeliToken(tila) {
+  return await luoToken({
     typ: 'temppeli',
     sid: tila.sid,
     series: tila.series,
@@ -148,7 +148,7 @@ export default async function handler(req, res) {
       if (![0, 1, 2].includes(series)) {
         return res.status(400).json({ ok: false, virhe: "virheellinen_sarja" });
       }
-      const token = luoPeliToken({
+      const token = await luoPeliToken({
         sid: 's_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
         series, total: 0, scored: [],
       });
@@ -182,9 +182,10 @@ export default async function handler(req, res) {
         const pisteet = BASE_PTS[round - 1] + bonus;
         tila.total += pisteet;
         tila.scored.push(tag);
+        const uusiToken = await luoPeliToken(tila);
         return res.status(200).json({
           ok: true, oikein: true, pisteet, bonus, total: tila.total,
-          selitys: avain.e, token: luoPeliToken(tila),
+          selitys: avain.e, token: uusiToken,
         });
       }
 
@@ -206,7 +207,7 @@ export default async function handler(req, res) {
       let token = body.token;
       if (!tila.scored.includes(tag)) {
         tila.scored.push(tag);           // lukitse: ei voi vastata aikakatkaisun jälkeen
-        token = luoPeliToken(tila);
+        token = await luoPeliToken(tila);
       }
       return res.status(200).json({ ok: true, oikea: avain.c, selitys: avain.e, total: tila.total, token });
     }
