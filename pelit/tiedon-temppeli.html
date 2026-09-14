@@ -438,8 +438,7 @@ body{
     <div style="font-size:19px;font-weight:900;margin-bottom:6px" id="end-title">Mahtava suoritus!</div>
     <div class="big-score" id="end-score">0</div>
     <div style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:16px">kokonaispistettä</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:8px">🏅 Olet saavuttanut temppelin huipun! Näytä tämä koodi opettajallesi:</div>
-    <div class="code-box" id="end-code">--------</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:4px">🏅 Olet saavuttanut temppelin huipun! Katso sijoituksesi tulostaulusta alta.</div>
   </div>
 
   <div style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px">
@@ -1518,7 +1517,6 @@ const BASE_PTS    = 100;   // pistettä oikeasta vastauksesta (K1)
 const BASE_PTS_K2 = 150;   // pistettä oikeasta vastauksesta (K2)
 const BASE_PTS_K3 = 200;   // pistettä oikeasta vastauksesta (K3)
 const MAX_BONUS   = 60;    // maksimi aikabonus
-const SECRET_CODE = "TEMPPELI2025";
 
 /* ═══════════════════════════════════════
    TILA
@@ -1937,7 +1935,6 @@ async function endGame() {
     score >= 5000 ? "Legendaarinen suoritus!" :
     score >= 3500 ? "Mahtava suoritus!" :
     score >= 2000 ? "Hyvä yritys!" : "Harjoitus tekee mestarin!";
-  document.getElementById("end-code").textContent = SECRET_CODE;
   document.getElementById("stat-correct").textContent = S.correctCount + "/30";
   document.getElementById("stat-time").textContent =
     Math.floor(elapsed/60) + ":" + String(elapsed%60).padStart(2,"0");
