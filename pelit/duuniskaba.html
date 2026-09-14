@@ -417,6 +417,7 @@ const state = {
   correctThisLap:0,
   tasksThisLap:0,
   lapFlag:false,
+  kierrostyyppi:0,
 };
 
 /* ================= LAUDAN PIIRTO ================= */
@@ -1465,10 +1466,13 @@ function flashEvent(cat, catName, text, money){
 
 /* ---- Tehtävän avaus ---- */
 function drawFromPool(cat){
-  const avain = cat + '_' + state.level;
+  const kt = state.kierrostyyppi || 0;                          // 0 = normaali, 1 = sakkokierros
+  const avain = cat + '_' + state.level + '_' + kt;
   if(!state.bankPools[avain] || state.bankPools[avain].length===0){
-    let lista = (BANK[cat]||[]).filter(t => (t.taso||1) === state.level);
-    if(lista.length===0) lista = (BANK[cat]||[]);   // varalla: mikä tahansa taso
+    let kaikki = (BANK[cat]||[]).filter(t => (t.taso||1) === state.level);
+    if(kaikki.length===0) kaikki = (BANK[cat]||[]);             // varalla: mikä tahansa taso
+    let lista = kaikki.filter((t,i)=> (i%2)===kt);             // sakkokierroksella eri tehtävät
+    if(lista.length===0) lista = kaikki;                        // varalla: jos vain 1 tehtävä
     state.bankPools[avain] = shuffle(lista.slice());
   }
   return state.bankPools[avain].shift();
@@ -1503,7 +1507,7 @@ function renderChoice(task,c){
         b.classList.add('wrong'); b.insertAdjacentHTML('beforeend','<span class="tag">✕</span>');
         // näytä oikea
         Array.from(wrap.children).forEach((x,idx)=>{ if(opts[idx].ok){x.classList.add('correct');} });
-        showFeedback(false, task.fb, Math.round(task.reward*0.25), c);
+        showFeedback(false, task.fb, 0, c, -Math.round(task.reward*0.5));
       }
     });
     wrap.appendChild(b);
@@ -1545,7 +1549,7 @@ function renderOrder(task,c){
       li.classList.add(cur[idx]===correct[idx]?'ok':'no');
     });
     check.remove();
-    showFeedback(ok, task.fb, ok?task.reward:Math.round(task.reward*0.3), c);
+    if(ok){ showFeedback(true, task.fb, task.reward, c); } else { showFeedback(false, task.fb, 0, c, -Math.round(task.reward*0.5)); }
   });
   cardBody.appendChild(check);
 }
@@ -1668,8 +1672,12 @@ function tarkistaTaso(){
 // Ei vielä tarpeeksi rahaa -> sama taso jatkuu uudella kierroksella.
 function uusiKierros(){
   const min = TASOT[state.level-1].raha_min;
-  state.bankPools={};               // sekoita tehtävät uudelleen vaihtelua varten
-  msg.textContent=`Kierros täynnä! Tarvitset ${min} € tasolle ${state.level+1}. Sinulla on ${state.money} €. Jatka keräämistä!`;
+  state.kierrostyyppi = state.kierrostyyppi ? 0 : 1;   // vuorottele normaali <-> sakko
+  if(state.kierrostyyppi===1){
+    msg.textContent=`Et vielä saanut ${min} €. Sakkokierros alkaa – samat ruudut, uudet tehtävät! Sinulla on ${state.money} €.`;
+  }else{
+    msg.textContent=`Uusi kierros – kerää lisää rahaa. Tarvitset ${min} €. Sinulla on ${state.money} €.`;
+  }
   endTurn(msg.textContent);
 }
 function levelComplete(){
@@ -1695,6 +1703,7 @@ function nextLevel(){
   state.correctThisLap=0;
   state.tasksThisLap=0;
   state.lapFlag=false;
+  state.kierrostyyppi=0;
   state.bankPools={};
   updateHud();
   const t=TASOT[state.level-1];
@@ -1722,7 +1731,7 @@ function peliLapaisty(){
 function pelaaUudelleen(){
   state.money=0; state.level=1; state.salary=60; state.pos=0;
   state.correctThisLap=0; state.tasksThisLap=0; state.oikeatYhteensa=0;
-  state.lapFlag=false; state.bankPools={};
+  state.lapFlag=false; state.kierrostyyppi=0; state.bankPools={};
   closeModal(); drawBoard(); updateHud();
   renderDie(1);
   state.busy=false; rollBtn.disabled=false;
