@@ -86,7 +86,7 @@ button{font-family:inherit;}
 
 /* ---------- Mittaristo ---------- */
 .hud{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px;
 }
 .stat{
   background:var(--surface); border:1px solid var(--line); border-radius:16px;
@@ -95,10 +95,17 @@ button{font-family:inherit;}
 .stat::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px;}
 .stat.money::before{background:var(--teal);}
 .stat.level::before{background:var(--purple);}
+.stat.round::before{background:var(--blue);}
 .stat.goal::before{background:var(--gold);}
 .stat .k{font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:800;}
 .stat .v{font-family:var(--font-display); font-size:1.5rem; line-height:1.1; margin-top:2px; font-variant-numeric:tabular-nums;}
 .stat .v small{font-size:.8rem; color:var(--ink-soft); font-weight:700;}
+/* Sakkokierros: koko kierros-ruutu korostuu, jotta pelaaja huomaa olevansa sakolla */
+.stat.round.sakko{background:linear-gradient(150deg, var(--coral), var(--gold)); border-color:transparent;}
+.stat.round.sakko::before{background:#fff;}
+.stat.round.sakko .k, .stat.round.sakko .v, .stat.round.sakko .v small{color:#fff;}
+.stat.round.sakko .v{animation:sakkoPulse 1.4s ease-in-out infinite;}
+@keyframes sakkoPulse{0%,100%{opacity:1}50%{opacity:.65}}
 
 /* ---------- Lauta ---------- */
 .board-card{
@@ -304,6 +311,7 @@ button{font-family:inherit;}
   <section class="hud" aria-label="Pelin tilanne">
     <div class="stat money"><div class="k">Rahaa</div><div class="v" id="sMoney">0 <small>€</small></div></div>
     <div class="stat level"><div class="k">Taso</div><div class="v" id="sLevel">1</div></div>
+    <div class="stat round" id="sRoundBox"><div class="k" id="sRoundK">Kierros</div><div class="v" id="sRound">1</div></div>
     <div class="stat goal"><div class="k">Tavoite</div><div class="v" id="sGoal">Kierrä lauta</div></div>
   </section>
 
@@ -418,6 +426,7 @@ const state = {
   tasksThisLap:0,
   lapFlag:false,
   kierrostyyppi:0,
+  kierros:1,       // monesko kierros tällä tasolla (näkyy pelaajalle)
 };
 
 /* ================= LAUDAN PIIRTO ================= */
@@ -1855,6 +1864,19 @@ function updateHud(){
   const sGoal=document.getElementById('sGoal');
   if(state.money>=min) sGoal.innerHTML=`✓ <small>${min} € täynnä</small>`;
   else sGoal.innerHTML=`${state.money} / ${min} <small>€</small>`;
+  // Kierroslaskuri + sakkokierroksen korostus
+  const box=document.getElementById('sRoundBox');
+  const sRound=document.getElementById('sRound');
+  const sRoundK=document.getElementById('sRoundK');
+  if(state.kierrostyyppi===1){
+    box.classList.add('sakko');
+    sRoundK.textContent='🔁 Sakkokierros';
+    sRound.textContent=state.kierros;
+  }else{
+    box.classList.remove('sakko');
+    sRoundK.textContent='Kierros';
+    sRound.textContent=state.kierros;
+  }
 }
 
 /* ================= TASON YHTEENVETO ================= */
@@ -1874,15 +1896,52 @@ function tarkistaTaso(){
   }
 }
 // Ei vielä tarpeeksi rahaa -> sama taso jatkuu uudella kierroksella.
+// Näytetään SELKEÄ modaali, jotta pelaaja tietää kierroksen päättyneen ja
+// huomaa siirtyvänsä sakkokierrokselle (tai uudelle tavalliselle kierrokselle).
 function uusiKierros(){
   const min = TASOT[state.level-1].raha_min;
+  const puuttuu = Math.max(0, min - state.money);
+  const paattynyt = state.kierros;                     // juuri päättyneen kierroksen numero
   state.kierrostyyppi = state.kierrostyyppi ? 0 : 1;   // vuorottele normaali <-> sakko
-  if(state.kierrostyyppi===1){
-    msg.textContent=`Et vielä saanut ${min} €. Sakkokierros alkaa – samat ruudut, uudet tehtävät! Sinulla on ${state.money} €.`;
-  }else{
-    msg.textContent=`Uusi kierros – kerää lisää rahaa. Tarvitset ${min} €. Sinulla on ${state.money} €.`;
-  }
-  endTurn(msg.textContent);
+  state.kierros++;                                     // uusi kierros alkaa
+  state.correctThisLap=0; state.tasksThisLap=0;        // laskurit nollaan uudelle kierrokselle
+  const sakko = state.kierrostyyppi===1;
+  updateHud();
+
+  openModal(CAT.tet, sakko ? 'Sakkokierros' : 'Uusi kierros',
+            `Kierros ${paattynyt} päättyi`);
+  cardHead.style.background = sakko
+    ? "linear-gradient(150deg,var(--coral),var(--gold))"
+    : "linear-gradient(150deg,var(--blue),var(--teal))";
+  const pct = Math.max(0, Math.min(100, Math.round(state.money/min*100)));
+  cardBody.innerHTML=`
+    <p class="q" style="text-align:center">Kiersit laudan! Palkkapäivä koitti ja kierros ${paattynyt} on nyt valmis.</p>
+    <div style="background:var(--surface2,rgba(0,0,0,.06));border-radius:14px;padding:12px 14px;margin:6px 0 2px">
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:.95rem">
+        <span>Rahaa: ${state.money} €</span><span>Tavoite: ${min} €</span>
+      </div>
+      <div style="height:12px;border-radius:8px;background:rgba(0,0,0,.12);margin-top:8px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;border-radius:8px;background:linear-gradient(90deg,var(--teal),var(--gold))"></div>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-weight:700">Tavoitteeseen puuttuu vielä <b>${puuttuu} €</b>.</div>
+    </div>`;
+  const info=document.createElement('p');
+  info.style.cssText="font-weight:600;line-height:1.55;margin-top:12px";
+  info.innerHTML = sakko
+    ? `🔁 <b>Sakkokierros alkaa!</b> Kuljet samoja ruutuja pitkin, mutta tehtävät ovat <b>eri</b> kuin äsken. Kerää tavoiteraha, niin pääset seuraavalle tasolle. Muista: väärästä vastauksesta menee rahaa.`
+    : `Aloitat <b>uuden tavallisen kierroksen</b> samalla tasolla. Jatka rahan keräämistä – tavoite on ${min} €.`;
+  cardBody.appendChild(info);
+
+  const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn';
+  btn.textContent = sakko ? 'Aloita sakkokierros →' : 'Jatka kierrosta →';
+  btn.addEventListener('click',()=>{
+    closeModal();
+    endTurn(sakko
+      ? `🔁 Sakkokierros ${state.kierros} käynnissä – samat ruudut, uudet tehtävät. Heitä noppaa!`
+      : `Kierros ${state.kierros} – kerää lisää rahaa. Tavoite ${min} €. Heitä noppaa!`);
+  });
+  cardBody.appendChild(btn);
+  btn.focus();
 }
 function levelComplete(){
   const t = TASOT[state.level-1];
@@ -1908,6 +1967,7 @@ function nextLevel(){
   state.tasksThisLap=0;
   state.lapFlag=false;
   state.kierrostyyppi=0;
+  state.kierros=1;
   state.bankPools={};
   updateHud();
   const t=TASOT[state.level-1];
@@ -1935,7 +1995,7 @@ function peliLapaisty(){
 function pelaaUudelleen(){
   state.money=0; state.level=1; state.salary=60; state.pos=0;
   state.correctThisLap=0; state.tasksThisLap=0; state.oikeatYhteensa=0;
-  state.lapFlag=false; state.kierrostyyppi=0; state.bankPools={};
+  state.lapFlag=false; state.kierrostyyppi=0; state.kierros=1; state.bankPools={};
   closeModal(); drawBoard(); updateHud();
   renderDie(1);
   state.busy=false; rollBtn.disabled=false;
