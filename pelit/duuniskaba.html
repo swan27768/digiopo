@@ -426,8 +426,13 @@ const state = {
   tasksThisLap:0,
   lapFlag:false,
   kierrostyyppi:0,
-  kierros:1,       // monesko kierros tällä tasolla (näkyy pelaajalle)
+  kierros:1,       // monesko kierros (yritys) tällä tasolla (näkyy pelaajalle)
+  lenkki:1,        // monesko lenkki tämän kierroksen sisällä (1..LENKKEJA_PER_KIERROS)
 };
+
+// Yksi KIERROS = näin monta kertaa laudan ympäri. Vasta kierroksen lopussa
+// tarkistetaan riittikö raha; jos ei, alkaa sakkokierros.
+const LENKKEJA_PER_KIERROS = 2;
 
 /* ================= LAUDAN PIIRTO ================= */
 const TW=64, TH=32, BLK=15, CBLK=24;
@@ -1839,12 +1844,21 @@ function addNext(fn){
   btn.focus();
 }
 
-/* ---- Tehtävän jälkeen: tarkista taso ---- */
+/* ---- Tehtävän jälkeen: lenkki- ja kierroslaskenta ---- */
 function afterTask(){
-  // Kierros valmiiksi -> tarkista pääseekö seuraavalle tasolle (rahaminimi).
   if(state.lapFlag){
     state.lapFlag=false;
-    tarkistaTaso();
+    // Kiersit laudan kerran (yksi lenkki valmis).
+    if(state.lenkki < LENKKEJA_PER_KIERROS){
+      // Kierros ei ole vielä ohi -> vielä lisää lenkkejä jäljellä.
+      state.lenkki++;
+      updateHud();
+      const jaljella = LENKKEJA_PER_KIERROS - state.lenkki + 1; // montako lenkkiä vielä tässä kierroksessa
+      endTurn(`Palkkapäivä! Kiersit laudan kerran. Kierros ${state.kierros} jatkuu – vielä ${jaljella} lenkki${jaljella===1?'':'ä'} jäljellä. Sinulla on ${state.money} €.`);
+    }else{
+      // Koko kierros (kaikki lenkit) valmis -> nyt vasta rahatarkistus.
+      tarkistaTaso();
+    }
   }else{
     endTurn();
   }
@@ -1864,18 +1878,17 @@ function updateHud(){
   const sGoal=document.getElementById('sGoal');
   if(state.money>=min) sGoal.innerHTML=`✓ <small>${min} € täynnä</small>`;
   else sGoal.innerHTML=`${state.money} / ${min} <small>€</small>`;
-  // Kierroslaskuri + sakkokierroksen korostus
+  // Kierros- ja lenkkilaskuri + sakkokierroksen korostus
   const box=document.getElementById('sRoundBox');
   const sRound=document.getElementById('sRound');
   const sRoundK=document.getElementById('sRoundK');
+  sRound.innerHTML=`${state.kierros} <small>lenkki ${state.lenkki}/${LENKKEJA_PER_KIERROS}</small>`;
   if(state.kierrostyyppi===1){
     box.classList.add('sakko');
     sRoundK.textContent='🔁 Sakkokierros';
-    sRound.textContent=state.kierros;
   }else{
     box.classList.remove('sakko');
     sRoundK.textContent='Kierros';
-    sRound.textContent=state.kierros;
   }
 }
 
@@ -1904,6 +1917,7 @@ function uusiKierros(){
   const paattynyt = state.kierros;                     // juuri päättyneen kierroksen numero
   state.kierrostyyppi = state.kierrostyyppi ? 0 : 1;   // vuorottele normaali <-> sakko
   state.kierros++;                                     // uusi kierros alkaa
+  state.lenkki=1;                                      // uusi kierros alkaa 1. lenkistä
   state.correctThisLap=0; state.tasksThisLap=0;        // laskurit nollaan uudelle kierrokselle
   const sakko = state.kierrostyyppi===1;
   updateHud();
@@ -1915,7 +1929,7 @@ function uusiKierros(){
     : "linear-gradient(150deg,var(--blue),var(--teal))";
   const pct = Math.max(0, Math.min(100, Math.round(state.money/min*100)));
   cardBody.innerHTML=`
-    <p class="q" style="text-align:center">Kiersit laudan! Palkkapäivä koitti ja kierros ${paattynyt} on nyt valmis.</p>
+    <p class="q" style="text-align:center">Kiersit laudan ${LENKKEJA_PER_KIERROS} kertaa – kierros ${paattynyt} on nyt valmis.</p>
     <div style="background:var(--surface2,rgba(0,0,0,.06));border-radius:14px;padding:12px 14px;margin:6px 0 2px">
       <div style="display:flex;justify-content:space-between;font-weight:800;font-size:.95rem">
         <span>Rahaa: ${state.money} €</span><span>Tavoite: ${min} €</span>
@@ -1928,8 +1942,8 @@ function uusiKierros(){
   const info=document.createElement('p');
   info.style.cssText="font-weight:600;line-height:1.55;margin-top:12px";
   info.innerHTML = sakko
-    ? `🔁 <b>Sakkokierros alkaa!</b> Kuljet samoja ruutuja pitkin, mutta tehtävät ovat <b>eri</b> kuin äsken. Kerää tavoiteraha, niin pääset seuraavalle tasolle. Muista: väärästä vastauksesta menee rahaa.`
-    : `Aloitat <b>uuden tavallisen kierroksen</b> samalla tasolla. Jatka rahan keräämistä – tavoite on ${min} €.`;
+    ? `🔁 <b>Sakkokierros alkaa!</b> Kierrä lauta taas <b>${LENKKEJA_PER_KIERROS} kertaa</b> – samat ruudut, mutta tehtävät ovat <b>eri</b> kuin äsken. Kerää tavoiteraha, niin pääset seuraavalle tasolle. Muista: väärästä vastauksesta menee rahaa.`
+    : `Aloitat <b>uuden kierroksen</b> samalla tasolla. Kierrä lauta taas ${LENKKEJA_PER_KIERROS} kertaa ja kerää lisää rahaa – tavoite on ${min} €.`;
   cardBody.appendChild(info);
 
   const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn';
@@ -1937,7 +1951,7 @@ function uusiKierros(){
   btn.addEventListener('click',()=>{
     closeModal();
     endTurn(sakko
-      ? `🔁 Sakkokierros ${state.kierros} käynnissä – samat ruudut, uudet tehtävät. Heitä noppaa!`
+      ? `🔁 Sakkokierros ${state.kierros} käynnissä – kierrä lauta ${LENKKEJA_PER_KIERROS} kertaa, uudet tehtävät. Heitä noppaa!`
       : `Kierros ${state.kierros} – kerää lisää rahaa. Tavoite ${min} €. Heitä noppaa!`);
   });
   cardBody.appendChild(btn);
@@ -1968,10 +1982,11 @@ function nextLevel(){
   state.lapFlag=false;
   state.kierrostyyppi=0;
   state.kierros=1;
+  state.lenkki=1;
   state.bankPools={};
   updateHud();
   const t=TASOT[state.level-1];
-  msg.textContent=`Taso ${state.level}: ${t.nimi}. Palkka on nyt ${state.salary} €. Tavoite ${t.raha_min} €. Heitä noppaa!`;
+  msg.textContent=`Taso ${state.level}: ${t.nimi}. Palkka on nyt ${state.salary} €. Tavoite ${t.raha_min} €. Kierrä lauta ${LENKKEJA_PER_KIERROS} kertaa. Heitä noppaa!`;
   endTurn(msg.textContent);
 }
 // Peli läpäisty (taso 3 tavoite saavutettu): tulos tulostauluun, ei jatkoa.
@@ -1995,11 +2010,11 @@ function peliLapaisty(){
 function pelaaUudelleen(){
   state.money=0; state.level=1; state.salary=60; state.pos=0;
   state.correctThisLap=0; state.tasksThisLap=0; state.oikeatYhteensa=0;
-  state.lapFlag=false; state.kierrostyyppi=0; state.kierros=1; state.bankPools={};
+  state.lapFlag=false; state.kierrostyyppi=0; state.kierros=1; state.lenkki=1; state.bankPools={};
   closeModal(); drawBoard(); updateHud();
   renderDie(1);
   state.busy=false; rollBtn.disabled=false;
-  msg.textContent=`Taso 1: ${TASOT[0].nimi}. Tavoite ${TASOT[0].raha_min} €. Heitä noppaa!`;
+  msg.textContent=`Taso 1: ${TASOT[0].nimi}. Tavoite ${TASOT[0].raha_min} €. Kierrä lauta ${LENKKEJA_PER_KIERROS} kertaa. Heitä noppaa!`;
 }
 
 /* ================= APURIT ================= */
