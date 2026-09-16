@@ -114,7 +114,7 @@ button{font-family:inherit;}
   border:1px solid var(--line); border-radius:22px; padding:6px;
   box-shadow:0 8px 26px var(--shadow); overflow:hidden;
 }
-#board{position:relative; z-index:1; display:block; width:100%; height:auto; max-height:62vh; margin-inline:auto; overflow:visible;}
+#board{position:relative; z-index:1; display:block; width:100%; height:auto;}
 .tile-top{stroke:var(--tile-line); stroke-width:1.2;}
 .pawn{filter:drop-shadow(0 4px 3px rgba(0,0,0,.28)); transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
 .pawn .marker{animation:bob 1.1s ease-in-out infinite;}
@@ -254,7 +254,6 @@ button{font-family:inherit;}
   .hud{grid-template-columns:1fr 1fr;}
   .stat.goal{grid-column:1/-1;}
   .roll-btn{flex:1;}
-  #board{max-height:50vh;}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important; transition:none !important;}
@@ -496,11 +495,10 @@ function drawSkyline(dark){
   const winOff = dark?"#3b3f72":"#dce6f0";
   const winOn  = "#ffd97a";
   let seed=7; const rnd=()=> (seed=(seed*9301+49297)%233280)/233280;
-  // maanpinta siluetin alle – ulottuu reilusti yli laudan, jotta kaupunki
-  // jatkuu kortin reunoihin asti myös kun lauta skaalautuu kapeammaksi.
-  put("rect",{x:-820,y:baseY,width:1640,height:14,fill:dark?"#1a1b36":"#c6ccd6",opacity:.95});
-  const houses=[]; let hx=-822;
-  while(hx<820){ const w=15+Math.round(rnd()*19); houses.push({x:hx,w,h:18+Math.round(rnd()*32)}); hx+=w+3+Math.round(rnd()*7); }
+  // maanpinta siluetin alle
+  put("rect",{x:-250,y:baseY,width:500,height:14,fill:dark?"#1a1b36":"#c6ccd6",opacity:.95});
+  const houses=[]; let hx=-252;
+  while(hx<252){ const w=15+Math.round(rnd()*19); houses.push({x:hx,w,h:18+Math.round(rnd()*32)}); hx+=w+3+Math.round(rnd()*7); }
   houses.forEach((b,i)=>{
     put("rect",{x:b.x,y:baseY-b.h,width:b.w,height:b.h,fill:(i%2)?wall:wall2});
     put("rect",{x:b.x-1.6,y:baseY-b.h-3.4,width:b.w+3.2,height:3.6,rx:1,fill:roof});
@@ -522,8 +520,8 @@ function drawSkyline(dark){
     put("circle",{cx:tx-2.5*s,cy:baseY-11.6*s,r:3.4*s,fill:leaf2});
     put("circle",{cx:tx+2.9*s,cy:baseY-10.4*s,r:3*s,fill:leaf2});
   };
-  seed=19; let tx=-816;
-  while(tx<820){ tree(tx, 0.85+rnd()*0.75); tx+=15+rnd()*17; }
+  seed=19; let tx=-246;
+  while(tx<250){ tree(tx, 0.85+rnd()*0.75); tx+=15+rnd()*17; }
 }
 
 function drawBoard(){
@@ -533,9 +531,8 @@ function drawBoard(){
   const cx=isoX(2,2), cy=isoY(2,2);
   const dark=currentDark();
   const level=state.level;
-  const LIFT=118;
-  // Dynaaminen viewBox: torni jatkuu alas kerroksittain. CSS-sääntö (max-height)
-  // pitää huolen, että koko torni + noppapainike mahtuvat ruudulle kerralla.
+  const LIFT=150;
+  // Dynaaminen viewBox: aktiivinen kerros pysyy samankokoisena, torni jatkuu alas.
   const vbH=300 + (level-1)*LIFT;
   svg.setAttribute('viewBox', `-250 -120 500 ${vbH}`);
 
@@ -1357,11 +1354,7 @@ const EVENTS = {
   start:  {msg:"Palkkapäivä! Sait palkkaa.", money:()=>state.salary},
   sattuma:{msg:null}, // arvotaan
   vero:   {msg:"Verottaja perii veroa palkastasi.", money:()=> -Math.round(state.salary*0.25)},
-  tet:    {nimi:()=> state.level>=3 ? "Duunitori" : "TET-tori",
-           msg:()=> state.level>=3
-             ? "Duunitori! Löysit avoimen työpaikan ja sait haastattelukutsun. Palkaksi kokemusbonus."
-             : "TET-tori! Kävit tutustumassa työhön ja sait kokemusbonuksen.",
-           money:()=>30},
+  tet:    {msg:"TET-tori! Kävit tutustumassa työhön ja sait kokemusbonuksen.", money:()=>30},
 };
 const SATTUMA = [
   {msg:"Löysit hyvän kesätyön ilmoituksen ja sait sen! +50 €", money:50},
@@ -2051,362 +2044,6 @@ BANK.yrittaminen.push(
    fb:"Jos hinta ei kata kuluja, jokainen kauppa vie rahaa. Reilu hinta pitää yrityksen pystyssä.", reward:65}
 );
 
-/* ===== LISÄÄ TOIMINNALLISIA TEHTÄVIÄ – TASO 2 ===== */
-BANK.porssi.push(
-  {type:"laske", taso:2, title:"Säästö kasvaa",
-   ohje:"Laitat säästöön 20 € joka kuukausi. Laske paljonko sinulla on vuoden päästä.",
-   vastaus:240, yksikko:"€", laskuFb:"20 € × 12 kuukautta = 240 €.",
-   q:"Miksi säännöllinen säästäminen on fiksua?",
-   opts:[
-     {t:"Pienikin summa kasvaa isoksi ajan myötä", ok:true},
-     {t:"Säästää kannattaa vasta aikuisena", ok:false},
-     {t:"Säästö ei koskaan kasva", ok:false},
-   ],
-   fb:"Kun säästät säännöllisesti, raha karttuu huomaamatta. Aika tekee suuren työn puolestasi.", reward:55},
-  {type:"scenario", taso:2, title:"Kaverit ostavat velaksi",
-   ohje:"Kaverit ostavat kalliita vaatteita osamaksulla. Sinulla ei ole rahaa. Mitä teet?",
-   valinnat:[
-     {t:"Odotat ja säästät siihen mihin oikeasti haluat", seuraus:"Saat haluamasi ilman velkaa ja stressiä.", money:10},
-     {t:"Otat osamaksun mukana pysyäksesi", seuraus:"Kuukausimaksut alkavat painaa ja rahat ovat tiukilla.", money:-15},
-   ],
-   q:"Miksi osamaksu voi olla riski nuorelle?",
-   opts:[
-     {t:"Se sitoo rahaa pitkäksi aikaa ja voi tulla kalliiksi", ok:true},
-     {t:"Se on aina ilmaista", ok:false},
-     {t:"Sitä ei tarvitse maksaa takaisin", ok:false},
-   ],
-   fb:"Osamaksu on velkaa. Lopullinen hinta on usein isompi. Säästäminen on halvempi tapa.", reward:50}
-);
-BANK.riski.push(
-  {type:"sort", taso:2, title:"Turvallinen vai riski?",
-   ohje:"Lajittele rahankäyttö: onko se turvallista vai riskialtista?",
-   groups:["Turvallinen","Riskialtis"],
-   items:[
-     {t:"Säästät hätävaraa tilille", g:0},
-     {t:"Vertailet hintoja ennen ostoa", g:0},
-     {t:"Lainaat rahaa uuteen puhelimeen", g:1},
-     {t:"Maksat tuntemattomalle etukäteen netissä", g:1},
-   ],
-   q:"Mikä pienentää rahaan liittyviä riskejä?",
-   opts:[
-     {t:"Harkinta, vertailu ja hätävara", ok:true},
-     {t:"Nopeat päätökset ilman miettimistä", ok:false},
-     {t:"Kaiken ostaminen velaksi", ok:false},
-   ],
-   fb:"Kun harkitset, vertailet ja sinulla on puskuria, yllätykset eivät kaada taloutta.", reward:55}
-);
-BANK.yrittaminen.push(
-  {type:"laske", taso:2, title:"Paljonko tienaat?",
-   ohje:"Ulkoilutat koiria. Teet 5 lenkkiä, hinta 8 € per lenkki. Laske paljonko tienaat.",
-   vastaus:40, yksikko:"€", laskuFb:"5 × 8 € = 40 €.",
-   q:"Mitä kannattaa muistaa, kun myyt omaa työtäsi?",
-   opts:[
-     {t:"Sovi hinta ja aikataulu selkeästi etukäteen", ok:true},
-     {t:"Älä sovi mitään, katso miten käy", ok:false},
-     {t:"Tee työ ilmaiseksi aina", ok:false},
-   ],
-   fb:"Kun sovit hinnan ja ajan etukäteen, molemmat tietävät mitä odottaa. Se on reilua.", reward:50}
-);
-BANK.raha.push(
-  {type:"sort", taso:2, title:"Tulo vai meno?",
-   ohje:"Lajittele: onko asia tuloa (rahaa tulee) vai menoa (rahaa lähtee)?",
-   groups:["Tulo","Meno"],
-   items:[
-     {t:"Palkka kesätyöstä", g:0},
-     {t:"Lahjaraha", g:0},
-     {t:"Bussilippu", g:1},
-     {t:"Puhelinlasku", g:1},
-   ],
-   q:"Miksi on hyvä tietää omat tulot ja menot?",
-   opts:[
-     {t:"Näet mihin raha menee ja paljonko voit käyttää", ok:true},
-     {t:"Sillä ei ole mitään merkitystä", ok:false},
-     {t:"Vain aikuisten tarvitsee tietää", ok:false},
-   ],
-   fb:"Kun tiedät tulot ja menot, pysyt kartalla omasta taloudestasi. Se on oman elämän hallintaa.", reward:50}
-);
-BANK.tyonhaku.push(
-  {type:"scenario", taso:2, title:"Kutsu haastatteluun",
-   ohje:"Sait kutsun työhaastatteluun ensi viikolle. Mitä teet ennen sitä?",
-   valinnat:[
-     {t:"Otat selvää yrityksestä ja mietit vahvuutesi", seuraus:"Haastattelussa olet rento ja vakuutat.", money:10},
-     {t:"Et valmistaudu mitenkään", seuraus:"Haastattelussa jännität etkä osaa vastata.", money:-10},
-   ],
-   q:"Mikä auttaa työhaastattelussa eniten?",
-   opts:[
-     {t:"Valmistautuminen: tiedät yrityksestä ja itsestäsi", ok:true},
-     {t:"Se, että saavut myöhässä", ok:false},
-     {t:"Ettet kerro itsestäsi mitään", ok:false},
-   ],
-   fb:"Pieni valmistautuminen vähentää jännitystä ja tekee hyvän vaikutuksen.", reward:50}
-);
-BANK.hyvinvointi.push(
-  {type:"sort", taso:2, title:"Mikä auttaa jaksamaan?",
-   ohje:"Lajittele: auttaako asia jaksamaan vai viekö se voimia?",
-   groups:["Auttaa","Vie voimia"],
-   items:[
-     {t:"Riittävä uni", g:0},
-     {t:"Liikkuminen ja ulkoilu", g:0},
-     {t:"Valvominen puhelimella", g:1},
-     {t:"Kaiken tekeminen yksin ilman apua", g:1},
-   ],
-   q:"Mikä on hyvä tapa pitää huolta jaksamisesta?",
-   opts:[
-     {t:"Nukkua tarpeeksi ja pyytää apua kun tarvitsee", ok:true},
-     {t:"Jättää lepo aina viimeiseksi", ok:false},
-     {t:"Olla pyytämättä koskaan apua", ok:false},
-   ],
-   fb:"Uni, liike ja avun pyytäminen ovat jaksamisen perusta. Niistä ei kannata tinkiä.", reward:55}
-);
-BANK.saannot.push(
-  {type:"scenario", taso:2, title:"Myöhästyt vuorosta",
-   ohje:"Bussi myöhästyy etkä ehdi ajoissa töihin. Mitä teet?",
-   valinnat:[
-     {t:"Soitat heti esihenkilölle ja kerrot tilanteen", seuraus:"Työpaikka osaa varautua ja arvostaa rehellisyyttä.", money:5},
-     {t:"Et ilmoita, toivot ettei kukaan huomaa", seuraus:"Työkaverit joutuvat pulaan ja luottamus kärsii.", money:-15},
-   ],
-   q:"Mikä on oikea tapa toimia, jos myöhästyt?",
-   opts:[
-     {t:"Ilmoittaa heti itse ja kertoa syy", ok:true},
-     {t:"Olla hiljaa asiasta", ok:false},
-     {t:"Syyttää muita", ok:false},
-   ],
-   fb:"Kaikille sattuu. Tärkeintä on ilmoittaa heti itse – silloin asia hoituu.", reward:50}
-);
-BANK.kesatyo.push(
-  {type:"sort", taso:2, title:"Kesätyön haku",
-   ohje:"Lajittele: onko toimintatapa fiksu vai ei, kun haet kesätyötä?",
-   groups:["Fiksu","Ei fiksu"],
-   items:[
-     {t:"Kysyt töitä suoraan yrityksistä", g:0},
-     {t:"Teet siistin hakemuksen ajoissa", g:0},
-     {t:"Lähetät saman huolimattoman viestin kaikille", g:1},
-     {t:"Odotat että työ löytää sinut", g:1},
-   ],
-   q:"Mikä lisää mahdollisuuksia saada kesätyö?",
-   opts:[
-     {t:"Aktiivisuus ja huolellinen hakemus", ok:true},
-     {t:"Odottaminen ja huolimattomuus", ok:false},
-     {t:"Se, ettei hae mistään", ok:false},
-   ],
-   fb:"Moni kesätyö löytyy kysymällä suoraan. Huolellinen ja ajoissa tehty hakemus erottuu.", reward:50}
-);
-
-/* ===== LISÄÄ TOIMINNALLISIA TEHTÄVIÄ – TASO 3 ===== */
-BANK.tyonhaku.push(
-  {type:"sort", taso:3, title:"Hyvä työhakemus",
-   ohje:"Lajittele: kuuluuko asia hyvään työhakemukseen vai ei?",
-   groups:["Kuuluu","Ei kuulu"],
-   items:[
-     {t:"Kerrot lyhyesti miksi sovit työhön", g:0},
-     {t:"Tarkistat kirjoitusvirheet", g:0},
-     {t:"Kirjoitat pitkän tarinan asian vierestä", g:1},
-     {t:"Haukut edellistä työnantajaa", g:1},
-   ],
-   q:"Millainen työhakemus tekee hyvän vaikutuksen?",
-   opts:[
-     {t:"Lyhyt, selkeä ja kohdennettu juuri siihen työhön", ok:true},
-     {t:"Mahdollisimman pitkä ja sekava", ok:false},
-     {t:"Sellainen jossa moititaan muita", ok:false},
-   ],
-   fb:"Hyvä hakemus on lyhyt ja kertoo, miksi juuri sinä sovit siihen työhön.", reward:60}
-);
-BANK.saannot.push(
-  {type:"scenario", taso:3, title:"Haluat lopettaa",
-   ohje:"Päätät lopettaa työsi. Miten toimit oikein?",
-   valinnat:[
-     {t:"Kerrot esihenkilölle ajoissa ja hoidat irtisanoutumisen sovitusti", seuraus:"Lähdöstä jää hyvä kuva ja saat hyvän suosituksen.", money:10},
-     {t:"Lakkaat vain tulemasta töihin", seuraus:"Jälki jää huono eikä suositusta heru.", money:-15},
-   ],
-   q:"Miksi työsuhde kannattaa päättää fiksusti?",
-   opts:[
-     {t:"Hyvä maine ja suositukset auttavat tulevaisuudessa", ok:true},
-     {t:"Maineella ei ole mitään merkitystä", ok:false},
-     {t:"On sama miten lähtee", ok:false},
-   ],
-   fb:"Ala on usein pieni. Reilu lähtö tuo hyvän suosituksen ja voi poikia uusia töitä.", reward:65}
-);
-BANK.vuoro.push(
-  {type:"sort", taso:3, title:"Anna palautetta",
-   ohje:"Lajittele: onko palaute rakentavaa vai murskaavaa?",
-   groups:["Rakentava","Murskaava"],
-   items:[
-     {t:"Tämä osa toimi hyvin, entä jos kokeillaan tätä?", g:0},
-     {t:"Kerron mitä voisi parantaa ja miksi", g:0},
-     {t:"Tämä on ihan surkeaa", g:1},
-     {t:"Et osaa mitään", g:1},
-   ],
-   q:"Miksi rakentava palaute on hyödyllistä?",
-   opts:[
-     {t:"Se auttaa toista kehittymään eikä lannista", ok:true},
-     {t:"Se saa toisen tuntemaan olonsa huonoksi", ok:false},
-     {t:"Palautetta ei kannata antaa koskaan", ok:false},
-   ],
-   fb:"Rakentava palaute kertoo, mikä toimii ja mitä voi parantaa. Se vie eteenpäin.", reward:65}
-);
-BANK.raha.push(
-  {type:"laske", taso:3, title:"Lainan korko",
-   ohje:"Otat 500 € lainaa. Korko on 10 % vuodessa. Laske paljonko maksat korkoa vuodessa.",
-   vastaus:50, yksikko:"€", laskuFb:"10 % 500 eurosta = 50 €. Sen verran maksat pelkkää korkoa.",
-   q:"Mitä korko tarkoittaa lainassa?",
-   opts:[
-     {t:"Ylimääräistä, jonka maksat lainan päälle", ok:true},
-     {t:"Alennusta lainasta", ok:false},
-     {t:"Samaa kuin lainattu summa", ok:false},
-   ],
-   fb:"Korko on lainan hinta. Mitä isompi korko ja pidempi aika, sitä enemmän maksat.", reward:60},
-  {type:"scenario", taso:3, title:"Luottokortti houkuttaa",
-   ohje:"Sinulle tarjotaan luottokorttia. Voisit ostaa nyt ja maksaa myöhemmin. Mitä teet?",
-   valinnat:[
-     {t:"Käytät vain rahaa jota sinulla oikeasti on", seuraus:"Pysyt velattomana ja rahat riittävät.", money:10},
-     {t:"Ostat luotolla enemmän kuin sinulla on varaa", seuraus:"Lasku kasvaa ja korot syövät rahojasi.", money:-20},
-   ],
-   q:"Mikä on luottokortin suurin vaara?",
-   opts:[
-     {t:"On helppo käyttää enemmän kuin on varaa", ok:true},
-     {t:"Se antaa aina ilmaista rahaa", ok:false},
-     {t:"Sitä ei tarvitse maksaa takaisin", ok:false},
-   ],
-   fb:"Luotolla ostettu raha on velkaa. Jos et maksa heti, korot tekevät siitä kallista.", reward:65}
-);
-BANK.porssi.push(
-  {type:"scenario", taso:3, title:"Pörssi laskee",
-   ohje:"Sijoituksesi arvo laskee yhtäkkiä paljon. Uutiset pelottavat. Mitä teet?",
-   valinnat:[
-     {t:"Pidät hermosi etkä myy paniikissa", seuraus:"Arvo palautuu ajan myötä, etkä menettänyt turhaan.", money:10},
-     {t:"Myyt heti kaiken pelossa", seuraus:"Myit halvalla ja tappio jäi pysyväksi.", money:-20},
-   ],
-   q:"Miksi pitkäjänteinen sijoittaja ei myy paniikissa?",
-   opts:[
-     {t:"Arvo heiluu, mutta nousee usein takaisin ajan kanssa", ok:true},
-     {t:"Koska myyminen on aina kiellettyä", ok:false},
-     {t:"Koska arvo ei koskaan muutu", ok:false},
-   ],
-   fb:"Kurssit heiluvat. Paniikkimyynti tekee tappiosta pysyvän. Aika tasaa heilahtelut.", reward:65},
-  {type:"budget", taso:3, title:"Jaa sijoitussalkku",
-   ohje:"Sinulla on 300 € sijoitettavaa. Jaa se eri kohteisiin. Muista käteispuskuri yllätyksiä varten.",
-   total:300, step:25, cats:["Osakkeet (isompi riski)","Rahasto (hajautettu)","Käteispuskuri"],
-   q:"Miksi rahaa ei kannata laittaa vain yhteen kohteeseen?",
-   opts:[
-     {t:"Hajauttaminen pienentää riskiä", ok:true},
-     {t:"Yksi kohde on aina paras", ok:false},
-     {t:"Käteistä ei tarvita ollenkaan", ok:false},
-   ],
-   fb:"Kun hajautat, yhden kohteen lasku ei kaada koko salkkua. Käteispuskuri tuo turvaa.", reward:70}
-);
-BANK.riski.push(
-  {type:"laske", taso:3, title:"Mitä pikavippi maksoi?",
-   ohje:"Otit pikavippiä 100 €. Maksat takaisin 150 €. Laske paljonko maksoit korkoa ja kuluja.",
-   vastaus:50, yksikko:"€", laskuFb:"150 - 100 = 50 €. Sen verran lisää pelkästä lainaamisesta.",
-   q:"Mitä tämä kertoo pikavipeistä?",
-   opts:[
-     {t:"Ne ovat kalliita – takaisin maksetaan paljon enemmän", ok:true},
-     {t:"Ne ovat ilmaisia", ok:false},
-     {t:"Ne kannattaa aina ottaa", ok:false},
-   ],
-   fb:"50 € lisää sadan euron lainasta on paljon. Pikavippi on kallis tapa saada rahaa.", reward:65},
-  {type:"sort", taso:3, title:"Huijaus vai aito?",
-   ohje:"Lajittele viestit: onko kyseessä huijaus vai aito viesti?",
-   groups:["Huijaus","Aito"],
-   items:[
-     {t:"Anna pankkitunnukset tästä linkistä heti", g:0},
-     {t:"Voitit palkinnon, maksa vain postikulut", g:0},
-     {t:"Pankki: emme koskaan kysy tunnuksia viestillä", g:1},
-     {t:"Kaverisi kysyy kuulumisia", g:1},
-   ],
-   q:"Mistä tunnistat huijausviestin?",
-   opts:[
-     {t:"Se kiirehtii ja pyytää tunnuksia tai rahaa", ok:true},
-     {t:"Se on aina täysin virheetön", ok:false},
-     {t:"Sitä ei voi mitenkään tunnistaa", ok:false},
-   ],
-   fb:"Huijaus kiirehtii ja pyytää tietoja tai rahaa. Älä klikkaa – kysy tarvittaessa aikuiselta.", reward:65}
-);
-BANK.kesatyo.push(
-  {type:"laske", taso:3, title:"Koko kesän palkka",
-   ohje:"Teet kesätyötä 6 viikkoa. Palkka on 300 € viikossa. Laske koko kesän palkka.",
-   vastaus:1800, yksikko:"€", laskuFb:"6 × 300 € = 1800 €.",
-   q:"Mitä osasta palkkaa kannattaa tehdä?",
-   opts:[
-     {t:"Laittaa osa säästöön, ei käyttää kaikkea heti", ok:true},
-     {t:"Käyttää kaikki heti ensimmäisenä viikkona", ok:false},
-     {t:"Antaa muiden päättää rahoistasi", ok:false},
-   ],
-   fb:"Kun säästät osan, sinulla on rahaa isompiin haaveisiin ja yllätyksiin.", reward:60},
-  {type:"scenario", taso:3, title:"Palkka myöhässä",
-   ohje:"Palkkapäivä meni, mutta rahaa ei tullut tilille. Mitä teet?",
-   valinnat:[
-     {t:"Kysyt asiasta esihenkilöltä asiallisesti", seuraus:"Virhe korjataan ja saat palkkasi.", money:5},
-     {t:"Et sano mitään ja jäät ilman rahaa", seuraus:"Palkka jää saamatta, koska kukaan ei tiedä virheestä.", money:-10},
-   ],
-   q:"Mikä on oikeutesi työntekijänä?",
-   opts:[
-     {t:"Saada sovittu palkka ajallaan tehdystä työstä", ok:true},
-     {t:"Palkan saa vain jos muistaa pyytää joka kerta", ok:false},
-     {t:"Palkka on vapaaehtoinen työnantajalle", ok:false},
-   ],
-   fb:"Sinulla on oikeus palkkaan. Jos jokin menee pieleen, asiallinen kysyminen yleensä korjaa asian.", reward:60}
-);
-BANK.hyvinvointi.push(
-  {type:"scenario", taso:3, title:"Raha vai lepo?",
-   ohje:"Sinulle tarjotaan paljon ylivuoroja. Rahaa tulisi, mutta vapaa-aika loppuisi. Mitä teet?",
-   valinnat:[
-     {t:"Otat osan vuoroista mutta jätät aikaa levolle", seuraus:"Tienaat hyvin ja jaksat silti.", money:10},
-     {t:"Otat kaikki vuorot etkä lepää lainkaan", seuraus:"Rahaa tulee, mutta uuvut etkä nauti mistään.", money:-10},
-   ],
-   q:"Miksi tasapaino rahan ja levon välillä on tärkeä?",
-   opts:[
-     {t:"Raha on tärkeää, mutta jaksaminen ja terveys myös", ok:true},
-     {t:"Vain raha ratkaisee", ok:false},
-     {t:"Lepoa ei tarvita jos saa palkkaa", ok:false},
-   ],
-   fb:"Raha on tärkeää, mutta ei kaikki. Kun lepäät, jaksat tehdä töitä pidempään ja voit paremmin.", reward:60},
-  {type:"sort", taso:3, title:"Stressi hallintaan",
-   ohje:"Lajittele: auttaako tapa stressiin vai pahentaako se tilannetta?",
-   groups:["Auttaa","Pahentaa"],
-   items:[
-     {t:"Puhut huolista jollekin", g:0},
-     {t:"Jaat tehtävät pienempiin osiin", g:0},
-     {t:"Jätät kaiken viime tinkaan", g:1},
-     {t:"Valvot ja jätät ruuat väliin", g:1},
-   ],
-   q:"Mikä auttaa, kun stressaa paljon?",
-   opts:[
-     {t:"Pilkkoa asiat osiin ja puhua jollekin", ok:true},
-     {t:"Yrittää tehdä kaikki kerralla yksin", ok:false},
-     {t:"Olla nukkumatta", ok:false},
-   ],
-   fb:"Stressi helpottaa, kun jaat asiat osiin ja puhut niistä. Kukaan ei pärjää yksin aina.", reward:60}
-);
-BANK.yrittaminen.push(
-  {type:"sort", taso:3, title:"Kannattava idea?",
-   ohje:"Lajittele: mikä tekee liikeideasta kannattavan ja mikä ei?",
-   groups:["Auttaa onnistumaan","Vie kohti tappiota"],
-   items:[
-     {t:"On asiakkaita jotka haluavat tuotteen", g:0},
-     {t:"Hinta kattaa kulut ja tuo katetta", g:0},
-     {t:"Kukaan ei tarvitse tuotetta", g:1},
-     {t:"Myyt jatkuvasti alle kulujen", g:1},
-   ],
-   q:"Mikä on kannattavan yrityksen perusta?",
-   opts:[
-     {t:"Asiakkaiden tarve ja hinta joka kattaa kulut", ok:true},
-     {t:"Se, ettei kukaan halua tuotetta", ok:false},
-     {t:"Myyminen aina tappiolla", ok:false},
-   ],
-   fb:"Kannattava yritys ratkaisee asiakkaan tarpeen ja myy hinnalla, joka kattaa kulut.", reward:65},
-  {type:"laske", taso:3, title:"Laske kate",
-   ohje:"Myyt 20 tuotetta hintaan 15 € kappale. Kulut olivat 200 €. Laske paljonko jää katteeksi.",
-   vastaus:100, yksikko:"€", laskuFb:"Myynti 20 × 15 € = 300 €. 300 - 200 = 100 €.",
-   q:"Mitä yrittäjän kannattaa tehdä katteella?",
-   opts:[
-     {t:"Säästää osa ja kehittää yritystä", ok:true},
-     {t:"Käyttää kaikki heti itseensä", ok:false},
-     {t:"Katteella ei tee mitään", ok:false},
-   ],
-   fb:"Kate on yrityksen voitto. Osa kannattaa jättää yritykseen, jotta se voi kasvaa.", reward:65}
-);
-
 /* ---- Tasokonfiguraatio (nimi, teema, minimiraja €, oppimistavoitteet) ---- */
 const TASOT = [
   { nimi:"Ensiaskeleet työelämään", teema:"Perusteet", raha_min:250,
@@ -2490,10 +2127,8 @@ function handleEvent(cat){
   }
   const ev=EVENTS[cat];
   const amt=ev.money();
-  const m = (typeof ev.msg==='function') ? ev.msg() : ev.msg;
-  const nimi = (typeof ev.nimi==='function') ? ev.nimi() : CAT[cat].name;
-  changeMoney(amt, m);
-  flashEvent(CAT[cat], nimi, m, amt);
+  changeMoney(amt, ev.msg);
+  flashEvent(CAT[cat], CAT[cat].name, ev.msg, amt);
 }
 
 /* ================= MODAALI ================= */
@@ -2527,17 +2162,16 @@ function flashEvent(cat, catName, text, money){
 
 /* ---- Tehtävän avaus ---- */
 function drawFromPool(cat){
-  // Yksi sekoitettu jono per kategoria + taso. Jono etenee koko ajan, myös
-  // sakkokierroksella, joten samat tehtävät eivät toistu peräkkäin ja pelaaja
-  // näkee kaikki tason tehtävät ennen kuin mikään tulee uudelleen.
-  const avain = cat + '_' + state.level;
-  let jono = state.bankPools[avain];
-  if(!jono || jono.length===0){
+  const kt = state.kierrostyyppi || 0;                          // 0 = normaali, 1 = sakkokierros
+  const avain = cat + '_' + state.level + '_' + kt;
+  if(!state.bankPools[avain] || state.bankPools[avain].length===0){
     let kaikki = (BANK[cat]||[]).filter(t => (t.taso||1) === state.level);
-    if(kaikki.length===0) kaikki = (BANK[cat]||[]);            // varalla: mikä tahansa taso
-    jono = state.bankPools[avain] = shuffle(kaikki.slice());
+    if(kaikki.length===0) kaikki = (BANK[cat]||[]);             // varalla: mikä tahansa taso
+    let lista = kaikki.filter((t,i)=> (i%2)===kt);             // sakkokierroksella eri tehtävät
+    if(lista.length===0) lista = kaikki;                        // varalla: jos vain 1 tehtävä
+    state.bankPools[avain] = shuffle(lista.slice());
   }
-  return jono.shift();
+  return state.bankPools[avain].shift();
 }
 function openTask(cat){
   const task=drawFromPool(cat);
