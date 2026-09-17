@@ -85,6 +85,9 @@
   .card-luonnos   { background: #dbeafe; color: #1e3a8a; border: 3px solid #3b82f6; }
   .card-viimeist  { background: #ede9fe; color: #3b0764; border: 3px solid #8b5cf6; }
   .card-palautus  { background: #d1fae5; color: #064e3b; border: 3px solid #059669; grid-column: span 3; min-height: 140px; }
+  .card-koe       { background: #d1fae5; color: #064e3b; border: 3px solid #059669; }
+  .card-vara      { background: #f1f5f9; color: #334155; border: 3px dashed #94a3b8; }
+  .card-vara .vara-line { flex: 1; width: 100%; min-height: 2.6rem; border-bottom: 2.5px solid #94a3b8; margin: 6px 0 2px; }
 
   .card-palautus .card-title { font-size: 1.8rem; }
   .card-palautus .card-icon { font-size: 3.5rem; }
@@ -160,7 +163,7 @@
 <div class="print-bar">
   <div>
     <h1>📅 Ihmisaikajana – tehtäväkortit</h1>
-    <p>Tulosta A4, leikkaa kortit irti ja jaa oppilaille ennen toiminnallista tehtävää.</p>
+    <p>Tulosta A4, leikkaa kortit irti ja jaa oppilaille. 16 roolia + vararooli — jokaiselle oppilaalle oma.</p>
   </div>
   <button class="print-btn" onclick="window.print()">
     🖨️ Tulosta kortit
@@ -170,42 +173,139 @@
 <div class="cards-grid">
 
   <div class="card card-aivoriihi">
-    <div class="card-icon">📋</div>
-    <div class="card-title">Muistiinpanojen läpikäynti</div>
-    <div class="card-days">Päivät 1–3</div>
-    <div class="card-desc">Käydään läpi tunnilla tehdyt muistiinpanot ja kirja. Mitä kokeessa pitää osata?</div>
-    <div class="card-instruction">Asetu aikajanalle: päivä 1–3</div>
+    <div class="card-icon">📚</div>
+    <div class="card-title">Kokoa materiaali</div>
+    <div class="card-days">Vaihe 1 · 📋 Muistiinpanot · Päivät 1–3</div>
+    <div class="card-desc">Kerää kaikki muistiinpanot, kirja ja monisteet yhteen pinoon.</div>
+    <div class="card-instruction">Asetu janalle: päivä 1</div>
+  </div>
+
+  <div class="card card-aivoriihi">
+    <div class="card-icon">🖍️</div>
+    <div class="card-title">Merkitse tärkeimmät</div>
+    <div class="card-days">Vaihe 1 · 📋 Muistiinpanot · Päivät 1–3</div>
+    <div class="card-desc">Käy muistiinpanot läpi ja alleviivaa tärkeimmät kohdat.</div>
+    <div class="card-instruction">Asetu janalle: päivä 2</div>
+  </div>
+
+  <div class="card card-aivoriihi">
+    <div class="card-icon">❓</div>
+    <div class="card-title">Kirjaa kysymykset</div>
+    <div class="card-days">Vaihe 1 · 📋 Muistiinpanot · Päivät 1–3</div>
+    <div class="card-desc">Kirjoita ylös asiat, joita et vielä ymmärrä.</div>
+    <div class="card-instruction">Asetu janalle: päivä 3</div>
   </div>
 
   <div class="card card-tutkimus">
-    <div class="card-icon">🧠</div>
-    <div class="card-title">Tiivistelmä</div>
-    <div class="card-days">Päivät 3–5</div>
-    <div class="card-desc">Tehdään tiivistelmä tärkeimmistä asioista. Mikä on olennaista, mikä sivuseikka?</div>
-    <div class="card-instruction">Asetu aikajanalle: päivä 3–5</div>
+    <div class="card-icon">🗺️</div>
+    <div class="card-title">Tee miellekartta</div>
+    <div class="card-days">Vaihe 2 · 🧠 Tiivistelmä · Päivät 3–5</div>
+    <div class="card-desc">Piirrä aiheesta kartta, joka näyttää miten asiat liittyvät toisiinsa.</div>
+    <div class="card-instruction">Asetu janalle: päivä 3</div>
+  </div>
+
+  <div class="card card-tutkimus">
+    <div class="card-icon">📄</div>
+    <div class="card-title">Kirjoita tiivistelmä</div>
+    <div class="card-days">Vaihe 2 · 🧠 Tiivistelmä · Päivät 3–5</div>
+    <div class="card-desc">Kokoa tärkeimmät asiat lyhyeksi tekstiksi omin sanoin.</div>
+    <div class="card-instruction">Asetu janalle: päivä 4</div>
+  </div>
+
+  <div class="card card-tutkimus">
+    <div class="card-icon">🃏</div>
+    <div class="card-title">Tee muistikortit</div>
+    <div class="card-days">Vaihe 2 · 🧠 Tiivistelmä · Päivät 3–5</div>
+    <div class="card-desc">Tee kortit: toisella puolella kysymys, toisella vastaus.</div>
+    <div class="card-instruction">Asetu janalle: päivä 5</div>
   </div>
 
   <div class="card card-luonnos">
     <div class="card-icon">✏️</div>
-    <div class="card-title">Harjoittelu</div>
-    <div class="card-days">Päivät 5–7</div>
-    <div class="card-desc">Harjoitellaan tehtäviä ja testataan itseä. Mikä ei vielä suju — siihen kannattaa palata.</div>
-    <div class="card-instruction">Asetu aikajanalle: päivä 5–7</div>
+    <div class="card-title">Tee harjoitustehtäviä</div>
+    <div class="card-days">Vaihe 3 · ✏️ Harjoittelu · Päivät 5–7</div>
+    <div class="card-desc">Tee kirjan ja monisteiden tehtäviä.</div>
+    <div class="card-instruction">Asetu janalle: päivä 5</div>
+  </div>
+
+  <div class="card card-luonnos">
+    <div class="card-icon">🧩</div>
+    <div class="card-title">Keksi koekysymyksiä</div>
+    <div class="card-days">Vaihe 3 · ✏️ Harjoittelu · Päivät 5–7</div>
+    <div class="card-desc">Keksi omia koekysymyksiä ja vastaa niihin.</div>
+    <div class="card-instruction">Asetu janalle: päivä 6</div>
+  </div>
+
+  <div class="card card-luonnos">
+    <div class="card-icon">🔍</div>
+    <div class="card-title">Palaa vaikeisiin</div>
+    <div class="card-days">Vaihe 3 · ✏️ Harjoittelu · Päivät 5–7</div>
+    <div class="card-desc">Etsi asiat, jotka eivät vielä suju, ja harjoittele niitä lisää.</div>
+    <div class="card-instruction">Asetu janalle: päivä 6</div>
+  </div>
+
+  <div class="card card-luonnos">
+    <div class="card-icon">🗣️</div>
+    <div class="card-title">Opeta kaverille</div>
+    <div class="card-days">Vaihe 3 · ✏️ Harjoittelu · Päivät 5–7</div>
+    <div class="card-desc">Selitä yksi asia kaverille tai kotona — opettaminen auttaa muistamaan.</div>
+    <div class="card-instruction">Asetu janalle: päivä 7</div>
   </div>
 
   <div class="card card-viimeist">
     <div class="card-icon">🔁</div>
-    <div class="card-title">Viimeinen kertaus</div>
-    <div class="card-days">Päivät 7–9</div>
-    <div class="card-desc">Tarkistetaan vielä epäselvät kohdat ja kerrataan kokonaisuus kevyesti läpi.</div>
-    <div class="card-instruction">Asetu aikajanalle: päivä 7–9</div>
+    <div class="card-title">Kertaa tiivistelmä</div>
+    <div class="card-days">Vaihe 4 · 🔁 Kertaus · Päivät 7–9</div>
+    <div class="card-desc">Lue tiivistelmä ja muistikortit vielä kerran läpi.</div>
+    <div class="card-instruction">Asetu janalle: päivä 8</div>
   </div>
 
-  <div class="card card-palautus">
-    <div class="card-icon">📝</div>
-    <div class="card-title">KOE!</div>
-    <div class="card-days">Päivä 10 — koepäivä!</div>
-    <div class="card-instruction">Asetu aikajanalle: päivä 10 — aivan loppuun!</div>
+  <div class="card card-viimeist">
+    <div class="card-icon">✅</div>
+    <div class="card-title">Tarkista epäselvät</div>
+    <div class="card-days">Vaihe 4 · 🔁 Kertaus · Päivät 7–9</div>
+    <div class="card-desc">Käy läpi kysymykset, joita et osannut, ja varmista että osaat ne nyt.</div>
+    <div class="card-instruction">Asetu janalle: päivä 8</div>
+  </div>
+
+  <div class="card card-viimeist">
+    <div class="card-icon">😴</div>
+    <div class="card-title">Lepää ja nuku</div>
+    <div class="card-days">Vaihe 4 · 🔁 Kertaus · Päivät 7–9</div>
+    <div class="card-desc">Pidä tauko ja nuku kunnolla ennen koetta. Väsyneenä ei opi!</div>
+    <div class="card-instruction">Asetu janalle: päivä 9</div>
+  </div>
+
+  <div class="card card-koe">
+    <div class="card-icon">📖</div>
+    <div class="card-title">Lue kysymykset</div>
+    <div class="card-days">Vaihe 5 · 📝 Koe · Päivä 10</div>
+    <div class="card-desc">Lue koekysymykset rauhassa läpi ennen kuin aloitat.</div>
+    <div class="card-instruction">Asetu janalle: päivä 10</div>
+  </div>
+
+  <div class="card card-koe">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">Vastaa helppoihin ensin</div>
+    <div class="card-days">Vaihe 5 · 📝 Koe · Päivä 10</div>
+    <div class="card-desc">Aloita kysymyksistä, jotka osaat parhaiten.</div>
+    <div class="card-instruction">Asetu janalle: päivä 10</div>
+  </div>
+
+  <div class="card card-koe">
+    <div class="card-icon">🔎</div>
+    <div class="card-title">Tarkista vastaukset</div>
+    <div class="card-days">Vaihe 5 · 📝 Koe · Päivä 10</div>
+    <div class="card-desc">Lue vastauksesi läpi ennen kuin palautat kokeen.</div>
+    <div class="card-instruction">Asetu janalle: päivä 10</div>
+  </div>
+
+  <div class="card card-vara">
+    <div class="card-icon">✍️</div>
+    <div class="card-title">Vararooli</div>
+    <div class="card-days">Opettaja kirjoittaa roolin</div>
+    <div class="vara-line"></div>
+    <div class="card-instruction">Asetu janalle sopivaan kohtaan</div>
   </div>
 
 </div>
@@ -220,11 +320,13 @@
   <h2>📋 Ohjeet opettajalle – Ihmisaikajana</h2>
   <ol>
     <li>Tulosta tämä sivu A4-kokoisena (Tiedosto → Tulosta).</li>
-    <li>Leikkaa viisi korttia irti. Jos luokassa on yli 5 oppilasta, tulosta useampi kopio ja jaa roolit pareittain tai ryhmissä.</li>
-    <li>Tee lattialle aikajana teipillä: merkitse numerot 1–10 tai päivät Ma–Pe.</li>
+    <li>Leikkaa kortit irti. Rooleja on 16 (n. 3 per vaihe) + vararooli, joten n. 20 oppilaan luokassa jokaiselle riittää oma rooli.</li>
+    <li>Jos oppilaita on enemmän kuin kortteja: tulosta suosituista vaiheista toinen kopio tai jaa vararoolikortteja. Vararoolikorttiin voit <strong>itse kirjoittaa roolin</strong> tyhjälle viivalle (tai antaa oppilaan tuplata jonkun vaiheen ja asettua vierekkäin).</li>
+    <li>Muodostakaa aikajana <strong>elävänä jonona</strong>: sovi, että luokan vasen reuna = päivä 1 (aloitus) ja oikea reuna = koepäivä. Lattiaan ei tarvita merkkejä. (Halutessasi voit silti merkitä päivät 1–10 teipillä tai A4-lapuilla.)</li>
     <li>Jaa kortit oppilaille — jokainen saa roolin.</li>
-    <li>Oppilaat asettuvat vapaasti aikajanalle. Sitten tarkistetaan yhdessä: onko järjestys oikea?</li>
-    <li>Lisää yllätystapahtuma ylläolevasta listasta ja katso, miten ryhmä ratkaisee ongelman.</li>
+    <li>Oppilaat asettuvat <strong>jonoon</strong> oman korttinsa mukaan — ensin itse, ilman apua.</li>
+    <li>Sano ääneen: <strong>"Koe on jonon viimeinen paikka!"</strong> Tarkistakaa yhdessä: kulkeeko jono loogisesti muistiinpanoista kokeeseen? Vaihtakaa paikkoja, kunnes järjestys on oikea.</li>
+    <li>Heitä yllätystapahtuma ylläolevasta listasta. Oppilaat ratkaisevat tilanteen <strong>siirtymällä jonossa</strong>.</li>
     <li>Purku: Miksi aikatauluun kannattaa jättää puskuria?</li>
   </ol>
 </div>
