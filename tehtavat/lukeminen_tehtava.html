@@ -315,12 +315,23 @@
           <strong>Teksti 6:</strong> "Aivot oppivat parhaiten yhtä asiaa kerrallaan. Kun puhelin on pois näkyvistä, keskittyminen paranee eikä huomio karkaa."
         </div>
       </div>
-      <a href="../tehtavat/lukeminen_tekstikortit.html" target="_blank"
-        style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; background:#1d4ed8; color:white; border-radius:8px; text-decoration:none; font-size:0.88rem; font-weight:700; transition:background 0.18s;"
+      <button id="korttiToggleBtn" onclick="toggleKortit(this)" aria-expanded="false" aria-controls="korttiWrap"
+        style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; background:#1d4ed8; color:white; border:none; border-radius:8px; cursor:pointer; font-size:0.88rem; font-weight:700; transition:background 0.18s;"
         onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1d4ed8'">
-        <span aria-hidden="true">🖨️</span> Avaa tulostettavat tekstikortit
-      </a>
-      <p style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">Avautuu uuteen välilehteen · Tulosta A4, leikkaa kortit irti</p>
+        <span aria-hidden="true">🖨️</span> <span class="kortti-btn-txt">Näytä tulostettavat tekstikortit</span>
+      </button>
+
+      <div id="korttiWrap" hidden style="margin-top:14px;">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+          <button onclick="tulostaKortit()"
+            style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#fff; color:#1d4ed8; border:1.5px solid #1d4ed8; border-radius:8px; cursor:pointer; font-size:0.82rem; font-weight:700;">
+            <span aria-hidden="true">🖨️</span> Tulosta kortit
+          </button>
+        </div>
+        <iframe id="korttiInlineFrame" title="Tulostettavat tekstikortit" data-src="lukeminen_tekstikortit.html" src="about:blank" loading="lazy"
+          style="width:100%; height:900px; border:1.5px solid #cbd5e1; border-radius:10px; background:#fff; display:block;"></iframe>
+        <p style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">Kortit näkyvät tässä samassa näkymässä. Tulosta A4, leikkaa kortit irti ja jaa oppilaille.</p>
+      </div>
     </div>
   </div>
 
@@ -706,6 +717,31 @@ function toggleOpettajaLukeminen(btn) {
     sisalto.hidden = false;
     sisalto.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
+}
+function toggleKortit(btn) {
+  var wrap = document.getElementById('korttiWrap');
+  var f = document.getElementById('korttiInlineFrame');
+  var txt = btn.querySelector('.kortti-btn-txt');
+  var avautuu = wrap.hidden;
+  if (avautuu && f.src.indexOf('about:blank') !== -1) {
+    f.src = f.getAttribute('data-src');
+    f.onload = function () {
+      try { f.style.height = (f.contentWindow.document.body.scrollHeight + 40) + 'px'; } catch (e) {}
+    };
+  }
+  wrap.hidden = !avautuu;
+  btn.setAttribute('aria-expanded', avautuu ? 'true' : 'false');
+  if (txt) txt.textContent = avautuu ? 'Piilota tulostettavat tekstikortit' : 'Näytä tulostettavat tekstikortit';
+  if (avautuu) { setTimeout(function () { wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80); }
+}
+
+function tulostaKortit() {
+  var f = document.getElementById('korttiInlineFrame');
+  if (!f) return;
+  if (f.src.indexOf('about:blank') !== -1) { f.src = f.getAttribute('data-src'); }
+  setTimeout(function () {
+    try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {}
+  }, 300);
 }
 </script>
 </body>
