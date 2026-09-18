@@ -748,7 +748,8 @@
           <div id="oppimaan-oppiminen-osiot">
 
             <!-- OTSIKKOLAATIKKO -->
-            <div style="background: linear-gradient(135deg, #4c1d95, #7c3aed); border-radius: 16px; padding: 22px 24px; margin: 20px 0 16px; color: white; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: center;">
+            <div style="background: linear-gradient(135deg, #4c1d95, #7c3aed); border-radius: 16px; padding: 22px 24px; margin: 20px 0 16px; color: white; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: center; position: relative;">
+              <button type="button" onclick="avaaLahteet()" aria-label="Näytä lähteet ja pedagoginen tausta" title="Lähteet ja tausta" style="position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.55); background:rgba(255,255,255,0.15); color:#fff; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:800; font-size:16px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(3px);" onmouseover="this.style.background='rgba(255,255,255,0.32)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">i</button>
               <img src="../images/bodaavat_aivot.png" alt="Bodaavat aivot" loading="lazy" style="flex: 0 0 auto; width: 130px; max-width: 35%; height: auto; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));">
               <div style="flex: 1 1 300px; min-width: 220px;">
                 <p style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 8px;">Opi, kasva, loista!</p>
@@ -756,6 +757,47 @@
                 <p style="font-size: 0.88rem; opacity: 0.9; max-width: 460px; margin: 0 auto;">Neljä tehtävää, joissa harjoittelet oppimisen tärkeimpiä taitoja.</p>
               </div>
             </div>
+
+            <!-- LÄHDEIKKUNA: Muisti · Lukeminen · Ajanhallinta · Tekoäly -->
+            <div id="lahteetModal" role="dialog" aria-modal="true" aria-labelledby="lahteetModalTitle" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,0.6); padding:20px; align-items:center; justify-content:center;" onclick="if(event.target===this)suljeLahteet()">
+              <div style="background:#fff; color:#1f2937; max-width:560px; width:100%; max-height:85vh; overflow:auto; border-radius:16px; padding:22px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.35);">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:4px;">
+                  <h3 id="lahteetModalTitle" style="font-size:1.15rem; font-weight:900; color:#4c1d95; margin:0;">Lähteet ja pedagoginen tausta</h3>
+                  <button type="button" onclick="suljeLahteet()" aria-label="Sulje ikkuna" style="background:#f3f4f6; border:none; border-radius:8px; width:32px; height:32px; font-size:17px; line-height:1; cursor:pointer; color:#374151; flex-shrink:0;">✕</button>
+                </div>
+                <p style="font-size:0.85rem; color:#6b7280; margin:0 0 16px;">Tehtävien taustalla oleva oppimiskäsitys ja keskeiset lähteet. Sisältö on mukautettu 7. luokan tasolle.</p>
+                <div style="border:2px solid #c4b5fd; background:#faf5ff; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+                  <p style="font-weight:800; color:#4c1d95; font-size:0.9rem; margin:0 0 4px;">📚 Päälähde – tehtävien suunnittelu</p>
+                  <p style="font-size:0.85rem; color:#374151; margin:0; line-height:1.55;">Vorderman, Carol ym. (2017): <em>Opiskelutaidot – Auta koululaista parempiin tuloksiin</em>. Suom. Veli-Pekka Ketola. Readme.fi. (ISBN 9789523214408)</p>
+                </div>
+                <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+                  <p style="font-weight:800; color:#111827; font-size:0.9rem; margin:0 0 4px;">Opetussuunnitelma</p>
+                  <p style="font-size:0.85rem; color:#374151; margin:0; line-height:1.55;">Opetushallitus (2014): <em>Perusopetuksen opetussuunnitelman perusteet</em> – laaja-alainen osaaminen L1, <em>Ajattelu ja oppimaan oppiminen</em>. <a href="https://eperusteet.opintopolku.fi/#/fi/perusopetus/419550/tiedot" target="_blank" rel="noopener" style="color:#7c3aed; font-weight:600;">ePerusteet ↗</a></p>
+                </div>
+            <div style="border-left:4px solid #7c3aed; background:#f9fafb; border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:10px;">
+              <p style="font-weight:800; font-size:0.88rem; margin:0 0 3px; color:#7c3aed;">🧠 Muisti</p>
+              <p style="font-size:0.84rem; color:#374151; margin:0; line-height:1.55;">Työmuistiin mahtuu kerralla vain muutama asia (Cowan, 2001). Muistijälki vahvistuu, kun asiaa kerrataan sopivin, harvenevin välein – unohtamiskäyrä ja hajautettu harjoittelu (Ebbinghaus, 1885). Uni vahvistaa päivän aikana opitun (muistin konsolidaatio).</p>
+            </div>
+            <div style="border-left:4px solid #2563eb; background:#f9fafb; border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:10px;">
+              <p style="font-weight:800; font-size:0.88rem; margin:0 0 3px; color:#2563eb;">📖 Lukeminen</p>
+              <p style="font-size:0.84rem; color:#374151; margin:0; line-height:1.55;">Luetun ymmärtämisen strategiat: ennakointi ja silmäily ennen lukemista, aktiivinen lukeminen (avainsanojen ja ydinvirkkeen merkitseminen) sekä pääajatuksen tiivistäminen omin sanoin.</p>
+            </div>
+            <div style="border-left:4px solid #059669; background:#f9fafb; border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:10px;">
+              <p style="font-weight:800; font-size:0.88rem; margin:0 0 3px; color:#059669;">📅 Ajanhallinta</p>
+              <p style="font-size:0.84rem; color:#374151; margin:0; line-height:1.55;">Itsesäätely ja suunnittelu: tavoitteesta taaksepäin suunnittelu, ison tehtävän pilkkominen välitavoitteisiin ja pelivaran (puskurin) jättäminen yllätyksille.</p>
+            </div>
+            <div style="border-left:4px solid #0891b2; background:#f9fafb; border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:10px;">
+              <p style="font-weight:800; font-size:0.88rem; margin:0 0 3px; color:#0891b2;">🤖 Tekoäly</p>
+              <p style="font-size:0.84rem; color:#374151; margin:0; line-height:1.55;">Medialukutaito ja lähdekritiikki: tekoälyn tuottaman tiedon tarkistaminen toisesta lähteestä, kysymyksen tarkka muotoilu ja tekoälyn käyttö oppimisen tukena – ei oman työn korvaajana.</p>
+            </div>
+                <p style="font-size:0.78rem; color:#9ca3af; margin:14px 0 0; line-height:1.5;">Oppimistutkimuksen periaatteet (työmuistin rajallisuus, kertaamisen rytmi, unen merkitys) ovat oppimispsykologian vakiintunutta perustietoa. Voit täydentää lähdeluetteloa oman tarpeesi mukaan.</p>
+              </div>
+            </div>
+            <script>
+              function avaaLahteet(){ var m=document.getElementById("lahteetModal"); if(!m)return; m.style.display="flex"; document.body.style.overflow="hidden"; var b=m.querySelector("button"); if(b) b.focus(); }
+              function suljeLahteet(){ var m=document.getElementById("lahteetModal"); if(!m)return; m.style.display="none"; document.body.style.overflow=""; }
+              document.addEventListener("keydown", function(e){ if(e.key==="Escape") suljeLahteet(); });
+            </script>
 
             <!-- TEHTÄVÄKORTIT – 4-sarakkeinen ruudukko -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 0 0 8px;">

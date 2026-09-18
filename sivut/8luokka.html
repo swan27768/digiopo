@@ -2304,7 +2304,9 @@
             padding: 24px 22px 20px;
             color: #fff;
             margin-bottom: 16px;
+            position: relative;
           ">
+            <button type="button" onclick="avaaLahteet()" aria-label="Näytä lähteet ja pedagoginen tausta" title="Lähteet ja tausta" style="position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6); background:rgba(255,255,255,0.18); color:#fff; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:800; font-size:16px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(3px); z-index:2;" onmouseover="this.style.background='rgba(255,255,255,0.34)'" onmouseout="this.style.background='rgba(255,255,255,0.18)'">i</button>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
               <span style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:999px; font-size:0.75rem; font-weight:700; padding:4px 12px; letter-spacing:0.04em;">
                 🧑‍💻 Tehdään itsenäisesti omalla laitteella
@@ -2331,6 +2333,34 @@
             title="Oppimaan oppimisen klinikka -tehtävä"
             loading="lazy"
           ></iframe>
+          <!-- LÄHDEIKKUNA: Oppimaan oppimisen klinikka -->
+          <div id="lahteetModal" role="dialog" aria-modal="true" aria-labelledby="lahteetModalTitle" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,0.6); padding:20px; align-items:center; justify-content:center;" onclick="if(event.target===this)suljeLahteet()">
+            <div style="background:#fff; color:#1f2937; max-width:560px; width:100%; max-height:85vh; overflow:auto; border-radius:16px; padding:22px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.35);">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:4px;">
+                <h3 id="lahteetModalTitle" style="font-size:1.15rem; font-weight:900; color:#5B2C6F; margin:0;">Lähteet ja pedagoginen tausta</h3>
+                <button type="button" onclick="suljeLahteet()" aria-label="Sulje ikkuna" style="background:#f3f4f6; border:none; border-radius:8px; width:32px; height:32px; font-size:17px; line-height:1; cursor:pointer; color:#374151; flex-shrink:0;">✕</button>
+              </div>
+              <p style="font-size:0.85rem; color:#6b7280; margin:0 0 16px;">Oppimaan oppimisen klinikan taustalla oleva oppimiskäsitys ja keskeiset lähteet.</p>
+              <div style="border:2px solid #c4b5fd; background:#faf5ff; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+                <p style="font-weight:800; color:#5B2C6F; font-size:0.9rem; margin:0 0 4px;">📚 Päälähde – tehtävien suunnittelu</p>
+                <p style="font-size:0.85rem; color:#374151; margin:0; line-height:1.55;">Vorderman, Carol ym. (2017): <em>Opiskelutaidot – Auta koululaista parempiin tuloksiin</em>. Suom. Veli-Pekka Ketola. Readme.fi. (ISBN 9789523214408)</p>
+              </div>
+              <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+                <p style="font-weight:800; color:#111827; font-size:0.9rem; margin:0 0 4px;">Opetussuunnitelma</p>
+                <p style="font-size:0.85rem; color:#374151; margin:0; line-height:1.55;">Opetushallitus (2014): <em>Perusopetuksen opetussuunnitelman perusteet</em> – laaja-alainen osaaminen L1, <em>Ajattelu ja oppimaan oppiminen</em>. <a href="https://www.oph.fi/fi/koulutus-ja-tutkinnot/perusopetuksen-opetussuunnitelman-perusteet" target="_blank" rel="noopener" style="color:#7c3aed; font-weight:600;">OPH ↗</a></p>
+              </div>
+              <div style="border-left:4px solid #0d9488; background:#f9fafb; border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:10px;">
+                <p style="font-weight:800; font-size:0.88rem; margin:0 0 3px; color:#0d9488;">🧠 Oppimispsykologian periaatteet</p>
+                <p style="font-size:0.84rem; color:#374151; margin:0; line-height:1.55;">Klinikan opiskelutekniikat (muistin kertaaminen sopivin välein, aktiivinen lukeminen, ajanhallinta ja keskittyminen) pohjautuvat oppimispsykologian vakiintuneisiin periaatteisiin, mm. työmuistin rajallisuus (Cowan, 2001), hajautettu harjoittelu (Ebbinghaus, 1885) ja unen merkitys muistin vahvistumisessa.</p>
+              </div>
+              <p style="font-size:0.78rem; color:#9ca3af; margin:14px 0 0; line-height:1.5;">Voit täydentää lähdeluetteloa oman tarpeesi mukaan.</p>
+            </div>
+          </div>
+          <script>
+            function avaaLahteet(){ var m=document.getElementById("lahteetModal"); if(!m)return; m.style.display="flex"; document.body.style.overflow="hidden"; var b=m.querySelector("button"); if(b) b.focus(); }
+            function suljeLahteet(){ var m=document.getElementById("lahteetModal"); if(!m)return; m.style.display="none"; document.body.style.overflow=""; }
+            document.addEventListener("keydown", function(e){ if(e.key==="Escape") suljeLahteet(); });
+          </script>
         <div class="pk-slot" data-paivakirja data-teema="8-klinikka"></div>
         </section>
 
