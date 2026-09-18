@@ -282,6 +282,27 @@
   .rs5 { background: #7c3aed; }
   .repeat-step .rs-num { font-size: 1.3rem; font-weight: 900; min-width: 30px; }
 
+  /* ── KERTAUSRYTMI (interaktiivinen) ── */
+  .kr-wrap { background:#fff; border:2px solid #ddd6fe; border-radius:16px; padding:18px; margin:16px 0; }
+  .kr-lead { font-size:0.92rem; color:#4c1d95; font-weight:600; margin-bottom:12px; line-height:1.5; }
+  .kr-axis { font-size:0.8rem; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:0.03em; margin:4px 0 10px; }
+  .kr-pool { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; min-height:46px; padding:8px; border-radius:12px; background:#faf5ff; border:1.5px dashed #c4b5fd; }
+  .kr-pool:empty::after { content:"Kaikki ajat sijoitettu ✓"; color:#a78bda; font-size:0.85rem; font-weight:600; padding:6px; }
+  .kr-chip { padding:10px 15px; border-radius:999px; background:#ede9fe; color:#4c1d95; font-weight:700; font-size:0.9rem; border:2px solid #c4b5fd; cursor:pointer; user-select:none; transition:transform .12s, background .12s; }
+  .kr-chip:hover { background:#ddd6fe; transform:translateY(-1px); }
+  .kr-timeline { display:flex; flex-direction:column; gap:10px; }
+  .kr-slot { display:flex; align-items:center; gap:12px; min-height:50px; border-radius:14px; border:2px dashed #c4b5fd; padding:8px 16px; cursor:pointer; font-size:0.95rem; font-weight:700; color:#7c3aed; background:#fff; }
+  .kr-num { width:28px; height:28px; border-radius:50%; background:#7c3aed; color:#fff; font-weight:900; font-size:0.95rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .kr-slot.filled { border-style:solid; color:#fff; }
+  .kr-slot.filled .kr-num { background:rgba(255,255,255,0.35); }
+  .kr-slot.rs1 { background:#10b981; border-color:#10b981; }
+  .kr-slot.rs2 { background:#3b82f6; border-color:#3b82f6; }
+  .kr-slot.rs3 { background:#f59e0b; border-color:#f59e0b; }
+  .kr-slot.rs4 { background:#ec4899; border-color:#ec4899; }
+  .kr-slot.rs5 { background:#7c3aed; border-color:#7c3aed; }
+  .kr-slot.bad { outline:3px solid #ef4444; outline-offset:1px; }
+  .kr-slot.ok  { outline:3px solid #10b981; outline-offset:1px; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 400px) {
     .brain-facts { grid-template-columns: 1fr; }
@@ -350,12 +371,13 @@
     </div>
   </div>
 
-  <div class="repeat-steps">
-    <div class="repeat-step rs1"><span class="rs-num">1</span> Toista pian oppimisen jälkeen</div>
-    <div class="repeat-step rs2"><span class="rs-num">2</span> Toista 1 vuorokauden kuluttua</div>
-    <div class="repeat-step rs3"><span class="rs-num">3</span> Toista 1 viikon kuluttua</div>
-    <div class="repeat-step rs4"><span class="rs-num">4</span> Toista 1 kuukauden kuluttua</div>
-    <div class="repeat-step rs5"><span class="rs-num">5</span> Toista 3–6 kuukauden kuluttua</div>
+  <div class="kr-wrap">
+    <p class="kr-lead">🔁 <strong>Kertausrytmi:</strong> milloin kannattaa kerrata, jotta asia siirtyy pitkäkestoiseen muistiin? Napauta ajat aikajanalle oikeaan järjestykseen – aikaisimmasta myöhäisimpään.</p>
+    <div class="kr-pool" id="krPool" aria-label="Kertausajat"></div>
+    <div class="kr-axis">⏱ Aikajana: aikaisin → myöhäisin</div>
+    <div class="kr-timeline" id="krTimeline"></div>
+    <button class="btn btn-full" id="krCheckBtn" onclick="krCheck()" style="margin-top:14px;" disabled>✔ Tarkista järjestys</button>
+    <div id="krResult" style="margin-top:12px;"></div>
   </div>
 
   <button class="btn btn-full" onclick="nextScreen()" style="margin-top:8px;">
@@ -915,11 +937,106 @@ function restartGame() {
   document.getElementById('numSequence').textContent = '–';
   document.getElementById('numCountdown').textContent = '';
   document.getElementById('quizDoneBtn').style.display = 'none';
+  initKertaus();
   goToScreen(0);
+}
+
+// ── KERTAUSRYTMI (interaktiivinen) ──
+const KR_ITEMS = [
+  { id:'a', label:'Heti oppitunnin jälkeen', cls:'rs1' },
+  { id:'b', label:'1 vrk kuluttua',          cls:'rs2' },
+  { id:'c', label:'1 viikon kuluttua',       cls:'rs3' },
+  { id:'d', label:'1 kk kuluttua',           cls:'rs4' },
+  { id:'e', label:'3–6 kk kuluttua',         cls:'rs5' }
+];
+const KR_CORRECT = ['a','b','c','d','e'];
+let krSlots = [null,null,null,null,null];
+let krSolved = false;
+
+function krItem(id){ return KR_ITEMS.find(x => x.id === id); }
+
+function krShuffledPool(){
+  const placed = krSlots.filter(Boolean);
+  let pool = KR_ITEMS.map(x=>x.id).filter(id => !placed.includes(id));
+  for (let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  return pool;
+}
+
+function initKertaus(){
+  krSlots = [null,null,null,null,null];
+  krSolved = false;
+  const pool = document.getElementById('krPool');
+  if(!pool) return;
+  krPoolOrder = krShuffledPool();
+  document.getElementById('krResult').innerHTML = '';
+  krRender();
+}
+let krPoolOrder = [];
+
+function krRender(){
+  const poolEl = document.getElementById('krTimeline') ? document.getElementById('krPool') : null;
+  if(!poolEl) return;
+  // pool
+  poolEl.innerHTML = '';
+  krPoolOrder.filter(id => !krSlots.includes(id)).forEach(id => {
+    const it = krItem(id);
+    const chip = document.createElement('button');
+    chip.type='button'; chip.className='kr-chip'; chip.textContent=it.label;
+    chip.onclick = () => krPlace(id);
+    poolEl.appendChild(chip);
+  });
+  // timeline
+  const tl = document.getElementById('krTimeline');
+  tl.innerHTML = '';
+  krSlots.forEach((id, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'kr-slot';
+    const num = document.createElement('span'); num.className='kr-num'; num.textContent=(i+1);
+    slot.appendChild(num);
+    const txt = document.createElement('span');
+    if(id){ const it=krItem(id); slot.classList.add('filled', it.cls); txt.textContent=it.label; slot.onclick=()=>krRemoveSlot(i); }
+    else { txt.textContent='Napauta aika tähän'; txt.style.opacity='0.6'; }
+    slot.appendChild(txt);
+    tl.appendChild(slot);
+  });
+  const filled = krSlots.filter(Boolean).length;
+  const btn = document.getElementById('krCheckBtn');
+  btn.disabled = (filled !== 5) || krSolved;
+}
+
+function krPlace(id){
+  if(krSolved) return;
+  const i = krSlots.indexOf(null);
+  if(i === -1) return;
+  krSlots[i] = id;
+  document.getElementById('krResult').innerHTML = '';
+  krRender();
+}
+
+function krRemoveSlot(i){
+  if(krSolved) return;
+  krSlots[i] = null;
+  document.getElementById('krResult').innerHTML = '';
+  krRender();
+}
+
+function krCheck(){
+  const res = document.getElementById('krResult');
+  const ok = krSlots.every((id, i) => id === KR_CORRECT[i]);
+  const slots = document.querySelectorAll('#krTimeline .kr-slot');
+  slots.forEach((el,i) => { el.classList.remove('ok','bad'); el.classList.add(krSlots[i]===KR_CORRECT[i] ? 'ok' : 'bad'); });
+  if(ok){
+    krSolved = true;
+    document.getElementById('krCheckBtn').disabled = true;
+    res.innerHTML = '<div style="padding:14px 16px;border-radius:12px;background:#ecfdf5;color:#065f46;font-weight:600;line-height:1.5;">🎉 Oikein! Näin muisti vahvistuu: kertaa ensin <strong>tihein välein</strong> (heti ja seuraavana päivänä) ja sen jälkeen yhä <strong>harvemmin</strong>. Jokainen kertaus siirtää asiaa pitkäkestoiseen muistiin!</div>';
+  } else {
+    res.innerHTML = '<div style="padding:14px 16px;border-radius:12px;background:#fffbeb;color:#92400e;font-weight:600;line-height:1.5;">🤔 Melkein! Punaisella merkityt ovat vielä väärässä kohdassa. Napauta ne pois ja kokeile uudelleen – vihje: mitä pian oppimisen jälkeen?</div>';
+  }
 }
 
 // init
 updateProgress();
+initKertaus();
 </script>
 </body>
 </html>
