@@ -303,6 +303,12 @@
   .kr-slot.bad { outline:3px solid #ef4444; outline-offset:1px; }
   .kr-slot.ok  { outline:3px solid #10b981; outline-offset:1px; }
 
+  /* ── JÄRJESTYSPALAUTE (yhtenäinen lukemistehtävän kanssa) ── */
+  .order-check-result { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; margin: 12px 0; display: none; }
+  .order-check-result.show { display: block; }
+  .order-check-result.ok { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+  .order-check-result.nope { background: #fff7ed; color: #92400e; border: 2px solid #fcd34d; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 400px) {
     .brain-facts { grid-template-columns: 1fr; }
@@ -1028,9 +1034,9 @@ function krCheck(){
   if(ok){
     krSolved = true;
     document.getElementById('krCheckBtn').disabled = true;
-    res.innerHTML = '<div style="padding:14px 16px;border-radius:12px;background:#ecfdf5;color:#065f46;font-weight:600;line-height:1.5;">🎉 Oikein! Näin muisti vahvistuu: kertaa ensin <strong>tihein välein</strong> (heti ja seuraavana päivänä) ja sen jälkeen yhä <strong>harvemmin</strong>. Jokainen kertaus siirtää asiaa pitkäkestoiseen muistiin!</div>';
+    res.innerHTML = '<div class="order-check-result ok show" style="line-height:1.5;">🎉 <strong>Oikein!</strong> Näin muisti vahvistuu: kertaa ensin <strong>tihein välein</strong> (heti ja seuraavana päivänä) ja sen jälkeen yhä <strong>harvemmin</strong>. Jokainen kertaus siirtää asiaa pitkäkestoiseen muistiin!</div>';
   } else {
-    res.innerHTML = '<div style="padding:14px 16px;border-radius:12px;background:#fffbeb;color:#92400e;font-weight:600;line-height:1.5;">🤔 Melkein! Punaisella merkityt ovat vielä väärässä kohdassa. Napauta ne pois ja kokeile uudelleen – vihje: mitä pian oppimisen jälkeen?</div>';
+    res.innerHTML = '<div class="order-check-result nope show" style="line-height:1.5;">🤔 <strong>Ei ihan oikein!</strong> Punaisella merkityt ovat vielä väärässä kohdassa. Napauta ne pois ja kokeile uudelleen – vihje: mitä kannattaa tehdä heti oppitunnin jälkeen?</div>';
   }
 }
 
