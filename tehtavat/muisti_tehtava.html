@@ -340,11 +340,10 @@
 <div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
   <div class="step-dot active" role="tab" aria-selected="true" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 3: Muistitesti" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Sanatesti" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Muistinaru" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 6: Muistipeli" onclick="goToScreen(5)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(5)">6</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 7: Tietovisa" onclick="goToScreen(6)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(6)">7</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 3: Testaa muistisi" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Muistinaru" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Muistipeli" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 6: Tietovisa" onclick="goToScreen(5)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(5)">6</div>
 </div>
 
 <!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
@@ -453,14 +452,17 @@
   </button>
 </section>
 
-<!-- ═══════════ SCREEN 1: MUISTITESTI ═══════════ -->
-<section class="screen" id="screen-1" aria-labelledby="s1-title">
+<!-- ═══════════ TESTAA MUISTISI (numerot + sanat) ═══════════ -->
+<section class="screen" id="screen-testaa" aria-labelledby="s-testaa-title">
   <div class="section-title">
-    <span>🔢</span> <span id="s1-title">Muistitesti</span>
+    <span>🧠</span> <span id="s-testaa-title">Testaa muistisi</span>
     <span class="section-badge">Vaihe 2</span>
   </div>
-  <p style="color:#6b7280; margin-bottom:16px;">Katso numerot, muista ne – sitten kirjoita muistista!</p>
+  <p style="color:#6b7280; margin-bottom:18px;">Testataan muistiasi kahdella kierroksella: ensin <strong>numerot</strong>, sitten <strong>sanat</strong>. Katso, paljonko muistat ilman erityistä tekniikkaa!</p>
 
+  <!-- Kierros 1: numerot -->
+  <div style="display:inline-block; background:#ede9fe; color:#5b21b6; font-weight:800; font-size:0.9rem; padding:6px 14px; border-radius:999px; margin-bottom:12px;">🔢 Kierros 1: Numerot</div>
+  <p style="color:#6b7280; margin-bottom:14px;">Katso numerot, muista ne – sitten kirjoita muistista!</p>
   <div id="memTestArea">
     <div class="number-display" id="numDisplay">
       <div class="num-label">Muista nämä numerot!</div>
@@ -479,36 +481,32 @@
     <div id="memResult"></div>
     <div id="memNext" style="display:none; margin-top:16px;">
       <button class="btn btn-full" id="nextLevelBtn" onclick="nextMemLevel()">Kokeile vaikeampaa! 💪</button>
-      <p style="text-align:center;margin-top:10px;font-size:13px;color:#6b7280;">Tai siirry eteenpäin</p>
-      <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:8px;">Jatka seuraavaan ▶</button>
+      <p style="text-align:center;margin-top:10px;font-size:13px;color:#6b7280;">Tai siirry sanoihin</p>
+      <button class="btn btn-outline btn-full" onclick="showSanaRound()" style="margin-top:8px;">➡ Kierros 2: sanat</button>
     </div>
   </div>
-</section>
 
-<!-- ═══════════ SANATESTI: OPETTELE SANAT ═══════════ -->
-<section class="screen" id="screen-sanatesti" aria-labelledby="s-sana-title">
-  <div class="section-title">
-    <span>🧠</span> <span id="s-sana-title">Opettele nämä sanat</span>
-    <span class="section-badge">Vaihe 3</span>
-  </div>
-  <p style="color:#6b7280; margin-bottom:16px;">Yritä painaa mieleen nämä 7 sanaa. Sinulla on 15 sekuntia aikaa – sitten ne katoavat ja kirjoitat muistista, montako muistat!</p>
-
-  <div id="sanaTestArea">
-    <div class="number-display" id="sanaDisplay">
-      <div class="num-label">Opettele nämä sanat!</div>
-      <div class="numbers" id="sanaWords" style="font-size:1.15rem; line-height:1.9; letter-spacing:normal;">–</div>
-      <div class="countdown" id="sanaCountdown" aria-live="polite"></div>
-    </div>
-    <button class="btn btn-full" id="startSanaBtn" onclick="startSanaTest()" style="margin-bottom:14px;">▶ Aloita</button>
-    <div class="number-input-area" id="sanaInputArea" style="display:none;">
-      <label for="sanaAnswer">Kirjoita muistamasi sanat (välilyönti tai pilkku väliin):</label>
-      <textarea id="sanaAnswer" rows="3" placeholder="esim. omena, kissa ..." style="width:100%; padding:10px; border-radius:10px; border:1.5px solid #ddd6fe; font-size:1rem; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
-      <button class="btn btn-full" onclick="checkSana()" style="margin-top:12px;">✔ Tarkista</button>
-    </div>
-    <div id="sanaResult"></div>
-    <div id="sanaNext" style="display:none; margin-top:16px;">
-      <button class="btn btn-outline btn-full" onclick="restartSana()">🔄 Yritä uudelleen</button>
-      <button class="btn btn-full" onclick="nextScreen()" style="margin-top:10px;">Jatka: opi tekniikka ▶</button>
+  <!-- Kierros 2: sanat (piilossa kunnes kierros 1 tehty) -->
+  <div id="sanaRound" style="display:none; margin-top:26px; padding-top:20px; border-top:2px dashed #ddd6fe;">
+    <div style="display:inline-block; background:#ede9fe; color:#5b21b6; font-weight:800; font-size:0.9rem; padding:6px 14px; border-radius:999px; margin-bottom:12px;">🔤 Kierros 2: Sanat</div>
+    <p style="color:#6b7280; margin-bottom:14px;">Yritä painaa mieleen nämä 7 sanaa. Sinulla on 15 sekuntia – sitten ne katoavat ja kirjoitat muistista, montako muistat!</p>
+    <div id="sanaTestArea">
+      <div class="number-display" id="sanaDisplay">
+        <div class="num-label">Opettele nämä sanat!</div>
+        <div class="numbers" id="sanaWords" style="font-size:1.15rem; line-height:1.9; letter-spacing:normal;">–</div>
+        <div class="countdown" id="sanaCountdown" aria-live="polite"></div>
+      </div>
+      <button class="btn btn-full" id="startSanaBtn" onclick="startSanaTest()" style="margin-bottom:14px;">▶ Aloita</button>
+      <div class="number-input-area" id="sanaInputArea" style="display:none;">
+        <label for="sanaAnswer">Kirjoita muistamasi sanat (välilyönti tai pilkku väliin):</label>
+        <textarea id="sanaAnswer" rows="3" placeholder="esim. omena, kissa ..." style="width:100%; padding:10px; border-radius:10px; border:1.5px solid #ddd6fe; font-size:1rem; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
+        <button class="btn btn-full" onclick="checkSana()" style="margin-top:12px;">✔ Tarkista</button>
+      </div>
+      <div id="sanaResult"></div>
+      <div id="sanaNext" style="display:none; margin-top:16px;">
+        <button class="btn btn-outline btn-full" onclick="restartSana()">🔄 Yritä uudelleen</button>
+        <button class="btn btn-full" onclick="nextScreen()" style="margin-top:10px;">Jatka: opi tekniikka ▶</button>
+      </div>
     </div>
   </div>
 </section>
@@ -517,7 +515,7 @@
 <section class="screen" id="screen-muistinaru" aria-labelledby="s-naru-title">
   <div class="section-title">
     <span>🧶</span> <span id="s-naru-title">Muistinaru — kytke ja muista!</span>
-    <span class="section-badge">Vaihe 4</span>
+    <span class="section-badge">Vaihe 3</span>
   </div>
   <p style="color:#6b7280; margin-bottom:14px;">Äsken yritit muistaa sanoja ulkoa. Nyt kokeillaan tekniikkaa, joka tekee muistamisesta helppoa: <strong>assosiointia</strong>.</p>
 
@@ -543,7 +541,7 @@
 <section class="screen" id="screen-2" aria-labelledby="s2-title">
   <div class="section-title">
     <span>🃏</span> <span id="s2-title">Muistipeli – löydä parit!</span>
-    <span class="section-badge">Vaihe 5</span>
+    <span class="section-badge">Vaihe 4</span>
   </div>
   <p style="color:#6b7280; margin-bottom:4px;">Käännä kortteja ja löydä kaikki parit. Muista missä olet nähnyt samanlaisen kortin!</p>
   <div class="mem-score" id="memGameScore" aria-live="polite">Parit: 0 / 8 &nbsp;|&nbsp; Yritykset: 0</div>
@@ -562,7 +560,7 @@
 <section class="screen" id="screen-3" aria-labelledby="s3-title">
   <div class="section-title">
     <span>❓</span> <span id="s3-title">Tietovisa – muistin salaisuudet</span>
-    <span class="section-badge">Vaihe 6</span>
+    <span class="section-badge">Vaihe 5</span>
   </div>
   <div id="quizContainer"></div>
   <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">
@@ -593,7 +591,7 @@
 <script>
 // ── STATE ──
 let currentScreen = 0;
-const totalScreens = 7;
+const totalScreens = 6;
 let quizScore = 0;
 let quizAnswered = 0;
 
@@ -610,9 +608,9 @@ function goToScreen(n) {
   currentScreen = n;
   updateProgress();
   window.scrollTo({top:0, behavior:'smooth'});
-  if(n === 4 && !naruInitialized) initNaru();
-  if(n === 5 && !memGameInitialized) initMemGame();
-  if(n === 6 && !quizInitialized) initQuiz();
+  if(n === 3 && !naruInitialized) initNaru();
+  if(n === 4 && !memGameInitialized) initMemGame();
+  if(n === 5 && !quizInitialized) initQuiz();
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
@@ -708,6 +706,12 @@ function naruPick(qi, oi, box, btn) {
 // ── SANATESTI (opettele sanat) ──
 const sanaWordList = ['omena','sateenkaari','kissa','polkupyörä','kynttilä','lumiukko','avaruus'];
 let sanaPhase = 'idle';
+
+function showSanaRound() {
+  const sr = document.getElementById('sanaRound');
+  sr.style.display = 'block';
+  sr.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function startSanaTest() {
   document.getElementById('startSanaBtn').style.display = 'none';
@@ -1025,7 +1029,7 @@ function answerQuiz(qi, oi) {
 
 function showFinal() {
   document.getElementById('finalScore').textContent = quizScore + ' / ' + quizData.length;
-  goToScreen(7);
+  goToScreen(6);
 }
 
 function restartGame() {
@@ -1034,6 +1038,7 @@ function restartGame() {
   naruInitialized = false;
   var _nr = document.getElementById('naruResult'); if(_nr) _nr.style.display = 'none';
   restartSana();
+  var _sr = document.getElementById('sanaRound'); if(_sr) _sr.style.display = 'none';
   quizScore = 0;
   quizAnswered = 0;
   memPhase = 'idle';
