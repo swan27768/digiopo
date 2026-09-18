@@ -335,14 +335,15 @@
 <div class="progress-bar-wrap">
   <div class="progress-bar-fill" id="progressBar"></div>
 </div>
-<div class="progress-label" id="progressLabel">Osio 1 / 4</div>
+<div class="progress-label" id="progressLabel">Osio 1 / 6</div>
 
 <div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
   <div class="step-dot active" role="tab" aria-selected="true" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 3: Muistitesti" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Muistipeli" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Muistinaru" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Muistipeli" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 6: Tietovisa" onclick="goToScreen(5)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(5)">6</div>
 </div>
 
 <!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
@@ -483,11 +484,37 @@
   </div>
 </section>
 
+<!-- ═══════════ MUISTINARU: ASSOSIOINTI ═══════════ -->
+<section class="screen" id="screen-muistinaru" aria-labelledby="s-naru-title">
+  <div class="section-title">
+    <span>🧶</span> <span id="s-naru-title">Muistinaru — kytke ja muista!</span>
+    <span class="section-badge">Vaihe 3</span>
+  </div>
+  <p style="color:#6b7280; margin-bottom:14px;">Äsken yritit muistaa numeroita ulkoa. Nyt kokeillaan tekniikkaa, joka tekee muistamisesta helppoa: <strong>assosiointia</strong>.</p>
+
+  <div style="background:linear-gradient(135deg,#ede9fe,#faf5ff); border:2px solid #ddd6fe; border-radius:16px; padding:18px 20px; margin-bottom:18px;">
+    <p style="font-weight:800;color:#4c1d95;margin-bottom:8px;">💡 Miten se toimii?</p>
+    <p style="font-size:0.95rem;color:#1e1b4b;line-height:1.6;">Kytke uusi asia johonkin, jonka jo tunnet. Mitä <strong>hullumpi ja elävämpi</strong> kuva, sitä paremmin se jää mieleen.</p>
+    <p style="font-size:0.95rem;color:#1e1b4b;line-height:1.6;margin-top:8px;">Esimerkki: pitää muistaa 🥛 <strong>MAITO</strong> ja ☂️ <strong>SATEENVARJO</strong> → kuvittele <em>sateenvarjo, josta sataa maitoa</em>. Nyt et unohda kumpaakaan!</p>
+  </div>
+
+  <p style="font-weight:700;color:#4c1d95;margin-bottom:12px;">Valitse vahvin muistikuva:</p>
+  <div id="naruContainer"></div>
+
+  <div id="naruResult" style="display:none; margin-top:16px;">
+    <div class="result-badge correct">
+      <span class="ri">🧶</span>
+      <div><strong>Hienoa — nyt osaat assosioinnin!</strong><br>Sama temppu toimii läksyissä: kytke uusi sana, vuosiluku tai kaava johonkin, jonka jo tunnet.</div>
+    </div>
+    <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:12px;">Jatka muistipeliin ▶</button>
+  </div>
+</section>
+
 <!-- ═══════════ SCREEN 2: MEMORY-PELI ═══════════ -->
 <section class="screen" id="screen-2" aria-labelledby="s2-title">
   <div class="section-title">
     <span>🃏</span> <span id="s2-title">Muistipeli – löydä parit!</span>
-    <span class="section-badge">Vaihe 3</span>
+    <span class="section-badge">Vaihe 4</span>
   </div>
   <p style="color:#6b7280; margin-bottom:4px;">Käännä kortteja ja löydä kaikki parit. Muista missä olet nähnyt samanlaisen kortin!</p>
   <div class="mem-score" id="memGameScore" aria-live="polite">Parit: 0 / 8 &nbsp;|&nbsp; Yritykset: 0</div>
@@ -506,7 +533,7 @@
 <section class="screen" id="screen-3" aria-labelledby="s3-title">
   <div class="section-title">
     <span>❓</span> <span id="s3-title">Tietovisa – muistin salaisuudet</span>
-    <span class="section-badge">Vaihe 4</span>
+    <span class="section-badge">Vaihe 5</span>
   </div>
   <div id="quizContainer"></div>
   <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">
@@ -537,7 +564,7 @@
 <script>
 // ── STATE ──
 let currentScreen = 0;
-const totalScreens = 5;
+const totalScreens = 6;
 let quizScore = 0;
 let quizAnswered = 0;
 
@@ -554,8 +581,9 @@ function goToScreen(n) {
   currentScreen = n;
   updateProgress();
   window.scrollTo({top:0, behavior:'smooth'});
-  if(n === 3 && !memGameInitialized) initMemGame();
-  if(n === 4 && !quizInitialized) initQuiz();
+  if(n === 3 && !naruInitialized) initNaru();
+  if(n === 4 && !memGameInitialized) initMemGame();
+  if(n === 5 && !quizInitialized) initQuiz();
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
@@ -563,6 +591,90 @@ function updateProgress() {
   document.getElementById('progressBar').style.width = pct + '%';
   document.getElementById('progressLabel').textContent = 'Osio ' + (currentScreen+1) + ' / ' + (totalScreens);
 }
+
+// ── MUISTINARU (assosiointi) ──
+let naruInitialized = false;
+let naruAnswered = 0;
+const naruData = [
+  { q: '🔑 AVAIN + 🐘 NORSU', opts: [
+    { t:'Norsu heiluttaa kärsässään jättikokoista avainta 🔑', ok:true,  fb:'Juuri niin! Kun kaksi asiaa sulautuu yhdeksi hassuksi kuvaksi, aivot muistavat ne yhtenä.' },
+    { t:'Luen sanat "avain, norsu" viisi kertaa peräkkäin', ok:false, fb:'Toistokin auttaa, mutta elävä mielikuva jää paljon paremmin mieleen.' },
+    { t:'Kirjoitan sanat allekkain listaan', ok:false, fb:'Lista ei kytke sanoja mihinkään. Yhteinen kuva olisi vahvempi.' }
+  ]},
+  { q: '🍌 BANAANI + ☎️ PUHELIN', opts: [
+    { t:'Puhut banaaniin kuin se olisi puhelin 🍌', ok:true,  fb:'Kyllä! Hauska, liikkuva kuva tarttuu mieleen.' },
+    { t:'Ajattelet vain: "banaani on keltainen"', ok:false, fb:'Tämä ei liitä banaania puhelimeen mitenkään.' },
+    { t:'Toistat sanat mielessäsi nopeasti', ok:false, fb:'Pelkkä toisto unohtuu helposti ilman kuvaa.' }
+  ]},
+  { q: '🌟 TÄHTI + 👟 LENKKARI', opts: [
+    { t:'Lenkkarit, joissa tähdet kimaltavat kun juokset 🌟', ok:true,  fb:'Loistavaa! Väri, liike ja kimallus tekevät kuvasta vahvan.' },
+    { t:'Molemmat sanat ovat lyhyitä', ok:false, fb:'Sanojen pituus ei auta muistamaan niitä.' },
+    { t:'Sanot ne ääneen kerran', ok:false, fb:'Kerran sanottu unohtuu — kuva kestää.' }
+  ]},
+  { q: 'Mikä on VAHVIN muistikuva sanalle 🕐 KELLO?', opts: [
+    { t:'Jättikello, jonka viisarit ovat spagettia ja joka tikittää nauraen 😄', ok:true, fb:'Juuri tuo! Outo, liikkuva ja tunteita herättävä kuva jää parhaiten mieleen.' },
+    { t:'Tavallinen kello seinällä', ok:false, fb:'Liian tuttu ja tylsä — ei erotu muista muistoista.' },
+    { t:'Sana "kello" kirjoitettuna vihkoon', ok:false, fb:'Teksti yksin ei luo mielikuvaa.' }
+  ]}
+];
+
+function initNaru() {
+  naruInitialized = true;
+  naruAnswered = 0;
+  const c = document.getElementById('naruContainer');
+  c.innerHTML = '';
+  document.getElementById('naruResult').style.display = 'none';
+  naruData.forEach((item, qi) => {
+    const box = document.createElement('div');
+    box.className = 'naru-q';
+    box.style.cssText = 'background:#fff;border:2px solid #e9d5ff;border-radius:14px;padding:16px 18px;margin-bottom:14px;';
+    const h = document.createElement('p');
+    h.style.cssText = 'font-weight:800;color:#4c1d95;margin-bottom:12px;font-size:1rem;';
+    h.textContent = item.q;
+    box.appendChild(h);
+    item.opts.forEach((op, oi) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'naru-opt';
+      b.style.cssText = 'display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:2px solid #ddd6fe;border-radius:10px;background:#faf5ff;color:#1e1b4b;font-size:0.92rem;line-height:1.5;cursor:pointer;';
+      b.textContent = op.t;
+      b.onclick = () => naruPick(qi, oi, box, b);
+      box.appendChild(b);
+    });
+    const fb = document.createElement('div');
+    fb.className = 'naru-fb';
+    fb.style.cssText = 'display:none;margin-top:6px;padding:10px 14px;border-radius:10px;font-size:0.9rem;line-height:1.5;';
+    box.appendChild(fb);
+    c.appendChild(box);
+  });
+}
+
+function naruPick(qi, oi, box, btn) {
+  if (box.dataset.done) return;
+  box.dataset.done = '1';
+  const op = naruData[qi].opts[oi];
+  const fb = box.querySelector('.naru-fb');
+  box.querySelectorAll('.naru-opt').forEach((b, i) => {
+    b.disabled = true;
+    b.style.cursor = 'default';
+    if (naruData[qi].opts[i].ok) { b.style.borderColor = '#10b981'; b.style.background = '#ecfdf5'; }
+  });
+  if (op.ok) {
+    btn.style.borderColor = '#10b981'; btn.style.background = '#d1fae5';
+    fb.style.background = '#ecfdf5'; fb.style.color = '#065f46';
+    fb.textContent = '✅ ' + op.fb;
+  } else {
+    btn.style.borderColor = '#ef4444'; btn.style.background = '#fee2e2';
+    fb.style.background = '#fef2f2'; fb.style.color = '#991b1b';
+    fb.textContent = '💡 ' + op.fb + ' (Vihreä oli vahvin kuva.)';
+  }
+  fb.style.display = 'block';
+  naruAnswered++;
+  if (naruAnswered === naruData.length) {
+    document.getElementById('naruResult').style.display = 'block';
+  }
+}
+
 
 // ── MEMORY NUMBER TEST ──
 const sequences = [
@@ -823,12 +935,14 @@ function answerQuiz(qi, oi) {
 
 function showFinal() {
   document.getElementById('finalScore').textContent = quizScore + ' / ' + quizData.length;
-  goToScreen(5);
+  goToScreen(6);
 }
 
 function restartGame() {
   memGameInitialized = false;
   quizInitialized = false;
+  naruInitialized = false;
+  var _nr = document.getElementById('naruResult'); if(_nr) _nr.style.display = 'none';
   quizScore = 0;
   quizAnswered = 0;
   memPhase = 'idle';
