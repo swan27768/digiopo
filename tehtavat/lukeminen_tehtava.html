@@ -120,6 +120,15 @@
   .order-check-result.show { display: block; }
   .order-check-result.ok { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
   .order-check-result.nope { background: #fff7ed; color: #92400e; border: 2px solid #fcd34d; }
+  /* ── AKTIIVINEN LUKEMINEN: avainsanat ── */
+  .kw-text { background:#fff; border:2px solid #bfdbfe; border-radius:16px; padding:18px 20px; margin-bottom:14px; font-size:1.05rem; line-height:2.1; color:#1e3a8a; }
+  .kw { cursor:pointer; border-radius:6px; padding:1px 4px; border-bottom:2px dashed #93c5fd; transition:background .12s; }
+  .kw:hover { background:#eff6ff; }
+  .kw.sel { background:#bfdbfe; border-bottom-color:transparent; font-weight:700; }
+  .kw.correct { background:#d1fae5; color:#065f46; border-bottom-color:transparent; font-weight:800; }
+  .kw.wrong { background:#fee2e2; color:#991b1b; border-bottom-color:transparent; text-decoration:line-through; }
+  .kw.missed { background:#fef3c7; color:#92400e; border-bottom:2px solid #fcd34d; font-weight:800; }
+
 
   /* CORE SENTENCE */
   .passage-box { background: white; border: 2px solid #bfdbfe; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
@@ -189,8 +198,10 @@
   <div class="step-dot active" role="tab" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
   <div class="step-dot" role="tab" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
   <div class="step-dot" role="tab" aria-label="Vaihe 3: Arvaa aihe" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
-  <div class="step-dot" role="tab" aria-label="Vaihe 4: Järjestä vaiheet" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
-  <div class="step-dot" role="tab" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 4: Aktiivinen lukeminen" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 5: Tiivistä" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 6: Järjestä vaiheet" onclick="goToScreen(5)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(5)">6</div>
+  <div class="step-dot" role="tab" aria-label="Vaihe 7: Tietovisa" onclick="goToScreen(6)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(6)">7</div>
 </div>
 
 <!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
@@ -360,7 +371,7 @@
 <section class="screen" id="screen-1" aria-labelledby="s1-title">
   <div class="section-title">
     <span>🕵️</span> <span id="s1-title">Arvaa mistä teksti kertoo!</span>
-    <span class="section-badge">Vaihe 2</span>
+    <span class="section-badge">Vaihe 3</span>
   </div>
   <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Lue vain tekstin alku. Arvaa sitten, mistä aiheesta teksti kertoo. Älykäs lukija osaa tehdä tämän!</p>
   <div id="guessContainer"></div>
@@ -369,11 +380,37 @@
   </button>
 </section>
 
+<!-- ═══════════ SCREEN: AKTIIVINEN LUKEMINEN (AIKANA) ═══════════ -->
+<section class="screen" id="screen-active" aria-labelledby="s-active-title">
+  <div class="section-title">
+    <span>✏️</span> <span id="s-active-title">Aktiivinen lukeminen – merkitse tärkeät</span>
+    <span class="section-badge">Vaihe 4</span>
+  </div>
+  <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Älykäs lukija lukee kynä kädessä. Poimi teksteistä avainsanat ja ydinvirke – ne kertovat, mistä on kyse.</p>
+  <div id="activeContainer"></div>
+  <button class="btn btn-full" onclick="nextScreen()" id="activeDoneBtn" style="display:none; margin-top:12px;">
+    Seuraava tehtävä ▶
+  </button>
+</section>
+
+<!-- ═══════════ SCREEN: TIIVISTÄ (JÄLKEEN) ═══════════ -->
+<section class="screen" id="screen-summary" aria-labelledby="s-summary-title">
+  <div class="section-title">
+    <span>💬</span> <span id="s-summary-title">Tiivistä – mikä on pääajatus?</span>
+    <span class="section-badge">Vaihe 5</span>
+  </div>
+  <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Lue kappale ja valitse paras yhden lauseen tiivistys. Hyvä tiivistys kokoaa pääajatuksen – ei liikaa eikä liian vähän.</p>
+  <div id="summaryContainer"></div>
+  <button class="btn btn-full" onclick="nextScreen()" id="summaryDoneBtn" style="display:none; margin-top:12px;">
+    Seuraava tehtävä ▶
+  </button>
+</section>
+
 <!-- ═══════════ SCREEN 2: JÄRJESTÄ VAIHEET ═══════════ -->
 <section class="screen" id="screen-2" aria-labelledby="s2-title">
   <div class="section-title">
     <span>🔀</span> <span id="s2-title">Järjestä lukemisen vaiheet</span>
-    <span class="section-badge">Vaihe 3</span>
+    <span class="section-badge">Vaihe 6</span>
   </div>
   <p style="color:#1d4ed8; margin-bottom:16px; font-size:0.95rem;">Vedä (tai napauta ylös/alas) vaiheet oikeaan järjestykseen. Mikä on älykkään lukijan oikea järjestys?</p>
   <div class="drag-list" id="dragList" role="list" aria-label="Lukemisen vaiheet, vedä järjestykseen"></div>
@@ -386,7 +423,7 @@
 <section class="screen" id="screen-3" aria-labelledby="s3-title">
   <div class="section-title">
     <span>❓</span> <span id="s3-title">Tietovisa – lukemisen taito</span>
-    <span class="section-badge">Vaihe 4</span>
+    <span class="section-badge">Vaihe 7</span>
   </div>
   <div id="quizContainer"></div>
   <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none; margin-top:8px;">
@@ -416,7 +453,7 @@
 
 <script>
 let currentScreen = 0;
-const totalScreens = 5;
+const totalScreens = 7;
 let quizScore = 0;
 let quizAnswered = 0;
 let guessAnswered = 0;
@@ -432,8 +469,10 @@ function goToScreen(n) {
   updateProgress();
   window.scrollTo({top:0, behavior:'smooth'});
   if(n === 2 && !guessInitialized) initGuess();
-  if(n === 3 && !orderInitialized) initOrder();
-  if(n === 4 && !quizInitialized) initQuiz();
+  if(n === 3 && !activeInitialized) initActive();
+  if(n === 4 && !summaryInitialized) initSummary();
+  if(n === 5 && !orderInitialized) initOrder();
+  if(n === 6 && !quizInitialized) initQuiz();
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
@@ -529,6 +568,228 @@ function doGuess(oi, ans, hint, optsDiv, fb, clicked) {
     fb.innerHTML = '❌ Ei ihan oikein. ' + hint;
   }
   document.getElementById('guessNextBtn').style.display = 'block';
+}
+
+// ══════ AKTIIVINEN LUKEMINEN (avainsanat + ydinvirke) ══════
+let activeInitialized = false;
+let activeIndex = 0;
+const activeItems = [
+  {
+    type: 'kw',
+    intro: 'Kynä kädessä! Napauta tekstistä kolme tärkeintä avainsanaa – ne, jotka kertovat mistä on kyse.',
+    tokens: [
+      {t:'Aivot', key:true},{t:'tarvitsevat'},{t:'vettä', key:true},{t:'toimiakseen.'},
+      {t:'Ilman'},{t:'sitä'},{t:'keskittyminen', key:true},{t:'herpaantuu.'}
+    ],
+    hint: 'Avainsanat kertovat tekstin ytimen: <strong>aivot</strong> tarvitsevat <strong>vettä</strong>, muuten <strong>keskittyminen</strong> kärsii.'
+  },
+  {
+    type: 'core',
+    intro: 'Lue kappale. Napauta virke, joka on ydinvirke – se kertoo koko kappaleen pääasian.',
+    sentences: [
+      'Liikunta parantaa oppimista.',
+      'Kun liikut, aivoihin virtaa enemmän happea.',
+      'Siksi pieni kävely ennen koetta voi auttaa muistamaan.'
+    ],
+    ans: 0,
+    hint: 'Ydinvirke on tässä ensimmäinen virke: se kertoo pääasian (liikunta auttaa oppimista). Muut virkkeet vain selittävät, miksi.'
+  },
+  {
+    type: 'kw',
+    intro: 'Napauta taas kolme tärkeintä avainsanaa.',
+    tokens: [
+      {t:'Puhelin', key:true},{t:'vie'},{t:'huomion', key:true},{t:'pois.'},
+      {t:'Kun'},{t:'se'},{t:'on'},{t:'piilossa,'},{t:'keskittyminen', key:true},{t:'paranee.'}
+    ],
+    hint: 'Avainsanat: <strong>puhelin</strong> vie <strong>huomion</strong>, ja piilossa <strong>keskittyminen</strong> paranee.'
+  }
+];
+
+function initActive() { activeInitialized = true; activeIndex = 0; renderActive(); }
+
+function makeActiveNext() {
+  const n = document.createElement('button');
+  n.className = 'btn btn-full';
+  n.style.cssText = 'display:none; margin-top:10px;';
+  n.textContent = activeIndex < activeItems.length - 1 ? 'Seuraava teksti ▶' : 'Valmis! ✅';
+  n.onclick = function () { activeIndex++; renderActive(); };
+  return n;
+}
+
+function renderActive() {
+  const c = document.getElementById('activeContainer');
+  c.innerHTML = '';
+  if (activeIndex >= activeItems.length) {
+    c.innerHTML = '<div style="text-align:center; padding:20px; background:#d1fae5; border-radius:16px; font-size:1.1rem; font-weight:800; color:#065f46;">🎉 Hienoa! Merkitsit tärkeät kohdat kuin aktiivinen lukija.</div>';
+    document.getElementById('activeDoneBtn').style.display = 'block';
+    return;
+  }
+  const it = activeItems[activeIndex];
+  const counter = document.createElement('p');
+  counter.style.cssText = 'font-size:12px; color:#60a5fa; font-weight:700; margin-bottom:10px;';
+  counter.textContent = 'Teksti ' + (activeIndex + 1) + ' / ' + activeItems.length;
+  c.appendChild(counter);
+  const intro = document.createElement('p');
+  intro.style.cssText = 'font-size:1rem; font-weight:800; color:#1e3a8a; margin-bottom:12px;';
+  intro.textContent = it.intro;
+  c.appendChild(intro);
+  if (it.type === 'kw') renderKw(it, c); else renderCore(it, c);
+}
+
+function renderKw(it, c) {
+  const box = document.createElement('p');
+  box.className = 'kw-text';
+  it.tokens.forEach(function (tok) {
+    const s = document.createElement('span');
+    s.className = 'kw';
+    s.textContent = tok.t;
+    s.onclick = function () { if (box.dataset.done) return; s.classList.toggle('sel'); };
+    box.appendChild(s);
+    box.appendChild(document.createTextNode(' '));
+  });
+  c.appendChild(box);
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-full';
+  btn.style.marginTop = '4px';
+  btn.textContent = '✔ Tarkista';
+  const fb = document.createElement('div');
+  fb.className = 'quiz-feedback';
+  const nextBtn = makeActiveNext();
+  btn.onclick = function () {
+    if (box.dataset.done) return;
+    box.dataset.done = '1';
+    let ok = true;
+    const spans = box.querySelectorAll('.kw');
+    spans.forEach(function (s, ti) {
+      const key = !!it.tokens[ti].key;
+      const sel = s.classList.contains('sel');
+      s.classList.remove('sel');
+      if (key && sel) s.classList.add('correct');
+      else if (!key && sel) { s.classList.add('wrong'); ok = false; }
+      else if (key && !sel) { s.classList.add('missed'); ok = false; }
+    });
+    fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'nope') + ' show';
+    fb.innerHTML = (ok ? '✅ Juuri niin! ' : '❌ Ei ihan oikein. Vihreällä näkyvät avainsanat. ') + it.hint;
+    btn.style.display = 'none';
+    nextBtn.style.display = 'block';
+  };
+  c.appendChild(btn);
+  c.appendChild(fb);
+  c.appendChild(nextBtn);
+}
+
+function renderCore(it, c) {
+  const wrap = document.createElement('div');
+  wrap.className = 'sentence-opts';
+  const fb = document.createElement('div');
+  fb.className = 'quiz-feedback';
+  const nextBtn = makeActiveNext();
+  it.sentences.forEach(function (sent, si) {
+    const b = document.createElement('button');
+    b.className = 'sent-opt vaihtoehto';
+    b.textContent = sent;
+    b.onclick = function () {
+      wrap.querySelectorAll('.sent-opt').forEach(function (x) { x.setAttribute('disabled', 'true'); });
+      if (si === it.ans) {
+        b.classList.add('correct');
+        fb.className = 'quiz-feedback ok show';
+        fb.innerHTML = '✅ ' + it.hint;
+      } else {
+        b.classList.add('wrong');
+        wrap.querySelectorAll('.sent-opt')[it.ans].classList.add('correct');
+        fb.className = 'quiz-feedback nope show';
+        fb.innerHTML = '❌ Ei ihan oikein. ' + it.hint;
+      }
+      nextBtn.style.display = 'block';
+    };
+    wrap.appendChild(b);
+  });
+  c.appendChild(wrap);
+  c.appendChild(fb);
+  c.appendChild(nextBtn);
+}
+
+// ══════ TIIVISTÄ – valitse paras tiivistys ══════
+let summaryInitialized = false;
+let summaryIndex = 0;
+const summaryItems = [
+  {
+    text: 'Aamupala antaa aivoille energiaa. Kun syöt aamulla, jaksat keskittyä paremmin ja muistat asiat helpommin. Tyhjällä vatsalla ajatus harhailee ja väsyttää.',
+    opts: [
+      'Tyhjällä vatsalla väsyttää.',
+      'Aamupala antaa aivoille energiaa ja auttaa keskittymään.',
+      'Ruoka on tärkeää ihmiselle.'
+    ],
+    ans: 1,
+    hint: 'Paras tiivistys kokoaa koko kappaleen pääajatuksen yhteen lauseeseen: aamupala antaa energiaa ja auttaa keskittymään. "Tyhjällä vatsalla väsyttää" on vain yksi yksityiskohta, ja "ruoka on tärkeää" on liian ympäripyöreä.'
+  },
+  {
+    text: 'Toistaminen on muistamisen tärkein taito. Mitä useammin kertaat asian, sitä paremmin se jää mieleen. Yksi lukukerta harvoin riittää.',
+    opts: [
+      'Kertaaminen auttaa muistamaan asiat.',
+      'Yksi lukukerta ei riitä kokeeseen.',
+      'Koulussa opitaan monia asioita.'
+    ],
+    ans: 0,
+    hint: '"Kertaaminen auttaa muistamaan" sanoo tekstin pääajatuksen. "Yksi lukukerta ei riitä" on vain yksityiskohta, eikä "koulussa opitaan monia asioita" liity tekstin ydinasiaan.'
+  }
+];
+
+function initSummary() { summaryInitialized = true; summaryIndex = 0; renderSummary(); }
+
+function renderSummary() {
+  const container = document.getElementById('summaryContainer');
+  container.innerHTML = '';
+  if (summaryIndex >= summaryItems.length) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; background:#d1fae5; border-radius:16px; font-size:1.1rem; font-weight:800; color:#065f46;">🎉 Hienoa! Osaat tiivistää tekstin pääajatuksen.</div>';
+    document.getElementById('summaryDoneBtn').style.display = 'block';
+    return;
+  }
+  const it = summaryItems[summaryIndex];
+  const counter = document.createElement('p');
+  counter.style.cssText = 'font-size:12px; color:#60a5fa; font-weight:700; margin-bottom:10px;';
+  counter.textContent = 'Kappale ' + (summaryIndex + 1) + ' / ' + summaryItems.length;
+  container.appendChild(counter);
+  const textDiv = document.createElement('div');
+  textDiv.className = 'text-card';
+  textDiv.innerHTML = '<div class="text-label">📄 Lue kappale</div><p>' + it.text + '</p>';
+  container.appendChild(textDiv);
+  const q = document.createElement('p');
+  q.style.cssText = 'font-size:1rem; font-weight:800; color:#1e3a8a; margin-bottom:12px;';
+  q.textContent = 'Mikä on paras yhden lauseen tiivistys?';
+  container.appendChild(q);
+  const optsDiv = document.createElement('div');
+  optsDiv.className = 'guess-options';
+  const fb = document.createElement('div');
+  fb.className = 'quiz-feedback';
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn btn-full';
+  nextBtn.style.cssText = 'display:none; margin-top:10px;';
+  nextBtn.textContent = summaryIndex < summaryItems.length - 1 ? 'Seuraava kappale ▶' : 'Valmis! ✅';
+  nextBtn.onclick = function () { summaryIndex++; renderSummary(); };
+  it.opts.forEach(function (opt, oi) {
+    const b = document.createElement('button');
+    b.className = 'guess-opt vaihtoehto';
+    b.textContent = opt;
+    b.onclick = function () {
+      optsDiv.querySelectorAll('.guess-opt').forEach(function (x) { x.setAttribute('disabled', 'true'); });
+      if (oi === it.ans) {
+        b.classList.add('correct');
+        fb.className = 'quiz-feedback ok show';
+        fb.innerHTML = '✅ ' + it.hint;
+      } else {
+        b.classList.add('wrong');
+        optsDiv.querySelectorAll('.guess-opt')[it.ans].classList.add('correct');
+        fb.className = 'quiz-feedback nope show';
+        fb.innerHTML = '❌ Ei ihan oikein. ' + it.hint;
+      }
+      nextBtn.style.display = 'block';
+    };
+    optsDiv.appendChild(b);
+  });
+  container.appendChild(optsDiv);
+  container.appendChild(fb);
+  container.appendChild(nextBtn);
 }
 
 // ── ORDER DRAG & DROP ──
@@ -685,19 +946,25 @@ function answerQuiz(qi, oi) {
 
 function showFinal() {
   document.getElementById('finalScore').textContent = quizScore+' / '+quizData.length;
-  goToScreen(5);
+  goToScreen(7);
 }
 
 function restartGame() {
   guessInitialized = false;
+  activeInitialized = false;
+  summaryInitialized = false;
   orderInitialized = false;
   quizInitialized = false;
   quizScore = 0;
   quizAnswered = 0;
   guessAnswered = 0;
   guessIndex = 0;
+  activeIndex = 0;
+  summaryIndex = 0;
   document.getElementById('quizDoneBtn').style.display = 'none';
   document.getElementById('guessDoneBtn').style.display = 'none';
+  document.getElementById('activeDoneBtn').style.display = 'none';
+  document.getElementById('summaryDoneBtn').style.display = 'none';
   document.getElementById('orderNextBtn').style.display = 'none';
   document.getElementById('orderResult').className = 'order-check-result';
   goToScreen(0);
