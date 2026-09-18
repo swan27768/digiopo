@@ -342,8 +342,7 @@
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 2: Toiminnallinen tehtävä" onclick="goToScreen(1)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(1)">2</div>
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 3: Testaa muistisi" onclick="goToScreen(2)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(2)">3</div>
   <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 4: Muistinaru" onclick="goToScreen(3)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(3)">4</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Muistipeli" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
-  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 6: Tietovisa" onclick="goToScreen(5)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(5)">6</div>
+  <div class="step-dot" role="tab" aria-selected="false" aria-label="Vaihe 5: Tietovisa" onclick="goToScreen(4)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(4)">5</div>
 </div>
 
 <!-- ═══════════ SCREEN 0: OPETTAJAN PUHE ═══════════ -->
@@ -533,26 +532,7 @@
       <span class="ri">🧶</span>
       <div><strong>Hienoa — nyt osaat assosioinnin!</strong><br>Sama temppu toimii läksyissä: kytke uusi sana, vuosiluku tai kaava johonkin, jonka jo tunnet.</div>
     </div>
-    <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:12px;">Jatka muistipeliin ▶</button>
-  </div>
-</section>
-
-<!-- ═══════════ SCREEN 2: MEMORY-PELI ═══════════ -->
-<section class="screen" id="screen-2" aria-labelledby="s2-title">
-  <div class="section-title">
-    <span>🃏</span> <span id="s2-title">Muistipeli – löydä parit!</span>
-    <span class="section-badge">Vaihe 4</span>
-  </div>
-  <p style="color:#6b7280; margin-bottom:4px;">Käännä kortteja ja löydä kaikki parit. Muista missä olet nähnyt samanlaisen kortin!</p>
-  <div class="mem-score" id="memGameScore" aria-live="polite">Parit: 0 / 8 &nbsp;|&nbsp; Yritykset: 0</div>
-  <div class="memory-grid" id="memoryGrid" aria-label="Muistipelin kortit" role="grid"></div>
-  <div id="memGameResult" style="display:none;">
-    <div class="result-badge correct">
-      <span class="ri">🎉</span>
-      <div><strong>Loistava muisti!</strong><br>Löysit kaikki parit!</div>
-    </div>
-    <button class="btn btn-full" onclick="resetMemGame()" style="margin-top:10px;">Pelaa uudelleen 🔄</button>
-    <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:10px;">Jatka tietovisaan ▶</button>
+    <button class="btn btn-outline btn-full" onclick="nextScreen()" style="margin-top:12px;">Jatka tietovisaan ▶</button>
   </div>
 </section>
 
@@ -560,7 +540,7 @@
 <section class="screen" id="screen-3" aria-labelledby="s3-title">
   <div class="section-title">
     <span>❓</span> <span id="s3-title">Tietovisa – muistin salaisuudet</span>
-    <span class="section-badge">Vaihe 5</span>
+    <span class="section-badge">Vaihe 4</span>
   </div>
   <div id="quizContainer"></div>
   <button class="btn btn-full" id="quizDoneBtn" onclick="showFinal()" style="display:none;margin-top:8px;">
@@ -591,7 +571,7 @@
 <script>
 // ── STATE ──
 let currentScreen = 0;
-const totalScreens = 6;
+const totalScreens = 5;
 let quizScore = 0;
 let quizAnswered = 0;
 
@@ -609,8 +589,7 @@ function goToScreen(n) {
   updateProgress();
   window.scrollTo({top:0, behavior:'smooth'});
   if(n === 3 && !naruInitialized) initNaru();
-  if(n === 4 && !memGameInitialized) initMemGame();
-  if(n === 5 && !quizInitialized) initQuiz();
+  if(n === 4 && !quizInitialized) initQuiz();
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
@@ -848,92 +827,6 @@ function nextMemLevel() {
   }
 }
 
-// ── MEMORY CARD GAME ──
-let memGameInitialized = false;
-let flippedCards = [];
-let matchedPairs = 0;
-let memAttempts = 0;
-let lockBoard = false;
-
-const cardEmojis = ['🧠','📚','✏️','🎯','💡','🔑','🎵','⭐'];
-
-function initMemGame() {
-  memGameInitialized = true;
-  resetMemGame();
-}
-
-function resetMemGame() {
-  matchedPairs = 0;
-  memAttempts = 0;
-  flippedCards = [];
-  lockBoard = false;
-  document.getElementById('memGameResult').style.display = 'none';
-  updateMemGameScore();
-  const pairs = [...cardEmojis, ...cardEmojis];
-  shuffle(pairs);
-  const grid = document.getElementById('memoryGrid');
-  grid.innerHTML = '';
-  pairs.forEach((emoji, idx) => {
-    const card = document.createElement('div');
-    card.className = 'mem-card';
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', 'Pelikortti ' + (idx+1));
-    card.setAttribute('tabindex', '0');
-    card.dataset.emoji = emoji;
-    card.innerHTML = `
-      <div class="card-back" aria-hidden="true">🤔</div>
-      <div class="card-front" aria-hidden="true">${emoji}</div>`;
-    card.addEventListener('click', () => flipCard(card));
-    card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') flipCard(card); });
-    grid.appendChild(card);
-  });
-}
-
-function flipCard(card) {
-  if(lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-  card.classList.add('flipped');
-  flippedCards.push(card);
-  if(flippedCards.length === 2) {
-    memAttempts++;
-    lockBoard = true;
-    setTimeout(checkMemMatch, 700);
-  }
-  updateMemGameScore();
-}
-
-function checkMemMatch() {
-  const [a, b] = flippedCards;
-  if(a.dataset.emoji === b.dataset.emoji) {
-    a.classList.add('matched'); b.classList.add('matched');
-    a.setAttribute('aria-label', 'Pari löydetty: ' + a.dataset.emoji);
-    b.setAttribute('aria-label', 'Pari löydetty: ' + b.dataset.emoji);
-    matchedPairs++;
-    if(matchedPairs === 8) {
-      setTimeout(() => {
-        document.getElementById('memGameResult').style.display = 'block';
-        document.getElementById('memGameResult').scrollIntoView({behavior:'smooth', block:'nearest'});
-      }, 400);
-    }
-  } else {
-    a.classList.remove('flipped'); b.classList.remove('flipped');
-  }
-  flippedCards = [];
-  lockBoard = false;
-  updateMemGameScore();
-}
-
-function updateMemGameScore() {
-  document.getElementById('memGameScore').textContent =
-    `Parit: ${matchedPairs} / 8  |  Yritykset: ${memAttempts}`;
-}
-
-function shuffle(arr) {
-  for(let i = arr.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-}
-
 // ── QUIZ ──
 let quizInitialized = false;
 const quizData = [
@@ -1029,11 +922,10 @@ function answerQuiz(qi, oi) {
 
 function showFinal() {
   document.getElementById('finalScore').textContent = quizScore + ' / ' + quizData.length;
-  goToScreen(6);
+  goToScreen(5);
 }
 
 function restartGame() {
-  memGameInitialized = false;
   quizInitialized = false;
   naruInitialized = false;
   var _nr = document.getElementById('naruResult'); if(_nr) _nr.style.display = 'none';
