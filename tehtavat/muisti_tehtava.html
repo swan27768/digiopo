@@ -336,7 +336,7 @@
 <div class="progress-bar-wrap">
   <div class="progress-bar-fill" id="progressBar"></div>
 </div>
-<div class="progress-label" id="progressLabel">Osio 1 / 6</div>
+<div class="progress-label" id="progressLabel">Osio 1 / 5</div>
 
 <div class="step-dots" role="tablist" aria-label="Tehtävän vaiheet">
   <div class="step-dot active" role="tab" aria-selected="true" aria-label="Vaihe 1: Opettajan puhe" onclick="goToScreen(0)" tabindex="0" onkeydown="if(event.key==='Enter')goToScreen(0)">1</div>
@@ -350,14 +350,14 @@
 <section class="screen active" id="screen-0" aria-labelledby="s0-title">
   <div class="teacher-box">
     <div class="teacher-label">🎤 Opettajan puhe</div>
-    <h2 id="s0-title">Aivosi ovat tähän saakka kehitetty paras tietokone!</h2>
+    <h2 id="s0-title">Aivosi ovat tehokkaammat kuin mikään tietokone, jonka ihminen on rakentanut!</h2>
     <p>Muisti ei ole vain yksi asia – se on kuin kirjasto, jossa on eri osastoja. Uusi tieto menee ensin <strong>lyhytkestoiseen muistiin</strong>. Sieltä se siirtyy <strong>pitkäkestoiseen muistiin</strong>, kun toistat sen tarpeeksi monta kertaa.</p>
     <p>🔑 <strong>Tärkein juttu:</strong> Mitä useammin kerrataan, sitä paremmin muistaa!</p>
     <div class="brain-facts">
       <div class="brain-fact">
         <span class="fact-icon">🤔</span>
         <strong>Lyhytkestoinen muisti</strong>
-        Muistaa 7 asiaa noin 20 sekuntia
+        Muistaa noin 4 asiaa noin 20 sekuntia
       </div>
       <div class="brain-fact">
         <span class="fact-icon">💡</span>
@@ -595,9 +595,11 @@ function goToScreen(n) {
 }
 function nextScreen() { if(currentScreen < totalScreens) goToScreen(currentScreen+1); }
 function updateProgress() {
-  const pct = (currentScreen / (totalScreens)) * 100;
+  const steps = 5; // numeroidut vaiheet = askelpallojen määrä (loppunäyttö ei ole osio)
+  const onFinal = currentScreen >= steps;
+  const pct = (Math.min(currentScreen, steps) / steps) * 100;
   document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = 'Osio ' + (currentScreen+1) + ' / ' + (totalScreens);
+  document.getElementById('progressLabel').textContent = onFinal ? '🎉 Valmis!' : 'Osio ' + (currentScreen+1) + ' / ' + steps;
 }
 
 // ── MUISTINARU (assosiointi) ──
@@ -834,9 +836,9 @@ let quizInitialized = false;
 const quizData = [
   {
     q: "Kuinka monta asiaa lyhytkestoinen muisti muistaa kerrallaan?",
-    opts: ["Noin 7", "Noin 20", "Noin 50", "Rajattomasti"],
+    opts: ["Noin 4", "Noin 20", "Noin 50", "Rajattomasti"],
     ans: 0,
-    feedback: "Oikein! Lyhytkestoinen muisti muistaa noin 7 asiaa – siksi puhelinnumerot ovat usein 7–8 numeroa pitkiä."
+    feedback: "Oikein! Lyhytkestoinen muisti pitää kerralla vain noin 4 asiaa. Siksi esimerkiksi puhelinnumerot kannattaa muistaa pieninä paloina."
   },
   {
     q: "Mikä muistitekniikka tarkoittaa alkukirjainten ottamista hankalasta sanalistasta?",
