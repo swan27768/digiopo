@@ -1465,10 +1465,18 @@
 
         <!-- Opi ajattelemaan -->
         <section id="ajattelu" class="aihe-osio" aria-labelledby="otsikko-ajattelu" data-teema="opiskelutaidot">
-          <div class="aihe-otsikko">
-            <h2 id="otsikko-ajattelu">Ajattelun taidot – oma pää käyttöön</h2>
+          <div class="aihe-otsikko" style="position:relative;">
+            <h2 id="otsikko-ajattelu">Ajattelun taidot – oma pää käyttöön<button type="button" onclick="_toggleAjatteluPopup(event)" aria-expanded="false" aria-controls="lahde-popup-ajattelu" aria-label="Näytä lähteet" style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#0d9488; color:white; border:none; cursor:pointer; font-size:0.72rem; font-weight:800; vertical-align:middle; margin-left:8px; line-height:1; flex-shrink:0; transition:background 0.15s;">i</button></h2>
             <a class="opettaja-lataus osio-ope-btn" data-fi-only href="../ohjeet/9lk_ajattelu_ope.html" target="_blank" rel="noopener" data-ohje-title="Ajattelun taidot — oma pää käyttöön"><span aria-hidden="true">📘</span> Osion opettajan ohje</a>
             <p>Käytä omia aivojasi monipuolisesti – viisi ajattelutapaa, ryhmäpäättely ja tekoälyn kriittinen käyttö</p>
+            <!-- Lähdepopup: Ajattelun taidot -->
+            <div id="lahde-popup-ajattelu" hidden role="dialog" aria-label="Lähteet ja lisää luettavaa" style="position:absolute; top:100%; left:50%; transform:translateX(-50%); z-index:200; margin-top:10px; background:white; border:1.5px solid #5eead4; border-radius:14px; padding:20px 22px; box-shadow:0 8px 32px rgba(13,148,136,0.18); width:min(480px, 90vw); text-align:left;">
+              <button type="button" onclick="_toggleAjatteluPopup(event)" aria-label="Sulje" style="position:absolute; top:10px; right:12px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:#6b7280; line-height:1;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+              <h4 style="margin:0 0 10px; color:#134e4a; font-size:0.85rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em;">Lähteet</h4>
+              <ul style="margin:0; padding-left:16px; font-size:0.85rem; color:#374151; line-height:1.8;">
+                <li>Vorderman, Carol ym. (2017): <em>Opiskelutaidot – Auta koululaista parempiin tuloksiin</em>. Suom. Veli-Pekka Ketola. Readme.fi. (ISBN 9789523214408)</li>
+              </ul>
+            </div>
           </div>
 
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
@@ -6396,6 +6404,26 @@
             popup.hidden = true;
             if (btn) btn.setAttribute('aria-expanded', 'false');
             document.removeEventListener('click', suljePopup);
+          }
+        });
+      }, 10);
+    }
+  }
+
+  function _toggleAjatteluPopup(e) {
+    e.stopPropagation();
+    var popup = document.getElementById('lahde-popup-ajattelu');
+    var btn = document.querySelector('[aria-controls="lahde-popup-ajattelu"]');
+    var auki = !popup.hidden;
+    popup.hidden = auki;
+    if (btn) btn.setAttribute('aria-expanded', String(!auki));
+    if (!auki) {
+      setTimeout(function() {
+        document.addEventListener('click', function suljeAjatteluPopup(ev) {
+          if (!popup.contains(ev.target)) {
+            popup.hidden = true;
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('click', suljeAjatteluPopup);
           }
         });
       }, 10);
