@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>7. luokka – Tehtävävihko | Omilla Jäljillä</title>
+<style>
+  :root{
+    --teal:#7c3aed;         /* 7. luokan väri (violetti) */
+    --teal-dark:#6d28d9;
+    --purple:#db2777;       /* korostus */
+    --ink:#1e1b4b;
+    --muted:#475569;
+    --line:#cbd5e1;
+    --soft:#f1f5f9;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    background:#e2e8f0;
+    color:var(--ink);
+    font-family:"Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size:11.5pt;
+    line-height:1.5;
+  }
+
+  /* ── Sivun runko: A4 ── */
+  .page{
+    position:relative;
+    width:210mm;
+    min-height:297mm;
+    margin:10mm auto;
+    padding:20mm 18mm 22mm;
+    background:#fff;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+    overflow:hidden;
+  }
+
+  /* ── Vesileima + alatunniste: kiinteät elementit, toistuvat joka
+       tulostussivulla (näkyvät vain tulostuksessa) ── */
+  .wm, .ft{ display:none; }
+
+  .page > *{ position:relative; z-index:1; }
+
+  /* ── Kansi ── */
+  .cover{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    padding-top:30mm;
+  }
+  .cover .kicker{
+    color:var(--teal-dark);
+    font-weight:700;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    font-size:11pt;
+  }
+  .cover h1{
+    font-size:34pt;
+    line-height:1.1;
+    margin:14px 0 6px;
+    color:var(--ink);
+  }
+  .cover .sub{
+    font-size:15pt;
+    color:var(--muted);
+    margin-bottom:34px;
+  }
+  .cover .badge{
+    display:inline-block;
+    background:var(--teal);
+    color:#fff;
+    font-weight:800;
+    padding:10px 26px;
+    border-radius:999px;
+    font-size:12pt;
+    letter-spacing:1px;
+  }
+  .namecard{
+    margin:38px auto 0;
+    width:100%;
+    max-width:120mm;
+    border:2px solid var(--teal);
+    border-radius:14px;
+    padding:22px 26px;
+    text-align:left;
+    background:linear-gradient(#fff,#f5f3ff);
+  }
+  .namecard .row{ margin:10px 0; display:flex; align-items:flex-end; gap:10px; }
+  .namecard label{ font-weight:700; min-width:38mm; color:var(--teal-dark); }
+  .namecard .fill{ flex:1; border-bottom:2px dotted var(--line); height:20px; }
+  .cover .intro{
+    margin:30px auto 0;
+    max-width:130mm;
+    color:var(--muted);
+    font-size:11pt;
+    font-style:italic;
+  }
+
+  /* ── Otsikot ── */
+  h2.section-title{
+    font-size:19pt;
+    color:#fff;
+    background:var(--teal);
+    margin:0 0 4px;
+    padding:12px 16px;
+    border-radius:10px 10px 0 0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  h2.section-title .num{
+    background:#fff;
+    color:var(--teal-dark);
+    font-size:14pt;
+    width:34px;height:34px;
+    border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-weight:800;
+    flex:none;
+  }
+  .section-lead{
+    background:#f5f3ff;
+    border:1px solid #ddd6fe;
+    border-top:none;
+    border-radius:0 0 10px 10px;
+    padding:10px 16px 12px;
+    color:var(--muted);
+    font-size:10.5pt;
+    margin-bottom:16px;
+  }
+
+  h3.task-title{
+    font-size:13.5pt;
+    color:var(--teal-dark);
+    margin:20px 0 2px;
+  }
+  h4.sub-title{
+    font-size:11.5pt;
+    color:var(--purple);
+    margin:14px 0 4px;
+  }
+
+  /* ── Tehtäväkortti ── */
+  .task{
+    border:1.5px solid var(--line);
+    border-left:5px solid var(--teal);
+    border-radius:10px;
+    padding:14px 18px 16px;
+    margin:14px 0 18px;
+    background:#fff;
+    break-inside:avoid;
+  }
+  .task.group{ border-left-color:var(--purple); }
+  .task.class{ border-left-color:#db2777; }
+
+  .tag{
+    display:inline-block;
+    font-size:8.5pt;
+    font-weight:700;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    padding:3px 10px;
+    border-radius:999px;
+    margin:0 6px 8px 0;
+    background:var(--soft);
+    color:var(--muted);
+  }
+  .tag.solo{ background:#ede9fe; color:var(--teal-dark); }
+  .tag.pair{ background:#fce7f3; color:#be185d; }
+  .tag.group{ background:#fce7f3; color:#be185d; }
+  .tag.class{ background:#fef9c3; color:#a16207; }
+  .tag.digi{ background:#e0f2fe; color:#0369a1; }
+  .tag.time{ background:#f1f5f9; color:#475569; }
+
+  .task p{ margin:6px 0; }
+  .prompt{ color:var(--muted); font-size:10.5pt; margin:2px 0 4px; }
+
+  /* ── Kysymys ── */
+  .q{
+    font-weight:700;
+    margin:14px 0 2px;
+    display:flex;
+    gap:8px;
+  }
+  .q .n{
+    color:var(--teal);
+    flex:none;
+    font-weight:800;
+  }
+  .q-hint{ color:var(--muted); font-weight:400; font-size:10pt; margin:0 0 4px 22px; }
+
+  /* ── Kirjoituslaatikko: viivoitettu ── */
+  .box{
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 8.5mm,
+        #e2e8f0 8.5mm,
+        #e2e8f0 calc(8.5mm + 1px)
+      );
+    background-position:0 6mm;
+    margin:6px 0 4px;
+  }
+  .box.h2{ height:17mm; }
+  .box.h3{ height:26mm; }
+  .box.h4{ height:34mm; }
+  .box.h5{ height:44mm; }
+  .box.h6{ height:60mm; }
+
+  /* ── Rasti-lista ── */
+  .check{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:7px 0;
+  }
+  .check .tick{
+    flex:none;
+    width:16px;height:16px;
+    border:2px solid var(--teal);
+    border-radius:4px;
+    margin-top:2px;
+  }
+
+  /* ── Info-laatikko ── */
+  .info{
+    background:#f5f3ff;
+    border:1px solid #ddd6fe;
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0;
+    font-size:10.5pt;
+  }
+  .info b{ color:var(--teal-dark); }
+
+  .note{
+    background:#fffbeb;
+    border-left:4px solid #f59e0b;
+    padding:8px 14px;
+    margin:10px 0;
+    font-size:10pt;
+    border-radius:0 8px 8px 0;
+  }
+
+  .story{
+    background:#fdf2f8;
+    border:1px solid #fbcfe8;
+    border-radius:8px;
+    padding:10px 14px;
+    margin:8px 0;
+    font-size:10.5pt;
+  }
+  .story b{ color:var(--purple); }
+
+  .cols{ display:flex; gap:14px; }
+  .cols > div{ flex:1; }
+
+  ul.clean{ margin:6px 0 6px 0; padding-left:20px; }
+  ul.clean li{ margin:4px 0; }
+
+  .pill-row{ margin:6px 0; }
+  .pill{
+    display:inline-block;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    padding:4px 12px;
+    margin:3px 4px 3px 0;
+    font-size:9.5pt;
+  }
+
+  /* ── Taulukko (motivaatiopäiväkirja) ── */
+  table.grid{
+    width:100%;
+    border-collapse:collapse;
+    margin:8px 0;
+    font-size:10pt;
+  }
+  table.grid th, table.grid td{
+    border:1.2px solid var(--line);
+    padding:6px 8px;
+    text-align:left;
+    vertical-align:top;
+  }
+  table.grid th{
+    background:#f5f3ff;
+    color:var(--teal-dark);
+    font-size:9.5pt;
+  }
+  table.grid td.day{ font-weight:700; white-space:nowrap; width:22mm; }
+  table.grid td.write{ height:11mm; }
+  table.grid td.su{ width:28mm; text-align:center; color:var(--muted); }
+
+  .toc{ margin-top:8px; }
+  .toc-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px dotted var(--line);
+  }
+  .toc-item .num{
+    background:var(--teal);
+    color:#fff;
+    width:26px;height:26px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:10pt;flex:none;
+  }
+  .toc-item .t{ flex:1; font-weight:600; }
+  .toc-item .k{ color:var(--muted); font-size:9.5pt; }
+
+  .page-title-plain{
+    font-size:22pt;
+    color:var(--teal-dark);
+    border-bottom:3px solid var(--teal);
+    padding-bottom:8px;
+    margin:0 0 14px;
+  }
+
+  /* ── TULOSTUS ── */
+  @media print{
+    html,body{ background:#fff; font-size:11pt; }
+
+    @page{ size:A4; margin:13mm 12mm 16mm; }
+
+    .page{
+      width:auto;
+      min-height:0;
+      margin:0;
+      padding:0;
+      box-shadow:none;
+    }
+    h2.section-title{ page-break-before:always; page-break-after:avoid; }
+    .page-title-plain{ page-break-before:always; }
+    .cover{ page-break-before:avoid; }
+    .section-lead{ page-break-after:avoid; }
+    h3.task-title, h4.sub-title{ page-break-after:avoid; }
+    .box{ background-color:#fff; }
+    .no-print{ display:none !important; }
+
+    /* Vesileima – himmeä vinoteksti keskellä, joka sivulla */
+    .wm{
+      display:block;
+      position:fixed;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%) rotate(-32deg);
+      font-size:46pt;
+      font-weight:800;
+      letter-spacing:2px;
+      color:var(--teal);
+      opacity:.06;
+      white-space:nowrap;
+      pointer-events:none;
+      z-index:0;
+    }
+    /* Alatunniste – alamarginaalissa, joka sivulla */
+    .ft{
+      display:block;
+      position:fixed;
+      bottom:7mm; left:0; right:0;
+      text-align:center;
+      font-size:8.5pt;
+      letter-spacing:.3px;
+      color:var(--muted);
+      z-index:2;
+    }
+  }
+
+  .no-print{
+    max-width:210mm;
+    margin:16px auto;
+    padding:12px 18px;
+    background:var(--teal-dark);
+    color:#fff;
+    border-radius:10px;
+    font-size:10.5pt;
+    text-align:center;
+  }
+  .no-print b{ color:#ddd6fe; }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  🖨️ <b>Tulostusohje:</b> Avaa selaimessa ja valitse Tiedosto → Tulosta (Ctrl/Cmd + P). Valitse A4 ja salli taustavärit/kuvat, jos haluat värilliset otsikot. Vesileima ja alatunniste tulostuvat jokaiselle sivulle.
+</div>
+
+<!-- ══════════════ KANSI ══════════════ -->
+<section class="page cover">
+  <div class="kicker">Yläkoulun oppilaanohjaus</div>
+  <h1>7. luokka<br />Yläkoulun startti</h1>
+  <div class="sub">Tulostettava tehtävävihko</div>
+  <div><span class="badge">Omilla Jäljillä · DigiOpo</span></div>
+
+  <div class="namecard">
+    <div class="row"><label>Nimi:</label><span class="fill"></span></div>
+    <div class="row"><label>Ryhmä:</label><span class="fill"></span></div>
+    <div class="row"><label>Lukuvuosi:</label><span class="fill"></span></div>
+  </div>
+
+  <p class="intro">
+    Uusi vaihe alkaa – ja se on jännittävää! Yläkoulussa kehität opiskelutaitoja,
+    löydät omat vahvuutesi ja alat miettiä tulevaisuuttasi. Kaikki on alussa vähän
+    uutta – ja se kuuluu asiaan. Et ole tässä yksin. Tähän vihkoon voit kirjoittaa
+    omat vastauksesi ja pohdintasi.
+  </p>
+</section>
+
+<!-- ══════════════ SISÄLLYS ══════════════ -->
+<section class="page">
+  <h1 class="page-title-plain">Sisällys</h1>
+  <div class="toc">
+    <div class="toc-item"><span class="num">1</span><span class="t">Tervetuloa yläkouluun</span><span class="k">selviytymisopas</span></div>
+    <div class="toc-item"><span class="num">2</span><span class="t">Rupatteluhetki</span><span class="k">tutustuminen</span></div>
+    <div class="toc-item"><span class="num">3</span><span class="t">Opi, kasva, loista</span><span class="k">opiskelutaidot</span></div>
+    <div class="toc-item"><span class="num">4</span><span class="t">Innostu uudelleen</span><span class="k">motivaatio</span></div>
+    <div class="toc-item"><span class="num">5</span><span class="t">Tunne itsesi, luota itseesi</span><span class="k">vahvuudet</span></div>
+    <div class="toc-item"><span class="num">6</span><span class="t">Unelmoi, kokeile, kasva</span><span class="k">tulevaisuus</span></div>
+    <div class="toc-item"><span class="num">7</span><span class="t">Koulupäivän jälkeen</span><span class="k">vapaa-aika</span></div>
+  </div>
+
+  <div class="info" style="margin-top:26px;">
+    <b>Merkintöjen selitykset:</b>
+    <span class="tag solo">Yksin</span>
+    <span class="tag pair">Parin kanssa</span>
+    <span class="tag group">Ryhmä</span>
+    <span class="tag class">Koko luokka</span>
+    <span class="tag digi">Digitaalinen</span>
+    <br />
+    Digitaaliset pelit ja tarinat tehdään DigiOpo-sivustolla. Tähän vihkoon kirjoitat
+    kirjoitus- ja pohdintatehtävien vastaukset.
+  </div>
+</section>
+
+<!-- ══════════════ 1. TERVETULOA YLÄKOULUUN ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">1</span> Tervetuloa yläkouluun</h2>
+  <div class="section-lead">Ensimmäinen oppitunti: orientaatio ja selviytymisopas.</div>
+
+  <p>
+    Yläkoulussa kehität opiskelutaitoja, löydät omat vahvuutesi ja alat miettiä
+    tulevaisuuttasi. Kaikki on alussa vähän uutta – ja se kuuluu asiaan.
+    <b>Et ole tässä yksin – kaikki muut ovat samassa tilanteessa.</b>
+  </p>
+
+  <h3 class="task-title">Lukujärjestys muuttuu – uusia aineita tulossa</h3>
+  <p class="prompt">
+    Alakoulun ympäristöoppi jakautuu 7. luokalla viideksi erilliseksi aineeksi:
+    biologiaksi, maantiedoksi, fysiikaksi, kemiaksi ja terveystiedoksi.
+  </p>
+  <div class="cols">
+    <div class="info">
+      <b>Uudet aineet 7. lk:lla</b><br />
+      Kotitalous · Terveystieto · Biologia ja maantieto · Fysiikka · Kemia ·
+      Oppilaanohjaus (opo)
+    </div>
+    <div class="info" style="background:#f8fafc;border-color:#e2e8f0;">
+      <b>Jatkuvat aineet</b><br />
+      Äidinkieli ja kirjallisuus · Matematiikka · Kielet (A/B, ruotsi) · Historia
+      ja yhteiskuntaoppi · Uskonto/ET · Taito- ja taideaineet
+    </div>
+  </div>
+
+  <h3 class="task-title">Yläkoulun selviytymisopas</h3>
+  <div class="info">
+    Neljä keinoa selvitä yläkoulun arjesta:
+    <b>1)</b> Opi oppimaan · <b>2)</b> Löydä motivaatiosi ·
+    <b>3)</b> Opi tuntemaan itsesi · <b>4)</b> Haaveile tulevaisuudesta.
+    Näihin pääset tässä vihkossa osioissa 3–6.
+  </div>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag digi">Interaktiivinen tarina</span><span class="tag">Kirjoitustehtävä</span>
+    <h3 class="task-title" style="margin-top:2px;">Kirje itselleni tulevaisuuteen</h3>
+    <p class="prompt">
+      Tarinassa "Robo saapuu yläkouluun" tutustut Roboon ja tekoälyyn – ja kirjoitat
+      kirjeen itsellesi kolmen vuoden päähän. Säilytä kirje ja lue se 9. luokalla!
+      Kirjoita rehellisesti – kirje on vain sinulle.
+    </p>
+    <div class="q"><span class="n">1.</span> Mitä toivot olevasi kolmen vuoden päästä?</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">2.</span> Mitä pelkäät tai jännität juuri nyt?</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">3.</span> Mikä sinussa on nyt sellaista, jota et halua unohtaa?</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="task group">
+    <span class="tag group">Ryhmä 3–4</span><span class="tag time">20–25 min · Liikkuva</span>
+    <h3 class="task-title" style="margin-top:2px;">Operaatio Yläkoulu – Amazing Race</h3>
+    <p class="prompt">
+      Opettaja antaa jokaiselle ryhmälle kirjekuoren, jossa on neljä rastikorttia.
+      Ratkaiskaa rastit järjestyksessä yhdessä liikkuen. Avatkaa aina uusi kortti
+      vasta, kun edellinen on valmis. Viimeisessä rastissa valmistaudutte esitykseen
+      koko luokalle.
+    </p>
+    <ul class="clean">
+      <li>Avatkaa Rasti 1 ja lukekaa ohjeet ääneen yhdessä.</li>
+      <li>Ratkaiskaa tehtävä – ryhmä päättää itse, milloin on valmis.</li>
+      <li>Vasta sitten avatkaa seuraava kortti.</li>
+      <li>Viimeisessä rastissa valmistautukaa esitykseen koko luokalle.</li>
+    </ul>
+    <div class="q"><span class="n">·</span> Ryhmämme tärkein oivallus / esityksen pääkohta:</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 2. RUPATTELUHETKI ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">2</span> Rupatteluhetki 💬</h2>
+  <div class="section-lead">Kysymyskortit tutustumiseen ja ryhmäytymiseen – rentoa juttelua yhdessä.</div>
+
+  <div class="task group">
+    <span class="tag group">Ryhmä</span><span class="tag digi">Digitaalinen peli</span>
+    <h3 class="task-title" style="margin-top:2px;">Kysymyskortit</h3>
+    <p class="prompt">
+      Juttele kavereiden kanssa ja tutustukaa rennosti. Nostakaa kysymyskortteja ja
+      vastatkaa vuorotellen – mukana hauskoja, rentoja ja vähän syvempiäkin kysymyksiä.
+      Peli pelataan DigiOpo-sivustolla.
+    </p>
+    <h4 class="sub-title">Muistiin: mieleenpainuvin vastaus</h4>
+    <p class="prompt">Kirjoita talteen yksi vastaus (omasi tai kaverin), joka jäi mieleen.</p>
+    <div class="box h4"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 3. OPI, KASVA, LOISTA ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">3</span> Opi, kasva, loista</h2>
+  <div class="section-lead">Kaikki oppii eri tavalla. Hyvä oppija kokeilee eri tapoja, ei luovuta heti ja pyytää apua. Oppiminen on taito, jota voi kehittää!</div>
+
+  <div class="task">
+    <span class="tag digi">Digitaaliset tehtävät</span>
+    <h3 class="task-title" style="margin-top:2px;">Neljä oppimistaitoa: Muisti · Lukeminen · Ajanhallinta · Tekoäly</h3>
+    <p class="prompt">
+      Neljä tehtävää, joissa harjoittelet oppimisen tärkeimpiä taitoja
+      (tehdään DigiOpo-sivustolla):
+    </p>
+    <ul class="clean">
+      <li>🧠 <b>Muisti ja muistaminen</b> – opi, miten aivosi toimivat.</li>
+      <li>📖 <b>Lukeminen</b> – opi lukemaan älykkäämmin.</li>
+      <li>📅 <b>Kokeeseen valmistautuminen</b> – ota aika hallintaan.</li>
+      <li>⚗️ <b>Opi tekoälyn kanssa</b> – kokeile uutta oppimistapaa.</li>
+    </ul>
+    <p class="prompt">Lisäksi: 🔓 Yläkoulun pakopeli ja 🏛️ Tiedon temppeli -pelit.</p>
+    <div class="q"><span class="n">·</span> Mikä näistä neljästä taidosta on sinulle jo vahva? Missä haluaisit kehittyä?</div>
+    <div class="box h3"></div>
+  </div>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag">⭐ Lisähaaste · Kirjoitustehtävä</span>
+    <h3 class="task-title" style="margin-top:2px;">Oma opiskelusuunnitelma tälle viikolle</h3>
+    <p class="prompt">
+      Tee itsellesi henkilökohtainen opiskelusuunnitelma. Pienet, konkreettiset
+      tavoitteet toimivat paremmin kuin isot haaveet.
+    </p>
+    <div class="q"><span class="n">1.</span> Valitse yksi oppiaine, johon panostat tällä viikolla:</div>
+    <div class="box h2"></div>
+    <div class="q"><span class="n">2.</span> Milloin opiskelet? (päivät ja kellonajat)</div>
+    <div class="box h2"></div>
+    <div class="q"><span class="n">3.</span> Miten opiskelet? (esim. kertaus, muistiinpanot, tehtävät, kysyminen)</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">4.</span> Miten arvioit onnistumistasi viikon lopussa?</div>
+    <div class="box h2"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 4. INNOSTU UUDELLEEN ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">4</span> Innostu uudelleen</h2>
+  <div class="section-lead">Mikä saa sinut liikkeelle? Motivaatio voi tulla kahdesta suunnasta – ja molemmat toimivat.</div>
+
+  <div class="cols">
+    <div class="info">
+      <b>Sisäinen motivaatio</b> – "teen, koska haluan".<br />
+      Saat energiaa itse tekemisestä tai oppimisesta. Esim. aihe kiinnostaa oikeasti,
+      haluat osata paremmin, tekeminen tuntuu hyvältä.
+    </div>
+    <div class="info" style="background:#fdf2f8;border-color:#fbcfe8;">
+      <b>Ulkoinen motivaatio</b> – "teen, koska täytyy tai saan palkkion".<br />
+      Energia tulee ulkopuolelta: arvosana, kehu tai seuraukset. Esim. hyvä arvosana,
+      vanhemmat odottavat, ei halua epäonnistua.
+    </div>
+  </div>
+  <p class="prompt">Molempia tarvitaan – omat keinot selviävät kokeilemalla.</p>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span>
+    <h3 class="task-title" style="margin-top:2px;">🤔 Mieti ennen peliä</h3>
+    <div class="q"><span class="n">1.</span> Onko sinulla oppiaine, joka tuntuu helpolta? Miksi?</div>
+    <div class="box h2"></div>
+    <div class="q"><span class="n">2.</span> Onko oppiaine, jota teet vain pakon edessä? Miltä se tuntuu?</div>
+    <div class="box h2"></div>
+    <div class="q"><span class="n">3.</span> Mitä tapahtuisi, jos arvosanat poistuisivat kokonaan?</div>
+    <div class="box h2"></div>
+  </div>
+
+  <div class="task group">
+    <span class="tag group">Ryhmä 3–4</span><span class="tag digi">Kadonnut motivaatio -peli</span><span class="tag time">Motivaatiotori · 20–25 min</span>
+    <h3 class="task-title" style="margin-top:2px;">Kadonnut motivaatio + Motivaatiotori</h3>
+    <p class="prompt">
+      Pelaa ensin "Kadonnut motivaatio" -peli sivustolla. Motivaatiotorilla jokainen
+      ryhmä saa yhden motivaatio-ongelmakortin: keksitte omat ratkaisut ja kierrätte
+      parantamassa toistenne ideoita, ja lopuksi esittelette voittajaidean luokalle.
+    </p>
+    <div class="q"><span class="n">·</span> Ryhmämme paras ratkaisu motivaatio-ongelmaan:</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag">⭐ Lisähaaste · Viikon mittainen</span>
+    <h3 class="task-title" style="margin-top:2px;">Motivaatiopäiväkirja</h3>
+    <p class="prompt">
+      Kirjaa joka päivä yksi asia, joka innosti sinua oppimaan – ja merkitse, oliko se
+      <b>S</b> = sisäistä (halusin itse) vai <b>U</b> = ulkoista (piti tehdä / odotettiin).
+      Pienetkin asiat kelpaavat – vaikkapa se tunti, jolloin aika lensi.
+    </p>
+    <table class="grid">
+      <thead>
+        <tr><th>Päivä</th><th>Mikä innosti oppimaan?</th><th>S / U</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="day">Maanantai</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Tiistai</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Keskiviikko</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Torstai</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Perjantai</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Lauantai</td><td class="write"></td><td class="su"></td></tr>
+        <tr><td class="day">Sunnuntai</td><td class="write"></td><td class="su"></td></tr>
+      </tbody>
+    </table>
+    <div class="q"><span class="n">·</span> Viikon lopuksi: kummasta (sisäisestä vai ulkoisesta) sait enemmän energiaa?</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 5. TUNNE ITSESI ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">5</span> Tunne itsesi, luota itseesi</h2>
+  <div class="section-lead">Kaikilla on vahvuuksia. Kun tunnet itsesi, teet parempia valintoja.</div>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag digi">Interaktiivinen tarina</span>
+    <h3 class="task-title" style="margin-top:2px;">Supervoimat – löydä omat vahvuutesi!</h3>
+    <p class="prompt">
+      Pelaa interaktiivinen tarina sivustolla ja selvitä, mitkä ovat sinun supervoimasi.
+      Tee valintoja ja löydä itsesi!
+    </p>
+    <div class="q"><span class="n">·</span> Mitkä supervoimat / vahvuudet tarina nosti sinusta esiin?</div>
+    <div class="box h3"></div>
+  </div>
+
+  <div class="task group">
+    <span class="tag group">Ryhmä 3–4</span><span class="tag time">Liikkuva · 20–25 min</span>
+    <h3 class="task-title" style="margin-top:2px;">Vahvuushuutokauppa</h3>
+    <p class="prompt">
+      Ryhmä saa budjetin: 10 pistettä ja listan 15 vahvuudesta. Päättäkää yhdessä,
+      mitkä 3 vahvuutta "ostatte" – ja miksi juuri ne. Lopuksi katsotaan, mikä vahvuus
+      ostettiin useimmiten.
+    </p>
+    <div class="q"><span class="n">·</span> Ryhmämme ostamat 3 vahvuutta ja perustelu:</div>
+    <div class="box h3"></div>
+  </div>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag">⭐ Lisähaaste · Kirjoitustehtävä</span>
+    <h3 class="task-title" style="margin-top:2px;">Oma vahvuuskartta</h3>
+    <p class="prompt">
+      Kirjoita kaikki asiat, joissa olet mielestäsi hyvä – myös ne pieniltä tuntuvat.
+      Luokittele vahvuudet neljään ryhmään.
+    </p>
+    <div class="cols">
+      <div>
+        <div class="q"><span class="n">·</span> Sosiaaliset vahvuudet</div>
+        <div class="box h3"></div>
+      </div>
+      <div>
+        <div class="q"><span class="n">·</span> Luovat vahvuudet</div>
+        <div class="box h3"></div>
+      </div>
+    </div>
+    <div class="cols">
+      <div>
+        <div class="q"><span class="n">·</span> Tekniset vahvuudet</div>
+        <div class="box h3"></div>
+      </div>
+      <div>
+        <div class="q"><span class="n">·</span> Fyysiset vahvuudet</div>
+        <div class="box h3"></div>
+      </div>
+    </div>
+    <div class="q"><span class="n">·</span> Mikä kategoria on sinulle vahvin? Pyydä joku, joka tuntee sinut hyvin, lisäämään yksi vahvuus, jota et itse huomannut:</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 6. UNELMOI, KOKEILE, KASVA ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">6</span> Unelmoi, kokeile, kasva</h2>
+  <div class="section-lead">Tulevaisuutta ei voi tietää etukäteen – mutta sitä voi harjoitella kuvittelemaan. Haaveilu on taito.</div>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span><span class="tag digi">Seikkailu · 10–15 min</span>
+    <h3 class="task-title" style="margin-top:2px;">Aikamatka tulevaisuuteen 🚀</h3>
+    <p class="prompt">
+      Robo löysi vanhan aikakoneen ja vie sinut vuoteen 2045 – aikaan, jolloin sinä olet
+      jo aikuinen. Matkalla teet valintoja ja kirjoitat omista unelmistasi.
+      Harjoittelet tärkeintä taitoa: mitä teen, kun en tiedä mitä tehdä?
+    </p>
+    <div class="q"><span class="n">1.</span> Tulevaisuuden arki: Mikä uusi asia tulevaisuudessa kiinnostaa sinua? Miksi?</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">2.</span> Tulevaisuuden työt: Millaista työtä haluaisit kokeilla? (Voit jopa keksiä oman uuden ammatin.)</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">3.</span> Oma unelma: Kirjoita yksi unelma ja yksi pieni askel, jonka voit ottaa jo nyt.</div>
+    <div class="box h4"></div>
+  </div>
+
+  <div class="task class">
+    <span class="tag class">Koko luokka</span>
+    <h3 class="task-title" style="margin-top:2px;">💬 Jaetaan unelmat</h3>
+    <p class="prompt">
+      Kun jokainen on tehnyt aikamatkan, jaetaan ajatukset yhdessä. Tarkoitus ei ole
+      arvioida, vaan kuunnella: tulevaisuus voi näyttää erilaiselta jokaisen silmin.
+      Jokainen kertoo halutessaan yhden tulevaisuuden työn tai unelman – muut kuuntelevat.
+    </p>
+    <div class="q"><span class="n">·</span> Mikä unelma toistui monella? Mitä jäi mieleen muiden kertomasta?</div>
+    <div class="box h3"></div>
+  </div>
+</section>
+
+<!-- ══════════════ 7. KOULUPÄIVÄN JÄLKEEN ══════════════ -->
+<section class="page">
+  <h2 class="section-title"><span class="num">7</span> Koulupäivän jälkeen</h2>
+  <div class="section-lead">Löydä mielekästä tekemistä vapaa-ajalle.</div>
+
+  <p>
+    Koulu on vain osa päivää. Vapaa-ajalla opit asioita, joita koulussa ei opeteta –
+    ja löydät ehkä jotain, josta tulee sinulle tärkeää.
+  </p>
+
+  <div class="task">
+    <span class="tag solo">Yksin</span>
+    <h3 class="task-title" style="margin-top:2px;">Oma vapaa-aikani</h3>
+    <div class="q"><span class="n">1.</span> Mitä teet mielelläsi vapaa-ajalla juuri nyt?</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">2.</span> Mitä uutta haluaisit kokeilla? (harrastus, laji, taito…)</div>
+    <div class="box h3"></div>
+    <div class="q"><span class="n">3.</span> Yksi pieni askel, jolla voisin kokeilla sitä tällä tai ensi viikolla:</div>
+    <div class="box h2"></div>
+  </div>
+</section>
+
+<div class="wm">Omilla Jäljillä · DigiOpo</div>
+<div class="ft">Omilla Jäljillä · DigiOpo — 7. luokan tehtävävihko</div>
+
+</body>
+</html>
