@@ -379,6 +379,16 @@ button{font-family:inherit;}
       <ol class="lb" id="kBoard"></ol>
       <p class="lb-empty" id="kEmpty" hidden>Ei vielä tuloksia tällä koodilla.</p>
       <button type="button" class="mini-btn" id="kRefresh" style="margin-top:12px">Päivitä tulostaulu</button>
+      <details class="opettaja-tyhj" style="margin-top:16px">
+        <summary style="cursor:pointer;font-size:.82rem;color:var(--ink-soft);font-weight:800">Opettajalle</summary>
+        <p class="kstatus" style="margin-top:6px">Tyhjennä tämän luokan tulostaulu ennen seuraavaa luokkaa. Vaatii opettajan salasanan.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px">
+          <input type="password" id="kAdminPw" autocomplete="off" placeholder="Opettajan salasana"
+            style="flex:1;min-width:160px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:11px;padding:9px 11px;font:inherit;font-weight:700">
+          <button type="button" class="mini-btn" id="kClear">Tyhjennä tulostaulu</button>
+        </div>
+        <p class="kstatus" id="kClearStatus"></p>
+      </details>
     </div>
   </div>
 </div>
@@ -3129,6 +3139,33 @@ if(kisaBtn){
   document.getElementById('kClose').addEventListener('click', closeKisa);
   kscrim.addEventListener('click', e=>{ if(e.target===kscrim) closeKisa(); });
   document.getElementById('kRefresh').addEventListener('click', lataaTulostaulu);
+  const kClear=document.getElementById('kClear');
+  const kClearStatus=document.getElementById('kClearStatus');
+  if(kClear){
+    kClear.addEventListener('click', async ()=>{
+      const pwEl=document.getElementById('kAdminPw');
+      const pw=(pwEl.value||'').trim();
+      if(!pw){ kClearStatus.textContent='Kirjoita opettajan salasana.'; pwEl.focus(); return; }
+      if(!confirm('Tyhjennetäänkö tämän luokan tulostaulu? Tätä ei voi perua.')) return;
+      kClearStatus.textContent='Tyhjennetään…';
+      try{
+        const r=await fetch('/api/duuni?fn=tyhjenna',{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ salasana:pw, koodi:state.kilpailu.koodi })
+        });
+        const d=await r.json().catch(()=>null);
+        if(r.ok && d && d.ok){
+          pwEl.value='';
+          kClearStatus.textContent='Tulostaulu tyhjennetty.';
+          lataaTulostaulu();
+        } else if(r.status===403){ kClearStatus.textContent='Väärä salasana.'; }
+        else if(r.status===401){ kClearStatus.textContent='Avaa peli ensin luokkakoodilla.'; }
+        else if(r.status===503){ kClearStatus.textContent='Tyhjennys ei ole vielä käytössä (salasanaa ei ole asetettu palvelimelle).'; }
+        else if(r.status===429){ kClearStatus.textContent='Liikaa yrityksiä. Yritä hetken kuluttua uudelleen.'; }
+        else { kClearStatus.textContent='Tyhjennys ei onnistunut.'; }
+      }catch(e){ kClearStatus.textContent='Tyhjennys ei onnistunut (yhteysvirhe).'; }
+    });
+  }
   document.getElementById('kSave').addEventListener('click', ()=>{
     const nimi=kNimiEl.value.trim().slice(0,24);
     if(!nimi){ kStatus.textContent='Kirjoita ensin nimesi.'; kNimiEl.focus(); return; }
