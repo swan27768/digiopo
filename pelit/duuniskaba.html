@@ -665,22 +665,30 @@ function drawSpiralStairs(cx, topY, lift, dark, store){
   if(store) spiralPath=path;
 }
 function climbAnimation(done){
+  // done() vapauttaa vuoron (state.busy). Se on KUTSUTTAVA aina, muuten peli
+  // jää jumiin. Siksi: kutsutaan täsmälleen kerran ja varmuusverkolla, vaikka
+  // requestAnimationFrame ei jostain syystä etenisi (esim. välilehti taustalla).
+  let finished=false;
+  const finish=()=>{ if(finished) return; finished=true; try{ drawPawn(); }catch(e){} done(); };
   const path=(spiralPath&&spiralPath.length)?spiralPath.slice():[];
   const n0=tileNodes[0]; if(n0) path.push({x:n0.x, y:n0.y-n0.h+13});
   const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  if(reduce || path.length<2){ drawPawn(); done(); return; }
+  if(reduce || path.length<2){ finish(); return; }
   if(pawnEl) pawnEl.remove();
   const per=1500/path.length;
   let idx=0, last=performance.now(), acc=0;
   function step(now){
+    if(finished) return;
     acc+=now-last; last=now;
     while(acc>=per && idx<path.length-1){ acc-=per; idx++; }
     const p=path[idx];
     drawPawnAtXY(p.x, p.y);
-    if(idx>=path.length-1){ drawPawn(); done(); return; }
+    if(idx>=path.length-1){ finish(); return; }
     requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
+  // Varmuusverkko: viimeistään 2,5 s kuluttua vuoro vapautetaan joka tapauksessa.
+  setTimeout(finish, 2500);
 }
 
 /* Keskuspuisto: pelto, lampi, kasvit, kukat ja eläimet */
