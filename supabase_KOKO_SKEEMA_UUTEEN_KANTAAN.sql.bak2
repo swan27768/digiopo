@@ -21,7 +21,7 @@ create table if not exists lisenssit (
   id          uuid primary key default gen_random_uuid(),
   koodi       text not null unique,           -- esim. "MÄYRÄLÄ-2026"
   koulu       text not null,                  -- koulun nimi
-  yhteyshenkilo text,                         -- opettajan nimi
+  yhteyshenkilö text,                         -- opettajan nimi
   email       text,                           -- opettajan sähköposti
   -- 'opettaja' on pakollinen: api/lisenssi.js hakee opettajalisenssin
   -- kyselyllä ?email=eq.<email>&tyyppi=eq.opettaja. Ilman tätä arvoa
@@ -46,7 +46,7 @@ create index if not exists lisenssit_koodi_idx on lisenssit (koodi);
 -- voimassaolopäivillä kirjautuminen toimisi tai ei toimisi arvaamattomasti.
 --
 -- Osittainen indeksi: koskee vain opettajalisenssejä. Koulukoodeilla sama
--- sähköposti voi esiintyä monta kertaa (sama yhteyshenkilo, monta koulua).
+-- sähköposti voi esiintyä monta kertaa (sama yhteyshenkilö, monta koulua).
 -- NULL-sähköpostit eivät ole keskenään ristiriidassa.
 --
 -- HUOM: luonti kaatuu, jos duplikaatteja on jo olemassa. Siivoa ensin.
@@ -86,7 +86,7 @@ create policy "Ei julkista pääsyä" on lisenssit
 --
 -- Ota käyttöön vain paikallisessa testauksessa, ja poista ennen julkaisua:
 --
--- insert into lisenssit (koodi, koulu, yhteyshenkilo, email, tyyppi, voimassa_asti)
+-- insert into lisenssit (koodi, koulu, yhteyshenkilö, email, tyyppi, voimassa_asti)
 -- values
 --   ('TESTI-2026', 'DigiOpo testaus', 'Admin', 'admin@digiopo.fi', 'testi', '2026-12-31'),
 --   ('KOULU-2026', 'Esimerkkikoulu', 'Matti Meikäläinen', 'matti@koulu.fi', 'vuosi', '2027-05-31')
@@ -1346,7 +1346,7 @@ create or replace view lisenssit_maksamattomat as
 select
   koodi,
   koulu,
-  yhteyshenkilo,
+  yhteyshenkilö,
   email,
   tyyppi,
   laskunumero,
