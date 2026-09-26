@@ -2756,8 +2756,18 @@ function renderOrder(task,c){
 function renderInvest(task,c){
   cardBody.innerHTML="";
   const q=document.createElement('p'); q.className='q'; q.textContent=task.q; cardBody.appendChild(q);
-  const box=document.createElement('div'); box.className='invest';
   const max=Math.max(0,Math.min(state.money, 150));
+  // Jos ei ole ylimääräistä rahaa, ei näytetä toimimatonta liukusäädintä.
+  if(max < 5){
+    const note=document.createElement('p'); note.className='hint';
+    note.textContent="Sinulla ei ole vielä ylimääräistä rahaa sijoitettavaksi. Se on ihan ok – sijoittaminen kannattaa aloittaa vasta kun rahaa jää yli.";
+    cardBody.appendChild(note);
+    const go=document.createElement('button'); go.type='button'; go.className='next-btn'; go.textContent='Selvä →';
+    go.addEventListener('click',()=>{ go.remove(); showFeedback(true,"Fiksua! Sijoittaminen kannattaa aloittaa vasta kun on ylimääräistä rahaa. Kerää ensin vähän puskuria, niin voit sijoittaa myöhemmin.",10,c); });
+    cardBody.appendChild(go); go.focus();
+    return;
+  }
+  const box=document.createElement('div'); box.className='invest';
   const amt=document.createElement('div'); amt.className='amt'; amt.textContent='0 €';
   const sl=document.createElement('input'); sl.type='range'; sl.className='slider'; sl.min=0; sl.max=max; sl.step=5; sl.value=0;
   sl.setAttribute('aria-label','Sijoitettava summa');
