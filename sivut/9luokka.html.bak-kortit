@@ -2751,18 +2751,8 @@
             <p class="paatos-ajattelu-summa"><span aria-hidden="true">→</span> Hyvä päätös käyttää molempia.</p>
           </div>
 
-          <!-- Kaksi tehtävää rinnakkain: 1 Neuvonantaja, 2 Skenaario -->
-          <style>
-            .paatos-tehtavat{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;align-items:stretch;}
-            .paatos-tehtavat > .paatos-kortti{display:flex;flex-direction:column;margin:0 !important;}
-            .paatos-tehtavat .paatos-kortti p.paatos-kortti-teksti{flex:1 1 auto;}
-            .paatos-kortti.paatos-valittu{border-color:#0d9488 !important;box-shadow:0 0 0 3px rgba(13,148,136,.25);}
-            .paatos-paneelit{margin-top:18px;}
-            @media (max-width:720px){.paatos-tehtavat{grid-template-columns:1fr;}}
-          </style>
-          <div class="paatos-tehtavat">
           <!-- Neuvonantaja-tehtävä -->
-          <div class="paatos-kortti" style="
+          <div style="
             background: linear-gradient(135deg, #e0faf5, #ccfbf1);
             border: 1.5px solid #5eead4;
             border-radius: 16px;
@@ -2774,7 +2764,7 @@
                 background:#0d9488; color:white;
                 border-radius:50%; width:36px; height:36px;
                 display:flex; align-items:center; justify-content:center;
-                font-size:1.1rem; flex-shrink:0;">1</span>
+                font-size:1.1rem; flex-shrink:0;">🧭</span>
               <div>
                 <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
                   text-transform:uppercase; color:#0d9488; margin-bottom:2px;">
@@ -2784,7 +2774,7 @@
               </div>
             </div>
 
-            <p class="paatos-kortti-teksti" style="color:#115e59; margin-bottom:16px; line-height:1.7;">
+            <p style="color:#115e59; margin-bottom:16px; line-height:1.7;">
               Tässä tehtävässä harjoittelet päätöksentekoa — ei omalla valinnallasi
               vaan neuvomalla fiktiivistä henkilöä. Sama taito auttaa kaikissa
               elämän isoissa valinnoissa.
@@ -2801,53 +2791,7 @@
               <span aria-hidden="true" id="neuvonantajaIkoni2" style="font-size:1rem; transition:transform 0.3s;"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
             </button>
 
-          </div>
-
-          <!-- Skenaariotehtävä -->
-          <div class="paatos-kortti" style="
-            background: linear-gradient(135deg, #e0faf5, #ccfbf1);
-            border: 1.5px solid #5eead4;
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
-          ">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-              <span aria-hidden="true" style="
-                background:#0d9488; color:white;
-                border-radius:50%; width:36px; height:36px;
-                display:flex; align-items:center; justify-content:center;
-                font-size:1.1rem; flex-shrink:0;">2</span>
-              <div>
-                <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
-                  text-transform:uppercase; color:#0d9488; margin-bottom:2px;">
-                  Yksilötehtävä
-                </div>
-                <h3 style="margin:0; color:#134e4a; font-size:1.1rem;">Valitse oma skenaariosi</h3>
-              </div>
-            </div>
-
-            <p class="paatos-kortti-teksti" style="color:#115e59; margin-bottom:16px; line-height:1.7; font-size:0.93rem;">
-              Kaksi tilannetta — valitse se, joka tuntuu sinulle läheisemmältä.
-              Pohdi, mitä tekisit ja miksi. Kukaan muu ei näe valintaasi.
-            </p>
-
-            <button type="button" onclick="_toggleSkenaario(this)"
-              style="display:flex; align-items:center; gap:10px;
-                background:#0d9488; color:white; border:none; border-radius:10px;
-                padding:12px 20px; font-size:0.95rem; font-weight:600;
-                cursor:pointer; width:100%; justify-content:space-between;
-                transition:background 0.2s; outline-offset:3px;"
-              aria-expanded="false"
-              aria-controls="skenaarioContainer">
-              <span><span aria-hidden="true" style="margin-right:8px;">🎭</span>Avaa tehtävä</span>
-              <span aria-hidden="true" id="skenaarioIkoni" style="font-size:1rem; transition:transform 0.3s;"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-            </button>
-
-          </div>
-          </div><!-- /paatos-tehtavat -->
-
-          <div class="paatos-paneelit">
-            <div id="neuvonantajaSisalto2" style="display:none; margin-top:0;">
+            <div id="neuvonantajaSisalto2" style="display:none; margin-top:18px;">
 
               <!-- VAIHE 1: Päätöstyökalu -->
               <div style="background:white; border:1.5px solid #5eead4;
@@ -3012,8 +2956,49 @@
               </div>
 
             </div><!-- /neuvonantajaSisalto -->
+          </div>
 
-            <div id="skenaarioContainer" style="display:none; margin-top:0;">
+          <!-- Skenaariotehtävä -->
+          <div style="
+            background: linear-gradient(135deg, #e0faf5, #ccfbf1);
+            border: 1.5px solid #5eead4;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+          ">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+              <span aria-hidden="true" style="
+                background:#0d9488; color:white;
+                border-radius:50%; width:36px; height:36px;
+                display:flex; align-items:center; justify-content:center;
+                font-size:1.1rem; flex-shrink:0;">🧭</span>
+              <div>
+                <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+                  text-transform:uppercase; color:#0d9488; margin-bottom:2px;">
+                  Yksilötehtävä
+                </div>
+                <h3 style="margin:0; color:#134e4a; font-size:1.1rem;">Valitse oma skenaariosi</h3>
+              </div>
+            </div>
+
+            <p style="color:#115e59; margin-bottom:16px; line-height:1.7; font-size:0.93rem;">
+              Kaksi tilannetta — valitse se, joka tuntuu sinulle läheisemmältä.
+              Pohdi, mitä tekisit ja miksi. Kukaan muu ei näe valintaasi.
+            </p>
+
+            <button type="button" onclick="_toggleSkenaario(this)"
+              style="display:flex; align-items:center; gap:10px;
+                background:#0d9488; color:white; border:none; border-radius:10px;
+                padding:12px 20px; font-size:0.95rem; font-weight:600;
+                cursor:pointer; width:100%; justify-content:space-between;
+                transition:background 0.2s; outline-offset:3px;"
+              aria-expanded="false"
+              aria-controls="skenaarioContainer">
+              <span><span aria-hidden="true" style="margin-right:8px;">🎭</span>Avaa tehtävä</span>
+              <span aria-hidden="true" id="skenaarioIkoni" style="font-size:1rem; transition:transform 0.3s;"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+            </button>
+
+            <div id="skenaarioContainer" style="display:none; margin-top:12px;">
               <iframe
                 id="skenaarioFrame"
                 src="../tehtavat/skenaario_9lk.html"
@@ -3024,7 +3009,7 @@
                 sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"
               ></iframe>
             </div>
-          </div><!-- /paatos-paneelit -->
+          </div>
 
           <!-- Purku -->
           <div style="
@@ -6426,34 +6411,23 @@
 
     // ── Apufunktiot ──
     
-  // Kaksi päätöksentekotehtävää rinnakkain: yksi paneeli auki kerrallaan koko leveydellä korttien alla
-  function _paatosPaneeli(btn, paneeliId, ikoniId) {
-    var sisalto = document.getElementById(paneeliId);
-    var ikoni   = document.getElementById(ikoniId);
+  function _toggleSkenaario(btn) {
+    var sisalto = document.getElementById('skenaarioContainer');
+    var ikoni   = document.getElementById('skenaarioIkoni');
     var auki = sisalto.style.display !== 'none';
-    [['neuvonantajaSisalto2','neuvonantajaIkoni2'],['skenaarioContainer','skenaarioIkoni']].forEach(function (par) {
-      var el = document.getElementById(par[0]);
-      var ik = document.getElementById(par[1]);
-      var b  = document.querySelector('#paatoksenteko button[aria-controls="' + par[0] + '"]');
-      if (el) el.style.display = 'none';
-      if (ik) ik.style.transform = '';
-      if (b) {
-        b.setAttribute('aria-expanded', 'false');
-        var kortti = b.closest('.paatos-kortti');
-        if (kortti) kortti.classList.remove('paatos-valittu');
-      }
-    });
-    if (!auki) {
-      sisalto.style.display = 'block';
-      if (ikoni) ikoni.style.transform = 'rotate(180deg)';
-      btn.setAttribute('aria-expanded', 'true');
-      var k = btn.closest('.paatos-kortti');
-      if (k) k.classList.add('paatos-valittu');
-      try { sisalto.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
-    }
+    sisalto.style.display = auki ? 'none' : 'block';
+    if (ikoni) ikoni.style.transform = auki ? '' : 'rotate(180deg)';
+    btn.setAttribute('aria-expanded', String(!auki));
   }
-  function _toggleSkenaario(btn) { _paatosPaneeli(btn, 'skenaarioContainer', 'skenaarioIkoni'); }
-  function _toggleNeuvonantaja2(btn) { _paatosPaneeli(btn, 'neuvonantajaSisalto2', 'neuvonantajaIkoni2'); }
+
+  function _toggleNeuvonantaja2(btn) {
+    var sisalto = document.getElementById('neuvonantajaSisalto2');
+    var ikoni   = document.getElementById('neuvonantajaIkoni2');
+    var auki = sisalto.style.display !== 'none';
+    sisalto.style.display = auki ? 'none' : 'block';
+    if (ikoni) ikoni.style.transform = auki ? '' : 'rotate(180deg)';
+    btn.setAttribute('aria-expanded', String(!auki));
+  }
 
   function _toggleHakuPopup(e) {
     e.stopPropagation();
