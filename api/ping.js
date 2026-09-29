@@ -8,9 +8,6 @@ import { haeIp } from './_lib/turva.js';
 import { rateLimitSallittu } from './_lib/rate.js';
 import { sbFetch } from './_lib/supabase.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-
 // Sallitut sivunimet – estää roskadatan
 const SALLITUT_SIVUT = new Set([
   "etusivu",
@@ -23,22 +20,16 @@ const SALLITUT_SIVUT = new Set([
   "sivu-valinnat", "sivu-tulevaisuus",
 ]);
 
-// Rate limit: jaettu Redis-laskuri (ks. _lib/rate.js) – toimii luotettavasti
-// serverless-instanssien kesken. Aiempi Map-laskuri nollautui joka cold startissa
-// eikä pätenyt instanssien yli, joten raja oli käytännössä olematon piikissä.
-// Ping on best-effort-analytiikkaa ja deduploidaan selaimessa (kerran per sivu
-// per päivä), joten raja on väljä: se estää vain yksittäisen IP:n roskaliikenteen,
-// ei koulun jaetun NAT-IP:n normaalia yhteiskäyttöä.
 const RL_MAX = 300;      // pingiä per IP
 const RL_IKKUNA_S = 60;  // per minuutti
 
 export default async function handler(req, res) {
-  // CORS-otsikot
   res.setHeader('Access-Control-Allow-Origin', 'https://app.digiopo.fi');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
+
   if (req.method !== 'POST') return res.status(405).end();
 
   const ip = haeIp(req);
@@ -55,7 +46,7 @@ export default async function handler(req, res) {
   }
 
   if (!sivu || !SALLITUT_SIVUT.has(sivu)) {
-    return res.status(200).end(); // Hiljainen hylkäys – ei virhettä selaimelle
+    return res.status(200).end();
   }
 
   try {

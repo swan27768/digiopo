@@ -79,7 +79,7 @@
     ]},
     '9-paatoksenteko': { teema: 'Päätöksenteko', kysymykset: [
       'Mikä iso päätös sinulla on juuri nyt mielessä?',
-      'Miten muiden mielipiteet vaikuttavat valintoihisi?',
+      'Miten muiden mielipiteet vaikuttavat sinun valintaan?',
       'Mikä auttaa sinua tekemään hyvän päätöksen?'
     ]},
     '9-epavarmuus': { teema: 'Epävarmuus', kysymykset: [
