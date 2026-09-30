@@ -121,50 +121,31 @@
   }
   .surprise-box h2 { font-size: 1rem; font-weight: 800; color: #92400e; margin-bottom: 8px; }
 
-  /* Esikatselu: kortit A4-suhteessa (210 x 297) */
-  .card { aspect-ratio: 210 / 297; justify-content: center; }
-  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-  .card-palautus { grid-column: auto; }
-
-  @page { size: A4 portrait; margin: 0; }
-
   @media print {
-    html, body { background: white; padding: 0; margin: 0; }
+    body { background: white; padding: 0; }
     .print-bar, .instructions, .surprise-box { display: none !important; }
-    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-    /* Yksi kortti = yksi kokonainen A4-sivu */
     .cards-grid {
-      display: block;
-      max-width: none;
-      width: 210mm;
-      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 100%;
+      width: 100%;
     }
 
     .card {
-      width: 210mm;
-      height: 296mm;
-      aspect-ratio: auto;
       border-radius: 0;
-      border-width: 6mm;
-      padding: 18mm 16mm;
-      gap: 8mm;
-      justify-content: center;
-      page-break-after: always;
-      break-after: page;
+      min-height: 44vh;
+      padding: 36px 28px;
       page-break-inside: avoid;
       break-inside: avoid;
-      overflow: hidden;
     }
-    .card:last-child { page-break-after: auto; break-after: auto; }
 
-    .card-icon { font-size: 110pt; }
-    .card-title { font-size: 44pt; }
-    .card-days { font-size: 20pt; }
-    .card-desc { font-size: 24pt; line-height: 1.4; flex: 0 0 auto; margin-top: 6mm; }
-    .card-instruction { font-size: 18pt; padding-top: 8mm; margin-top: 6mm; border-top-width: 2px; }
-    .card-vara .vara-line { flex: 0 0 auto; min-height: 22mm; margin: 6mm 0 2mm; }
-    .card-palautus { min-height: 0; padding: 18mm 16mm; }
+    .card-icon { font-size: 4rem; }
+    .card-title { font-size: 1.8rem; }
+    .card-palautus { min-height: auto; padding: 28px; }
+
+    @page { margin: 10mm; }
   }
 </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -182,7 +163,7 @@
 <div class="print-bar">
   <div>
     <h1>📅 Ihmisaikajana – tehtäväkortit</h1>
-    <p>Jokainen kortti tulostuu omalle A4-sivulleen. 16 roolia + vararooli — jokaiselle oppilaalle oma.</p>
+    <p>Tulosta A4, leikkaa kortit irti ja jaa oppilaille. 16 roolia + vararooli — jokaiselle oppilaalle oma.</p>
   </div>
   <button class="print-btn" onclick="window.print()">
     🖨️ Tulosta kortit
@@ -338,8 +319,8 @@
 <div class="instructions">
   <h2>📋 Ohjeet opettajalle – Ihmisaikajana</h2>
   <ol>
-    <li>Tulosta tämä sivu (Tiedosto → Tulosta). Jokainen kortti tulostuu omalle A4-sivulleen (17 sivua). Valitse tulostusasetuksista paperikooksi A4 ja mittakaavaksi 100 %.</li>
-    <li>Erottele sivut – leikkaamista ei tarvita. Rooleja on 16 (n. 3 per vaihe) + vararooli, joten n. 20 oppilaan luokassa jokaiselle riittää oma rooli.</li>
+    <li>Tulosta tämä sivu A4-kokoisena (Tiedosto → Tulosta).</li>
+    <li>Leikkaa kortit irti. Rooleja on 16 (n. 3 per vaihe) + vararooli, joten n. 20 oppilaan luokassa jokaiselle riittää oma rooli.</li>
     <li>Jos oppilaita on enemmän kuin kortteja: tulosta suosituista vaiheista toinen kopio tai jaa vararoolikortteja. Vararoolikorttiin voit <strong>itse kirjoittaa roolin</strong> tyhjälle viivalle (tai antaa oppilaan tuplata jonkun vaiheen ja asettua vierekkäin).</li>
     <li>Muodostakaa aikajana <strong>elävänä jonona</strong>: sovi, että luokan vasen reuna = päivä 1 (aloitus) ja oikea reuna = koepäivä. Lattiaan ei tarvita merkkejä. (Halutessasi voit silti merkitä päivät 1–10 teipillä tai A4-lapuilla.)</li>
     <li>Jaa kortit oppilaille — jokainen saa roolin.</li>
