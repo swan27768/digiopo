@@ -315,12 +315,6 @@
       </button>
 
       <div id="korttiWrap" hidden style="margin-top:14px;">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-          <button onclick="tulostaKortit()"
-            style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#fff; color:#059669; border:1.5px solid #059669; border-radius:8px; cursor:pointer; font-size:0.82rem; font-weight:700;">
-            <span aria-hidden="true">🖨️</span> Tulosta kortit
-          </button>
-        </div>
         <iframe id="korttiInlineFrame" title="Tulostettavat roolikortit" data-src="aikataulu_tehtavakortit.html" src="about:blank" loading="lazy"
           style="width:100%; height:900px; border:1.5px solid #cbd5e1; border-radius:10px; background:#fff; display:block;"></iframe>
         <p style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">Kortit näkyvät tässä samassa näkymässä. Jokainen kortti tulostuu omalle A4-sivulleen (8 sivua) – tulosta ja jaa oppilaille.</p>
@@ -807,14 +801,6 @@ function toggleKortit(btn) {
   if (avautuu) { setTimeout(function () { wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80); }
 }
 
-function tulostaKortit() {
-  var f = document.getElementById('korttiInlineFrame');
-  if (!f) return;
-  if (f.src.indexOf('about:blank') !== -1) { f.src = f.getAttribute('data-src'); }
-  setTimeout(function () {
-    try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {}
-  }, 300);
-}
 </script>
 </body>
 </html>
