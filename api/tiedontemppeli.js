@@ -23,7 +23,12 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 // Peli-tokenin allekirjoitus. Käytä lisenssisalaisuutta; devissä (ei muuria)
 // varasalaisuus, jotta peli toimii – vastaukset ovat silti palvelimella.
-const PELI_SECRET = process.env.LISENSSI_JWT_SECRET || 'temppeli-dev-secret-2025';
+// TUOTANNOSSA ei saa käyttää varasalaisuutta: se olisi julkinen (löytyy koodista), jolloin kuka
+// tahansa voisi väärentää tokenin ja kirjata keksityn pistemäärän tulostauluun. Siksi tuotannossa
+// puuttuva LISENSSI_JWT_SECRET pysäyttää pelin (500) eikä putoa heikkoon oletukseen.
+const ON_TUOTANTO = process.env.VERCEL_ENV === 'production';
+const PELI_SECRET = process.env.LISENSSI_JWT_SECRET
+  || (ON_TUOTANTO ? null : 'temppeli-dev-secret-2025');
 
 // ── Rate limit: jaettu Redis-laskuri (ks. _lib/rate.js) ───────
 const RL_MAX = 3000;         // POST-toimintoja per IP / 10 min. Peli tekee ~50/oppilas, ja
@@ -91,6 +96,16 @@ async function lueTila(token) {
   return { sid: p.sid, series: p.series, total: Number(p.total) || 0, scored: p.scored };
 }
 
+// Poistaa HTML-merkit ja ohjausmerkit pelaajan syöttämästä tekstistä (puolustus XSS:ää vastaan;
+// selain escapeaa lisäksi tulostaulun tekstit).
+function puhdista(v, max) {
+  return String(v || "")
+    .replace(/[<>&"`\u0000-\u001f\u007f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
+}
+
 function kokluku(v) { const n = Math.round(Number(v)); return Number.isFinite(n) ? n : null; }
 
 export default async function handler(req, res) {
@@ -101,7 +116,8 @@ export default async function handler(req, res) {
   res.setHeader("Cache-Control", "private, no-store");
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !PELI_SECRET) {
+    if (!PELI_SECRET) console.error("tiedontemppeli: LISENSSI_JWT_SECRET puuttuu tuotannosta");
     return res.status(500).json({ ok: false, virhe: "palvelin_ei_konfiguroitu" });
   }
 
@@ -217,10 +233,10 @@ export default async function handler(req, res) {
       const tila = await lueTila(body.token);
       if (!tila) return res.status(401).json({ ok: false, virhe: "istunto_vanhentunut" });
 
-      const id     = String(body.id     || "").trim().slice(0, 80);
-      const nimi   = String(body.nimi   || "").trim().slice(0, 30);
-      const koulu  = String(body.koulu  || "").trim().slice(0, 40);
-      const luokka = String(body.luokka || "").trim().slice(0, 10);
+      const id     = String(body.id || "").trim().replace(/[^\w.\-]/g, "").slice(0, 80);
+      const nimi   = puhdista(body.nimi,   30);
+      const koulu  = puhdista(body.koulu,  40);
+      const luokka = puhdista(body.luokka, 10);
       const pisteet = tila.total;        // VAIN palvelimen laskema summa
       if (!id || !nimi || !koulu || !Number.isFinite(pisteet) || pisteet < 0) {
         return res.status(400).json({ ok: false, virhe: "virheelliset_parametrit" });

@@ -1601,6 +1601,13 @@ async function loadLb(areaId, highlight) {
   });
 }
 
+// Escapaa käyttäjän syöttämä teksti ennen innerHTML:ää (estää XSS:n tulostaulussa)
+function esc(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 function renderLb(area, lb, highlight) {
   if (!lb || lb.length === 0) {
     area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Ei tuloksia vielä – ole ensimmäinen! 🎯</div>';
@@ -1612,11 +1619,11 @@ function renderLb(area, lb, highlight) {
     const me = (e.id === S.playerId || e.name === highlight) ? " me" : "";
     const rc = i < 3 ? ` r${i+1}` : "";
     const rank = medals[i] || (i+1);
-    const luokka = e.luokka ? ` / ${e.luokka}` : "";
-    const sub = e.koulu ? `<small> · ${e.koulu}${luokka}</small>` : "";
+    const luokka = e.luokka ? ` / ${esc(e.luokka)}` : "";
+    const sub = e.koulu ? `<small> · ${esc(e.koulu)}${luokka}</small>` : "";
     h += `<div class="lbrow${me}"><span class="lbrank${rc}">${rank}</span>` +
-         `<span class="lbname">${e.name}${sub}</span>` +
-         `<span class="lbpts">${e.score}</span></div>`;
+         `<span class="lbname">${esc(e.name)}${sub}</span>` +
+         `<span class="lbpts">${esc(Number(e.score) || 0)}</span></div>`;
   });
   h += "</div>";
   area.innerHTML = h;
@@ -1826,18 +1833,39 @@ function openQuestion(idx) {
   showScreen("s-question");
 }
 
+// Aika lasketaan seinäkellosta (Date.now), ei sekunnin välein vähentävästä laskurista:
+// selain hidastaa taustavälilehden ajastimia, jolloin vanha laskuri jäi jälkeen.
+function laskeAikaJaljella() {
+  return Math.max(0, Math.ceil((S.qDeadline - Date.now()) / 1000));
+}
+
+function tickQTimer() {
+  if (S.answered) return;
+  const left = laskeAikaJaljella();
+  if (left !== S.qTimeLeft) {
+    S.qTimeLeft = left;
+    setTimerDisplay(left);
+  }
+  // Jos vastaus on parhaillaan matkalla (busy), ajastin jää käyntiin ja aikakatkaisu
+  // käsitellään heti kun vastaus on käsitelty – kysymys ei jää ilman aikarajaa.
+  if (left <= 0 && !S.busy) {
+    clearInterval(S.qTimer);
+    timeOut();
+  }
+}
+
 function startQTimer() {
   if (S.qTimer) clearInterval(S.qTimer);
+  S.qDeadline = Date.now() + Q_TIME * 1000;
+  S.qTimeLeft = Q_TIME;
   setTimerDisplay(Q_TIME);
-  S.qTimer = setInterval(() => {
-    S.qTimeLeft--;
-    setTimerDisplay(S.qTimeLeft);
-    if (S.qTimeLeft <= 0) {
-      clearInterval(S.qTimer);
-      if (!S.answered && !S.busy) timeOut();
-    }
-  }, 1000);
+  S.qTimer = setInterval(tickQTimer, 250);
 }
+
+// Kun välilehti palaa näkyviin, päivitä aika heti
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && S.qTimer && !S.answered && S.currentQ >= 0) tickQTimer();
+});
 
 function setTimerDisplay(t) {
   const pct  = (t / Q_TIME) * 100;
@@ -1852,8 +1880,14 @@ function setTimerDisplay(t) {
 
 async function answerQuestion(origIdx, btn) {
   if (S.answered || S.busy) return;
+  // Aika loppui jo (esim. taustavälilehti): käsittele aikakatkaisuna, ei vastauksena
+  if (Date.now() >= S.qDeadline) {
+    clearInterval(S.qTimer);
+    timeOut();
+    return;
+  }
   S.busy = true;
-  const aika = S.qTimeLeft;                 // aika mitataan selaimessa; palvelin rajaa
+  const aika = laskeAikaJaljella();          // aika mitataan selaimessa; palvelin rajaa
   let d = null;
   try {
     d = await _apiPost({ toiminto: "peli_vastaa", token: S.token,
