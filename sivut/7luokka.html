@@ -1124,41 +1124,79 @@
               
             </div>
           </div>
-          <div class="theory-card">
-            <div style="width: 100%;">
-              <p style="font-size: 1rem; color: #1e1b4b; margin: 0 0 4px; font-weight: 500;" data-i18n="motivaatio.question">Mikä saa sinut liikkeelle?</p>
-              <p style="font-size: 0.9rem; color: #6b7280; margin: 0 0 16px;" data-i18n="motivaatio.subtitle">Motivaatio voi tulla kahdesta suunnasta – ja molemmat toimivat.</p>
-
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <style>
+            /* Motivaation teoria-laatikko: ohittaa yleisen .theory-card-ruudukon (160 px kuvasarake) */
+            .aihe-osio > .theory-card.mot-teoria { display:block; grid-template-columns:none; padding:0; opacity:1; overflow:hidden; border:1px solid #ddd6fe; border-radius:20px; background:#fff; box-shadow:0 10px 30px rgba(91,33,182,0.14); }
+            .mot-teoria .mot-yla { position:relative; overflow:hidden; padding:22px 26px 20px; color:#fff; background:linear-gradient(120deg,#4c1d95 0%,#7c3aed 55%,#db2777 100%); }
+            .mot-teoria .mot-yla::before, .mot-teoria .mot-yla::after { content:""; position:absolute; border-radius:50%; background:rgba(255,255,255,0.12); }
+            .mot-teoria .mot-yla::before { width:150px; height:150px; right:-30px; top:-60px; }
+            .mot-teoria .mot-yla::after { width:90px; height:90px; right:110px; bottom:-50px; background:rgba(255,255,255,0.09); }
+            .mot-teoria .mot-yla > * { position:relative; }
+            .mot-teoria .mot-otsikko { margin:0 0 4px; font-size:clamp(1.3rem,3vw,1.7rem); font-weight:800; line-height:1.15; color:#fff !important; text-shadow:0 2px 8px rgba(0,0,0,0.25); }
+            .mot-teoria .mot-alaotsikko { margin:0; font-size:0.98rem; color:#ede9fe; max-width:60ch; }
+            .mot-teoria .mot-runko { position:relative; padding:22px 22px 8px; background:linear-gradient(180deg,#faf5ff 0%,#fff 100%); }
+            .mot-teoria .mot-kortit { display:grid; grid-template-columns:1fr 1fr; gap:18px; position:relative; }
+            .mot-teoria .mot-plus { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%; background:#fff; color:#7c3aed; border:2px solid #ddd6fe; box-shadow:0 4px 12px rgba(91,33,182,0.2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800; line-height:1; z-index:2; }
+            .mot-teoria .mot-kortti { display:flex; flex-direction:column; border-radius:16px; padding:18px 18px 16px; border:1px solid; border-top-width:6px; box-shadow:0 4px 14px rgba(0,0,0,0.06); }
+            .mot-teoria .mot-kortti.sisa { background:linear-gradient(180deg,#f5f3ff,#ede9fe); border-color:#c4b5fd; border-top-color:#7c3aed; }
+            .mot-teoria .mot-kortti.ulko { background:linear-gradient(180deg,#fffbeb,#fef3c7); border-color:#fcd34d; border-top-color:#f59e0b; }
+            .mot-teoria .mot-kortti-yla { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+            .mot-teoria .mot-ikoni { flex:none; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+            .mot-teoria .mot-tag { display:inline-block; font-size:11px; font-weight:800; letter-spacing:0.07em; text-transform:uppercase; padding:4px 11px; border-radius:999px; }
+            .mot-teoria .sisa .mot-tag { background:#7c3aed; color:#fff; }
+            .mot-teoria .ulko .mot-tag { background:#d97706; color:#fff; }
+            .mot-teoria .mot-kortti h4 { margin:0 0 4px; font-size:1.08rem; font-weight:800; line-height:1.25; }
+            .mot-teoria .sisa h4 { color:#3b0764; } .mot-teoria .ulko h4 { color:#78350f; }
+            .mot-teoria .mot-kuvaus { margin:0 0 12px; font-size:0.9rem; line-height:1.5; }
+            .mot-teoria .sisa .mot-kuvaus { color:#5b21b6; } .mot-teoria .ulko .mot-kuvaus { color:#92400e; }
+            .mot-teoria .mot-esim-otsikko { margin:0 0 6px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; }
+            .mot-teoria .sisa .mot-esim-otsikko { color:#4c1d95; } .mot-teoria .ulko .mot-esim-otsikko { color:#78350f; }
+            .mot-teoria .mot-chipit { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; padding:0; list-style:none; }
+            .mot-teoria .mot-chipit li { margin:0; padding:5px 11px; border-radius:999px; font-size:0.84rem; font-weight:600; background:#fff; border:1px solid; }
+            .mot-teoria .sisa .mot-chipit li { color:#4c1d95; border-color:#c4b5fd; } .mot-teoria .ulko .mot-chipit li { color:#78350f; border-color:#fcd34d; }
+            .mot-teoria .mot-pohdi { margin:auto 0 0; display:flex; gap:9px; align-items:flex-start; padding:10px 12px; border-radius:12px; font-size:0.92rem; font-style:italic; font-weight:600; line-height:1.45; background:#fff; border-left:5px solid; }
+            .mot-teoria .mot-pohdi::before { content:"💭"; font-style:normal; flex:none; }
+            .mot-teoria .sisa .mot-pohdi { color:#3b0764; border-left-color:#7c3aed; } .mot-teoria .ulko .mot-pohdi { color:#78350f; border-left-color:#f59e0b; }
+            .mot-teoria .mot-loppu { margin:16px 0 0; padding:13px 22px 16px; text-align:center; font-size:0.95rem; font-weight:600; color:#4c1d95; }
+            .mot-teoria .mot-loppu span { display:inline-block; padding:8px 18px; border-radius:999px; background:linear-gradient(90deg,#ede9fe,#fce7f3); border:1px solid #ddd6fe; }
+            @media (max-width:720px) {
+              .mot-teoria .mot-kortit { grid-template-columns:1fr; }
+              .mot-teoria .mot-plus { display:none; }
+              .mot-teoria .mot-yla { padding:18px 18px 16px; }
+              .mot-teoria .mot-runko { padding:16px 14px 4px; }
+            }
+          </style>
+          <div class="theory-card mot-teoria">
+            <div class="mot-yla">
+              <h3 class="mot-otsikko" data-i18n="motivaatio.question">Mikä saa sinut liikkeelle?</h3>
+              <p class="mot-alaotsikko" data-i18n="motivaatio.subtitle">Motivaatio voi tulla kahdesta suunnasta – ja molemmat toimivat.</p>
+            </div>
+            <div class="mot-runko">
+              <div class="mot-kortit">
+                <div class="mot-plus" aria-hidden="true">+</div>
 
                 <!-- Sisäinen motivaatio -->
-                <div style="background: #ede9fe; border: 1px solid #c4b5fd; border-radius: 12px; padding: 14px 16px;">
-                  <span style="display: inline-block; background: #ddd6fe; color: #4c1d95; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;">Sisäinen motivaatio</span>
-                  <p style="font-size: 0.88rem; font-weight: 600; color: #3b0764; margin: 0 0 4px;">Teen, koska haluan</p>
-                  <p style="font-size: 0.82rem; color: #5b21b6; margin: 0 0 10px; line-height: 1.5;">Saat energiaa itse tekemisestä tai oppimisesta.</p>
-                  <p style="font-size: 11px; font-weight: 700; color: #3b0764; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.05em;">Esimerkkejä</p>
-                  <p style="font-size: 0.82rem; color: #4c1d95; margin: 0 0 2px;">— Aihe kiinnostaa oikeasti</p>
-                  <p style="font-size: 0.82rem; color: #4c1d95; margin: 0 0 2px;">— Haluaa osata paremmin</p>
-                  <p style="font-size: 0.82rem; color: #4c1d95; margin: 0 0 10px;">— Tekeminen tuntuu hyvältä</p>
-                  <p style="font-size: 0.82rem; font-style: italic; color: #3b0764; margin: 0; padding: 7px 10px; background: rgba(167,139,250,0.2); border-left: 3px solid #7c3aed; border-radius: 0 6px 6px 0; line-height: 1.5;">Milloin viimeksi aika lensi koulussa?</p>
+                <div class="mot-kortti sisa">
+                  <div class="mot-kortti-yla"><span class="mot-ikoni" aria-hidden="true">🔥</span><span class="mot-tag">Sisäinen motivaatio</span></div>
+                  <h4>Teen, koska haluan</h4>
+                  <p class="mot-kuvaus">Saat energiaa itse tekemisestä tai oppimisesta.</p>
+                  <p class="mot-esim-otsikko">Esimerkkejä</p>
+                  <ul class="mot-chipit"><li>Aihe kiinnostaa oikeasti</li><li>Haluaa osata paremmin</li><li>Tekeminen tuntuu hyvältä</li></ul>
+                  <p class="mot-pohdi">Milloin viimeksi aika lensi koulussa?</p>
                 </div>
 
                 <!-- Ulkoinen motivaatio -->
-                <div style="background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px; padding: 14px 16px;">
-                  <span style="display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;">Ulkoinen motivaatio</span>
-                  <p style="font-size: 0.88rem; font-weight: 600; color: #78350f; margin: 0 0 4px;">Teen, koska täytyy tai saa palkkion</p>
-                  <p style="font-size: 0.82rem; color: #92400e; margin: 0 0 10px; line-height: 1.5;">Energia tulee ulkopuolelta: arvosana, kehu tai seuraukset.</p>
-                  <p style="font-size: 11px; font-weight: 700; color: #78350f; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.05em;">Esimerkkejä</p>
-                  <p style="font-size: 0.82rem; color: #92400e; margin: 0 0 2px;">— Hyvä arvosana</p>
-                  <p style="font-size: 0.82rem; color: #92400e; margin: 0 0 2px;">— Vanhemmat odottavat</p>
-                  <p style="font-size: 0.82rem; color: #92400e; margin: 0 0 10px;">— Ei halua epäonnistua</p>
-                  <p style="font-size: 0.82rem; font-style: italic; color: #78350f; margin: 0; padding: 7px 10px; background: rgba(252,211,77,0.2); border-left: 3px solid #f59e0b; border-radius: 0 6px 6px 0; line-height: 1.5;">Mitä tapahtuu, jos palkinto katoaa?</p>
+                <div class="mot-kortti ulko">
+                  <div class="mot-kortti-yla"><span class="mot-ikoni" aria-hidden="true">🏆</span><span class="mot-tag">Ulkoinen motivaatio</span></div>
+                  <h4>Teen, koska täytyy tai saa palkkion</h4>
+                  <p class="mot-kuvaus">Energia tulee ulkopuolelta: arvosana, kehu tai seuraukset.</p>
+                  <p class="mot-esim-otsikko">Esimerkkejä</p>
+                  <ul class="mot-chipit"><li>Hyvä arvosana</li><li>Vanhemmat odottavat</li><li>Ei halua epäonnistua</li></ul>
+                  <p class="mot-pohdi">Mitä tapahtuu, jos palkinto katoaa?</p>
                 </div>
-
               </div>
-
-              <p style="font-size: 0.82rem; color: #6b7280; margin: 0; font-style: italic;">Molempia tarvitaan — omat keinot selviävät kokeilemalla.</p>
             </div>
+            <p class="mot-loppu"><span>💡 Molempia tarvitaan — omat keinot selviävät kokeilemalla.</span></p>
           </div>
 
           <!-- Noppatehtävä ennen peliä (parityö) -->
