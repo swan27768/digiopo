@@ -23,6 +23,7 @@ import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp } from './_lib/turva.js';
 import { rateLimitSallittu } from './_lib/rate.js';
 import { luoToken, tarkistaToken } from './_lib/token.js';
+import { tarkistaNimimerkki, tarkistaKoulu } from './_lib/nimisuodatin.js';
 
 const SUPABASE_URL         = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -249,6 +250,11 @@ export default async function handler(req, res) {
       if (![0, 1, 2].includes(series)) {
         return res.status(400).json({ ok: false, virhe: "virheellinen_sarja" });
       }
+      // Nimimerkki ja koulu tarkistetaan jo pelin alussa (ei aloiteta peliä, jonka tulosta ei voi julkaista)
+      const alkuNimi  = puhdista(body.nimi, 30);
+      const alkuKoulu = puhdista(body.koulu, 40);
+      const nimiVirhe = (alkuNimi && tarkistaNimimerkki(alkuNimi)) || (alkuKoulu && tarkistaKoulu(alkuKoulu));
+      if (nimiVirhe) return res.status(400).json({ ok: false, virhe: nimiVirhe });
       const token = await luoPeliToken({
         sid: 's_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
         series, total: 0, scored: [], avattu: {}, vaarat: {}, alku: Date.now(),
@@ -393,6 +399,8 @@ export default async function handler(req, res) {
       if (tila.scored.length < KYS_YHT || (tila.alku && Date.now() - tila.alku < MIN_PELI_S * 1000)) {
         return res.status(400).json({ ok: false, virhe: "peli_kesken" });
       }
+      const nimiVirhe = tarkistaNimimerkki(nimi) || tarkistaKoulu(koulu);
+      if (nimiVirhe) return res.status(400).json({ ok: false, virhe: nimiVirhe });
       if (!id || !nimi || !koulu || !Number.isFinite(pisteet) || pisteet < 0) {
         return res.status(400).json({ ok: false, virhe: "virheelliset_parametrit" });
       }

@@ -33,7 +33,7 @@ window._fbLbGet = async () => {
 window._fbLbSave = async (playerId, name, koulu, luokka, token) => {
   try {
     const d = await _apiPost({ toiminto: "peli_tallenna", token, id: playerId, nimi: name, koulu, luokka });
-    if (!d.ok) return { saved: false, reason: d.virhe === "istunto_vanhentunut" ? "Pelisessio vanheni" : "Verkkovirhe" };
+    if (!d.ok) return { saved: false, reason: d.virhe === "istunto_vanhentunut" ? "Pelisessio vanheni" : (d.virhe === "nimi_ei_sovi" || d.virhe === "nimi_yhteystieto") ? "Nimi ei sovi" : "Verkkovirhe" };
     return { saved: d.saved, reason: d.reason || "" };
   } catch { return { saved: false, reason: "Verkkovirhe" }; }
 };
@@ -1698,13 +1698,19 @@ async function goLb() {
    PELIN ALOITUS
 ═══════════════════════════════════════ */
 // Aloita pelisessio palvelimella: palauttaa allekirjoitetun tokenin tai null (virhe)
+// Palauttaa { token } tai { virhe } (esim. nimi_ei_sovi / nimi_yhteystieto) tai null (verkkovirhe)
 async function peliAloita(series) {
   try {
-    const d = await _apiPost({ toiminto: "peli_aloita", series });
+    const d = await _apiPost({ toiminto: "peli_aloita", series, nimi: S.nimi || "", koulu: S.koulu || "" });
     if (d && d.ok && d.token) return d.token;
+    if (d && d.virhe) S.aloitusVirhe = d.virhe;
   } catch (e) {}
   return null;
 }
+const NIMI_VIRHEET = {
+  nimi_ei_sovi: "Tämä nimi ei sovi tulostauluun. Keksi toinen nimimerkki (ja tarkista koulun nimi).",
+  nimi_yhteystieto: "Älä kirjoita nimimerkkiin puhelinnumeroa, sähköpostia tai verkkosivua. Keksi toinen nimimerkki.",
+};
 
 async function startGame() {
   const nimi  = document.getElementById("inp-nimi").value.trim();
@@ -1725,10 +1731,13 @@ async function startGame() {
   S.correctCount = 0;
   S.currentRound = 1;
   S.series = pickSeries();
+  S.aloitusVirhe = "";
   const token = await peliAloita(S.series);
   if (!token) {
     const err = document.getElementById("welcome-err");
-    err.textContent = "Pelin käynnistys ei onnistunut – tarkista nettiyhteys ja yritä uudelleen.";
+    err.textContent = NIMI_VIRHEET[S.aloitusVirhe] || (S.aloitusVirhe === "ei_lisenssia"
+      ? "Istunto on vanhentunut. Kirjaudu sisään uudelleen."
+      : "Pelin käynnistys ei onnistunut – tarkista nettiyhteys ja yritä uudelleen.");
     err.style.display = "block";
     return;
   }
@@ -2117,6 +2126,10 @@ async function endGame() {
     } else if (res.reason === "Aiempi tulos on parempi") {
       notice.textContent = "ℹ️ Sinulla on jo parempi tulos tallennettuna – sitä ei ylikirjoitettu.";
       notice.style.cssText = "display:block;background:#1c2030;border:1px solid #2d3a4a;color:#74b9ff;" +
+        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+    } else if (res.reason === "Nimi ei sovi") {
+      notice.textContent = "⚠️ Tulosta ei tallennettu: nimimerkki tai koulu ei sovi tulostauluun.";
+      notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;" +
         "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
     } else {
       notice.textContent = "⚠️ Tulosta ei voitu tallentaa – tarkista nettiyhteys.";
