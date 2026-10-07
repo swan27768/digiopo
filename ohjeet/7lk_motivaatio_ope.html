@@ -8,6 +8,34 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="ope-ohje.css">
+<style>
+  /* Ongelmakortit avautuvat tässä samassa ohjeessa */
+  .kortti-details{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:0}
+  .kortti-details>summary{cursor:pointer;padding:14px 16px;list-style:none;font-size:.95rem;color:var(--ink-soft)}
+  .kortti-details>summary::-webkit-details-marker{display:none}
+  .kortti-details>summary::before{content:"▸";display:inline-block;margin-right:.55rem;color:var(--accent);transition:transform .15s}
+  .kortti-details[open]>summary::before{transform:rotate(90deg)}
+  .kortti-details>summary strong{color:var(--ink)}
+  .kortti-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 16px 12px;font-size:.85rem;color:var(--ink-faint)}
+  .kortti-toolbar .print{margin-left:0}
+  .kortit{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px 16px}
+  .kortti{border:1.5px solid var(--line);border-radius:12px;padding:14px 15px 12px;background:var(--card);break-inside:avoid;page-break-inside:avoid}
+  .kortti .nro{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:#fff;padding:.25em .8em;border-radius:999px}
+  .kortti .ongelma{font-weight:700;font-size:1rem;color:var(--ink);margin:.55rem 0 .5rem;line-height:1.35}
+  .kortti .kysymys{font-size:.84rem;font-style:italic;color:var(--ink-soft);margin:0 0 .6rem;padding:.45em .7em;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
+  .kortti .viivat-otsikko{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 .15rem}
+  .kortti .viiva{height:26px;border-bottom:1.5px dashed var(--line)}
+  @media(max-width:620px){.kortit{grid-template-columns:1fr}}
+  @media print{
+    body:not(.print-kortit) #tulostettavat{display:none}
+    body.print-kortit .sheet>*:not(#tulostettavat){display:none!important}
+    body.print-kortit #tulostettavat>.lab,body.print-kortit #tulostettavat>h2,body.print-kortit .kortti-details>summary,body.print-kortit .kortti-toolbar{display:none!important}
+    body.print-kortit #tulostettavat{border:0;box-shadow:none;padding:0;margin:0;break-inside:auto}
+    body.print-kortit .kortti-details{border:0}
+    body.print-kortit .kortit{padding:0;gap:10px}
+    .kortti{border-color:#a8a29e}
+  }
+</style>
 </head>
 <body>
 <main class="sheet">
@@ -122,42 +150,74 @@
     <div class="hint">Kannusta liikkumaan reippaasti kierrosten välillä — tempo pitää energiatason korkeana. Koko tehtävään kannattaa varata noin 20–25 minuuttia. Voit säätää kierrosten pituutta ryhmien mukaan.</div>
   </section>
 
-  <section class="blk">
-    <p class="lab">Eriyttäminen — koko osio</p>
-    <h2>Kaikille tekemistä</h2>
-    <div class="split">
-      <div class="mini">
-        <span class="tag">Tuki</span>
-        <h3>Kevyempi</h3>
-        <p>Anna ryhmälle pari valmista esimerkkikeinoa kortin alkuun. Kirjuri voi kirjata, muut ideoivat ääneen.</p>
-      </div>
-      <div class="mini harder">
-        <span class="tag">Laajennus</span>
-        <h3>Haastavampi</h3>
-        <p>Ryhmä luokittelee keinot (nopea apu vs. pitkän tähtäimen keino) tai keksii oman motivaatio-ongelmakortin muille.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="blk">
-    <p class="lab">Kytkennät muihin osioihin</p>
-    <h2>Mihin tämä liittyy</h2>
-    <ul class="clean">
-      <li><strong>Selviytymiskeino 1 (Opi, kasva, loista):</strong> opiskelutaidot ja motivaatio tukevat toisiaan.</li>
-      <li><strong>Selviytymiskeino 3 (Tunne itsesi):</strong> omat vahvuudet auttavat löytämään, mikä itseä motivoi.</li>
-    </ul>
-  </section>
-
-  <section class="blk">
+  <section class="blk" id="tulostettavat">
     <p class="lab">Tulostettavat</p>
     <h2>Materiaalit tähän osioon</h2>
-    <ul class="clean">
-      <li><a href="../tehtavat/motivaatiohuutokauppa.html" target="_blank" rel="noopener"><strong>Ongelmakortit</strong></a> — kuusi korttia arjen motivaatio-ongelmista, yksi per ryhmä. Avaa ja tulosta.</li>
-      <li><a href="../7luokka-tehtavavihko.html" target="_blank" rel="noopener"><strong>Tehtävävihko</strong></a> — sisältää noppatehtävän paperiversion (kuusi kysymystä).</li>
-    </ul>
+    <details class="kortti-details" id="ongelmakortit">
+      <summary><strong>Ongelmakortit</strong> — kuusi korttia arjen motivaatio-ongelmista, yksi per ryhmä. Avaa ja tulosta.</summary>
+      <div class="kortti-toolbar">
+        <button type="button" class="print" onclick="tulostaKortit()">Tulosta kortit</button>
+        <span>Tulostuu vain kortit. Leikkaa tai anna jokaiselle ryhmälle yksi kortti.</span>
+      </div>
+      <div class="kortit">
+        <div class="kortti">
+          <span class="nro">Kortti 1</span>
+          <p class="ongelma">😩 Et jaksa tehdä kotitehtäviä</p>
+          <p class="kysymys">Miltä tuntuu katsoa pinkaa tekemättömiä tehtäviä? Mitkä keinot voisivat auttaa aloittamaan?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+        <div class="kortti">
+          <span class="nro">Kortti 2</span>
+          <p class="ongelma">🥱 Oppiaine tuntuu täysin turhalta</p>
+          <p class="kysymys">Miksi pitää opiskella asioita, joilla ei tunnu olevan mitään järkeä? Miten löytää yhteys omaan elämään?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+        <div class="kortti">
+          <span class="nro">Kortti 3</span>
+          <p class="ongelma">📉 Saat huonon arvosanan, vaikka yritit</p>
+          <p class="kysymys">Kuinka jaksaa yrittää uudelleen, kun pettymys on iso? Mitä sanoisit kaverille samassa tilanteessa?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+        <div class="kortti">
+          <span class="nro">Kortti 4</span>
+          <p class="ongelma">🙈 Kaveri häiritsee — et pysty keskittymään</p>
+          <p class="kysymys">Miten pitää oma fokus, kun ympäristö häiritsee? Entä jos häiritsijä on paras kaveri?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+        <div class="kortti">
+          <span class="nro">Kortti 5</span>
+          <p class="ongelma">😔 Vertaat itseäsi muihin ja tulee huono olo</p>
+          <p class="kysymys">Muut tuntuvat osaavan helpommin. Miten löytää oma tahti ja uskoa omaan osaamiseen?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+        <div class="kortti">
+          <span class="nro">Kortti 6</span>
+          <p class="ongelma">😴 Aamulla ei yhtään huvita tulla kouluun</p>
+          <p class="kysymys">Jokin saa kuitenkin nousemaan ylös. Mikä se voisi olla? Miten tehdä koulupäivästä sellainen, jota odottaa?</p>
+          <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+        </div>
+      </div>
+    </details>
   </section>
 
   <footer>DigiOpo · Osion ohje · Innostu uudelleen (7. luokka)</footer>
 </main>
+<script>
+  // Ongelmakorttien tulostus: avaa kortit ja tulosta vain ne (ei koko ohjetta)
+  function tulostaKortit() {
+    var d = document.getElementById('ongelmakortit');
+    if (d) d.open = true;
+    document.body.classList.add('print-kortit');
+    window.print();
+  }
+  window.addEventListener('afterprint', function () { document.body.classList.remove('print-kortit'); });
+  // Tulostettaessa koko ohje (Tulosta ohje -nappi) kortit eivät tule mukaan
+</script>
 </body>
 </html>
