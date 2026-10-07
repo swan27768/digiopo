@@ -1916,8 +1916,10 @@ async function answerQuestion(origIdx, btn) {
 
   const fb = document.getElementById("q-feedback");
   if (!d || !d.ok) {
-    fb.textContent = (d && d.virhe === "istunto_vanhentunut")
-      ? "⚠️ Pelisessio vanheni. Lataa peli uudelleen."
+    fb.textContent = !d ? "⚠️ Verkkovirhe – yritä uudelleen."
+      : d.virhe === "istunto_vanhentunut" ? "⚠️ Pelisessio vanheni. Lataa peli uudelleen."
+      : d.virhe === "ei_lisenssia" ? "⚠️ Istunto on vanhentunut. Kirjaudu sisään uudelleen."
+      : d.virhe === "liian_nopea" ? "Hetkinen! Lue kysymys rauhassa ja valitse sitten vastaus."
       : "⚠️ Verkkovirhe – yritä uudelleen.";
     fb.className = "feedback err";
     return;
@@ -1929,13 +1931,24 @@ async function answerQuestion(origIdx, btn) {
     return;
   }
   if (d.jo) {
-    // Kysymys on jo pisteytetty/lukittu: ei pisteitä eikä lisäystä oikeiden laskuriin
-    S.answered = true;
-    clearInterval(S.qTimer);
-    document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
-    fb.textContent = "Tämä kysymys on jo käsitelty.";
-    fb.className = "feedback time";
-    document.getElementById("q-btns").style.display = "block";
+    // Kysymys on jo pisteytetty (esim. aika loppui): ei pisteitä eikä lisäystä oikeiden laskuriin,
+    // mutta oikea vastaus ratkaisee kysymyksen kierroksen etenemistä varten.
+    if (d.oikein) {
+      S.answered = true;
+      clearInterval(S.qTimer);
+      document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
+      btn.classList.add("correct");
+      S.solved.push(S.currentQ);
+      fb.textContent = "✓ Oikein! Tästä kysymyksestä ei enää tule pisteitä.";
+      fb.className = "feedback ok";
+      document.getElementById("q-btns").style.display = "block";
+      if (S.solved.length === 10) setTimeout(endGame, 1600);
+    } else {
+      btn.classList.add("wrong");
+      btn.disabled = true;
+      fb.textContent = "✗ Väärin! Yritä uudelleen.";
+      fb.className = "feedback err";
+    }
     return;
   }
   if (d.oikein) {
@@ -1945,11 +1958,12 @@ async function answerQuestion(origIdx, btn) {
     document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
     btn.classList.add("correct");
     if (d.token) S.token = d.token;
-    S.score += (d.pisteet || 0);
+    S.score = (typeof d.total === "number") ? d.total : S.score + (d.pisteet || 0);   // palvelimen summa
     S.correctCount++;
     S.solved.push(S.currentQ);
     const bonusTxt = d.bonus ? ` sis. ${d.bonus} aikabonus` : "";
-    fb.textContent = `✓ Oikein! ${d.selitys || ""} (+${d.pisteet}p${bonusTxt})`;
+    const sakotTxt = d.sakot ? `, −${d.sakot}p vääristä vastauksista` : "";
+    fb.textContent = `✓ Oikein! ${d.selitys || ""} (+${d.pisteet}p${bonusTxt}${sakotTxt})`;
     fb.className = "feedback ok";
     document.getElementById("q-btns").style.display = "block";
     if (S.solved.length === 10) {
@@ -1976,12 +1990,13 @@ function naytaAikaLoppui(d) {
   document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
   const fb = document.getElementById("q-feedback");
   if (d && d.token) S.token = d.token;
+  if (d && typeof d.total === "number") S.score = d.total;
   if (d && typeof d.oikea === "number") {
     document.querySelectorAll(".ans-btn").forEach(b => {
       if (Number(b.dataset.orig) === d.oikea) b.classList.add("correct");
     });
   }
-  fb.textContent = "⏰ Aika loppui! " + ((d && d.selitys) || "");
+  fb.textContent = "⏰ Aika loppui! " + ((d && d.selitys) || "") + ((d && d.sakot) ? ` (−${d.sakot}p väärien vastausten vuoksi)` : "");
   fb.className = "feedback time";
   document.getElementById("q-btns").style.display = "block";
 }

@@ -4,7 +4,7 @@
 // POST /api/tiedontemppeli  (body.toiminto ratkaisee):
 //   peli_aloita     { series }                                   → { ok, token }
 //   peli_avaa       { token, round, q }                          → { ok, token, sekunnit }   (käynnistää kysymyksen kellon PALVELIMELLA)
-//   peli_vastaa     { token, round, q, valinta }                 → { ok, oikein, pisteet?, selitys?, total, token }
+//   peli_vastaa     { token, round, q, valinta }                 → { ok, oikein, pisteet?, bonus?, sakot?, selitys?, total, token }  (väärä: −20 p/vaihtoehto, vähennetään kun kysymys ratkeaa)
 //   peli_aikakatkaisu { token, round, q }                        → { ok, oikea, selitys, total, token }  (vain kun aika on oikeasti kulunut)
 //   peli_tallenna   { token, id, nimi, koulu, luokka }           → { ok, saved }
 //
@@ -47,6 +47,9 @@ const BASE_PTS   = [100, 150, 200];    // kierros 1,2,3
 const MAX_BONUS  = 60;                 // maksimi aikabonus
 const KYS_PER_KIERROS = 10;
 const VAARIN_SAKKO = 20;               // pistevähennys väärästä vastauksesta (kerran per vaihtoehto)
+const MIN_VASTAUS_S = 1.5;             // nopeampaa vastausta ei hyväksytä (ihminen ei ehdi lukea kysymystä)
+const MIN_PELI_S   = 60;               // tulosta ei voi tallentaa nopeammin kuin tässä ajassa
+const KYS_YHT      = 3 * KYS_PER_KIERROS;
 const ALKU_ARMO_S  = 1.5;              // verkkoviive: ensimmäiset sekunnit eivät syö bonusta
 const VASTAUS_ARMO_S = 3;              // vastaus hyväksytään vielä Q_TIME + tämä jälkeen (viive)
 const AIKAKATKAISU_ARMO_S = 2;         // aikakatkaisu sallitaan aikaisintaan Q_TIME − tämä
@@ -66,10 +69,39 @@ async function redis(...komento) {
     return j.result ?? null;
   } catch { return null; }
 }
+const vaaraAvain = (sid, tag) => `tt:vr:${sid}:${tag}`;
 const avaaAvain  = (sid, tag) => `tt:av:${sid}:${tag}`;
 const lukkoAvain = (sid, tag) => `tt:lk:${sid}:${tag}`;
 async function onLukittu(sid, tag) { return (await redis('EXISTS', lukkoAvain(sid, tag))) === 1; }
 async function lukitse(sid, tag)   { await redis('SET', lukkoAvain(sid, tag), '1', 'EX', 7200); }
+
+// Maksumuuri: API ei kuulu middlewaren matcheriin, joten lisenssieväste tarkistetaan täällä.
+// Ilman LISENSSI_JWT_SECRET-muuttujaa muuri on pois päältä (sama turvaventtiili kuin middleware.js).
+function haeEvaste(req, nimi) {
+  const cookie = (req.headers && req.headers.cookie) || '';
+  for (const osa of cookie.split(';')) {
+    const vali = osa.indexOf('=');
+    if (vali === -1) continue;
+    if (osa.slice(0, vali).trim() === nimi) return osa.slice(vali + 1).trim();
+  }
+  return null;
+}
+async function onLisenssi(req) {
+  const salaisuus = process.env.LISENSSI_JWT_SECRET;
+  if (!salaisuus) return true;
+  const token = haeEvaste(req, 'digiopo_lisenssi');
+  return Boolean(token && await tarkistaToken(token, salaisuus));
+}
+
+// Väärien vastausten sakko vähennetään vasta kun kysymys ratkeaa (oikea vastaus / aika loppui).
+// Redisissä väärät vaihtoehdot ovat joukossa, joten tokenin haarauttaminen (arvaus vanhalla
+// tokenilla) ei poista sakkoa. Ilman Redisiä käytetään tokenin listaa (heikompi).
+async function haeSakot(tila, tag) {
+  const tokenissa = Array.isArray(tila.vaarat[tag]) ? tila.vaarat[tag].length : 0;
+  const n = await redis('SCARD', vaaraAvain(tila.sid, tag));
+  const lkm = Number.isFinite(Number(n)) && n !== null ? Math.max(Number(n), tokenissa) : tokenissa;
+  return Math.min(lkm, 2) * VAARIN_SAKKO;
+}
 
 // Kysymyksen avaushetki (ms): Redis ensisijainen, muuten tokenissa oleva. NX = ensimmäinen avaus voittaa.
 async function haeAvausHetki(tila, tag, nyt, luoJosPuuttuu) {
@@ -126,6 +158,7 @@ async function luoPeliToken(tila) {
     total: tila.total,
     scored: tila.scored,               // taulukko "kierros-kysymys" merkkijonoja
     avattu: tila.avattu || {},         // { "kierros-kysymys": avaushetki ms }
+    alku: tila.alku || Date.now(),     // pelisession alkuhetki (ms)
     vaarat: tila.vaarat || {},         // { "kierros-kysymys": [jo sakotetut väärät vaihtoehdot] }
     iat: Date.now(),
     exp: Date.now() + 2 * 60 * 60 * 1000, // 2 h
@@ -139,7 +172,7 @@ async function lueTila(token) {
   if (!Array.isArray(p.scored)) return null;
   const avattu = (p.avattu && typeof p.avattu === 'object' && !Array.isArray(p.avattu)) ? p.avattu : {};
   const vaarat = (p.vaarat && typeof p.vaarat === 'object' && !Array.isArray(p.vaarat)) ? p.vaarat : {};
-  return { sid: p.sid, series: p.series, total: Number(p.total) || 0, scored: p.scored, avattu, vaarat };
+  return { sid: p.sid, series: p.series, total: Number(p.total) || 0, scored: p.scored, avattu, vaarat, alku: Number(p.alku) || 0 };
 }
 
 // Poistaa HTML-merkit ja ohjausmerkit pelaajan syöttämästä tekstistä (puolustus XSS:ää vastaan;
@@ -165,6 +198,11 @@ export default async function handler(req, res) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !PELI_SECRET) {
     if (!PELI_SECRET) console.error("tiedontemppeli: LISENSSI_JWT_SECRET puuttuu tuotannosta");
     return res.status(500).json({ ok: false, virhe: "palvelin_ei_konfiguroitu" });
+  }
+
+  // Maksumuuri myös APIlle: ilman voimassa olevaa lisenssiä ei pelata eikä lueta taulua
+  if (req.method !== "OPTIONS" && !(await onLisenssi(req))) {
+    return res.status(401).json({ ok: false, virhe: "ei_lisenssia" });
   }
 
   // ── GET: tulostaulu ──────────────────────────────────────────
@@ -213,7 +251,7 @@ export default async function handler(req, res) {
       }
       const token = await luoPeliToken({
         sid: 's_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
-        series, total: 0, scored: [], avattu: {}, vaarat: {},
+        series, total: 0, scored: [], avattu: {}, vaarat: {}, alku: Date.now(),
       });
       return res.status(200).json({ ok: true, token });
     }
@@ -267,12 +305,18 @@ export default async function handler(req, res) {
       const alku = await haeAvausHetki(tila, tag, nyt, false);
       const kulunut = alku ? (nyt - alku) / 1000 : null;
 
+      if (kulunut !== null && kulunut < MIN_VASTAUS_S) {
+        return res.status(200).json({ ok: false, virhe: "liian_nopea" });
+      }
+
       if (kulunut !== null && kulunut > Q_TIME + VASTAUS_ARMO_S) {
-        // Aika loppui: ei pisteitä, kysymys lukitaan
+        // Aika loppui: ei pisteitä, kysymys lukitaan, aiemmat väärät vastaukset sakotetaan
+        const sakotAL = await haeSakot(tila, tag);
+        tila.total = Math.max(0, tila.total - sakotAL);
         tila.scored.push(tag);
         await lukitse(tila.sid, tag);
         const uusiToken = await luoPeliToken(tila);
-        return res.status(200).json({ ok: true, oikein: false, aikaloppui: true, oikea: avain.c, selitys: avain.e, total: tila.total, token: uusiToken });
+        return res.status(200).json({ ok: true, oikein: false, aikaloppui: true, sakot: sakotAL, oikea: avain.c, selitys: avain.e, total: tila.total, token: uusiToken });
       }
 
       if (valinta === avain.c) {
@@ -281,28 +325,27 @@ export default async function handler(req, res) {
           : Math.max(0, Math.min(Q_TIME, Q_TIME - Math.max(0, kulunut - ALKU_ARMO_S)));
         const bonus = Math.max(0, Math.min(MAX_BONUS, Math.round((jaljella / Q_TIME) * MAX_BONUS)));
         const pisteet = BASE_PTS[round - 1] + bonus;
-        tila.total += pisteet;
+        const sakot = await haeSakot(tila, tag);
+        tila.total = Math.max(0, tila.total + pisteet - sakot);
         tila.scored.push(tag);
         await lukitse(tila.sid, tag);
         const uusiToken = await luoPeliToken(tila);
         return res.status(200).json({
-          ok: true, oikein: true, pisteet, bonus, total: tila.total,
+          ok: true, oikein: true, pisteet, bonus, sakot, total: tila.total,
           selitys: avain.e, token: uusiToken,
         });
       }
 
-      // Väärin → pistevähennys (kerran per väärä vaihtoehto, ei alle nollan). Oikeaa ei paljasteta, saa yrittää uudelleen.
-      const sakotetut = Array.isArray(tila.vaarat[tag]) ? tila.vaarat[tag] : [];
+      // Väärin → oikeaa ei paljasteta, saa yrittää uudelleen. Sakko (20 p / väärä vaihtoehto)
+      // vähennetään vasta kun kysymys ratkeaa; tässä vain kirjataan väärä vaihtoehto.
+      const aiemmat = Array.isArray(tila.vaarat[tag]) ? tila.vaarat[tag] : [];
       let sakko = 0, token = body.token;
-      if (!sakotetut.includes(valinta)) {
-        // Redis estää vanhalla tokenilla arvaamisen ilman sakkoa (SADD palauttaa 0, jos jo sakotettu)
-        const uusi = await redis('SADD', `tt:vr:${tila.sid}:${tag}`, String(valinta));
-        if (uusi !== 0) {
-          sakko = Math.min(VAARIN_SAKKO, tila.total);
-          tila.total -= sakko;
-          tila.vaarat[tag] = [...sakotetut, valinta];
-          token = await luoPeliToken(tila);
-        }
+      const uusi = await redis('SADD', vaaraAvain(tila.sid, tag), String(valinta));
+      if (uusi !== null) await redis('EXPIRE', vaaraAvain(tila.sid, tag), 7200);
+      if (!aiemmat.includes(valinta) && uusi !== 0) {
+        sakko = VAARIN_SAKKO;
+        tila.vaarat[tag] = [...aiemmat, valinta];
+        token = await luoPeliToken(tila);
       }
       return res.status(200).json({ ok: true, oikein: false, sakko, total: tila.total, token });
     }
@@ -318,7 +361,7 @@ export default async function handler(req, res) {
       }
       const avain = VASTAUSAVAIN[tila.series][round - 1][q];
       const tag = round + "-" + q;
-      let token = body.token;
+      let token = body.token, sakotAK = 0;
       const jo = tila.scored.includes(tag) || await onLukittu(tila.sid, tag);
       if (!jo) {
         const nyt = Date.now();
@@ -327,11 +370,13 @@ export default async function handler(req, res) {
         if ((nyt - alku) / 1000 < Q_TIME - AIKAKATKAISU_ARMO_S) {
           return res.status(409).json({ ok: false, virhe: "liian_aikaisin" });
         }
+        sakotAK = await haeSakot(tila, tag);
+        tila.total = Math.max(0, tila.total - sakotAK);
         tila.scored.push(tag);           // lukitse: ei voi vastata aikakatkaisun jälkeen
         await lukitse(tila.sid, tag);
         token = await luoPeliToken(tila);
       }
-      return res.status(200).json({ ok: true, oikea: avain.c, selitys: avain.e, total: tila.total, token });
+      return res.status(200).json({ ok: true, oikea: avain.c, selitys: avain.e, sakot: sakotAK, total: tila.total, token });
     }
 
     // ── peli_tallenna: kirjaa palvelimen vahvistama summa ──────
@@ -344,6 +389,10 @@ export default async function handler(req, res) {
       const koulu  = puhdista(body.koulu,  40);
       const luokka = "";                 // luokkatietoa ei enää tallenneta (tietosuoja)
       const pisteet = tila.total;        // VAIN palvelimen laskema summa
+      // Vain loppuun pelattu peli kirjataan: kaikki 30 kysymystä ratkaistu eikä liian nopeasti
+      if (tila.scored.length < KYS_YHT || (tila.alku && Date.now() - tila.alku < MIN_PELI_S * 1000)) {
+        return res.status(400).json({ ok: false, virhe: "peli_kesken" });
+      }
       if (!id || !nimi || !koulu || !Number.isFinite(pisteet) || pisteet < 0) {
         return res.status(400).json({ ok: false, virhe: "virheelliset_parametrit" });
       }
