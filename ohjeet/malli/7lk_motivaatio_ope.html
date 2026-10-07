@@ -40,6 +40,7 @@
   .kortti .kysymys{font-size:.84rem;font-style:italic;color:var(--ink-soft);margin:0 0 .6rem;padding:.45em .7em;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
   .kortti .viivat-otsikko{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 .15rem}
   .kortti .viiva{height:26px;border-bottom:1.5px dashed var(--line)}
+  .kortti .vain-tuloste{display:none}
   @media(max-width:620px){.kortit{grid-template-columns:1fr}.kortti-napit{width:100%}.kortti-napit .nappi{flex:1}.kortti-alarivi .nappi{flex:1}}
   @media print{
     body:not(.print-kortit) #tulostettavat{display:none}
@@ -48,8 +49,16 @@
     body.print-kortit #tulostettavat{border:0;box-shadow:none;padding:0;margin:0;break-inside:auto}
     body.print-kortit .kortti-paneeli{border:0;background:none}
     body.print-kortit .kortti-sisalto{border:0;padding:0;display:block!important}
-    body.print-kortit .kortit{gap:10px}
-    .kortti{border-color:#a8a29e}
+    /* Kortit isoina: yksi per A4-vaakasivu (sivukoko asetetaan tulostettaessa, ks. tulostaKortit) */
+    body.print-kortit .kortit{display:block}
+    body.print-kortit .kortti{display:flex;flex-direction:column;height:182mm;box-sizing:border-box;padding:9mm 11mm 8mm;margin:0;border:2px solid #7b8294;border-radius:6mm;break-after:page;page-break-after:always;break-inside:avoid;background:#fff;color:#111}
+    body.print-kortit .kortti:last-child{break-after:auto;page-break-after:auto}
+    body.print-kortit .kortti .nro{font-size:12pt;padding:.3em 1.1em;align-self:flex-start;background:#34518a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body.print-kortit .kortti .ongelma{font-size:27pt;margin:5mm 0 4mm;color:#111;line-height:1.2}
+    body.print-kortit .kortti .kysymys{font-size:15pt;line-height:1.45;padding:3mm 5mm;margin:0 0 5mm;color:#222;background:#eef1f7;border-left:2mm solid #34518a;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body.print-kortit .kortti .viivat-otsikko{font-size:11pt;margin:0 0 1mm;color:#34518a}
+    body.print-kortit .kortti .viiva{flex:1 1 0;min-height:9mm;height:auto;border-bottom:1.5px dashed #8a90a0}
+    body.print-kortit .kortti .vain-tuloste{display:block}
     .nappi{display:none!important}
   }
 </style>
@@ -184,49 +193,49 @@
         </div>
       </div>
       <div class="kortti-sisalto" id="kortitSisalto" hidden>
-        <p class="kortti-vihje">Tulosta kortit ja anna jokaiselle ryhmälle yksi. Tulostus sisältää vain kortit.</p>
+        <p class="kortti-vihje">Tulostus sisältää vain kortit: yksi iso kortti per A4-vaakasivu (6 sivua). Anna jokaiselle ryhmälle yksi kortti.</p>
         <div class="kortit">
         <div class="kortti">
           <span class="nro">Kortti 1</span>
           <p class="ongelma">😩 Et jaksa tehdä kotitehtäviä</p>
           <p class="kysymys">Miltä tuntuu katsoa pinkaa tekemättömiä tehtäviä? Mitkä keinot voisivat auttaa aloittamaan?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         <div class="kortti">
           <span class="nro">Kortti 2</span>
           <p class="ongelma">🥱 Oppiaine tuntuu täysin turhalta</p>
           <p class="kysymys">Miksi pitää opiskella asioita, joilla ei tunnu olevan mitään järkeä? Miten löytää yhteys omaan elämään?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         <div class="kortti">
           <span class="nro">Kortti 3</span>
           <p class="ongelma">📉 Sait huonon arvosanan, vaikka yritit</p>
           <p class="kysymys">Kuinka jaksaa yrittää uudelleen, kun pettymys on iso? Mitä sanoisit kaverille samassa tilanteessa?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         <div class="kortti">
           <span class="nro">Kortti 4</span>
           <p class="ongelma">🙈 Kaveri häiritsee — et pysty keskittymään</p>
           <p class="kysymys">Miten pitää oma fokus, kun ympäristö häiritsee? Entä jos häiritsijä on paras kaveri?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         <div class="kortti">
           <span class="nro">Kortti 5</span>
           <p class="ongelma">😔 Vertaat itseäsi muihin ja tulee huono olo</p>
           <p class="kysymys">Muut tuntuvat osaavan helpommin. Miten löytää oma tahti ja uskoa omaan osaamiseen?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         <div class="kortti">
           <span class="nro">Kortti 6</span>
           <p class="ongelma">😴 Aamulla ei yhtään huvita mennä kouluun</p>
           <p class="kysymys">Jokin saa kuitenkin nousemaan ylös. Mikä se voisi olla? Miten tehdä koulupäivästä sellainen, jota odottaa?</p>
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
-          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
+          <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div><div class="viiva vain-tuloste"></div>
         </div>
         </div>
         <div class="kortti-alarivi">
@@ -261,10 +270,15 @@
     kortitOliKiinni = !!(sis && sis.hidden);
     if (kortitOliKiinni) sis.hidden = false;    // tulostus tarvitsee näkyvät kortit
     document.body.classList.add('print-kortit');
+    var ps = document.createElement('style');
+    ps.id = 'kortitSivukoko';
+    ps.textContent = '@page{size:A4 landscape;margin:10mm}';
+    document.head.appendChild(ps);
     window.print();
   }
   window.addEventListener('afterprint', function () {
     document.body.classList.remove('print-kortit');
+    var ps = document.getElementById('kortitSivukoko'); if (ps) ps.remove();
     if (kortitOliKiinni) { var s = document.getElementById('kortitSisalto'); if (s) s.hidden = true; kortitOliKiinni = false; }
   });
   // Tulostettaessa koko ohje (Tulosta ohje -nappi) kortit eivät tule mukaan
