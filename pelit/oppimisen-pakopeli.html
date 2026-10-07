@@ -15313,15 +15313,17 @@ body {
         /* ===== VOITTO ===== */
         window.renderWin = function() {
           var sv    = State.variables;
-          var codes = ['TAITO8', 'KOULU7', 'OPPIJA', 'GENIUS', 'VAPAUS', 'VIISAS'];
-          var code  = codes[Math.min(Math.floor(sv.score / 20), codes.length - 1)];
+          var usedPenalty = (sv.penaltyDone && sv.penaltyDone.length > 0);
+          /* Koodi kertoo reitin: GENIUS = pääsi ulos sakkokierroksen kautta,
+             VAPAUS = pääsi ulos ilman sakkokierrosta (80–99), VIISAS = täydet 100 pistettä */
+          var code  = usedPenalty ? 'GENIUS' : (sv.score >= 100 ? 'VIISAS' : 'VAPAUS');
           var codeEl = document.getElementById('secret-code');
           if (codeEl) codeEl.textContent = code;
-          var msg = sv.score >= 90
-            ? 'Upea suoritus! Sinulla on erinomaiset oppimisen taidot.'
-            : sv.score >= 75
-              ? 'Hyvä tulos! Olet oppinut paljon oppimisesta.'
-              : 'Hyvä työ! Sait tarpeeksi pisteitä ja pääset ulos.';
+          var msg = usedPenalty
+            ? 'Hyvä työ! Pääsit ulos lisätehtävien avulla. Et luovuttanut, ja se on oppimisen tärkein taito.'
+            : sv.score >= 100
+              ? 'Upea suoritus! Täydet pisteet. Sinulla on erinomaiset oppimisen taidot.'
+              : 'Hyvä tulos! Olet oppinut paljon oppimisesta.';
           var descEl = document.getElementById('win-desc');
           if (descEl) descEl.textContent = msg + ' Sait ' + sv.score + ' pistettä sadasta.';
           var skills = [
@@ -15385,7 +15387,7 @@ body {
         pistettä&lt;/strong&gt;&lt;/div&gt; &lt;div
         class=&quot;saanto-rivi&quot;&gt;Väärä vastaus voi vähentää
         pisteitä&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;Jos
-        pisteitä ei riitä, käyt lisäluokissa&lt;/div&gt; &lt;/div&gt; &lt;button
+        pisteitä ei riitä, käyt lisäluokissa (liikunta, musiikki, kuvataide, kotitalous ja käsityö). Niissä oikea vastaus tuo &lt;strong&gt;8 pistettä&lt;/strong&gt;&lt;/div&gt; &lt;/div&gt; &lt;button
         class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;Aloita
         pakomatka&lt;/button&gt;  &lt;/div&gt;</tw-passagedata
       ><tw-passagedata
