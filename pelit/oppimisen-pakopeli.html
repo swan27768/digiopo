@@ -14289,12 +14289,34 @@ body {
 }
 
 .start-saannot {
-  background: var(--valk); border: 3px solid var(--viiva);
-  padding: 18px 22px; width: 100%; max-width: 500px; text-align: left;
-  display: flex; flex-direction: column; gap: 10px;
+  background: var(--valk); border: 3px solid var(--viiva); box-shadow: 5px 5px 0 var(--viiva);
+  width: 100%; max-width: 540px; text-align: left; overflow: hidden;
 }
-.saanto-rivi { font-size: 1rem; color: var(--teksti); line-height: 1.5; }
+.saannot-otsikko {
+  background: var(--viiva); color: #fff;
+  font-family: var(--otsikko); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 10px 20px;
+}
+.saanto-rivi {
+  display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 16px;
+  padding: 14px 20px; font-size: 1rem; color: var(--teksti); line-height: 1.5;
+  border-bottom: 2px solid var(--violetti-vaalea);
+}
+.saanto-rivi:last-child { border-bottom: none; }
 .saanto-rivi strong { color: var(--viiva); }
+.saanto-merkki {
+  font-family: var(--otsikko); font-weight: 700; font-size: 1.25rem; line-height: 1;
+  text-align: center; padding: 10px 0; border: 3px solid var(--viiva);
+}
+.saanto-merkki.plus  { background: var(--vihrea-bg); color: var(--vihrea-tumma); }
+.saanto-merkki.miinus { background: var(--puna-bg); color: var(--puna-tumma); }
+.saanto-merkki.lisa  { background: var(--violetti-vaalea); color: var(--violetti-tumma); }
+.saanto-teksti small { display: block; margin-top: 4px; font-size: 0.9rem; color: var(--teksti2); }
+@media (max-width: 480px) {
+  .saanto-rivi { grid-template-columns: 52px 1fr; gap: 12px; padding: 12px 14px; }
+  .saannot-otsikko { padding: 10px 14px; }
+}
 
 .btn-start {
   padding: 18px 44px;
@@ -14613,7 +14635,9 @@ body {
   .palaute { margin-left: 16px !important; margin-right: 16px !important; }
   .vastaukset { padding: 0 16px; }
   .sakko-grid { grid-template-columns: 1fr; }
-  .start-stats { flex-wrap: wrap; }
+  .start-stats { width: 100%; }
+  .stat-item { flex: 1; min-width: 0; padding: 12px 6px; }
+  .stat-item span { font-size: 0.62rem; letter-spacing: 0.06em; text-align: center; }
   .salakoodi { font-size: 1.9rem; letter-spacing: 0.16em; }
   .salakoodi-kehys { padding: 18px 20px; }
   .choice-letter { width: 46px; font-size: 1.1rem; }
@@ -15371,25 +15395,7 @@ body {
         tags=""
         position="625,250"
         size="100,100"
-        >&lt;div class=&quot;page-start&quot;&gt; &lt;h1&gt;Yläkoulun pakopeli!&lt;/h1&gt; &lt;p
-        class=&quot;start-story&quot;&gt; Selviätkö ulos koulurakennuksesta?
-        Pelissä on 10 kysymystä, jotka liittyvät opiskeluun. Jos saat
-        tarvittavan määrän pisteitä, pääset ulos koulusta! &lt;/p&gt; &lt;div
-        class=&quot;start-stats&quot;&gt; &lt;div
-        class=&quot;stat-item&quot;&gt; &lt;strong&gt;10&lt;/strong&gt;
-        &lt;span&gt;luokkaa&lt;/span&gt; &lt;/div&gt; &lt;div
-        class=&quot;stat-item&quot;&gt; &lt;strong&gt;100&lt;/strong&gt;
-        &lt;span&gt;pistettä max&lt;/span&gt; &lt;/div&gt; &lt;div
-        class=&quot;stat-item&quot;&gt; &lt;strong&gt;80&lt;/strong&gt;
-        &lt;span&gt;pistettä vaaditaan&lt;/span&gt; &lt;/div&gt; &lt;/div&gt;
-        &lt;div class=&quot;start-saannot&quot;&gt; &lt;div
-        class=&quot;saanto-rivi&quot;&gt;Oikea vastaus tuo &lt;strong&gt;10
-        pistettä&lt;/strong&gt;&lt;/div&gt; &lt;div
-        class=&quot;saanto-rivi&quot;&gt;Väärä vastaus voi vähentää
-        pisteitä&lt;/div&gt; &lt;div class=&quot;saanto-rivi&quot;&gt;Jos
-        pisteitä ei riitä, käyt lisäluokissa (liikunta, musiikki, kuvataide, kotitalous ja käsityö). Niissä oikea vastaus tuo &lt;strong&gt;8 pistettä&lt;/strong&gt;&lt;/div&gt; &lt;/div&gt; &lt;button
-        class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;Aloita
-        pakomatka&lt;/button&gt;  &lt;/div&gt;</tw-passagedata
+        >&lt;div class=&quot;page-start&quot;&gt;&lt;h1&gt;Yläkoulun pakopeli!&lt;/h1&gt;&lt;p class=&quot;start-story&quot;&gt;Selviätkö ulos koulurakennuksesta? Pelissä on 10 kysymystä, jotka liittyvät opiskeluun. Jos saat tarvittavan määrän pisteitä, pääset ulos koulusta!&lt;/p&gt;&lt;div class=&quot;start-stats&quot;&gt;&lt;div class=&quot;stat-item&quot;&gt;&lt;strong&gt;10&lt;/strong&gt;&lt;span&gt;luokkaa&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;stat-item&quot;&gt;&lt;strong&gt;100&lt;/strong&gt;&lt;span&gt;pistettä max&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;stat-item&quot;&gt;&lt;strong&gt;80&lt;/strong&gt;&lt;span&gt;pistettä vaaditaan&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;start-saannot&quot;&gt;&lt;div class=&quot;saannot-otsikko&quot;&gt;Pelin säännöt&lt;/div&gt;&lt;div class=&quot;saanto-rivi&quot;&gt;&lt;span class=&quot;saanto-merkki plus&quot;&gt;+10&lt;/span&gt;&lt;span class=&quot;saanto-teksti&quot;&gt;Oikea vastaus tuo &lt;strong&gt;10 pistettä&lt;/strong&gt;.&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;saanto-rivi&quot;&gt;&lt;span class=&quot;saanto-merkki miinus&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;saanto-teksti&quot;&gt;Väärä vastaus voi &lt;strong&gt;vähentää pisteitä&lt;/strong&gt;.&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;saanto-rivi&quot;&gt;&lt;span class=&quot;saanto-merkki lisa&quot;&gt;+8&lt;/span&gt;&lt;span class=&quot;saanto-teksti&quot;&gt;Jos pisteet eivät riitä, pääset &lt;strong&gt;lisäluokkiin&lt;/strong&gt;. Niissä oikea vastaus tuo &lt;strong&gt;8 pistettä&lt;/strong&gt;.&lt;small&gt;Liikunta, musiikki, kuvataide, kotitalous ja käsityö.&lt;/small&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;button class=&quot;btn-start&quot; onclick=&quot;aloitaPeli()&quot;&gt;Aloita pakomatka&lt;/button&gt;&lt;/div&gt;</tw-passagedata
       ><tw-passagedata
         pid="2"
         name="StoryInit"
