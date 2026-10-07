@@ -1162,26 +1162,129 @@
             </div>
           </div>
 
-          <!-- Itsearviointi ennen peliä -->
-          <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 14px; padding: 18px 20px; margin: 12px 0;">
-            <p style="font-size: 0.85rem; font-weight: 700; color: #4c1d95; margin: 0 0 12px; display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1rem;">🤔</span> Mieti ennen peliä
-            </p>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: #1e1b4b;">
-                <span style="background: #7c3aed; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">1</span>
-                <span>Onko sinulla oppiaine, joka tuntuu helpolta? Miksi?</span>
+          <!-- Noppatehtävä ennen peliä (parityö) -->
+          <style>
+            .noppa-laatikko { background:#f5f3ff; border:1px solid #ddd6fe; border-radius:14px; padding:18px 20px 20px; margin:12px 0; color:#1e1b4b; }
+            .noppa-otsikko { font-size:0.85rem; font-weight:700; color:#4c1d95; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+            .noppa-tag { background:#ddd6fe; color:#4c1d95; font-size:11px; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:999px; }
+            .noppa-ohje { font-size:0.9rem; line-height:1.55; margin:6px 0 16px; }
+            .noppa-alue { display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center; background:#fff; border:1px solid #ddd6fe; border-radius:14px; padding:18px; }
+            .noppa-vasen { display:flex; flex-direction:column; align-items:center; gap:12px; min-width:132px; }
+            .noppa-vuoro { font-size:0.8rem; font-weight:700; color:#4c1d95; background:#ede9fe; border-radius:999px; padding:5px 12px; white-space:nowrap; }
+            .noppa { width:84px; height:84px; background:#fff; border:3px solid #4c1d95; border-radius:16px; box-shadow:0 4px 0 #4c1d95; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); padding:11px; gap:2px; }
+            .noppa i { width:14px; height:14px; border-radius:50%; background:transparent; place-self:center; }
+            .noppa i.on { background:#7c3aed; }
+            .noppa.heitto { animation:noppaHeitto 0.6s ease; }
+            @keyframes noppaHeitto { 0%{transform:rotate(0) translateY(0)} 25%{transform:rotate(-24deg) translateY(-8px)} 50%{transform:rotate(18deg) translateY(0)} 75%{transform:rotate(-10deg) translateY(-3px)} 100%{transform:rotate(0) translateY(0)} }
+            .noppa-nappi { background:#7c3aed; color:#fff; border:none; border-radius:999px; font-weight:700; font-size:0.95rem; padding:11px 22px; cursor:pointer; min-height:44px; font-family:inherit; }
+            .noppa-nappi:hover { background:#6d28d9; }
+            .noppa-nappi:focus-visible { outline:3px solid #1e1b4b; outline-offset:2px; }
+            .noppa-nappi:disabled { opacity:0.6; cursor:default; }
+            .noppa-kysymys { min-height:96px; display:flex; flex-direction:column; justify-content:center; gap:6px; }
+            .noppa-tyhja { font-size:0.95rem; color:#6b7280; font-style:italic; margin:0; }
+            .noppa-kysymys-numero { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#7c3aed; }
+            .noppa-kysymys-teksti { font-size:1.15rem; font-weight:700; line-height:1.4; margin:0; }
+            .noppa-kysymys-vinkki { font-size:0.82rem; color:#5b21b6; margin:0; }
+            .noppa-lista { list-style:none; display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:14px 0 0; }
+            .noppa-lista li { display:flex; align-items:center; gap:6px; font-size:0.78rem; color:#4c1d95; background:#ede9fe; border-radius:999px; padding:4px 12px 4px 4px; }
+            .noppa-lista li b { background:#7c3aed; color:#fff; width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; }
+            .noppa-lista li.kaytetty { background:#dcfce7; color:#14532d; }
+            .noppa-lista li.kaytetty b { background:#15803d; }
+            .noppa-lista li.kaytetty::after { content:"✓"; font-weight:700; }
+            .noppa-valmis { font-size:0.9rem; font-weight:600; color:#14532d; background:#dcfce7; border-radius:10px; padding:10px 14px; margin:12px 0 0; }
+            @media (max-width:560px) { .noppa-alue { grid-template-columns:1fr; justify-items:center; text-align:center; } .noppa-kysymys { min-height:0; } }
+            @media (prefers-reduced-motion:reduce) { .noppa.heitto { animation:none; } }
+          </style>
+          <div class="noppa-laatikko" id="noppaTehtava" data-fi-only>
+            <p class="noppa-otsikko"><span style="font-size:1rem;">🎲</span> Mieti ennen peliä <span class="noppa-tag">Pari</span></p>
+            <p class="noppa-ohje">Tehkää tämä parin kanssa. Heittäkää virtuaalinoppaa vuorotellen. Silmäluku kertoo, mihin kysymykseen vastaat. Vastaa parillesi ja kuuntele sitten hänen vastauksensa. Heittäkää, kunnes kaikki kuusi kysymystä on käyty läpi.</p>
+            <div class="noppa-alue">
+              <div class="noppa-vasen">
+                <span class="noppa-vuoro" id="noppaVuoro">Vuorossa: Pelaaja 1</span>
+                <div class="noppa" id="noppaKuva" role="img" aria-label="Noppa: ei vielä heitetty">
+                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+                <button type="button" class="noppa-nappi" id="noppaNappi" onclick="noppaHeita()">Heitä noppa</button>
               </div>
-              <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: #1e1b4b;">
-                <span style="background: #7c3aed; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">2</span>
-                <span>Onko oppiaine, jota teet vain pakon edessä? Miltä se tuntuu?</span>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: #1e1b4b;">
-                <span style="background: #7c3aed; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">3</span>
-                <span>Mitä tapahtuisi, jos arvosanat poistuisivat kokonaan?</span>
+              <div class="noppa-kysymys" id="noppaKysymys" aria-live="polite">
+                <p class="noppa-tyhja">Heitä noppa, niin saat kysymyksen.</p>
               </div>
             </div>
+            <ol class="noppa-lista" id="noppaLista" aria-label="Kysymykset ja kuinka monta on käyty läpi"></ol>
+            <p class="noppa-valmis" id="noppaValmis" hidden>Hienoa! Kaikki kysymykset on käyty läpi. Olette valmiina Kadonnut motivaatio -peliin.</p>
           </div>
+          <script>
+            (function () {
+              var KYSYMYKSET = [
+                'Onko sinulla oppiaine, joka tuntuu helpolta? Miksi?',
+                'Onko oppiaine, jota teet vain pakon edessä? Miltä se tuntuu?',
+                'Mitä tapahtuisi, jos arvosanat poistuisivat kokonaan?',
+                'Mitä teet, kun tekemistä on niin paljon, ettei jaksaisi aloittaa mitään?',
+                'Milloin teit viimeksi jotain koulussa, koska se oikeasti kiinnosti? Mikä siinä oli hyvää?',
+                'Mitä sinulle tapahtuu, kun pelkäät epäonnistuvasi? Miten se vaikuttaa yrittämiseen?'
+              ];
+              var PIIKIT = { 1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8] };
+              var kaytetty = {}, vuoro = 1, heitetty = false, kesken = false;
+              var kuva = document.getElementById('noppaKuva');
+              var lista = document.getElementById('noppaLista');
+              if (!kuva || !lista) return;
+
+              function piirraNoppa(n) {
+                var pisteet = kuva.querySelectorAll('i');
+                for (var i = 0; i < pisteet.length; i++) pisteet[i].className = '';
+                (PIIKIT[n] || []).forEach(function (k) { pisteet[k].className = 'on'; });
+                kuva.setAttribute('aria-label', 'Noppa: ' + n);
+              }
+              function piirraLista() {
+                lista.innerHTML = '';
+                KYSYMYKSET.forEach(function (_, i) {
+                  var li = document.createElement('li');
+                  if (kaytetty[i + 1]) li.className = 'kaytetty';
+                  li.innerHTML = '<b>' + (i + 1) + '</b>' + (kaytetty[i + 1] ? 'Käyty läpi' : 'Kysymys ' + (i + 1));
+                  lista.appendChild(li);
+                });
+              }
+              function nayta(n, uusintaa) {
+                var el = document.getElementById('noppaKysymys');
+                el.innerHTML = '';
+                var num = document.createElement('span'); num.className = 'noppa-kysymys-numero'; num.textContent = 'Kysymys ' + n;
+                var txt = document.createElement('p'); txt.className = 'noppa-kysymys-teksti'; txt.textContent = KYSYMYKSET[n - 1];
+                el.appendChild(num); el.appendChild(txt);
+                if (uusintaa) {
+                  var v = document.createElement('p'); v.className = 'noppa-kysymys-vinkki';
+                  v.textContent = 'Tämä kysymys tuli jo aiemmin. Vastaa uudelleen tai heitä vielä kerran.';
+                  el.appendChild(v);
+                }
+              }
+              window.noppaHeita = function () {
+                if (kesken) return;
+                kesken = true;
+                var nappi = document.getElementById('noppaNappi');
+                nappi.disabled = true;
+                var vähennä = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                kuva.classList.remove('heitto'); void kuva.offsetWidth; kuva.classList.add('heitto');
+                var kierrokset = vähennä ? 0 : 7, k = 0;
+                (function pyorita() {
+                  if (k < kierrokset) { piirraNoppa(1 + Math.floor(Math.random() * 6)); k++; setTimeout(pyorita, 70); return; }
+                  var n = 1 + Math.floor(Math.random() * 6);
+                  var uusintaa = !!kaytetty[n];
+                  piirraNoppa(n);
+                  kaytetty[n] = true;
+                  nayta(n, uusintaa);
+                  piirraLista();
+                  if (heitetty) { vuoro = vuoro === 1 ? 2 : 1; }
+                  heitetty = true;
+                  var jarj = document.getElementById('noppaVuoro');
+                  if (jarj) jarj.textContent = 'Heitti: Pelaaja ' + vuoro + '. Seuraavaksi: Pelaaja ' + (vuoro === 1 ? 2 : 1);
+                  if (Object.keys(kaytetty).length === KYSYMYKSET.length) document.getElementById('noppaValmis').hidden = false;
+                  nappi.textContent = 'Heitä uudelleen';
+                  nappi.disabled = false; kesken = false;
+                })();
+              };
+              piirraNoppa(6); kuva.setAttribute('aria-label', 'Noppa: ei vielä heitetty');
+              piirraLista();
+            })();
+          </script>
 
           <!-- ═══════════════════════════════════════════════════
                KADONNUT MOTIVAATIO -PELI

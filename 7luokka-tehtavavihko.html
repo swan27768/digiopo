@@ -216,6 +216,45 @@
   .box.h5{ height:44mm; }
   .box.h6{ height:60mm; }
 
+  /* ── Noppatehtävä (paperiversio) ── */
+  .task.pairtask{ border-left-color:#be185d; }
+  table.noppa-taulu{
+    width:100%;
+    border-collapse:collapse;
+    margin:8px 0 12px;
+    font-size:10.5pt;
+  }
+  table.noppa-taulu th{
+    background:#f5f3ff;
+    color:var(--teal-dark);
+    font-size:8.5pt;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    text-align:left;
+    padding:6px 8px;
+    border:1.5px solid var(--line);
+  }
+  table.noppa-taulu td{
+    border:1.5px solid var(--line);
+    padding:6px 8px;
+    vertical-align:middle;
+    height:23mm;
+  }
+  table.noppa-taulu tr{ break-inside:avoid; }
+  table.noppa-taulu td.noppa-silma{ width:21mm; text-align:center; }
+  table.noppa-taulu td.noppa-kys{ width:44%; line-height:1.4; }
+  table.noppa-taulu td.noppa-kys b{ color:var(--teal); }
+  table.noppa-taulu td.noppa-vast{ vertical-align:top; padding:4px 8px; }
+  table.noppa-taulu td.noppa-vast span{
+    display:block;
+    height:9.5mm;
+    border-bottom:1px solid #e2e8f0;
+    color:var(--muted);
+    font-size:8.5pt;
+  }
+  table.noppa-taulu td.noppa-ok{ width:14mm; text-align:center; font-size:16pt; color:var(--muted); }
+  table.noppa-taulu th:last-child{ text-align:center; }
+
   /* ── Rasti-lista ── */
   .check{
     display:flex;
@@ -594,14 +633,59 @@
   </div>
   <p class="prompt">Molempia tarvitaan – omat keinot selviävät kokeilemalla.</p>
 
-  <div class="task">
-    <span class="tag solo">Yksin</span>
-    <h3 class="task-title" style="margin-top:2px;">🤔 Mieti ennen peliä</h3>
-    <div class="q"><span class="n">1.</span> Onko sinulla oppiaine, joka tuntuu helpolta? Miksi?</div>
-    <div class="box h2"></div>
-    <div class="q"><span class="n">2.</span> Onko oppiaine, jota teet vain pakon edessä? Miltä se tuntuu?</div>
-    <div class="box h2"></div>
-    <div class="q"><span class="n">3.</span> Mitä tapahtuisi, jos arvosanat poistuisivat kokonaan?</div>
+  <div class="task pairtask">
+    <span class="tag pair">Parin kanssa</span><span class="tag time">🎲 Noppatehtävä · 10 min</span>
+    <h3 class="task-title" style="margin-top:2px;">🎲 Mieti ennen peliä: noppakeskustelu</h3>
+    <p class="prompt">
+      Heittäkää noppaa vuorotellen (oikea noppa tai sivuston virtuaalinoppa). Silmäluku kertoo,
+      mihin kysymykseen vastaat. Kerro vastauksesi parillesi ja kuuntele hänen vastauksensa.
+      Kirjoita itsellesi pari sanaa muistiin ja merkitse kysymys tehdyksi. Jos sama luku tulee
+      uudelleen, heitä uudestaan. Jatkakaa, kunnes kaikki kuusi kysymystä on käyty läpi.
+    </p>
+    <table class="noppa-taulu">
+      <thead>
+        <tr><th>Silmäluku</th><th>Kysymys</th><th>Muistiinpanot</th><th>Tehty</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 1"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="25" cy="25" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>1.</b> Onko sinulla oppiaine, joka tuntuu helpolta? Miksi?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 2"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="10" cy="10" r="4.2" fill="#7c3aed"/><circle cx="40" cy="40" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>2.</b> Onko oppiaine, jota teet vain pakon edessä? Miltä se tuntuu?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 3"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="10" cy="10" r="4.2" fill="#7c3aed"/><circle cx="25" cy="25" r="4.2" fill="#7c3aed"/><circle cx="40" cy="40" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>3.</b> Mitä tapahtuisi, jos arvosanat poistuisivat kokonaan?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 4"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="10" cy="10" r="4.2" fill="#7c3aed"/><circle cx="40" cy="10" r="4.2" fill="#7c3aed"/><circle cx="10" cy="40" r="4.2" fill="#7c3aed"/><circle cx="40" cy="40" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>4.</b> Mitä teet, kun tekemistä on niin paljon, ettei jaksaisi aloittaa mitään?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 5"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="10" cy="10" r="4.2" fill="#7c3aed"/><circle cx="40" cy="10" r="4.2" fill="#7c3aed"/><circle cx="25" cy="25" r="4.2" fill="#7c3aed"/><circle cx="10" cy="40" r="4.2" fill="#7c3aed"/><circle cx="40" cy="40" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>5.</b> Milloin teit viimeksi jotain koulussa, koska se oikeasti kiinnosti? Mikä siinä oli hyvää?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+        <tr>
+          <td class="noppa-silma"><svg class="die" viewBox="-5 -5 60 60" width="13mm" height="13mm" role="img" aria-label="Noppa 6"><rect x="-3" y="-3" width="56" height="56" rx="11" fill="#fff" stroke="#4c1d95" stroke-width="3"/><circle cx="10" cy="10" r="4.2" fill="#7c3aed"/><circle cx="40" cy="10" r="4.2" fill="#7c3aed"/><circle cx="10" cy="25" r="4.2" fill="#7c3aed"/><circle cx="40" cy="25" r="4.2" fill="#7c3aed"/><circle cx="10" cy="40" r="4.2" fill="#7c3aed"/><circle cx="40" cy="40" r="4.2" fill="#7c3aed"/></svg></td>
+          <td class="noppa-kys"><b>6.</b> Mitä sinulle tapahtuu, kun pelkäät epäonnistuvasi? Miten se vaikuttaa yrittämiseen?</td>
+          <td class="noppa-vast"><span>Minä:</span><span>Pari:</span></td>
+          <td class="noppa-ok">☐</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="q"><span class="n">·</span> Mikä parin vastauksista yllätti sinut tai tuntui tutulta?</div>
     <div class="box h2"></div>
   </div>
 
