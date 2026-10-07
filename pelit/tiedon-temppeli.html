@@ -396,7 +396,7 @@ body{
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px">KIERROS 1 – PISTEET</div>
       <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus · väärä vastaus −20p</div>
     </div>
     <button class="btn-start-big" onclick="startRound2()" style="font-size:17px;padding:14px 36px">
       Jatka toiselle kerrokselle →
@@ -419,7 +419,7 @@ body{
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px">PISTEET TÄHÄN MENNESSÄ</div>
       <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans2-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus · väärä vastaus −20p</div>
     </div>
     <button class="btn-start-big" onclick="startRound3()" style="font-size:17px;padding:14px 36px">
       Jatka kolmannelle kerrokselle →
@@ -1795,11 +1795,27 @@ function currentQSet() {
   return S.currentRound === 1 ? set.k1 : S.currentRound === 2 ? set.k2 : set.k3;
 }
 
-function openQuestion(idx) {
+// Kysymyksen kello käynnistyy PALVELIMELLA (peli_avaa); aikabonus lasketaan siellä.
+// Jos avaus epäonnistuu, peli jatkuu paikallisella ajastimella (palvelin antaa silloin vain perus­pisteet).
+async function peliAvaa(round, qIdx) {
+  try {
+    const d = await _apiPost({ toiminto: "peli_avaa", token: S.token, round, q: qIdx });
+    if (d && d.ok) {
+      if (d.token) S.token = d.token;
+      return Math.max(0, Math.min(Q_TIME, Number(d.sekunnit) || 0));
+    }
+  } catch (e) {}
+  return Q_TIME;
+}
+
+async function openQuestion(idx) {
+  if (S.busy) return;
   const q = currentQSet()[idx];
   S.currentQ  = idx;
   S.answered  = false;
+  S.timeOutKaynnissa = false;
   S.qTimeLeft = Q_TIME;
+  if (S.qTimer) clearInterval(S.qTimer);
 
   document.getElementById("q-cat").textContent  = q.icon + " " + q.title;
   document.getElementById("q-title").textContent = q.title;
@@ -1826,8 +1842,14 @@ function openQuestion(idx) {
     answersEl.appendChild(btn);
   });
 
-  startQTimer();
+  setTimerDisplay(Q_TIME);
   showScreen("s-question");
+  const round = S.currentRound;
+  S.busy = true;
+  const sekunnit = await peliAvaa(round, idx);
+  S.busy = false;
+  if (S.currentQ !== idx || S.currentRound !== round) return;   // pelaaja ehti poistua
+  startQTimer(sekunnit);
 }
 
 // Aika lasketaan seinäkellosta (Date.now), ei sekunnin välein vähentävästä laskurista:
@@ -1851,11 +1873,12 @@ function tickQTimer() {
   }
 }
 
-function startQTimer() {
+function startQTimer(sekunnit) {
   if (S.qTimer) clearInterval(S.qTimer);
-  S.qDeadline = Date.now() + Q_TIME * 1000;
-  S.qTimeLeft = Q_TIME;
-  setTimerDisplay(Q_TIME);
+  const t = (typeof sekunnit === "number") ? sekunnit : Q_TIME;
+  S.qDeadline = Date.now() + t * 1000;
+  S.qTimeLeft = t;
+  setTimerDisplay(t);
   S.qTimer = setInterval(tickQTimer, 250);
 }
 
@@ -1876,7 +1899,7 @@ function setTimerDisplay(t) {
 }
 
 async function answerQuestion(origIdx, btn) {
-  if (S.answered || S.busy) return;
+  if (S.answered || S.busy || !S.qTimer) return;
   // Aika loppui jo (esim. taustavälilehti): käsittele aikakatkaisuna, ei vastauksena
   if (Date.now() >= S.qDeadline) {
     clearInterval(S.qTimer);
@@ -1884,11 +1907,10 @@ async function answerQuestion(origIdx, btn) {
     return;
   }
   S.busy = true;
-  const aika = laskeAikaJaljella();          // aika mitataan selaimessa; palvelin rajaa
   let d = null;
   try {
     d = await _apiPost({ toiminto: "peli_vastaa", token: S.token,
-      round: S.currentRound, q: S.currentQ, valinta: origIdx, aika });
+      round: S.currentRound, q: S.currentQ, valinta: origIdx });
   } catch (e) { d = null; }
   S.busy = false;
 
@@ -1901,6 +1923,21 @@ async function answerQuestion(origIdx, btn) {
     return;
   }
 
+  if (d.aikaloppui) {
+    // Palvelimen kello: aika oli jo kulunut loppuun
+    naytaAikaLoppui(d);
+    return;
+  }
+  if (d.jo) {
+    // Kysymys on jo pisteytetty/lukittu: ei pisteitä eikä lisäystä oikeiden laskuriin
+    S.answered = true;
+    clearInterval(S.qTimer);
+    document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
+    fb.textContent = "Tämä kysymys on jo käsitelty.";
+    fb.className = "feedback time";
+    document.getElementById("q-btns").style.display = "block";
+    return;
+  }
   if (d.oikein) {
     // ✓ Oikein – palvelin vahvisti
     S.answered = true;
@@ -1922,30 +1959,55 @@ async function answerQuestion(origIdx, btn) {
     // ✗ Väärin – lukitse tämä vaihtoehto, anna yrittää uudelleen
     btn.classList.add("wrong");
     btn.disabled = true;
-    fb.textContent = "✗ Väärin! Yritä uudelleen – etsi oikea vastaus.";
+    if (d.token) S.token = d.token;
+    const sakko = Number(d.sakko) || 0;
+    if (sakko > 0) {
+      S.score = Math.max(0, S.score - sakko);
+      document.getElementById("g-score").textContent = S.score;
+    }
+    fb.textContent = "✗ Väärin!" + (sakko > 0 ? ` −${sakko}p.` : "") + " Yritä uudelleen – etsi oikea vastaus.";
     fb.className = "feedback err";
   }
 }
 
-async function timeOut() {
-  if (S.answered) return;
+function naytaAikaLoppui(d) {
   S.answered = true;
+  clearInterval(S.qTimer);
+  document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
+  const fb = document.getElementById("q-feedback");
+  if (d && d.token) S.token = d.token;
+  if (d && typeof d.oikea === "number") {
+    document.querySelectorAll(".ans-btn").forEach(b => {
+      if (Number(b.dataset.orig) === d.oikea) b.classList.add("correct");
+    });
+  }
+  fb.textContent = "⏰ Aika loppui! " + ((d && d.selitys) || "");
+  fb.className = "feedback time";
+  document.getElementById("q-btns").style.display = "block";
+}
+
+async function timeOut(yritys = 0) {
+  if (S.answered || (yritys === 0 && S.timeOutKaynnissa)) return;
+  S.timeOutKaynnissa = true;
+  S.busy = true;
   clearInterval(S.qTimer);
   let d = null;
   try {
     d = await _apiPost({ toiminto: "peli_aikakatkaisu", token: S.token, round: S.currentRound, q: S.currentQ });
   } catch (e) { d = null; }
+  // Palvelimen kello on hieman jäljessä selaimen kelloa: yritä uudelleen (busy pysyy päällä)
+  if (d && d.virhe === "liian_aikaisin" && yritys < 3) {
+    setTimeout(() => timeOut(yritys + 1), 1000);
+    return;
+  }
+  S.busy = false;
+  S.timeOutKaynnissa = false;
+  if (d && d.ok) { naytaAikaLoppui(d); return; }
+  S.answered = true;
+  S.timeOutKaynnissa = false;
   document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
   const fb = document.getElementById("q-feedback");
-  if (d && d.ok) {
-    if (d.token) S.token = d.token;
-    document.querySelectorAll(".ans-btn").forEach(b => {
-      if (Number(b.dataset.orig) === d.oikea) b.classList.add("correct");
-    });
-    fb.textContent = "⏰ Aika loppui! " + (d.selitys || "");
-  } else {
-    fb.textContent = "⏰ Aika loppui!";
-  }
+  fb.textContent = "⏰ Aika loppui!";
   fb.className = "feedback time";
   document.getElementById("q-btns").style.display = "block";
 }
