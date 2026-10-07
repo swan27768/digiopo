@@ -10,30 +10,47 @@
 <link rel="stylesheet" href="ope-ohje.css">
 <style>
   /* Ongelmakortit avautuvat tässä samassa ohjeessa */
-  .kortti-details{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:0}
-  .kortti-details>summary{cursor:pointer;padding:14px 16px;list-style:none;font-size:.95rem;color:var(--ink-soft)}
-  .kortti-details>summary::-webkit-details-marker{display:none}
-  .kortti-details>summary::before{content:"▸";display:inline-block;margin-right:.55rem;color:var(--accent);transition:transform .15s}
-  .kortti-details[open]>summary::before{transform:rotate(90deg)}
-  .kortti-details>summary strong{color:var(--ink)}
-  .kortti-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 16px 12px;font-size:.85rem;color:var(--ink-faint)}
-  .kortti-toolbar .print{margin-left:0}
-  .kortit{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px 16px}
+  .kortti-paneeli{border:1px solid var(--line);border-radius:16px;background:var(--paper);overflow:hidden}
+  .kortti-ylarivi{display:flex;align-items:center;justify-content:space-between;gap:14px 20px;flex-wrap:wrap;padding:16px 18px}
+  .kortti-info{display:flex;align-items:center;gap:13px;min-width:220px;flex:1 1 260px}
+  .kortti-ikoni{flex:none;width:46px;height:46px;border-radius:13px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+  .kortti-teksti{display:flex;flex-direction:column;gap:2px}
+  .kortti-teksti strong{font-size:1.05rem;color:var(--ink)}
+  .kortti-teksti span{font-size:.88rem;color:var(--ink-soft)}
+  .kortti-napit{display:flex;gap:10px;flex-wrap:wrap}
+  .nappi{font:inherit;font-size:.92rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:.55em 1.1em;white-space:nowrap;border-radius:999px;border:2px solid var(--accent);cursor:pointer;line-height:1.1;transition:transform .12s,box-shadow .12s,background .12s,color .12s}
+  .nappi:focus-visible{outline:3px solid var(--accent-ink);outline-offset:2px}
+  .nappi:active{transform:translateY(1px)}
+  .nappi-iso{background:var(--accent);color:var(--card);box-shadow:0 4px 12px rgba(52,81,138,.28)}
+  .nappi-iso:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(52,81,138,.36)}
+  .nappi-iso .chev{transition:transform .2s}
+  .nappi-iso[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .nappi-ulko{background:transparent;color:var(--accent)}
+  .nappi-ulko:hover{background:var(--accent-soft)}
+  .nappi-hiljainen{background:transparent;border-color:var(--line);color:var(--ink-soft)}
+  .nappi-hiljainen:hover{background:var(--card);border-color:var(--ink-faint);color:var(--ink)}
+  .kortti-sisalto{border-top:1px solid var(--line);padding:14px 18px 18px}
+  .kortti-sisalto[hidden]{display:none}
+  .kortti-vihje{margin:0 0 12px;font-size:.88rem;color:var(--ink-faint)}
+  .kortit{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .kortti-alarivi{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
   .kortti{border:1.5px solid var(--line);border-radius:12px;padding:14px 15px 12px;background:var(--card);break-inside:avoid;page-break-inside:avoid}
-  .kortti .nro{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:#fff;padding:.25em .8em;border-radius:999px}
+  .kortti .nro{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--card);padding:.25em .8em;border-radius:999px}
   .kortti .ongelma{font-weight:700;font-size:1rem;color:var(--ink);margin:.55rem 0 .5rem;line-height:1.35}
   .kortti .kysymys{font-size:.84rem;font-style:italic;color:var(--ink-soft);margin:0 0 .6rem;padding:.45em .7em;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
   .kortti .viivat-otsikko{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 .15rem}
   .kortti .viiva{height:26px;border-bottom:1.5px dashed var(--line)}
-  @media(max-width:620px){.kortit{grid-template-columns:1fr}}
+  @media(max-width:620px){.kortit{grid-template-columns:1fr}.kortti-napit{width:100%}.kortti-napit .nappi{flex:1}.kortti-alarivi .nappi{flex:1}}
   @media print{
     body:not(.print-kortit) #tulostettavat{display:none}
     body.print-kortit .sheet>*:not(#tulostettavat){display:none!important}
-    body.print-kortit #tulostettavat>.lab,body.print-kortit #tulostettavat>h2,body.print-kortit .kortti-details>summary,body.print-kortit .kortti-toolbar{display:none!important}
+    body.print-kortit #tulostettavat>.lab,body.print-kortit #tulostettavat>h2,body.print-kortit .kortti-ylarivi,body.print-kortit .kortti-vihje,body.print-kortit .kortti-alarivi{display:none!important}
     body.print-kortit #tulostettavat{border:0;box-shadow:none;padding:0;margin:0;break-inside:auto}
-    body.print-kortit .kortti-details{border:0}
-    body.print-kortit .kortit{padding:0;gap:10px}
+    body.print-kortit .kortti-paneeli{border:0;background:none}
+    body.print-kortit .kortti-sisalto{border:0;padding:0;display:block!important}
+    body.print-kortit .kortit{gap:10px}
     .kortti{border-color:#a8a29e}
+    .nappi{display:none!important}
   }
 </style>
 </head>
@@ -153,13 +170,22 @@
   <section class="blk" id="tulostettavat">
     <p class="lab">Tulostettavat</p>
     <h2>Materiaalit tähän osioon</h2>
-    <details class="kortti-details" id="ongelmakortit">
-      <summary><strong>Ongelmakortit</strong> — kuusi korttia arjen motivaatio-ongelmista, yksi per ryhmä. Avaa ja tulosta.</summary>
-      <div class="kortti-toolbar">
-        <button type="button" class="print" onclick="tulostaKortit()">Tulosta kortit</button>
-        <span>Tulostuu vain kortit. Leikkaa tai anna jokaiselle ryhmälle yksi kortti.</span>
+    <div class="kortti-paneeli" id="ongelmakortit">
+      <div class="kortti-ylarivi">
+        <div class="kortti-info">
+          <span class="kortti-ikoni" aria-hidden="true">🗂️</span>
+          <div class="kortti-teksti"><strong>Ongelmakortit</strong><span>Kuusi korttia arjen motivaatio-ongelmista, yksi per ryhmä.</span></div>
+        </div>
+        <div class="kortti-napit">
+          <button type="button" class="nappi nappi-iso" id="kortitToggle" aria-expanded="false" aria-controls="kortitSisalto" onclick="kortitToggle()">
+            <span class="nappi-teksti">Avaa kortit</span><svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <button type="button" class="nappi nappi-ulko" onclick="tulostaKortit()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="2"/><path d="M6 14h12v7H6z"/></svg><span>Tulosta</span></button>
+        </div>
       </div>
-      <div class="kortit">
+      <div class="kortti-sisalto" id="kortitSisalto" hidden>
+        <p class="kortti-vihje">Tulosta kortit ja anna jokaiselle ryhmälle yksi. Tulostus sisältää vain kortit.</p>
+        <div class="kortit">
         <div class="kortti">
           <span class="nro">Kortti 1</span>
           <p class="ongelma">😩 Et jaksa tehdä kotitehtäviä</p>
@@ -202,21 +228,45 @@
           <p class="viivat-otsikko">Ratkaisut ja keinot:</p>
           <div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div><div class="viiva"></div>
         </div>
+        </div>
+        <div class="kortti-alarivi">
+          <button type="button" class="nappi nappi-ulko" onclick="tulostaKortit()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="2"/><path d="M6 14h12v7H6z"/></svg><span>Tulosta kortit</span></button>
+          <button type="button" class="nappi nappi-hiljainen" onclick="kortitToggle(false, true)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Sulje</span></button>
+        </div>
       </div>
-    </details>
+    </div>
   </section>
 
   <footer>DigiOpo · Osion ohje · Innostu uudelleen (7. luokka)</footer>
 </main>
 <script>
-  // Ongelmakorttien tulostus: avaa kortit ja tulosta vain ne (ei koko ohjetta)
+  // Ongelmakortit: avaa/sulje samalla sivulla, tulosta vain kortit
+  function kortitToggle(avaa, vieSivunAlkuun) {
+    var sis = document.getElementById('kortitSisalto');
+    var nappi = document.getElementById('kortitToggle');
+    if (!sis || !nappi) return;
+    var auki = (typeof avaa === 'boolean') ? avaa : sis.hidden;
+    sis.hidden = !auki;
+    nappi.setAttribute('aria-expanded', String(auki));
+    nappi.querySelector('.nappi-teksti').textContent = auki ? 'Sulje kortit' : 'Avaa kortit';
+    if (!auki && vieSivunAlkuun) {
+      var ala = document.getElementById('tulostettavat');
+      if (ala) ala.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      nappi.focus({ preventScroll: true });
+    }
+  }
+  var kortitOliKiinni = false;
   function tulostaKortit() {
-    var d = document.getElementById('ongelmakortit');
-    if (d) d.open = true;
+    var sis = document.getElementById('kortitSisalto');
+    kortitOliKiinni = !!(sis && sis.hidden);
+    if (kortitOliKiinni) sis.hidden = false;    // tulostus tarvitsee näkyvät kortit
     document.body.classList.add('print-kortit');
     window.print();
   }
-  window.addEventListener('afterprint', function () { document.body.classList.remove('print-kortit'); });
+  window.addEventListener('afterprint', function () {
+    document.body.classList.remove('print-kortit');
+    if (kortitOliKiinni) { var s = document.getElementById('kortitSisalto'); if (s) s.hidden = true; kortitOliKiinni = false; }
+  });
   // Tulostettaessa koko ohje (Tulosta ohje -nappi) kortit eivät tule mukaan
 </script>
 </body>
