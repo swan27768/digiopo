@@ -254,6 +254,18 @@ body{
 .btn-lb-small:hover{background:rgba(255,255,255,.18);color:#fff}
 
 /* ANIMATIONS */
+/* SAAVUTETTAVUUS */
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.screen:focus,#q-text:focus{outline:none}
+.inp-lbl{display:block}
+button.door{font-family:inherit;appearance:none}
+.ans-btn.correct::after{content:" ✓"}
+.ans-btn.wrong::after{content:" ✗"}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .door:hover:not(.solved){transform:none}
+}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .anim-fade{animation:fadeUp .3s ease}
@@ -321,17 +333,17 @@ body{
 
   <div style="width:100%;display:flex;flex-direction:column;gap:10px">
     <div class="inp-group">
-      <div class="inp-lbl">Nimimerkki *</div>
-      <input class="finp" id="inp-nimi" placeholder="Keksi nimimerkki" maxlength="30" autocomplete="off">
-      <div style="font-size:12px;color:var(--muted);margin-top:5px">Älä käytä oikeaa nimeäsi. Nimimerkki ja koulu näkyvät tulostaulussa.</div>
+      <label class="inp-lbl" for="inp-nimi">Nimimerkki *</label>
+      <input class="finp" id="inp-nimi" placeholder="Keksi nimimerkki" maxlength="30" autocomplete="off" aria-describedby="nimi-vihje" aria-required="true">
+      <div id="nimi-vihje" style="font-size:12px;color:var(--muted);margin-top:5px">Älä käytä oikeaa nimeäsi. Nimimerkki ja koulu näkyvät tulostaulussa.</div>
     </div>
     <div class="inp-group">
-      <div class="inp-lbl">Koulu *</div>
-      <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40">
+      <label class="inp-lbl" for="inp-koulu">Koulu *</label>
+      <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40" aria-required="true">
     </div>
   </div>
 
-  <div id="welcome-err" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita nimimerkki ja koulu</div>
+  <div id="welcome-err" role="alert" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita nimimerkki ja koulu</div>
 
   <div class="btns">
     <button class="btn btn-acc" onclick="startGame()" style="font-size:15px;padding:13px 30px">🚀 Aloita peli!</button>
@@ -356,10 +368,10 @@ body{
     <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">
       Ratkaistu: <span id="g-solved2" style="color:var(--text);font-weight:700">0</span>/10
     </div>
-    <div class="sdots" id="solved-dots"></div>
+    <div class="sdots" id="solved-dots" aria-hidden="true"></div>
   </div>
 
-  <div class="door-grid" id="door-grid"></div>
+  <div class="door-grid" id="door-grid" role="group" aria-label="Temppelin portit"></div>
 </div>
 
 <!-- ═══ QUESTION ═══ -->
@@ -368,12 +380,13 @@ body{
     <div class="q-cat" id="q-cat">Kategoria</div>
     <div class="q-title" id="q-title">Otsikko</div>
     <div class="timer-row">
-      <div class="tbar-wrap"><div class="tbar" id="tbar" style="width:100%;background:var(--green)"></div></div>
-      <div class="tnum" id="tnum" style="color:var(--green)">30</div>
+      <div class="tbar-wrap" aria-hidden="true"><div class="tbar" id="tbar" style="width:100%;background:var(--green)"></div></div>
+      <div class="tnum" id="tnum" role="timer" aria-live="off" aria-label="Aikaa jäljellä sekunteina" style="color:var(--green)">30</div>
     </div>
-    <div class="q-text" id="q-text"></div>
+    <div class="q-text" id="q-text" tabindex="-1"></div>
     <div id="q-answers"></div>
-    <div class="feedback" id="q-feedback"></div>
+    <div class="feedback" id="q-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="sr-live" class="sr-only" role="status" aria-live="polite"></div>
     <div id="q-btns" style="display:none;margin-top:4px">
       <div class="btns">
         <button class="btn btn-acc" onclick="backToMap()">← Takaisin kartalle</button>
@@ -460,7 +473,7 @@ body{
   <div id="end-lb-area" style="width:100%">
     <div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Ladataan...</div>
   </div>
-  <div id="save-notice" class="notice" style="display:none"></div>
+  <div id="save-notice" class="notice" role="status" aria-live="polite" style="display:none"></div>
 
   <div class="btns">
     <button class="btn" onclick="goPlayAgain()">🔄 Pelaa uudelleen</button>
@@ -1612,15 +1625,15 @@ function renderLb(area, lb, highlight) {
     return;
   }
   const medals = ["🥇","🥈","🥉"];
-  let h = `<div class="lbwrap"><div class="lbrow hdr"><span>#</span><span>Pelaaja</span><span>Pisteet</span></div>`;
+  let h = `<div class="lbwrap" role="table" aria-label="Tulostaulu"><div class="lbrow hdr" role="row"><span role="columnheader">#</span><span role="columnheader">Pelaaja</span><span role="columnheader">Pisteet</span></div>`;
   lb.forEach((e, i) => {
     const me = e.oma ? " me" : "";
     const rc = i < 3 ? ` r${i+1}` : "";
     const rank = medals[i] || (i+1);
     const sub = e.koulu ? `<small> · ${esc(e.koulu)}</small>` : "";
-    h += `<div class="lbrow${me}"><span class="lbrank${rc}">${rank}</span>` +
-         `<span class="lbname">${esc(e.name)}${sub}</span>` +
-         `<span class="lbpts">${esc(Number(e.score) || 0)}</span></div>`;
+    h += `<div class="lbrow${me}" role="row"><span class="lbrank${rc}" role="cell">${rank}</span>` +
+         `<span class="lbname" role="cell">${esc(e.name)}${sub}${e.oma ? ' <span class="sr-only">(sinä)</span>' : ''}</span>` +
+         `<span class="lbpts" role="cell">${esc(Number(e.score) || 0)}</span></div>`;
   });
   h += "</div>";
   area.innerHTML = h;
@@ -1631,8 +1644,12 @@ function renderLb(area, lb, highlight) {
 ═══════════════════════════════════════ */
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
-  document.getElementById(id).classList.add("on");
+  const el = document.getElementById(id);
+  el.classList.add("on");
   window.scrollTo(0, 0);
+  // Siirrä fokus uuteen näkymään, jotta ruudunlukija ja näppäimistö jatkavat oikeasta kohdasta
+  el.setAttribute("tabindex", "-1");
+  try { el.focus({ preventScroll: true }); } catch (e) {}
 }
 
 function goRegister() {
@@ -1778,11 +1795,15 @@ function renderMap() {
   const grid = document.getElementById("door-grid");
   grid.innerHTML = "";
   qs.forEach((q, i) => {
-    const d = document.createElement("div");
-    d.className = "door" + (S.solved.includes(i) ? " solved" : "");
+    const ratkaistu = S.solved.includes(i);
+    const d = document.createElement("button");
+    d.type = "button";
+    d.className = "door" + (ratkaistu ? " solved" : "");
     d.style.background = q.color;
-    d.innerHTML = `<div class="door-icon">${q.icon}</div><div>${q.title}</div>`;
-    if (!S.solved.includes(i)) d.onclick = () => openQuestion(i);
+    d.setAttribute("aria-label", `Portti ${i + 1}: ${q.title}${ratkaistu ? ", ratkaistu" : ""}`);
+    d.innerHTML = `<div class="door-icon" aria-hidden="true">${q.icon}</div><div>${q.title}</div>`;
+    if (ratkaistu) d.disabled = true;
+    else d.onclick = () => openQuestion(i);
     grid.appendChild(d);
   });
 }
@@ -1844,6 +1865,7 @@ async function openQuestion(idx) {
 
   setTimerDisplay(Q_TIME);
   showScreen("s-question");
+  try { document.getElementById("q-text").focus({ preventScroll: true }); } catch (e) {}
   const round = S.currentRound;
   S.busy = true;
   const sekunnit = await peliAvaa(round, idx);
@@ -1896,6 +1918,11 @@ function setTimerDisplay(t) {
   const color = t <= 10 ? "var(--red)" : t <= 20 ? "var(--yellow)" : "var(--green)";
   bar.style.background = color;
   num.style.color = color;
+  // Ruudunlukijalle vain harvat ajanvaroitukset (ei jokaista sekuntia)
+  if (t === 20 || t === 10 || t === 5) {
+    const live = document.getElementById("sr-live");
+    if (live) live.textContent = `Aikaa jäljellä ${t} sekuntia`;
+  }
 }
 
 async function answerQuestion(origIdx, btn) {
