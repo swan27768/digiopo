@@ -63,15 +63,14 @@ async function sb(polku, opts = {}) {
   return r;
 }
 
-function riviTulokseksi(r) {
+// Julkinen tulostaulu: vain nimimerkki, koulu ja pisteet (tietosuoja: ei id:tä, luokkaa eikä
+// päivämäärää). `oma` kertoo selaimelle, mikä rivi on pelaajan oma, ilman että id paljastuu.
+function riviTulokseksi(r, omaId) {
   return {
-    id:      r.id,
-    name:    r.nimi,
-    koulu:   r.koulu,
-    luokka:  r.luokka,
-    score:   r.pisteet,
-    date:    r.pvm,
-    updated: r.paivitetty,
+    name:  r.nimi,
+    koulu: r.koulu,
+    score: r.pisteet,
+    oma:   Boolean(omaId) && r.id === omaId,
   };
 }
 
@@ -127,10 +126,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, virhe: "tuntematon_toiminto" });
     }
     try {
-      const r = await sb("tiedontemppeli_tulostaulu?order=pisteet.desc&limit=5&select=*");
+      const r = await sb("tiedontemppeli_tulostaulu?order=pisteet.desc&limit=5&select=id,nimi,koulu,pisteet");
       if (!r.ok) throw new Error(`DB ${r.status}`);
       const rivit = await r.json();
-      return res.status(200).json({ ok: true, tulokset: rivit.map(riviTulokseksi) });
+      const omaId = String(req.query.pid || "").slice(0, 80);
+      return res.status(200).json({ ok: true, tulokset: rivit.map(rivi => riviTulokseksi(rivi, omaId)) });
     } catch (err) {
       console.error("tiedontemppeli GET:", err);
       await kirjaaVirhe('tiedontemppeli GET', err);
@@ -236,7 +236,7 @@ export default async function handler(req, res) {
       const id     = String(body.id || "").trim().replace(/[^\w.\-]/g, "").slice(0, 80);
       const nimi   = puhdista(body.nimi,   30);
       const koulu  = puhdista(body.koulu,  40);
-      const luokka = puhdista(body.luokka, 10);
+      const luokka = "";                 // luokkatietoa ei enää tallenneta (tietosuoja)
       const pisteet = tila.total;        // VAIN palvelimen laskema summa
       if (!id || !nimi || !koulu || !Number.isFinite(pisteet) || pisteet < 0) {
         return res.status(400).json({ ok: false, virhe: "virheelliset_parametrit" });

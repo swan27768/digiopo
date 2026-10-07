@@ -22,7 +22,10 @@ async function _apiPost(body) {
 
 window._fbLbGet = async () => {
   try {
-    const d = await _apiGet("tulostaulu");
+    // Palvelin ei julkaise pelaajien id:itä; oma rivi tunnistetaan lähettämällä oma id (pid)
+    let pid = "";
+    try { pid = localStorage.getItem("temppeli-pid") || ""; } catch (e) {}
+    const d = await _apiGet("tulostaulu&pid=" + encodeURIComponent(pid));
     return d.ok ? d.tulokset : [];
   } catch { return []; }
 };
@@ -318,22 +321,17 @@ body{
 
   <div style="width:100%;display:flex;flex-direction:column;gap:10px">
     <div class="inp-group">
-      <div class="inp-lbl">Nimi *</div>
-      <input class="finp" id="inp-nimi" placeholder="Nimimerkki" maxlength="30">
+      <div class="inp-lbl">Nimimerkki *</div>
+      <input class="finp" id="inp-nimi" placeholder="Keksi nimimerkki" maxlength="30" autocomplete="off">
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">Älä käytä oikeaa nimeäsi. Nimimerkki ja koulu näkyvät tulostaulussa.</div>
     </div>
-    <div class="inp-row">
-      <div class="inp-group">
-        <div class="inp-lbl">Koulu *</div>
-        <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40">
-      </div>
-      <div class="inp-group">
-        <div class="inp-lbl">Luokka (vapaaehtoinen)</div>
-        <input class="finp" id="inp-luokka" placeholder="7A" maxlength="10">
-      </div>
+    <div class="inp-group">
+      <div class="inp-lbl">Koulu *</div>
+      <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40">
     </div>
   </div>
 
-  <div id="welcome-err" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita ainakin nimi ja koulu</div>
+  <div id="welcome-err" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita nimimerkki ja koulu</div>
 
   <div class="btns">
     <button class="btn btn-acc" onclick="startGame()" style="font-size:15px;padding:13px 30px">🚀 Aloita peli!</button>
@@ -1616,11 +1614,10 @@ function renderLb(area, lb, highlight) {
   const medals = ["🥇","🥈","🥉"];
   let h = `<div class="lbwrap"><div class="lbrow hdr"><span>#</span><span>Pelaaja</span><span>Pisteet</span></div>`;
   lb.forEach((e, i) => {
-    const me = (e.id === S.playerId || e.name === highlight) ? " me" : "";
+    const me = e.oma ? " me" : "";
     const rc = i < 3 ? ` r${i+1}` : "";
     const rank = medals[i] || (i+1);
-    const luokka = e.luokka ? ` / ${esc(e.luokka)}` : "";
-    const sub = e.koulu ? `<small> · ${esc(e.koulu)}${luokka}</small>` : "";
+    const sub = e.koulu ? `<small> · ${esc(e.koulu)}</small>` : "";
     h += `<div class="lbrow${me}"><span class="lbrank${rc}">${rank}</span>` +
          `<span class="lbname">${esc(e.name)}${sub}</span>` +
          `<span class="lbpts">${esc(Number(e.score) || 0)}</span></div>`;
@@ -1702,7 +1699,7 @@ async function startGame() {
   document.getElementById("welcome-err").style.display = "none";
   S.nimi = nimi;
   S.koulu = koulu;
-  S.luokka = document.getElementById("inp-luokka").value.trim();
+  S.luokka = "";   // luokkatietoa ei enää kerätä
   S.playerId = getPlayerId();
   S.score = 0;
   S.scoreK1 = 0;
