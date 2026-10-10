@@ -20,6 +20,12 @@ window.SANASTOVISA = {
     { ryhma: "rakenne", termi: "Henkilökohtainen opintosuunnitelma", selitys: "Oma suunnitelma siitä, mitä opintoja suoritat ja missä järjestyksessä.", esim: "Suunnittelen sen yhdessä opon kanssa ja päivitän sitä matkan varrella." },
     { ryhma: "rakenne", termi: "Lukiodiplomi", selitys: "Erillinen näyttö erityisestä osaamisesta, esimerkiksi musiikissa tai kuvataiteessa.", esim: "Tein lukiodiplomin kuvataiteessa." },
 
+    /* Kielet */
+    { ryhma: "kielet", termi: "A-kieli", selitys: "Pitkä kieli, jonka opiskelu alkaa jo peruskoulussa. Lukiossa se on pakollinen.", esim: "Englanti on usein A-kieli, mutta lukiossa A-kieleksi voi valita muunkin tarjolla olevan kielen." },
+    { ryhma: "kielet", termi: "B1-kieli", selitys: "Keskipitkä kieli, jonka opiskelu on alkanut peruskoulussa viimeistään kuudennella luokalla. Usein se on toinen kotimainen kieli.", esim: "Monella B1-kieli on ruotsi." },
+    { ryhma: "kielet", termi: "B2-kieli", selitys: "Lyhyt valinnainen kieli, jonka opiskelu on alkanut peruskoulussa viimeistään kahdeksannella luokalla.", esim: "Aloitin saksan kahdeksannella luokalla, joten jatkan sitä lukiossa B2-kielenä." },
+    { ryhma: "kielet", termi: "B3-kieli", selitys: "Lyhyt valinnainen kieli, jonka opiskelu alkaa vasta lukiossa.", esim: "Voin aloittaa lukiossa kokonaan uuden kielen, esimerkiksi espanjan." },
+
     /* Tuki ja ohjaus */
     { ryhma: "tuki", termi: "Ryhmänohjaaja", selitys: "Opettaja, joka tukee oman ryhmänsä opiskelijoita opintojen aikana.", esim: "Ryhmänohjaaja kysyi, miltä ensimmäiset viikot ovat tuntuneet." },
     { ryhma: "tuki", termi: "Opinto-ohjaaja (opo)", selitys: "Auttaa opintojen suunnittelussa ja jatko-opintoihin liittyvissä valinnoissa.", esim: "Varasin opolle ajan, kun mietin yliopiston hakuvaihtoehtoja." },
