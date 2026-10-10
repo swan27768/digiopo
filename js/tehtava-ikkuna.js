@@ -45,14 +45,16 @@
       /* filter/transform yms. esivanhemmassa sitoisi position:fixed -ikkunan siihen eikä selaimen ikkunaan */
       ".tp-vapaa{filter:none!important;transform:none!important;-webkit-backdrop-filter:none!important;" +
       "backdrop-filter:none!important;perspective:none!important;contain:none!important;will-change:auto!important;" +
-      "animation:none!important;transition:none!important;z-index:auto!important;isolation:auto!important;opacity:1!important}" +
+      "animation:none!important;transition:none!important;z-index:auto!important;isolation:auto!important;opacity:1!important;" +
+      /* Safari/WebKit leikkaa position:fixed -lapsen, jos esivanhemmalla on overflow:hidden/clip-path/mask (esim. pyöristetty kortti) */
+      "overflow:visible!important;clip-path:none!important;-webkit-mask:none!important;mask:none!important}" +
       "html.tp-lukittu,html.tp-lukittu body{overflow:hidden!important}" +
 
       /* Ikkuna: oikealla, kirjasivu jää näkyviin vasemmalle */
       ".tp-auki{--tp-vasen:clamp(16px,22vw,340px);--tp-pala:68px;" +
       "position:fixed!important;top:14px;bottom:14px;right:16px;left:auto;" +
       "width:calc(100vw - var(--tp-vasen) - 16px);max-width:1280px;margin:0!important;" +
-      "z-index:9990;overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box;" +
+      "z-index:9990;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);box-sizing:border-box;" +
       "background:rgba(255,255,255,.90);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);" +
       "border:3px solid var(--grade-accent,#7c3aed);border-radius:18px;padding:0!important;" +
       "box-shadow:-14px 10px 48px rgba(15,23,42,.38);animation:tp-sisaan .26s cubic-bezier(.2,.7,.2,1)}" +
