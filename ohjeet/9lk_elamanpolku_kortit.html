@@ -7,16 +7,22 @@
 <style>*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin:0;padding:20px;color:#0f172a;background:#f8fafc;line-height:1.45}
 .top{max-width:900px;margin:0 auto 18px}.top ol{margin:0 0 10px;padding-left:22px}.top li{margin-bottom:3px}h1{font-size:1.5rem;margin:0 0 6px}p{margin:0 0 8px}
 .print{background:#0d9488;color:#fff;border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
-.ryhma{max-width:900px;margin:22px auto 0}.ryhma h2{font-size:1.15rem;margin:0 0 8px}
-.kortit{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kortti{border:2px dashed #64748b;border-radius:12px;padding:12px 14px;background:#fff;break-inside:avoid;page-break-inside:avoid;min-height:120px}
-.kortti b{display:block;font-size:.9rem;margin-bottom:2px}.tag{display:inline-block;font-size:.75rem;font-weight:700;background:#fff;border:1px solid #94a3b8;border-radius:99px;padding:1px 9px;margin-bottom:6px}.kortti p{font-size:1rem}
-.vihjekortti{max-width:900px;margin:18px auto 0;border:2px dashed #64748b;border-radius:12px;padding:14px 16px;background:#fff;break-inside:avoid}
-.vihjekortti h2{font-size:1.1rem;margin:0 0 8px}.rivi{display:flex;gap:8px;align-items:baseline;margin:10px 0;font-size:1rem}.rivi span:first-child{font-weight:800;min-width:110px}.viiva{flex:1;border-bottom:1px solid #94a3b8;height:1.4em}
-@media print{body{background:#fff;padding:0}.print,.noprint{display:none}.ryhma{break-before:page}}
-@media(max-width:620px){.kortit{grid-template-columns:1fr}}</style>
+.upotus{padding:12px}.upotus .top{display:none}
+.sivut{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ryhma{display:contents}.ryhma>h2{display:none}.kortit{display:contents}
+.kortti,.vihjekortti{aspect-ratio:148/210;border:3px dashed #64748b;border-radius:12px;padding:6% 7%;background:#fff;overflow:hidden;break-inside:avoid;page-break-inside:avoid;margin:0;max-width:none}
+.kortti b{display:block;font-size:1.05rem;margin-bottom:10px}.kortti p{font-size:1.25rem;line-height:1.5}
+.vihjekortti h2{font-size:1.25rem;margin:0 0 8px}.rivi{display:flex;gap:8px;align-items:baseline;margin:14px 0;font-size:1.05rem}.rivi span:first-child{font-weight:800;min-width:96px}.viiva{flex:1;border-bottom:1px solid #94a3b8;height:1.4em}
+@page{size:A5 portrait;margin:0}
+@media print{html,body{background:#fff;padding:0;margin:0}.print,.noprint,.top{display:none!important}
+.sivut{display:block;max-width:none}
+.kortti,.vihjekortti{width:136mm;height:198mm;aspect-ratio:auto;margin:6mm;padding:12mm 11mm;border-radius:6mm;break-after:page;page-break-after:always;overflow:hidden}
+.sivut>*:last-child{break-after:auto;page-break-after:auto}
+.kortti b{font-size:15pt;margin-bottom:8mm}.kortti p{font-size:24pt;line-height:1.4}
+.vihjekortti h2{font-size:20pt}.vihjekortti p{font-size:13pt}.rivi{font-size:15pt;margin:9mm 0}.rivi span:first-child{min-width:34mm}}</style>
 </head>
 <body>
+<script>if(/[?&]upotus/.test(location.search))document.body.className='upotus';</script>
 <div class="top">
   <h1>Elämänpolku-kävely: tulostettavat kortit</h1>
   <p><strong>Tulosta rastien (suora, risteys ja umpikuja) kysymyskortit ja yksi vihjekortti per ryhmä.</strong></p>
@@ -29,6 +35,7 @@
   <p>Jokaisella rastilla on kolme eri kysymyskorttia. Jos ryhmiä on enemmän kuin kolme, tulosta kortteja useammin niin, että jokaiselle rastille tulee yhtä monta korttia kuin on ryhmiä. Voit jakaa kortit tasaisesti, esimerkiksi kuusi ryhmää = kaksi kappaletta kutakin korttia.</p>
   <button class="print" onclick="window.print()">Tulosta kortit</button>
 </div>
+<div class="sivut">
 <section class="vihjekortti">
   <h2>Vihjekortti, ryhmä nro ____</h2>
   <p>Tulosta yksi per ryhmä. Kirjoita jokaiseen kohtaan arvoitus, joka vie rastille.</p>
@@ -55,5 +62,6 @@
 <div class="kortti" style="background:#eff6ff;border-color:#3b82f6"><b style="color:#1e3a8a">⛔ Umpikuja · kortti 2</b><p>Keksikää "ensiapupakkaus jännitykseen": viisi pientä keinoa, jotka voivat auttaa (esimerkiksi hengitys, vesilasillinen tai kävely). Kirjoittakaa ne kortin taakse.</p></div>
 <div class="kortti" style="background:#eff6ff;border-color:#3b82f6"><b style="color:#1e3a8a">⛔ Umpikuja · kortti 3</b><p>Harjoitelkaa yhdessä minuutin hengitys: hengitä sisään neljään laskien ja ulos kuuteen laskien, kolme kertaa. Kertokaa vuorotellen yhdellä sanalla, miltä tuntui.</p></div>
 </div></section>
+</div>
 </body>
 </html>
