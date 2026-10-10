@@ -142,7 +142,7 @@ window.OSIO_DATA = {
         "1. Opi sanasto → 2. Pelaa → 3. Testaa → 4. Sovella → 5. Luo → 6. Koe yhdessä → 7. Lukio vs. Amis"
       ],
       tavoitteet: [
-        "Hallitset toisen asteen sanaston: kurssi, jakso, koulutussopimus, YO-koe",
+        "Hallitset toisen asteen sanaston: opintojakso, opintopiste, koulutussopimus, YO-koe",
         "Testaat, mitä jo tiedät — ja paikkaat aukot",
         "Saat varmuutta siitä, että olet valmis seuraavaan vaiheeseen"
       ],
