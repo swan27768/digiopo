@@ -248,6 +248,10 @@
         var v = cs[PROPS[i]];
         if (v && v !== "none" && v !== "auto" && v !== "normal") { sido = true; break; }
       }
+      /* Myös :hover/:focus-within -säännöt voivat lisätä transformin vasta ikkunan avaamisen jälkeen
+         (esim. .mission-card:hover), jolloin position:fixed -ikkuna sitoutuisi esivanhempaan ja
+         hiiren rulla lakkaisi toimimasta. Siksi jokainen esivanhempi vapautetaan aina. */
+      sido = true;
       if (sido) { el.classList.add("tp-vapaa"); c._tpVapautetut.push(el); }
     }
   }
