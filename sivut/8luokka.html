@@ -1584,7 +1584,7 @@
                Tila tallennetaan localStorage:oon (avaimet: dg8-amis-*, dg8-lukio-*)
                Maskotti laukeaa kun tutkija-alue tulee näkyviin (aihe-osio-havainnointi)
           ══ -->
-          <div class="tutkija-alue aihe-osio" id="tutkija-alue" style="display:none;">
+          <div class="tutkija-alue aihe-osio" id="tutkija-alue" data-tp-ikkuna data-tp-otsikko="Oma reitti löytyy tutkimalla" style="display:none;">
             <h3 class="ala-karuselli-otsikko" style="margin-top:24px;">
               Oma reitti löytyy tutkimalla
             </h3>
@@ -2151,8 +2151,17 @@
                 >
                   Ryhmittele ammatit oikeille aloille. Paras tuloksesi tallentuu yhteiseen tulostauluun!
                 </p>
-                <a href="../pelit/ala-set.html" class="btn-hero">Pelaa AmmattiSet!</a>
+                <button type="button" class="btn-hero" onclick="toggleAmmattiSet(this)" aria-expanded="false" aria-controls="ammattiset-wrapper" style="cursor:pointer;border:none;font-size:1rem;">Pelaa AmmattiSet!</button>
               </div>
+            </div>
+
+            <div id="ammattiset-wrapper" style="display:none;">
+              <iframe
+                src="../pelit/ala-set.html"
+                style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"
+                title="AmmattiSet – tunnistatko koulutusalat?"
+                loading="lazy"
+              ></iframe>
             </div>
 
           </div><!-- /AmmattiSet -->
@@ -2316,22 +2325,25 @@
               📎 <strong>Palautus:</strong> lataa oppimisresepti.txt → Classroom<br>
               💡 <strong>Vinkki:</strong> voit käydä useamman aiheen läpi
             </p>
+            <button type="button" class="btn-hero" onclick="toggleKlinikka(this)" aria-expanded="false" aria-controls="klinikka-wrapper" style="cursor:pointer;border:none;font-size:1rem;margin-top:16px;">Avaa tehtävä</button>
           </div>
 
-          <!-- iframe-upotus -->
-          <iframe
-            src="../tehtavat/oppimisklinikka.html"
-            style="
-              width: 100%;
-              height: 90vh;
-              min-height: 680px;
-              border: none;
-              border-radius: 14px;
-              box-shadow: 0 4px 20px rgba(91,44,111,0.15);
-            "
-            title="Oppimaan oppimisen klinikka -tehtävä"
-            loading="lazy"
-          ></iframe>
+          <div id="klinikka-wrapper" style="display:none;">
+<!-- iframe-upotus -->
+            <iframe
+              src="../tehtavat/oppimisklinikka.html"
+              style="
+                width: 100%;
+                height: 90vh;
+                min-height: 680px;
+                border: none;
+                border-radius: 14px;
+                box-shadow: 0 4px 20px rgba(91,44,111,0.15);
+              "
+              title="Oppimaan oppimisen klinikka -tehtävä"
+              loading="lazy"
+            ></iframe>
+          </div>
           <!-- LÄHDEIKKUNA: Oppimaan oppimisen klinikka -->
           <div id="lahteetModal" role="dialog" aria-modal="true" aria-labelledby="lahteetModalTitle" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,0.6); padding:20px; align-items:center; justify-content:center;" onclick="if(event.target===this)suljeLahteet()">
             <div style="background:#fff; color:#1f2937; max-width:560px; width:100%; max-height:85vh; overflow:auto; border-radius:16px; padding:22px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.35);">
@@ -2997,87 +3009,12 @@
 
           <!-- Hakuharjoitus – lomake (piilotettu) -->
           <div id="haku-wrapper" style="display: none; margin-top: 8px;">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-              <button type="button"
-                onclick="toggleHaku(document.querySelector('[aria-controls=haku-wrapper]'))"
-                style="
-                  background: #059669; color: white; border: none;
-                  padding: 8px 18px; border-radius: 8px; font-size: 14px;
-                  font-weight: 600; cursor: pointer;
-                  display: flex; align-items: center; gap: 6px;
-                "
-              >
-                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
-              </button>
-            </div>
-
-            <div style="background:#f0fdf4; border:1.5px solid #a7f3d0; border-radius:14px; padding:24px;">
-              <h4 style="margin:0 0 6px; color:#065f46; font-size:1rem;">✏️ Täytä tiedot — luodaan viesti sinulle</h4>
-              <p style="font-size:0.85rem; color:#374151; margin:0 0 20px;">Voit käyttää oikeaa TET-paikkaa tai keksittyä. Tärkeintä on harjoitella!</p>
-
-              <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
-                <div>
-                  <label for="haku-nimi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Etunimesi</label>
-                  <input id="haku-nimi" type="text" placeholder="esim. Emmi"
-                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-                <div>
-                  <label for="haku-paikka" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Minne haluat TET:iin? (yritys tai paikka)</label>
-                  <input id="haku-paikka" type="text" placeholder="esim. kirjasto, eläinlääkäri, rakennusliike..."
-                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-                <div>
-                  <label for="haku-miksi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Miksi juuri tämä paikka kiinnostaa sinua?</label>
-                  <textarea id="haku-miksi" placeholder="esim. Olen aina pitänyt eläimistä ja haluaisin nähdä, miltä eläinlääkärin työ oikeasti näyttää."
-                    style="width:100%; min-height:80px; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none; resize:vertical;"
-                    oninput="paivitaHakuPohja()"></textarea>
-                </div>
-                <div>
-                  <label for="haku-aika" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">TET-ajankohta (viikko tai kuukausi)</label>
-                  <input id="haku-aika" type="text" placeholder="esim. viikolla 6 tai helmikuussa"
-                    style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-              </div>
-
-              <div>
-                <div style="font-size:0.82rem; font-weight:700; color:#065f46; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                  <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Valmis viesti:
-                </div>
-                <div id="haku-pohja" style="
-                  background:#fff; border:1.5px solid #a7f3d0; border-radius:10px;
-                  padding:18px; font-size:0.88rem; line-height:1.8; color:#1f2937;
-                  white-space:pre-wrap; font-family:inherit; min-height:160px;
-                ">Täytä tiedot yllä niin viesti ilmestyy tähän.</div>
-              </div>
-
-              <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; align-items:center;">
-                <button type="button" onclick="kopioiHakuViesti()" style="
-                  background:linear-gradient(135deg,#059669,#0284c7); color:#fff;
-                  border:none; padding:10px 20px; border-radius:10px;
-                  font-size:0.9rem; font-weight:700; cursor:pointer;
-                  display:flex; align-items:center; gap:7px;
-                ">
-                  <i class="fa-solid fa-copy" aria-hidden="true"></i> Kopioi viesti
-                </button>
-                <span id="haku-kopioitu" style="font-size:0.82rem; color:#059669; display:none;">✓ Kopioitu!</span>
-              </div>
-
-              <div style="margin-top:16px; background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:14px 16px; font-size:0.85rem; color:#065f46;">
-                <div style="font-weight:700; margin-bottom:10px;">📬 Mitä seuraavaksi?</div>
-                <ol style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; line-height:1.6;">
-                  <li><strong>Kopioi viesti</strong> yllä olevasta napista</li>
-                  <li><strong>Etsi työnantajan sähköpostiosoite</strong> yrityksen nettisivuilta tai Google Maps -profiilista</li>
-                  <li><strong>Avaa sähköposti</strong> (esim. koulun Gmail) ja liitä viesti siihen — tarkista ennen lähetystä</li>
-                  <li><strong>Lähetä</strong> — ja odota vastausta muutama päivä</li>
-                </ol>
-                <div style="margin-top:10px; padding-top:10px; border-top:1px solid #a7f3d0; font-size:0.8rem; color:#047857;">
-                  💡 Ei sähköpostia? Voit soittaa tai käydä paikan päällä — kerro sama asia puhelimessa.
-                </div>
-              </div>
-            </div>
+            <iframe
+              src="../tehtavat/ota-yhteytta-tyonantajaan.html"
+              style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"
+              title="Ota yhteyttä työnantajaan -tehtävä"
+              loading="lazy"
+            ></iframe>
           </div>
 
           
@@ -3476,6 +3413,24 @@
         }
       }
 
+      /* ── AmmattiSet: avaa/sulje (tehtävä-ikkuna) ── */
+      function toggleAmmattiSet(btn) {
+        var w = document.getElementById('ammattiset-wrapper');
+        if (!w) return;
+        var auki = w.style.display !== 'none';
+        w.style.display = auki ? 'none' : 'block';
+        var b = btn || document.querySelector('[aria-controls="ammattiset-wrapper"]');
+        if (b) b.setAttribute('aria-expanded', String(!auki));
+      }
+      /* ── Oppimaan oppimisen klinikka: avaa/sulje (tehtävä-ikkuna) ── */
+      function toggleKlinikka(btn) {
+        var w = document.getElementById('klinikka-wrapper');
+        if (!w) return;
+        var auki = w.style.display !== 'none';
+        w.style.display = auki ? 'none' : 'block';
+        var b = btn || document.querySelector('[aria-controls="klinikka-wrapper"]');
+        if (b) b.setAttribute('aria-expanded', String(!auki));
+      }
       /* ── "Oma reitti löytyy tutkimalla": avaa/sulje koko tehtävä ── */
       function avaaReitti(btn) {
         var t = document.getElementById('tutkija-alue');
@@ -3581,33 +3536,7 @@
         wrapper.style.display = open ? 'none' : 'block';
         btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
         btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-        if (!open) { paivitaHakuPohja(); wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-      }
-
-      function paivitaHakuPohja() {
-        var nimi   = (document.getElementById('haku-nimi')  && document.getElementById('haku-nimi').value.trim())   || '[etunimesi]';
-        var paikka = (document.getElementById('haku-paikka') && document.getElementById('haku-paikka').value.trim()) || '[TET-paikka]';
-        var miksi  = (document.getElementById('haku-miksi') && document.getElementById('haku-miksi').value.trim())  || '[Kerro lyhyesti, miksi juuri tämä paikka kiinnostaa sinua.]';
-        var aika   = (document.getElementById('haku-aika')  && document.getElementById('haku-aika').value.trim())   || '[ajankohta]';
-        var pohja  = document.getElementById('haku-pohja');
-        if (!pohja) return;
-        pohja.textContent =
-          'Hei!\n\n' +
-          'Nimeni on ' + nimi + ' ja olen 8-luokkalainen.\n\n' +
-          'Olen kiinnostunut suorittamaan TET-harjoittelun ' + paikka + ':ssä. ' + miksi + '\n\n' +
-          'TET-jaksoni ajoittuu ' + aika + '. Onko teillä mahdollisuus ottaa TET-harjoittelija silloin?\n\n' +
-          'Ystävällisin terveisin,\n' + nimi;
-      }
-
-      function kopioiHakuViesti() {
-        var pohja = document.getElementById('haku-pohja');
-        if (!pohja || !pohja.textContent || pohja.textContent.indexOf('[') === 0) return;
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(pohja.textContent).then(function() {
-            var k = document.getElementById('haku-kopioitu');
-            if (k) { k.style.display = 'inline'; setTimeout(function(){ k.style.display = 'none'; }, 2000); }
-          });
-        }
+        if (!open) { wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       }
 
       /* ── Haaste (eriyttäminen ylöspäin) ── */
@@ -4469,5 +4398,6 @@
     <script src="../js/jarjestys.js"></script>
     <script src="../js/i18n-8lk.js" defer></script>
       <script defer src="../js/ohje-paneeli.js"></script>
+      <script defer src="../js/tehtava-ikkuna.js"></script>
   </body>
 </html>

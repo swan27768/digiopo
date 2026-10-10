@@ -555,6 +555,7 @@
   var FI_ONLY_SELECTORS = [
     'a.btn-hero[href*="koulutusalat.html"]',
     'a.btn-hero[href*="ala-set.html"]',
+    'button[aria-controls="ammattiset-wrapper"]',
     'button[aria-controls="maailma-wrapper"]',
     'button[onclick*="avaaVahvuusmatka"]',
     'button[aria-controls="fake-insta-wrapper"]',

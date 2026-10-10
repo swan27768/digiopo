@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ota yhteyttä työnantajaan – DigiOpo</title>
+<link rel="stylesheet" href="/vendor/fontawesome/fontawesome-subset.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; padding: 12px; background: transparent;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #1f2937; line-height: 1.5; }
+  input:focus, textarea:focus { border-color: #059669 !important; box-shadow: 0 0 0 3px rgba(5,150,105,.2); }
+</style>
+</head>
+<body>
+<div style="background:#f0fdf4; border:1.5px solid #a7f3d0; border-radius:14px; padding:24px;">
+  <h4 style="margin:0 0 6px; color:#065f46; font-size:1rem;">✏️ Täytä tiedot — luodaan viesti sinulle</h4>
+  <p style="font-size:0.85rem; color:#374151; margin:0 0 20px;">Voit käyttää oikeaa TET-paikkaa tai keksittyä. Tärkeintä on harjoitella!</p>
+
+  <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
+    <div>
+      <label for="haku-nimi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Etunimesi</label>
+      <input id="haku-nimi" type="text" placeholder="esim. Emmi"
+        style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+        oninput="paivitaHakuPohja()" />
+    </div>
+    <div>
+      <label for="haku-paikka" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Minne haluat TET:iin? (yritys tai paikka)</label>
+      <input id="haku-paikka" type="text" placeholder="esim. kirjasto, eläinlääkäri, rakennusliike..."
+        style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+        oninput="paivitaHakuPohja()" />
+    </div>
+    <div>
+      <label for="haku-miksi" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">Miksi juuri tämä paikka kiinnostaa sinua?</label>
+      <textarea id="haku-miksi" placeholder="esim. Olen aina pitänyt eläimistä ja haluaisin nähdä, miltä eläinlääkärin työ oikeasti näyttää."
+        style="width:100%; min-height:80px; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none; resize:vertical;"
+        oninput="paivitaHakuPohja()"></textarea>
+    </div>
+    <div>
+      <label for="haku-aika" style="font-size:0.82rem; font-weight:600; color:#065f46; display:block; margin-bottom:5px;">TET-ajankohta (viikko tai kuukausi)</label>
+      <input id="haku-aika" type="text" placeholder="esim. viikolla 6 tai helmikuussa"
+        style="width:100%; padding:10px 14px; border:1.5px solid #a7f3d0; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
+        oninput="paivitaHakuPohja()" />
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:0.82rem; font-weight:700; color:#065f46; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+      <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Valmis viesti:
+    </div>
+    <div id="haku-pohja" style="
+      background:#fff; border:1.5px solid #a7f3d0; border-radius:10px;
+      padding:18px; font-size:0.88rem; line-height:1.8; color:#1f2937;
+      white-space:pre-wrap; font-family:inherit; min-height:160px;
+    ">Täytä tiedot yllä niin viesti ilmestyy tähän.</div>
+  </div>
+
+  <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; align-items:center;">
+    <button type="button" onclick="kopioiHakuViesti()" style="
+      background:linear-gradient(135deg,#059669,#0284c7); color:#fff;
+      border:none; padding:10px 20px; border-radius:10px;
+      font-size:0.9rem; font-weight:700; cursor:pointer;
+      display:flex; align-items:center; gap:7px;
+    ">
+      <i class="fa-solid fa-copy" aria-hidden="true"></i> Kopioi viesti
+    </button>
+    <span id="haku-kopioitu" style="font-size:0.82rem; color:#059669; display:none;">✓ Kopioitu!</span>
+  </div>
+
+  <div style="margin-top:16px; background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:14px 16px; font-size:0.85rem; color:#065f46;">
+    <div style="font-weight:700; margin-bottom:10px;">📬 Mitä seuraavaksi?</div>
+    <ol style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; line-height:1.6;">
+      <li><strong>Kopioi viesti</strong> yllä olevasta napista</li>
+      <li><strong>Etsi työnantajan sähköpostiosoite</strong> yrityksen nettisivuilta tai Google Maps -profiilista</li>
+      <li><strong>Avaa sähköposti</strong> (esim. koulun Gmail) ja liitä viesti siihen — tarkista ennen lähetystä</li>
+      <li><strong>Lähetä</strong> — ja odota vastausta muutama päivä</li>
+    </ol>
+    <div style="margin-top:10px; padding-top:10px; border-top:1px solid #a7f3d0; font-size:0.8rem; color:#047857;">
+      💡 Ei sähköpostia? Voit soittaa tai käydä paikan päällä — kerro sama asia puhelimessa.
+    </div>
+  </div>
+</div>
+
+<script>
+function paivitaHakuPohja() {
+  var nimi   = (document.getElementById('haku-nimi')  && document.getElementById('haku-nimi').value.trim())   || '[etunimesi]';
+  var paikka = (document.getElementById('haku-paikka') && document.getElementById('haku-paikka').value.trim()) || '[TET-paikka]';
+  var miksi  = (document.getElementById('haku-miksi') && document.getElementById('haku-miksi').value.trim())  || '[Kerro lyhyesti, miksi juuri tämä paikka kiinnostaa sinua.]';
+  var aika   = (document.getElementById('haku-aika')  && document.getElementById('haku-aika').value.trim())   || '[ajankohta]';
+  var pohja  = document.getElementById('haku-pohja');
+  if (!pohja) return;
+  pohja.textContent =
+    'Hei!\n\n' +
+    'Nimeni on ' + nimi + ' ja olen 8-luokkalainen.\n\n' +
+    'Olen kiinnostunut suorittamaan TET-harjoittelun ' + paikka + ':ssä. ' + miksi + '\n\n' +
+    'TET-jaksoni ajoittuu ' + aika + '. Onko teillä mahdollisuus ottaa TET-harjoittelija silloin?\n\n' +
+    'Ystävällisin terveisin,\n' + nimi;
+}
+
+function kopioiHakuViesti() {
+  var pohja = document.getElementById('haku-pohja');
+  if (!pohja || !pohja.textContent || pohja.textContent.indexOf('[') === 0) return;
+  function naytaKopioitu() {
+    var k = document.getElementById('haku-kopioitu');
+    if (k) { k.style.display = 'inline'; setTimeout(function(){ k.style.display = 'none'; }, 2000); }
+  }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(pohja.textContent).then(naytaKopioitu).catch(function () {});
+  }
+}
+
+paivitaHakuPohja();
+</script>
+</body>
+</html>

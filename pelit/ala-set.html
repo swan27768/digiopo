@@ -740,5 +740,15 @@ function goPlayAgain() {
   showScreen("s-again");
 }
 </script>
+<script>
+/* Kun peli on tehtäväikkunassa (iframe), "Palaa takaisin" sulkee ikkunan eikä lataa kirjaa iframen sisään */
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest('a[href="/8luokka"]');
+  if (a && window.parent !== window) {
+    e.preventDefault();
+    window.parent.postMessage({ digiopo: "sulje-tehtava" }, window.location.origin);
+  }
+});
+</script>
 </body>
 </html>
