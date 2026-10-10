@@ -8,9 +8,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="ope-ohje.css">
+<style>
+.sulje-nappi{position:sticky;top:10px;z-index:20;display:flex;justify-content:flex-end;margin:0 0 10px;pointer-events:none}
+.sulje-nappi button{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;background:#1e293b;color:#fff;border:2px solid #fff;border-radius:999px;box-shadow:0 4px 14px rgba(15,23,42,.35);font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
+.sulje-nappi button:hover{background:#0f172a}
+.sulje-nappi button:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media print{.sulje-nappi{display:none!important}}
+</style>
 </head>
 <body>
 <main class="sheet">
+
+  <div class="sulje-nappi"><button type="button" id="sulje-ohje" aria-label="Sulje ohje"><span aria-hidden="true">✕</span> Sulje</button></div>
 
   <div class="doc-top">
     <span class="badge osio">Tehtävän ohje</span>
@@ -102,5 +111,23 @@
 
   <footer>DigiOpo · Tehtävän ohje · Elämänpolku-kävely (9. luokka)</footer>
 </main>
+<script>
+(function () {
+  var b = document.getElementById('sulje-ohje');
+  if (!b) return;
+  function sulje() {
+    try {
+      if (window.parent && window.parent !== window && window.parent.OhjePaneeli) { window.parent.OhjePaneeli.sulje(); return; }
+    } catch (e) {}
+    window.close();
+    setTimeout(function () {
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = '../sivut/9luokka.html';
+    }, 150);
+  }
+  b.addEventListener('click', sulje);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sulje(); });
+})();
+</script>
 </body>
 </html>
