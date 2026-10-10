@@ -98,11 +98,15 @@
       /* Ei-iframe-sisältö (data-tp-ikkuna): sisältö saa reunatilaa, palkki ulottuu reunasta reunaan */
       ".tp-auki[data-tp-ikkuna]{padding:0 22px 96px!important}" +
       ".tp-auki[data-tp-ikkuna]>.tp-palkki{margin:0 -22px 18px}" +
+      /* Pelkkää iframea sisältävä ikkuna: ei reunatilaa, iframe täyttää ikkunan */
+      ".tp-auki.tp-iframe[data-tp-ikkuna]{padding:0!important}" +
+      ".tp-auki.tp-iframe[data-tp-ikkuna]>.tp-palkki{margin:0}" +
 
       /* Puhelin/pieni ruutu: koko ruutu, mutta sama sulje-palkki */
       "@media(max-width:899px){.tp-auki{top:0;bottom:0;left:0;right:0;width:100vw;max-width:none;" +
       "border-radius:0;border-width:0 0 0 0}" +
       ".tp-auki[data-tp-ikkuna]{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}" +
+      ".tp-auki.tp-iframe[data-tp-ikkuna]{padding:0!important}" +
       ".tp-zoom-arvo{display:none}.tp-otsikko{font-size:.9rem}" +
       ".tp-auki iframe{border-radius:0!important;height:calc(100vh - var(--tp-pala))!important;" +
       "height:calc(100dvh - var(--tp-pala))!important}}";
@@ -276,6 +280,7 @@
     auki.push(c);
 
     vapautaEsivanhemmat(c);
+    if (c.querySelector(":scope > iframe")) c.classList.add("tp-iframe");
     c.classList.add("tp-auki");
     c.setAttribute("role", "dialog");
     c.setAttribute("aria-modal", "true");
@@ -319,6 +324,7 @@
     c._tpAuki = false;
     auki = auki.filter(function (x) { return x !== c; });
     c.classList.remove("tp-auki");
+    c.classList.remove("tp-iframe");
     palautaEsivanhemmat(c);
     c.removeAttribute("role");
     c.removeAttribute("aria-modal");

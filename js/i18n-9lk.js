@@ -1036,8 +1036,7 @@
     'button.next-step-btn[data-peli="lukiosanasto"]',
     'button.next-step-btn[data-peli="amissanasto"]',
     'button.next-step-btn[data-peli="lukioristikko"]',
-    'button.next-step-btn[data-peli="amisristikko"]',
-    'a[href*="lukio_vs_amis.html"]'
+    'button.next-step-btn[data-peli="amisristikko"]'
   ];
 
   function poistaVaroitukset() {
