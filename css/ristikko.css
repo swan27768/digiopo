@@ -1,0 +1,111 @@
+/* ============================================================
+   DigiOpo · ristikko.css — lukion ja amiksen ristikot
+   Värit muuttujilla (--rs-vari, --rs-vari-tumma, --rs-vari-vaalea)
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; background: #f4f6fb; color: #1e293b;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px; line-height: 1.5;
+}
+.rs {
+  --rs-vari: #1d4ed8; --rs-vari-tumma: #1e3a8a; --rs-vari-vaalea: #dbeafe;
+  --rs-ruutu: clamp(24px, calc((100vw - 36px) / var(--rs-sarakkeet)), 42px);
+  max-width: 1000px; margin: 0 auto; padding: 20px 16px 48px;
+}
+.rs-otsikko { margin: 8px 0 4px; font-size: clamp(1.5rem, 4.5vw, 2rem); line-height: 1.2; color: var(--rs-vari-tumma); }
+.rs-ohje { margin: 0 0 12px; color: #475569; font-size: 1rem; }
+.rs-ohjeet { margin: 0 0 14px; font-size: 0.95rem; color: #334155; }
+.rs-ohjeet summary { cursor: pointer; font-weight: 700; color: var(--rs-vari-tumma); }
+.rs-ohjeet ul { margin: 8px 0 0; padding-left: 20px; }
+
+.rs-tilarivi { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.rs-pilli {
+  background: #fff; border: 2px solid var(--rs-vari); color: var(--rs-vari-tumma);
+  border-radius: 999px; padding: 4px 16px; font-weight: 700; font-size: 0.95rem;
+}
+.rs-pilli-pisteet { background: var(--rs-vari-vaalea); }
+.rs-palkki { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
+.rs-palkki-sisus { height: 100%; width: 0; background: var(--rs-vari); border-radius: 999px; transition: width 0.3s ease; }
+
+.rs-aktiivinen {
+  display: flex; gap: 8px; align-items: baseline; min-height: 56px; margin-bottom: 14px; padding: 10px 14px;
+  background: #fff; border: 2px solid var(--rs-vari); border-radius: 12px; font-weight: 600; font-size: 1.05rem;
+}
+.rs-aktiivinen-nro { color: var(--rs-vari-tumma); white-space: nowrap; }
+
+.rs-asettelu { display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
+.rs-ruudukko-laatikko { overflow-x: auto; padding-bottom: 4px; }
+.rs-ruudukko { display: grid; gap: 2px; width: max-content; margin: 0 auto; }
+.rs-ruutu { position: relative; width: var(--rs-ruutu); height: var(--rs-ruutu); border-radius: 4px; }
+.rs-musta { background: transparent; }
+.rs-valkoinen { background: #fff; border: 2px solid #94a3b8; }
+.rs-ruutu input {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; padding: 0;
+  text-align: center; text-transform: uppercase; font: inherit; font-weight: 800;
+  font-size: calc(var(--rs-ruutu) * 0.55); color: #0f172a; caret-color: transparent; cursor: pointer; border-radius: 2px;
+}
+.rs-ruutu input:focus { outline: none; }
+.rs-ruutu-nro {
+  position: absolute; top: 1px; left: 3px; font-size: calc(var(--rs-ruutu) * 0.28); font-weight: 700;
+  line-height: 1; color: #475569; pointer-events: none; z-index: 1;
+}
+.rs-aktiivinen-sana { background: var(--rs-vari-vaalea); border-color: var(--rs-vari); }
+.rs-aktiivinen-ruutu { background: #fde68a; border-color: #b45309; box-shadow: 0 0 0 2px #b45309; z-index: 2; }
+.rs-oikea { background: #dcfce7; border-color: #16a34a; }
+.rs-oikea input { color: #14532d; }
+.rs-vaara { background: #fee2e2; border-color: #dc2626; }
+.rs-vaara input { color: #7f1d1d; }
+
+.rs-vihjeet { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rs-vihjeosa h2 { margin: 0 0 8px; font-size: 1.05rem; color: var(--rs-vari-tumma); }
+.rs-vihje {
+  display: flex; gap: 8px; width: 100%; text-align: left; margin: 0 0 6px; padding: 8px 10px;
+  background: #fff; color: #0f172a; border: 2px solid #cbd5e1; border-radius: 10px; cursor: pointer;
+  font: inherit; font-size: 0.95rem; line-height: 1.35;
+}
+.rs-vihje:hover { background: var(--rs-vari-vaalea); border-color: var(--rs-vari); }
+.rs-vihje:focus-visible, .rs-nappi:focus-visible { outline: 3px solid #0f172a; outline-offset: 2px; }
+.rs-vihje-nro { font-weight: 800; color: var(--rs-vari-tumma); }
+.rs-vihje-aktiivinen { background: var(--rs-vari-vaalea); border-color: var(--rs-vari); }
+.rs-vihje-ratkaistu { background: #f0fdf4; border-color: #86efac; color: #14532d; }
+.rs-vihje-ratkaistu .rs-vihje-teksti { text-decoration: line-through; text-decoration-color: #16a34a; }
+
+.rs-toiminnot { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.rs-nappi {
+  min-height: 48px; padding: 0 20px; background: #fff; color: var(--rs-vari-tumma);
+  border: 2px solid var(--rs-vari); border-radius: 12px; cursor: pointer; font: inherit; font-weight: 800; font-size: 1rem;
+}
+.rs-nappi:hover { background: var(--rs-vari-vaalea); }
+.rs-nappi-ensisijainen { background: var(--rs-vari); color: #fff; }
+.rs-nappi-ensisijainen:hover { background: var(--rs-vari-tumma); }
+
+.rs-palaute { margin-top: 14px; padding: 12px 14px; border-radius: 12px; font-size: 1rem; }
+.rs-palaute-info { background: #eff6ff; border: 2px solid #93c5fd; color: #1e3a8a; }
+.rs-palaute-oikein { background: #f0fdf4; border: 2px solid #86efac; color: #14532d; }
+.rs-palaute-vaara { background: #fef2f2; border: 2px solid #fca5a5; color: #7f1d1d; }
+
+.rs-tulos { margin-top: 18px; background: #fff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 20px; box-shadow: 0 6px 20px rgba(15,23,42,.07); }
+.rs-tulos h2 { margin: 0 0 14px; font-size: 1.4rem; color: var(--rs-vari-tumma); }
+.rs-luvut { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.rs-luku { flex: 1 1 130px; background: var(--rs-vari-vaalea); border-radius: 12px; padding: 12px; text-align: center; }
+.rs-luku strong { display: block; font-size: 1.6rem; color: var(--rs-vari-tumma); }
+.rs-luku span { font-size: 0.85rem; color: #475569; }
+
+@media (min-width: 880px) {
+  .rs-asettelu { grid-template-columns: auto 1fr; }
+  .rs { --rs-ruutu: 40px; }
+  .rs-vihjeet { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  body { font-size: 17px; }
+  .rs-vihjeet { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .rs-palkki-sisus { transition: none; } }
+
+.rs-takaisin {
+  display: inline-block; margin: 12px 0 0 16px; padding: 8px 14px; background: #fff; color: #0f172a;
+  border: 1px solid #cbd5e1; border-radius: 999px; font-weight: 700; font-size: 0.95rem; text-decoration: none;
+}
+.rs-takaisin:hover { background: #f1f5f9; }
