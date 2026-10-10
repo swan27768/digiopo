@@ -54,8 +54,8 @@
       ".tp-auki{--tp-vasen:clamp(16px,22vw,340px);--tp-pala:68px;" +
       "position:fixed!important;top:14px;bottom:14px;right:16px;left:auto;" +
       "width:calc(100vw - var(--tp-vasen) - 16px);max-width:1280px;margin:0!important;" +
-      "z-index:9990;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);box-sizing:border-box;" +
-      "background:rgba(255,255,255,.90);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);" +
+      "z-index:9990;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;box-sizing:border-box;" +
+      "background:rgba(255,255,255,.97);" +
       "border:3px solid var(--grade-accent,#7c3aed);border-radius:18px;padding:0!important;" +
       "box-shadow:-14px 10px 48px rgba(15,23,42,.38);animation:tp-sisaan .26s cubic-bezier(.2,.7,.2,1)}" +
       "@keyframes tp-sisaan{from{transform:translateX(44px);opacity:0}to{transform:none;opacity:1}}" +
@@ -96,12 +96,13 @@
       "background:transparent}" +
 
       /* Ei-iframe-sisältö (data-tp-ikkuna): sisältö saa reunatilaa, palkki ulottuu reunasta reunaan */
-      ".tp-auki[data-tp-ikkuna]{padding:0 22px 28px!important}" +
+      ".tp-auki[data-tp-ikkuna]{padding:0 22px 96px!important}" +
       ".tp-auki[data-tp-ikkuna]>.tp-palkki{margin:0 -22px 18px}" +
 
       /* Puhelin/pieni ruutu: koko ruutu, mutta sama sulje-palkki */
       "@media(max-width:899px){.tp-auki{top:0;bottom:0;left:0;right:0;width:100vw;max-width:none;" +
-      "border-radius:0;border-width:0 0 0 0;padding-bottom:env(safe-area-inset-bottom)!important}" +
+      "border-radius:0;border-width:0 0 0 0}" +
+      ".tp-auki[data-tp-ikkuna]{padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}" +
       ".tp-zoom-arvo{display:none}.tp-otsikko{font-size:.9rem}" +
       ".tp-auki iframe{border-radius:0!important;height:calc(100vh - var(--tp-pala))!important;" +
       "height:calc(100dvh - var(--tp-pala))!important}}";
