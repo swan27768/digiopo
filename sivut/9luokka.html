@@ -4236,29 +4236,51 @@
               </span>
               <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
             </button>
-            <div class="vaihe-sisalto" id="vaiheSisalto2" data-tp-ikkuna hidden>
+            <div class="vaihe-sisalto" id="vaiheSisalto2" hidden>
             <div class="next-step-links">
-              <a href="../pelit/lukiosanasto.html" class="next-step-btn">
+              <button type="button" class="next-step-btn" data-peli="lukiosanasto" onclick="togglePeliIkkuna('sanastoLukioWrapper', this)" aria-expanded="false" aria-controls="sanastoLukioWrapper" style="width:100%; text-align:left; cursor:pointer; font:inherit;">
                 <span class="next-step-label">Lukio</span>
                 <span class="next-step-title">Lukiosanastopeli</span>
                 <span class="next-step-arrow">→</span>
-              </a>
-              <a href="../pelit/amissanasto.html" class="next-step-btn">
+              </button>
+              <button type="button" class="next-step-btn" data-peli="amissanasto" onclick="togglePeliIkkuna('sanastoAmisWrapper', this)" aria-expanded="false" aria-controls="sanastoAmisWrapper" style="width:100%; text-align:left; cursor:pointer; font:inherit;">
                 <span class="next-step-label">Amis</span>
                 <span class="next-step-title">Amissanastopeli</span>
                 <span class="next-step-arrow">→</span>
-              </a>
-              <a href="../pelit/lukioristikko.html" class="next-step-btn">
+              </button>
+              <button type="button" class="next-step-btn" data-peli="lukioristikko" onclick="togglePeliIkkuna('ristikkoLukioWrapper', this)" aria-expanded="false" aria-controls="ristikkoLukioWrapper" style="width:100%; text-align:left; cursor:pointer; font:inherit;">
                 <span class="next-step-label">Lukio</span>
                 <span class="next-step-title">Lukion ristikko</span>
                 <span class="next-step-arrow">→</span>
-              </a>
-              <a href="../pelit/amisristikko.html" class="next-step-btn">
+              </button>
+              <button type="button" class="next-step-btn" data-peli="amisristikko" onclick="togglePeliIkkuna('ristikkoAmisWrapper', this)" aria-expanded="false" aria-controls="ristikkoAmisWrapper" style="width:100%; text-align:left; cursor:pointer; font:inherit;">
                 <span class="next-step-label">Amis</span>
                 <span class="next-step-title">Amisristikko</span>
                 <span class="next-step-arrow">→</span>
-              </a>
+              </button>
             </div>
+            <div id="sanastoLukioWrapper" style="display:none;">
+              <iframe src="../pelit/lukiosanasto.html" title="Lukiosanastopeli" loading="lazy" style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"></iframe>
+            </div>
+            <div id="sanastoAmisWrapper" style="display:none;">
+              <iframe src="../pelit/amissanasto.html" title="Amissanastopeli" loading="lazy" style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"></iframe>
+            </div>
+            <div id="ristikkoLukioWrapper" style="display:none;">
+              <iframe src="../pelit/lukioristikko.html" title="Lukion ristikko" loading="lazy" style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"></iframe>
+            </div>
+            <div id="ristikkoAmisWrapper" style="display:none;">
+              <iframe src="../pelit/amisristikko.html" title="Amisristikko" loading="lazy" style="width:100%;height:90vh;min-height:680px;border:none;border-radius:14px;"></iframe>
+            </div>
+            <script>
+              function togglePeliIkkuna(id, btn) {
+                var w = document.getElementById(id);
+                if (!w) return;
+                var auki = w.style.display !== 'none';
+                w.style.display = auki ? 'none' : 'block';
+                var b = btn || document.querySelector('[aria-controls="' + id + '"]');
+                if (b) b.setAttribute('aria-expanded', String(!auki));
+              }
+            </script>
             </div>
           </div>
 

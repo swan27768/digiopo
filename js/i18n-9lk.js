@@ -1033,10 +1033,10 @@
     'button[onclick*="avaaHakustrategia"]',
     'button[onclick*="avaaElamapeli"]',
     'button[onclick*="avaaAiLaboratorio"]',
-    'a.next-step-btn[href*="lukiosanasto"]',
-    'a.next-step-btn[href*="amissanasto"]',
-    'a.next-step-btn[href*="lukioristikko"]',
-    'a.next-step-btn[href*="amisristikko"]',
+    'button.next-step-btn[data-peli="lukiosanasto"]',
+    'button.next-step-btn[data-peli="amissanasto"]',
+    'button.next-step-btn[data-peli="lukioristikko"]',
+    'button.next-step-btn[data-peli="amisristikko"]',
     'a[href*="lukio_vs_amis.html"]'
   ];
 
