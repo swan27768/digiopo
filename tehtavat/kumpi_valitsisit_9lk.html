@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kumpi valitsisit?</title>
+<link rel="stylesheet" href="/vendor/fonts/fonts.css">
+<link rel="stylesheet" href="/vendor/fontawesome/fontawesome-subset.css">
+<style>
+  :root{--lk9-teal:#0d9488;--lk9-teal-lt:#0f766e;--lk9-teal-bg:#f0fdfa;--lk9-teal-bd:#99f6e4;}
+  *{box-sizing:border-box;}
+  body{margin:0;padding:16px;font-family:'Lato',system-ui,sans-serif;color:#1e293b;background:#ffffff;line-height:1.5;}
+  h3{font-family:inherit;}
+  button{font-family:inherit;}
+  .sivu{max-width:760px;margin:0 auto;}
+</style>
+</head>
+<body>
+<main class="sivu">
+          <!-- Harjoitus 1: Kumpi valitsisit? -->
+          <div style="
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            border: 1.5px solid var(--lk9-teal-bd);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 0;
+          ">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+              <span style="
+                background: var(--lk9-teal);
+                color: white;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+                font-weight: 700;
+                flex-shrink: 0;
+              ">1</span>
+              <div>
+                <div style="
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  letter-spacing: 0.1em;
+                  text-transform: uppercase;
+                  color: var(--lk9-teal);
+                  margin-bottom: 2px;
+                ">Harjoitus · Pareittain · 10–15 min</div>
+                <h3 style="margin:0; color:#134e4a; font-size:1.1rem;">Kumpi valitsisit?</h3>
+              </div>
+            </div>
+
+            <p style="color:#475569; margin-bottom:16px; line-height:1.6;">
+              Sinulle jaetaan korttipakka parin kanssa. Yksi teistä nostaa kortin ja lukee kaksi vaihtoehtoa ääneen. Molemmat tekevät ensin oman valinnan mielessään, sitten kumpikin perustelee valintansa toiselle.
+            </p>
+
+            <div style="
+              background: white;
+              border: 1px solid var(--lk9-teal-bd);
+              border-radius: 10px;
+              padding: 16px;
+              margin-bottom: 16px;
+            ">
+              <div style="font-weight:700; color:#134e4a; margin-bottom:10px; font-size:0.9rem;">
+                <i class="fa-solid fa-shuffle" aria-hidden="true" style="margin-right:6px; color:var(--lk9-teal);"></i>
+                Miten harjoitus etenee
+              </div>
+              <ol style="margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; color:#475569; font-size:0.9rem;">
+                <li>Sekoita kortit ja aseta ne pinoon pöydälle</li>
+                <li>Vuorotellen yksi nostaa kortin ja lukee kaksi vaihtoehtoa ääneen</li>
+                <li>Molemmat miettivät ensin itse — ei paljasteta vielä</li>
+                <li>Kumpikin kertoo valintansa <strong>ja perustelee</strong> sen toiselle</li>
+                <li>Voitte myös kysyä toisiltanne: "Miksi juuri se?"</li>
+              </ol>
+            </div>
+
+            <!-- Interaktiivinen korttipakka -->
+            <div style="margin-top:8px;">
+              
+
+              <div id="kumpiValitsisitSisalto" style="margin-top:14px;">
+                <div style="
+                  background: white;
+                  border: 1.5px solid var(--lk9-teal-bd);
+                  border-radius: 14px;
+                  padding: 24px;
+                  text-align: center;
+                ">
+                  <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--lk9-teal); margin-bottom:12px;">
+                    Kortti <span id="kumpiKorttinro">1</span> / <span id="kumpiKorttiYht"></span>
+                  </div>
+                  <div style="
+                    display: flex;
+                    gap: 12px;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    margin-bottom: 20px;
+                  ">
+                    <div id="kumpiA" style="
+                      flex: 1;
+                      min-width: 140px;
+                      max-width: 220px;
+                      background: var(--lk9-teal-bg);
+                      border: 2px solid var(--lk9-teal);
+                      border-radius: 12px;
+                      padding: 18px 14px;
+                      font-size: 1rem;
+                      font-weight: 700;
+                      color: #134e4a;
+                    ">–</div>
+                    <div style="
+                      display: flex;
+                      align-items: center;
+                      font-size: 1.2rem;
+                      color: #94a3b8;
+                      font-weight: 700;
+                    ">vai</div>
+                    <div id="kumpiB" style="
+                      flex: 1;
+                      min-width: 140px;
+                      max-width: 220px;
+                      background: #fff7ed;
+                      border: 2px solid #fdba74;
+                      border-radius: 12px;
+                      padding: 18px 14px;
+                      font-size: 1rem;
+                      font-weight: 700;
+                      color: #7c2d12;
+                    ">–</div>
+                  </div>
+                  <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                    <button type="button" onclick="kumpiSeuraava(-1)" style="
+                      background: #f1f5f9;
+                      border: 1px solid #e2e8f0;
+                      border-radius: 8px;
+                      padding: 9px 18px;
+                      font-size: 0.9rem;
+                      font-weight: 600;
+                      cursor: pointer;
+                      color: #475569;
+                      transition: background 0.15s;
+                    ">← Edellinen</button>
+                    <button type="button" onclick="kumpiSekoita()" style="
+                      background: #f1f5f9;
+                      border: 1px solid #e2e8f0;
+                      border-radius: 8px;
+                      padding: 9px 18px;
+                      font-size: 0.9rem;
+                      font-weight: 600;
+                      cursor: pointer;
+                      color: #475569;
+                      transition: background 0.15s;
+                    ">🔀 Sekoita</button>
+                    <button type="button" onclick="kumpiSeuraava(1)" style="
+                      background: var(--lk9-teal);
+                      border: none;
+                      border-radius: 8px;
+                      padding: 9px 18px;
+                      font-size: 0.9rem;
+                      font-weight: 600;
+                      cursor: pointer;
+                      color: white;
+                      transition: background 0.15s;
+                    ">Seuraava kortti →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p style="margin-top:14px; font-size:0.85rem; color:#64748b;">
+              <i class="fa-solid fa-circle-info" aria-hidden="true" style="margin-right:5px;"></i>
+              <strong>Muistakaa:</strong> ei ole oikeaa vastausta — tärkeintä on perustelu!
+            </p>
+          </div>
+
+</main>
+<script>
+      /* ── Harjoitus 1: Kumpi valitsisit? ─────────────────────────── */
+      var kumpiKortit = [
+        ["Olla kuuluisa", "Olla onnellinen"],
+        ["Paljon rahaa ja tylsä työ", "Vähän rahaa ja rakastettu työ"],
+        ["Osata kaikkea vähän", "Osata yhtä asiaa täydellisesti"],
+        ["Matkustaa ympäri maailmaa", "Asua koko elämä kotikylässä"],
+        ["Olla kaveripiirin johtaja", "Olla kaveripiirin rauhoittelija"],
+        ["Tehdä päätökset yksin", "Tehdä päätökset yhdessä"],
+        ["Elää nykyhetkessä", "Suunnitella tulevaisuutta"],
+        ["Saada paljon lahjoja", "Antaa paljon lahjoja"],
+        ["Olla rohkea ja epäonnistua", "Olla varovainen ja onnistua aina"],
+        ["Olla rehellinen ja loukata", "Valehdella ja säästää tunteita"],
+        ["Oppia koulussa", "Oppia elämän kautta"],
+        ["Olla nopea päättäjä", "Harkita pitkään ennen päätöstä"],
+      ];
+      var kumpiIndeksi = 0;
+
+            function kumpiSekoita() {
+        for (var i = kumpiKortit.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = kumpiKortit[i]; kumpiKortit[i] = kumpiKortit[j]; kumpiKortit[j] = tmp;
+        }
+        kumpiIndeksi = 0;
+        kumpiPaivita();
+      }
+
+      function kumpiSeuraava(suunta) {
+        kumpiIndeksi = (kumpiIndeksi + suunta + kumpiKortit.length) % kumpiKortit.length;
+        kumpiPaivita();
+      }
+
+      function kumpiPaivita() {
+        var kortti = kumpiKortit[kumpiIndeksi];
+        document.getElementById("kumpiA").textContent = kortti[0];
+        document.getElementById("kumpiB").textContent = kortti[1];
+        document.getElementById("kumpiKorttinro").textContent = kumpiIndeksi + 1;
+        document.getElementById("kumpiKorttiYht").textContent = kumpiKortit.length;
+      }
+
+kumpiPaivita();
+</script>
+</body>
+</html>
