@@ -4425,7 +4425,7 @@
                 <span class="vaihe-badge" id="vaiheBadge4">4</span>
                 <span>
                   <span class="vaihe-label">Sovella — päivä uudessa koulussa</span>
-                  <span class="vaihe-meta">⏱ 5 min · Täydennä Ainon tarina ja lue Mikaelin tarina</span>
+                  <span class="vaihe-meta">⏱ 5–8 min · Täydennä Ainon ja Mikaelin tarinat</span>
                 </span>
               </span>
               <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
@@ -4527,13 +4527,84 @@
                 </span>
                 <i class="fa-solid fa-chevron-down" style="color:#22c55e; font-size:0.8rem; flex-shrink:0; transition:transform 0.2s;"></i>
               </button>
-              <div hidden style="padding:16px; background:#ffffff; border-top:1px solid #bbf7d0; font-size:0.88rem; line-height:1.7; color:#1e293b;">
-                <p style="margin:0 0 10px;">Mikael aloitti autoalan ammatillisessa koulutuksessa. Hänen opintonsa etenivät <mark style="background:#dcfce7; color:#14532d; border-radius:4px; padding:1px 5px;">tutkinnon osa</mark> kerrallaan – jokainen osa oli oma kokonaisuutensa.</p>
-                <p style="margin:0 0 10px;">Syksyllä Mikael aloitti <mark style="background:#dcfce7; color:#14532d; border-radius:4px; padding:1px 5px;">koulutussopimuksen</mark> paikallisessa autokorjaamossa. Hän ei saanut palkkaa, mutta sai korvaamatonta käytännön kokemusta.</p>
-                <p style="margin:0 0 10px;">Seuraavana vuonna hän harkitsi <mark style="background:#dcfce7; color:#14532d; border-radius:4px; padding:1px 5px;">oppisopimusta</mark> – silloin olisi jo työsopimus ja palkka. Opintojen lopussa odotti <mark style="background:#dcfce7; color:#14532d; border-radius:4px; padding:1px 5px;">näyttö</mark>: Mikael huoltaisi auton itsenäisesti alusta loppuun.</p>
-                <div style="background:#f0fdf4; border-radius:8px; padding:10px 14px; margin-top:12px;">
-                  <p style="margin:0; font-size:0.8rem; color:#15803d; font-weight:600;">Käsitteet: <span style="font-weight:400;">tutkinnon osa · koulutussopimus · oppisopimus · näyttö</span></p>
+              <div id="mikael-tarina" hidden style="padding:16px; background:#ffffff; border-top:1px solid #bbf7d0; font-size:0.88rem; line-height:1.7; color:#1e293b;">
+                <style>
+                  .mikael-aukko{font:inherit;font-size:.95em;font-weight:600;color:#1e3a8a;background:#dbeafe;border:2px solid #93c5fd;border-radius:8px;padding:2px 6px;margin:0 2px;max-width:100%;cursor:pointer}
+                  .mikael-aukko:focus-visible{outline:3px solid #1e3a8a;outline-offset:2px}
+                  .mikael-aukko.oikein{background:#dcfce7;border-color:#22c55e;color:#14532d}
+                  .mikael-aukko.vaarin{background:#fee2e2;border-color:#ef4444;color:#7f1d1d}
+                  .mikael-aukko.tyhja{background:#fef3c7;border-color:#f59e0b;color:#78350f}
+                  .mikael-oikea{font-size:.85em;font-weight:700;color:#15803d;margin:0 2px}
+                  .mikael-btn{font:inherit;font-weight:700;font-size:.95rem;border:0;border-radius:10px;padding:10px 20px;cursor:pointer;background:#1d4ed8;color:#fff}
+                  .mikael-btn.toinen{background:#e2e8f0;color:#1e293b;margin-left:8px}
+                  #mikael-tulos{margin-top:12px;padding:12px 14px;border-radius:10px;font-weight:600;display:none}
+                  #mikael-tulos.nakyy{display:block}
+                </style>
+                <p style="margin:0 0 12px; font-weight:600; color:#14532d;">Valitse jokaiseen aukkoon oikea sana. Kun olet valmis, paina Tarkista.</p>
+                <p style="margin:0 0 10px;">Mikael aloitti autoalan ammatillisessa koulutuksessa. Tutkinnon laajuus on 180 <select class="mikael-aukko" data-oikea="osaamispistettä" aria-label="Aukko 1 / 8"><option value="">valitse…</option><option value="kurssia">kurssia</option><option value="opintopistettä">opintopistettä</option><option value="osaamispistettä">osaamispistettä</option><option value="oppituntia">oppituntia</option></select>. Opinnot etenevät <select class="mikael-aukko" data-oikea="tutkinnon osa" aria-label="Aukko 2 / 8"><option value="">valitse…</option><option value="vuosiluokka">vuosiluokka</option><option value="tutkinnon osa">tutkinnon osa</option><option value="opintojakso">opintojakso</option><option value="viikko">viikko</option></select> kerrallaan – jokainen osa on oma kokonaisuutensa, esimerkiksi jarrujen huolto tai sähköjärjestelmät. Ensimmäisellä viikolla Mikael teki opettajan kanssa henkilökohtaisen opiskelusuunnitelman. Sen lyhenne on <select class="mikael-aukko" data-oikea="HOKS" aria-label="Aukko 3 / 8"><option value="">valitse…</option><option value="TET">TET</option><option value="YTO">YTO</option><option value="HOKS">HOKS</option><option value="OPS">OPS</option></select>.</p>
+                <p style="margin:0 0 10px;">Mikael ei opiskellut vain autoja. Tutkintoon kuuluu myös <select class="mikael-aukko" data-oikea="yhteisiä tutkinnon osia" aria-label="Aukko 4 / 8"><option value="">valitse…</option><option value="yo-kokeita">yo-kokeita</option><option value="lukiodiplomeja">lukiodiplomeja</option><option value="yhteisiä tutkinnon osia">yhteisiä tutkinnon osia</option><option value="vapaaehtoisia kerhoja">vapaaehtoisia kerhoja</option></select>, eli YTO-opintoja. Niitä on 35 osaamispistettä, ja niihin kuuluvat esimerkiksi äidinkieli, matematiikka, kielet ja työelämätaidot. YTO-opinnot kuuluvat kaikkiin ammatillisiin perustutkintoihin.</p>
+                <p style="margin:0 0 10px;">Syksyllä Mikael aloitti <select class="mikael-aukko" data-oikea="koulutussopimuksen" aria-label="Aukko 5 / 8"><option value="">valitse…</option><option value="oppisopimuksen">oppisopimuksen</option><option value="työsopimuksen">työsopimuksen</option><option value="koulutussopimuksen">koulutussopimuksen</option><option value="vuokrasopimuksen">vuokrasopimuksen</option></select> paikallisessa autokorjaamossa. Hän ei saanut palkkaa, mutta sai paljon käytännön kokemusta. Seuraavana vuonna hän harkitsi <select class="mikael-aukko" data-oikea="oppisopimusta" aria-label="Aukko 6 / 8"><option value="">valitse…</option><option value="koulutussopimusta">koulutussopimusta</option><option value="vuokrasopimusta">vuokrasopimusta</option><option value="näyttöä">näyttöä</option><option value="oppisopimusta">oppisopimusta</option></select>. Silloin hänellä olisi jo työsopimus ja palkka.</p>
+                <p style="margin:0 0 10px;">Opintojen aikana Mikael osoitti osaamisensa <select class="mikael-aukko" data-oikea="näytöllä" aria-label="Aukko 7 / 8"><option value="">valitse…</option><option value="yo-kokeella">yo-kokeella</option><option value="näytöllä">näytöllä</option><option value="esitelmällä">esitelmällä</option><option value="kirjallisella kokeella">kirjallisella kokeella</option></select>. Se ei ole tavallinen koe, jossa istutaan pulpetissa. Mikael huolsi auton itsenäisesti alusta loppuun, ja opettaja ja korjaamon työntekijä arvioivat työn yhdessä.</p>
+                <p style="margin:0 0 10px;">Opettaja kertoi Mikaelille myös kilpailusta nimeltä <select class="mikael-aukko" data-oikea="Taitaja" aria-label="Aukko 8 / 8"><option value="">valitse…</option><option value="Abitti">Abitti</option><option value="Yhteishaku">Yhteishaku</option><option value="Taitaja">Taitaja</option><option value="Lukiodiplomi">Lukiodiplomi</option></select>. Se on Suomen suurin ammattitaidon SM-kilpailu, jossa ammatillisen koulutuksen opiskelijat kilpailevat omalla alallaan. Yläkoululaisillekin on oma versionsa, Taitaja9, jossa kolmen hengen joukkue ratkoo käytännön tehtäviä. Mikael päätti kokeilla kisaa ensi keväänä.</p>
+                <p style="margin:0 0 10px;">Mikael hymyili. Hän ei ollut vielä ammattilainen, mutta tiesi, että oma polku etenee askel kerrallaan.</p>
+                <div style="margin-top:14px;">
+                  <button type="button" class="mikael-btn" id="mikael-tarkista">Tarkista vastaukset</button><button type="button" class="mikael-btn toinen" id="mikael-uusi" hidden>Yritä uudelleen</button>
                 </div>
+                <div id="mikael-tulos" role="status" aria-live="polite"></div>
+                <script>
+                (function () {
+                  var box = document.getElementById('mikael-tarina');
+                  if (!box) return;
+                  var btn = document.getElementById('mikael-tarkista');
+                  var uusi = document.getElementById('mikael-uusi');
+                  var tulos = document.getElementById('mikael-tulos');
+                  var sels = box.querySelectorAll('.mikael-aukko');
+                  function siivoa() {
+                    box.querySelectorAll('.mikael-oikea').forEach(function (e) { e.parentNode.removeChild(e); });
+                    sels.forEach(function (s) { s.classList.remove('oikein', 'vaarin', 'tyhja'); s.disabled = false; });
+                  }
+                  btn.addEventListener('click', function () {
+                    siivoa();
+                    var ok = 0, tyhjia = 0;
+                    sels.forEach(function (s) {
+                      var oikea = s.getAttribute('data-oikea');
+                      if (!s.value) { s.classList.add('tyhja'); tyhjia++; return; }
+                      if (s.value === oikea) { s.classList.add('oikein'); ok++; }
+                      else {
+                        s.classList.add('vaarin');
+                        var m = document.createElement('span');
+                        m.className = 'mikael-oikea';
+                        m.textContent = '→ ' + oikea;
+                        s.parentNode.insertBefore(m, s.nextSibling);
+                      }
+                    });
+                    var n = sels.length;
+                    var teksti, vari;
+                    if (tyhjia) {
+                      teksti = 'Täytä ensin kaikki aukot (' + tyhjia + ' jäi tyhjäksi). Keltaiset aukot odottavat vastausta.';
+                      vari = ['#fef3c7', '#78350f'];
+                    } else if (ok === n) {
+                      teksti = '🎉 Kaikki ' + n + '/' + n + ' oikein! Hallitset ammatillisen koulutuksen käsitteet.';
+                      vari = ['#dcfce7', '#14532d'];
+                    } else {
+                      teksti = ok + '/' + n + ' oikein. Vihreä merkitsee oikean vastauksen, punaisen vieressä on oikea sana. Voit kokeilla uudelleen.';
+                      vari = ['#fee2e2', '#7f1d1d'];
+                    }
+                    tulos.textContent = teksti;
+                    tulos.style.background = vari[0];
+                    tulos.style.color = vari[1];
+                    tulos.className = 'nakyy';
+                    uusi.hidden = !!tyhjia;
+                  });
+                  uusi.addEventListener('click', function () {
+                    siivoa();
+                    sels.forEach(function (s) { s.value = ''; });
+                    tulos.className = '';
+                    tulos.textContent = '';
+                    uusi.hidden = true;
+                  });
+                })();
+                </script>
               </div>
             </div>
 
