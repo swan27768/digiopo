@@ -255,7 +255,9 @@ window.OSIO_DATA = {
       lahteet: [
         "Masten, A. (2001). Ordinary magic: resilience processes in development. <em>American Psychologist</em>.",
         "Lieberman, M. ym. (2007). Affect labeling. <em>Psychological Science</em>.",
-        "Mitchell, K., Levin, A. & Krumboltz, J. (1999). Planned happenstance. <em>Journal of Counseling & Development</em>."
+        "Mitchell, K., Levin, A. & Krumboltz, J. (1999). Planned happenstance. <em>Journal of Counseling & Development</em>.",
+        "Riipinen, K. (2023, päivitetty 2026). <em>Opot toisesta asteesta: Muista, että nyt ei ratkaista koko loppuelämää</em>. Helsingin kaupunki. <a href='https://www.hel.fi/fi/uutiset/opot-toisesta-asteesta-muista-etta-nyt-ei-ratkaista-koko-loppuelamaa' target='_blank' rel='noopener noreferrer'>hel.fi</a>",
+        "Jyväskylän yliopisto (2020). <em>Uravalinta on nuorelle iso haaste</em>. <a href='https://www.jyu.fi/fi/uutinen/uravalinta-on-nuorelle-iso-haaste' target='_blank' rel='noopener noreferrer'>jyu.fi</a>"
       ]
     },
     "valinnat-peli": {
@@ -267,7 +269,8 @@ window.OSIO_DATA = {
       lahteet: [
         "Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. FSG.",
         "Kolb, D. (1984). <em>Experiential Learning</em>. Prentice Hall.",
-        "Gati, I. & Asher, I. (2001). The PIC model for career decision making."
+        "Gati, I. & Asher, I. (2001). The PIC model for career decision making.",
+        "Järvelä, J. (2023). <em>Mikä ohjaa nuorten valintoja?</em> Verkkouutiset. <a href='https://www.verkkouutiset.fi/a/mika-ohjaa-nuorten-valintoja/' target='_blank' rel='noopener noreferrer'>verkkouutiset.fi</a>"
       ]
     },
     "kolme-minua": {
