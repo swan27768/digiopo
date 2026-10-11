@@ -4621,63 +4621,11 @@
             </div>
           </div>
 
-          <!-- ══ VAIHE 5: LUO (haaste) ══ -->
-          <div class="vaihe-kortti">
-            <button class="vaihe-toggle" type="button" data-vaihe="5" onclick="toggleVaihe(this)" aria-expanded="false" aria-controls="vaiheSisalto5" style="--vaihe-accent:#be185d;">
+          <!-- ══ VAIHE 5: KOE YHDESSÄ ══ -->
+          <div id="elamänpolku-mission" class="mission-card" style="margin-top:14px; padding:0;">
+            <button class="vaihe-toggle" type="button" data-vaihe="5" onclick="toggleVaihe(this)" aria-expanded="false" aria-controls="vaiheSisalto5" style="--vaihe-accent:#d97706; background:transparent;">
               <span class="vaihe-toggle-left">
                 <span class="vaihe-badge" id="vaiheBadge5">5</span>
-                <span>
-                  <span class="vaihe-label">Luo oma tarina</span>
-                  <span class="vaihe-meta">⭐ Haaste · 10–15 min</span>
-                </span>
-              </span>
-              <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
-            </button>
-            <div class="vaihe-sisalto" id="vaiheSisalto5" data-tp-ikkuna hidden>
-              <p class="haaste-ohje">Kirjoita oma kuvitteellinen <strong>ensimmäinen päivä</strong> lukiossa tai amisessa. Valitse polku – ja kirjoita tarina niin kuin se voisi oikeasti mennä.</p>
-              <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:10px; padding:12px 14px; margin:12px 0;">
-                <p style="margin:0 0 8px; font-size:0.78rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#0f766e;">Käytä vähintään 5 näistä termeistä</p>
-                <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">opintojakso</span>
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">opintopiste</span>
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">jakso</span>
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">luokaton lukio</span>
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">pitkä oppimäärä</span>
-                  <span style="background:#dbeafe; color:#1e3a8a; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">yo-koe</span>
-                  <span style="background:#dcfce7; color:#14532d; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">tutkinnon osa</span>
-                  <span style="background:#dcfce7; color:#14532d; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">koulutussopimus</span>
-                  <span style="background:#dcfce7; color:#14532d; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">oppisopimus</span>
-                  <span style="background:#dcfce7; color:#14532d; font-size:0.78rem; font-weight:600; border-radius:20px; padding:3px 10px;">näyttö</span>
-                </div>
-                <p style="margin:8px 0 0; font-size:0.75rem; color:#0f766e; font-style:italic;">Sininen = lukio · Vihreä = amis · Molempia voi käyttää</p>
-              </div>
-              <div style="position:relative;">
-                <textarea id="paivakertomus-oma" placeholder="Aloita vaikka näin: &quot;Astuin sisään ensimmäistä kertaa ja...&quot;" oninput="paivitaLaskuri(this)" style="width:100%; min-height:180px; box-sizing:border-box; border:1.5px solid #5eead4; border-radius:10px; padding:14px; font-size:0.9rem; font-family:inherit; line-height:1.6; color:#134e4a; background:#ffffff; resize:vertical; outline:none;" onfocus="this.style.borderColor='#0d9488'" onblur="this.style.borderColor='#5eead4'"></textarea>
-                <div style="display:flex; justify-content:space-between; margin-top:6px;">
-                  <span id="paivakertomus-laskuri" style="font-size:0.75rem; color:#9ca3af;">0 sanaa</span>
-                  <span id="paivakertomus-merkki" style="font-size:0.75rem; color:#9ca3af;"></span>
-                </div>
-              </div>
-              <p class="haaste-vihje" style="display:flex;align-items:center;gap:10px;"><img loading="lazy" src="../images/robo-emoji.webp" alt="Robo vinkkaa" style="height:56px;width:auto;flex-shrink:0;"><span class="haaste-vihje-teksti">Käytä termiä lauseessa niin, että lukija ymmärtää mitä se tarkoittaa – älä vain listaa sanoja</span></p>
-              <script>
-                function paivitaLaskuri(ta) {
-                  var sanat = ta.value.trim() === '' ? 0 : ta.value.trim().split(/\s+/).length;
-                  var laskuri = document.getElementById('paivakertomus-laskuri');
-                  var merkki = document.getElementById('paivakertomus-merkki');
-                  laskuri.textContent = sanat + ' sanaa';
-                  if (sanat >= 80) { merkki.textContent = '✓ Hyvä pituus!'; merkki.style.color = '#0d9488'; }
-                  else if (sanat >= 40) { merkki.textContent = 'Jatka vielä...'; merkki.style.color = '#d97706'; }
-                  else { merkki.textContent = ''; }
-                }
-              </script>
-            </div>
-          </div>
-
-          <!-- ══ VAIHE 6: KOE YHDESSÄ ══ -->
-          <div id="elamänpolku-mission" class="mission-card" style="margin-top:14px; padding:0;">
-            <button class="vaihe-toggle" type="button" data-vaihe="6" onclick="toggleVaihe(this)" aria-expanded="false" aria-controls="vaiheSisalto6" style="--vaihe-accent:#d97706; background:transparent;">
-              <span class="vaihe-toggle-left">
-                <span class="vaihe-badge" id="vaiheBadge6">6</span>
                 <span>
                   <span class="vaihe-label">Elämänpolku-kävely</span>
                   <span class="vaihe-meta">Ryhmätehtävä · Rastikävely vihjeiden avulla</span>
@@ -4685,7 +4633,7 @@
               </span>
               <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
             </button>
-            <div class="vaihe-sisalto" id="vaiheSisalto6" data-tp-ikkuna hidden style="padding:0 18px 18px;">
+            <div class="vaihe-sisalto" id="vaiheSisalto5" data-tp-ikkuna hidden style="padding:0 18px 18px;">
             <p style="font-size:1.05rem; line-height:1.6;">Tämä on seikkailu koulussa. Ryhmänne etsii kolme rastia vihjeiden avulla. Jokaisella rastilla otatte yhden tehtäväkortin ja teette sen heti paikan päällä. Tehtävät liittyvät omaan polkuunne. Kukaan ei ole yksin, koska samat asiat toistuvat monella.</p>
 <div style="display:flex; align-items:center; gap:8px; background:#f0fdfa; border:1px solid #99f6e4; border-radius:10px; padding:14px; margin:14px 0;">
               <div style="display:flex; flex-direction:column; align-items:center; gap:2px; min-width:44px;">
@@ -4717,11 +4665,11 @@
           </div>
 
 
-          <!-- ══ VAIHE 7: YO-TUTKINTO TUTUKSI ══ -->
+          <!-- ══ VAIHE 6: YO-TUTKINTO TUTUKSI ══ -->
           <div id="yo-tutkinto-mission" class="mission-card" style="margin-top:14px; border:2px solid #e0e7ff; padding:0; background:#eef2ff;">
-            <button class="vaihe-toggle" type="button" data-vaihe="7" onclick="toggleVaihe(this)" aria-expanded="false" aria-controls="vaiheSisalto7" style="--vaihe-accent:#4f46e5; background:transparent;">
+            <button class="vaihe-toggle" type="button" data-vaihe="6" onclick="toggleVaihe(this)" aria-expanded="false" aria-controls="vaiheSisalto6" style="--vaihe-accent:#4f46e5; background:transparent;">
               <span class="vaihe-toggle-left">
-                <span class="vaihe-badge" id="vaiheBadge7">7</span>
+                <span class="vaihe-badge" id="vaiheBadge6">6</span>
                 <span>
                   <span class="vaihe-label">YO-tutkinto tutuksi</span>
                   <span class="vaihe-meta">Opas ja pikatesti · 10–15 min</span>
@@ -4729,7 +4677,7 @@
               </span>
               <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
             </button>
-            <div class="vaihe-sisalto" id="vaiheSisalto7" data-tp-ikkuna data-tp-otsikko="YO-tutkinto tutuksi" hidden style="padding:0;">
+            <div class="vaihe-sisalto" id="vaiheSisalto6" data-tp-ikkuna data-tp-otsikko="YO-tutkinto tutuksi" hidden style="padding:0;">
               <iframe src="../tehtavat/yo_tutkinto_9lk.html" title="YO-tutkinto tutuksi" loading="lazy" style="width:100%; height:640px; border:0; background:#f6f7fb;"></iframe>
             </div>
           </div>

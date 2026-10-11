@@ -139,7 +139,7 @@ window.OSIO_DATA = {
 
     "testi": {
       rakenne: [
-        "1. Opi sanasto → 2. Pelaa → 3. Testaa → 4. Sovella → 5. Luo → 6. Koe yhdessä → 7. YO-tutkinto tutuksi"
+        "1. Opi sanasto → 2. Pelaa → 3. Testaa → 4. Sovella → 5. Koe yhdessä → 6. YO-tutkinto tutuksi"
       ],
       tavoitteet: [
         "Hallitset toisen asteen sanaston: opintojakso, opintopiste, koulutussopimus, YO-koe",
