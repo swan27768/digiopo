@@ -4425,7 +4425,7 @@
                 <span class="vaihe-badge" id="vaiheBadge4">4</span>
                 <span>
                   <span class="vaihe-label">Sovella — päivä uudessa koulussa</span>
-                  <span class="vaihe-meta">⏱ 5 min · Lue tarinat ja etsi korostetut käsitteet</span>
+                  <span class="vaihe-meta">⏱ 5 min · Täydennä Ainon tarina ja lue Mikaelin tarina</span>
                 </span>
               </span>
               <i class="fa-solid fa-chevron-down vaihe-chevron" aria-hidden="true"></i>
@@ -4439,14 +4439,83 @@
                 </span>
                 <i class="fa-solid fa-chevron-down" style="color:#3b82f6; font-size:0.8rem; flex-shrink:0; transition:transform 0.2s;"></i>
               </button>
-              <div hidden style="padding:16px; background:#ffffff; border-top:1px solid #bfdbfe; font-size:0.88rem; line-height:1.7; color:#1e293b;">
-                <p style="margin:0 0 10px;">Aino astui lukion käytävälle ensimmäistä kertaa. Vatsassa tuntui pieni kihelmöinti. Uusi <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">ryhmä</mark> kokoontui yhteen luokkaan, ja ryhmän <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">ohjaaja</mark> toivotti kaikki tervetulleiksi. Ohjaaja kertoi auttavansa jokaista opintojen suunnittelussa.</p>
-                <p style="margin:0 0 10px;">Sitten Aino sai lukujärjestyksen. Se näytti erilaiselta kuin yläkoulussa. Ohjaaja selitti, että lukio on <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">luokaton</mark>. Opinnot eivät etene vuosiluokka kerrallaan niin kuin peruskoulussa. Aino voi itse päättää, missä tahdissa hän opiskelee – koulun tarjonnan sallimissa rajoissa. Lukuvuosi on jaettu 4–6 <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">jaksoon</mark>, ja jokaiselle jaksolle Aino valitsee omat opintonsa.</p>
-                <p style="margin:0 0 10px;">Lukio-opinnot koostuvat <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">opintojaksoista</mark>. Jokaisella opintojaksolla on oma laajuutensa, ja se mitataan <mark style="background:#dbeafe; color:#1e3a8a; border-radius:4px; padding:1px 5px;">opintopisteinä</mark>. Yksi opintopiste tarkoittaa 19 oppituntia, ja yksi oppitunti kestää 45 minuuttia. Joskus opintojakso kuuluu vain yhteen oppiaineeseen, joskus se yhdistää useita aineita. Jokainen lukio päättää tämän itse.</p>
+              <div id="aino-tarina" hidden style="padding:16px; background:#ffffff; border-top:1px solid #bfdbfe; font-size:0.88rem; line-height:1.7; color:#1e293b;">
+                <style>
+                  .aino-aukko{font:inherit;font-size:.95em;font-weight:600;color:#1e3a8a;background:#dbeafe;border:2px solid #93c5fd;border-radius:8px;padding:2px 6px;margin:0 2px;max-width:100%;cursor:pointer}
+                  .aino-aukko:focus-visible{outline:3px solid #1e3a8a;outline-offset:2px}
+                  .aino-aukko.oikein{background:#dcfce7;border-color:#22c55e;color:#14532d}
+                  .aino-aukko.vaarin{background:#fee2e2;border-color:#ef4444;color:#7f1d1d}
+                  .aino-aukko.tyhja{background:#fef3c7;border-color:#f59e0b;color:#78350f}
+                  .aino-oikea{font-size:.85em;font-weight:700;color:#15803d;margin:0 2px}
+                  .aino-btn{font:inherit;font-weight:700;font-size:.95rem;border:0;border-radius:10px;padding:10px 20px;cursor:pointer;background:#1d4ed8;color:#fff}
+                  .aino-btn.toinen{background:#e2e8f0;color:#1e293b;margin-left:8px}
+                  #aino-tulos{margin-top:12px;padding:12px 14px;border-radius:10px;font-weight:600;display:none}
+                  #aino-tulos.nakyy{display:block}
+                </style>
+                <p style="margin:0 0 12px; font-weight:600; color:#1e3a8a;">Valitse jokaiseen aukkoon oikea sana. Kun olet valmis, paina Tarkista.</p>
+                
+                <p style="margin:0 0 10px;">Aino astui lukion käytävälle ensimmäistä kertaa. Vatsassa tuntui pieni kihelmöinti. Uusi <select class="aino-aukko" data-oikea="ryhmä" aria-label="Aukko 1 / 6"><option value="">valitse…</option><option value="luokka">luokka</option><option value="ryhmä">ryhmä</option><option value="kurssi">kurssi</option><option value="kerho">kerho</option></select> kokoontui yhteen luokkaan, ja ryhmän <select class="aino-aukko" data-oikea="ohjaaja" aria-label="Aukko 2 / 6"><option value="">valitse…</option><option value="rehtori">rehtori</option><option value="luokanvalvoja">luokanvalvoja</option><option value="ohjaaja">ohjaaja</option><option value="kuraattori">kuraattori</option></select> toivotti kaikki tervetulleiksi. Ohjaaja kertoi auttavansa jokaista opintojen suunnittelussa.</p>
+                <p style="margin:0 0 10px;">Sitten Aino sai lukujärjestyksen. Se näytti erilaiselta kuin yläkoulussa. Ohjaaja selitti, että lukio on <select class="aino-aukko" data-oikea="luokaton" aria-label="Aukko 3 / 6"><option value="">valitse…</option><option value="vuosiluokkainen">vuosiluokkainen</option><option value="maksullinen">maksullinen</option><option value="luokaton">luokaton</option><option value="kaksivuotinen">kaksivuotinen</option></select>. Opinnot eivät etene vuosiluokka kerrallaan niin kuin peruskoulussa. Aino voi itse päättää, missä tahdissa hän opiskelee – koulun tarjonnan sallimissa rajoissa. Lukuvuosi on jaettu 4–6 <select class="aino-aukko" data-oikea="jaksoon" aria-label="Aukko 4 / 6"><option value="">valitse…</option><option value="lukukauteen">lukukauteen</option><option value="jaksoon">jaksoon</option><option value="viikkoon">viikkoon</option><option value="koeviikkoon">koeviikkoon</option></select>, ja jokaiselle jaksolle Aino valitsee omat opintonsa.</p>
+                <p style="margin:0 0 10px;">Lukio-opinnot koostuvat <select class="aino-aukko" data-oikea="opintojaksoista" aria-label="Aukko 5 / 6"><option value="">valitse…</option><option value="vuosiluokista">vuosiluokista</option><option value="tutkinnon osista">tutkinnon osista</option><option value="opintojaksoista">opintojaksoista</option><option value="ylioppilaskokeista">ylioppilaskokeista</option></select>. Jokaisella opintojaksolla on oma laajuutensa, ja se mitataan <select class="aino-aukko" data-oikea="opintopisteinä" aria-label="Aukko 6 / 6"><option value="">valitse…</option><option value="osaamispisteinä">osaamispisteinä</option><option value="kursseina">kursseina</option><option value="opintopisteinä">opintopisteinä</option><option value="arvosanoina">arvosanoina</option></select>. Yksi opintopiste tarkoittaa 19 oppituntia, ja yksi oppitunti kestää 45 minuuttia. Joskus opintojakso kuuluu vain yhteen oppiaineeseen, joskus se yhdistää useita aineita. Jokainen lukio päättää tämän itse.</p>
                 <p style="margin:0 0 10px;">Aino katsoi lukujärjestystään ja hymyili. Kaikkea ei tarvitse ymmärtää heti ensimmäisenä päivänä. Ryhmän ohjaaja auttaa, kun suunnitelmaa tehdään yhdessä.</p>
-                <div style="background:#eff6ff; border-radius:8px; padding:10px 14px; margin-top:12px;">
-                  <p style="margin:0; font-size:0.8rem; color:#1d4ed8; font-weight:600;">Käsitteet: <span style="font-weight:400;">luokaton lukio · jakso · opintopiste · opintojakso</span></p>
+                <div style="margin-top:14px;">
+                  <button type="button" class="aino-btn" id="aino-tarkista">Tarkista vastaukset</button><button type="button" class="aino-btn toinen" id="aino-uusi" hidden>Yritä uudelleen</button>
                 </div>
+                <div id="aino-tulos" role="status" aria-live="polite"></div>
+                <script>
+                (function () {
+                  var box = document.getElementById('aino-tarina');
+                  if (!box) return;
+                  var btn = document.getElementById('aino-tarkista');
+                  var uusi = document.getElementById('aino-uusi');
+                  var tulos = document.getElementById('aino-tulos');
+                  var sels = box.querySelectorAll('.aino-aukko');
+                  function siivoa() {
+                    box.querySelectorAll('.aino-oikea').forEach(function (e) { e.parentNode.removeChild(e); });
+                    sels.forEach(function (s) { s.classList.remove('oikein', 'vaarin', 'tyhja'); s.disabled = false; });
+                  }
+                  btn.addEventListener('click', function () {
+                    siivoa();
+                    var ok = 0, tyhjia = 0;
+                    sels.forEach(function (s) {
+                      var oikea = s.getAttribute('data-oikea');
+                      if (!s.value) { s.classList.add('tyhja'); tyhjia++; return; }
+                      if (s.value === oikea) { s.classList.add('oikein'); ok++; }
+                      else {
+                        s.classList.add('vaarin');
+                        var m = document.createElement('span');
+                        m.className = 'aino-oikea';
+                        m.textContent = '→ ' + oikea;
+                        s.parentNode.insertBefore(m, s.nextSibling);
+                      }
+                    });
+                    var n = sels.length;
+                    var teksti, vari;
+                    if (tyhjia) {
+                      teksti = 'Täytä ensin kaikki aukot (' + tyhjia + ' jäi tyhjäksi). Keltaiset aukot odottavat vastausta.';
+                      vari = ['#fef3c7', '#78350f'];
+                    } else if (ok === n) {
+                      teksti = '🎉 Kaikki ' + n + '/' + n + ' oikein! Hallitset lukion käsitteet.';
+                      vari = ['#dcfce7', '#14532d'];
+                    } else {
+                      teksti = ok + '/' + n + ' oikein. Vihreä merkitsee oikean vastauksen, punaisen vieressä on oikea sana. Voit kokeilla uudelleen.';
+                      vari = ['#fee2e2', '#7f1d1d'];
+                    }
+                    tulos.textContent = teksti;
+                    tulos.style.background = vari[0];
+                    tulos.style.color = vari[1];
+                    tulos.className = 'nakyy';
+                    uusi.hidden = !!tyhjia;
+                  });
+                  uusi.addEventListener('click', function () {
+                    siivoa();
+                    sels.forEach(function (s) { s.value = ''; });
+                    tulos.className = '';
+                    tulos.textContent = '';
+                    uusi.hidden = true;
+                  });
+                })();
+                </script>
               </div>
             </div>
 
