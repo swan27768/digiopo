@@ -44,13 +44,16 @@ window.dispatchEvent(new Event("fbready"));
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:dark;-webkit-text-size-adjust:100%}
 :root{
   --bg:#0e0e2e;
   --bg2:#1a1a4e;
   --card:#1e1e5a;
   --border:#3a3a8e;
   --text:#e8e8ff;
-  --muted:#8888bb;
+  --muted:#b4b4de;
+  --accent-text:#a89fff;
+  --field-border:#7a7ad0;
   --accent:#7c6fff;
   --green:#4ade80;
   --red:#f87171;
@@ -59,6 +62,8 @@ window.dispatchEvent(new Event("fbready"));
 }
 body{
   font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.5;
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
@@ -73,27 +78,27 @@ body{
 
 /* TITLE */
 .game-title{font-size:26px;font-weight:900;text-align:center;letter-spacing:-1px;line-height:1.2}
-.game-title span{color:var(--accent)}
-.game-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
+.game-title span{color:var(--accent-text)}
+.game-sub{font-size:15px;color:var(--muted);text-align:center;margin-top:4px}
 
 /* CARD */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;width:100%}
 
 /* INPUTS */
-.inp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:5px}
-.finp{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+.inp-lbl{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:5px}
+.finp{width:100%;padding:12px 14px;min-height:46px;background:rgba(255,255,255,.07);border:1.5px solid var(--field-border);border-radius:8px;color:var(--text);font-size:16px;outline:none;transition:border-color .2s}
 .finp:focus{border-color:var(--accent)}
 .finp::placeholder{color:var(--muted)}
 .inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .inp-group{display:flex;flex-direction:column}
 
 /* BUTTONS */
-.btn{padding:11px 22px;border-radius:8px;border:1px solid var(--border);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;background:rgba(255,255,255,.07);color:var(--text)}
+.btn{padding:12px 22px;min-height:46px;border-radius:8px;border:1px solid var(--field-border);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;background:rgba(255,255,255,.07);color:var(--text)}
 .btn:hover{border-color:var(--accent);color:var(--accent)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-acc{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-acc:hover{background:#9d96ff;border-color:#9d96ff;color:#fff}
+.btn-acc{background:#5547d6;color:#fff;border-color:#5547d6}
+.btn-acc:hover{background:#6a5de8;border-color:#a89fff;color:#fff}
 .btn-grn{background:var(--green);color:#000;border-color:var(--green)}
 .btn-grn:hover{filter:brightness(1.1);color:#000}
 .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
@@ -102,8 +107,8 @@ body{
 .sbar{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--r);width:100%;overflow:hidden}
 .scell{flex:1;text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
 .scell:last-child{border-right:none}
-.sval{font-size:20px;font-weight:900;color:var(--accent)}
-.slbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.sval{font-size:22px;font-weight:900;color:var(--accent-text)}
+.slbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
 
 /* DOOR GRID */
 .door-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:100%}
@@ -113,8 +118,9 @@ body{
   text-align:center;
   cursor:pointer;
   font-weight:700;
-  font-size:12px;
+  font-size:14px;
   line-height:1.3;
+  overflow-wrap:anywhere;hyphens:auto;
   transition:transform .15s,filter .15s,box-shadow .15s;
   position:relative;
   min-height:88px;
@@ -138,23 +144,23 @@ body{
 .sdot.on{background:var(--green);border-color:var(--green);box-shadow:0 0 6px rgba(74,222,128,.5)}
 
 /* QUESTION */
-.q-cat{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
-.q-title{font-size:22px;font-weight:900;color:var(--accent);margin-bottom:14px}
-.q-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:18px}
+.q-cat{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
+.q-title{font-size:22px;font-weight:900;color:var(--accent-text);margin-bottom:14px}
+.q-text{font-size:18px;line-height:1.6;color:var(--text);margin-bottom:18px}
 
 /* TIMER */
 .timer-row{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:16px}
 .tbar-wrap{flex:1;background:rgba(255,255,255,.1);border-radius:999px;height:7px;overflow:hidden}
 .tbar{height:100%;border-radius:999px;transition:width .1s linear,background .4s}
-.tnum{font-size:17px;font-weight:900;min-width:28px;text-align:right;transition:color .4s}
+.tnum{font-size:20px;font-weight:900;min-width:46px;text-align:right;transition:color .4s}
 
 /* ANSWER BUTTONS */
 .ans-btn{
-  width:100%;padding:13px 16px;
+  width:100%;padding:14px 16px;min-height:52px;line-height:1.5;
   background:rgba(255,255,255,.06);
-  border:1.5px solid var(--border);
+  border:1.5px solid var(--field-border);
   border-radius:9px;color:var(--text);
-  font-size:14px;font-weight:600;
+  font-size:16px;font-weight:600;
   text-align:left;cursor:pointer;
   transition:all .15s;
   display:block;margin-bottom:9px;
@@ -165,27 +171,27 @@ body{
 .ans-btn:disabled{cursor:default}
 
 /* FEEDBACK */
-.feedback{font-size:14px;font-weight:600;text-align:center;padding:10px;min-height:20px;line-height:1.5}
+.feedback{font-size:16px;font-weight:600;text-align:center;padding:10px;min-height:20px;line-height:1.5}
 .feedback.ok{color:var(--green)}
 .feedback.err{color:var(--red)}
 .feedback.time{color:var(--yellow)}
 
 /* LEADERBOARD */
 .lbwrap{width:100%;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
-.lbrow{display:grid;grid-template-columns:36px 1fr auto;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.lbrow{display:grid;grid-template-columns:36px 1fr auto;gap:6px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);font-size:15px}
 .lbrow:last-child{border-bottom:none}
-.lbrow.hdr{background:rgba(255,255,255,.05);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+.lbrow.hdr{background:rgba(255,255,255,.05);font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
 .lbrow.me{background:rgba(124,111,255,.15);border-left:3px solid var(--accent)}
 .lbrank{font-weight:900;text-align:center}
 .r1{color:gold}.r2{color:silver}.r3{color:#cd7f32}
-.lbname{font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.lbname small{font-weight:400;color:var(--muted);font-size:11px}
-.lbpts{font-weight:900;color:var(--accent);text-align:right}
+.lbname{font-weight:700;overflow-wrap:anywhere}
+.lbname small{font-weight:400;color:var(--muted);font-size:13px}
+.lbpts{font-weight:900;color:var(--accent-text);text-align:right}
 
 /* END */
-.big-score{font-size:68px;font-weight:900;color:var(--accent);text-align:center;line-height:1}
-.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);align-self:flex-start}
-.notice{border-radius:var(--r);padding:11px 15px;font-size:13px;width:100%}
+.big-score{font-size:68px;font-weight:900;color:var(--accent-text);text-align:center;line-height:1}
+.sec-lbl{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);align-self:flex-start}
+.notice{border-radius:var(--r);padding:11px 15px;font-size:15px;width:100%}
 .code-box{font-size:34px;font-weight:900;letter-spacing:6px;color:var(--yellow);text-align:center;padding:14px;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.3);border-radius:var(--r)}
 
 /* LANDING PAGE */
@@ -242,10 +248,11 @@ body{
 .btn-start-big:active{transform:scale(.97)}
 .btn-lb-small{
   background:rgba(255,255,255,.1);
-  color:rgba(255,255,255,.7);
-  border:1px solid rgba(255,255,255,.2);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.45);
   border-radius:8px;
-  font-size:13px;
+  min-height:44px;
+  font-size:15px;
   font-weight:600;
   padding:8px 20px;
   cursor:pointer;
@@ -269,15 +276,17 @@ button.door{font-family:inherit;appearance:none}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .anim-fade{animation:fadeUp .3s ease}
+.tnum::after{content:" s";font-size:.65em;font-weight:700}
+@media (forced-colors: active){.ans-btn,.door,.btn,.finp{border:2px solid ButtonText}}
 
 /* PROGRESS */
 .pwrap{width:100%;background:var(--bg2);border-radius:999px;height:5px;overflow:hidden}
 .pbar{height:100%;background:var(--accent);border-radius:999px;transition:width .4s}
 
 @media(max-width:480px){
-  .door-grid{grid-template-columns:repeat(5,1fr);gap:6px}
-  .door{font-size:10px;padding:10px 3px;min-height:74px}
-  .door-icon{font-size:18px;margin-bottom:3px}
+  .door-grid{grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}
+  .door{font-size:12px;padding:10px 2px;min-height:84px}
+  .door-icon{font-size:22px;margin-bottom:3px}
   .inp-row{grid-template-columns:1fr}
   .big-score{font-size:52px}
 }
@@ -299,12 +308,12 @@ button.door{font-family:inherit;appearance:none}
   <div class="landing-wrap">
     <div class="landing-bg" id="landing-bg">
       <div class="landing-fallback" id="landing-fallback">
-        <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.5)">Tiedon<br>Temppeli</div>
+        <div role="heading" aria-level="1" style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.5)">Tiedon<br>Temppeli</div>
       </div>
       <img loading="lazy" id="landing-img" alt="" aria-hidden="true" style="display:none;width:100%;border-radius:20px 20px 0 0;">
     </div>
     <div class="landing-btns">
-      <button class="btn-start-big" onclick="goRegister()">▶Start</button>
+      <button class="btn-start-big" onclick="goRegister()">▶ Aloita</button>
       <button class="btn-lb-small" onclick="goLb()">🏆 Tulostaulu</button>
     </div>
   </div>
@@ -314,36 +323,33 @@ button.door{font-family:inherit;appearance:none}
 <div id="s-welcome" class="screen">
   <div style="margin-top:6px;text-align:center">
     <div style="font-size:42px;margin-bottom:6px">🏛️</div>
-    <div class="game-title">Tiedon Temppelin<br><span>Salaisuudet</span></div>
+    <div class="game-title" role="heading" aria-level="1">Tiedon Temppelin<br><span>Salaisuudet</span></div>
     <div class="game-sub">Kuka pääsee nopeiten temppelin huipulle ja voittaa aarteen?</div>
   </div>
 
   <div class="card" style="text-align:center">
     <div style="font-size:15px;font-weight:800;margin-bottom:10px">🏆 Kierros 1 – Temppelin Portti</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:14px">
+    <div style="font-size:15px;color:var(--muted);line-height:1.8">
       Edessäsi on Tiedon Temppeli – täynnä mystisiä portteja ja arvoituksia.<br>
       Ratkaise kaikki <strong style="color:var(--text)">30 arvoitusta</strong> kolmessa kerroksessa.<br>
       Nopein pelaaja pääsee temppelin huipulle ja voittaa <strong style="color:var(--yellow)">aarteen</strong>!<br>
       Aarteen sisältö selviää vain voittajalle. 🏅
-    </div>
-    <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:11px;font-size:12px;color:var(--muted);line-height:1.8">
-      ⚡ K1: 100p · K2: 150p · K3: 200p per oikea &nbsp;·&nbsp; 2 yritystä per kysymys, väärä −20p &nbsp;·&nbsp; 🏆 Tulostaulu
     </div>
   </div>
 
   <div style="width:100%;display:flex;flex-direction:column;gap:10px">
     <div class="inp-group">
       <label class="inp-lbl" for="inp-nimi">Nimimerkki *</label>
-      <input class="finp" id="inp-nimi" placeholder="Keksi nimimerkki" maxlength="30" autocomplete="off" aria-describedby="nimi-vihje" aria-required="true">
-      <div id="nimi-vihje" style="font-size:12px;color:var(--muted);margin-top:5px">Älä käytä oikeaa nimeäsi. Nimimerkki ja koulu näkyvät tulostaulussa.</div>
+      <input class="finp" id="inp-nimi" placeholder="Keksi nimimerkki" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="next" aria-describedby="nimi-vihje" aria-required="true">
+      <div id="nimi-vihje" style="font-size:14px;color:var(--muted);margin-top:5px">Älä käytä oikeaa nimeäsi. Nimimerkki ja koulu näkyvät tulostaulussa.</div>
     </div>
     <div class="inp-group">
       <label class="inp-lbl" for="inp-koulu">Koulu *</label>
-      <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40" aria-required="true">
+      <input class="finp" id="inp-koulu" placeholder="Koulu" maxlength="40" autocomplete="off" enterkeyhint="go" aria-required="true">
     </div>
   </div>
 
-  <div id="welcome-err" role="alert" style="font-size:13px;color:var(--red);display:none">⚠ Kirjoita nimimerkki ja koulu</div>
+  <div id="welcome-err" role="alert" style="font-size:15px;color:var(--red);display:none">⚠ Kirjoita nimimerkki ja koulu</div>
 
   <div class="btns">
     <button class="btn btn-acc" onclick="startGame()" style="font-size:15px;padding:13px 30px">🚀 Aloita peli!</button>
@@ -353,7 +359,7 @@ button.door{font-family:inherit;appearance:none}
 
 <!-- ═══ GAME MAP ═══ -->
 <div id="s-game" class="screen">
-  <div class="game-title" style="font-size:18px">🏛️ Tiedon Temppeli – <span id="round-label">Kierros 1</span></div>
+  <div class="game-title" role="heading" aria-level="1" style="font-size:18px">🏛️ Tiedon Temppeli – <span id="round-label">Kierros 1</span></div>
 
   <div class="sbar">
     <div class="scell"><div class="sval" id="g-score">0</div><div class="slbl">Pisteet</div></div>
@@ -362,10 +368,10 @@ button.door{font-family:inherit;appearance:none}
   </div>
 
   <div class="card" style="padding:16px">
-    <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:12px;line-height:1.6">
+    <div style="font-size:15px;color:var(--muted);text-align:center;margin-bottom:12px;line-height:1.6">
       Klikkaa portteja ja ratkaise arvoitukset. Nopein pelaaja pääsee temppelin huipulle ja voittaa aarteen – aarteen sisältö selviää vain voittajalle! 🏅
     </div>
-    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">
+    <div style="font-size:14px;color:var(--muted);text-align:center;margin-bottom:10px">
       Ratkaistu: <span id="g-solved2" style="color:var(--text);font-weight:700">0</span>/10
     </div>
     <div class="sdots" id="solved-dots" aria-hidden="true"></div>
@@ -378,13 +384,13 @@ button.door{font-family:inherit;appearance:none}
 <div id="s-question" class="screen">
   <div class="card anim-fade" style="padding:22px">
     <div class="q-cat" id="q-cat">Kategoria</div>
-    <div class="q-title" id="q-title">Otsikko</div>
+    <div class="q-title" id="q-title" role="heading" aria-level="2">Otsikko</div>
     <div class="timer-row">
       <div class="tbar-wrap" aria-hidden="true"><div class="tbar" id="tbar" style="width:100%;background:var(--green)"></div></div>
       <div class="tnum" id="tnum" role="timer" aria-live="off" aria-label="Aikaa jäljellä sekunteina" style="color:var(--green)">30</div>
     </div>
     <div class="q-text" id="q-text" tabindex="-1"></div>
-    <div id="q-answers"></div>
+    <div id="q-answers" role="group" aria-labelledby="q-text"></div>
     <div class="feedback" id="q-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
     <div id="sr-live" class="sr-only" role="status" aria-live="polite"></div>
     <div id="q-btns" style="display:none;margin-top:4px">
@@ -407,9 +413,9 @@ button.door{font-family:inherit;appearance:none}
       <span style="color:var(--yellow)">Aarre odottaa temppelin huipulla. 🏅</span>
     </div>
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">KIERROS 1 – PISTEET</div>
-      <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:6px">KIERROS 1 – PISTEET</div>
+      <div style="font-size:36px;font-weight:900;color:var(--accent-text)" id="trans-score">0</div>
+      <div style="font-size:14px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
     </div>
     <button class="btn-start-big" onclick="startRound2()" style="font-size:17px;padding:14px 36px">
       Jatka toiselle kerrokselle →
@@ -430,9 +436,9 @@ button.door{font-family:inherit;appearance:none}
       <span style="color:var(--yellow)">Tämä on viimeinen mahdollisuus kisata aarteesta. 🏅</span>
     </div>
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">PISTEET TÄHÄN MENNESSÄ</div>
-      <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans2-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:6px">PISTEET TÄHÄN MENNESSÄ</div>
+      <div style="font-size:36px;font-weight:900;color:var(--accent-text)" id="trans2-score">0</div>
+      <div style="font-size:14px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
     </div>
     <button class="btn-start-big" onclick="startRound3()" style="font-size:17px;padding:14px 36px">
       Jatka kolmannelle kerrokselle →
@@ -442,36 +448,36 @@ button.door{font-family:inherit;appearance:none}
 
 <!-- ═══ END ═══ -->
 <div id="s-end" class="screen">
-  <div class="game-title" style="font-size:20px">🏆 Seikkailu <span>päättyi!</span></div>
+  <div class="game-title" role="heading" aria-level="1" style="font-size:20px">🏆 Seikkailu <span>päättyi!</span></div>
 
   <div class="card" style="text-align:center">
     <div style="font-size:52px;margin-bottom:8px" id="end-emoji">🎉</div>
     <div style="font-size:19px;font-weight:900;margin-bottom:6px" id="end-title">Mahtava suoritus!</div>
     <div class="big-score" id="end-score">0</div>
-    <div style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:16px">kokonaispistettä</div>
+    <div style="font-size:15px;color:var(--muted);margin-top:4px;margin-bottom:16px">kokonaispistettä</div>
     <div id="aarre-box" style="width:100%;background:linear-gradient(135deg,rgba(250,204,21,.14),rgba(250,204,21,.04));border:1.5px solid var(--yellow);border-radius:14px;padding:16px 18px;margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--yellow);font-weight:800;margin-bottom:8px">🏆 Temppelin aarre</div>
+      <div style="font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--yellow);font-weight:800;margin-bottom:8px">🏆 Temppelin aarre</div>
       <div id="end-aarre" style="font-size:16px;font-weight:700;line-height:1.5;font-style:italic;color:var(--text)">…</div>
     </div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:4px">🏅 Olet saavuttanut temppelin huipun! Katso sijoituksesi tulostaulusta alta.</div>
+    <div style="font-size:15px;color:var(--muted);margin-bottom:4px">🏅 Olet saavuttanut temppelin huipun! Katso sijoituksesi tulostaulusta alta.</div>
   </div>
 
   <div style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:8px;padding:11px">
-        <div style="font-size:22px;font-weight:900;color:var(--accent)" id="stat-correct">0</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Oikein</div>
+        <div style="font-size:22px;font-weight:900;color:var(--accent-text)" id="stat-correct">0</div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase">Oikein</div>
       </div>
       <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:8px;padding:11px">
-        <div style="font-size:22px;font-weight:900;color:var(--accent)" id="stat-time">0:00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Kokonaisaika</div>
+        <div style="font-size:22px;font-weight:900;color:var(--accent-text)" id="stat-time">0:00</div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase">Kokonaisaika</div>
       </div>
     </div>
   </div>
 
   <div class="sec-lbl">🏆 TULOSTAULU – TOP 5 (K1 + K2 + K3)</div>
   <div id="end-lb-area" style="width:100%">
-    <div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Ladataan...</div>
+    <div style="text-align:center;padding:16px;color:var(--muted);font-size:15px">Ladataan...</div>
   </div>
   <div id="save-notice" class="notice" role="status" aria-live="polite" style="display:none"></div>
 
@@ -486,7 +492,7 @@ button.door{font-family:inherit;appearance:none}
   <div class="game-title" style="font-size:20px">🏆 <span>Tulostaulu</span></div>
   <div class="sec-lbl">TOP 5 – YHTEISPISTEET (K1 + K2 + K3)</div>
   <div id="main-lb-area" style="width:100%">
-    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Ladataan...</div>
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:15px">Ladataan...</div>
   </div>
   <div class="btns">
     <button class="btn btn-acc" onclick="showScreen('s-welcome')" style="min-width:140px">← Takaisin</button>
@@ -1605,7 +1611,7 @@ function pickSeries() {
 async function loadLb(areaId, highlight) {
   const area = document.getElementById(areaId);
   if (!area) return;
-  area.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Ladataan...</div>';
+  area.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:15px">Ladataan...</div>';
   withFb(async () => {
     const lb = await window._fbLbGet();
     renderLb(area, lb, highlight);
@@ -1621,7 +1627,7 @@ function esc(v) {
 
 function renderLb(area, lb, highlight) {
   if (!lb || lb.length === 0) {
-    area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Ei tuloksia vielä – ole ensimmäinen! 🎯</div>';
+    area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:15px">Ei tuloksia vielä – ole ensimmäinen! 🎯</div>';
     return;
   }
   const medals = ["🥇","🥈","🥉"];
@@ -1809,6 +1815,9 @@ function renderMap() {
     d.type = "button";
     d.className = "door" + (ratkaistu ? " solved" : "");
     d.style.background = q.color;
+    const tv = parasTekstiVari(q.color);
+    d.style.color = tv;
+    if (tv !== "#ffffff") d.style.textShadow = "none";
     d.setAttribute("aria-label", `Portti ${i + 1}: ${q.title}${ratkaistu ? ", ratkaistu" : ""}`);
     d.innerHTML = `<div class="door-icon" aria-hidden="true">${q.icon}</div><div>${q.title}</div>`;
     if (ratkaistu) d.disabled = true;
@@ -1820,6 +1829,23 @@ function renderMap() {
 /* ═══════════════════════════════════════
    KYSYMYS
 ═══════════════════════════════════════ */
+// Värin luettavuus: valitaan oviin musta tai valkoinen teksti ja vaalennetaan otsikon väri tarvittaessa
+function _lum(hex) {
+  const n = parseInt(hex.slice(1), 16), f = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+  return .2126 * f(n >> 16 & 255) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255);
+}
+function _kontrasti(a, b) { const x = _lum(a), y = _lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
+function parasTekstiVari(bg) { return _kontrasti(bg, "#ffffff") >= _kontrasti(bg, "#0b0b24") ? "#ffffff" : "#0b0b24"; }
+function luettavaVari(hex) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex)) return hex;
+  let n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255, out = hex;
+  for (let i = 0; i < 12 && _kontrasti(out, "#1e1e5a") < 4.5; i++) {
+    r += (255 - r) * .15; g += (255 - g) * .15; b += (255 - b) * .15;
+    out = "#" + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, "0")).join("");
+  }
+  return out;
+}
+
 function currentQSet() {
   const set = QUESTION_SETS[S.series];
   return S.currentRound === 1 ? set.k1 : S.currentRound === 2 ? set.k2 : set.k3;
@@ -1849,7 +1875,7 @@ async function openQuestion(idx) {
 
   document.getElementById("q-cat").textContent  = q.icon + " " + q.title;
   document.getElementById("q-title").textContent = q.title;
-  document.getElementById("q-title").style.color = q.color;
+  document.getElementById("q-title").style.color = luettavaVari(q.color);
   document.getElementById("q-text").textContent  = q.text;
   document.getElementById("q-feedback").textContent = "";
   document.getElementById("q-feedback").className = "feedback";
@@ -2149,19 +2175,19 @@ async function endGame() {
     if (res.saved) {
       notice.textContent = "✓ Tulos tallennettu tulostauluun!";
       notice.style.cssText = "display:block;background:#1c2a1c;border:1px solid #2d4a2d;color:#7ec87e;" +
-        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+        "border-radius:12px;padding:11px 15px;font-size:15px;width:100%";
     } else if (res.reason === "Aiempi tulos on parempi") {
       notice.textContent = "ℹ️ Sinulla on jo parempi tulos tallennettuna – sitä ei ylikirjoitettu.";
       notice.style.cssText = "display:block;background:#1c2030;border:1px solid #2d3a4a;color:#74b9ff;" +
-        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+        "border-radius:12px;padding:11px 15px;font-size:15px;width:100%";
     } else if (res.reason === "Nimi ei sovi") {
       notice.textContent = "⚠️ Tulosta ei tallennettu: nimimerkki tai koulu ei sovi tulostauluun.";
       notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;" +
-        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+        "border-radius:12px;padding:11px 15px;font-size:15px;width:100%";
     } else {
       notice.textContent = "⚠️ Tulosta ei voitu tallentaa – tarkista nettiyhteys.";
       notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;" +
-        "border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+        "border-radius:12px;padding:11px 15px;font-size:15px;width:100%";
     }
     await loadLb("end-lb-area", S.nimi);
   });
@@ -2175,7 +2201,7 @@ async function goPlayAgain() {
     const notice = document.getElementById("save-notice");
     if (notice) {
       notice.textContent = "⚠️ Uuden pelin käynnistys ei onnistunut – tarkista nettiyhteys.";
-      notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;border-radius:12px;padding:11px 15px;font-size:13px;width:100%";
+      notice.style.cssText = "display:block;background:#2a1515;border:1px solid #4a2d2d;color:#f87171;border-radius:12px;padding:11px 15px;font-size:15px;width:100%";
     }
     return;
   }
