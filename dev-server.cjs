@@ -73,7 +73,45 @@ const fakeInstaDB = [];
 const maailmaTauluDB = [];  // { id, koulu, ongelma, jasenet, idea, tila, tykkaukset, created_at }
 
 // ─── Tiedon Temppeli -muistikanta ────────────────────────────────────────────
-const tiedonTemppTulostaulu = [];   // { id, name, koulu, luokka, score, date, updated }
+// Tiedon temppeli: dev-serveri ajaa OIKEAN api/tiedontemppeli.js-käsittelijän, jotta pelin
+// vastausavain, pisteytys ja yritysraja ovat samat kuin tuotannossa (ei kopiota avaimesta).
+// Supabase korvataan muistissa olevalla feikillä; tulokset nollautuvat uudelleenkäynnistyksessä.
+const { pathToFileURL } = require("url");
+const FAKE_SB = "http://supabase.dev.local";
+const tiedonTemppTulostaulu = [];   // { id, nimi, koulu, pisteet }
+const _oikeaFetch = global.fetch;
+global.fetch = async function (input, init) {
+  const u = typeof input === "string" ? input : (input && input.url) || String(input);
+  if (!u.startsWith(FAKE_SB)) return _oikeaFetch(input, init);
+  const vastaus = (data, status = 200) =>
+    new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+  const polku = u.slice((FAKE_SB + "/rest/v1/").length);
+  if (polku.startsWith("tiedontemppeli_tulostaulu")) {
+    return vastaus([...tiedonTemppTulostaulu].sort((a, b) => b.pisteet - a.pisteet).slice(0, 5));
+  }
+  if (polku === "rpc/tiedontemppeli_tallenna_tulos") {
+    const b = JSON.parse((init && init.body) || "{}");
+    const nyk = tiedonTemppTulostaulu.find(r => r.id === b.p_id);
+    if (nyk && nyk.pisteet >= b.p_pisteet) return vastaus("aiempi_parempi");
+    if (nyk) Object.assign(nyk, { nimi: b.p_nimi, koulu: b.p_koulu, pisteet: b.p_pisteet });
+    else tiedonTemppTulostaulu.push({ id: b.p_id, nimi: b.p_nimi, koulu: b.p_koulu, pisteet: b.p_pisteet });
+    return vastaus("tallennettu");
+  }
+  return vastaus({}, 404);   // muut Supabase-kutsut (esim. virhelokit) eivät tee mitään
+};
+let _tiedonTemppeliKasittelija = null;
+async function haeTiedonTemppeliKasittelija() {
+  if (!_tiedonTemppeliKasittelija) {
+    process.env.SUPABASE_URL = FAKE_SB;
+    process.env.SUPABASE_SERVICE_KEY = "dev";
+    delete process.env.LISENSSI_JWT_SECRET;      // maksumuuri pois päältä kehityksessä
+    delete process.env.UPSTASH_REDIS_REST_URL;   // muistipohjaiset rajat riittävät
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    _tiedonTemppeliKasittelija =
+      (await import(pathToFileURL(path.join(ROOT, "api", "tiedontemppeli.js")).href)).default;
+  }
+  return _tiedonTemppeliKasittelija;
+}
 
 // ─── AmmattiSet -muistikanta ──────────────────────────────────────────────────
 const ammattSetTulostaulu  = [];    // { id, name, koulu, luokka, score, date, updated }
@@ -226,40 +264,22 @@ const server = http.createServer(async (req, res) => {
     return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
   }
 
-  // ── API: tiedontemppeli (paikallinen, muistipohjainen) ───────────────────
+  // ── API: tiedontemppeli → oikea käsittelijä (api/tiedontemppeli.js) ───────
   if (url.startsWith("/api/tiedontemppeli")) {
-    if (req.method === "OPTIONS") {
-      res.writeHead(204, { "Access-Control-Allow-Origin": "*" });
-      return res.end();
+    const kasittelija = await haeTiedonTemppeliKasittelija();
+    const query = Object.fromEntries(new URL(req.url, "http://localhost").searchParams);
+    let body;
+    if (req.method === "POST") {
+      const raw = await lueRunko(req);
+      try { body = raw ? JSON.parse(raw) : {}; } catch { body = raw; }
     }
-
-    if (req.method === "GET") {
-      const top5 = [...tiedonTemppTulostaulu]
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
-      return lahetaJSON(res, 200, { ok: true, tulokset: top5 });
-    }
-
-    const raw = await lueRunko(req);
-    let body = {};
-    try { body = JSON.parse(raw); } catch { return lahetaJSON(res, 400, { ok: false, virhe: "virheellinen_pyynto" }); }
-
-    if (body.toiminto === "tallenna") {
-      const { id, nimi, koulu, luokka, pisteet } = body;
-      const existing = tiedonTemppTulostaulu.find(r => r.id === id);
-      if (existing && existing.score >= pisteet) {
-        return lahetaJSON(res, 200, { ok: true, saved: false, reason: "Aiempi tulos on parempi" });
-      }
-      const pvm = new Date().toLocaleDateString("fi-FI");
-      if (existing) {
-        existing.name = nimi; existing.koulu = koulu; existing.luokka = luokka || "";
-        existing.score = pisteet; existing.date = pvm; existing.updated = Date.now();
-      } else {
-        tiedonTemppTulostaulu.push({ id, name: nimi, koulu, luokka: luokka || "", score: pisteet, date: pvm, updated: Date.now() });
-      }
-      return lahetaJSON(res, 200, { ok: true, saved: true });
-    }
-    return lahetaJSON(res, 400, { ok: false, virhe: "tuntematon_toiminto" });
+    const vast = {
+      setHeader: (k, v) => res.setHeader(k, v),
+      status(koodi) { res.statusCode = koodi; return vast; },
+      json(data) { res.setHeader("Content-Type", "application/json; charset=utf-8"); res.end(JSON.stringify(data)); return vast; },
+      end() { res.end(); return vast; },
+    };
+    return kasittelija({ method: req.method, headers: req.headers, query, body, socket: req.socket }, vast);
   }
 
   // ── API: ammattiset (paikallinen, muistipohjainen) ────────────────────────
