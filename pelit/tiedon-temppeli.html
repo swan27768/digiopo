@@ -327,7 +327,7 @@ button.door{font-family:inherit;appearance:none}
       Aarteen sisältö selviää vain voittajalle. 🏅
     </div>
     <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:11px;font-size:12px;color:var(--muted);line-height:1.8">
-      ⚡ K1: 100p · K2: 150p · K3: 200p per oikea &nbsp;·&nbsp; 🏆 Tulostaulu
+      ⚡ K1: 100p · K2: 150p · K3: 200p per oikea &nbsp;·&nbsp; 2 yritystä per kysymys, väärä −20p &nbsp;·&nbsp; 🏆 Tulostaulu
     </div>
   </div>
 
@@ -409,7 +409,7 @@ button.door{font-family:inherit;appearance:none}
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px">KIERROS 1 – PISTEET</div>
       <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus · väärä vastaus −20p</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 2: oikea vastaus = 150p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
     </div>
     <button class="btn-start-big" onclick="startRound2()" style="font-size:17px;padding:14px 36px">
       Jatka toiselle kerrokselle →
@@ -432,7 +432,7 @@ button.door{font-family:inherit;appearance:none}
     <div style="background:rgba(255,255,255,.05);border-radius:10px;padding:14px;margin-bottom:20px">
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px">PISTEET TÄHÄN MENNESSÄ</div>
       <div style="font-size:36px;font-weight:900;color:var(--accent)" id="trans2-score">0</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus · väärä vastaus −20p</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Kierros 3: oikea vastaus = 200p + aikabonus · väärä vastaus −20p · 2 yritystä per kysymys</div>
     </div>
     <button class="btn-start-big" onclick="startRound3()" style="font-size:17px;padding:14px 36px">
       Jatka kolmannelle kerrokselle →
@@ -527,9 +527,9 @@ const QUESTIONS = [
     "icon": "⏳",
     "text": "Kuvitellaan, että sinut siirretään ajassa 200 vuotta taaksepäin suoraan kouluun. Mikä asia tuntuisi siellä sinusta todennäköisesti oudolta?",
     "answers": [
-      "A) Opettaja kirjoittaa liitutaululle.",
-      "B) Kukaan ei käytä kännykkää tai tietokonetta.",
-      "C) Oppilaat istuvat pulpeteissa."
+      "A) Opettaja kirjoittaa tehtävät liitutaululle oppilaille.",
+      "B) Kukaan ei käytä kännykkää eikä tietokonetta koulussa.",
+      "C) Oppilaat istuvat pulpeteissa ja kuuntelevat opettajaa."
     ]
   },
   {
@@ -538,9 +538,9 @@ const QUESTIONS = [
     "icon": "⚗️",
     "text": "Mikko laittoi limsapullon liian nopeasti pakastimeen, jotta se jäähtyisi. Kun hän otti sen ulos, limsa oli jäätynyt ja pullo oli hieman pullistunut. Miksi näin kävi?",
     "answers": [
-      "A) Limsaan tuli lisää sokeria jääkaapissa.",
+      "A) Limsaan syntyi pakkasessa lisää hiilihappoa, joka pullisti pullon.",
       "B) Neste laajenee jäätyessään, ja pullo ei kestänyt sitä.",
-      "C) Pullo alkoi hengittää ja turposi itse."
+      "C) Pullon korkki löystyi ja ilma pääsi pullon sisään."
     ]
   },
   {
@@ -549,9 +549,9 @@ const QUESTIONS = [
     "icon": "🌍",
     "text": "Jani menee kahvilaan Lontoossa ja sanoo reippaasti tiskillä: \"I want to buy a big bread.\" Myyjä katsoo häntä hetken oudosti. Mikä olisi voinut olla parempi tapa sanoa se?",
     "answers": [
-      "A) I want to eat a bread right now.",
+      "A) I want to buy one bread for me now.",
       "B) I would like a big loaf of bread, please.",
-      "C) Give bread now, thanks."
+      "C) Give me one big bread, thanks a lot."
     ]
   },
   {
@@ -571,9 +571,9 @@ const QUESTIONS = [
     "icon": "💪",
     "text": "Miksi on tärkeää lämmitellä ennen urheilusuoritusta?",
     "answers": [
-      "A) Jotta ei tule kylmä ulkona.",
+      "A) Jotta keho ei kylmene ja urheilu tuntuu mukavammalta ulkona.",
       "B) Se vähentää loukkaantumisriskiä ja parantaa suorituskykyä.",
-      "C) Koska opettaja käskee niin."
+      "C) Koska opettaja käskee ja kaikki tekevät niin."
     ]
   },
   {
@@ -593,9 +593,9 @@ const QUESTIONS = [
     "icon": "🌿",
     "text": "Mikä on yhteyttäminen?",
     "answers": [
-      "A) Prosessi, jossa kasvit muuttavat auringonvalon, veden ja hiilidioksidin energiaksi ja hapeksi.",
-      "B) Tapa, jolla eläimet kommunikoivat keskenään.",
-      "C) Menetelmä, jolla ihmiset kierrättävät jätteitä."
+      "A) Prosessi, jossa kasvit tekevät valon avulla energiaa ja happea.",
+      "B) Tapa, jolla eläimet kommunikoivat keskenään ja varoittavat vaarasta.",
+      "C) Menetelmä, jolla ihmiset kierrättävät jätteitä uusiokäyttöön."
     ]
   },
   {
@@ -640,9 +640,9 @@ const QUESTIONS_K2 = [
     "icon": "💻",
     "text": "Näet somessa videon, jossa tunnettu tiedemies väittää rokotteiden aiheuttavan vakavia sairauksia. Mitä kannattaa tehdä ensin?",
     "answers": [
-      "A) Jakaa video eteenpäin, koska asiantuntija sanoo niin.",
+      "A) Jakaa video eteenpäin heti, koska sen esittäjä on asiantuntija.",
       "B) Uskoa väitteet, koska ne ovat somessa laajasti levinneet.",
-      "C) Tarkistaa, onko video aito, ja etsiä tietoa luotettavista lähteistä."
+      "C) Tarkistaa, onko video aito, ja etsiä luotettavaa tietoa."
     ]
   },
   {
@@ -674,8 +674,8 @@ const QUESTIONS_K2 = [
     "text": "Miksi tummiin vaatteisiin pukeutunut henkilö tuntee olonsa kuumemmaksi auringossa kuin vaaleisiin pukeutunut?",
     "answers": [
       "A) Tummat vaatteet hengittävät huonommin kuin vaaleat.",
-      "B) Tummat vaatteet ovat yleensä paksumpia ja lämpimämpiä.",
-      "C) Tummat värit absorboivat enemmän auringon säteilyä kuin vaaleat."
+      "B) Tummat vaatteet ovat yleensä paksumpia ja siksi paljon lämpimämpiä.",
+      "C) Tummat värit imevät enemmän auringon säteilyä kuin vaaleat."
     ]
   },
   {
@@ -706,9 +706,9 @@ const QUESTIONS_K2 = [
     "icon": "🦋",
     "text": "Miksi luonnon monimuotoisuuden eli eri eläin- ja kasvilajien säilyttäminen on tärkeää?",
     "answers": [
-      "A) Jotta luonto näyttää kauniilta ja monipuoliselta.",
-      "B) Lajit ovat riippuvaisia toisistaan – yhden lajin häviäminen voi heikentää koko ekosysteemin toimintaa.",
-      "C) Harvinaiset lajit ovat taloudellisesti arvokkaita keräilijöille."
+      "A) Jotta luonto näyttää kauniilta ja monipuoliselta, kun ihmiset kulkevat metsissä ja retkeilevät.",
+      "B) Lajit ovat riippuvaisia toisistaan, joten yhden häviäminen heikentää koko ekosysteemiä.",
+      "C) Harvinaiset lajit ovat taloudellisesti arvokkaita keräilijöille ja matkailijoille."
     ]
   },
   {
@@ -718,7 +718,7 @@ const QUESTIONS_K2 = [
     "text": "Miksi Suomessa on ns. yötön yö kesällä?",
     "answers": [
       "A) Suomi sijaitsee lähellä pohjoisnapaa, ja maa on kesällä kallellaan aurinkoa kohti.",
-      "B) Suomi on lähellä päiväntasaajaa, jossa aurinko paistaa pitkään.",
+      "B) Suomi on lähellä päiväntasaajaa, jossa aurinko paistaa joka päivä pitkään ja kuumasti kesällä.",
       "C) Suomen ilmasto on poikkeuksellisen lämmin, joten aurinko paistaa pidempään."
     ]
   }
@@ -742,9 +742,9 @@ const QUESTIONS_K3 = [
     "icon": "🧠",
     "text": "Mainos väittää: \"Yhdeksän kymmenestä lääkäristä suosittelee tätä vitamiinia!\" Miksi tämä väite kannattaa kyseenalaistaa?",
     "answers": [
-      "A) Koska lääkärit eivät tunne ravitsemusta.",
-      "B) Koska emme tiedä, kuinka monta lääkäriä kysyttiin tai millä perusteella he suosittelivat.",
-      "C) Koska vitamiinit ovat aina haitallisia."
+      "A) Koska lääkärit eivät tunne ravitsemusta eivätkä tiedä vitamiineista mitään.",
+      "B) Koska emme tiedä, montako lääkäriä kysyttiin tai miksi he suosittelivat.",
+      "C) Koska vitamiinit ovat aina haitallisia ja vaarallisia kaikille ihmisille."
     ]
   },
   {
@@ -775,9 +775,9 @@ const QUESTIONS_K3 = [
     "icon": "📜",
     "text": "Miksi ihmiset muuttivat maalta kaupunkeihin teollistumisen aikana 1800-luvulla?",
     "answers": [
-      "A) Kaupungeissa oli parempi ilmasto ja enemmän puistoja.",
-      "B) Maatalouskoneet vähensivät maataloustyöntekijöiden tarvetta ja tehtaat tarjosivat töitä.",
-      "C) Hallitus pakotti ihmiset muuttamaan kaupunkeihin."
+      "A) Kaupungeissa oli parempi ilmasto ja enemmän puistoja sekä virkistystä.",
+      "B) Maatalouskoneet vähensivät työn tarvetta maalla ja tehtaat tarjosivat töitä.",
+      "C) Hallitus pakotti ihmiset muuttamaan kaupunkeihin, vaikka he eivät halunneet."
     ]
   },
   {
@@ -786,9 +786,9 @@ const QUESTIONS_K3 = [
     "icon": "⚙️",
     "text": "Miksi terässilloissa on pienet saumakohdat/raot eri osien välillä?",
     "answers": [
-      "A) Jotta sadevesi valuu pois sillalta.",
-      "B) Jotta silta näyttää esteettisemmältä.",
-      "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät sillan vääntymisen."
+      "A) Jotta sadevesi ja lumi valuvat pois sillan pinnalta, eikä jäätä synny talvella.",
+      "B) Jotta silta näyttää esteettisemmältä ja kevyemmältä kauempaa katsottuna.",
+      "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät vääntymisen."
     ]
   },
   {
@@ -797,9 +797,9 @@ const QUESTIONS_K3 = [
     "icon": "🎓",
     "text": "Suomalainen kirjoittaa: \"The weather in Finland is very different than Sweden.\" Mikä on kielioppivirhe?",
     "answers": [
-      "A) \"very\" pitäisi olla \"much\" – oikein: \"much different\".",
+      "A) \"very\" pitäisi olla \"much\" – oikein: \"much different\", ja lause on silloin kunnossa.",
       "B) \"different than\" pitäisi olla \"different from\" – oikein: \"different from Sweden\".",
-      "C) \"weather\" pitäisi olla \"climate\" – oikein: \"the climate\"."
+      "C) \"weather\" pitäisi olla \"climate\" – oikein: \"the climate\", ja lause on silloin kunnossa."
     ]
   },
   {
@@ -819,8 +819,8 @@ const QUESTIONS_K3 = [
     "icon": "🔭",
     "text": "Miksi antibiootit eivät tehoa flunssaan tai muihin virusinfektioihin?",
     "answers": [
-      "A) Antibiootit ovat liian heikkoja tappamaan viruksia.",
-      "B) Antibiootit tappavat vain bakteereita – virukset ovat rakenteeltaan erilaisia, eikä antibiootti vaikuta niihin.",
+      "A) Antibiootit ovat liian heikkoja tappamaan viruksia, joten tarvitaan vahvempia tabletteja.",
+      "B) Antibiootit tappavat vain bakteereita, eikä niillä ole vaikutusta viruksiin.",
       "C) Lääkärit eivät halua määrätä antibiootteja viruksiin, koska ne ovat kalliita."
     ]
   },
@@ -968,9 +968,9 @@ const QUESTIONS_S2_K2 = [
     "icon": "📖",
     "text": "Mainos väittää: 'Yhdeksän kymmenestä lääkäristä suosittelee tätä vitamiinia!' Miksi väite kannattaa kyseenalaistaa?",
     "answers": [
-      "A) Lääkärit eivät tunne ravitsemusta.",
-      "B) Emme tiedä, kuinka monta lääkäriä kyselyyn osallistui tai millä perusteella he suosittelivat.",
-      "C) Vitamiinit ovat aina haitallisia."
+      "A) Lääkärit eivät tunne ravitsemusta eivätkä osaa suositella vitamiineja.",
+      "B) Emme tiedä, montako lääkäriä kysyttiin tai millä perusteella.",
+      "C) Vitamiinit ovat aina haitallisia kaikille ihmisille."
     ]
   },
   {
@@ -979,9 +979,9 @@ const QUESTIONS_S2_K2 = [
     "icon": "💻",
     "text": "Mitä tarkoittaa 'pilvipalvelu'?",
     "answers": [
-      "A) Sääpalvelu, joka ennustaa pilvien liikkeen.",
-      "B) Tiedostojen tallentaminen ja käyttäminen internetin kautta etäpalvelimilla.",
-      "C) Kotitietokoneen lisämuisti."
+      "A) Sääpalvelu, joka ennustaa pilvien liikkeet ja sateen ajankohdan tarkasti.",
+      "B) Tiedostojen tallentaminen ja käyttö internetin kautta etäpalvelimilla.",
+      "C) Kotitietokoneen lisämuisti, jonka voi ostaa kaupasta."
     ]
   },
   {
@@ -990,9 +990,9 @@ const QUESTIONS_S2_K2 = [
     "icon": "🌱",
     "text": "Mitä tarkoittaa 'hiilijalanjälki'?",
     "answers": [
-      "A) Hiilen määrä maaperässä.",
-      "B) Ihmisen tai tuotteen elinkaarensa aikana tuottamat kasvihuonekaasupäästöt.",
-      "C) Tehtaiden savupiipuista tuleva noki."
+      "A) Hiilen määrä maaperässä ja kallioperässä jollain alueella.",
+      "B) Ihmisen tai tuotteen aiheuttamat kasvihuonekaasupäästöt.",
+      "C) Tehtaiden savupiipuista tuleva noki ja savu ilmassa."
     ]
   },
   {
@@ -1023,9 +1023,9 @@ const QUESTIONS_S2_K2 = [
     "icon": "🗣️",
     "text": "Suomalainen kirjoittaa englanniksi: 'I am very boring in this lesson.' Mikä on ongelma?",
     "answers": [
-      "A) 'Very' on väärä sana.",
-      "B) 'Boring' tarkoittaa 'tylsää henkilöä' – oikein olisi 'bored' (minulla on tylsää).",
-      "C) Lauseessa ei ole virhettä."
+      "A) 'Very' on väärä sana, oikein olisi 'really' tai 'quite' tässä lauseessa.",
+      "B) 'Boring' tarkoittaa 'tylsää henkilöä' – oikein olisi 'bored'.",
+      "C) Lauseessa ei ole virhettä, se on täysin oikein."
     ]
   },
   {
@@ -1081,9 +1081,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "🧠",
     "text": "Saat tekstiviestin: 'Pankkisi on sulkenut tilisi! Klikkaa tästä ja anna tunnuksesi.' Mitä teet?",
     "answers": [
-      "A) Klikkaat linkkiä ja kirjaudut sisään nopeasti.",
-      "B) Soitat pankin viralliseen numeroon tai menet pankin sivustolle suoraan selaimella.",
-      "C) Lähetät tunnuksesi tekstiviestillä takaisin."
+      "A) Klikkaat linkkiä ja kirjaudut sisään nopeasti, jotta tili ei sulkeudu.",
+      "B) Soitat pankin viralliseen numeroon tai menet pankin sivuille itse.",
+      "C) Lähetät tunnuksesi tekstiviestillä takaisin, jotta pankki voi auttaa."
     ]
   },
   {
@@ -1092,9 +1092,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "🛡️",
     "text": "Oppilas käyttää tekoälyä koko koulun esseen kirjoittamiseen. Mikä on suurin ongelma oppimisen kannalta?",
     "answers": [
-      "A) Tekoäly voi tehdä kielioppivirheitä.",
-      "B) Oppilas ei harjoittele itse ajattelemista ja kirjoittamista – tärkeimmät taidot jäävät kehittymättä.",
-      "C) Tekoäly kirjoittaa liian pitkiä tekstejä."
+      "A) Tekoäly voi tehdä kielioppivirheitä, ja teksti voi sisältää virheellistä tietoa.",
+      "B) Oppilas ei harjoittele itse ajattelua ja kirjoittamista, joten taidot eivät kehity.",
+      "C) Tekoäly kirjoittaa liian pitkiä tekstejä, joita opettajan on vaikea lukea."
     ]
   },
   {
@@ -1103,9 +1103,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "🌍",
     "text": "Miksi palmuöljyn kulutuksen vähentäminen voi olla ympäristöteko?",
     "answers": [
-      "A) Palmuöljy on myrkyllistä ihmisille.",
-      "B) Palmuöljyn viljelyyn raivataan sademetsää, mikä tuhoaa elinympäristöjä ja vapauttaa valtavasti CO₂.",
-      "C) Palmuöljy saastuttaa Suomen vesistöjä."
+      "A) Palmuöljy on ihmisille myrkyllistä ja aiheuttaa vakavia sairauksia lapsille.",
+      "B) Palmuöljyn viljelyyn raivataan sademetsää, mikä tuhoaa eläinten elinympäristöjä.",
+      "C) Palmuöljy saastuttaa Suomen vesistöjä ja rannikkoa pahasti."
     ]
   },
   {
@@ -1114,9 +1114,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "📜",
     "text": "Mitä tarkoitti 'kylmä sota' (1947–1991)?",
     "answers": [
-      "A) Pohjoisten maiden kauppasota.",
-      "B) USA:n ja Neuvostoliiton välinen ideologinen kilpailu ilman suoraa aseellista sotaa.",
-      "C) Ankaran talven aiheuttama kriisi Euroopassa."
+      "A) Pohjoisten maiden välinen kauppasota, jossa tullit nousivat.",
+      "B) USA:n ja Neuvostoliiton välinen kilpailu ilman suoraa aseellista sotaa.",
+      "C) Ankaran talven aiheuttama energiakriisi, joka koetteli koko Eurooppaa lujasti."
     ]
   },
   {
@@ -1125,9 +1125,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "⚙️",
     "text": "Miksi lentokoneessa on paineistettu matkustamo?",
     "answers": [
-      "A) Jotta matkustajat eivät palele.",
-      "B) Koska suurella korkeudella ilmanpaine on liian matala ihmiselle hengittää turvallisesti.",
-      "C) Jotta koneen siivet kestävät paremmin."
+      "A) Jotta matkustajat eivät palele, kun ulkona on todella kova pakkanen ja tuulinen sää.",
+      "B) Korkealla ilmanpaine on liian matala, jotta ihminen voisi hengittää turvallisesti.",
+      "C) Jotta koneen siivet kestävät paremmin lentämistä kovassa tuulessa."
     ]
   },
   {
@@ -1136,9 +1136,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "🎓",
     "text": "Mikä on ero sanojen 'affect' ja 'effect' välillä?",
     "answers": [
-      "A) Ne tarkoittavat täsmälleen samaa.",
-      "B) 'Affect' on yleensä verbi (vaikuttaa johonkin), 'effect' on yleensä substantiivi (vaikutus).",
-      "C) 'Effect' käytetään vain tieteellisissä teksteissä."
+      "A) Ne tarkoittavat täsmälleen samaa, ja niitä voi käyttää vapaasti toistensa tilalla.",
+      "B) 'Affect' on yleensä verbi (vaikuttaa), 'effect' on yleensä substantiivi (vaikutus).",
+      "C) 'Effect' käytetään vain tieteellisissä teksteissä eikä arkikielessä."
     ]
   },
   {
@@ -1158,9 +1158,9 @@ const QUESTIONS_S2_K3 = [
     "icon": "🔭",
     "text": "Miksi antibioottikuurin keskeyttäminen – kun olo jo paranee – on vaarallista?",
     "answers": [
-      "A) Loput antibiootit menevät hukkaan.",
-      "B) Osa bakteereista voi jäädä eloon ja kehittää resistenssin eli vastustuskyvyn antibioottia kohtaan.",
-      "C) Lääkäri voi kieltäytyä kirjoittamasta uutta reseptiä."
+      "A) Loput antibiootit menevät hukkaan ja kuuri pitää aloittaa aina kokonaan alusta uudelleen.",
+      "B) Osa bakteereista voi jäädä eloon ja kehittää vastustuskyvyn antibioottia vastaan.",
+      "C) Lääkäri voi kieltäytyä kirjoittamasta uutta reseptiä, vaikka tauti palaisi."
     ]
   },
   {
@@ -1169,7 +1169,7 @@ const QUESTIONS_S2_K3 = [
     "icon": "🏛️",
     "text": "Mitä tarkoittaa 'progressiivinen verotus'?",
     "answers": [
-      "A) Kaikki maksavat saman summan veroja.",
+      "A) Kaikki maksavat saman summan veroja riippumatta siitä, paljonko tienaavat.",
       "B) Suurempituloiset maksavat suuremman prosenttiosuuden tuloistaan veroja.",
       "C) Yritykset maksavat aina enemmän veroja kuin yksityishenkilöt."
     ]
@@ -1216,9 +1216,9 @@ const QUESTIONS_S3_K1 = [
     "icon": "⚗️",
     "text": "Miksi talvipakkasella hengitettäessä uloshengitys näkyy 'höyrynä'?",
     "answers": [
-      "A) Keuhkot hengittävät ulos savua.",
-      "B) Lämmin uloshengitysilma sisältää kosteutta, joka tiivistyy näkyviksi vesipisaroiksi kylmässä.",
-      "C) Suu jäähtyy ja jäätyy."
+      "A) Keuhkot hengittävät ulos oikeaa savua, koska kylmä ilma polttaa niitä sisältä pakkasella.",
+      "B) Uloshengityksen lämmin ja kostea ilma tiivistyy kylmässä näkyviksi vesipisaroiksi.",
+      "C) Suu jäähtyy ja jäätyy, ja jää näkyy höyrynä ulkoilmassa."
     ]
   },
   {
@@ -1280,7 +1280,7 @@ const QUESTIONS_S3_K1 = [
     "title": "Maan Mysteeri",
     "color": "#a16207",
     "icon": "🌏",
-    "text": "Mikä on Suomen korkein tunturi?",
+    "text": "Minkä tunturin rinteellä on Suomen korkein kohta?",
     "answers": [
       "A) Saana",
       "B) Halti",
@@ -1307,7 +1307,7 @@ const QUESTIONS_S3_K2 = [
     "icon": "📖",
     "text": "Pelikonsolissa näkyy viesti: 'Olet voittanut! Lähetä nyt osoitteesi ja puhelinnumerosi.' Mitä teet?",
     "answers": [
-      "A) Lähetät tiedot nopeasti, ettei voitto mene ohi.",
+      "A) Lähetät tiedot heti, jotta voitto ei mene ohi ennen kuin joku muu ehtii.",
       "B) Epäilet huijausta – oikeat kilpailut eivät toimi tällä tavoin.",
       "C) Kysyt kavereilta, onko heillä sama viesti."
     ]
@@ -1318,9 +1318,9 @@ const QUESTIONS_S3_K2 = [
     "icon": "💻",
     "text": "Mitä tarkoittaa 'lähdekoodi' (source code)?",
     "answers": [
-      "A) Internetsivuston osoite (URL).",
-      "B) Ihmisen luettavissa oleva ohjelmakoodi, josta tietokoneohjelma rakennetaan.",
-      "C) Tietokoneen virustorjuntaohjelma."
+      "A) Internetsivuston osoite (URL), jonka kirjoitat selaimen osoiteriville.",
+      "B) Ihmisen luettavissa oleva ohjelmakoodi, josta ohjelma rakennetaan.",
+      "C) Tietokoneen virustorjuntaohjelma, joka suojaa laitetta haittaohjelmilta."
     ]
   },
   {
@@ -1329,8 +1329,8 @@ const QUESTIONS_S3_K2 = [
     "icon": "🌱",
     "text": "Suomi sitoutui Pariisin ilmastosopimuksessa rajoittamaan lämpenemistä. Mikä on sopimuksen päätavoite?",
     "answers": [
-      "A) Estää kaikki teollisuus kehitysmaissa.",
-      "B) Pitää maapallon keskilämpötilan nousu alle 1,5–2 asteessa verrattuna esiteolliseen aikaan.",
+      "A) Estää kaikkien kehitysmaiden teollisuuden kasvun ja siirtää tehtaat kokonaan pois.",
+      "B) Pitää maapallon lämpeneminen alle 1,5–2 asteessa esiteollisesta ajasta.",
       "C) Poistaa kaikki fossiiliset polttoaineet vuoteen 2025 mennessä."
     ]
   },
@@ -1340,9 +1340,9 @@ const QUESTIONS_S3_K2 = [
     "icon": "🏰",
     "text": "Miksi Berliinin muuri kaadettiin vuonna 1989?",
     "answers": [
-      "A) Se oli rakennettu huonosta materiaalista.",
-      "B) Neuvostoliiton heikkeneminen johti Itä-Euroopan kommunististen hallitusten romahtamiseen.",
-      "C) NATO pakotti sen purkamaan."
+      "A) Se oli rakennettu huonosta materiaalista, joka alkoi hajota ajan myötä.",
+      "B) Neuvostoliitto heikkeni ja Itä-Euroopan kommunistiset hallitukset kaatuivat.",
+      "C) NATO pakotti Itä-Saksan purkamaan sen sotilaallisella painostuksella."
     ]
   },
   {
@@ -1351,9 +1351,9 @@ const QUESTIONS_S3_K2 = [
     "icon": "🔬",
     "text": "Miksi tähtien valo saavuttaa meidät niin myöhässä, että jotkut tähdistä voivat olla jo sammuneet?",
     "answers": [
-      "A) Teleskoopit hidastavat valon kulkua.",
-      "B) Tähdet ovat niin kaukana, että niiden valo vie vuosia, vuosisatoja tai miljoonia vuosia saavuttamaan meidät.",
-      "C) Valo katoaa matkalla pimeässä avaruudessa."
+      "A) Teleskoopit hidastavat valon kulkua, jolloin kuva tulee perille myöhässä.",
+      "B) Tähdet ovat niin kaukana, että niiden valo matkaa vuosia tai jopa vuosisatoja.",
+      "C) Valo katoaa osittain matkalla pimeässä avaruudessa ennen perille tuloa."
     ]
   },
   {
@@ -1362,9 +1362,9 @@ const QUESTIONS_S3_K2 = [
     "icon": "🗣️",
     "text": "Suomalainen kirjoittaa: 'The weather in Finland is very different than Sweden.' Mikä on virhe?",
     "answers": [
-      "A) 'Very' pitäisi olla 'much'.",
-      "B) 'Different than' pitäisi olla 'different from'.",
-      "C) 'Weather' pitäisi olla 'climate'."
+      "A) 'Very' pitäisi olla 'much', ja lause olisi silloin oikein.",
+      "B) 'Different than' pitäisi olla 'different from' tässä lauseessa.",
+      "C) 'Weather' pitäisi olla 'climate', ja lause olisi silloin oikein."
     ]
   },
   {
@@ -1384,9 +1384,9 @@ const QUESTIONS_S3_K2 = [
     "icon": "🦋",
     "text": "Miten rokotteet toimivat?",
     "answers": [
-      "A) Ne tappavat kaikki bakteerit kehosta.",
-      "B) Ne opettavat immuunijärjestelmän tunnistamaan taudinaiheuttajan ilman todellista sairastumista.",
-      "C) Ne vahvistavat sydäntä ja lihaksia."
+      "A) Ne tappavat kaikki bakteerit kehosta ja suojaavat siten kaikilta taudeilta.",
+      "B) Ne opettavat immuunijärjestelmän tunnistamaan taudinaiheuttajan sairastumatta.",
+      "C) Ne vahvistavat sydäntä ja lihaksia, joten keho jaksaa taistella paremmin."
     ]
   },
   {
@@ -1420,8 +1420,8 @@ const QUESTIONS_S3_K3 = [
     "icon": "🧠",
     "text": "Somessa leviää video, joka väittää kaupungin lopettavan julkisen liikenteen. Video on kerännyt miljoonia katselukertoja. Mitä teet?",
     "answers": [
-      "A) Jaat videon kaikille ystävillesi heti.",
-      "B) Tarkistat asian kaupungin viralliselta sivulta tai luotettavasta paikallismediasta.",
+      "A) Jaat videon heti kaikille ystävillesi, jotta hekin ehtivät varautua ajoissa.",
+      "B) Tarkistat asian kaupungin sivuilta tai luotettavasta paikallismediasta.",
       "C) Uskot videon, koska se on saanut niin paljon katselukertoja."
     ]
   },
@@ -1431,9 +1431,9 @@ const QUESTIONS_S3_K3 = [
     "icon": "🛡️",
     "text": "Mitä tarkoittaa 'phishing'?",
     "answers": [
-      "A) Tietokoneen hidastaminen viruksella.",
-      "B) Huijausyritys, jossa esiinnytään luotettavana tahona saadakseen uhri luovuttamaan salasanoja tai rahaa.",
-      "C) Nettisivuston kaataminen liiallisella liikenteellä."
+      "A) Tietokoneen hidastaminen viruksella niin, ettei se enää käynnisty.",
+      "B) Huijausyritys, jossa esiinnytään luotettavana saadakseen salasanoja tai rahaa.",
+      "C) Nettisivuston kaataminen liiallisella liikenteellä, jotta se menee kumoon."
     ]
   },
   {
@@ -1442,9 +1442,9 @@ const QUESTIONS_S3_K3 = [
     "icon": "🌍",
     "text": "Miksi luonnon monimuotoisuuden väheneminen uhkaa ruoantuotantoa?",
     "answers": [
-      "A) Kasvit eivät kasva ilman muuta kasvilajistoa.",
-      "B) Pölyttäjähyönteiset ja maaperän pieneliöt, joita ruoantuotanto tarvitsee, voivat hävitä.",
-      "C) Peltojen maaperä muuttuu värillisenä lajien hävitessä."
+      "A) Kasvit eivät kasva ilman muuta kasvilajistoa, joten pellot tyhjenevät.",
+      "B) Pölyttäjät ja maaperän pieneliöt, joita ruoantuotanto tarvitsee, voivat hävitä.",
+      "C) Peltojen maaperä muuttuu värilliseksi lajien hävitessä, ja sato huononee."
     ]
   },
   {
@@ -1453,9 +1453,9 @@ const QUESTIONS_S3_K3 = [
     "icon": "📜",
     "text": "Mitä tarkoitti 'apartheid' Etelä-Afrikassa?",
     "answers": [
-      "A) Perinteistä afrikkalaista musiikkia.",
-      "B) Laillinen rotuerottelujärjestelmä, jossa mustia ja valkoisia pidettiin erillään 1948–1994.",
-      "C) Tasavalta, jossa kaikilla oli yhtäläiset oikeudet."
+      "A) Perinteistä afrikkalaista musiikkia, jota soitettiin juhlissa rummuilla.",
+      "B) Laillinen rotuerottelujärjestelmä, jossa mustat ja valkoiset pidettiin erillään.",
+      "C) Tasavalta, jossa kaikilla oli yhtäläiset oikeudet ja äänioikeus."
     ]
   },
   {
@@ -1464,9 +1464,9 @@ const QUESTIONS_S3_K3 = [
     "icon": "⚙️",
     "text": "Miksi silloissa on pienet raot eri osien välillä?",
     "answers": [
-      "A) Jotta sadevesi valuu pois sillalta.",
-      "B) Jotta silta näyttää esteettisemmältä.",
-      "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät sillan vääntymisen."
+      "A) Jotta sadevesi ja lumi valuvat pois sillan pinnalta, eikä jäätä synny talvella.",
+      "B) Jotta silta näyttää esteettisemmältä ja kevyemmältä kauempaa katsottuna.",
+      "C) Metallit laajenevat kuumassa ja supistuvat kylmässä – raot estävät vääntymisen."
     ]
   },
   {
@@ -1497,8 +1497,8 @@ const QUESTIONS_S3_K3 = [
     "icon": "🔭",
     "text": "Hiukkasfysiikan 'Higgsin bosoni' löydettiin CERN:ssä 2012. Miksi se on tärkeä?",
     "answers": [
-      "A) Se tekee aineesta radioaktiivista.",
-      "B) Se on alkeishiukkanen, joka antaa muille hiukkasille massan – viimeinen puuttui osa Standardimallista.",
+      "A) Se tekee aineesta radioaktiivista ja vaarallista pienissä määrin.",
+      "B) Se on alkeishiukkanen, joka antaa muille hiukkasille massan.",
       "C) Se on pienin mahdollinen osa ainetta, jota ei voi jakaa."
     ]
   },
@@ -1508,9 +1508,9 @@ const QUESTIONS_S3_K3 = [
     "icon": "🏛️",
     "text": "Mitä tarkoittaa 'oikeusvaltioperiaate' (rule of law)?",
     "answers": [
-      "A) Tuomarit voivat päättää laeista itsenäisesti ilman kansanäänestystä.",
-      "B) Kaikki – myös hallitus ja presidentti – ovat samojen lakien alaisia, eikä kukaan ole lain yläpuolella.",
-      "C) Vain lakimiehillä on oikeus tulkita lakeja."
+      "A) Tuomarit voivat päättää laeista itsenäisesti ilman kansanäänestystä tai eduskunnan hyväksyntää.",
+      "B) Kaikki, myös hallitus ja presidentti, ovat lain alaisia – kukaan ei ole lain yläpuolella.",
+      "C) Vain lakimiehillä on oikeus tulkita lakeja ja tuomita ihmisiä."
     ]
   }
 ];
@@ -2006,7 +2006,8 @@ async function answerQuestion(origIdx, btn) {
       setTimeout(endGame, 1600);
     }
   } else {
-    // ✗ Väärin – lukitse tämä vaihtoehto, anna yrittää uudelleen
+    // ✗ Väärin – lukitse tämä vaihtoehto. Toinen väärä vastaus sulkee kysymyksen (palvelin päättää).
+    if (d.menetetty) { naytaMenetetty(d, btn); return; }
     btn.classList.add("wrong");
     btn.disabled = true;
     if (d.token) S.token = d.token;
@@ -2015,9 +2016,35 @@ async function answerQuestion(origIdx, btn) {
       S.score = Math.max(0, S.score - sakko);
       document.getElementById("g-score").textContent = S.score;
     }
-    fb.textContent = "✗ Väärin!" + (sakko > 0 ? ` −${sakko}p.` : "") + " Yritä uudelleen – etsi oikea vastaus.";
+    fb.textContent = "✗ Väärin!" + (sakko > 0 ? ` −${sakko}p.` : "") +
+      (Number(d.jaljella) === 1 ? " Yksi yritys jäljellä." : " Yritä uudelleen.");
     fb.className = "feedback err";
   }
+}
+
+// Kaksi väärää vastausta: kysymys sulkeutuu, oikea vastaus ja selitys näytetään, ei pisteitä.
+// Kysymys merkitään käsitellyksi, jotta kierros etenee; pelaaja palaa kartalle painikkeella.
+function naytaMenetetty(d, btn) {
+  S.answered = true;
+  clearInterval(S.qTimer);
+  document.querySelectorAll(".ans-btn").forEach(b => b.disabled = true);
+  if (btn) btn.classList.add("wrong");
+  if (d.token) S.token = d.token;
+  if (typeof d.total === "number") {
+    S.score = d.total;
+    document.getElementById("g-score").textContent = S.score;
+  }
+  if (typeof d.oikea === "number") {
+    document.querySelectorAll(".ans-btn").forEach(b => {
+      if (Number(b.dataset.orig) === d.oikea) b.classList.add("correct");
+    });
+  }
+  if (!S.solved.includes(S.currentQ)) S.solved.push(S.currentQ);
+  const fb = document.getElementById("q-feedback");
+  fb.textContent = "✗ Kaksi väärää vastausta – kysymys sulkeutui. " + (d.selitys || "") +
+    (d.sakot ? ` (−${d.sakot}p väärien vastausten vuoksi)` : "");
+  fb.className = "feedback err";
+  document.getElementById("q-btns").style.display = "block";
 }
 
 function naytaAikaLoppui(d) {
