@@ -2023,9 +2023,7 @@ async function answerQuestion(origIdx, btn) {
     S.score = (typeof d.total === "number") ? d.total : S.score + (d.pisteet || 0);   // palvelimen summa
     S.correctCount++;
     S.solved.push(S.currentQ);
-    const bonusTxt = d.bonus ? ` sis. ${d.bonus} aikabonus` : "";
-    const sakotTxt = d.sakot ? `, −${d.sakot}p vääristä vastauksista` : "";
-    fb.textContent = `✓ Oikein! ${d.selitys || ""} (+${d.pisteet}p${bonusTxt}${sakotTxt})`;
+    fb.textContent = `✓ Oikein! +${d.pisteet}p`;
     fb.className = "feedback ok";
     document.getElementById("q-btns").style.display = "block";
     if (S.solved.length === 10) {
@@ -2042,13 +2040,13 @@ async function answerQuestion(origIdx, btn) {
       S.score = Math.max(0, S.score - sakko);
       document.getElementById("g-score").textContent = S.score;
     }
-    fb.textContent = "✗ Väärin!" + (sakko > 0 ? ` −${sakko}p.` : "") +
-      (Number(d.jaljella) === 1 ? " Yksi yritys jäljellä." : " Yritä uudelleen.");
+    fb.textContent = "✗ Väärin!" + (sakko > 0 ? ` −${sakko}p` : "") +
+      (Number(d.jaljella) === 1 ? " · Yksi yritys jäljellä" : "");
     fb.className = "feedback err";
   }
 }
 
-// Kaksi väärää vastausta: kysymys sulkeutuu, oikea vastaus ja selitys näytetään, ei pisteitä.
+// Kaksi väärää vastausta: kysymys sulkeutuu, oikea vastaus näytetään, ei pisteitä.
 // Kysymys merkitään käsitellyksi, jotta kierros etenee; pelaaja palaa kartalle painikkeella.
 function naytaMenetetty(d, btn) {
   S.answered = true;
@@ -2067,8 +2065,7 @@ function naytaMenetetty(d, btn) {
   }
   if (!S.solved.includes(S.currentQ)) S.solved.push(S.currentQ);
   const fb = document.getElementById("q-feedback");
-  fb.textContent = "✗ Kaksi väärää vastausta – kysymys sulkeutui. " + (d.selitys || "") +
-    (d.sakot ? ` (−${d.sakot}p väärien vastausten vuoksi)` : "");
+  fb.textContent = "✗ Kysymys sulkeutui." + (d.sakot ? ` −${d.sakot}p` : "");
   fb.className = "feedback err";
   document.getElementById("q-btns").style.display = "block";
 }
@@ -2085,7 +2082,7 @@ function naytaAikaLoppui(d) {
       if (Number(b.dataset.orig) === d.oikea) b.classList.add("correct");
     });
   }
-  fb.textContent = "⏰ Aika loppui! " + ((d && d.selitys) || "") + ((d && d.sakot) ? ` (−${d.sakot}p väärien vastausten vuoksi)` : "");
+  fb.textContent = "⏰ Aika loppui!" + ((d && d.sakot) ? ` −${d.sakot}p` : "");
   fb.className = "feedback time";
   document.getElementById("q-btns").style.display = "block";
 }
