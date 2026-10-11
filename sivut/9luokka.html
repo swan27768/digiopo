@@ -4114,21 +4114,41 @@
             <p>Sanastoa, tehtäviä ja varmuutta seuraavaan vaiheeseen</p>
           </div>
 
-          <!-- Vaihepolku -->
-          <div class="vaihepolku-scroll" style="display:flex; justify-content:center; align-items:center; gap:0; margin:0 0 24px; overflow-x:auto; padding-bottom:4px;">
-            <div style="display:flex; align-items:center; gap:0; min-width:max-content;">
-              <span style="background:#1d4ed8; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">1 Opi</span>
-              <span style="color:#d1d5db; font-size:0.8rem; padding:0 4px;">›</span>
-              <span style="background:#0891b2; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">2 Pelaa</span>
-              <span style="color:#d1d5db; font-size:0.8rem; padding:0 4px;">›</span>
-              <span style="background:#0d9488; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">3 Testaa</span>
-              <span style="color:#d1d5db; font-size:0.8rem; padding:0 4px;">›</span>
-              <span style="background:#7c3aed; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">4 Sovella</span>
-              <span style="color:#d1d5db; font-size:0.8rem; padding:0 4px;">›</span>
-              <span style="background:#d97706; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">5 Koe yhdessä</span>
-              <span style="color:#d1d5db; font-size:0.8rem; padding:0 4px;">›</span>
-              <span style="background:#4f46e5; color:white; border-radius:999px; padding:4px 12px; font-size:0.75rem; font-weight:700; white-space:nowrap;">6 YO-tutkinto</span>
+          <!-- Vaihepolku: etenemispalkki + interaktiiviset palikat -->
+          <style>
+            .vp-wrap { max-width:640px; margin:0 auto 24px; }
+            .vp-info { display:flex; justify-content:space-between; align-items:baseline; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:6px; }
+            .vp-info small { font-weight:600; color:#64748b; }
+            .vp-bar { height:12px; background:#e2e8f0; border-radius:999px; overflow:hidden; }
+            .vp-bar-fill { height:100%; width:0; background:linear-gradient(90deg,#34d399,#16a34a); border-radius:999px; transition:width .5s ease; }
+            .vp-rivi { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:14px; }
+            .vp-pill { position:relative; display:inline-flex; align-items:center; gap:6px; background:var(--vp); color:#fff; border:2px solid var(--vp); border-radius:999px; padding:6px 14px; font-size:0.8rem; font-weight:700; font-family:inherit; white-space:nowrap; cursor:pointer; transition:transform .15s, box-shadow .15s; }
+            .vp-pill:hover { transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,.18); }
+            .vp-pill:focus-visible { outline:3px solid #0f172a; outline-offset:2px; }
+            .vp-num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.25); font-size:0.75rem; }
+            .vp-ok { display:none; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#16a34a; color:#fff; font-size:0.65rem; border:2px solid #fff; margin-left:2px; }
+            .vp-pill.vp-valmis { background:#fff; color:#14532d; border-color:#16a34a; }
+            .vp-pill.vp-valmis .vp-num { background:var(--vp); color:#fff; }
+            .vp-pill.vp-valmis .vp-ok { display:inline-flex; }
+            .vp-valmis-viesti { display:none; text-align:center; margin-top:12px; font-weight:700; color:#166534; background:#dcfce7; border:1px solid #86efac; border-radius:10px; padding:8px 12px; font-size:0.9rem; }
+            .vp-nollaa { background:none; border:none; color:#64748b; font-size:0.75rem; text-decoration:underline; cursor:pointer; padding:4px; font-family:inherit; }
+            .vaihe-suoritettu { display:inline-flex; align-items:center; gap:4px; margin-left:auto; margin-right:10px; background:#dcfce7; color:#166534; border:1px solid #86efac; border-radius:999px; padding:3px 10px; font-size:0.72rem; font-weight:800; white-space:nowrap; }
+            .vaihe-toggle { gap:6px; }
+            @media (max-width:480px){ .vaihe-suoritettu span.vs-teksti{display:none;} .vaihe-suoritettu{padding:3px 7px;} .vp-pill{padding:5px 10px; font-size:0.75rem;} }
+          </style>
+          <div class="vp-wrap" id="vaihePolku">
+            <div class="vp-info"><span>Etenemisesi</span><span id="vpLaskuri">0 / 6 suoritettu</span></div>
+            <div class="vp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Suoritetut tehtävät" id="vpBar"><div class="vp-bar-fill" id="vpFill"></div></div>
+            <div class="vp-rivi">
+              <button type="button" class="vp-pill" data-vp="1" style="--vp:#1d4ed8;" onclick="avaaVaihePolulta(1)" aria-label="Avaa tehtävä 1: Opi"><span class="vp-num">1</span> Opi<span class="vp-ok" aria-hidden="true">✓</span></button>
+              <button type="button" class="vp-pill" data-vp="2" style="--vp:#0891b2;" onclick="avaaVaihePolulta(2)" aria-label="Avaa tehtävä 2: Pelaa"><span class="vp-num">2</span> Pelaa<span class="vp-ok" aria-hidden="true">✓</span></button>
+              <button type="button" class="vp-pill" data-vp="3" style="--vp:#0d9488;" onclick="avaaVaihePolulta(3)" aria-label="Avaa tehtävä 3: Testaa"><span class="vp-num">3</span> Testaa<span class="vp-ok" aria-hidden="true">✓</span></button>
+              <button type="button" class="vp-pill" data-vp="4" style="--vp:#7c3aed;" onclick="avaaVaihePolulta(4)" aria-label="Avaa tehtävä 4: Sovella"><span class="vp-num">4</span> Sovella<span class="vp-ok" aria-hidden="true">✓</span></button>
+              <button type="button" class="vp-pill" data-vp="5" style="--vp:#d97706;" onclick="avaaVaihePolulta(5)" aria-label="Avaa tehtävä 5: Koe yhdessä"><span class="vp-num">5</span> Koe yhdessä<span class="vp-ok" aria-hidden="true">✓</span></button>
+              <button type="button" class="vp-pill" data-vp="6" style="--vp:#4f46e5;" onclick="avaaVaihePolulta(6)" aria-label="Avaa tehtävä 6: YO-tutkinto"><span class="vp-num">6</span> YO-tutkinto<span class="vp-ok" aria-hidden="true">✓</span></button>
             </div>
+            <div class="vp-valmis-viesti" id="vpViesti" role="status">🎉 Kaikki tehtävät suoritettu — hienoa työtä!</div>
+            <div style="text-align:center;"><button type="button" class="vp-nollaa" onclick="nollaaVaiheet()">Nollaa eteneminen</button></div>
           </div>
 
           <script>
@@ -4139,26 +4159,63 @@
               if (sisalto) sisalto.hidden = expanded;
               if (!expanded) merkitseVaiheAvatuksi(btn.dataset.vaihe);
             }
-            function merkitseVaiheAvatuksi(n) {
-              try {
-                var avatut = JSON.parse(localStorage.getItem('digiopo_9lk_testi_avatut') || '[]');
-                if (avatut.indexOf(n) === -1) {
-                  avatut.push(n);
-                  localStorage.setItem('digiopo_9lk_testi_avatut', JSON.stringify(avatut));
-                }
-                var badge = document.getElementById('vaiheBadge' + n);
-                if (badge) badge.classList.add('vaihe-valmis');
-              } catch (e) {}
+            var VAIHE_AVAIN = 'digiopo_9lk_testi_avatut';
+            function haeAvatut() {
+              try { return (JSON.parse(localStorage.getItem(VAIHE_AVAIN) || '[]') || []).filter(function (x) { return /^[1-6]$/.test(String(x)); }).map(String); } catch (e) { return []; }
             }
-            (function lataaVaiheTila() {
+            function merkitseVaiheAvatuksi(n) {
+              if (!n) return;
               try {
-                var avatut = JSON.parse(localStorage.getItem('digiopo_9lk_testi_avatut') || '[]');
-                avatut.forEach(function (n) {
-                  var b = document.getElementById('vaiheBadge' + n);
-                  if (b) b.classList.add('vaihe-valmis');
-                });
+                var avatut = haeAvatut();
+                if (avatut.indexOf(String(n)) === -1) {
+                  avatut.push(String(n));
+                  localStorage.setItem(VAIHE_AVAIN, JSON.stringify(avatut));
+                }
               } catch (e) {}
-            })();
+              paivitaEteneminen(true);
+            }
+            function paivitaEteneminen(animoi) {
+              var avatut = haeAvatut();
+              for (var n = 1; n <= 6; n++) {
+                var valmis = avatut.indexOf(String(n)) > -1;
+                var badge = document.getElementById('vaiheBadge' + n);
+                if (badge) badge.classList.toggle('vaihe-valmis', valmis);
+                var pill = document.querySelector('.vp-pill[data-vp="' + n + '"]');
+                if (pill) pill.classList.toggle('vp-valmis', valmis);
+                var btn = document.querySelector('.vaihe-toggle[data-vaihe="' + n + '"]');
+                if (btn) {
+                  var chip = btn.querySelector('.vaihe-suoritettu');
+                  if (valmis && !chip) {
+                    chip = document.createElement('span');
+                    chip.className = 'vaihe-suoritettu';
+                    chip.innerHTML = '<span aria-hidden="true">✓</span><span class="vs-teksti">Suoritettu</span>';
+                    var chev = btn.querySelector('.vaihe-chevron');
+                    btn.insertBefore(chip, chev);
+                  } else if (!valmis && chip) { chip.remove(); }
+                }
+              }
+              var lkm = avatut.length;
+              var fill = document.getElementById('vpFill');
+              if (fill) fill.style.width = Math.round(lkm / 6 * 100) + '%';
+              var bar = document.getElementById('vpBar');
+              if (bar) bar.setAttribute('aria-valuenow', lkm);
+              var l = document.getElementById('vpLaskuri');
+              if (l) l.textContent = lkm + ' / 6 suoritettu';
+              var v = document.getElementById('vpViesti');
+              if (v) v.style.display = lkm === 6 ? 'block' : 'none';
+            }
+            function avaaVaihePolulta(n) {
+              var btn = document.querySelector('.vaihe-toggle[data-vaihe="' + n + '"]');
+              if (!btn) return;
+              var kortti = btn.closest('.vaihe-kortti, .mission-card') || btn;
+              if (btn.getAttribute('aria-expanded') !== 'true') { kortti.scrollIntoView({ behavior: 'smooth', block: 'center' }); toggleVaihe(btn); }
+              else { kortti.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            }
+            function nollaaVaiheet() {
+              try { localStorage.removeItem(VAIHE_AVAIN); } catch (e) {}
+              if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { paivitaEteneminen(); }); else paivitaEteneminen();
+            }
+            paivitaEteneminen();
           </script>
 
           <!-- ══ VAIHE 1: OPI SANASTO ══ -->
