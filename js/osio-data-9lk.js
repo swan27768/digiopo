@@ -235,18 +235,6 @@ window.OSIO_DATA = {
         "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     },
-    "hakustrategia": {
-      otsikko: "Hakustrategia — suunnittele oma reittisi",
-      teksti: [
-        "Tehtävä soveltaa urapäätöksenteon vaihemallia (PIC-malli): ensin karsitaan vaihtoehdot laajasta joukosta (prescreening), sitten vertaillaan perusteellisesti (in-depth exploration) ja lopuksi valitaan (choice). Varma–realistinen–unelma-jako on portfolioajattelua: se maksimoi onnistumisen todennäköisyyden murskaamatta toiveita.",
-        "Kahteen osaan jaettu tehtävä hyödyntää tutustumiskäyntejä: päätös paranee, kun mukana on omakohtaista tietoa."
-      ],
-      lahteet: [
-        "Gati, I. & Asher, I. (2001). The PIC model for career decision making. <em>Contemporary models in vocational psychology</em>.",
-        "Savickas, M. (2005). The theory and practice of career construction. <em>Career development and counseling</em>.",
-        "Opintopolku.fi — yhteishaun viralliset valintaperusteet."
-      ]
-    },
     "epavarmuus": {
       otsikko: "Mitä jos suunnitelma ei toimi?",
       teksti: [
