@@ -205,7 +205,8 @@ window.OSIO_DATA = {
         "Dewey, J. (1933). <em>How We Think</em>. D.C. Heath. (reflektiivinen ajattelu)",
         "Guilford, J. P. (1967). <em>The Nature of Human Intelligence</em>. McGraw-Hill. (divergentti eli luova ajattelu)",
         "de Bono, E. (1970). <em>Lateral Thinking</em>. Ward Lock. (lateraalinen ajattelu)",
-        "Facione, P. (1990). Critical Thinking: A Statement of Expert Consensus. <em>The Delphi Report</em>. (kriittinen ajattelu)"
+        "Facione, P. (1990). Critical Thinking: A Statement of Expert Consensus. <em>The Delphi Report</em>. (kriittinen ajattelu)",
+        "Vorderman, C. ym. (2017). <em>Opiskelutaidot – Auta koululaista parempiin tuloksiin</em>. Suom. Veli-Pekka Ketola. Readme.fi. (ISBN 9789523214408)"
       ]
     },
     "salapoliisi": {
