@@ -171,7 +171,7 @@ async function haeKaikki(t) {
   for (let offset = 0; ; offset += SIVU) {
     const polku = `${t.nimi}?select=${t.sarakkeet.join(',')}&order=${t.jarjestys}&limit=${SIVU}&offset=${offset}`;
     const r = await sbFetch(polku);
-    if (!r.ok) throw new Error(`${t.nimi}: ${r.status}`);
+    if (!r.ok) throw new Error(`${t.nimi}: ${r.status} ${(await r.text()).slice(0, 300)}`);
     const sivu = await r.json();
     rivit.push(...sivu);
     if (sivu.length < SIVU) break;
@@ -237,7 +237,7 @@ export default async function handler(req, res) {
       return res.status(200).send(await vientiSql());
     } catch (err) {
       console.error('vienti virhe:', err.message);
-      return res.status(500).end();
+      return res.status(500).send('vienti virhe: ' + err.message);
     }
   }
   // ═══ TILAPÄINEN-VIENTI-LOPPU ═══
