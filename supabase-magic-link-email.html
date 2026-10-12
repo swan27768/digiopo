@@ -1,24 +1,32 @@
 <!--
-  DigiOpo - Supabasen Magic Link -sahkopostimalli
-  Liita tama: Supabase -> Authentication -> Email Templates -> Magic Link -> Message body.
-  Muuttuja {{ .ConfirmationURL }} on kirjautumislinkki - ala muuta sita.
-  Aihe (Subject): Kirjautumislinkkisi DigiOpoon
-  Muista myos vaihtaa lahettajan nimi "Admin" -> "DigiOpo"
-  (Supabase -> Project Settings -> Authentication -> SMTP / Sender name).
-  Aakkoset (a-umlaut / o-umlaut) on kirjoitettu HTML-entiteetteina (&auml; &ouml;),
-  jotta ne nakyvat oikein riippumatta sahkopostin merkistokoodauksesta.
+  DigiOpo - Supabasen kirjautumissahkopostin malli (linkki + koodi)
+  KAYTTO: liita sama sisalto molempiin malleihin:
+    Supabase -> Authentication -> Emails -> Templates
+      1) Magic Link      (Subject: Olet Omilla Jaljilla - jatka kirjautumista)
+      2) Confirm sign up (Subject: Olet Omilla Jaljilla - vahvista kirjautuminen)
+  Muuttujia ei saa muuttaa:
+    {{ .ConfirmationURL }} = kertakayttoinen kirjautumislinkki
+    {{ .Token }}           = kirjautumiskoodi (kirjoitetaan sivulle, jos linkki ei aukea)
+  Linkin ja koodin voimassaoloaika on Supabasessa 900 s (15 min):
+    Authentication -> Sign In / Providers -> Email -> Email OTP Expiration.
+  Aakkoset on kirjoitettu HTML-entiteetteina (&auml; &ouml;), jotta ne nakyvat
+  oikein riippumatta sahkopostin merkistokoodauksesta.
 -->
 <!-- Esikatselurivi: nakyy sahkopostilistalla otsikon vieressa (piilossa itse viestissa). -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
-  Kirjautumislinkkisi DigiOpoon &ndash; voimassa hetken ja toimii vain kerran.
+  Kirjautumislinkkisi ja koodisi DigiOpoon &ndash; voimassa 15 minuuttia.
 </div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0;padding:0;background:#eef5fb;">
   <tr>
     <td align="center" style="padding:32px 16px;">
       <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="width:480px;max-width:100%;background:#ffffff;border:1px solid #dbe8f5;border-radius:20px;overflow:hidden;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+        <!-- Varikaista -->
         <tr>
           <td style="height:6px;background:#1a3f6f;background:linear-gradient(90deg,#1a3f6f,#2563a8,#2d9e6b);font-size:0;line-height:0;">&nbsp;</td>
         </tr>
+
+        <!-- Logo -->
         <tr>
           <td align="center" style="padding:40px 40px 4px 40px;">
             <div style="font-size:26px;font-weight:700;letter-spacing:-0.2px;">
@@ -27,6 +35,8 @@
             <div style="margin-top:6px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9db3c8;font-weight:600;">Omilla j&auml;ljill&auml;</div>
           </td>
         </tr>
+
+        <!-- Otsikko ja johdanto -->
         <tr>
           <td align="center" style="padding:22px 40px 0 40px;">
             <h1 style="margin:0;font-size:22px;font-weight:800;color:#1a3f6f;">Kirjaudu sis&auml;&auml;n</h1>
@@ -35,11 +45,13 @@
         <tr>
           <td align="center" style="padding:12px 44px 0 44px;">
             <p style="margin:0;font-size:15px;line-height:1.6;color:#3a5a7a;">
-              Pyysit kirjautumislinkin opettajan hallintapaneeliin.
               Klikkaa alla olevaa painiketta kirjautuaksesi DigiOpoon.
+              Jos kirjaudut ensimm&auml;ist&auml; kertaa, t&auml;m&auml; vahvistaa samalla s&auml;hk&ouml;postiosoitteesi.
             </p>
           </td>
         </tr>
+
+        <!-- Painike -->
         <tr>
           <td align="center" style="padding:28px 40px 8px 40px;">
             <table role="presentation" cellpadding="0" cellspacing="0">
@@ -54,36 +66,75 @@
             </table>
           </td>
         </tr>
+
+        <!-- Erotin: tai -->
+        <tr>
+          <td style="padding:24px 44px 0 44px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="border-top:1px solid #e6eef7;font-size:0;line-height:0;" width="42%">&nbsp;</td>
+                <td align="center" style="padding:0 12px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#9db3c8;font-weight:600;white-space:nowrap;">tai</td>
+                <td style="border-top:1px solid #e6eef7;font-size:0;line-height:0;" width="42%">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Koodi -->
+        <tr>
+          <td align="center" style="padding:20px 44px 0 44px;">
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#3a5a7a;">
+              Jos painike ei aukea, kirjoita t&auml;m&auml; koodi kirjautumissivulle:
+            </p>
+          </td>
+        </tr>
         <tr>
           <td align="center" style="padding:14px 44px 0 44px;">
+            <table role="presentation" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center" bgcolor="#eef5fb" style="background:#eef5fb;border:2px dashed #b9d2ea;border-radius:14px;padding:16px 28px;">
+                  <span style="font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;font-size:30px;font-weight:800;letter-spacing:8px;color:#1a3f6f;">{{ .Token }}</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:10px 44px 0 44px;">
+            <p style="margin:0;font-size:13px;line-height:1.6;color:#3a5a7a;">
+              Kirjautumissivu: <a href="https://app.digiopo.fi/kirjaudu" target="_blank" style="color:#2563a8;text-decoration:underline;">app.digiopo.fi/kirjaudu</a>
+            </p>
+          </td>
+        </tr>
+
+        <!-- Voimassaolo -->
+        <tr>
+          <td align="center" style="padding:18px 44px 0 44px;">
             <p style="margin:0;font-size:13px;line-height:1.6;color:#2d9e6b;font-weight:600;">
-              &#128274; Linkki on voimassa hetken ja toimii vain kerran.
+              &#128274; Linkki ja koodi ovat voimassa 15 minuuttia ja toimivat vain kerran.
             </p>
           </td>
         </tr>
+
+        <!-- Erotin -->
         <tr>
-          <td align="center" style="padding:14px 44px 0 44px;">
-            <p style="margin:0;font-size:13px;line-height:1.6;color:#7a9ab5;">
-              Jos painike ei toimi, avaa
-              <a href="{{ .ConfirmationURL }}" style="color:#2563a8;text-decoration:underline;">kirjautumislinkki t&auml;st&auml;</a>.
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:28px 44px 0 44px;">
+          <td style="padding:26px 44px 0 44px;">
             <div style="border-top:1px solid #e6eef7;font-size:0;line-height:0;">&nbsp;</div>
           </td>
         </tr>
+
+        <!-- Alatunniste -->
         <tr>
           <td align="center" style="padding:16px 44px 36px 44px;">
             <p style="margin:0;font-size:12px;line-height:1.6;color:#9db3c8;">
-              Etk&ouml; pyyt&auml;nyt t&auml;t&auml; linkki&auml;? Voit j&auml;tt&auml;&auml; t&auml;m&auml;n viestin huomiotta &ndash; tili&auml;si ei k&auml;ytet&auml; ilman linkin klikkausta.
+              Etk&ouml; pyyt&auml;nyt kirjautumista? Voit j&auml;tt&auml;&auml; t&auml;m&auml;n viestin huomiotta &ndash; tili&auml;si ei k&auml;ytet&auml; ilman linkin klikkausta tai koodin sy&ouml;tt&ouml;&auml;.
             </p>
             <p style="margin:10px 0 0 0;font-size:12px;color:#9db3c8;">
               DigiOpo.fi &middot; Opinto-ohjauksen digikirja
             </p>
           </td>
         </tr>
+
       </table>
     </td>
   </tr>
