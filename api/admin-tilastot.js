@@ -18,6 +18,7 @@
 
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { vertaaSalaisuus } from './_lib/turva.js';
+import { sbFetch } from './_lib/supabase.js'; // TILAPÄINEN-VIENTI (poistettava)
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -130,6 +131,78 @@ async function haeDeployStatus() {
   };
 }
 
+// ═══ TILAPÄINEN-VIENTI-ALKU (Supabase-cutover vko 42) – POISTETTAVA ═══
+// GET /api/admin-tilastot?vienti=1 palauttaa opetusryhmat/jarjestykset/
+// lukuvuosi_tapahtumat SQL-upsert-lauseina (vain luku). Sisältää avain_hash-arvot.
+// Omaa reittiä ei voi lisätä: Vercel Hobby sallii max 12 funktiota.
+const SIVU = 1000;
+
+// Taulu → sarakkeet (järjestys sama kuin skeemassa) ja pääavain upsertia varten
+const TAULUT = [
+  {
+    nimi: 'opetusryhmat',
+    sarakkeet: ['ryhmakoodi', 'avain_hash', 'koulukoodi', 'nimi', 'luotu_at', 'muokattu_at'],
+    avain: ['ryhmakoodi'],
+    jarjestys: 'ryhmakoodi.asc',
+  },
+  {
+    nimi: 'jarjestykset',
+    sarakkeet: ['ryhmakoodi', 'luokka', 'jarjestys', 'lukitut', 'muokattu_at'],
+    avain: ['ryhmakoodi', 'luokka'],
+    jarjestys: 'ryhmakoodi.asc,luokka.asc',
+  },
+  {
+    nimi: 'lukuvuosi_tapahtumat',
+    sarakkeet: ['id', 'ryhmakoodi', 'luokka', 'otsikko', 'tyyppi', 'alku_pvm', 'loppu_pvm', 'kuvaus', 'luotu_at', 'muokattu_at'],
+    avain: ['id'],
+    jarjestys: 'id.asc',
+  },
+];
+
+function sqlArvo(v) {
+  if (v === null || v === undefined) return 'NULL';
+  if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+  if (typeof v === 'object') return `'${JSON.stringify(v).replace(/'/g, "''")}'::jsonb`;
+  return `'${String(v).replace(/'/g, "''")}'`;
+}
+
+async function haeKaikki(t) {
+  const rivit = [];
+  for (let offset = 0; ; offset += SIVU) {
+    const polku = `${t.nimi}?select=${t.sarakkeet.join(',')}&order=${t.jarjestys}&limit=${SIVU}&offset=${offset}`;
+    const r = await sbFetch(polku);
+    if (!r.ok) throw new Error(`${t.nimi}: ${r.status}`);
+    const sivu = await r.json();
+    rivit.push(...sivu);
+    if (sivu.length < SIVU) break;
+  }
+  return rivit;
+}
+
+function upsertSql(t, rivit) {
+  if (rivit.length === 0) return `-- ${t.nimi}: 0 riviä\n`;
+  const arvot = rivit
+    .map((r) => `  (${t.sarakkeet.map((s) => sqlArvo(r[s])).join(', ')})`)
+    .join(',\n');
+  const paivitettavat = t.sarakkeet.filter((s) => !t.avain.includes(s));
+  const paivitys = paivitettavat.map((s) => `${s} = excluded.${s}`).join(', ');
+  return (
+    `-- ${t.nimi}: ${rivit.length} riviä\n` +
+    `insert into ${t.nimi} (${t.sarakkeet.join(', ')}) values\n${arvot}\n` +
+    `on conflict (${t.avain.join(', ')}) do update set ${paivitys};\n`
+  );
+}
+
+async function vientiSql() {
+  let ulos = '-- DigiOpo: opetusryhmien vienti vanhasta kannasta (upsert)\nbegin;\n\n';
+  for (const t of TAULUT) {
+    const rivit = await haeKaikki(t);
+    ulos += upsertSql(t, rivit) + '\n';
+  }
+  return ulos + 'commit;\n';
+}
+// ═══ TILAPÄINEN-VIENTI-LOPPU ═══
+
 export default async function handler(req, res) {
   // CORS: sallitaan mikä tahansa origin (myös paikallinen file://-sivu), koska
   // tämä endpoint on joka tapauksessa suojattu x-admin-key-avaimella eikä
@@ -155,6 +228,19 @@ export default async function handler(req, res) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     return res.status(500).json({ ok: false, virhe: 'palvelin_ei_konfiguroitu' });
   }
+
+  // ═══ TILAPÄINEN-VIENTI-ALKU ═══
+  if (req.query && req.query.vienti === '1') {
+    try {
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      return res.status(200).send(await vientiSql());
+    } catch (err) {
+      console.error('vienti virhe:', err.message);
+      return res.status(500).end();
+    }
+  }
+  // ═══ TILAPÄINEN-VIENTI-LOPPU ═══
 
   try {
     const [lisenssit, kuorma, virheet, deploy, lisenssikaytto] = await Promise.all([
