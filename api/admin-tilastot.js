@@ -133,30 +133,18 @@ async function haeDeployStatus() {
 
 // ═══ TILAPÄINEN-VIENTI-ALKU (Supabase-cutover vko 42) – POISTETTAVA ═══
 // GET /api/admin-tilastot?vienti=1 palauttaa opetusryhmat/jarjestykset/
-// lukuvuosi_tapahtumat SQL-upsert-lauseina (vain luku). Sisältää avain_hash-arvot.
+// lukuvuosi_tapahtumat SQL-upsert-lauseina (vain luku).
+// Sarakkeet luetaan vanhasta kannasta (select=*), ei kovakoodattuina:
+// vanhan ja uuden kannan skeema on voinut ajautua erilleen.
+// Sisältää omistaja_email-arvot (henkilötietoa) – käsittele sen mukaisesti.
 // Omaa reittiä ei voi lisätä: Vercel Hobby sallii max 12 funktiota.
 const SIVU = 1000;
 
-// Taulu → sarakkeet (järjestys sama kuin skeemassa) ja pääavain upsertia varten
+// Taulu → pääavain (upsertia varten) ja järjestys sivutusta varten
 const TAULUT = [
-  {
-    nimi: 'opetusryhmat',
-    sarakkeet: ['ryhmakoodi', 'avain_hash', 'koulukoodi', 'nimi', 'luotu_at', 'muokattu_at'],
-    avain: ['ryhmakoodi'],
-    jarjestys: 'ryhmakoodi.asc',
-  },
-  {
-    nimi: 'jarjestykset',
-    sarakkeet: ['ryhmakoodi', 'luokka', 'jarjestys', 'lukitut', 'muokattu_at'],
-    avain: ['ryhmakoodi', 'luokka'],
-    jarjestys: 'ryhmakoodi.asc,luokka.asc',
-  },
-  {
-    nimi: 'lukuvuosi_tapahtumat',
-    sarakkeet: ['id', 'ryhmakoodi', 'luokka', 'otsikko', 'tyyppi', 'alku_pvm', 'loppu_pvm', 'kuvaus', 'luotu_at', 'muokattu_at'],
-    avain: ['id'],
-    jarjestys: 'id.asc',
-  },
+  { nimi: 'opetusryhmat', avain: ['ryhmakoodi'], jarjestys: 'ryhmakoodi.asc' },
+  { nimi: 'jarjestykset', avain: ['ryhmakoodi', 'luokka'], jarjestys: 'ryhmakoodi.asc,luokka.asc' },
+  { nimi: 'lukuvuosi_tapahtumat', avain: ['id'], jarjestys: 'id.asc' },
 ];
 
 function sqlArvo(v) {
@@ -169,7 +157,7 @@ function sqlArvo(v) {
 async function haeKaikki(t) {
   const rivit = [];
   for (let offset = 0; ; offset += SIVU) {
-    const polku = `${t.nimi}?select=${t.sarakkeet.join(',')}&order=${t.jarjestys}&limit=${SIVU}&offset=${offset}`;
+    const polku = `${t.nimi}?select=*&order=${t.jarjestys}&limit=${SIVU}&offset=${offset}`;
     const r = await sbFetch(polku);
     if (!r.ok) throw new Error(`${t.nimi}: ${r.status} ${(await r.text()).slice(0, 300)}`);
     const sivu = await r.json();
@@ -181,15 +169,18 @@ async function haeKaikki(t) {
 
 function upsertSql(t, rivit) {
   if (rivit.length === 0) return `-- ${t.nimi}: 0 riviä\n`;
+  const sarakkeet = Object.keys(rivit[0]);
   const arvot = rivit
-    .map((r) => `  (${t.sarakkeet.map((s) => sqlArvo(r[s])).join(', ')})`)
+    .map((r) => `  (${sarakkeet.map((s) => sqlArvo(r[s])).join(', ')})`)
     .join(',\n');
-  const paivitettavat = t.sarakkeet.filter((s) => !t.avain.includes(s));
-  const paivitys = paivitettavat.map((s) => `${s} = excluded.${s}`).join(', ');
+  const paivitettavat = sarakkeet.filter((s) => !t.avain.includes(s));
+  const konflikti = paivitettavat.length
+    ? `do update set ${paivitettavat.map((s) => `${s} = excluded.${s}`).join(', ')}`
+    : 'do nothing';
   return (
-    `-- ${t.nimi}: ${rivit.length} riviä\n` +
-    `insert into ${t.nimi} (${t.sarakkeet.join(', ')}) values\n${arvot}\n` +
-    `on conflict (${t.avain.join(', ')}) do update set ${paivitys};\n`
+    `-- ${t.nimi}: ${rivit.length} riviä (sarakkeet: ${sarakkeet.join(', ')})\n` +
+    `insert into ${t.nimi} (${sarakkeet.join(', ')}) values\n${arvot}\n` +
+    `on conflict (${t.avain.join(', ')}) ${konflikti};\n`
   );
 }
 
