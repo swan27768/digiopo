@@ -475,6 +475,7 @@ const state = {
   busy:false,
   bankPools:{},   // sekoitetut tehtävät per kategoria
   learned:new Set(),
+  tasoAlku:0,      // saldo tason alussa: tason tavoite lasketaan vain tämän jälkeen ansaitusta rahasta
   parasRaha:null,  // paras loppusaldo tässä istunnossa (säilyy uusintakierroksilla)
   aiheet:{},       // aihekohtainen tilasto koko pelin ajalta: {kategoria:[oikein, yhteensä]}
   aiheetTaso:{},   // sama, mutta vain nykyiseltä tasolta
@@ -1281,9 +1282,9 @@ async function lataaTehtavat(){
 
 /* Kulmat / erikoisruudut (ei tehtävää, tapahtuu heti) */
 const EVENTS = {
-  start:  {msg:"Palkkapäivä! Sait palkkaa.", money:()=>state.salary},
+  start:  {msg:()=> state.kierrostyyppi===1 ? "Sakkokierroksella palkkaa ei makseta." : "Palkkapäivä! Sait palkkaa.", money:()=> state.kierrostyyppi===1 ? 0 : state.salary},
   sattuma:{msg:null}, // arvotaan
-  vero:   {msg:"Verottaja perii veroa palkastasi.", money:()=> -Math.round(state.salary*0.25)},
+  vero:   {msg:()=> state.kierrostyyppi===1 ? "Sakkokierroksella ei palkkaa, joten veroakaan ei tule." : "Verottaja perii veroa palkastasi.", money:()=> state.kierrostyyppi===1 ? 0 : -Math.round(state.salary*0.25)},
   tet:    {nimi:()=> state.level>=3 ? "Duunitori" : "TET-tori",
            msg:()=> state.level>=3
              ? "Duunitori! Löysit avoimen työpaikan ja sait haastattelukutsun. Palkaksi kokemusbonus."
@@ -1323,9 +1324,9 @@ const SATTUMA = [
 const TASOT = [
   { nimi:"Ensiaskeleet työelämään", teema:"Perusteet", raha_min:250,
     tavoitteet:["Työnhaun ja haastattelun perusteet","Työpaikan pelisäännöt ja vastuu","Kesätyön käytännöt"] },
-  { nimi:"Töissä ja tiimissä", teema:"Arki työpaikalla", raha_min:500,
+  { nimi:"Töissä ja tiimissä", teema:"Arki työpaikalla", raha_min:250,
     tavoitteet:["Vuorovaikutus ja tiimityö","Palkka, verokortti ja sopimukset","Hyvinvointi ja jaksaminen"] },
-  { nimi:"Oma talous ja tulevaisuus", teema:"Vastuu & valinnat", raha_min:800,
+  { nimi:"Oma talous ja tulevaisuus", teema:"Vastuu & valinnat", raha_min:300,
     tavoitteet:["Säästäminen ja sijoittaminen","Riskit ja huijausten välttäminen","Yrittäjyys ja oma talous"] },
 ];
 
@@ -1369,7 +1370,7 @@ function hop(steps){
     // START-ruudun ohitus/saapuminen -> kierros täyteen (ja palkka jos ohitetaan)
     if(state.pos===0){
       state.lapFlag=true;
-      if(left>1) changeMoney(state.salary, "Ohitit palkkapäivän! Sait palkkaa.");
+      if(left>1 && state.kierrostyyppi!==1) changeMoney(state.salary, "Ohitit palkkapäivän! Sait palkkaa.");
     }
     left--;
     if(left>0){ setTimeout(step,260); }
@@ -1821,8 +1822,9 @@ function updateHud(){
   const t = TASOT[state.level-1];
   const min = t ? t.raha_min : 0;
   const sGoal=document.getElementById('sGoal');
-  if(state.money>=min) sGoal.innerHTML=`✓ <small>${min} € täynnä</small>`;
-  else sGoal.innerHTML=`${state.money} / ${min} <small>€</small>`;
+  const tr=tasoRaha();
+  if(tr>=min) sGoal.innerHTML=`✓ <small>${min} € täynnä</small>`;
+  else sGoal.innerHTML=`${Math.max(0,tr)} / ${min} <small>€</small>`;
   // Kierros- ja lenkkilaskuri + sakkokierroksen korostus
   const box=document.getElementById('sRoundBox');
   const sRound=document.getElementById('sRound');
@@ -1838,6 +1840,7 @@ function updateHud(){
 }
 
 /* ================= TASON YHTEENVETO ================= */
+function tasoRaha(){ return state.money - (state.tasoAlku||0); }   // tällä tasolla ansaittu raha
 function tahdet(){
   const pts=state.correctThisLap, total=state.tasksThisLap;
   if(total<=0) return 3;
@@ -1846,7 +1849,7 @@ function tahdet(){
 // Kierroksen lopussa: rahaminimi ratkaisee pääseekö seuraavalle tasolle.
 function tarkistaTaso(){
   const min = TASOT[state.level-1].raha_min;
-  if(state.money >= min){
+  if(tasoRaha() >= min){
     if(state.level >= TASOT.length) peliLapaisty();
     else levelComplete();
   }else{
@@ -1858,7 +1861,7 @@ function tarkistaTaso(){
 // huomaa siirtyvänsä sakkokierrokselle (tai uudelle tavalliselle kierrokselle).
 function uusiKierros(){
   const min = TASOT[state.level-1].raha_min;
-  const puuttuu = Math.max(0, min - state.money);
+  const puuttuu = Math.max(0, min - tasoRaha());
   const paattynyt = state.kierros;                     // juuri päättyneen kierroksen numero
   state.kierrostyyppi = state.kierrostyyppi ? 0 : 1;   // vuorottele normaali <-> sakko
   state.kierros++;                                     // uusi kierros alkaa
@@ -1872,12 +1875,12 @@ function uusiKierros(){
   cardHead.style.background = sakko
     ? "linear-gradient(150deg,var(--coral),var(--gold))"
     : "linear-gradient(150deg,var(--blue),var(--teal))";
-  const pct = Math.max(0, Math.min(100, Math.round(state.money/min*100)));
+  const pct = Math.max(0, Math.min(100, Math.round(tasoRaha()/min*100)));
   cardBody.innerHTML=`
     <p class="q" style="text-align:center">Kiersit laudan ${LENKKEJA_PER_KIERROS} kertaa – kierros ${paattynyt} on nyt valmis.</p>
     <div style="background:var(--surface2,rgba(0,0,0,.06));border-radius:14px;padding:12px 14px;margin:6px 0 2px">
       <div style="display:flex;justify-content:space-between;font-weight:800;font-size:.95rem">
-        <span>Rahaa: ${state.money} €</span><span>Tavoite: ${min} €</span>
+        <span>Tällä tasolla: ${Math.max(0,tasoRaha())} €</span><span>Tavoite: ${min} €</span>
       </div>
       <div style="height:12px;border-radius:8px;background:rgba(0,0,0,.12);margin-top:8px;overflow:hidden">
         <div style="height:100%;width:${pct}%;border-radius:8px;background:linear-gradient(90deg,var(--teal),var(--gold))"></div>
@@ -1887,7 +1890,7 @@ function uusiKierros(){
   const info=document.createElement('p');
   info.style.cssText="font-weight:600;line-height:1.55;margin-top:12px";
   info.innerHTML = sakko
-    ? `🔁 <b>Sakkokierros alkaa!</b> Kierrä lauta taas <b>${LENKKEJA_PER_KIERROS} kertaa</b> – samat ruudut, mutta tehtävät ovat <b>eri</b> kuin äsken. Kerää tavoiteraha, niin pääset seuraavalle tasolle. Muista: väärästä vastauksesta menee rahaa.`
+    ? `🔁 <b>Sakkokierros alkaa!</b> Kierrä lauta taas <b>${LENKKEJA_PER_KIERROS} kertaa</b> – samat ruudut, mutta tehtävät ovat <b>eri</b> kuin äsken. <b>Palkkaa ei makseta</b>, vain tehtävistä saa rahaa. Kerää puuttuva summa, niin pääset seuraavalle tasolle. Muista: väärästä vastauksesta menee rahaa.`
     : `Aloitat <b>uuden kierroksen</b> samalla tasolla. Kierrä lauta taas ${LENKKEJA_PER_KIERROS} kertaa ja kerää lisää rahaa – tavoite on ${min} €.`;
   cardBody.appendChild(info);
 
@@ -1910,7 +1913,7 @@ function levelComplete(){
   const lis = t.tavoitteet.map(x=>`<li>${x}</li>`).join('');
   cardBody.innerHTML=`
     <div class="stars">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
-    <p class="q" style="text-align:center">Saavutit tavoitteen! Sinulla on <b>${state.money} €</b>.</p>
+    <p class="q" style="text-align:center">Saavutit tavoitteen! Tällä tasolla ansaitsit <b>${tasoRaha()} €</b>. Kokonaissaldosi on <b>${state.money} €</b>.</p>
     <p style="font-weight:600;line-height:1.5">Tasolla <b>${t.nimi}</b> opit:</p>
     <ul class="summary" style="padding-left:20px">${lis}</ul>`;
   cardBody.insertAdjacentHTML('beforeend', aiheYhteenveto(state.aiheetTaso, 'Miten tämä taso meni?'));
@@ -1922,6 +1925,7 @@ function levelComplete(){
 }
 function nextLevel(){
   state.level++;
+  state.tasoAlku=state.money;
   state.salary+=15;
   state.correctThisLap=0;
   state.tasksThisLap=0;
@@ -1947,7 +1951,7 @@ function nextLevel(){
 // Peli läpäisty (taso 3 tavoite saavutettu): tulos tulostauluun, ei jatkoa.
 function peliLapaisty(){
   const total=state.oikeatYhteensa||0;
-  const stars = state.money>=800 ? 3 : state.money>=600 ? 2 : 1;
+  const stars = state.money>=1350 ? 3 : state.money>=1150 ? 2 : 1;
   const edellinen=state.parasRaha;
   const ennatys = edellinen===null || state.money>edellinen;
   if(ennatys) state.parasRaha=state.money;
@@ -1983,7 +1987,7 @@ function peliLapaisty(){
 }
 function pelaaUudelleen(){
   state.loppu=false; rollBtn.textContent='Heitä noppaa';
-  state.money=0; state.level=1; state.salary=60; state.pos=0;
+  state.money=0; state.tasoAlku=0; state.level=1; state.salary=60; state.pos=0;
   state.correctThisLap=0; state.tasksThisLap=0; state.oikeatYhteensa=0;
   state.lapFlag=false; state.kierrostyyppi=0; state.kierros=1; state.lenkki=1; state.bankPools={};
   state.aiheet={}; state.aiheetTaso={};
@@ -2052,7 +2056,7 @@ function rakennaIntro(){
    +'<li><span class="e" aria-hidden="true">🏗️</span><span>Kierrä lauta kaksi kertaa. Jos rahaa on tarpeeksi, nouset seuraavaan kerrokseen. Jos ei, saat uuden kierroksen uusilla tehtävillä.</span></li>'
    +'<li><span class="e" aria-hidden="true">🏆</span><span>Kilpaile luokan kanssa tulostaulussa. Lopuksi näet, missä aiheissa olet vahva ja mitä kannattaa kerrata.</span></li>'
    +'</ul>'
-   +'<div class="intro-floors">Nouse kerroksesta toiseen: <b>'+r[0]+' €</b> → kerros 2 · <b>'+r[1]+' €</b> → kerros 3 · <b>'+r[2]+' €</b> → peli läpi 🎉<br><span style="font-weight:600;color:var(--ink-soft)">Rahat säilyvät koko pelin ajan. Peli kestää noin 30 minuuttia.</span></div>'
+   +'<div class="intro-floors">Ansaitse joka kerroksessa: <b>'+r[0]+' €</b> → kerros 2 · <b>'+r[1]+' €</b> → kerros 3 · <b>'+r[2]+' €</b> → peli läpi 🎉<br><span style="font-weight:600;color:var(--ink-soft)">Kerroksen tavoite lasketaan vain siltä kerrokselta ansaitusta rahasta, mutta kaikki raha lasketaan lopputulokseen. Jos tavoite jää väliin, alkaa sakkokierros ilman palkkaa. Peli kestää noin 30 minuuttia.</span></div>'
    +'<button type="button" class="next-btn" id="iStart">Aloita peli →</button>';
   document.getElementById('iStart').addEventListener('click',suljeIntro);
 }
