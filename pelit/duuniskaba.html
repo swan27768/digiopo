@@ -1578,7 +1578,7 @@ function actLaske(task,wrap,done){
 /* Raahaa & lajittele: valitse jokaiselle oikea ryhmä (2 ryhmää). */
 function actSort(task,wrap,done){
   const groups=task.groups||["A","B"];
-  const items=task.items||[];
+  const items=shuffle((task.items||[]).slice());   // vastausjärjestys vaihtuu joka kerta
   const assign=items.map(()=>-1);
   items.forEach((it,idx)=>{
     const row=document.createElement('div'); row.className='sort-row';
