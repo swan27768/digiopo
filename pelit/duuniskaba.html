@@ -246,6 +246,12 @@ button{font-family:inherit;}
 .summary .card-head{background:linear-gradient(150deg,var(--purple),var(--blue));}
 .summary ul{margin:10px 0 0; padding-left:20px;}
 .summary li{margin:6px 0; font-weight:600; line-height:1.4;}
+.intro-lead{font-size:1.08rem; font-weight:700; line-height:1.45; margin:0 0 12px;}
+.intro-steps{list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:9px;}
+.intro-steps li{display:flex; gap:11px; align-items:flex-start; line-height:1.4; font-weight:600; font-size:.95rem;}
+.intro-steps .e{flex:0 0 auto; font-size:1.35rem; line-height:1.2;}
+.intro-floors{background:var(--surface-2); border:2px solid var(--line); border-radius:14px; padding:10px 14px; margin:0 0 16px; font-weight:700; font-size:.92rem; line-height:1.55;}
+.intro-floors b{font-variant-numeric:tabular-nums;}
 .stars{font-size:1.8rem; text-align:center; margin:6px 0 2px; letter-spacing:4px;}
 .aihe-box{margin-top:14px; border:2px solid var(--line); border-radius:14px; padding:12px 14px; background:var(--surface-2);}
 .aihe-box h4{margin:0 0 6px; font-family:"Baloo 2"; font-size:1.02rem;}
@@ -321,9 +327,10 @@ details.aihe-luokka summary{cursor:pointer; font-weight:800; font-size:.9rem;}
     </div>
     <div>
       <h1>Duuniskaba – työelämätaidot</h1>
-      <p class="sub">Kierrä kaupunki ja opi työelämän taidot &middot; 9. luokka</p>
+      <p class="sub">Nouse tornin huipulle ja opi työelämän taidot &middot; 9. luokka</p>
     </div>
     <div class="topbtns">
+      <button class="mini-btn" id="introBtn" type="button">🎯 Pelin tarkoitus</button>
       <button class="mini-btn" id="kisaBtn" type="button">🏆 Kilpailu</button>
       <button class="theme-btn" id="themeBtn" type="button">Tumma teema</button>
     </div>
@@ -349,8 +356,7 @@ details.aihe-luokka summary{cursor:pointer; font-weight:800; font-size:.9rem;}
   <div class="legend" id="legend" aria-label="Ruutujen selitykset"></div>
 
   <p class="foot">
-    Prototyyppi &middot; Yksi taso, yksi lauta. Peli tukee useampia tasoja: kun kierrät laudan,
-    siirryt seuraavalle tasolle ja tehtävät vaihtuvat.
+    Tavoite: kerää rahaa ja nouse tornin huipulle. Väärästä vastauksesta menee rahaa, joten mieti ennen kuin vastaat.
   </p>
 </div>
 
@@ -363,6 +369,18 @@ details.aihe-luokka summary{cursor:pointer; font-weight:800; font-size:.9rem;}
       <div class="ico" id="taskIco" aria-hidden="true">📋</div>
     </div>
     <div class="card-body" id="cardBody"></div>
+  </div>
+</div>
+
+<!-- Pelin tarkoitus (aloitusruutu) -->
+<div class="scrim" id="iscrim" role="dialog" aria-modal="true" aria-labelledby="iTitle">
+  <div class="card">
+    <div class="card-head" style="background:linear-gradient(150deg,var(--gold),var(--coral))">
+      <div class="cat">Pelin tarkoitus</div>
+      <h2 id="iTitle">Nouse huipulle!</h2>
+      <button type="button" class="close" id="iClose" aria-label="Sulje">×</button>
+    </div>
+    <div class="card-body" id="iBody"></div>
   </div>
 </div>
 
@@ -1995,6 +2013,56 @@ function kaynnistaLataus(){
   });
 }
 kaynnistaLataus();
+
+/* ================= PELIN TARKOITUS (aloitusruutu) ================= */
+/* Näytetään automaattisesti ensimmäisellä kerralla (muistetaan selaimeen). Avautuu aina
+   uudelleen yläpalkin napista. Rahaa koskevat luvut luetaan TASOT-asetuksesta. */
+const introScrim=document.getElementById('iscrim');
+const introBody=document.getElementById('iBody');
+const introBtn=document.getElementById('introBtn');
+const INTRO_AVAIN='duuniskaba-intro-nahty';
+let introPalaa=null;
+function rakennaIntro(){
+  const r=TASOT.map(t=>t.raha_min);
+  introBody.innerHTML=
+    '<p class="intro-lead">Sinulla on 0 € ja ensimmäinen työpaikka. Tavoite: kerää rahaa ja nouse lasitornin kolme kerrosta ylös. Jokainen kerros on edellistä vaikeampi.</p>'
+   +'<ul class="intro-steps">'
+   +'<li><span class="e" aria-hidden="true">🎲</span><span>Heitä noppaa ja kierrä kaupunkia. Jokaisessa ruudussa vastaan tulee jokin työelämän tilanne.</span></li>'
+   +'<li><span class="e" aria-hidden="true">💬</span><span>Ratkaise tilanne. Oikea vastaus tuo palkkion. Väärästä menee puolet palkkiosta, joten mieti ennen kuin vastaat.</span></li>'
+   +'<li><span class="e" aria-hidden="true">🏗️</span><span>Kierrä lauta kaksi kertaa. Jos rahaa on tarpeeksi, nouset seuraavaan kerrokseen. Jos ei, saat uuden kierroksen uusilla tehtävillä.</span></li>'
+   +'<li><span class="e" aria-hidden="true">🏆</span><span>Kilpaile luokan kanssa tulostaulussa. Lopuksi näet, missä aiheissa olet vahva ja mitä kannattaa kerrata.</span></li>'
+   +'</ul>'
+   +'<div class="intro-floors">Nouse kerroksesta toiseen: <b>'+r[0]+' €</b> → kerros 2 · <b>'+r[1]+' €</b> → kerros 3 · <b>'+r[2]+' €</b> → peli läpi 🎉<br><span style="font-weight:600;color:var(--ink-soft)">Rahat säilyvät koko pelin ajan. Peli kestää noin 30 minuuttia.</span></div>'
+   +'<button type="button" class="next-btn" id="iStart">Aloita peli →</button>';
+  document.getElementById('iStart').addEventListener('click',suljeIntro);
+}
+function avaaIntro(){
+  rakennaIntro();
+  introPalaa=document.activeElement;
+  introScrim.classList.add('open');
+  const kortti=introScrim.querySelector('.card'); if(kortti) kortti.scrollTop=0;
+  const s=document.getElementById('iStart'); if(s) s.focus({preventScroll:true}); // ei vieritä alas pienellä näytöllä
+}
+function suljeIntro(){
+  introScrim.classList.remove('open');
+  try{ localStorage.setItem(INTRO_AVAIN,'1'); }catch(e){}
+  if(introPalaa && introPalaa.focus && document.contains(introPalaa)) introPalaa.focus();
+  introPalaa=null;
+}
+document.getElementById('iClose').addEventListener('click',suljeIntro);
+introScrim.addEventListener('click',e=>{ if(e.target===introScrim) suljeIntro(); });
+introBtn.addEventListener('click',avaaIntro);
+document.addEventListener('keydown',e=>{
+  if(!introScrim.classList.contains('open')) return;
+  if(e.key==='Escape'){ e.preventDefault(); suljeIntro(); return; }
+  if(e.key==='Tab'){ // fokus pysyy aloitusruudussa
+    const f=Array.from(introScrim.querySelectorAll('button')); if(!f.length) return;
+    const eka=f[0], vika=f[f.length-1];
+    if(e.shiftKey && document.activeElement===eka){ e.preventDefault(); vika.focus(); }
+    else if(!e.shiftKey && document.activeElement===vika){ e.preventDefault(); eka.focus(); }
+  }
+});
+(function(){ let nahty=false; try{ nahty=localStorage.getItem(INTRO_AVAIN)==='1'; }catch(e){} if(!nahty) avaaIntro(); })();
 
 /* ================= KILPAILU / TULOSTAULU ================= */
 /* Kevyt kilpailu: pelaaja syöttää vain nimen. Luokkakoodi tulee pelin
