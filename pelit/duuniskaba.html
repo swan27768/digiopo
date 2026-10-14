@@ -1341,7 +1341,7 @@ renderDie(1);
 /* ================= PELISILMUKKA ================= */
 const rollBtn=document.getElementById('rollBtn');
 const msg=document.getElementById('msg');
-rollBtn.addEventListener('click', roll);
+rollBtn.addEventListener('click', ()=>{ if(state.loppu) pelaaUudelleen(); else roll(); });
 
 function roll(){
   if(state.busy)return;
@@ -1964,13 +1964,25 @@ function peliLapaisty(){
       : 'Et ole vielä liittynyt kilpailuun, joten tulosta ei tallennettu tulostauluun.'}</p>`;
   cardBody.insertAdjacentHTML('beforeend', aiheYhteenveto(state.aiheet, 'Miten eri aiheet menivät?'));
   const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn';
-  btn.textContent='Pelaa uudelleen alusta';
+  btn.textContent='Yritä uudelleen (aloitat alusta)';
   btn.addEventListener('click', pelaaUudelleen);
   cardBody.appendChild(btn);
+  const katso=document.createElement('button'); katso.type='button'; katso.className='next-btn';
+  katso.style.cssText='margin-top:10px;background:#fff;color:var(--ink,#222);border:2px solid currentColor;box-shadow:none';
+  katso.textContent='Katso tulostaulua';
+  katso.addEventListener('click', ()=>{
+    closeModal();
+    rollBtn.textContent='Pelaa uudelleen';
+    msg.textContent='Peli on läpäisty. Paina "Pelaa uudelleen", kun haluat yrittää parantaa tulostasi.';
+    rollBtn.disabled=false; state.busy=false;   // nappi aloittaa uuden pelin
+  });
+  cardBody.appendChild(katso);
   btn.focus();
+  state.loppu=true;
   state.busy=true; rollBtn.disabled=true;   // peli ei jatku itsestään
 }
 function pelaaUudelleen(){
+  state.loppu=false; rollBtn.textContent='Heitä noppaa';
   state.money=0; state.level=1; state.salary=60; state.pos=0;
   state.correctThisLap=0; state.tasksThisLap=0; state.oikeatYhteensa=0;
   state.lapFlag=false; state.kierrostyyppi=0; state.kierros=1; state.lenkki=1; state.bankPools={};
