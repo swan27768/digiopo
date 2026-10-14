@@ -475,6 +475,7 @@ const state = {
   busy:false,
   bankPools:{},   // sekoitetut tehtävät per kategoria
   learned:new Set(),
+  parasRaha:null,  // paras loppusaldo tässä istunnossa (säilyy uusintakierroksilla)
   aiheet:{},       // aihekohtainen tilasto koko pelin ajalta: {kategoria:[oikein, yhteensä]}
   aiheetTaso:{},   // sama, mutta vain nykyiseltä tasolta
   curCat:null,     // tehtävän kategoria, jota parhaillaan tehdään
@@ -1947,13 +1948,20 @@ function nextLevel(){
 function peliLapaisty(){
   const total=state.oikeatYhteensa||0;
   const stars = state.money>=800 ? 3 : state.money>=600 ? 2 : 1;
+  const edellinen=state.parasRaha;
+  const ennatys = edellinen===null || state.money>edellinen;
+  if(ennatys) state.parasRaha=state.money;
+  const nimella=!!(state.kilpailu && state.kilpailu.nimi);
   try{ lahetaTulos(); }catch(e){}
   openModal(CAT.tet, "Peli läpäisty", "Peli läpäisty! 🎉");
   cardHead.style.background="linear-gradient(150deg,var(--gold),var(--coral))";
   cardBody.innerHTML=`
     <div class="stars">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
     <p class="q" style="text-align:center">Läpäisit kaikki kolme tasoa! Loppusaldosi on <b>${state.money} €</b>.</p>
-    <p style="font-weight:600;line-height:1.5">Vastasit oikein ${total} kertaa. Tuloksesi lähetettiin luokan tulostauluun.</p>`;
+    <p style="text-align:center;font-weight:700;margin:6px 0">Tämä kerta: ${state.money} € · Paras tuloksesi: ${state.parasRaha} €${ennatys && edellinen!==null ? ' 🏆 Uusi ennätys!' : ''}</p>
+    <p style="font-weight:600;line-height:1.5">Vastasit oikein ${total} kertaa. ${nimella
+      ? 'Tulostaulussa säilyy paras tuloksesi, joten yritä rohkeasti uudelleen.'
+      : 'Et ole vielä liittynyt kilpailuun, joten tulosta ei tallennettu tulostauluun.'}</p>`;
   cardBody.insertAdjacentHTML('beforeend', aiheYhteenveto(state.aiheet, 'Miten eri aiheet menivät?'));
   const btn=document.createElement('button'); btn.type='button'; btn.className='next-btn';
   btn.textContent='Pelaa uudelleen alusta';
