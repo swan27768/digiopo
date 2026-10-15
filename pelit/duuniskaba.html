@@ -2046,6 +2046,7 @@ const introBody=document.getElementById('iBody');
 const introBtn=document.getElementById('introBtn');
 const INTRO_AVAIN='duuniskaba-intro-nahty';
 let introPalaa=null;
+let introAlku=false;   // true: peli ei ole vielä alkanut, ruutu suljetaan vain napilla
 function rakennaIntro(){
   const r=TASOT.map(t=>t.raha_min);
   introBody.innerHTML=
@@ -2057,10 +2058,12 @@ function rakennaIntro(){
    +'<li><span class="e" aria-hidden="true">🏆</span><span>Kilpaile luokan kanssa tulostaulussa. Lopuksi näet, missä aiheissa olet vahva ja mitä kannattaa kerrata.</span></li>'
    +'</ul>'
    +'<div class="intro-floors">Ansaitse joka kerroksessa: <b>'+r[0]+' €</b> → kerros 2 · <b>'+r[1]+' €</b> → kerros 3 · <b>'+r[2]+' €</b> → peli läpi 🎉<br><span style="font-weight:600;color:var(--ink-soft)">Jokaisella kerroksella on oma tavoite. Kaikki ansaitsemasi raha lasketaan silti lopputulokseen. Peli kestää noin 30 minuuttia.</span></div>'
-   +'<button type="button" class="next-btn" id="iStart">Aloita peli →</button>';
+   +'<button type="button" class="next-btn" id="iStart">'+(introAlku?'Aloita peli →':'Takaisin peliin →')+'</button>';
   document.getElementById('iStart').addEventListener('click',suljeIntro);
 }
-function avaaIntro(){
+function avaaIntro(alku){
+  introAlku=(alku===true);
+  const x=document.getElementById('iClose'); if(x) x.style.display=introAlku?'none':'';
   rakennaIntro();
   introPalaa=document.activeElement;
   introScrim.classList.add('open');
@@ -2074,11 +2077,11 @@ function suljeIntro(){
   introPalaa=null;
 }
 document.getElementById('iClose').addEventListener('click',suljeIntro);
-introScrim.addEventListener('click',e=>{ if(e.target===introScrim) suljeIntro(); });
-introBtn.addEventListener('click',avaaIntro);
+introScrim.addEventListener('click',e=>{ if(e.target===introScrim && !introAlku) suljeIntro(); });
+introBtn.addEventListener('click',()=>avaaIntro(false));
 document.addEventListener('keydown',e=>{
   if(!introScrim.classList.contains('open')) return;
-  if(e.key==='Escape'){ e.preventDefault(); suljeIntro(); return; }
+  if(e.key==='Escape'){ e.preventDefault(); if(!introAlku) suljeIntro(); return; }
   if(e.key==='Tab'){ // fokus pysyy aloitusruudussa
     const f=Array.from(introScrim.querySelectorAll('button')); if(!f.length) return;
     const eka=f[0], vika=f[f.length-1];
@@ -2086,7 +2089,7 @@ document.addEventListener('keydown',e=>{
     else if(!e.shiftKey && document.activeElement===vika){ e.preventDefault(); eka.focus(); }
   }
 });
-(function(){ let nahty=false; try{ nahty=localStorage.getItem(INTRO_AVAIN)==='1'; }catch(e){} if(!nahty) avaaIntro(); })();
+avaaIntro(true);   // etusivu: tavoite ja ohjeet näytetään aina ensin, peli alkaa vasta napista
 
 /* ================= KILPAILU / TULOSTAULU ================= */
 /* Kevyt kilpailu: pelaaja syöttää vain nimen. Luokkakoodi tulee pelin
