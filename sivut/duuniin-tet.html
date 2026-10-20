@@ -283,6 +283,10 @@
   .fb-box.ok   { background: var(--bg-warning); color: var(--text-warning); border: 1.5px solid var(--border-warning); }
   .fb-title { font-weight: 800; font-size: 15px; margin-bottom: 4px; }
 
+  .choice-btn.reveal { border-style: dashed; }
+  .fb-best { display: none; margin-top: .7rem; padding-top: .7rem; border-top: 1px dashed currentColor; font-size: 13px; }
+  .fb-best.show { display: block; }
+
   /* ── BTN ROW ── */
   .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .btn-next { display: none; }
@@ -360,7 +364,7 @@
       <div class="level-card selected" data-level="easy" onclick="selectLevel(this,'easy')" role="button" tabindex="0" aria-pressed="true">
         <div class="level-icon" aria-hidden="true">🟢</div>
         <div class="level-name">Perustaso</div>
-        <div class="level-desc">Selkeät tilanteet, kolme vaihtoehtoa. Hyvä ensimmäiselle kerralle.</div>
+        <div class="level-desc">Selkeät tilanteet, kolme vaihtoehtoa. Hyvä ensimmäiselle kerralle. Vihjeestä menettää yhden pisteen.</div>
       </div>
       <div class="level-card" data-level="hard" onclick="selectLevel(this,'hard')" role="button" tabindex="0" aria-pressed="false">
         <div class="level-icon" aria-hidden="true">🔴</div>
@@ -405,6 +409,7 @@
   <div class="fb-box" id="fb-box" role="alert">
     <div class="fb-title" id="fb-title"></div>
     <div id="fb-text"></div>
+    <div class="fb-best" id="fb-best"></div>
   </div>
   <div class="btn-row">
     <button class="btn btn-dark btn-next" id="btn-next" onclick="nextQ()"></button>
@@ -930,6 +935,7 @@ function loadQ(){
   document.getElementById('q-text').textContent=q.text;
   document.getElementById('hint-box').style.display='none';
   document.getElementById('fb-box').className='fb-box';
+  const fbb=document.getElementById('fb-best');fbb.className='fb-best';fbb.textContent='';
   const bn=document.getElementById('btn-next');
   bn.className='btn btn-dark btn-next';
   bn.textContent=curQ<gameQ.length-1?'Seuraava tilanne →':'Katso tulokset →';
@@ -953,15 +959,33 @@ function showHint(){
 
 function pick(idx){
   const q=gameQ[curQ];const c=q.choices[idx];
-  document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
-  document.querySelectorAll('.choice-btn')[idx].classList.add(c.type==='correct'?'correct':c.type==='wrong'?'wrong':'neutral');
+  const best=Math.max(...q.choices.map(x=>x.score));
+  const btns=document.querySelectorAll('.choice-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[idx].classList.add(c.type==='correct'?'correct':c.type==='wrong'?'wrong':'neutral');
+  // Jos valittu vastaus ei ollut paras, näytetään paras vastaus
+  const bestTexts=[];
+  if(c.score<best){
+    q.choices.forEach((x,i)=>{
+      if(x.score===best){
+        btns[i].classList.add('correct','reveal');
+        btns[i].setAttribute('aria-label','Paras vastaus: '+x.text);
+        bestTexts.push(x.text);
+      }
+    });
+  }
   const earned=hintUsed?Math.max(0,c.score-1):c.score;
   stars+=earned;
-  answers.push({module:q.module,sit:q.situation,ans:c.text,score:c.score,type:c.type,hintUsed});
+  answers.push({module:q.module,sit:q.situation,ans:c.text,score:c.score,max:best,type:c.type,hintUsed,bestTxt:bestTexts.join(' / ')});
   const fb=document.getElementById('fb-box');
   fb.className='fb-box '+(c.type==='correct'?'good':c.type==='wrong'?'bad':'ok')+' show';
   document.getElementById('fb-title').textContent=c.fb.t;
   document.getElementById('fb-text').textContent=c.fb.d;
+  const fbb=document.getElementById('fb-best');
+  if(bestTexts.length){
+    fbb.textContent=(bestTexts.length>1?'Parhaat vastaukset olivat: ':'Paras vastaus oli: ')+bestTexts.map(t=>'”'+t+'”').join(' tai ');
+    fbb.className='fb-best show';
+  }
   document.getElementById('btn-next').classList.add('show');
   document.getElementById('stars-label').textContent='⭐ '+stars;
 }
@@ -969,24 +993,36 @@ function pick(idx){
 function nextQ(){curQ++;if(curQ>=gameQ.length)showResults();else loadQ();}
 
 function buildSummary(){
-  const themes={};
+  // Pisteet lasketaan aiheittain: saadut pisteet / parhaat mahdolliset pisteet.
+  // Aiheesta tehdään johtopäätös vasta, kun siitä on vähintään 2 vastausta.
+  // Yhden vastauksen aiheista nostetaan esiin vain selvät tapaukset.
+  const mods={};
   answers.forEach(a=>{
-    if(!themes[a.module])themes[a.module]={good:0,total:0};
-    themes[a.module].total++;
-    if(a.type==='correct')themes[a.module].good++;
+    const m=mods[a.module]||(mods[a.module]={got:0,max:0,n:0,hits:[],missed:[]});
+    m.got+=a.score;m.max+=a.max;m.n++;
+    (a.score>=a.max?m.hits:m.missed).push('”'+a.sit+'”');
   });
   const s=[],d=[];
-  Object.entries(themes).forEach(([mod,v])=>{
-    if(v.good/v.total>=0.67)s.push(mod+' – valinnat olivat pääosin oikeita');
-    else d.push(mod+' – kannattaa harjoitella lisää ennen TET-jaksoa');
+  Object.entries(mods).forEach(([mod,v])=>{
+    const r=v.max?v.got/v.max:0;
+    if(v.n>=2){
+      if(r>=0.75)s.push({r,t:mod+' – valintasi olivat pääosin hyviä'});
+      else if(r<0.6)d.push({r,t:mod+' – harjoittele lisää. Mieti erityisesti tilanteita '+v.missed.join(', ')});
+    }else{
+      if(r>=1)s.push({r:0.9,t:mod+' – hallitsit tilanteen '+v.hits[0]});
+      else if(r<=1/3)d.push({r,t:mod+' – mieti vielä tilannetta '+v.missed[0]});
+    }
   });
-  if(!s.length)s.push('Kaikki osa-alueet kaipaavat vielä harjoittelua');
-  if(!d.length)d.push('Ei erityisiä kehityskohteita – hyvä suoritus!');
-  return{strengths:s,develop:d};
+  s.sort((a,b)=>b.r-a.r);d.sort((a,b)=>a.r-b.r);
+  const strengths=s.slice(0,4).map(x=>x.t),develop=d.slice(0,4).map(x=>x.t);
+  if(!strengths.length)strengths.push('Tällä kertaa ei noussut selkeää vahvuutta esiin. Pelaa uudelleen ja katso, miten käy.');
+  if(!develop.length)develop.push('Ei erityisiä kehityskohteita – hyvä suoritus!');
+  return{strengths,develop};
 }
 
 function showResults(){
   show('s-result');
+  const dlBtn=document.getElementById('btn-dl');dlBtn.textContent='⬇ Lataa tulokset';dlBtn.className='btn btn-dark';
   const correct=answers.filter(a=>a.type==='correct').length;
   const pct=Math.round(stars/maxStars*100);
   let emoji,title,sub;
@@ -1021,14 +1057,14 @@ function downloadResults(){
   txt+='\nVASTAUKSET\n----------\n';
   answers.forEach((a,i)=>{
     const m=a.type==='correct'?'[OK]':a.type==='wrong'?'[EI]':'[OS]';
-    txt+=`${i+1}. ${a.module} – ${a.sit}\n   ${m} ${a.ans}${a.hintUsed?' (vihje käytetty)':''}\n\n`;
+    txt+=`${i+1}. ${a.module} – ${a.sit}\n   ${m} ${a.ans}${a.hintUsed?' (vihje käytetty)':''}\n   Pisteet: ${a.score}/${a.max}${a.score<a.max&&a.bestTxt?'\n   Paras vastaus: '+a.bestTxt:''}\n\n`;
   });
   txt+='================================\nLähetetty opettajalle Google Classroomin tai Wilman kautta.\n';
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;
   a.download=`TET-tulokset_${name.replace(/\s+/g,'_')}_${date.replace(/\./g,'-')}.txt`;
-  a.click();URL.revokeObjectURL(url);
+  document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1500);
   const btn=document.getElementById('btn-dl');
   btn.textContent='✓ Tiedosto ladattu!';btn.className='btn btn-success';
 }
