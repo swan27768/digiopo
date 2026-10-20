@@ -287,6 +287,10 @@
   .fb-best { display: none; margin-top: .7rem; padding-top: .7rem; border-top: 1px dashed currentColor; font-size: 13px; }
   .fb-best.show { display: block; }
 
+  .btn-link { background: none; border: none; padding: 6px 2px; font: inherit; font-size: 13px; color: var(--accent-dark); text-decoration: underline; cursor: pointer; }
+  .btn-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  #next-step .btn { margin-bottom: 6px; }
+
   /* ── BTN ROW ── */
   .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .btn-next { display: none; }
@@ -422,7 +426,8 @@
   <div class="hero">
     <div class="hero-logo-wrap"><div class="hero-logo" aria-hidden="true" id="r-emoji"></div></div>
     <div class="hero-title" id="r-title"></div>
-    <div class="hero-sub" id="r-sub"></div>
+    <div class="hero-sub" id="r-sub" style="margin-bottom:.6rem;"></div>
+    <div class="hero-sub" id="r-path" style="margin-bottom:1.25rem;font-size:13px;display:none;"></div>
     <div class="score-grid">
       <div class="sc-card"><div class="sc-num" id="r-correct"></div><div class="sc-lbl">Oikeita vastauksia</div></div>
       <div class="sc-card"><div class="sc-num" id="r-stars"></div><div class="sc-lbl">Tähteä yhteensä</div></div>
@@ -440,7 +445,7 @@
 
   <div class="card-secondary">
     <div class="section-label">Lähetä tulokset opettajalle</div>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6;">Lataa tuloksesi tekstitiedostona ja palauta se opettajalle Google Classroomin tai Wilman kautta.</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6;">Lataa tuloksesi tekstitiedostona ja palauta se opettajalle Google Classroomin tai Wilman kautta. Tiedostossa ovat kaikki kierrokset, jotka olet pelannut tällä kertaa.</p>
     <ol class="dl-steps">
       <li>Paina "Lataa tulokset" – tiedosto tallentuu koneellesi</li>
       <li>Avaa Google Classroom tai Wilma</li>
@@ -449,9 +454,14 @@
     <button class="btn btn-dark" id="btn-dl" onclick="downloadResults()">⬇ Lataa tulokset</button>
   </div>
 
-  <div style="margin-top:.75rem;">
-    <button class="btn btn-outline" onclick="restartGame()">Pelaa uudelleen</button>
-    <button class="btn btn-dark" onclick="switchLevel()">Kokeile toista tasoa</button>
+  <div class="card-secondary" id="next-step">
+    <div class="section-label">Mitä seuraavaksi?</div>
+    <p id="ns-msg" style="font-size:14px;color:var(--text-primary);margin-bottom:1rem;line-height:1.6;"></p>
+    <div class="btn-row">
+      <button class="btn btn-dark" id="ns-primary"></button>
+      <button class="btn btn-outline" id="ns-secondary"></button>
+    </div>
+    <div style="margin-top:.5rem;"><button class="btn-link" onclick="goStart(chosenLevel)">Valitse toinen harjoittelupaikka tai taso</button></div>
   </div>
 </div>
 
@@ -888,6 +898,12 @@ const ALL_Q=[
 ];
 
 let chosenLevel='easy',chosenWP='all',gameQ=[],curQ=0,stars=0,maxStars=0,answers=[],hintUsed=false;
+let rounds=[],seenQ=new Set(),sessionName='',weakModules=[],currentPractice=false;
+ALL_Q.forEach((q,i)=>{q.id=i;});
+const LEVEL_NAME={easy:'Perustaso',hard:'Haastava taso'};
+const WP_NAME={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',office:'Toimisto',cafe:'Ravintola/Kahvila',workshop:'Tekniikka/Rakennus',care:'Hoiva/Terveys'};
+// Jatkopolun rajat (prosenttia saatavilla olevista pisteistä)
+const RAJA={easy:{hyva:70,kesken:45},hard:{hyva:70,kesken:40}};
 
 function selectLevel(el,l){
   document.querySelectorAll('.level-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
@@ -912,12 +928,25 @@ function startGame(){
   const inp=document.getElementById('player-name');
   if(!name){inp.classList.add('error');inp.setAttribute('aria-invalid','true');hint.classList.add('show');inp.focus();return;}
   inp.classList.remove('error');inp.setAttribute('aria-invalid','false');hint.classList.remove('show');
+  beginRound(false);
+}
+
+// Aloittaa uuden kierroksen. Nimi, paikka ja taso otetaan nykyisistä valinnoista.
+// Näkemättömät kysymykset menevät ensin. Harjoituksessa heikoimmat aiheet menevät kaiken edelle.
+function beginRound(practice){
+  const nm=document.getElementById('player-name').value.trim().toLowerCase();
+  if(nm!==sessionName){sessionName=nm;rounds=[];seenQ=new Set();weakModules=[];} // uusi oppilas = puhdas alku
+  currentPractice=!!practice&&weakModules.length>0;
   let pool=ALL_Q.filter(q=>q.level===chosenLevel&&q.wp.includes(chosenWP));
   if(!pool.length)pool=ALL_Q.filter(q=>q.level===chosenLevel);
-  gameQ=shuffle(pool).slice(0,Math.min(10,pool.length)).map(q=>Object.assign({},q,{choices:shuffle(q.choices)}));
-  maxStars=gameQ.reduce((s,q)=>s+Math.max(...q.choices.map(c=>c.score)),0);
+  const weak=currentPractice?weakModules:[];
+  const tier=q=>{const unseen=!seenQ.has(q.id);return weak.length?((weak.includes(q.module)?0:2)+(unseen?0:1)):(unseen?0:1);};
+  const picked=shuffle(pool).sort((a,b)=>tier(a)-tier(b)).slice(0,Math.min(10,pool.length));
+  picked.forEach(q=>seenQ.add(q.id));
+  gameQ=shuffle(picked).map(q=>Object.assign({},q,{choices:shuffle(q.choices)}));
+  maxStars=gameQ.reduce((sum,q)=>sum+Math.max(...q.choices.map(c=>c.score)),0);
   curQ=0;stars=0;answers=[];
-  show('s-game');loadQ();
+  show('s-game');loadQ();window.scrollTo(0,0);
 }
 
 function loadQ(){
@@ -931,6 +960,7 @@ function loadQ(){
   const db=document.getElementById('diff-badge');
   if(chosenLevel==='hard'){db.className='badge badge-hard';db.textContent='🔴 Haastava taso';}
   else{db.className='badge badge-easy';db.textContent='🟢 Perustaso';}
+  if(currentPractice)db.textContent+=' · 🎯 Heikkojen aiheiden harjoitus';
   document.getElementById('sit-label').textContent=q.situation;
   document.getElementById('q-text').textContent=q.text;
   document.getElementById('hint-box').style.display='none';
@@ -992,12 +1022,13 @@ function pick(idx){
 
 function nextQ(){curQ++;if(curQ>=gameQ.length)showResults();else loadQ();}
 
-function buildSummary(){
+function buildSummary(ans){
+  ans=ans||answers;
   // Pisteet lasketaan aiheittain: saadut pisteet / parhaat mahdolliset pisteet.
   // Aiheesta tehdään johtopäätös vasta, kun siitä on vähintään 2 vastausta.
   // Yhden vastauksen aiheista nostetaan esiin vain selvät tapaukset.
   const mods={};
-  answers.forEach(a=>{
+  ans.forEach(a=>{
     const m=mods[a.module]||(mods[a.module]={got:0,max:0,n:0,hits:[],missed:[]});
     m.got+=a.score;m.max+=a.max;m.n++;
     (a.score>=a.max?m.hits:m.missed).push('”'+a.sit+'”');
@@ -1020,6 +1051,12 @@ function buildSummary(){
   return{strengths,develop};
 }
 
+function weakFrom(ans){
+  const m={};
+  ans.forEach(a=>{const v=m[a.module]||(m[a.module]={got:0,max:0});v.got+=a.score;v.max+=a.max;});
+  return Object.keys(m).filter(k=>m[k].max&&m[k].got/m[k].max<0.6);
+}
+
 function showResults(){
   show('s-result');
   const dlBtn=document.getElementById('btn-dl');dlBtn.textContent='⬇ Lataa tulokset';dlBtn.className='btn btn-dark';
@@ -1035,49 +1072,98 @@ function showResults(){
   document.getElementById('r-correct').textContent=correct+'/'+gameQ.length;
   document.getElementById('r-stars').textContent=stars;
   document.getElementById('r-pct').textContent=pct+'%';
-  const{strengths,develop}=buildSummary();
+  const sm=buildSummary(answers);
   const sl=document.getElementById('strengths-list');sl.innerHTML='';
-  strengths.forEach(s=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML=`<div class="sum-dot dot-g" aria-hidden="true"></div><div>${s}</div>`;sl.appendChild(d);});
+  sm.strengths.forEach(t=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML='<div class="sum-dot dot-g" aria-hidden="true"></div><div></div>';d.lastChild.textContent=t;sl.appendChild(d);});
   const dl=document.getElementById('develop-list');dl.innerHTML='';
-  develop.forEach(s=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML=`<div class="sum-dot dot-o" aria-hidden="true"></div><div>${s}</div>`;dl.appendChild(d);});
+  sm.develop.forEach(t=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML='<div class="sum-dot dot-o" aria-hidden="true"></div><div></div>';d.lastChild.textContent=t;dl.appendChild(d);});
+  weakModules=weakFrom(answers);
+  rounds.push({n:rounds.length+1,level:chosenLevel,levelName:LEVEL_NAME[chosenLevel],wp:chosenWP,wpName:WP_NAME[chosenWP],practice:currentPractice,
+    correct,total:gameQ.length,pct,strengths:sm.strengths,develop:sm.develop,answers:answers.slice()});
+  const path=document.getElementById('r-path');
+  if(rounds.length>1){path.textContent='Kierrokset: '+rounds.map(r=>r.levelName+' '+r.pct+' %').join(' → ');path.style.display='';}
+  else path.style.display='none';
+  renderNextStep(pct);
+  window.scrollTo(0,0);
 }
+
+// Jatkopolku tuloksen mukaan. Haastava taso on aina valittavissa, tulos vain suosittelee.
+function renderNextStep(pct){
+  const r=RAJA[chosenLevel];
+  const hasWeak=weakModules.length>0;
+  const again=()=>startNext(chosenLevel,false), practice=()=>startNext(chosenLevel,true);
+  let msg,p,sec;
+  if(chosenLevel==='easy'){
+    if(pct>=r.hyva){
+      msg='Hienoa työtä! Perustaso sujui hyvin. Haastavassa tasossa tilanteet ovat monitulkintaisempia. Kokeile, kun olet valmis.';
+      p=['Siirry haastavalle tasolle',()=>startNext('hard',false)];sec=['Pelaa perustaso uudelleen',again];
+    }else if(pct>=r.kesken){
+      msg='Hyvä alku! Vielä vähän harjoittelua, niin haastava taso alkaa sujua. Saat uusia kysymyksiä.';
+      p=['Pelaa perustaso uudelleen',again];sec=['Kokeile haastavaa tasoa',()=>startNext('hard',false)];
+    }else{
+      msg='Hyvä, että harjoittelet! Virheistä oppii eniten. Aloitetaan niistä aiheista, jotka tuntuivat hankalilta.';
+      p=hasWeak?['Harjoittele heikkoja aiheita',practice]:['Pelaa perustaso uudelleen',again];
+      sec=['Valitse toinen harjoittelupaikka',()=>goStart('easy')];
+    }
+  }else{
+    if(pct>=r.hyva){
+      msg='Upea suoritus! Hallitset myös haastavat tilanteet. Kokeile vielä toista harjoittelupaikkaa.';
+      p=['Kokeile toista harjoittelupaikkaa',()=>goStart('hard')];sec=['Pelaa haastava taso uudelleen',again];
+    }else if(pct>=r.kesken){
+      msg='Hyvä yritys! Haastavissa tilanteissa vastauksia voi tulkita monella tavalla. Harjoitellaan niitä lisää.';
+      p=hasWeak?['Harjoittele heikkoja aiheita',practice]:['Pelaa haastava taso uudelleen',again];sec=['Pelaa haastava taso uudelleen',again];
+    }else{
+      msg='Haastava taso oli tiukka. Se on ihan normaalia. Kokeile ensin perustasoa uudelleen.';
+      p=['Pelaa perustaso',()=>startNext('easy',false)];
+      sec=hasWeak?['Harjoittele heikkoja aiheita haastavalla tasolla',practice]:['Pelaa haastava taso uudelleen',again];
+    }
+  }
+  document.getElementById('ns-msg').textContent=msg;
+  const bp=document.getElementById('ns-primary'),bs=document.getElementById('ns-secondary');
+  bp.textContent=p[0];bp.onclick=p[1];
+  bs.textContent=sec[0];bs.onclick=sec[1];
+}
+
+function setLevelUI(level){
+  chosenLevel=level;
+  document.querySelectorAll('.level-card').forEach(c=>{
+    const sel=c.dataset.level===chosenLevel;
+    c.classList.toggle('selected',sel);c.setAttribute('aria-pressed',sel?'true':'false');
+  });
+}
+function startNext(level,practice){setLevelUI(level);beginRound(practice);}
+function goStart(level){setLevelUI(level);show('s-start');window.scrollTo(0,0);}
+function restartGame(){show('s-start');}
 
 function downloadResults(){
   const name=document.getElementById('player-name').value.trim();
-  const pct=Math.round(stars/maxStars*100);
-  const correct=answers.filter(a=>a.type==='correct').length;
-  const{strengths,develop}=buildSummary();
   const date=new Date().toLocaleDateString('fi-FI');
-  const level=chosenLevel==='hard'?'Haastava':'Perus';
-  const wp={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',office:'Toimisto',cafe:'Ravintola/Kahvila',workshop:'Tekniikka/Rakennus',care:'Hoiva/Terveys'}[chosenWP];
-  let txt='DUUNIIN! – TET-pelin tulokset\n================================\n\n';
-  txt+=`Nimi:              ${name}\nPäivämäärä:        ${date}\nTaso:              ${level}\nHarjoittelupaikka: ${wp}\nOikeita vastauksia:${correct} / ${gameQ.length}\nPisteet:           ${pct}%\n\n`;
-  txt+='VAHVUUDET\n---------\n';strengths.forEach(s=>txt+=`+ ${s}\n`);
-  txt+='\nKEHITYSKOHTEET\n--------------\n';develop.forEach(s=>txt+=`> ${s}\n`);
-  txt+='\nVASTAUKSET\n----------\n';
-  answers.forEach((a,i)=>{
-    const m=a.type==='correct'?'[OK]':a.type==='wrong'?'[EI]':'[OS]';
-    txt+=`${i+1}. ${a.module} – ${a.sit}\n   ${m} ${a.ans}${a.hintUsed?' (vihje käytetty)':''}\n   Pisteet: ${a.score}/${a.max}${a.score<a.max&&a.bestTxt?'\n   Paras vastaus: '+a.bestTxt:''}\n\n`;
+  const line='================================\n';
+  let txt='DUUNIIN! – TET-pelin tulokset\n'+line+'\n';
+  txt+='Nimi:              '+name+'\nPäivämäärä:        '+date+'\nPelikertoja:       '+rounds.length+'\n\n';
+  txt+='ETENEMINEN\n----------\n';
+  rounds.forEach(r=>{txt+=r.n+'. '+r.levelName+(r.practice?' (heikkojen aiheiden harjoitus)':'')+', '+r.wpName+': '+r.pct+' % ('+r.correct+'/'+r.total+' oikein)\n';});
+  rounds.forEach(r=>{
+    txt+='\n'+line+'KIERROS '+r.n+': '+r.levelName+(r.practice?' (heikkojen aiheiden harjoitus)':'')+', '+r.wpName+'\n'+line+'\n';
+    txt+='Oikeita vastauksia: '+r.correct+' / '+r.total+'\nPisteet:           '+r.pct+' %\n\n';
+    txt+='VAHVUUDET\n---------\n';r.strengths.forEach(t=>txt+='+ '+t+'\n');
+    txt+='\nKEHITYSKOHTEET\n--------------\n';r.develop.forEach(t=>txt+='> '+t+'\n');
+    txt+='\nVASTAUKSET\n----------\n';
+    r.answers.forEach((a,i)=>{
+      const m=a.type==='correct'?'[OK]':a.type==='wrong'?'[EI]':'[OS]';
+      txt+=(i+1)+'. '+a.module+' – '+a.sit+'\n   '+m+' '+a.ans+(a.hintUsed?' (vihje käytetty)':'')+'\n   Pisteet: '+a.score+'/'+a.max+(a.score<a.max&&a.bestTxt?'\n   Paras vastaus: '+a.bestTxt:'')+'\n\n';
+    });
   });
-  txt+='================================\nLähetetty opettajalle Google Classroomin tai Wilman kautta.\n';
+  txt+=line+'Lähetetty opettajalle Google Classroomin tai Wilman kautta.\n';
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;
-  a.download=`TET-tulokset_${name.replace(/\s+/g,'_')}_${date.replace(/\./g,'-')}.txt`;
+  a.download='TET-tulokset_'+name.replace(/\s+/g,'_')+'_'+date.replace(/\./g,'-')+'.txt';
   document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1500);
   const btn=document.getElementById('btn-dl');
   btn.textContent='✓ Tiedosto ladattu!';btn.className='btn btn-success';
 }
 
-function restartGame(){show('s-start');}
-function switchLevel(){
-  chosenLevel=chosenLevel==='easy'?'hard':'easy';
-  document.querySelectorAll('.level-card').forEach(c=>{
-    const sel=c.dataset.level===chosenLevel;
-    c.classList.toggle('selected',sel);c.setAttribute('aria-pressed',sel?'true':'false');
-  });
-  show('s-start');
-}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[r[i],r[k]]=[r[k],r[i]];}return r;}
 </script>
