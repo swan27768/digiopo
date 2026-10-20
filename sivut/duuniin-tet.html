@@ -174,6 +174,31 @@
   .wp-icon { font-size: 22px; margin-bottom: .25rem; }
   .wp-name { font-size: 12px; font-weight: 700; color: var(--text-primary); line-height: 1.2; overflow-wrap: anywhere; hyphens: auto; }
 
+  /* ── ALKUNÄKYMÄN ULKOASU ── */
+  .hero-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 auto 1.6rem; }
+  .hero-chip { font-size: 12px; font-weight: 600; color: var(--accent-dark); background: var(--accent-tint-soft); border: 1px solid var(--border-default); border-radius: 99px; padding: 4px 12px; }
+  .start-step { margin-bottom: 1.6rem; }
+  .section-label.step { display: flex; align-items: center; justify-content: center; gap: 9px; margin-bottom: .8rem; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; letter-spacing: 0; }
+  .name-wrap { margin-bottom: 1.6rem; }
+  .name-input { max-width: 420px; display: block; margin: 0 auto; text-align: center; font-size: 16px; }
+  .input-hint { text-align: center; }
+  .level-grid { max-width: 640px; margin: 0 auto; }
+  .level-card { position: relative; display: flex; flex-direction: column; }
+  .level-head { display: flex; align-items: center; gap: 10px; margin-bottom: .5rem; }
+  .level-head .level-icon { margin: 0; width: 38px; height: 38px; font-size: 20px; flex: none; }
+  .level-head .level-name { margin: 0; font-size: 15px; }
+  .level-desc { font-size: 13px; }
+  .level-card.selected::after { content: "✓"; position: absolute; top: 10px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .level-card.locked::after { content: "🔒"; position: absolute; top: 9px; right: 11px; font-size: 16px; }
+  .wp-grid { grid-template-columns: repeat(4, 1fr); max-width: 640px; margin: 0 auto; }
+  .wp-card { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 86px; }
+  .wp-icon { font-size: 26px; }
+  .wp-name { font-size: 13px; hyphens: none; overflow-wrap: normal; word-break: normal; }
+  @media (max-width: 560px) { .wp-grid { grid-template-columns: repeat(2, 1fr); } .level-grid { grid-template-columns: 1fr; } }
+  .start-summary { display: inline-block; font-size: 13px; font-weight: 600; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border-default); border-radius: 99px; padding: 5px 14px; margin-bottom: .9rem; }
+  .btn-start { padding: 15px 52px; font-size: 17px; }
+
   /* ── BUTTONS ── */
   .btn {
     display: inline-block;
@@ -393,31 +418,33 @@
   <div class="hero">
     <div class="hero-logo-wrap"><div class="hero-logo" aria-hidden="true">💼</div></div>
     <div class="hero-title">Duuniin!</div>
-    <div class="hero-sub">Opas työelämään – TET-harjoitus<br>Harjoittele oikeita tilanteita ennen kuin astut ovesta sisään.</div>
+    <div class="hero-sub" style="margin-bottom:.9rem;">Opas työelämään – TET-harjoitus<br>Harjoittele oikeita tilanteita ennen kuin astut ovesta sisään.</div>
+    <div class="hero-chips" aria-hidden="true"><span class="hero-chip">📝 10 tilannetta kierroksessa</span><span class="hero-chip">💡 Vihjeet mukana</span><span class="hero-chip">🏢 7 harjoittelupaikkaa</span></div>
 
     <div class="name-wrap">
-      <div class="section-label">Kirjoita nimesi</div>
+      <div class="section-label step"><span class="step-num" aria-hidden="true">1</span>Kirjoita nimesi</div>
       <label for="player-name" class="sr-only">Etu- ja sukunimi</label>
       <input class="name-input" id="player-name" type="text" placeholder="Etunimi Sukunimi" maxlength="60" autocomplete="name" aria-required="true"/>
       <div class="input-hint" id="name-hint" role="alert">Kirjoita nimesi ennen kuin aloitat.</div>
     </div>
 
-    <div class="section-label">Valitse taso</div>
+    <div class="start-step"><div class="section-label step"><span class="step-num" aria-hidden="true">2</span>Valitse taso</div>
     <div class="level-grid" role="group" aria-label="Vaikeustason valinta">
       <div class="level-card selected" data-level="easy" onclick="selectLevel(this,'easy')" role="button" tabindex="0" aria-pressed="true">
-        <div class="level-icon" aria-hidden="true">🟢</div>
-        <div class="level-name">Perustaso</div>
+        <div class="level-head"><div class="level-icon" aria-hidden="true">🟢</div>
+        <div class="level-name">Perustaso</div></div>
         <div class="level-desc">Selkeät tilanteet, kolme vaihtoehtoa. Hyvä ensimmäiselle kerralle. Vihjeestä menettää yhden pisteen.</div>
       </div>
       <div class="level-card" id="card-hard" data-level="hard" onclick="selectLevel(this,'hard')" role="button" tabindex="0" aria-pressed="false">
-        <div class="level-icon" aria-hidden="true">🔴</div>
-        <div class="level-name">Haastava taso</div>
+        <div class="level-head"><div class="level-icon" aria-hidden="true">🔴</div>
+        <div class="level-name">Haastava taso</div></div>
         <div class="level-desc">Monitulkintaisia tilanteita. Vihjeestä menettää yhden pisteen.</div>
-        <div class="level-lock" id="lock-note">🔒 Avautuu, kun olet pelannut perustason ja saanut vähintään 70 %.</div>
+        <div class="level-lock" id="lock-note">Avautuu, kun olet pelannut perustason ja saanut vähintään 70 %.</div>
       </div>
     </div>
 
-    <div class="section-label">Valitse harjoittelupaikka</div>
+    </div>
+    <div class="start-step"><div class="section-label step"><span class="step-num" aria-hidden="true">3</span>Valitse harjoittelupaikka</div>
     <div class="wp-grid" role="group" aria-label="Harjoittelupaikan valinta">
       <div class="wp-card selected" data-wp="all"     onclick="selectWP(this,'all')"     role="button" tabindex="0" aria-pressed="true" ><div class="wp-icon" aria-hidden="true">🌐</div><div class="wp-name">Kaikki</div></div>
       <div class="wp-card"          data-wp="school"  onclick="selectWP(this,'school')"  role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🏫</div><div class="wp-name">Koulu</div></div>
@@ -429,7 +456,9 @@
       <div class="wp-card"          data-wp="care"    onclick="selectWP(this,'care')"    role="button" tabindex="0" aria-pressed="false"><div class="wp-icon" aria-hidden="true">🩺</div><div class="wp-name">Hoiva/<wbr>Terveys</div></div>
     </div>
 
-    <button class="btn btn-dark" onclick="startGame()">Aloita peli</button>
+    </div>
+    <div class="start-summary" id="start-summary" aria-live="polite"></div><br>
+    <button class="btn btn-dark btn-start" onclick="startGame()">Aloita peli →</button>
   </div>
 </div>
 
@@ -1073,14 +1102,20 @@ function paivitaLukitus(){
 }
 document.getElementById('player-name').addEventListener('input',paivitaLukitus);
 
+function paivitaYhteenveto(){
+  const el=document.getElementById('start-summary');if(!el)return;
+  const wp=document.querySelector('.wp-card.selected');
+  const ic=wp?wp.querySelector('.wp-icon').textContent:'';
+  el.textContent='Aloitat: '+(chosenLevel==='hard'?'🔴 Haastava taso':'🟢 Perustaso')+' · '+ic+' '+(chosenWP==='all'?'Kaikki harjoittelupaikat':WP_NAME[chosenWP]);
+}
 function selectLevel(el,l){
   if(l==='hard'&&!onkoHaastavaAuki())return;
   document.querySelectorAll('.level-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
-  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenLevel=l;
+  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenLevel=l;paivitaYhteenveto();
 }
 function selectWP(el,w){
   document.querySelectorAll('.wp-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
-  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenWP=w;
+  el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenWP=w;paivitaYhteenveto();
 }
 
 document.addEventListener('keydown',e=>{
@@ -1334,6 +1369,7 @@ function setLevelUI(level){
     const sel=c.dataset.level===chosenLevel;
     c.classList.toggle('selected',sel);c.setAttribute('aria-pressed',sel?'true':'false');
   });
+  paivitaYhteenveto();
 }
 function startNext(level,practice){setLevelUI(level);beginRound(practice);}
 function goStart(level){setLevelUI(level);paivitaLukitus();show('s-start');window.scrollTo(0,0);}
@@ -1377,7 +1413,8 @@ function sendHeight(){
 }
 if(window.ResizeObserver){document.querySelectorAll('.screen').forEach(x=>new ResizeObserver(sendHeight).observe(x));}
 window.addEventListener("load",sendHeight);
-paivitaLukitus();
+paivitaLukitus();paivitaYhteenveto();
+document.getElementById('player-name').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
 window.addEventListener("resize",sendHeight);
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');sendHeight();}
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[r[i],r[k]]=[r[k],r[i]];}return r;}
