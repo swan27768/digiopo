@@ -138,6 +138,10 @@
     transform: translateY(-1px);
   }
   .level-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .level-card.locked { opacity: .65; cursor: not-allowed; background: var(--bg-secondary); }
+  .level-card.locked:hover { background: var(--bg-secondary); border-color: var(--border-default); }
+  .level-lock { display: none; margin-top: .45rem; font-size: 12px; font-weight: 600; color: var(--text-primary); }
+  .level-card.locked .level-lock { display: block; }
   .level-icon {
     font-size: 24px; margin-bottom: .5rem;
     width: 42px; height: 42px; border-radius: 50%;
@@ -405,10 +409,11 @@
         <div class="level-name">Perustaso</div>
         <div class="level-desc">Selkeät tilanteet, kolme vaihtoehtoa. Hyvä ensimmäiselle kerralle. Vihjeestä menettää yhden pisteen.</div>
       </div>
-      <div class="level-card" data-level="hard" onclick="selectLevel(this,'hard')" role="button" tabindex="0" aria-pressed="false">
+      <div class="level-card" id="card-hard" data-level="hard" onclick="selectLevel(this,'hard')" role="button" tabindex="0" aria-pressed="false">
         <div class="level-icon" aria-hidden="true">🔴</div>
         <div class="level-name">Haastava taso</div>
         <div class="level-desc">Monitulkintaisia tilanteita. Vihjeestä menettää yhden pisteen.</div>
+        <div class="level-lock" id="lock-note">🔒 Avautuu, kun olet pelannut perustason ja saanut vähintään 70 %.</div>
       </div>
     </div>
 
@@ -1038,7 +1043,38 @@ const WP_NAME={all:'Kaikki',school:'Koulu',daycare:'Päiväkoti',shop:'Kauppa',o
 // Jatkopolun rajat (prosenttia saatavilla olevista pisteistä)
 const RAJA={easy:{hyva:70,kesken:45},hard:{hyva:70,kesken:40}};
 
+// ── Haastavan tason avautuminen ──
+// Oppilas aloittaa perustasolta. Haastava avautuu, kun perustaso on pelattu tuloksella 70 % tai yli.
+// Avautuminen muistetaan nimellä selaimen muistissa. Jos muisti ei toimi, se muistetaan vain sivun ollessa auki.
+const AVAUS_KEY='duuniin-tet-haastava-auki';
+const opettajaAvaus=/[?&]taso=haastava(&|$)/.test(location.search);
+let avattuMuistissa={};
+function nimiAvain(){return document.getElementById('player-name').value.trim().toLowerCase();}
+function lueAvatut(){try{return JSON.parse(localStorage.getItem(AVAUS_KEY)||'{}')||{};}catch(e){return {};}}
+function onkoHaastavaAuki(){
+  if(opettajaAvaus)return true;
+  const n=nimiAvain();if(!n)return false;
+  return !!(avattuMuistissa[n]||lueAvatut()[n]);
+}
+function avaaHaastava(){
+  const n=nimiAvain();if(!n)return false;
+  const ennen=onkoHaastavaAuki();
+  avattuMuistissa[n]=true;
+  try{const a=lueAvatut();a[n]=true;localStorage.setItem(AVAUS_KEY,JSON.stringify(a));}catch(e){}
+  return !ennen;
+}
+function paivitaLukitus(){
+  const auki=onkoHaastavaAuki();
+  const c=document.getElementById('card-hard');
+  c.classList.toggle('locked',!auki);
+  c.setAttribute('aria-disabled',auki?'false':'true');
+  c.setAttribute('aria-label','Haastava taso'+(auki?'':'. Lukittu. Avautuu, kun olet pelannut perustason ja saanut vähintään 70 prosenttia.'));
+  if(!auki&&chosenLevel==='hard')setLevelUI('easy');
+}
+document.getElementById('player-name').addEventListener('input',paivitaLukitus);
+
 function selectLevel(el,l){
+  if(l==='hard'&&!onkoHaastavaAuki())return;
   document.querySelectorAll('.level-card').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-pressed','false');});
   el.classList.add('selected');el.setAttribute('aria-pressed','true');chosenLevel=l;
 }
@@ -1069,6 +1105,7 @@ function startGame(){
 function beginRound(practice){
   const nm=document.getElementById('player-name').value.trim().toLowerCase();
   if(nm!==sessionName){sessionName=nm;rounds=[];seenQ=new Set();weakModules=[];} // uusi oppilas = puhdas alku
+  if(chosenLevel==='hard'&&!onkoHaastavaAuki())setLevelUI('easy');
   currentPractice=!!practice&&weakModules.length>0;
   let pool=ALL_Q.filter(q=>q.level===chosenLevel&&q.wp.includes(chosenWP));
   if(!pool.length)pool=ALL_Q.filter(q=>q.level===chosenLevel);
@@ -1227,6 +1264,8 @@ function showResults(){
   const dlBtn=document.getElementById('btn-dl');dlBtn.textContent='⬇ Lataa tulokset';dlBtn.className='btn btn-dark';
   const correct=answers.filter(a=>a.type==='correct').length;
   const pct=Math.round(stars/maxStars*100);
+  const juuriAvattu=chosenLevel==='easy'&&pct>=RAJA.easy.hyva&&avaaHaastava();
+  paivitaLukitus();
   let emoji,title,sub;
   if(pct>=85){emoji='🏆';title='Duuniin-mestari!';sub='Upea tulos! Olet selvästi valmis TET-jaksolle.';}
   else if(pct>=60){emoji='👍';title='Hyvällä tiellä!';sub='Hyvä suoritus! Käy läpi kehityskohteet ennen TET-jaksoa.';}
@@ -1260,11 +1299,11 @@ function renderNextStep(pct){
   let msg,p,sec;
   if(chosenLevel==='easy'){
     if(pct>=r.hyva){
-      msg='Hienoa työtä! Perustaso sujui hyvin. Haastavassa tasossa tilanteet ovat monitulkintaisempia. Kokeile, kun olet valmis.';
+      msg=(onkoHaastavaAuki()?'🔓 ':'')+'Hienoa työtä! Perustaso sujui hyvin. Haastava taso on nyt auki. Siinä tilanteet ovat monitulkintaisempia. Kokeile, kun olet valmis.';
       p=['Siirry haastavalle tasolle',()=>startNext('hard',false)];sec=['Pelaa perustaso uudelleen',again];
     }else if(pct>=r.kesken){
-      msg='Hyvä alku! Vielä vähän harjoittelua, niin haastava taso alkaa sujua. Saat uusia kysymyksiä.';
-      p=['Pelaa perustaso uudelleen',again];sec=['Kokeile haastavaa tasoa',()=>startNext('hard',false)];
+      msg=onkoHaastavaAuki()?'Hyvä alku! Vielä vähän harjoittelua, niin haastava taso alkaa sujua. Saat uusia kysymyksiä.':'Hyvä alku! Haastava taso avautuu, kun saat perustasolla vähintään 70 %. Saat uusia kysymyksiä.';
+      p=['Pelaa perustaso uudelleen',again];sec=['Valitse toinen harjoittelupaikka',()=>goStart('easy')];
     }else{
       msg='Hyvä, että harjoittelet! Virheistä oppii eniten. Aloitetaan niistä aiheista, jotka tuntuivat hankalilta.';
       p=hasWeak?['Harjoittele heikkoja aiheita',practice]:['Pelaa perustaso uudelleen',again];
@@ -1297,7 +1336,7 @@ function setLevelUI(level){
   });
 }
 function startNext(level,practice){setLevelUI(level);beginRound(practice);}
-function goStart(level){setLevelUI(level);show('s-start');window.scrollTo(0,0);}
+function goStart(level){setLevelUI(level);paivitaLukitus();show('s-start');window.scrollTo(0,0);}
 function restartGame(){show('s-start');}
 
 function downloadResults(){
@@ -1338,6 +1377,7 @@ function sendHeight(){
 }
 if(window.ResizeObserver){document.querySelectorAll('.screen').forEach(x=>new ResizeObserver(sendHeight).observe(x));}
 window.addEventListener("load",sendHeight);
+paivitaLukitus();
 window.addEventListener("resize",sendHeight);
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');sendHeight();}
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[r[i],r[k]]=[r[k],r[i]];}return r;}
