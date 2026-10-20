@@ -4972,11 +4972,19 @@
         var container = document.getElementById("duuniintetContainer");
         var frame = document.getElementById("duuniintetFrame");
         if (!frame.getAttribute("src")) {
-          frame.src = "../sivut/duuniin-tet.html?v=20261020a";
+          frame.src = "../sivut/duuniin-tet.html?v=20261021a";
         }
         container.style.display = "block";
         container.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+
+      window.addEventListener("message", function(e){
+        if (e.origin !== location.origin) return;
+        if (e.data && e.data.type === "duuniin-tet-korkeus" && e.data.korkeus){
+          var f = document.getElementById("duuniintetFrame");
+          if (f) f.style.height = Math.max(600, parseInt(e.data.korkeus, 10) + 8) + "px";
+        }
+      });
 
       function suljeDuuniinTet() {
         var container = document.getElementById("duuniintetContainer");

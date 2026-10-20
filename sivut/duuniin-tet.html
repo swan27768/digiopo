@@ -429,7 +429,7 @@
 </div>
 
 <!-- ═══════════════ GAME ═══════════════ -->
-<div id="s-game" class="screen" aria-live="polite">
+<div id="s-game" class="screen">
   <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-aria">
     <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     <div class="prog-label" id="prog-label">1 / 10</div>
@@ -451,7 +451,7 @@
   </div>
   <div class="choices-title" id="choices-title">Mitä sinä tekisit? Valitse yksi vastaus.</div>
   <div class="choices" id="choices" role="group" aria-label="Valitse vastaus"></div>
-  <div class="fb-box" id="fb-box" role="alert">
+  <div class="fb-box" id="fb-box" role="status" tabindex="-1">
     <div class="fb-title" id="fb-title"></div>
     <div class="fb-points" id="fb-points"></div>
     <div id="fb-text"></div>
@@ -586,12 +586,12 @@ const ALL_Q=[
     {text:"Kerron asiasta rauhassa ohjaajalle tai opettajalle.",score:3,type:"correct",fb:{t:"Rohkea ja oikea teko!",d:"Vaitiolovelvollisuus ei tarkoita, että turvallisuus sivuutetaan. Aikuiset osaavat auttaa oppilasta."}},
     {text:"Kysyn oppilaalta lisää ennen kuin teen mitään muuta.",score:1,type:"neutral",fb:{t:"Huomaavaista, mutta...",d:"Tilanne vaatii nopeaa toimintaa. Kerro aikuiselle ensin. Sinun ei tarvitse selvittää asiaa yksin."}},
   ]},
- {level:"hard",wp:["office","all"],module:"🤫 Hiljainen tieto",situation:"Kahvikassa",hint:"Moni asia työpaikalla opitaan vain kysymällä.",
-   text:"Toimiston kahvihuoneessa on kahvikone ja purkki. Purkissa lukee: ”Kahvi 50 snt / kuppi.” Kukaan ei ole kertonut sinulle, saako harjoittelija ottaa kahvia. Mitä teet?",
+ {level:"hard",wp:["office","all"],module:"🤫 Hiljainen tieto",situation:"Kahvikassa",hint:"Katso, mitä muut tekevät.",
+   text:"Toimiston kahvihuoneessa on kahvikone ja purkki. Purkissa lukee: ”Kahvi 50 snt / kuppi.” Näet, että työntekijät laittavat rahan purkkiin ja ottavat kahvia. Kukaan ei ole sanonut sinulle mitään. Mitä teet?",
    choices:[
-    {text:"Kysyn kollegalta tai ohjaajalta, saanko ottaa kahvia ja miten maksan.",score:3,type:"correct",fb:{t:"Hyvä ratkaisu!",d:"Kysyminen on helpoin tapa. Näin tiedät varmasti, mikä on ok."}},
-    {text:"Otan kahvia ja jätän maksamatta, koska kukaan ei ole sanonut mitään.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Vaikka asiasta ei ole puhuttu, yhteisiä sääntöjä noudatetaan. Kysy ensin."}},
-    {text:"En ota kahvia koko TET-jaksolla, koska en halua aiheuttaa ongelmia.",score:2,type:"neutral",fb:{t:"Varovainen ratkaisu.",d:"Se toimii, mutta voit myös kysyä. Ehkä harjoittelijakin saa ottaa."}},
+    {text:"Otan kahvia ja jätän maksamatta, koska kukaan ei ole sanonut mitään.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Purkin teksti kertoo säännön. Muiden tapa näyttää, että kaikki maksavat."}},
+    {text:"En ota kahvia koko TET-jaksolla, koska en halua aiheuttaa ongelmia.",score:1,type:"neutral",fb:{t:"Turhan varovaista.",d:"Kahvia ei tarvitse jättää väliin. Purkin teksti ja muiden toiminta kertovat jo, mitä tehdään."}},
+    {text:"Otan kahvia ja laitan 50 senttiä purkkiin niin kuin muutkin.",score:3,type:"correct",fb:{t:"Oikein!",d:"Katsoit, mitä muut tekevät, ja teit samoin. Se on hiljaista tietoa."}},
   ]},
  {level:"easy",wp:["cafe","all"],module:"🤝 Ihmiset",situation:"Asiakkaan kohtaaminen",hint:"Ensivaikutelma syntyy muutamassa sekunnissa.",
    text:"Olet TET:ssä kahvilassa. Asiakas tulee tiskille ja näyttää epävarmalta. Sinun pitäisi siivota pöytiä, eikä kukaan muu ole paikalla. Mitä teet?",
@@ -692,12 +692,12 @@ const ALL_Q=[
     {text:"Nauran mukana ja esitän, ettei se haittaa, ettei tule riitaa.",score:0,type:"wrong",fb:{t:"Sinun ei tarvitse sietää tätä.",d:"Jos kommentti tuntuu pahalta, se ei ole ok. Apua saa pyytää, eikä se ole valittamista."}},
     {text:"Kerron heti ohjaajalle, opolle tai kotona aikuiselle. En jää yksin asian kanssa.",score:3,type:"correct",fb:{t:"Hyvä tapa!",d:"Sinun ei tarvitse hoitaa asiaa itse. Aikuiset auttavat."}},
   ]},
- {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🔒 Vaitiolovelvollisuus",situation:"Kuva somessa",hint:"Mieti, kenen luvalla kuvan saa julkaista.",
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🔒 Vaitiolovelvollisuus",situation:"Kuva somessa",hint:"Kuka kaikki kuvassa näkyy?",
    text:"Haluat julkaista kuvan TET-päivästäsi. Taustalla näkyy työkavereita ja tietokoneen ruutu, jossa on asiakastietoja. Mitä teet?",
    choices:[
-    {text:"Kysyn ohjaajalta luvan ennen kuin otan tai julkaisen mitään kuvaa.",score:3,type:"correct",fb:{t:"Täysin oikein!",d:"Lupa ensin, vasta sitten kuva. Jokaisella työpaikalla on omat säännöt."}},
-    {text:"Julkaisen kuvan vain 24 tunnin tarinaksi. Silloin sitä ei ehdi kukaan nähdä.",score:0,type:"wrong",fb:{t:"Ei pidä paikkaansa.",d:"Tarinan voi tallentaa ja jakaa hetkessä. Lupa tarvitaan aina."}},
-    {text:"Rajaan kuvan niin, ettei ruutu näy, ja julkaisen sen.",score:1,type:"neutral",fb:{t:"Hyvä yritys, mutta...",d:"Kuvassa on silti työkavereita. Kysy lupa ohjaajalta ja työkavereilta."}},
+    {text:"En julkaise kuvaa. Kerron TET-päivästä sanoilla.",score:3,type:"correct",fb:{t:"Oikein!",d:"Työkaverit ja asiakastiedot eivät kuulu someen. Voit silti kertoa, mitä teit ja opit."}},
+    {text:"Julkaisen kuvan vain 24 tunnin tarinaksi. Silloin sitä ei ehdi kukaan nähdä.",score:0,type:"wrong",fb:{t:"Älä.",d:"Tarinan voi tallentaa ja jakaa. Asiakastiedot voivat levitä heti."}},
+    {text:"Rajaan kuvan niin, ettei ruutu näy, ja julkaisen sen.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Ruutu on hyvä rajata pois. Työkaverit näkyvät silti, eikä heiltä ole kysytty lupaa."}},
   ]},
  {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🦺 Turvallisuus",situation:"Vaarallinen tehtävä",hint:"Kukaan ei odota, että osaat kaiken heti.",
    text:"Ohjaaja pyytää sinua tekemään jotain, mitä et ole tehnyt ennen. Se tuntuu vaaralliselta, esimerkiksi tikkailla korkealle nouseminen. Mitä teet?",
@@ -711,14 +711,14 @@ const ALL_Q=[
    choices:[
     {text:"Sanon ”ok”, mutta jään kiukuttelemaan asiaa koko päiväksi enkä kysy mitään.",score:1,type:"neutral",fb:{t:"Tunne on ymmärrettävä.",d:"Kiukku on normaali tunne. Kysy kuitenkin, mitä pitäisi tehdä toisin. Silloin asia ei jää vaivaamaan."}},
     {text:"Sanon heti vastaan ja selitän, miksi ohjaaja on mielestäni väärässä.",score:0,type:"wrong",fb:{t:"Ei vielä.",d:"Vastaan sanominen kesken palautteen pahentaa tilannetta. Kuuntele ensin."}},
-    {text:"Kuuntelen loppuun. Sitten kysyn, miten teen asian jatkossa oikein.",score:3,type:"correct",fb:{t:"Hyvä tapa!",d:"Kuuntelemalla opit. Rauhallinen kysymys näyttää, että otat palautteen tosissasi."}},
+    {text:"Kuuntelen loppuun ja korjaan virheen. Mietin illalla, mitä opin.",score:3,type:"correct",fb:{t:"Hyvä tapa!",d:"Kuuntelemalla opit. Rauhallinen kysymys näyttää, että otat palautteen tosissasi."}},
   ]},
- {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"⏰ Arjen säännöt",situation:"Pidempi työpäivä",hint:"Kotona ja koulussa pitää tietää, milloin tulet.",
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"⏰ Arjen säännöt",situation:"Pidempi työpäivä",hint:"Työajoista on sovittu.",
    text:"On kiire. Ohjaaja pyytää sinua jäämään töihin tunniksi pidempään. Työajat on kuitenkin sovittu ja kotona odotetaan sinua. Mitä teet?",
    choices:[
-    {text:"Kerron, että ajat on sovittu, ja kysyn ensin lupaa kotoa tai opolta.",score:3,type:"correct",fb:{t:"Hyvä ratkaisu!",d:"Kun kysyt luvan, kaikki tietävät, missä olet. Voit sopia asian ilman ristiriitaa."}},
-    {text:"Jään pidempään, mutta en kerro siitä kenellekään. En kehtaa sanoa ei.",score:1,type:"neutral",fb:{t:"Ei paras.",d:"Kotona voidaan huolestua. Kerro aina, jos aika muuttuu."}},
-    {text:"Lähden normaaliin aikaan ilman selityksiä, koska aika oli sovittu.",score:2,type:"neutral",fb:{t:"Oikea ajatus.",d:"Sovitusta pitää voida pitää kiinni. Sano silti kohteliaasti, miksi lähdet."}},
+    {text:"Sanon ystävällisesti, että työajat on sovittu ja lähden normaalisti.",score:3,type:"correct",fb:{t:"Hyvä raja!",d:"Selkeä ja kohtelias vastaus riittää. Sovitut ajat ovat tärkeitä myös kotona."}},
+    {text:"Jään pidempään, mutta en kerro siitä kenellekään. En kehtaa sanoa ei.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Jäämällä autat. Kotona voidaan silti huolestua, kun et tule sovittuun aikaan."}},
+    {text:"Lähden normaaliin aikaan ilman selityksiä, koska aika oli sovittu.",score:2,type:"neutral",fb:{t:"Melkein.",d:"Aika oli sovittu, joten lähteminen on ok. Ystävällinen sana tekee siitä paremman."}},
   ]},
  {level:"easy",wp:["school","all"],module:"🛡️ Rajat ja kunnioitus",situation:"Oppilaan pyyntö",hint:"Työssä ja vapaa-ajalla on eri säännöt.",
    text:"Oppilas kysyy: ”Mikä sun Instagram on? Voinko seurata sua?” Mitä teet?",
@@ -804,12 +804,12 @@ const ALL_Q=[
     {text:"Jään tuijottamaan asiakasta, jotta hän huomaa minut.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Tuijottaminen ei ratkaise mitään. Kerro työntekijälle."}},
     {text:"Menen sanomaan asiakkaalle, että näin hänen tekevän sen.",score:0,type:"wrong",fb:{t:"Älä mene itse.",d:"Se voi olla vaarallista. Kerro työntekijälle, hän hoitaa asian."}},
   ]},
- {level:"hard",wp:["shop","all"],module:"🛡️ Rajat ja kunnioitus",situation:"Palkkio",hint:"Mieti ensin, saatko luvata mitään.",
+ {level:"hard",wp:["shop","all"],module:"🛡️ Rajat ja kunnioitus",situation:"Palkkio",hint:"Mitä sinä saat luvata asiakkaalle?",
    text:"Asiakas pyytää sinua laittamaan tuotteen sivuun hänelle. Hän tarjoaa viisi euroa siitä. Ohjaaja ei ole lähellä. Mitä teet?",
    choices:[
-    {text:"Otan rahan ja laitan tuotteen sivuun, koska asiakas tarjosi sen itse.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Se ei ole reilua muille asiakkaille. Työssä ei oteta rahaa salaa."}},
-    {text:"Kiitän, mutta en ota rahaa. Kysyn ohjaajalta, saako tuotteen varata.",score:3,type:"correct",fb:{t:"Täydellinen!",d:"Kohtelias kieltäytyminen ja luvan kysyminen. Näin kaikki asiakkaat saavat saman kohtelun."}},
-    {text:"Laitan tuotteen sivuun, mutta en ota rahaa enkä kysy keneltäkään.",score:2,type:"neutral",fb:{t:"Melkein.",d:"Raha jäi ottamatta, hyvä. Kysy kuitenkin ensin ohjaajalta, saako tuotteita varata."}},
+    {text:"Otan rahan ja laitan tuotteen sivuun, koska asiakas tarjosi sen itse.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Raha pyynnön hinnasta ei kuulu sinulle. Työpaikalla ei oteta lahjuksia."}},
+    {text:"Kiitän, mutta en ota rahaa. Neuvon asiakasta kysymään varaamisesta kassalta.",score:3,type:"correct",fb:{t:"Oikein!",d:"Kieltäydyit rahasta ystävällisesti. Asiakas saa silti apua oikealta henkilöltä."}},
+    {text:"Laitan tuotteen sivuun, mutta en ota rahaa enkä kerro siitä kenellekään.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Rahan kieltäminen on hyvä. Tuotteen varaaminen ei kuitenkaan kuulu sinulle."}},
   ]},
  {level:"easy",wp:["office","all"],module:"📱 Käyttäytyminen",situation:"Työkone tauolla",hint:"Työkoneelle ei kannata jättää jälkiä omasta elämästäsi.",
    text:"Tauolla työkone on vapaana. Haluat nopeasti katsoa omaa somea ja kirjautua sisään omilla tunnuksillasi. Mitä teet?",
@@ -832,12 +832,12 @@ const ALL_Q=[
     {text:"Sanon, etten ota kuvaa omalla puhelimellani, ja kysyn ohjaajalta, miten tilaus lähetetään.",score:3,type:"correct",fb:{t:"Viisas valinta!",d:"Asiakkaan tietoja ei viedä omalle puhelimelle. Ohjaaja tietää, mitä välineitä työpaikalla käytetään."}},
     {text:"Kysyn ohjaajalta luvan, otan kuvan ja poistan sen puhelimestani heti lähettämisen jälkeen.",score:2,type:"neutral",fb:{t:"Melkein.",d:"Luvan kysyminen on hyvä. Asiakkaiden tietoja ei kuitenkaan pitäisi siirtää omalla puhelimella, vaan työpaikan omilla välineillä."}},
   ]},
- {level:"hard",wp:["office","all"],module:"🔒 Vaitiolovelvollisuus",situation:"Tunnusten lainaus",hint:"Tunnuksilla tehdyt teot kirjautuvat sinun nimiisi.",
+ {level:"hard",wp:["office","all"],module:"🔒 Vaitiolovelvollisuus",situation:"Tunnusten lainaus",hint:"Tunnus on henkilökohtainen.",
    text:"Sait työkoneeseen väliaikaiset tunnukset. Kollega on unohtanut oman salasanansa ja kiirehtii. Hän kysyy: ”Voinko kirjautua sinun tunnuksillasi vain hetkeksi?” Mitä teet?",
    choices:[
-    {text:"Annan tunnukset vain hetkeksi. Hän on kiireessä ja asia on pieni.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Tunnukset ovat henkilökohtaiset. Jos jotain tapahtuu, vastuu on sinulla."}},
-    {text:"Kirjaudun itse sisään ja istun vieressä, kun hän tekee tarvitsemansa.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Kaikki, mitä koneella tehdään, tulee sinun nimiisi. Salasanan unohtanut voi pyytää uuden ohjaajalta tai IT-tuelta."}},
-    {text:"Sanon ystävällisesti, etten voi lainata tunnuksia. Ehdotan, että hän pyytää uuden salasanan ohjaajalta tai IT-tuesta.",score:3,type:"correct",fb:{t:"Viisas vastaus!",d:"Pidit tunnukset itselläsi ja autoit silti kollegaa eteenpäin."}},
+    {text:"Annan tunnukset vain hetkeksi. Hän on kiireessä ja asia on pieni.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Tunnuksilla tehdyt asiat kirjataan sinun nimiisi. Pieni asia voi kasvaa isoksi."}},
+    {text:"Kirjaudun itse sisään ja istun vieressä, kun hän tekee tarvitsemansa.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Tunnukset pysyvät sinulla, mutta kollegan työ kirjautuu silti sinun nimiisi."}},
+    {text:"Sanon, etten voi lainata tunnuksia. Autan häntä palauttamaan salasanan.",score:3,type:"correct",fb:{t:"Oikein!",d:"Tunnukset ovat henkilökohtaiset. Salasanan palautus on turvallinen tapa päästä sisään."}},
   ]},
  {level:"hard",wp:["office","all"],module:"🔒 Vaitiolovelvollisuus",situation:"Väärä liite",hint:"Mitä nopeammin kerrot, sitä helpompi asia on korjata.",
    text:"Ohjaaja pyytää sinua lähettämään sähköpostin asiakkaalle hänen koneeltaan. Kun viesti on lähtenyt, huomaat liittäneesi mukaan väärän tiedoston. Siinä on toisen asiakkaan tietoja. Mitä teet?",
@@ -867,19 +867,19 @@ const ALL_Q=[
     {text:"Menen sivuun itkemään pitkäksi aikaa ja jätän työt kesken.",score:1,type:"neutral",fb:{t:"Ymmärrettävää, mutta...",d:"Tunne on ihan ok. Kokeile palata töihin ja puhua asiasta, kun ruuhka on ohi."}},
     {text:"Huudan takaisin, että kyllä minä teen parhaani. En aio ottaa tuota vastaan.",score:0,type:"wrong",fb:{t:"Ei auta.",d:"Huutaminen pahentaa ruuhkaa. Rauhoitu ensin ja puhu asiasta myöhemmin."}},
   ]},
- {level:"hard",wp:["cafe","all"],module:"🦺 Turvallisuus",situation:"Eilinen leivonnainen",hint:"Ruokaan liittyy tarkat säännöt.",
+ {level:"hard",wp:["cafe","all"],module:"🦺 Turvallisuus",situation:"Eilinen leivonnainen",hint:"Mitä teet, kun et ole varma?",
    text:"Aamulla vitriinissä on eilisiä leivonnaisia. Kollega sanoo: ”Myy vaan nekin, ei kukaan huomaa.” Et tiedä, saako niitä myydä. Mitä teet?",
    choices:[
-    {text:"Myyn ne, kun kollega kerran sanoi niin.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Vanhasta ruoasta voi tulla vatsatauti. Älä myy mitään, jos et ole varma."}},
-    {text:"En myy niitä, ennen kuin olen kysynyt ohjaajalta, mitä säännöt sanovat.",score:3,type:"correct",fb:{t:"Viisas valinta!",d:"Kysymällä suojelet asiakkaita ja itseäsi."}},
-    {text:"Myyn ne alennuksella. Silloin asiakas tietää, että ne ovat vanhoja.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Ruoan turvallisuus ei riipu hinnasta. Kysy ohjaajalta, mitä säännöt sanovat."}},
+    {text:"Myyn ne, kun kollega kerran sanoi niin.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Jos niitä ei saa myydä, asiakas voi sairastua. Kollegan sana ei riitä."}},
+    {text:"En myy niitä, ennen kuin olen kysynyt ohjaajalta, mitä säännöt sanovat.",score:2,type:"neutral",fb:{t:"Hyvä.",d:"Kysyminen on oikein. Siirrä leivonnaiset silti heti pois myynnistä, kun odotat vastausta."}},
+    {text:"En myy niitä. Siirrän ne sivuun ja jatkan muita tehtäviä.",score:3,type:"correct",fb:{t:"Oikein!",d:"Kun et ole varma, ruokaa ei myydä. Ruoan turvallisuus on aina tärkeämpää."}},
   ]},
- {level:"hard",wp:["cafe","all"],module:"⏰ Arjen säännöt",situation:"Ylijäänyt ruoka",hint:"Salaisuus kertoo, että jokin voi olla pielessä.",
+ {level:"hard",wp:["cafe","all"],module:"⏰ Arjen säännöt",situation:"Ylijäänyt ruoka",hint:"Mitä teet, kun joku pyytää salaamaan?",
    text:"Kahvila menee kiinni ja ruokaa jää paljon yli. Kollega sanoo: ”Ota kotiin, mutta älä kerro ohjaajalle.” Mitä teet?",
    choices:[
-    {text:"Otan vähän ruokaa mukaani, koska kukaan ei varmasti huomaa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Luvaton ottaminen on varastamista. Ja ”kukaan ei huomaa” tarkoittaa yleensä, että säännöt ovat toiset."}},
-    {text:"En ota mitään ja sanon kollegalle, että en halua ongelmia.",score:2,type:"neutral",fb:{t:"Turvallinen valinta.",d:"Hyvä, mutta voit myös kysyä. Ehkä ruoan saa ottaa."}},
-    {text:"Kiitän ja kysyn ohjaajalta luvan ennen kuin otan mitään.",score:3,type:"correct",fb:{t:"Hyvä ratkaisu!",d:"Ehkä ruoan saa ottaa. Kun kysyt, sinulla ei ole mitään salattavaa."}},
+    {text:"Otan vähän ruokaa mukaani, koska kukaan ei varmasti huomaa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Salaa ottaminen on varastamista, vaikka ruoka menisi hukkaan."}},
+    {text:"En ota mitään ja sanon kollegalle, että en halua ongelmia.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Et tehnyt väärin. Ruokaa voi silti saada luvalla, jos kysyy avoimesti."}},
+    {text:"En ota mitään salaa. Sanon kollegalle, että otan vain luvalla.",score:3,type:"correct",fb:{t:"Oikein!",d:"Kun joku pyytää salaamaan, se on varoitusmerkki. Avoimesti toimiminen on turvallista."}},
   ]},
  {level:"easy",wp:["workshop","all"],module:"🦺 Turvallisuus",situation:"Suojavarusteet",hint:"Suojavarusteet ovat siellä syystä.",
    text:"Ohjaaja antaa sinulle suojalasit ja kuulosuojaimet. Ne tuntuvat ärsyttäviltä. Mitä teet?",
@@ -936,6 +936,97 @@ const ALL_Q=[
     {text:"Kerron hauskan jutun yhdestä asukkaasta. Se on vain vitsi.",score:0,type:"wrong",fb:{t:"Älä.",d:"Asukkaan asiat eivät ole viihdettä. Vaitiolovelvollisuus koskee myös sinua."}},
     {text:"Kerron kokemuksistani yleisesti. Asukkaiden asioista en kerro mitään.",score:3,type:"correct",fb:{t:"Täysin oikein!",d:"Voit kertoa, mitä teit ja mitä opit. Asukkaiden yksityisasiat pysyvät työpaikalla."}},
     {text:"Kerron ilman nimiä, mitä yksi asukas on sairastanut.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Vaikka nimi puuttuu, ihmisen voi tunnistaa. Jätä sairaudet ja yksityiset asiat kertomatta."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🌅 Valmistautuminen",situation:"Reitti etukäteen",hint:"Mitä voit selvittää jo tänään?",
+   text:"Huomenna alkaa TET. Et ole varma, mitä bussia tarvitset ja milloin pitää olla perillä. Mitä teet tänään?",
+   choices:[
+    {text:"Tarkistan reitin ja ajat jo tänään.",score:3,type:"correct",fb:{t:"Oikein!",d:"Kun reitti on selvillä, aamu on rauhallinen. Et joudu kiirehtimään."}},
+    {text:"Soitan huomenna aamulla työpaikalle ja kysyn reitin.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Kysyminen on ok, mutta aamulla on jo kiire. Selvitä reitti etukäteen."}},
+    {text:"En tee mitään. Selviän kyllä jotenkin.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Ilman suunnitelmaa voit eksyä tai myöhästyä. Ensimmäinen päivä on tärkeä."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🌅 Valmistautuminen",situation:"Ilta ennen työpäivää",hint:"Työpäivä on pidempi kuin koulupäivä.",
+   text:"Aamulla pitää herätä kuudelta. Illalla kaveri kysyy, jäisitkö pelaamaan pitkälle yöhön. Mitä teet?",
+   choices:[
+    {text:"Sanon, että pelataan toisena iltana. Menen ajoissa nukkumaan.",score:3,type:"correct",fb:{t:"Hyvä päätös!",d:"Kun nukut tarpeeksi, jaksat työssä ja muistat uudet asiat."}},
+    {text:"Pelaan yhden pelin ja menen sitten nukkumaan. Nukun silti vähän.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Yksi peli voi venyä. Väsyneenä työpäivä tuntuu raskaalta."}},
+    {text:"Pelaan myöhään. Nukun sitten bussissa.",score:0,type:"wrong",fb:{t:"Älä.",d:"Väsyneenä tekee virheitä ja unohtaa ohjeita. Se näkyy työssä."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"📱 Käyttäytyminen",situation:"Tylsä tehtävä",hint:"Pienetkin työt kuuluvat työpaikalle.",
+   text:"Sinun pitää järjestää kansioita tai tuotteita aakkosjärjestykseen. Työ on tylsää ja tuntuu turhalta. Mitä teet?",
+   choices:[
+    {text:"Valitan työkavereille, että tämä on tylsää. Teen sen hitaasti.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Teet työn, mutta valittaminen vie muiden tunnelmaa."}},
+    {text:"Teen työn huolella loppuun asti.",score:3,type:"correct",fb:{t:"Oikein!",d:"Huolellisesti tehty pieni työ näkyy. Se kertoo, että sinuun voi luottaa."}},
+    {text:"Jätän työn kesken ja etsin jotain hauskempaa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Keskeneräinen työ jää jonkun muun tehtäväksi. Työpaikalla se huomataan."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"📱 Käyttäytyminen",situation:"Tervehtiminen",hint:"Mieti, miltä sinusta tuntuu, kun sinut tervehditään.",
+   text:"Työpaikalla ihmiset tervehtivät toisiaan. Sinua jännittää, etkä tiedä, pitääkö sinunkin sanoa jotain. Mitä teet?",
+   choices:[
+    {text:"Tervehdin vain ohjaajaa. Muut eivät varmaan odota minulta mitään.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Ohjaajan tervehtiminen on hyvä alku. Muut ilahtuvat myös tervehdyksestä."}},
+    {text:"Odotan, että joku tervehtii ensin. Sitten vastaan.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Uusi ihminen voi aloittaa itse. Se näyttää ystävälliseltä ja rohkealta."}},
+    {text:"Sanon hei kaikille, jotka kohtaan. Kiitän, kun joku auttaa.",score:3,type:"correct",fb:{t:"Hyvä!",d:"Tervehtiminen ja kiittäminen on helppoa. Siitä jää hyvä muistijälki."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🤫 Hiljainen tieto",situation:"Taukohuoneen kupit",hint:"Kukaan ei sano ääneen, mutta kaikki huomaavat.",
+   text:"Tauon jälkeen pöydällä on monta likaista kahvikuppia. Et ole jättänyt niitä. Mitä teet?",
+   choices:[
+    {text:"Jätän ne siihen. Ne eivät ole minun, joten en koske niihin.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Yhteinen tila kuuluu kaikille. Jos kaikki ajattelevat näin, kupit jäävät pöydälle."}},
+    {text:"Vien oman kuppini koneeseen ja pyyhin pöydän.",score:3,type:"correct",fb:{t:"Oikein!",d:"Pieni teko auttaa kaikkia. Siitä näkee, että otat muut huomioon."}},
+    {text:"Vien vain oman kuppini koneeseen.",score:2,type:"neutral",fb:{t:"Hyvä alku.",d:"Oman kupin vieminen on tärkeintä. Voit auttaa vielä vähän enemmän."}},
+  ]},
+ {level:"easy",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🛡️ Rajat ja kunnioitus",situation:"Työkaverin eväät",hint:"Mikä on sinun ja mikä on toisen?",
+   text:"Sinulla on kova nälkä. Unohdit omat eväät kotiin. Jääkaapissa on työkaverin nimikoitu eväsrasia. Mitä teet?",
+   choices:[
+    {text:"Otan pienen palan ja jätän lapun. Maksan sen myöhemmin.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Lappu on kohtelias. Toisen eväitä ei silti oteta ilman lupaa."}},
+    {text:"Otan rasian ja syön sen. Hän ei varmaan huomaa, eikä se haittaa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Toisen ruoka ei ole sinun. Jos asia selviää, luottamus menee."}},
+    {text:"Jätän rasian rauhaan ja käyn ostamassa jotain.",score:3,type:"correct",fb:{t:"Oikein!",d:"Toisen tavaroihin ei kosketa ilman lupaa. Seuraavana päivänä otat evään mukaan."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🦺 Turvallisuus",situation:"Palohälytys",hint:"Mieti, mitä sekunnit merkitsevät.",
+   text:"Palohälytys alkaa soida. Olet kesken työtehtävää. Ohjaajaa ei näy missään. Mitä teet?",
+   choices:[
+    {text:"Lopetan heti ja menen ulos lähintä reittiä.",score:3,type:"correct",fb:{t:"Täysin oikein!",d:"Hälytys on aina tosi. Ulos mennään heti, vaikka ketään ei näkyisi."}},
+    {text:"Etsin ensin ohjaajan ja kysyn, mitä tehdään.",score:1,type:"neutral",fb:{t:"Liian hidasta.",d:"Ohjaajan etsiminen vie aikaa. Poistu ensin, ohjaaja löytyy ulkona."}},
+    {text:"Teen tehtävän loppuun ja katson sitten. Ehkä hälytys on vain testi.",score:0,type:"wrong",fb:{t:"Vaarallista.",d:"Älä jää arvailemaan. Hälytyksen aikana lähdetään heti."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🌅 Valmistautuminen",situation:"Yllätystehtävä huomiselle",hint:"Jännittäminen on tavallista. Valmistautuminen auttaa.",
+   text:"Ohjaaja sanoo: ”Huomenna saat esitellä työpaikan muille vierailijoille.” Sinua jännittää kovasti. Mitä teet?",
+   choices:[
+    {text:"Sanon huomenna aamulla, että minulle tuli flunssa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Kiertäminen ei auta. Jännitys helpottuu, kun tekee jotain."}},
+    {text:"Kirjoitan muutaman lauseen ja harjoittelen ne ääneen.",score:3,type:"correct",fb:{t:"Oikein!",d:"Pieni valmistelu rauhoittaa. Kun tiedät alun, loppu sujuu helpommin."}},
+    {text:"Menen paikalle ja puhun sen, mitä mieleen tulee. Kyllä se siitä sujuu.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Rohkeus on hyvä. Pieni valmistelu auttaisi silti muistamaan tärkeät asiat."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🛡️ Rajat ja kunnioitus",situation:"Tuntilista toisen puolesta",hint:"Mitä tarkoittaa, kun allekirjoitat tiedon?",
+   text:"Työkaveri tulee kymmenen minuuttia myöhässä. Hän pyytää: ”Kirjaa tuntilistaan, että tulin ajoissa. Ei kukaan huomaa.” Mitä teet?",
+   choices:[
+    {text:"Kirjaan, mutta sanon hänelle, ettei hän saa pyytää sitä enää uudestaan.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Väärä tieto on väärä tieto. Joutuisit itsekin vastuuseen."}},
+    {text:"Kirjaan vain sen, minkä tiedän. Sanon, etten voi kirjata muuta.",score:3,type:"correct",fb:{t:"Hyvä raja!",d:"Voit sanoa ei ystävällisesti. Rehellinen kirjaus suojaa myös sinua."}},
+    {text:"Sanon, ettei se kuulu minulle, ja käännyn pois.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Et tehnyt väärin. Voisit silti sanoa suoraan, miksi et kirjaa sitä."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"📱 Käyttäytyminen",situation:"Väsynyt iltapäivällä",hint:"Muut eivät tiedä, miltä sinusta tuntuu.",
+   text:"Iltapäivällä olet väsynyt. Huomaat vastaavasi ihmisille lyhyesti ja ärtyneesti. Mitä teet?",
+   choices:[
+    {text:"Yritän vain jaksaa. Vastaan lyhyesti, koska olen väsynyt.",score:1,type:"neutral",fb:{t:"Ei ihan.",d:"Väsymys on ymmärrettävää, mutta ärtynyt ääni vaikuttaa muihin."}},
+    {text:"Otan tauolla happea ja juon vettä. Palaan rauhallisena.",score:3,type:"correct",fb:{t:"Oikein!",d:"Lyhyt tauko auttaa. Myös ääni ja ilme voi muuttua heti."}},
+    {text:"Sanon ihmisille, että olen väsynyt ja heidän pitää odottaa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Muiden ei tarvitse kärsiä sinun väsymyksestäsi. Huolehdi omasta jaksamisestasi."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🤫 Hiljainen tieto",situation:"Kohtelias pyyntö",hint:"Ihmiset eivät aina sano suoraan, mitä haluavat.",
+   text:"Ohjaaja sanoo: ”Jos sinulla olisi hetki, voisit ehkä käydä katsomassa varastoa.” Mitä hän tarkoittaa?",
+   choices:[
+    {text:"Se on kohtelias pyyntö. Menen heti katsomaan varastoa.",score:3,type:"correct",fb:{t:"Oikein!",d:"Ohjaaja pyytää kohteliaasti. Hän odottaa, että menet nyt."}},
+    {text:"Kysyn, haluaako hän sen heti vai vasta, kun olen tehnyt muut työt.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Kysyminen ei ole väärin. Tässä kohtelias tapa kertoo jo, että asia on tärkeä."}},
+    {text:"Hän sanoi ”jos”. Menen vasta, kun minulla on hetki.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Sana ”jos” on tässä vain kohtelias. Pyyntöön vastataan heti."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🤫 Hiljainen tieto",situation:"Muistiinpanot",hint:"Mitä voit tehdä, ettei sama asia unohdu?",
+   text:"Ohjaaja on neuvonut saman työvaiheen jo kolme kertaa. Silti et muista kaikkea. Mitä teet?",
+   choices:[
+    {text:"Kirjoitan vaiheet muistiin ja katson listaa tehdessäni.",score:3,type:"correct",fb:{t:"Hyvä!",d:"Muistiinpanot auttavat kaikkia. Ne näyttävät, että otat työn tosissasi."}},
+    {text:"Teen niin kuin muistan. En halua kysyä enää samaa, koska se on noloa.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Väärin tehty työ on suurempi harmi kuin uusi kysymys."}},
+    {text:"Kysyn uudelleen ja pyydän anteeksi.",score:1,type:"neutral",fb:{t:"Melkein.",d:"Kysyminen on ok. Muistiinpanot auttaisivat, ettei tarvitse kysyä samaa uudelleen."}},
+  ]},
+ {level:"hard",wp:["school","daycare","shop","office","cafe","workshop","care","all"],module:"🤝 Ihmiset",situation:"Mykkä työkaveri",hint:"Ihmisellä voi olla huono päivä, vaikka syy ei olisi sinä.",
+   text:"Tervehdit työkaveria, mutta hän ei vastaa. Hän vaikuttaa mököttävän. Sinusta tuntuu, että teit jotain väärin. Mitä teet?",
+   choices:[
+    {text:"En kysy mitään ja puhun hänestä muille.",score:0,type:"wrong",fb:{t:"Ei näin.",d:"Puhuminen selän takana pahentaa tilannetta. Se voi jäädä mieleen kauan."}},
+    {text:"En ota sitä henkilökohtaisesti. Jatkan ystävällisenä.",score:3,type:"correct",fb:{t:"Oikein!",d:"Huono päivä voi olla kenellä vain. Ystävällisyys auttaa useimmiten."}},
+    {text:"Kysyn suoraan: ”Oletko vihainen minulle, kun et tervehtinyt?”",score:1,type:"neutral",fb:{t:"Melkein.",d:"Rohkea kysymys, mutta se voi tuntua hänestä painostavalta. Anna hänelle ensin tilaa."}},
   ]},
 ];
 
@@ -1028,6 +1119,7 @@ function loadQ(){
   });
   document.getElementById('choices-title').textContent='Mitä sinä tekisit? Valitse yksi vastaus.';
   renderDots('dots');
+  if(curQ>0){const qt=document.getElementById('q-text');qt.setAttribute('tabindex','-1');qt.focus({preventScroll:true});}
 }
 
 function renderDots(id){
@@ -1084,6 +1176,13 @@ function pick(idx){
   renderDots('dots');
   document.getElementById('btn-next').classList.add('show');
   document.getElementById('stars-label').textContent='⭐ '+stars;
+  const done=Math.round((curQ+1)/gameQ.length*100);
+  document.getElementById('prog-fill').style.width=done+'%';
+  document.getElementById('prog-aria').setAttribute('aria-valuenow',done);
+  document.getElementById('btn-hint').disabled=true;
+  // Kohdistus palautteeseen, jotta näppäimistö- ja ruudunlukijakäyttäjä pysyy mukana
+  fb.focus({preventScroll:true});
+  try{fb.scrollIntoView({block:'nearest',behavior:'smooth'});}catch(e){}
 }
 
 function nextQ(){curQ++;if(curQ>=gameQ.length)showResults();else loadQ();}
@@ -1230,7 +1329,17 @@ function downloadResults(){
   btn.textContent='✓ Tiedosto ladattu!';btn.className='btn btn-success';
 }
 
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function sendHeight(){
+  if(window.parent===window)return;
+  const sc=document.querySelector('.screen.active');if(!sc)return;
+  const cs=getComputedStyle(document.body);
+  const h=Math.ceil(sc.getBoundingClientRect().height+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+8);
+  try{window.parent.postMessage({type:"duuniin-tet-korkeus",korkeus:h},location.origin);}catch(e){}
+}
+if(window.ResizeObserver){document.querySelectorAll('.screen').forEach(x=>new ResizeObserver(sendHeight).observe(x));}
+window.addEventListener("load",sendHeight);
+window.addEventListener("resize",sendHeight);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');sendHeight();}
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[r[i],r[k]]=[r[k],r[i]];}return r;}
 </script>
 </body>
