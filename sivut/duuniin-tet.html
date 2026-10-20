@@ -361,30 +361,12 @@
     .choice-tag { margin-left: 44px; }
   }
 
-  /* ── VALINTOJEN TULOS ── */
   .dots { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 .9rem; }
   .dot { width: 13px; height: 13px; border-radius: 50%; background: #e3f1ee; border: 1.5px solid var(--border-strong); }
   .dot.cur { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(13,148,136,.25); }
   .dot.g { background: #0F6E56; border-color: #0F6E56; }
   .dot.o { background: var(--star-gold); border-color: var(--star-gold); }
   .dot.r { background: var(--border-error); border-color: var(--border-error); }
-  .rv-summary { cursor: pointer; font-size: 14px; font-weight: 800; color: var(--accent-dark); margin-bottom: .8rem; }
-  .rv-legend { font-size: 12px; color: var(--text-secondary); margin: 0 0 1rem; display: flex; gap: 14px; flex-wrap: wrap; }
-  .rv-legend .dot { display: inline-block; width: 10px; height: 10px; vertical-align: -1px; margin-right: 5px; }
-  .rv-item { border: 1px solid var(--border-default); border-left: 6px solid var(--border-default); border-radius: var(--radius-md); padding: .9rem 1rem; margin-bottom: .7rem; background: var(--bg-primary); }
-  .rv-item.g { border-left-color: #0F6E56; }
-  .rv-item.o { border-left-color: var(--star-gold); }
-  .rv-item.r { border-left-color: var(--border-error); }
-  .rv-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: .45rem; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--accent-dark); }
-  .rv-pts { background: var(--accent-tint-soft); border: 1px solid var(--border-default); border-radius: 99px; padding: 2px 10px; white-space: nowrap; }
-  .rv-item.g .rv-pts { background: var(--bg-success); color: var(--text-success); }
-  .rv-item.o .rv-pts { background: var(--bg-warning); color: var(--text-warning); }
-  .rv-item.r .rv-pts { background: var(--bg-error); color: var(--text-error); }
-  .rv-q { font-weight: 650; color: var(--accent-deep); margin-bottom: .55rem; line-height: 1.5; }
-  .rv-ans { font-size: 14px; margin-bottom: .35rem; line-height: 1.5; }
-  .rv-best { font-size: 14px; color: var(--text-success); background: var(--bg-success); border-radius: 8px; padding: .45rem .65rem; margin-bottom: .35rem; line-height: 1.5; }
-  .rv-fb { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
-
   /* ── SCREEN READER ── */
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 </style>
@@ -503,16 +485,9 @@
     <div id="develop-list"></div>
   </div>
 
-  <details class="card" id="review-card" open>
-    <summary class="rv-summary">Valintasi kysymys kerrallaan (<span id="review-count"></span>)</summary>
-    <div class="dots" id="r-dots" aria-hidden="true"></div>
-    <div class="rv-legend" aria-hidden="true"><span><i class="dot g"></i>paras vastaus</span><span><i class="dot o"></i>osittain oikein</span><span><i class="dot r"></i>ei hyvä</span></div>
-    <div id="review-list"></div>
-  </details>
-
   <div class="card-secondary">
     <div class="section-label">Lähetä tulokset opettajalle</div>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6;">Lataa tuloksesi tekstitiedostona ja palauta se opettajalle Google Classroomin tai Wilman kautta. Tiedostossa ovat kaikki kierrokset, jotka olet pelannut tällä kertaa.</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6;">Lataa tuloksesi tekstitiedostona ja palauta se opettajalle Google Classroomin tai Wilman kautta. Tiedostossa on yhteenveto vastauksistasi kaikilta kierroksilta, jotka olet pelannut tällä kertaa.</p>
     <ol class="dl-steps">
       <li>Paina "Lataa tulokset" – tiedosto tallentuu koneellesi</li>
       <li>Avaa Google Classroom tai Wilma</li>
@@ -1142,25 +1117,6 @@ function buildSummary(ans){
   return{strengths,develop};
 }
 
-function renderReview(ans){
-  renderDots('r-dots');
-  const box=document.getElementById('review-list');box.innerHTML='';
-  document.getElementById('review-count').textContent=ans.length;
-  const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
-  ans.forEach((a,i)=>{
-    const cls=a.score>=a.max?'g':a.score===0?'r':'o';
-    const icon=cls==='g'?'✓':cls==='r'?'✗':'~';
-    const it=el('div','rv-item '+cls);
-    const top=el('div','rv-top');
-    top.append(el('span','',(i+1)+'. '+a.sit),el('span','rv-pts',icon+' '+a.earned+' / '+a.max+' p'+(a.hintUsed?' · vihje':'')));
-    const ansLine=el('div','rv-ans');ansLine.append(el('strong','','Valintasi: '),document.createTextNode(a.ans));
-    it.append(top,el('div','rv-q',a.qtext),ansLine);
-    if(a.score<a.max&&a.bestTxt){const b=el('div','rv-best');b.append(el('strong','','Paras vastaus: '),document.createTextNode(a.bestTxt));it.append(b);}
-    it.append(el('div','rv-fb',a.fbT+' '+a.fbD));
-    box.appendChild(it);
-  });
-}
-
 function weakFrom(ans){
   const m={};
   ans.forEach(a=>{const v=m[a.module]||(m[a.module]={got:0,max:0});v.got+=a.score;v.max+=a.max;});
@@ -1187,7 +1143,6 @@ function showResults(){
   sm.strengths.forEach(t=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML='<div class="sum-dot dot-g" aria-hidden="true"></div><div></div>';d.lastChild.textContent=t;sl.appendChild(d);});
   const dl=document.getElementById('develop-list');dl.innerHTML='';
   sm.develop.forEach(t=>{const d=document.createElement('div');d.className='summary-item';d.innerHTML='<div class="sum-dot dot-o" aria-hidden="true"></div><div></div>';d.lastChild.textContent=t;dl.appendChild(d);});
-  renderReview(answers);
   weakModules=weakFrom(answers);
   rounds.push({n:rounds.length+1,level:chosenLevel,levelName:LEVEL_NAME[chosenLevel],wp:chosenWP,wpName:WP_NAME[chosenWP],practice:currentPractice,
     correct,total:gameQ.length,pct,strengths:sm.strengths,develop:sm.develop,answers:answers.slice()});
