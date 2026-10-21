@@ -1,7 +1,9 @@
 // DigiOpo – Osiojärjestyksen jako (Vaihe 2)
 //
 // GET  /api/jarjestys?ryhma=7A-K3M9&luokka=7
-//      → { ok: true, jarjestys: ["johdanto", ...] | null }   (julkinen luku)
+//      → { ok: true, jarjestys: ["johdanto", ...] | null,
+//          lukitut: [...], piilotetut: [...] }                (julkinen luku)
+//      piilotetut = osiot jotka opettaja on piilottanut oppilailta kokonaan.
 //
 // POST /api/jarjestys   (JSON body, toiminto-kenttä ratkaisee)
 //   Ryhmien luonti/muokkaus tapahtuu tili-toiminnoilla (luo_oma, tallenna_oma…),
@@ -115,7 +117,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
     }
     try {
-      const r = await sb(`jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=jarjestys,lukitut`);
+      const haeUrl = (sarakkeet) =>
+        `jarjestykset?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&select=${sarakkeet}`;
+      let r = await sb(haeUrl('jarjestys,lukitut,piilotetut'));
+      // Jos piilotetut-saraketta ei vielä ole (supabase_piilotetut_osiot.sql ajamatta),
+      // PostgREST vastaa 400. Haetaan silloin ilman sitä, jotta oppilaiden näkymä ei kaadu.
+      if (r.status === 400) r = await sb(haeUrl('jarjestys,lukitut'));
       if (!r.ok) throw new Error(`DB-virhe ${r.status}`);
       const rivi = (await r.json())[0];
       // Edge-välimuisti: sama ryhmä+luokka on kaikilla luokan oppilailla identtinen.
@@ -129,6 +136,7 @@ export default async function handler(req, res) {
         ok: true,
         jarjestys: rivi ? rivi.jarjestys : null,
         lukitut: rivi ? (rivi.lukitut || []) : [],
+        piilotetut: rivi ? (rivi.piilotetut || []) : [],
       });
     } catch (err) {
       console.error('jarjestys GET:', err);
@@ -269,18 +277,31 @@ export default async function handler(req, res) {
         const luokka = String(body.luokka || '').trim();
         const jarjestys = body.jarjestys;
         const lukitut = body.lukitut == null ? [] : body.lukitut;
+        const piilotetut = body.piilotetut == null ? [] : body.piilotetut;
         if (!SALLITUT_LUOKAT.includes(luokka)) {
           return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
         }
-        if (!validiJarjestys(jarjestys) || !validiJarjestys(lukitut)) {
+        if (!validiJarjestys(jarjestys) || !validiJarjestys(lukitut) || !validiJarjestys(piilotetut)) {
           return res.status(400).json({ ok: false, virhe: 'jarjestys_virheellinen' });
         }
-        const r = await sb('jarjestykset?on_conflict=ryhmakoodi,luokka', {
+        const tallennaRivi = (rivi) => sb('jarjestykset?on_conflict=ryhmakoodi,luokka', {
           method: 'POST',
           headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-          body: JSON.stringify({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut }),
+          body: JSON.stringify(rivi),
         });
-        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
+        let r = await tallennaRivi({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut, piilotetut });
+        let virheTeksti = r.status >= 300 ? await r.text() : '';
+        // piilotetut-saraketta ei vielä ole (supabase_piilotetut_osiot.sql ajamatta):
+        // tallennetaan ilman sitä, jos mitään ei ole piilotettu. Muuten kerrotaan
+        // selvästi että tietokanta pitää päivittää (ei hiljaa hukata piilotusta).
+        if (r.status === 400 && /piilotetut/i.test(virheTeksti)) {
+          if (piilotetut.length > 0) {
+            return res.status(503).json({ ok: false, virhe: 'tietokanta_paivittamatta' });
+          }
+          r = await tallennaRivi({ ryhmakoodi: ryhma, luokka, jarjestys, lukitut });
+          virheTeksti = r.status >= 300 ? await r.text() : '';
+        }
+        if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${virheTeksti}`);
         return res.status(200).json({ ok: true });
       }
 

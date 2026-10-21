@@ -1,0 +1,209 @@
+/* Järjestä osiot -ikkuna (Google Forms -tyylinen) */
+.jo-ikkuna {
+  --jo-teksti: #1f1f1f;
+  --jo-haalea: #6b6b6b;
+  --jo-viiva: #dadce0;
+  --jo-nuoli: #5f6368;
+  --jo-nuoli-pois: #c4c7cc;
+  --jo-aksentti: #3b2f8f;
+  --jo-tausta: #ffffff;
+
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--jo-tausta);
+  color: var(--jo-teksti);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  font-family: inherit;
+  overflow: hidden;
+}
+.jo-ikkuna[open] { display: flex; flex-direction: column; }
+.jo-ikkuna::backdrop { background: rgba(0, 0, 0, 0.5); }
+
+.jo-otsikko {
+  margin: 0;
+  padding: 24px 24px 8px;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.jo-ohje {
+  margin: 0;
+  padding: 0 24px 16px;
+  color: var(--jo-haalea);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.jo-ohje[hidden] { display: none; }
+
+.jo-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  border-top: 1px solid var(--jo-viiva);
+}
+
+.jo-rivi {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px 14px 12px;
+  border-bottom: 1px solid var(--jo-viiva);
+  background: var(--jo-tausta);
+}
+.jo-rivi.jo-raahataan {
+  background: #f1f0fb;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+.jo-rivi.jo-juuri-siirretty { animation: jo-valo 0.5s ease-out; }
+@keyframes jo-valo { from { background: #e8e6fa; } to { background: var(--jo-tausta); } }
+@media (prefers-reduced-motion: reduce) {
+  .jo-rivi.jo-juuri-siirretty { animation: none; }
+}
+
+.jo-kahva {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 44px;
+  border: 0;
+  background: none;
+  color: var(--jo-nuoli-pois);
+  cursor: grab;
+  touch-action: none; /* kosketusraahaus ei vieritä sivua */
+  border-radius: 6px;
+}
+.jo-kahva:active { cursor: grabbing; }
+.jo-kahva svg { width: 14px; height: 22px; fill: currentColor; }
+
+.jo-teksti { flex: 1 1 auto; min-width: 0; }
+.jo-nimi {
+  font-weight: 700;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.jo-sija { color: var(--jo-haalea); font-size: 0.95rem; margin-top: 2px; }
+
+/* Piilotettu osio: rivi himmenee, mutta tila kerrotaan myös tekstillä ("Piilotettu oppilailta") */
+.jo-rivi.jo-piilotettu { background: #f7f7f9; }
+.jo-rivi.jo-piilotettu .jo-nimi,
+.jo-rivi.jo-piilotettu .jo-sija { opacity: 0.7; }
+.jo-rivi.jo-piilotettu .jo-sija,
+.jo-rivi.jo-lukittu .jo-sija { font-style: italic; }
+
+/* Osion tilanapit (Piilota / Tuo näkyviin, Lukitse / Avaa lukitus) nimen alla */
+.jo-valinnat {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.jo-nakyvyys {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--jo-viiva);
+  border-radius: 22px;
+  background: none;
+  color: var(--jo-nuoli);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.jo-nakyvyys:hover { background: rgba(0, 0, 0, 0.06); }
+.jo-nakyvyys-kuva { display: grid; place-items: center; }
+.jo-nakyvyys svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.jo-piilotettu .jo-piilotus { border-color: var(--jo-aksentti); color: var(--jo-aksentti); }
+.jo-lukittu .jo-lukitus { border-color: #b91c1c; color: #b91c1c; }
+.jo-nakyvyys:focus-visible { outline: 3px solid var(--jo-aksentti); outline-offset: 2px; }
+
+.jo-varoitus {
+  margin: 0;
+  padding: 10px 24px;
+  background: #fff4d6;
+  color: #7a4300;
+  font-size: 0.92rem;
+  border-top: 1px solid #f0d28a;
+}
+.jo-varoitus[hidden] { display: none; }
+
+.jo-alavihje {
+  margin: 0;
+  padding: 12px 24px 0;
+  color: var(--jo-haalea);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-top: 1px solid var(--jo-viiva);
+}
+
+.jo-nuolet { flex: 0 0 auto; display: flex; gap: 4px; }
+.jo-nuoli {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px; /* riittävä kosketuskohde */
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--jo-nuoli);
+  cursor: pointer;
+}
+.jo-nuoli svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.jo-nuoli:hover:not(:disabled) { background: rgba(0, 0, 0, 0.08); }
+.jo-nuoli:disabled { color: var(--jo-nuoli-pois); cursor: default; }
+
+.jo-kahva:focus-visible,
+.jo-nuoli:focus-visible,
+.jo-nappi:focus-visible {
+  outline: 3px solid var(--jo-aksentti);
+  outline-offset: 2px;
+}
+
+.jo-toiminnot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 16px;
+}
+.jo-nappi {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--jo-nuoli);
+  cursor: pointer;
+}
+.jo-nappi:hover { background: rgba(0, 0, 0, 0.06); }
+.jo-nappi.jo-tallenna { color: var(--jo-aksentti); }
+
+.jo-kuulutus {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .jo-rivi { gap: 6px; padding-left: 4px; padding-right: 8px; }
+  .jo-kahva { width: 28px; }
+  .jo-nuoli { width: 38px; }
+  .jo-nuolet { gap: 0; }
+  .jo-otsikko, .jo-ohje, .jo-varoitus, .jo-alavihje { padding-left: 16px; padding-right: 16px; }
+  .jo-nakyvyys { padding: 0 11px; gap: 5px; }
+}

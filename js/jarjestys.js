@@ -1,6 +1,10 @@
 /* ============================================================
    JARJESTYS.JS — opettajan osiojärjestys
    - Vain OSIOITA järjestetään, ei tehtäviä.
+   - Osion voi myös PIILOTTAA oppilailta kokonaan (piilotetut). Eri asia kuin
+     lukitus: lukittu osio näkyy otsikkona + viestinä, piilotettu ei näy lainkaan.
+     Järjestys + piilotus tehdään "Järjestä ja piilota osioita" -ikkunassa
+     (js/jarjestys-ikkuna.js, ladataan vasta kun opettaja avaa sen).
    - Muokkaustila avautuu "Hallintapaneeli"-linkistä. Valtuutus tulee opettajan
      istunnosta (kirjautunut opettaja + ryhmän omistajuus). PIN on poistettu.
    - Oppilas liittyy ?ryhma=KOODI-linkillä ja näkee opettajan järjestyksen.
@@ -23,6 +27,8 @@
   var LS_LOCK = "digiopo-lukitut-" + LUOKKA;          // opettajan lukot (työversio)
   var LS_LOCK_CACHE = "digiopo-lukitut-cache-" + LUOKKA; // oppilaan välimuisti
   var LS_OPE_VIIM = "digiopo-ope-esikatselu-" + LUOKKA;  // muistettu esikatseluryhmä (opettaja) per luokka
+  var LS_HIDE = "digiopo-piilotetut-" + LUOKKA;          // opettajan piilotukset (työversio)
+  var LS_HIDE_CACHE = "digiopo-piilotetut-cache-" + LUOKKA; // oppilaan välimuisti
 
   // ---- apurit ----
   function osiot() {
@@ -92,6 +98,47 @@
   function lueLukot() { var a = lue(LS_LOCK); return Array.isArray(a) ? a : []; }
   function tallennaLukot(a) { kirjoita(LS_LOCK, a); }
 
+  // ---- piilotetut osiot ----
+  // Piilotettu osio ei näy oppilaalle lainkaan: ei sisältöä, otsikkoa eikä navin linkkiä.
+  function luePiilotetut() {
+    var a = lue(LS_HIDE);
+    if (!Array.isArray(a)) return [];
+    var nyt = jarjestysNyt();
+    return a.filter(function (id) { return nyt.indexOf(id) !== -1; });
+  }
+  function tallennaPiilotetut(a) { kirjoita(LS_HIDE, a); }
+
+  // Oppilasnäkymä (ja opettajan julkaistu esikatselu): piilota osiot + niiden navilinkit
+  function applyPiilotetut(piilotetut) {
+    piilotetut = Array.isArray(piilotetut) ? piilotetut : [];
+    var ryhmat = navRyhmat();
+    osiot().forEach(function (sec) {
+      var on = piilotetut.indexOf(sec.id) !== -1;
+      sec.classList.toggle("osio-piilotettu", on);
+      (ryhmat[sec.id] || []).forEach(function (el) { el.classList.toggle("osio-piilotettu-nav", on); });
+    });
+  }
+
+  // Muokkaustila: piilotetut osiot pysyvät näkyvissä (himmennettyinä) ja merkitään opettajalle
+  function merkitsePiilotetutOpe() {
+    var piilotetut = luePiilotetut();
+    var ryhmat = navRyhmat();
+    osiot().forEach(function (sec) {
+      var on = piilotetut.indexOf(sec.id) !== -1;
+      sec.classList.toggle("ope-osio-piilotettu", on);
+      (ryhmat[sec.id] || []).forEach(function (el) { el.classList.toggle("ope-nav-piilotettu", on); });
+      var P = sec.querySelector(":scope > .jarjestys-piilota-nappi");
+      if (P) paivitaPiilotaNappi(P, on);
+    });
+  }
+  function paivitaPiilotaNappi(btn, piilossa) {
+    btn.innerHTML = piilossa ? "🙈" : "👁️";
+    btn.title = piilossa ? "Piilotettu oppilailta — klikkaa tuodaksesi näkyviin" : "Näkyy oppilaille — klikkaa piilottaaksesi";
+    btn.setAttribute("aria-label", btn.title);
+    btn.setAttribute("aria-pressed", piilossa ? "true" : "false");
+    btn.classList.toggle("piilotettu", piilossa);
+  }
+
   // Oppilasnäkymä: merkitse lukitut osiot (CSS piilottaa sisällön + pelit)
   function applyLukot(lukitut) {
     lukitut = Array.isArray(lukitut) ? lukitut : [];
@@ -145,12 +192,16 @@
     // Oppilas: välimuisti heti, sitten palvelimelta
     sovella(yhdista(lue(LS_CACHE)) || yhdista(lue(LS_LOCAL)));
     applyLukot(lue(LS_LOCK_CACHE) || []);
+    applyPiilotetut(lue(LS_HIDE_CACHE) || []);
     haeServer(liittymaRyhma).then(function (v) {
       if (v && v.ok) {
         if (v.jarjestys) { kirjoita(LS_CACHE, v.jarjestys); sovella(yhdista(v.jarjestys)); }
         var luk = v.lukitut || [];
         kirjoita(LS_LOCK_CACHE, luk);
         applyLukot(luk);
+        var pii = v.piilotetut || [];
+        kirjoita(LS_HIDE_CACHE, pii);
+        applyPiilotetut(pii);
       }
     });
   } else {
@@ -171,6 +222,7 @@
       if (v && v.ok) {
         sovella(yhdista(v.jarjestys || OLETUS));
         applyLukot(v.lukitut || []);
+        applyPiilotetut(v.piilotetut || []);
       }
       return v;
     });
@@ -221,6 +273,7 @@
   // ============================================================
   var muokkausPaalla = false;
   var julkaisuTila;
+  var esikatseluPaalla = false; // opettajan oppilasnäkymä-esikatselu muokkaustilassa
   var tiliMoodi = false; // true = muokkaus avattiin opettajatilillä (tallennus istunnolla, ei PIN:llä)
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -474,12 +527,15 @@
     if (muokkausPaalla) return;
     muokkausPaalla = true;
     document.body.classList.add("ope-muokkaustila");
+    applyPiilotetut([]);        // opettaja näkee kaikki osiot muokatessaan (esikatselun piilotus pois)
     lisaaKahvat();
+    merkitsePiilotetutOpe();
     naytaPaneeli();
     naytaRyhmaMerkki();
     ladataSortable(kaynnistaSortable);
   }
   function lopetaMuokkaus() {
+    if (esikatseluPaalla) vaihdaEsikatselu();
     muokkausPaalla = false;
     document.body.classList.remove("ope-muokkaustila");
     var b = document.querySelector(".jarjestys-banneri"); if (b) b.remove();
@@ -507,9 +563,22 @@
           tallennaLukot(lk);
           paivitaLukkoNappi(L, nyt);
           sec.classList.toggle("ope-osio-lukittu", nyt);
-          if (julkaisuTila) { julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila odottaa"; }
+          muutettu();
         });
         sec.insertAdjacentElement("afterbegin", L);
+      }
+      // Piilota/Tuo näkyviin suoraan sivulta (sama tila kuin "Muokkaa osioita" -ikkunassa)
+      if (!sec.querySelector(":scope > .jarjestys-piilota-nappi")) {
+        var P = document.createElement("button");
+        P.type = "button"; P.className = "jarjestys-piilota-nappi";
+        P.addEventListener("click", function () {
+          var pi = luePiilotetut(); var j = pi.indexOf(sec.id);
+          if (j === -1) pi.push(sec.id); else pi.splice(j, 1);
+          tallennaPiilotetut(pi);
+          merkitsePiilotetutOpe();
+          muutettu();
+        });
+        sec.insertAdjacentElement("afterbegin", P);
       }
       sec.classList.toggle("ope-osio-lukittu", locked);
     });
@@ -549,9 +618,79 @@
         var uusi = jarjestysNyt();
         kirjoita(LS_LOCAL, uusi);
         if (nav) sovella(uusi);
-        if (julkaisuTila) { julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila odottaa"; }
+        muutettu();
       },
     });
+  }
+
+  // ---------- Yhteinen tila: yhteenveto, julkaisemattomat muutokset, esikatselu ----------
+  // Kaikki tavat muuttaa osioita (sivun kahva/lukko/piilota-nappi, "Muokkaa osioita" -ikkuna,
+  // Palauta oletukset) kutsuvat muutettu(), jolloin paneeli pysyy ajan tasalla.
+
+  // Allekirjoitus = osioiden nykyinen tila. Verrataan viimeksi julkaistuun, joten
+  // "ei vielä julkaistu" pitää paikkansa myös sivun uudelleenlatauksen jälkeen
+  // eikä jää päälle, jos muutos peruttiin takaisin.
+  function nykyinenSig() {
+    return JSON.stringify({ j: jarjestysNyt(), l: lueLukot().slice().sort(), p: luePiilotetut().slice().sort() });
+  }
+  function sigAvain() { return "digiopo-julkaistu-" + (lueRaaka(LS_OPE_R) || "") + "-" + LUOKKA; }
+
+  function paivitaJulkaisuTila(muutosTehty) {
+    var nappi = document.querySelector(".jarjestys-julkaise");
+    var viimeisin = lueRaaka(sigAvain());
+    // Ei tietoa aiemmasta julkaisusta tältä laitteelta → kerrotaan vasta kun jotain muuttuu
+    var odottaa = viimeisin ? viimeisin !== nykyinenSig() : !!muutosTehty;
+    if (nappi) nappi.classList.toggle("jarjestys-julkaise-odottaa", odottaa);
+    if (!julkaisuTila) return;
+    if (odottaa) {
+      julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille.";
+      julkaisuTila.className = "jarjestys-tila odottaa";
+    } else if (viimeisin) {
+      julkaisuTila.textContent = "✓ Ei julkaisemattomia muutoksia.";
+      julkaisuTila.className = "jarjestys-tila ok";
+    } else {
+      julkaisuTila.textContent = "";
+      julkaisuTila.className = "jarjestys-tila";
+    }
+  }
+
+  function paivitaYhteenveto() {
+    var el = document.querySelector(".jp-yhteenveto");
+    if (!el) return;
+    var tunnetut = jarjestysNyt();
+    var n = tunnetut.length;
+    var p = luePiilotetut().length;
+    var l = lueLukot().filter(function (id) { return tunnetut.indexOf(id) !== -1; }).length;
+    var osat = [n + (n === 1 ? " osio" : " osiota")];
+    if (p) osat.push(p === 1 ? "1 piilotettu" : p + " piilotettua");
+    if (l) osat.push(l === 1 ? "1 lukittu" : l + " lukittua");
+    el.textContent = (p || l) ? osat.join(" · ") : osat[0] + ", kaikki näkyvissä";
+  }
+
+  function muutettu() {
+    paivitaYhteenveto();
+    paivitaJulkaisuTila(true);
+  }
+
+  // Esikatselu: näyttää luonnoksen sellaisena kuin oppilas sen näkisi (piilotetut pois,
+  // lukituista otsikko + viesti). Ei tallenna eikä julkaise mitään.
+  function vaihdaEsikatselu() {
+    esikatseluPaalla = !esikatseluPaalla;
+    document.body.classList.toggle("ope-esikatselu", esikatseluPaalla);
+    if (esikatseluPaalla) {
+      applyPiilotetut(luePiilotetut());
+      applyLukot(lueLukot());
+    } else {
+      applyPiilotetut([]);
+      applyLukot([]);
+      merkitsePiilotetutOpe();
+      paivitaKaikkiLukot();
+    }
+    var n = document.querySelector(".jarjestys-esikatsele");
+    if (n) {
+      n.textContent = esikatseluPaalla ? "← Palaa muokkaamaan" : "👁 Esikatsele oppilaana";
+      n.setAttribute("aria-pressed", esikatseluPaalla ? "true" : "false");
+    }
   }
 
   function naytaPaneeli() {
@@ -565,24 +704,30 @@
         '<span class="jp-title">👩‍🏫 Muokkaustila</span>' +
         '<button type="button" class="jarjestys-nappi jarjestys-sulje" title="Sulje">✕</button>' +
       '</div>' +
-      // 1. Osioiden järjestys
+      // 1. Osiot: järjestys, piilotus ja lukitus yhdessä ikkunassa
       '<div class="jp-block">' +
-        '<div class="jp-h">Osioiden järjestys</div>' +
-        '<p class="jp-ohje">Raahaa osioita kahvasta (⠿) ja lukitse/avaa osioita lukolla (🔒).</p>' +
-        '<button type="button" class="jarjestys-nappi jarjestys-palauta">Palauta oletusjärjestys</button>' +
+        '<div class="jp-h">Osiot oppilaille</div>' +
+        '<p class="jp-ohje">Järjestä osioita, piilota niitä tai lukitse niitä. ' +
+          'Piilotettua osiota oppilas ei näe lainkaan; lukittu osio näkyy otsikkona ja viestinä.</p>' +
+        '<p class="jp-yhteenveto" aria-live="polite"></p>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-jarjesta">Muokkaa osioita</button>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-esikatsele" aria-pressed="false">👁 Esikatsele oppilaana</button>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-palauta" ' +
+          'title="Palauttaa osioiden oletusjärjestyksen ja avaa kaikki lukitut ja piilotetut osiot">Palauta oletukset</button>' +
       '</div>' +
-      // 2. Lukuvuoden aikataulu
-      '<div class="jp-block">' +
-        '<div class="jp-h">Lukuvuoden aikataulu</div>' +
-        '<p class="jp-ohje">Lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät.</p>' +
-        '<button type="button" class="jarjestys-nappi jarjestys-aikataulu">Muokkaa aikataulua</button>' +
-      '</div>' +
-      // 3. Julkaise muutokset oppilaille
+      // 2. Julkaisu heti osioiden jälkeen: sama työ, sama paikka
       '<div class="jp-block">' +
         '<div class="jp-h">Julkaise oppilaille</div>' +
-        '<p class="jp-ohje">Tallenna tekemäsi järjestys- ja lukitusmuutokset oppilaiden nähtäväksi.</p>' +
+        '<p class="jp-ohje">Osioiden muutokset näkyvät oppilaille vasta, kun julkaiset ne.</p>' +
         '<button type="button" class="jarjestys-nappi jarjestys-julkaise">Tallenna oppilaille</button>' +
         '<span class="jarjestys-tila"></span>' +
+      '</div>' +
+      // 3. Lukuvuoden aikataulu (tallentuu heti, ei erillistä julkaisua)
+      '<div class="jp-block">' +
+        '<div class="jp-h">Lukuvuoden aikataulu</div>' +
+        '<p class="jp-ohje">Lisää koulun tärkeät päivät (TET-jakso, yhteishaku, palautukset), jotka oppilaat näkevät. ' +
+          'Aikataulu tallentuu heti, sitä ei tarvitse julkaista erikseen.</p>' +
+        '<button type="button" class="jarjestys-nappi jarjestys-aikataulu">Muokkaa aikataulua</button>' +
       '</div>' +
       // 4. Jaettava linkki oppilaille (viimeisenä)
       '<div class="jp-block">' +
@@ -594,13 +739,19 @@
     document.body.appendChild(b);
     b.querySelector(".jarjestys-sulje").addEventListener("click", lopetaMuokkaus);
     b.querySelector(".jarjestys-palauta").addEventListener("click", function () {
-      try { localStorage.removeItem(LS_LOCAL); localStorage.removeItem(LS_LOCK); } catch (e) {}
+      // Nollaa järjestyksen, lukot JA piilotukset → kysytään varmistus
+      if (!window.confirm("Palautetaanko oletukset?\n\nOsioiden järjestys, lukot ja piilotukset palautuvat alkuperäisiksi. " +
+        "Oppilaat näkevät muutoksen vasta, kun julkaiset sen.")) return;
+      if (esikatseluPaalla) vaihdaEsikatselu();
+      try { localStorage.removeItem(LS_LOCAL); localStorage.removeItem(LS_LOCK); localStorage.removeItem(LS_HIDE); } catch (e) {}
       sovella(OLETUS);
       paivitaKaikkiLukot();
-      // Muistuta ettei palautus mene oppilaille ennen "Tallenna oppilaille" -painallusta
-      // (sama muistutus kuin raahauksessa ja lukon vaihdossa).
-      if (julkaisuTila) { julkaisuTila.textContent = "Muutoksia ei vielä julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila odottaa"; }
+      merkitsePiilotetutOpe();
+      muutettu();
     });
+    var jarjestaNappi = b.querySelector(".jarjestys-jarjesta");
+    if (jarjestaNappi) jarjestaNappi.addEventListener("click", avaaJarjestysIkkuna);
+    b.querySelector(".jarjestys-esikatsele").addEventListener("click", vaihdaEsikatselu);
     b.querySelector(".jarjestys-julkaise").addEventListener("click", julkaise);
     var aikatauluNappi = b.querySelector(".jarjestys-aikataulu");
     if (aikatauluNappi) aikatauluNappi.addEventListener("click", avaaAikatauluModaali);
@@ -613,6 +764,73 @@
       });
     });
     julkaisuTila = b.querySelector(".jarjestys-tila");
+    paivitaYhteenveto();
+    paivitaJulkaisuTila(false);
+  }
+
+  // ---------- "Muokkaa osioita" -ikkuna (järjestys + piilotus + lukitus) ----------
+
+  // Ikkunan JS + CSS ladataan vasta kun opettaja avaa sen (oppilaat eivät lataa niitä)
+  function lataaIkkuna(cb) {
+    if (window.DigiopoJarjestys) return cb();
+    if (!document.querySelector('link[data-jarjestys-ikkuna]')) {
+      var l = document.createElement("link");
+      l.rel = "stylesheet"; l.href = "/css/jarjestys-ikkuna.css";
+      l.setAttribute("data-jarjestys-ikkuna", "1");
+      document.head.appendChild(l);
+    }
+    var s = document.createElement("script");
+    s.src = "/js/jarjestys-ikkuna.js";
+    s.onload = cb;
+    s.onerror = function () { window.alert("Järjestysikkunaa ei voitu ladata. Tarkista verkkoyhteys."); };
+    document.head.appendChild(s);
+  }
+
+  // Osion nimi ikkunaan: h2 ilman info-nappeja, tyhjät pois; varana navin linkki tai id
+  function osionNimi(sec) {
+    var nimi = "";
+    var h = sec.querySelector("h2");
+    if (h) {
+      var kopio = h.cloneNode(true);
+      Array.prototype.forEach.call(kopio.querySelectorAll("button, script, style"), function (e) { e.remove(); });
+      nimi = kopio.textContent.replace(/\s+/g, " ").trim();
+    }
+    if (!nimi && nav) {
+      var a = nav.querySelector('a[href="#' + sec.id + '"]');
+      if (a) nimi = a.textContent.replace(/\s+/g, " ").trim();
+    }
+    return nimi || sec.id;
+  }
+
+  function avaaJarjestysIkkuna() {
+    if (esikatseluPaalla) vaihdaEsikatselu(); // muokataan aina varsinaisessa muokkausnäkymässä
+    lataaIkkuna(function () {
+      var piilo = luePiilotetut();
+      var lukot = lueLukot();
+      window.DigiopoJarjestys.avaa({
+        osiot: osiot().map(function (sec) {
+          return {
+            id: sec.id,
+            otsikko: osionNimi(sec),
+            piilotettu: piilo.indexOf(sec.id) !== -1,
+            lukittu: lukot.indexOf(sec.id) !== -1
+          };
+        }),
+        tekstit: {
+          tallenna: "Valmis",
+          alavihje: "Muutokset näkyvät oppilaille vasta, kun painat paneelissa Tallenna oppilaille."
+        },
+        onTallenna: function (jarjestys, piilotetut, lukitut) {
+          kirjoita(LS_LOCAL, jarjestys);
+          sovella(jarjestys);
+          tallennaPiilotetut(piilotetut || []);
+          tallennaLukot(lukitut || []);
+          merkitsePiilotetutOpe();
+          paivitaKaikkiLukot();
+          muutettu();
+        }
+      });
+    });
   }
 
   // ---------- Aikataulu-modaali (samalla luokkasivulla, ei erillistä sivua) ----------
@@ -734,13 +952,19 @@
     var ryhma = lueRaaka(LS_OPE_R);
     if (!ryhma) return;
     // Tallennus vain opettajan istunnolla + omistajuudella (PIN poistettu).
-    var payload = { toiminto: "tallenna_oma", ryhma: ryhma, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot() };
+    var payload = { toiminto: "tallenna_oma", ryhma: ryhma, luokka: LUOKKA, jarjestys: jarjestysNyt(), lukitut: lueLukot(), piilotetut: luePiilotetut() };
+    var sig = nykyinenSig();
     if (julkaisuTila) { julkaisuTila.textContent = "Tallennetaan…"; julkaisuTila.className = "jarjestys-tila"; }
     postServer(payload)
       .then(function (v) {
         if (!julkaisuTila) return;
-        if (v && v.ok) { julkaisuTila.textContent = "✓ Julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila ok"; }
+        if (v && v.ok) {
+          kirjoitaRaaka(sigAvain(), sig);
+          julkaisuTila.textContent = "✓ Julkaistu oppilaille."; julkaisuTila.className = "jarjestys-tila ok";
+          var jn = document.querySelector(".jarjestys-julkaise"); if (jn) jn.classList.remove("jarjestys-julkaise-odottaa");
+        }
         else if (v && (v.virhe === "ei_kirjautunut" || v.virhe === "ei_omistaja")) { julkaisuTila.textContent = "Istunto vanhentui — kirjaudu uudelleen."; julkaisuTila.className = "jarjestys-tila virhe"; }
+        else if (v && v.virhe === "tietokanta_paivittamatta") { julkaisuTila.textContent = "Piilotus ei ole vielä käytössä: tietokanta pitää päivittää (supabase_piilotetut_osiot.sql)."; julkaisuTila.className = "jarjestys-tila virhe"; }
         else { julkaisuTila.textContent = "Tallennus epäonnistui."; julkaisuTila.className = "jarjestys-tila virhe"; }
       });
   }

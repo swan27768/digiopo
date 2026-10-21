@@ -72,6 +72,13 @@ POST /api/aikataulu  { toiminto: "lisaa" | "muokkaa" | "poista", ... }
 
 `jarjestys.js` hyväksyy myös `x-admin-key`-otsakkeen ylläpitotoimintoihin.
 
+`GET /api/jarjestys` palauttaa `jarjestys` (osio-id:t järjestyksessä), `lukitut` ja `piilotetut`.
+Lukittu osio näkyy oppilaalle otsikkona ja viestinä; piilotettu osio ei näy oppilaalle lainkaan
+(ei sisältöä, otsikkoa eikä navin linkkiä). `POST { toiminto: "tallenna_oma" }` ottaa vastaan
+samat kolme listaa. Jos `piilotetut`-saraketta ei ole vielä tietokannassa
+(`supabase_piilotetut_osiot.sql` ajamatta), luku toimii ilman sitä ja tallennus palauttaa
+`tietokanta_paivittamatta`, kun jotain yritetään piilottaa.
+
 ### Pelit ja oppilastyöt
 
 | Endpoint | Metodi | Valtuutus |

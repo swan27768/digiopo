@@ -385,3 +385,108 @@ body.ope-muokkaustila section.ope-osio-lukittu {
   outline-color: #ef4444;
   background: rgba(254, 226, 226, 0.4);
 }
+
+/* ============================================================
+   OSIOIDEN PIILOTUS
+   ============================================================ */
+
+/* --- Oppilasnäkymä: piilotettu osio ei näy lainkaan (sisältö, otsikko, navin linkit) --- */
+.osio-piilotettu { display: none !important; }
+.aihelista .osio-piilotettu-nav { display: none !important; }
+
+/* --- Muokkaustila: piilotettu osio pysyy näkyvissä mutta himmennettynä ---
+   Kahva ja lukko jäävät täysin näkyviin, ettei osiota voi "hukata" himmennykseen. */
+body.ope-muokkaustila section.ope-osio-piilotettu {
+  outline-color: #94a3b8;
+  background: rgba(226, 232, 240, 0.5);
+}
+body.ope-muokkaustila section.ope-osio-piilotettu > :not(.jarjestys-kahva):not(.jarjestys-lukko-nappi) {
+  opacity: 0.55;
+}
+body.ope-muokkaustila section.ope-osio-piilotettu::before {
+  content: "🙈 Piilotettu oppilailta";
+  display: block;
+  width: fit-content;
+  margin: 0 0 0.6rem;
+  padding: 0.35rem 0.7rem;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+}
+/* Navissa piilotettu osio himmenee ja saa tekstimerkinnän (ei vain väriä) */
+body.ope-muokkaustila .aihelista .ope-nav-piilotettu { opacity: 0.5; }
+body.ope-muokkaustila .aihelista a.ope-nav-piilotettu:not(.sub-link)::after {
+  content: " (piilotettu)";
+  font-size: 0.85em;
+}
+
+/* ============================================================
+   MUOKKAUSTILA – YHTENÄINEN KOKONAISUUS
+   (osiot-lohko, piilota-painike sivulla, esikatselu, julkaisumuistutus)
+   ============================================================ */
+
+/* Osiot-lohkon tilannerivi: "6 osiota · 1 piilotettu · 2 lukittua" */
+.jp-yhteenveto {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+.jp-yhteenveto:empty { display: none; }
+
+/* --- Piilota/Tuo näkyviin suoraan sivulla (lukon vasemmalla puolella) --- */
+.jarjestys-piilota-nappi { display: none; }
+body.ope-muokkaustila .jarjestys-piilota-nappi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0.75rem;
+  right: 6.05rem; /* kahva 0.75rem, lukko 3.4rem, tämä 6.05rem */
+  z-index: 5;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  background: #f1f5f9;       /* NÄKYVISSÄ = neutraali */
+  border: 2px solid #94a3b8;
+  color: #334155;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+body.ope-muokkaustila .jarjestys-piilota-nappi.piilotettu {
+  background: #334155;       /* PIILOTETTU = tumma */
+  border-color: #1e293b;
+  color: #ffffff;
+}
+
+/* --- Julkaisumuistutus: nappi korostuu kun on julkaisemattomia muutoksia --- */
+.jarjestys-julkaise-odottaa {
+  outline: 3px solid #fde68a;
+  outline-offset: 2px;
+}
+.jarjestys-julkaise-odottaa::before {
+  content: "● ";
+  color: #b45309;
+}
+
+/* Päällä oleva vaihtopainike (esim. Esikatsele oppilaana) */
+.jarjestys-nappi[aria-pressed="true"] { background: #fde68a; }
+
+/* --- Esikatselu oppilaana: muokkausvälineet piiloon, näkymä kuten oppilaalla ---
+   (Pitää olla tiedoston lopussa, jotta ohittaa muokkaustilan samanarvoiset säännöt.) */
+body.ope-esikatselu .jarjestys-kahva,
+body.ope-esikatselu .jarjestys-lukko-nappi,
+body.ope-esikatselu .jarjestys-piilota-nappi { display: none !important; }
+body.ope-esikatselu section.aihe-osio,
+body.ope-esikatselu section.ope-osio-lukittu,
+body.ope-esikatselu section.ope-osio-piilotettu {
+  outline: none;
+  background: none;
+}
+body.ope-esikatselu section.ope-osio-piilotettu::before { content: none; }
+body.ope-esikatselu .aihelista .ope-nav-piilotettu { opacity: 1; }
+body.ope-esikatselu .aihelista a.ope-nav-piilotettu:not(.sub-link)::after { content: none; }

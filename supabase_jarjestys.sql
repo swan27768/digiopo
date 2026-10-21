@@ -23,12 +23,17 @@ create table if not exists jarjestykset (
   luokka      text not null check (luokka in ('7', '8', '9')),
   jarjestys   jsonb not null default '[]'::jsonb, -- lista osio-id:itä järjestyksessä
   lukitut     jsonb not null default '[]'::jsonb, -- lista lukittuja osio-id:itä
+  piilotetut  jsonb not null default '[]'::jsonb, -- lista oppilailta piilotettuja osio-id:itä
   muokattu_at timestamptz not null default now(),
   primary key (ryhmakoodi, luokka)
 );
 
 -- Jos taulu on jo luotu ilman lukitut-saraketta, lisää se:
 alter table jarjestykset add column if not exists lukitut jsonb not null default '[]'::jsonb;
+
+-- Jos taulu on jo luotu ilman piilotetut-saraketta, lisää se
+-- (sama rivi on myös erillisessä tiedostossa supabase_piilotetut_osiot.sql):
+alter table jarjestykset add column if not exists piilotetut jsonb not null default '[]'::jsonb;
 
 create index if not exists jarjestykset_ryhma_idx on jarjestykset (ryhmakoodi);
 
