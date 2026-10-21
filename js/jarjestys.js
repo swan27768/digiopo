@@ -9,7 +9,6 @@
      istunnosta (kirjautunut opettaja + ryhmän omistajuus). PIN on poistettu.
    - Oppilas liittyy ?ryhma=KOODI-linkillä ja näkee opettajan järjestyksen.
    - Järjestys sovelletaan siirtämällä <section>-elementit DOM:ssa.
-   Riippuvuus: SortableJS (ladataan vain muokkaustilassa).
    ============================================================ */
 (function () {
   "use strict";
@@ -127,18 +126,8 @@
       var on = piilotetut.indexOf(sec.id) !== -1;
       sec.classList.toggle("ope-osio-piilotettu", on);
       (ryhmat[sec.id] || []).forEach(function (el) { el.classList.toggle("ope-nav-piilotettu", on); });
-      var P = sec.querySelector(":scope > .jarjestys-piilota-nappi");
-      if (P) paivitaPiilotaNappi(P, on);
     });
   }
-  function paivitaPiilotaNappi(btn, piilossa) {
-    btn.innerHTML = piilossa ? "🙈" : "👁️";
-    btn.title = piilossa ? "Piilotettu oppilailta — klikkaa tuodaksesi näkyviin" : "Näkyy oppilaille — klikkaa piilottaaksesi";
-    btn.setAttribute("aria-label", btn.title);
-    btn.setAttribute("aria-pressed", piilossa ? "true" : "false");
-    btn.classList.toggle("piilotettu", piilossa);
-  }
-
   // Oppilasnäkymä: merkitse lukitut osiot (CSS piilottaa sisällön + pelit)
   function applyLukot(lukitut) {
     lukitut = Array.isArray(lukitut) ? lukitut : [];
@@ -532,99 +521,33 @@
     merkitsePiilotetutOpe();
     naytaPaneeli();
     naytaRyhmaMerkki();
-    ladataSortable(kaynnistaSortable);
   }
   function lopetaMuokkaus() {
     if (esikatseluPaalla) vaihdaEsikatselu();
     muokkausPaalla = false;
     document.body.classList.remove("ope-muokkaustila");
     var b = document.querySelector(".jarjestys-banneri"); if (b) b.remove();
-    Array.prototype.forEach.call(document.querySelectorAll(".jarjestys-kahva"), function (k) { k.remove(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".ope-osio-lukittu"), function (s) { s.classList.remove("ope-osio-lukittu"); });
   }
 
+  // Osioiden hallinta tehdään paneelin "Muokkaa osioita" -ikkunassa; osioiden kulmiin ei lisätä nappeja.
   function lisaaKahvat() {
     var lukot = lueLukot();
     osiot().forEach(function (sec) {
-      var locked = lukot.indexOf(sec.id) !== -1;
-      if (!sec.querySelector(":scope > .jarjestys-kahva")) {
-        var k = document.createElement("button");
-        k.type = "button"; k.className = "jarjestys-kahva";
-        k.title = "Raahaa osiota järjestääksesi"; k.setAttribute("aria-label", "Raahaa osiota");
-        k.innerHTML = "⠿";
-        sec.insertAdjacentElement("afterbegin", k);
-      }
-      if (!sec.querySelector(":scope > .jarjestys-lukko-nappi")) {
-        var L = document.createElement("button");
-        L.type = "button"; L.className = "jarjestys-lukko-nappi";
-        paivitaLukkoNappi(L, locked);
-        L.addEventListener("click", function () {
-          var lk = lueLukot(); var i = lk.indexOf(sec.id); var nyt;
-          if (i === -1) { lk.push(sec.id); nyt = true; } else { lk.splice(i, 1); nyt = false; }
-          tallennaLukot(lk);
-          paivitaLukkoNappi(L, nyt);
-          sec.classList.toggle("ope-osio-lukittu", nyt);
-          muutettu();
-        });
-        sec.insertAdjacentElement("afterbegin", L);
-      }
-      // Piilota/Tuo näkyviin suoraan sivulta (sama tila kuin "Muokkaa osioita" -ikkunassa)
-      if (!sec.querySelector(":scope > .jarjestys-piilota-nappi")) {
-        var P = document.createElement("button");
-        P.type = "button"; P.className = "jarjestys-piilota-nappi";
-        P.addEventListener("click", function () {
-          var pi = luePiilotetut(); var j = pi.indexOf(sec.id);
-          if (j === -1) pi.push(sec.id); else pi.splice(j, 1);
-          tallennaPiilotetut(pi);
-          merkitsePiilotetutOpe();
-          muutettu();
-        });
-        sec.insertAdjacentElement("afterbegin", P);
-      }
-      sec.classList.toggle("ope-osio-lukittu", locked);
+      sec.classList.toggle("ope-osio-lukittu", lukot.indexOf(sec.id) !== -1);
     });
-  }
-
-  function paivitaLukkoNappi(btn, locked) {
-    btn.innerHTML = locked ? "🔒" : "🔓";
-    btn.title = locked ? "Lukittu oppilailta — klikkaa avataksesi" : "Avoin — klikkaa lukitaksesi oppilailta";
-    btn.setAttribute("aria-label", btn.title);
-    btn.classList.toggle("lukittu", locked);
   }
 
   function paivitaKaikkiLukot() {
     var lukot = lueLukot();
     osiot().forEach(function (sec) {
-      var L = sec.querySelector(":scope > .jarjestys-lukko-nappi");
       var locked = lukot.indexOf(sec.id) !== -1;
-      if (L) paivitaLukkoNappi(L, locked);
       sec.classList.toggle("ope-osio-lukittu", locked);
     });
   }
 
-  function ladataSortable(cb) {
-    if (window.Sortable) return cb();
-    var s = document.createElement("script");
-    s.src = "/vendor/sortable/Sortable.min.js";
-    s.onload = cb;
-    s.onerror = function () { console.warn("SortableJS ei latautunut."); };
-    document.head.appendChild(s);
-  }
-  function kaynnistaSortable() {
-    if (!window.Sortable) return;
-    window.Sortable.create(main, {
-      draggable: "section.aihe-osio", handle: ".jarjestys-kahva",
-      animation: 150, ghostClass: "jarjestys-haamu",
-      onEnd: function () {
-        var uusi = jarjestysNyt();
-        kirjoita(LS_LOCAL, uusi);
-        if (nav) sovella(uusi);
-        muutettu();
-      },
-    });
-  }
-
   // ---------- Yhteinen tila: yhteenveto, julkaisemattomat muutokset, esikatselu ----------
-  // Kaikki tavat muuttaa osioita (sivun kahva/lukko/piilota-nappi, "Muokkaa osioita" -ikkuna,
+  // Kaikki tavat muuttaa osioita ("Muokkaa osioita" -ikkuna,
   // Palauta oletukset) kutsuvat muutettu(), jolloin paneeli pysyy ajan tasalla.
 
   // Allekirjoitus = osioiden nykyinen tila. Verrataan viimeksi julkaistuun, joten

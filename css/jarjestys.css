@@ -3,42 +3,12 @@
    Näkyvät vain ?ope=1 -muokkaustilassa.
    ============================================================ */
 
-/* Raahauskahva — piilossa oletuksena, näkyy vain muokkaustilassa */
-.jarjestys-kahva { display: none; }
-
-body.ope-muokkaustila .jarjestys-kahva {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  z-index: 5;
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: 1.25rem;
-  line-height: 1;
-  color: #5b21b6;
-  background: #f5f3ff;
-  border: 2px solid #ddd6fe;
-  border-radius: 0.6rem;
-  cursor: grab;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-}
-body.ope-muokkaustila .jarjestys-kahva:active { cursor: grabbing; }
-
-/* Osiot saavat muokkaustilassa katkoviivareunan ja sijoitusvaran kahvalle */
+/* Osiot saavat muokkaustilassa katkoviivareunan */
 body.ope-muokkaustila section.aihe-osio {
   position: relative;
   outline: 2px dashed #c4b5fd;
   outline-offset: 4px;
   border-radius: 0.5rem;
-}
-
-/* Raahattavan osion "haamu" */
-.jarjestys-haamu {
-  opacity: 0.45;
-  background: #ede9fe !important;
 }
 
 /* Muokkaustilan paneeli — kelluva kortti sivun vasemmalla puolella.
@@ -354,32 +324,6 @@ body.ope-muokkaustila .jarjestys-opelinkki { display: none; }
 }
 .osio-lukko-ikoni { font-size: 1.2rem; }
 
-/* --- Muokkaustila: lukko-painike --- */
-.jarjestys-lukko-nappi { display: none; }
-body.ope-muokkaustila .jarjestys-lukko-nappi {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0.75rem;
-  right: 3.4rem; /* kahvan vasemmalla puolella */
-  z-index: 5;
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: 1.1rem;
-  line-height: 1;
-  background: #ecfdf5;      /* AUKI = vihreä */
-  border: 2px solid #34d399;
-  color: #047857;
-  border-radius: 0.6rem;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-}
-body.ope-muokkaustila .jarjestys-lukko-nappi.lukittu {
-  background: #fee2e2;      /* KIINNI = punainen */
-  border-color: #ef4444;
-  color: #b91c1c;
-}
 /* Opettajalle merkki lukitusta osiosta (sisältö pysyy näkyvissä) — punainen reunus */
 body.ope-muokkaustila section.ope-osio-lukittu {
   outline-color: #ef4444;
@@ -400,7 +344,7 @@ body.ope-muokkaustila section.ope-osio-piilotettu {
   outline-color: #94a3b8;
   background: rgba(226, 232, 240, 0.5);
 }
-body.ope-muokkaustila section.ope-osio-piilotettu > :not(.jarjestys-kahva):not(.jarjestys-lukko-nappi) {
+body.ope-muokkaustila section.ope-osio-piilotettu > * {
   opacity: 0.55;
 }
 body.ope-muokkaustila section.ope-osio-piilotettu::before {
@@ -436,33 +380,6 @@ body.ope-muokkaustila .aihelista a.ope-nav-piilotettu:not(.sub-link)::after {
 }
 .jp-yhteenveto:empty { display: none; }
 
-/* --- Piilota/Tuo näkyviin suoraan sivulla (lukon vasemmalla puolella) --- */
-.jarjestys-piilota-nappi { display: none; }
-body.ope-muokkaustila .jarjestys-piilota-nappi {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0.75rem;
-  right: 6.05rem; /* kahva 0.75rem, lukko 3.4rem, tämä 6.05rem */
-  z-index: 5;
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: 1.1rem;
-  line-height: 1;
-  background: #f1f5f9;       /* NÄKYVISSÄ = neutraali */
-  border: 2px solid #94a3b8;
-  color: #334155;
-  border-radius: 0.6rem;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-}
-body.ope-muokkaustila .jarjestys-piilota-nappi.piilotettu {
-  background: #334155;       /* PIILOTETTU = tumma */
-  border-color: #1e293b;
-  color: #ffffff;
-}
-
 /* --- Julkaisumuistutus: nappi korostuu kun on julkaisemattomia muutoksia --- */
 .jarjestys-julkaise-odottaa {
   outline: 3px solid #fde68a;
@@ -478,9 +395,6 @@ body.ope-muokkaustila .jarjestys-piilota-nappi.piilotettu {
 
 /* --- Esikatselu oppilaana: muokkausvälineet piiloon, näkymä kuten oppilaalla ---
    (Pitää olla tiedoston lopussa, jotta ohittaa muokkaustilan samanarvoiset säännöt.) */
-body.ope-esikatselu .jarjestys-kahva,
-body.ope-esikatselu .jarjestys-lukko-nappi,
-body.ope-esikatselu .jarjestys-piilota-nappi { display: none !important; }
 body.ope-esikatselu section.aihe-osio,
 body.ope-esikatselu section.ope-osio-lukittu,
 body.ope-esikatselu section.ope-osio-piilotettu {
