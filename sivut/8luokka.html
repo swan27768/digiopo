@@ -3379,13 +3379,13 @@
         tulevaisuus:    "iloisena",
       };
       window.maskottiPuhetekstit = {
-        johdanto:       "Tänä vuonna suunta alkaa löytyä — tervetuloa! 👋",
-        koulutus:       "Tiedätkö jo, haluatko oppia tekemällä vai lukemalla laajasti eri aineita? 🤔",
-        "tutkija-alue": "Tutki molempia polkuja — reitti selviää kokeilemalla 🗺️",
-        vahvuudet:      "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään 💡",
-        tet:            "TET-paikka ei löydy itsestään — mutta sinä pystyt! 💼",
-        klinikka:       "Valitse kortti joka puhuttelee sinua juuri nyt 🃏",
-        tulevaisuus:    "Suurin osa tulevaisuuden töistä ei ole vielä olemassa 🚀",
+        johdanto:       "Tänä vuonna suunta alkaa löytyä — tervetuloa!",
+        koulutus:       "Tiedätkö jo, haluatko oppia tekemällä vai lukemalla laajasti eri aineita?",
+        "tutkija-alue": "Tutki molempia polkuja — reitti selviää kokeilemalla",
+        vahvuudet:      "Mitä osaat ja mitä haluat? Tänä vuonna selvitetään",
+        tet:            "TET-paikka ei löydy itsestään — mutta sinä pystyt!",
+        klinikka:       "Valitse kortti joka puhuttelee sinua juuri nyt",
+        tulevaisuus:    "Suurin osa tulevaisuuden töistä ei ole vielä olemassa",
       };
       window.currentClassNumber = "8";
     </script>
@@ -3748,13 +3748,11 @@
         if (!maskotti || !puhekupla || !osiot.length) return;
 
         const puhetekstit = window.maskottiPuhetekstit || {};
-        const prefixit    = ["🙂", "👀", "💭", "✨"];
-        let viimeisin     = null;
+                let viimeisin     = null;
         let piilotusAjastin = null;
 
         function naytaMaskotti(teksti) {
-          const prefix = prefixit[Math.floor(Math.random() * prefixit.length)];
-          puhekupla.textContent = `${prefix} ${teksti}`;
+          puhekupla.textContent = teksti;
           maskotti.classList.remove("piilossa");
           maskotti.classList.add("nakyvissa");
           clearTimeout(piilotusAjastin);
@@ -3784,7 +3782,7 @@
           }
         }
 
-        setTimeout(() => naytaMaskotti("Moi! Tänä vuonna otat suunnan 🧭"), 800);
+        setTimeout(() => naytaMaskotti("Moi! Tänä vuonna otat suunnan"), 800);
         window.addEventListener("scroll", paivitaOsio, { passive: true });
       }
 
@@ -4414,5 +4412,6 @@
     <script src="../js/i18n-8lk.js" defer></script>
       <script defer src="../js/ohje-paneeli.js"></script>
       <script defer src="../js/tehtava-ikkuna.js"></script>
-  </body>
+      <script src="../js/maskotti-tunne.js"></script>
+</body>
 </html>
