@@ -36,8 +36,25 @@
     toiminnallinen: { ikoni: "fa-solid fa-person-running", nimi: "Toiminnallinen tehtävä" },
     peli: { ikoni: "fa-solid fa-gamepad", nimi: "Pelitehtävä" },
     tarina: { ikoni: "fa-solid fa-book-open", nimi: "Interaktiivinen tarinatehtävä" },
-    testi: { ikoni: "fa-solid fa-clipboard-check", nimi: "Testi / kysely" }
+    testi: { ikoni: "fa-solid fa-clipboard-check", nimi: "Testi / kysely" },
+    kirjoitus: { ikoni: "fa-solid fa-pen", nimi: "Kirjoitustehtävä" }
   };
+  /* Korttityyppi (väri + reunatyyli, css/korttityypit.css): peli / toiminta / tehtava */
+  var KORTTITYYPPI = {
+    peli: "peli",
+    toiminnallinen: "toiminta",
+    keskustelu: "tehtava",
+    kirjoitus: "tehtava",
+    testi: "tehtava",
+    tarina: "tehtava"
+  };
+  function korttiJuuri(e) {
+    for (var i = 0, n = e; n && n !== document.body && !n.classList.contains("aihe-osio") && i < 7; i++, n = n.parentElement) {
+      var cs = window.getComputedStyle(n);
+      if (parseFloat(cs.borderTopLeftRadius) >= 14 && cs.overflow !== "visible") return n;
+    }
+    return null;
+  }
 
   /* ---- 1 & 2: tavoite- ja yhteenvetopaneelit ---------------- */
   function rakennaOsioPaneelit() {
@@ -182,7 +199,12 @@
       var tyyppi = TYYPIT[hero.getAttribute("data-tyyppi")];
       var meta = el("div", "tehtava-meta");
       if (tapa) meta.appendChild(badge(tapa, "tehtava-badge tehtava-badge--tapa"));
-      if (tyyppi) meta.appendChild(badge(tyyppi, "tehtava-badge"));
+      var kt = KORTTITYYPPI[hero.getAttribute("data-tyyppi")];
+      if (tyyppi) meta.appendChild(badge(tyyppi, "tehtava-badge" + (kt ? " tehtava-badge--" + kt : "")));
+      if (kt) {
+        var kortti = korttiJuuri(hero);
+        if (kortti && !kortti.hasAttribute("data-korttityyppi")) kortti.setAttribute("data-korttityyppi", kt);
+      }
 
       var juuri = hero.classList.contains("hero-badge") ? hero.parentElement : hero;
       var vanhaBadge = hero.classList.contains("hero-badge")
