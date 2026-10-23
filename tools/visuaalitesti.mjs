@@ -63,8 +63,9 @@ async function kaynnistaPalvelin() {
 }
 
 async function otaKuvat(selain, kansio) {
-  rmSync(kansio, { recursive: true, force: true });
   mkdirSync(kansio, { recursive: true });
+  // Poista vain ajettavien sivujen vanhat kuvat, jotta --sivu ei tuhoa muiden sivujen perustaa
+  for (const f of readdirSync(kansio)) if (SIVUT.some((sv) => f.startsWith(`${sv}lk-`))) rmSync(join(kansio, f), { force: true });
   let lkm = 0;
   for (const sivu of SIVUT) for (const leveys of LEVEYDET) {
     const ctx = await selain.newContext({ viewport: { width: leveys, height: 900 }, reducedMotion: "reduce", deviceScaleFactor: 1 });
@@ -114,7 +115,11 @@ try {
     const n = await otaKuvat(selain, join(KUVAT, "uusi"));
     const eroKansio = join(KUVAT, "ero");
     rmSync(eroKansio, { recursive: true, force: true }); mkdirSync(eroKansio, { recursive: true });
-    const perusta = readdirSync(join(KUVAT, "perusta")).filter((f) => f.endsWith(".png"));
+    const perusta = readdirSync(join(KUVAT, "perusta"))
+      .filter((f) => f.endsWith(".png"))
+      // --sivu / --leveys: vertaa vain ajettuihin sivuihin ja leveyksiin
+      .filter((f) => SIVUT.some((s) => f.startsWith(`${s}lk-`)))
+      .filter((f) => !arg("leveys") || f.startsWith(`${f.split("-")[0]}-${arg("leveys")}-`));
     const uudet = new Set(readdirSync(join(KUVAT, "uusi")).filter((f) => f.endsWith(".png")));
     let eroja = 0;
     for (const f of perusta) {

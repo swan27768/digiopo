@@ -43,7 +43,7 @@
   inset: 0;
   background-image: var(--hk-gradient, linear-gradient(135deg, var(--hk-1) 0%, var(--hk-2) 45%, var(--hk-3) 100%));
   background-size: cover;
-  background-position: center;
+  background-position: var(--hk-pos, center);
 }
 .hero-kortti__kuvio {
   position: absolute;
@@ -158,7 +158,8 @@ body[data-luokka="9"] { --hk-p0: 19 78 74;   --hk-p1: 15 118 110; --hk-p2: 13 14
 .hero-kortti__kuva--taysi {
   inset: 0;
   width: auto;
-  background: var(--hk-kuva) right center / contain no-repeat;
+  background: var(--hk-kuva) right center / var(--hk-kuva-koko, contain) no-repeat;
+  opacity: var(--hk-kuva-opac, 1);
   -webkit-mask-image: none;
   mask-image: none;
 }
@@ -208,6 +209,7 @@ body[data-luokka="9"] { --hk-p0: 19 78 74;   --hk-p1: 15 118 110; --hk-p2: 13 14
   --hk-varjo: rgba(109, 40, 217, 0.25);
   --hk-gradient: linear-gradient(rgb(var(--hk-p1) / 0.4) 0%, rgb(var(--hk-p1) / 0.92) 100%), url("../images/ammatti.webp");
   --hk-pad: 20px 24px;
+  --hk-pos: center top;
   --hk-h-koko: clamp(1rem, 2.5vw, 1.25rem);
   --hk-h-marg: 6px;
   --hk-h-paino: 800;
@@ -220,11 +222,66 @@ body[data-luokka="9"] { --hk-p0: 19 78 74;   --hk-p1: 15 118 110; --hk-p2: 13 14
   --hk-p-leveys: none;
   align-items: flex-end;
 }
-.hero-kortti--kompakti .hero-kortti__tausta {
-  background-position: center top;
-}
 .hero-kortti__nappi {
   cursor: pointer;
   border: none;
   font-size: 1rem;
+}
+
+/* Peite: tumma tai värillinen kerros kuvan päällä */
+.hero-kortti__peite {
+  position: absolute;
+  inset: 0;
+  background: var(--hk-peite);
+}
+
+/* Kuvallinen kortti: luokan värigradientti + taustakuva.
+   Muuttujat: --hk-kuva, --hk-pos, --hk-a1, --hk-a2 (gradientin peittävyydet) */
+.hero-kortti.hero-kortti--kuvallinen {
+  --hk-marg: 20px 0;
+  --hk-kuva: none;
+  --hk-a1: 0.85;
+  --hk-a2: 0.75;
+  --hk-varjo: rgb(var(--hk-p2) / 0.25);
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-p1) / var(--hk-a1)) 0%, rgb(var(--hk-p2) / var(--hk-a2)) 100%), var(--hk-kuva);
+  --hk-h-paino: 800;
+  --hk-h-kerning: normal;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --hk-p-opac: 0.92;
+  --hk-p-leveys: 480px;
+}
+.hero-kortti.hero-kortti--robo {
+  --hk-kuva: url("../images/robo_maskotti.webp");
+  --hk-pos: center top;
+}
+.hero-kortti.hero-kortti--opiskelu {
+  --hk-kuva: url("../images/opiskelutaidot.webp");
+}
+.hero-kortti.hero-kortti--motivaatio {
+  --hk-min: 280px;
+  --hk-kuva: url("../images/motivaatio_kadoksissa.webp");
+  --hk-pos: center 65%;
+  --hk-a1: 0.78;
+  --hk-a2: 0.65;
+}
+.hero-kortti.hero-kortti--temppeli {
+  --hk-varjo: rgba(120, 53, 15, 0.30);
+  --hk-kuva: url("../pelit/tiedon_temppeli.webp");
+  --hk-gradient: var(--hk-kuva);
+  --hk-pos: center top;
+  --hk-peite: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.35) 100%);
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.hero-kortti.hero-kortti--supervoimat {
+  --hk-kuva: url("../images/vahvuudet.webp");
+  --hk-kuva-koko: auto 75%;
+  --hk-kuva-opac: 0.55;
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-p1) / 0.88) 0%, rgb(var(--hk-p2) / 0.78) 100%);
+}
+
+/* 7. luokan Kysymyskortit poikkeaa hieman 8. luokasta */
+body[data-luokka="7"] .hero-kortti.hero-kortti--kortit {
+  --hk-varjo: rgba(236, 72, 153, 0.22);
+  --hk-gradient: linear-gradient(90deg, rgb(var(--hk-p1) / 0.92) 0%, rgb(var(--hk-p2) / 0.8) 42%, rgb(var(--hk-p2) / 0.3) 68%, rgb(var(--hk-p2) / 0.1) 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
 }
