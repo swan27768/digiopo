@@ -1,0 +1,98 @@
+/* ============================================================
+   FAKTA-RUUDUKKO — teoria visuaaliseksi: iso luku/sana + yksi lause
+   <div class="fakta-ruudukko" data-fakta> (maskotti reagoi yllättyneenä)
+     <div class="fakta-kortti" style="--c:#2563eb">
+       <div class="fakta-nimi">Lukio</div>
+       <div class="fakta-iso">3 <small>vuotta</small></div>
+       <p class="fakta-lause">…</p>
+     </div>
+   Ei ikoneita: väri + iso typografia kantavat viestin. Väri tulee --c:stä.
+   ============================================================ */
+
+.aihe-osio > .fakta-ruudukko {
+  margin-left: 28px;
+  margin-right: 28px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.fakta-ruudukko {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0;
+}
+
+.fakta-kortti {
+  --c: #7c3aed;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 22px 18px 20px;
+  background: #fff;
+  border: 1.5px solid color-mix(in srgb, var(--c) 28%, #fff);
+  border-top: 6px solid var(--c);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(20, 18, 48, 0.07);
+}
+
+/* Pehmeä värisävy kortin taustalla */
+.fakta-kortti::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 10px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 9%, #fff) 0%, #fff 70%);
+  pointer-events: none;
+}
+.fakta-kortti > * { position: relative; z-index: 1; }
+
+.fakta-nimi {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c);
+}
+
+.fakta-iso {
+  margin: 8px 0 10px;
+  font-size: clamp(2.2rem, 5.4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--c);
+}
+.fakta-iso small {
+  font-size: 0.38em;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.fakta-lause {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fakta-kortti { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .fakta-kortti:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(20, 18, 48, 0.12); }
+}
+
+@media (max-width: 720px) {
+  .aihe-osio > .fakta-ruudukko { margin-left: 16px; margin-right: 16px; }
+  .fakta-ruudukko { grid-template-columns: 1fr; gap: 12px; }
+  .fakta-kortti { padding: 16px 16px 14px; }
+  .fakta-iso { margin: 4px 0 6px; font-size: 2.4rem; }
+}
+
+@media print { .fakta-kortti { box-shadow: none; } }
+
+/* Sanaversio: pitkät sanat mahtuvat kortin leveyteen */
+.fakta-kortti { container-type: inline-size; }
+.fakta-iso--sana { font-size: clamp(1.4rem, 13cqw, 2.8rem); line-height: 1.15; overflow-wrap: break-word; }
