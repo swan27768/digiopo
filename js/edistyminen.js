@@ -89,18 +89,18 @@
     var ref = document.querySelector(".book-spread");
     if (!ref || !ref.parentNode) return false;
     bar = document.createElement("nav");
-    bar.className = "osio-polku";
+    bar.className = "edist-polku";
     bar.hidden = true;
     bar.innerHTML =
-      '<div class="osio-polku__nyt"><span class="osio-polku__nyt-etu"></span> <strong class="osio-polku__nyt-nimi"></strong></div>' +
-      '<div class="osio-polku__rata"><div class="osio-polku__viiva"></div><div class="osio-polku__osat"></div>' +
-      '<ol class="osio-polku__lista"></ol></div>' +
-      '<button type="button" class="osio-polku__nollaa" hidden></button>';
+      '<div class="edist-polku__nyt"><span class="edist-polku__nyt-etu"></span> <strong class="edist-polku__nyt-nimi"></strong></div>' +
+      '<div class="edist-polku__rata"><div class="edist-polku__viiva"></div><div class="edist-polku__osat"></div>' +
+      '<ol class="edist-polku__lista"></ol></div>' +
+      '<button type="button" class="edist-polku__nollaa" hidden></button>';
     ref.parentNode.insertBefore(bar, ref);
-    nytNimi = bar.querySelector(".osio-polku__nyt-nimi");
-    osat = bar.querySelector(".osio-polku__osat");
-    lista = bar.querySelector(".osio-polku__lista");
-    nollaaNappi = bar.querySelector(".osio-polku__nollaa");
+    nytNimi = bar.querySelector(".edist-polku__nyt-nimi");
+    osat = bar.querySelector(".edist-polku__osat");
+    lista = bar.querySelector(".edist-polku__lista");
+    nollaaNappi = bar.querySelector(".edist-polku__nollaa");
     nollaaNappi.addEventListener("click", function () {
       if (nollaaNappi.dataset.varmista === "1") {
         clearTimeout(nollausAjastin);
@@ -161,7 +161,7 @@
     osiot = nakyvatOsiot();
     if (!bar) return;
     bar.setAttribute("aria-label", t("polku"));
-    bar.querySelector(".osio-polku__nyt-etu").textContent = t("nyt");
+    bar.querySelector(".edist-polku__nyt-etu").textContent = t("nyt");
     if (osiot.length < 2) { bar.hidden = true; return; }
     bar.hidden = false;
 
@@ -173,9 +173,9 @@
       var s = osionTila(sec);
       var left = (i / (n - 1)) * 100;
       html +=
-        '<li class="osio-polku__pysakki" data-tila="' + s + '" style="left:' + left.toFixed(3) + '%">' +
+        '<li class="edist-polku__pysakki" data-tila="' + s + '" style="left:' + left.toFixed(3) + '%">' +
         '<a href="#' + sec.id + '" data-id="' + sec.id + '" data-nimi="' + nimi.replace(/"/g, "&quot;") + '"' +
-        ' aria-label="' + nimi.replace(/"/g, "&quot;") + ", " + t(s) + '"><span class="osio-polku__piste"></span></a></li>';
+        ' aria-label="' + nimi.replace(/"/g, "&quot;") + ", " + t(s) + '"><span class="edist-polku__piste"></span></a></li>';
       varmistaNappi(sec);
     });
     lista.innerHTML = html;
@@ -186,7 +186,7 @@
       if (i === 0) return;
       var s = osionTila(sec);
       if (s !== "kaynyt" && s !== "tehty") return;
-      janat += '<span class="osio-polku__osa" data-tila="' + s + '" style="left:' +
+      janat += '<span class="edist-polku__osa" data-tila="' + s + '" style="left:' +
         (((i - 1) / (n - 1)) * 100).toFixed(3) + '%;width:' + (100 / (n - 1)).toFixed(3) + '%"></span>';
     });
     osat.innerHTML = janat;
