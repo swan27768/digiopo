@@ -57,7 +57,7 @@
     var grade = PALETIT[luokka];
     if (!grade) return;
     document.querySelectorAll("[data-korttityyppi]").forEach(function (kortti) {
-      if (kortti.classList.contains("ak-hero") || kortti.classList.contains("elamapeli-hero")) return;
+      if (kortti.classList.contains("ak-hero")) return;
       var p = kortti.getAttribute("data-korttityyppi") === "toiminta" ? TOIMINTA : grade;
       Array.prototype.forEach.call(kortti.children, function (k) {
         if (k.getAttribute("aria-hidden") === "true") varita(k, p);
