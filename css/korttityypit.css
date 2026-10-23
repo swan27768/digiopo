@@ -1,0 +1,65 @@
+/* ============================================================
+   KORTTITYYPIT JA OSIOIDEN EROTIN
+   Yksi kuvakieli: väri + reunatyyli kertoo heti, onko edessä
+   lukemista vai tekemistä. Ei ikoneita eikä numeroita.
+     teoria          violetti, paksu vasen reuna (lue)
+     tehtävä         pinkki, katkoviivareuna (kirjoita / vastaa)
+     toiminnallinen  keltainen, paksu alareuna kuin painike (tee)
+     peli            turkoosi, kaksoisrengas (pelaa)
+   Värit: base.css (--color-teoria-border jne.)
+   ============================================================ */
+
+:root {
+  --kt-teoria: #7c3aed;
+  --kt-tehtava: var(--color-tehtava-border, #ec4899);
+  --kt-toiminta: var(--color-toiminta-border, #ca8a04);
+  --kt-peli: #0d9488;
+}
+
+/* Teoria */
+body .aihe-osio > .theory-card:not(.mot-teoria) {
+  background: var(--color-teoria, #faf5ff);
+  border: 1px solid color-mix(in srgb, var(--kt-teoria) 35%, #fff);
+  border-left: 6px solid var(--kt-teoria);
+  opacity: 1;
+}
+
+/* Tehtävä */
+body .aihe-osio > .tasks-section {
+  /* 7. ja 9. lk:n omat säännöt poistavat laatikon !important:lla, joten tässä sama */
+  background: var(--color-tehtava, #fdf2f8) !important;
+  border: 2px dashed var(--kt-tehtava) !important;
+  border-radius: 14px !important;
+  padding: 14px 18px !important;
+}
+
+/* Toiminnallinen */
+body .mission-card {
+  background: linear-gradient(135deg, #fefce8, #fef08a);
+  border: 2px solid var(--kt-toiminta);
+  border-bottom-width: 6px;
+}
+
+/* Peli */
+body .ak-hero,
+body .elamapeli-hero,
+body [data-korttityyppi="peli"] {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--kt-peli);
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+/* Osion alareunan aaltoerotin luokka-asteen värillä */
+.aihe-osio::after {
+  content: "";
+  display: block;
+  height: 16px;
+  margin-top: 18px;
+  background: var(--osio-accent-bd, #ddd6fe);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='16' viewBox='0 0 40 16'%3E%3Cpath d='M0 8Q10 0 20 8T40 8V16H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 16px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='16' viewBox='0 0 40 16'%3E%3Cpath d='M0 8Q10 0 20 8T40 8V16H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 16px;
+}
+
+@media print {
+  .aihe-osio::after { display: none; }
+}
