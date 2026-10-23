@@ -10,8 +10,8 @@
    ============================================================ */
 
 :root {
-  --kt-teoria: #7c3aed;
-  --kt-tehtava: var(--color-tehtava-border, #ec4899);
+  --kt-teoria: var(--osio-accent, #7c3aed);
+  --kt-tehtava: var(--osio-accent, #db2777);
   --kt-toiminta: var(--color-toiminta-border, #ca8a04);
   --kt-peli: #0d9488;
 }
@@ -27,7 +27,7 @@ body .aihe-osio > .theory-card:not(.mot-teoria) {
 /* Tehtävä */
 body .aihe-osio > .tasks-section {
   /* 7. ja 9. lk:n omat säännöt poistavat laatikon !important:lla, joten tässä sama */
-  background: var(--color-tehtava, #fdf2f8) !important;
+  background: var(--osio-accent-bg, #fdf2f8) !important;
   border: 2px dashed var(--kt-tehtava) !important;
   border-radius: 14px !important;
   padding: 14px 18px !important;
@@ -55,17 +55,39 @@ body .mission-card::after {
   pointer-events: none;
   z-index: 6;
 }
-body [data-korttityyppi="peli"]::after { border: 5px double #2dd4bf; }
+body [data-korttityyppi="peli"]::after { border: 5px double rgba(255, 255, 255, 0.85); }
 body [data-korttityyppi="toiminta"]::after { border: 3px solid #fbbf24; }
-body [data-korttityyppi="tehtava"]::after { border: 3px dashed #f9a8d4; }
+body [data-korttityyppi="tehtava"]::after { border: 3px dashed rgba(255, 255, 255, 0.8); }
 body .mission-card::after { border: 3px solid #d97706; }
 /* mission-card: reuna pois, kehys tulee ::after-elementistä (sama rakenne kuin muilla korteilla) */
 body .mission-card { border: 0; }
 
-/* Tyyppitunniste saa tyypin värin */
-.tehtava-badge--peli { background: #0d9488; border-color: #5eead4; color: #fff; }
-.tehtava-badge--toiminta { background: #ca8a04; border-color: #fde047; color: #fff; }
-.tehtava-badge--tehtava { background: #db2777; border-color: #f9a8d4; color: #fff; }
+/* Tekstimerkki kortin yläreunassa (Lue / Tee / Toimi / Pelaa), teksti js/korttimerkit.js:stä */
+.kortti-merkki {
+  position: absolute;
+  top: 0;
+  left: 22px;
+  z-index: 8;
+  padding: 3px 12px 4px;
+  border-radius: 0 0 9px 9px;
+  background: #fff;
+  color: var(--osio-accent-dk, #5b21b6);
+  border: 1.5px solid var(--osio-accent, #7c3aed);
+  border-top: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  pointer-events: none;
+}
+.kortti-merkki--toiminta {
+  background: #fbbf24;
+  color: #451a03;
+  border-color: #d97706;
+}
+body .theory-card, body .tasks-section, body .mission-card { position: relative; }
+@media print { .kortti-merkki { display: none; } }
 
 /* Ei kaksoiskehystä: jos tehtäväsäiliössä on jo tyypitetty hero-kortti, säiliön oma kehys pois */
 body .aihe-osio > .tasks-section:has([data-korttityyppi]),
@@ -115,3 +137,8 @@ body .aihe-osio > .osio-valiotsikko,
   line-height: 1.55;
   color: #374151;
 }
+
+/* Tilaa tekstimerkille kortin yläreunassa */
+body .aihe-osio > .theory-card { padding-top: 28px; }
+body .aihe-osio > .tasks-section { padding-top: 28px !important; }
+body .mission-card { padding-top: 30px !important; }
