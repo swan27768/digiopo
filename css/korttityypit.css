@@ -152,3 +152,30 @@ body .tehtava-meta.tehtava-meta--kulma {
   margin: 0;
   z-index: 8;
 }
+
+/* Kaikki kortit ja hero-laatikot samaan vasempaan (ja oikeaan) reunaan: ei 28 px:n sisennystä */
+body .aihe-osio > :is(.theory-card, .tasks-section, .mission-card, .mission-section, .interactive-hero, .fakta-ruudukko, [data-korttityyppi], [id$="-mission"], .tetjakso-hero, .duuniintet-hero, .tet-harjoittelu-tehtava, .reppu-tehtava, .hakustr-hero, .ala-karuselli-wrapper) {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  max-width: none;
+}
+
+/* Osio, jonka kortit ovat ylimääräisen .ala-osio-kääreen sisällä (esim. 7. lk Tervetuloa):
+   kääreen sisennys perutaan korteilta, jotta ne alkavat samasta reunasta kuin muut */
+body .aihe-osio > .ala-osio > :is(.theory-card, .tasks-section, .mission-card, [data-korttityyppi], [id$="-mission"]) {
+  margin-left: -28px !important;
+  margin-right: -28px !important;
+}
+@media (max-width: 768px) {
+  body .aihe-osio > .ala-osio > :is(.theory-card, .tasks-section, .mission-card, [data-korttityyppi], [id$="-mission"]) {
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+  }
+}
+
+/* Luokaton kääre, jonka sisällä on kortti tai hero-laatikko */
+body .aihe-osio > div:not([class]):has(> :is(.theory-card, .hakustr-hero, .tasks-section, .mission-card)) {
+  margin-left: 0;
+  margin-right: 0;
+}
