@@ -1,0 +1,230 @@
+/* ============================================================
+   HERO-KORTTI — yhteinen komponentti (css/hero-kortti.css)
+   Yksi paikka kortin ulkoasulle. Ei inline-tyylejä.
+
+   Rakenne:
+     <div class="hero-kortti">
+       <div class="hero-kortti__tausta" aria-hidden="true"></div>
+       <div class="hero-kortti__kuvio"  aria-hidden="true"></div>   (valinnainen)
+       <div class="hero-kortti__sisalto">
+         <div class="hero-badge" data-tapa=".." data-tyyppi=".."></div>
+         <h3 class="hero-kortti__otsikko">..</h3>
+         <p  class="hero-kortti__teksti">..</p>
+         <div class="hero-kortti__toiminnot"> <button class="btn-hero">..</button> </div>
+       </div>
+     </div>
+
+   Väri tulee kortin tyypistä (data-korttityyppi, asettaa osio-rakenne.js):
+   toiminta = ruskea/keltainen, muut = luokka-asteen väri.
+   ============================================================ */
+.hero-kortti {
+  --hk-1: color-mix(in srgb, var(--osio-accent-dk, #6d28d9) 95%, transparent);
+  --hk-2: color-mix(in srgb, var(--osio-accent, #7c3aed) 90%, transparent);
+  --hk-3: color-mix(in srgb, var(--osio-accent, #7c3aed) 92%, transparent);
+  --hk-nappi: var(--osio-accent, #7c3aed);
+  --hk-varjo: rgba(124, 58, 237, 0.30);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--hk-min, 200px);
+  margin: var(--hk-marg, 24px 0 16px);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px var(--hk-varjo);
+}
+.hero-kortti[data-korttityyppi="toiminta"] {
+  --hk-1: rgba(180, 83, 9, 0.95);
+  --hk-2: rgba(180, 83, 9, 0.90);
+  --hk-3: rgba(146, 64, 14, 0.92);
+  --hk-nappi: #7c3aed;
+}
+.hero-kortti__tausta {
+  position: absolute;
+  inset: 0;
+  background-image: var(--hk-gradient, linear-gradient(135deg, var(--hk-1) 0%, var(--hk-2) 45%, var(--hk-3) 100%));
+  background-size: cover;
+  background-position: center;
+}
+.hero-kortti__kuvio {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+.hero-kortti__sisalto {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--hk-sis-leveys, none);
+  padding: var(--hk-pad, 28px 32px);
+  color: #fff;
+}
+.hero-kortti__otsikko {
+  color: #fff;
+  margin: 0 0 var(--hk-h-marg, 8px);
+  font-size: var(--hk-h-koko, clamp(1.2rem, 3vw, 1.6rem));
+  font-weight: var(--hk-h-paino, 900);
+  letter-spacing: var(--hk-h-kerning, -0.5px);
+  text-shadow: var(--hk-h-varjo, 0 2px 8px rgba(0, 0, 0, 0.35));
+}
+.hero-kortti__teksti {
+  max-width: var(--hk-p-leveys, 460px);
+  margin: 0 0 var(--hk-p-marg, 20px);
+  font-size: var(--hk-p-koko, 15px);
+  line-height: var(--hk-p-rivi, 1.6);
+  opacity: var(--hk-p-opac, 0.95);
+  text-shadow: var(--hk-p-varjo, 0 1px 4px rgba(0, 0, 0, 0.3));
+}
+.hero-kortti__toiminnot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.hero-kortti__toiminnot > button {
+  background: #fff;
+  color: var(--hk-nappi);
+  border: none;
+}
+.hero-kortti__lisa {
+  font-size: 13px;
+  opacity: 0.82;
+}
+
+/* Sivun yleinen osion yleinen kaikkien lasten sääntö antaisi kortille sivupaddingin */
+body section > .hero-kortti {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ---- Luokka-asteen paletti (rgb-kolmikot, tummin -> vaalein) ---- */
+body[data-luokka="7"] { --hk-p0: 76 29 149;  --hk-p1: 109 40 217; --hk-p2: 124 58 237; }
+body[data-luokka="8"] { --hk-p0: 157 23 77;  --hk-p1: 190 24 93;  --hk-p2: 219 39 119; }
+body[data-luokka="9"] { --hk-p0: 19 78 74;   --hk-p1: 15 118 110; --hk-p2: 13 148 136; }
+/* Toiminnallisten korttien ruskea/keltainen */
+.hero-kortti { --hk-t0: 120 53 15; --hk-t1: 146 64 14; --hk-t2: 180 83 9; }
+
+/* ---- Lisäkerrokset ---- */
+.hero-kortti__kuvio--viiva {
+  opacity: 0.08;
+  background-image: repeating-linear-gradient(45deg, #fff 0px, #fff 2px, transparent 2px, transparent 18px);
+  background-size: auto;
+}
+.hero-kortti__kuva {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  background: var(--hk-kuva) center center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 35%);
+}
+.hero-kortti__vihje {
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ---- Kortit (vain poikkeavat arvot) ---- */
+.hero-kortti.hero-kortti--kirjoitus {
+  --hk-marg: 8px 0 16px;
+  --hk-varjo: rgba(5, 150, 105, 0.30);
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-p1) / 0.95) 0%, rgb(var(--hk-p1) / 0.92) 100%);
+  --hk-nappi: #059669;
+}
+.hero-kortti.hero-kortti--insta {
+  --hk-marg: 8px 0 16px;
+  --hk-varjo: rgba(188, 24, 136, 0.30);
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-t2) / 0.92) 0%, rgb(var(--hk-t2) / 0.88) 40%, rgb(var(--hk-t1) / 0.92) 100%);
+  --hk-kuva: url("../images/insta-profiili.webp");
+  --hk-nappi: #dc2743;
+}
+.hero-kortti.hero-kortti--tarina {
+  --hk-marg: 20px 0;
+  --hk-min: 220px;
+  --hk-varjo: rgba(219, 39, 119, 0.25);
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-p0) / 0.7) 0%, rgb(var(--hk-p2) / 0.55) 100%), url("../images/vahvuusmatka_kansikuva.webp");
+  --hk-h-paino: 800;
+  --hk-h-kerning: normal;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --hk-p-opac: 0.92;
+  --hk-p-varjo: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --hk-p-leveys: 480px;
+}
+
+/* Kuvakerrokset (img[width][height]-sääntö ylikirjoittaa korkeuden, siksi tarkempi valitsin) */
+.hero-kortti__kuva--taysi {
+  inset: 0;
+  width: auto;
+  background: var(--hk-kuva) right center / contain no-repeat;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.hero-kortti img.hero-kortti__kuva-img[width] {
+  max-width: none;
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 160%;
+  width: auto;
+  opacity: 0.6;
+  -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0) 100%);
+}
+
+.hero-kortti.hero-kortti--kortit {
+  --hk-marg: 0 0 4px;
+  --hk-min: 240px;
+  --hk-varjo: rgba(219, 39, 119, 0.22);
+  --hk-kuva: url("../images/tikkuhahmot_keskustelemassa.webp");
+  --hk-gradient: linear-gradient(90deg, rgb(var(--hk-p1) / 0.92) 0%, rgb(var(--hk-p1) / 0.8) 42%, rgb(var(--hk-p2) / 0.3) 68%, rgb(var(--hk-p2) / 0.1) 100%);
+  --hk-sis-leveys: 62%;
+  --hk-h-paino: 800;
+  --hk-h-kerning: normal;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --hk-p-opac: 0.96;
+  --hk-p-varjo: 0 1px 4px rgba(0, 0, 0, 0.35);
+  --hk-p-leveys: 380px;
+  background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);
+}
+.hero-kortti.hero-kortti--maailma {
+  --hk-marg: 8px 0 0;
+  --hk-min: 220px;
+  --hk-varjo: rgba(15, 76, 58, 0.30);
+  --hk-gradient: linear-gradient(135deg, rgb(var(--hk-t0)) 0%, rgb(var(--hk-t1)) 100%);
+  --hk-h-paino: 800;
+  --hk-h-kerning: normal;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --hk-p-opac: 0.92;
+  --hk-p-leveys: 480px;
+}
+/* Kompakti kortti (esim. AmmattiSet): vähemmän tilaa, sisältö alareunaan */
+.hero-kortti.hero-kortti--kompakti {
+  --hk-marg: 0;
+  --hk-min: 250px;
+  --hk-varjo: rgba(109, 40, 217, 0.25);
+  --hk-gradient: linear-gradient(rgb(var(--hk-p1) / 0.4) 0%, rgb(var(--hk-p1) / 0.92) 100%), url("../images/ammatti.webp");
+  --hk-pad: 20px 24px;
+  --hk-h-koko: clamp(1rem, 2.5vw, 1.25rem);
+  --hk-h-marg: 6px;
+  --hk-h-paino: 800;
+  --hk-h-kerning: normal;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --hk-p-koko: 14px;
+  --hk-p-rivi: 1.5;
+  --hk-p-marg: 16px;
+  --hk-p-opac: 0.92;
+  --hk-p-leveys: none;
+  align-items: flex-end;
+}
+.hero-kortti--kompakti .hero-kortti__tausta {
+  background-position: center top;
+}
+.hero-kortti__nappi {
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
