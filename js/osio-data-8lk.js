@@ -29,7 +29,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä vahvuuksia muistat 7. luokalta?",
         "Interaktiivinen tarina: Vahvuusmatka",
-        "Paritehtävä: Fake Insta — ammatti-identiteetti somessa",
+        "Ryhmätehtävä: Fake Insta — ammatti-identiteetti somessa",
         "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen?"
       ],
       tavoitteet: [
@@ -92,7 +92,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: kukaan ei tiedä tulevaisuutta — miksi sitä silti kannattaa miettiä?",
         "Toiminnallinen lämmittely: Pyörä pyörii – satunnainen ura",
-        "Tiimitehtävä: Tulevaisuuden työpaikka",
+        "Ryhmätehtävä: Tulevaisuuden työpaikka",
         "Purku: ryhmät esittelevät, luokka äänestää"
       ],
       tavoitteet: [

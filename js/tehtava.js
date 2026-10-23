@@ -148,11 +148,11 @@ window.addEventListener("load", async function () {
 
       // ── Vaiheet: ympyräkaavio ──────────────────────────────────────────────
       const vaiheet = task.vaiheet || [
-        { otsikko: "Mieti itse",              aika: "2 min", ikoni: "🤔", vari: "#7c3aed",
+        { otsikko: "Mieti itse",              aika: "", ikoni: "🤔", vari: "#7c3aed",
           teksti: "Lue teksti rauhassa. Mieti sitten: mitä ajattelet tästä? Oletko samaa vai eri mieltä? Voit tehdä lyhyen muistiinpanon itsellesi." },
-        { otsikko: "Keskustele parin kanssa", aika: "5 min", ikoni: "👥", vari: "#0891b2",
+        { otsikko: "Keskustele parin kanssa", aika: "", ikoni: "👥", vari: "#0891b2",
           teksti: "Keskustelkaa yhdessä. Kerro oma mielipiteesi: \"Olen itse sitä mieltä, että...\". Kuuntele toista – älä keskeytä. Kysy, jos et ymmärrä. Ei tarvitse olla samaa mieltä." },
-        { otsikko: "Jaa luokalle",            aika: "3 min", ikoni: "🙋", vari: "#059669",
+        { otsikko: "Jaa luokalle",            aika: "", ikoni: "🙋", vari: "#059669",
           teksti: "Vaihtakaa ajatuksia koko luokan kanssa. Yksi asia pariltanne: mitä ajattelitte tai mistä olitte eri mieltä? Perustele lyhyesti." },
       ];
 
@@ -259,7 +259,7 @@ window.addEventListener("load", async function () {
             detalji.style.borderLeftColor = v.vari || "#7c3aed";
             detalji.innerHTML =
               "<strong style='color:" + (v.vari||"#7c3aed") + ";'>Vaihe " + (i+1) + ": " + v.otsikko + "</strong><br>" +
-              "<span style='font-size:0.78rem;color:#6b7280;'>⏱ " + (v.aika||"") + "</span><br><br>" +
+              (v.aika ? "<span style='font-size:0.78rem;color:#6b7280;'>⏱ " + v.aika + "</span><br><br>" : "") +
               v.teksti;
             detalji.style.display = "block";
           }

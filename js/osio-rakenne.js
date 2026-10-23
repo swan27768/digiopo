@@ -25,10 +25,11 @@
 
   /* ---- Työtavat ja tehtävätyypit --------------------------- */
   var TAVAT = {
-    yksin: { ikoni: "fa-solid fa-user", nimi: "Yksin" },
-    pari: { ikoni: "fa-solid fa-user-group", nimi: "Parin kanssa" },
-    "yksin-pari": { ikoni: "fa-solid fa-user-group", nimi: "Yksin tai parin kanssa" },
-    ryhma: { ikoni: "fa-solid fa-users", nimi: "Ryhmässä" }
+    yksin: { ikoni: "fa-solid fa-user", nimi: "Yksilötehtävä" },
+    pari: { ikoni: "fa-solid fa-user-group", nimi: "Ryhmätehtävä" },
+    "yksin-pari": { ikoni: "fa-solid fa-user-group", nimi: "Yksilö- tai ryhmätehtävä" },
+    luokka: { ikoni: "fa-solid fa-people-group", nimi: "Koko luokka" },
+    ryhma: { ikoni: "fa-solid fa-users", nimi: "Ryhmätehtävä" }
   };
   var TYYPIT = {
     keskustelu: { ikoni: "fa-solid fa-comments", nimi: "Keskustelutehtävä" },
