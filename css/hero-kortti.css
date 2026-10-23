@@ -44,6 +44,7 @@
   background-image: var(--hk-gradient, linear-gradient(135deg, var(--hk-1) 0%, var(--hk-2) 45%, var(--hk-3) 100%));
   background-size: cover;
   background-position: var(--hk-pos, center);
+  filter: var(--hk-filtteri, none);
 }
 .hero-kortti__kuvio {
   position: absolute;
@@ -317,4 +318,88 @@ body[data-luokka="7"] .hero-kortti.hero-kortti--kortit {
   --hk-marg: 20px 0 12px;
   --hk-bg: linear-gradient(135deg, rgba(13, 148, 136, 0.80), rgba(19, 78, 74, 0.87)), url("../images/ammatit.webp") center / cover no-repeat;
   --hk-deco: radial-gradient(circle at 85% 25%, rgba(153, 246, 228, 0.2) 0%, transparent 55%), radial-gradient(circle at 15% 75%, rgba(13, 148, 136, 0.3) 0%, transparent 50%);
+}
+
+/* ---- 9. luokan erä 2 ---- */
+.hero-kortti.hero-kortti--tet-kuva {
+  --hk-bg: linear-gradient(to right, rgba(15, 118, 110, 0.97) 35%, rgba(15, 118, 110, 0.25) 75%), var(--hk-kuva) right center / auto 100% no-repeat;
+}
+.hero-kortti.hero-kortti--harjoittelu { --hk-kuva: url("../images/ammatti.webp"); }
+.hero-kortti.hero-kortti--reppu {
+  --hk-kuva: url("../images/robo_maskotti_tyytyvainen_punainen_reppu.webp");
+  --hk-marg: 20px 0 12px;
+}
+.hero-kortti.hero-kortti--duunimina {
+  --hk-marg: 20px 0;
+  --hk-min: 220px;
+  --hk-varjo: transparent;
+  --hk-gradient: url("../images/duunimina-hero.webp");
+  --hk-filtteri: brightness(0.45);
+  --hk-h-koko: clamp(1.3rem, 3vw, 1.8rem);
+  --hk-h-paino: 800;
+  --hk-h-kerning: -0.01em;
+  --hk-h-varjo: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --hk-p-leveys: 480px;
+  --hk-p-opac: 0.92;
+}
+
+/* Startti TETiin: vaalea muistilistakortti (aiemmin sivun <style>-lohkossa) */
+.hero-kortti.hero-kortti--startti {
+  --hk-deco: radial-gradient(circle at 14% 24%, rgba(151, 196, 89, 0.16) 0%, transparent 46%), radial-gradient(circle at 90% 82%, rgba(30, 58, 99, 0.06) 0%, transparent 50%);
+  background: #FBF6EA;
+  border: 1px solid #EFE6D3;
+  box-shadow: 0 6px 22px rgba(30, 58, 99, 0.09);
+}
+.hero-kortti--startti .hero-kortti__sisalto {
+  color: #3a4a66;
+  padding-right: 190px;
+}
+.hero-kortti--startti .hero-kortti__otsikko {
+  color: #1e3a63;
+  text-shadow: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.hero-kortti--startti .hero-kortti__otsikko .stetti-banner {
+  background: #1e3a63;
+  color: #fff;
+  padding: 3px 16px;
+  border-radius: 9px;
+  transform: rotate(-1.5deg);
+  letter-spacing: 0.01em;
+  box-shadow: 0 3px 8px rgba(30, 58, 99, 0.25);
+}
+.hero-kortti--startti .hero-kortti__teksti {
+  color: #556077;
+  opacity: 1;
+}
+.hero-kortti--startti .hero-kortti__merkki {
+  background: #E7F3DE;
+  border: 1px solid #C0DD97;
+  color: #3B6D11;
+}
+.hero-kortti--startti .hero-kortti__cta {
+  background: #16a34a;
+  color: #fff;
+}
+.hero-kortti--startti .hero-kortti__cta:hover {
+  background: #15803d;
+  color: #fff;
+}
+.hero-kortti--startti .stetti-valot {
+  position: absolute;
+  right: 34px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 104px;
+  height: auto;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .hero-kortti--startti .hero-kortti__sisalto { padding-right: 32px; }
+  .hero-kortti--startti .stetti-valot { display: none; }
 }

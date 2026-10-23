@@ -510,7 +510,7 @@
       /* DuuniMinä */
       if (tet.duunimina) {
         var dm = tet.duunimina;
-        var hero = document.querySelector('.duunimina-hero');
+        var hero = document.querySelector('[data-hero="duunimina"]');
         if (hero) {
           var badge = hero.querySelector('.duunimina-badge');
           if (badge) {
@@ -518,8 +518,8 @@
             badge.textContent = dm.badge;
             if (icon) badge.insertBefore(icon, badge.firstChild);
           }
-          setTxt('.duunimina-hero h3', dm.h3);
-          setTxt('.duunimina-hero p', dm.p);
+          setTxt('[data-hero="duunimina"] h3', dm.h3);
+          setTxt('[data-hero="duunimina"] p', dm.p);
           var openBtn = hero.querySelector('.btn-duunimina');
           if (openBtn) {
             var icon2 = openBtn.querySelector('i');
