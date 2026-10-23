@@ -70,7 +70,16 @@ async function otaKuvat(selain, kansio) {
   for (const sivu of SIVUT) for (const leveys of LEVEYDET) {
     const ctx = await selain.newContext({ viewport: { width: leveys, height: 900 }, reducedMotion: "reduce", deviceScaleFactor: 1 });
     const page = await ctx.newPage();
-    await page.addInitScript(() => { Math.random = () => 0.5; });
+    await page.addInitScript(() => {
+      Math.random = () => 0.5;
+      // Kiinteä päivämäärä (esim. päiväkirjan päiväys), jotta kuvat eivät muutu päivästä toiseen
+      const RealDate = Date, kiinteä = new RealDate("2026-01-15T10:00:00Z").getTime();
+      class KiinteaDate extends RealDate {
+        constructor(...a) { if (a.length === 0) super(kiinteä); else super(...a); }
+        static now() { return kiinteä; }
+      }
+      globalThis.Date = KiinteaDate;
+    });
     await page.goto(`${BASE}/sivut/${sivu}luokka.html`, { waitUntil: "load" });
     await page.addStyleTag({ content: TYYLI });
     // lataa laiskat kuvat: vieritä sivu läpi
@@ -128,7 +137,7 @@ try {
       const r = vertaa(join(KUVAT, "perusta", f), join(KUVAT, "uusi", f), join(eroKansio, f));
       if (r.pros > RAJA) { console.log(`ERO ${r.pros.toFixed(2)} %  ${f}${r.koko ? "  (koko " + r.koko + ")" : ""}`); eroja++; }
     }
-    for (const f of uudet) { console.log(`UUSI     ${f}`); eroja++; }
+    for (const f of uudet) { if (!SIVUT.some((sv) => f.startsWith(`${sv}lk-`))) continue; console.log(`UUSI     ${f}`); eroja++; }
     console.log(eroja ? `\n${eroja} kuvaa eroaa perustasta (raja ${RAJA} %). Katso tools/vertailukuvat/ero/` : `\nKaikki ${n} kuvaa vastaavat perustaa.`);
     if (eroja) koodi = 1;
   }

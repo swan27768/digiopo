@@ -165,7 +165,7 @@
     (function () {
       var op = g(g9, 'jatko.opintopolku');
       if (!op) return;
-      var hero = document.querySelectorAll('#jatko .tetjakso-hero')[0];
+      var hero = document.querySelector('#jatko [data-hero="pisteet"]');
       if (hero) {
         var badge = hero.querySelector('.tetjakso-badge');
         if (badge) {
@@ -225,7 +225,7 @@
     (function () {
       var vk = g(g9, 'jatko.vuosikello');
       if (!vk) return;
-      var hero = document.querySelectorAll('#jatko .tetjakso-hero')[1];
+      var hero = document.querySelector('#jatko [data-hero="vuosikello"]');
       if (hero) {
         var badge = hero.querySelector('.tetjakso-badge');
         if (badge) {
@@ -394,7 +394,7 @@
       /* Duuniin! TET-peli */
       if (tet.duuniintet) {
         var du = tet.duuniintet;
-        var hero = document.querySelector('#tet .duuniintet-hero');
+        var hero = document.querySelector('#tet [data-hero="duuniintet"]');
         if (hero) {
           var badge = hero.querySelector('.duuniintet-badge');
           if (badge) {
@@ -402,8 +402,8 @@
             badge.textContent = du.badge;
             if (icon) badge.insertBefore(icon, badge.firstChild);
           }
-          setTxt('#tet .duuniintet-hero h3', du.h3);
-          setTxt('#tet .duuniintet-hero p', du.p);
+          setTxt('#tet [data-hero="duuniintet"] h3', du.h3);
+          setTxt('#tet [data-hero="duuniintet"] p', du.p);
           var openBtn = hero.querySelector('.btn-duuniintet');
           if (openBtn) {
             var icon2 = openBtn.querySelector('i');
