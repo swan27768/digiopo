@@ -63,3 +63,28 @@ body [data-korttityyppi="peli"] {
 @media print {
   .aihe-osio::after { display: none; }
 }
+
+/* Tyhjä tehtäväsäiliö (task-list täytetään vasta JS:llä tai ei lainkaan) ei saa näkyä tyhjänä kehyksenä */
+body .aihe-osio > .tasks-section:not(:has(> :not(.task-list))):has(> .task-list:empty),
+body .aihe-osio > .tasks-section:empty {
+  display: none !important;
+}
+
+/* Väliotsikko kahden tehtävän välissä */
+.osio-valiotsikko {
+  margin: 28px 0 18px;
+  padding: 2px 0 2px 16px;
+  border-left: 4px solid var(--osio-accent, #db2777);
+}
+.osio-valiotsikko h3 {
+  margin: 0 0 6px;
+  font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+  font-weight: 800;
+  color: var(--osio-accent-dk, #9d174d);
+}
+.osio-valiotsikko p {
+  margin: 0 0 2px;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #374151;
+}
