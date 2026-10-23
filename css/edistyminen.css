@@ -1,0 +1,230 @@
+/* Luokka-asteen sävy (JS lisää html-elementille luokan edist-7/8/9) */
+:root, .edist-7 { --polku-accent: #7c3aed; --polku-dk: #5b21b6; --polku-bd: #ddd6fe; --polku-bg: #f5f3ff; --polku-ring: rgba(124, 58, 237, 0.22); }
+.edist-8 { --polku-accent: #db2777; --polku-dk: #9d174d; --polku-bd: #f9a8d4; --polku-bg: #fdf2f8; --polku-ring: rgba(219, 39, 119, 0.22); }
+.edist-9 { --polku-accent: #0d9488; --polku-dk: #0f766e; --polku-bd: #99f6e4; --polku-bg: #f0fdfa; --polku-ring: rgba(13, 148, 136, 0.22); }
+
+/* ============================================================
+   EDISTYMINEN — vaakapolku (missä olen) + "tehty"-merkintä
+   Värit: luokka-asteen --osio-accent (osio-rakenne.css), oletus 8. lk pinkki.
+   Ei ikoneita: ruksi piirretty CSS:llä.
+   ============================================================ */
+
+.osio-polku {
+  position: sticky;
+  top: calc(var(--navbar-h, 60px) + 8px);
+  z-index: 900;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 1200px;
+  margin: 14px auto -26px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(20, 18, 48, 0.1);
+  backdrop-filter: blur(6px);
+}
+.osio-polku[hidden] { display: none; }
+
+.osio-polku__nyt {
+  flex: 0 0 210px;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.osio-polku__nyt-nimi { color: var(--polku-accent); font-weight: 700; }
+
+.osio-polku__rata {
+  position: relative;
+  flex: 1 1 auto;
+  height: 26px;
+  margin: 0 10px;
+}
+.osio-polku__viiva {
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 4px;
+  background: var(--polku-bd);
+  overflow: hidden;
+}
+.osio-polku__tayte {
+  height: 100%;
+  width: 0;
+  background: var(--polku-accent);
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .osio-polku__tayte { transition: width 0.25s ease-out; }
+}
+
+.osio-polku__lista { list-style: none; margin: 0; padding: 0; }
+.osio-polku__pysakki {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.osio-polku__pysakki a {
+  position: relative;
+  display: block;
+  padding: 6px; /* isompi napautusalue */
+  outline-offset: 2px;
+}
+
+.osio-polku__piste {
+  position: relative;
+  display: block;
+  width: 14px; height: 14px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--polku-accent);
+  transition: transform 0.15s ease;
+}
+.osio-polku__pysakki a:hover .osio-polku__piste,
+.osio-polku__pysakki a:focus-visible .osio-polku__piste { transform: scale(1.25); }
+
+/* tilat */
+.osio-polku__pysakki[data-tila="kaynyt"] .osio-polku__piste {
+  background: linear-gradient(90deg, var(--polku-accent) 50%, #fff 50%);
+}
+.osio-polku__pysakki[data-tila="tehty"] .osio-polku__piste {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+.osio-polku__pysakki[data-tila="tehty"] .osio-polku__piste::after {
+  content: "";
+  position: absolute;
+  left: 3px; top: 1px;
+  width: 4px; height: 7px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.osio-polku__pysakki[data-tila="lukittu"] .osio-polku__piste {
+  background: #f3f4f6;
+  border: 2px dashed #9ca3af;
+}
+.osio-polku__pysakki a[aria-current="location"] .osio-polku__piste {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 4px var(--polku-ring);
+}
+
+/* nimikyltti hoverilla / fokuksella */
+.osio-polku__pysakki a::after {
+  content: attr(data-nimi);
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 240px;
+  width: max-content;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: #1e1b4b;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.osio-polku__pysakki a:hover::after,
+.osio-polku__pysakki a:focus-visible::after { opacity: 1; }
+/* reunimmaiset pysäkit: kyltti ei mene ulos palkista */
+.osio-polku__pysakki:first-child a::after { left: 0; transform: none; }
+.osio-polku__pysakki:last-child a::after { left: auto; right: 0; transform: none; }
+
+.osio-polku__nollaa {
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #fff;
+  color: #6b7280;
+  font: inherit;
+  font-size: 0.74rem;
+  cursor: pointer;
+}
+.osio-polku__nollaa:hover { border-color: var(--polku-accent); color: var(--polku-accent); }
+.osio-polku__nollaa[hidden] { display: none; }
+
+/* sticky-polku ei saa peittää hypyn kohdetta */
+.aihe-osio { scroll-margin-top: calc(100px + var(--polku-h, 44px)); }
+
+/* ---- "Merkitse tehdyksi" osion lopussa ---- */
+.osio-tehty-rivi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--polku-bd);
+}
+.osio-tehty-nappi {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 2px solid var(--polku-accent);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--polku-dk);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.osio-tehty-nappi:hover { background: var(--polku-bg); }
+.osio-tehty-nappi[aria-pressed="true"] {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+}
+.osio-tehty-nappi[aria-pressed="true"]::before {
+  content: "";
+  width: 5px; height: 10px;
+  margin-top: -3px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+.osio-tehty-laite { margin: 0; font-size: 0.76rem; color: #9ca3af; }
+
+/* ---- sivupalkin linkki: vihreä ruksi tehdylle ---- */
+.aihelista a.edistyminen-tehty::after {
+  content: "";
+  display: inline-block;
+  width: 5px; height: 9px;
+  margin-left: 9px;
+  border: solid #16a34a;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+/* ---- Mobiili (toissijainen): vain ohut polku ---- */
+@media (max-width: 768px) {
+  .osio-polku { margin: 8px 0 -18px; padding: 6px 14px; gap: 10px; }
+  .osio-polku__nyt, .osio-polku__nollaa { display: none; }
+  .osio-polku__rata { margin: 0 6px; }
+}
+
+@media print {
+  .osio-polku, .osio-tehty-rivi { display: none !important; }
+}
+
+/* Maskotti (kiinteä, vasemmalla) ei jää polun alle */
+@media (min-width: 769px) {
+  .maskotti-laatikko { top: calc(var(--navbar-h, 60px) + var(--polku-h, 44px) + 36px); }
+}
