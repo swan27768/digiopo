@@ -5,7 +5,11 @@
      järjestys, piilotus ja lukitus (jarjestys.js) toimivat automaattisesti.
    - Merkinnät tallennetaan osion id:llä (ei paikalla) vain tälle laitteelle
      (localStorage): digiopo-edistyminen-<luokka>-<ryhmä>.
-   - Tilat: tyhja → kaynyt (osiossa viivytty ~8 s) → tehty (oppilas merkitsee).
+   - Tilat: tyhja → kaynyt (osiossa viivytty ~8 s JA tehty jotain: avattu
+     tehtävä, klikattu, kirjoitettu) → tehty (oppilas merkitsee itse).
+   - Polun väri ei seuraa vieritystä: jokaisen pysäkin edessä oleva jana
+     värjäytyy vasta, kun pysäkki on käyty tai tehty. Lukitut jäävät värjäämättä.
+     Sijainti näkyy vain isompana pysäkkinä ja "Nyt"-tekstinä.
    - Opettajan laitteella ja muokkaustilassa mitään ei tallenneta.
    ============================================================ */
 (function () {
@@ -75,7 +79,7 @@
   }
 
   /* ---- DOM ---- */
-  var bar, nytNimi, tayte, lista, nollaaNappi;
+  var bar, nytNimi, osat, lista, nollaaNappi;
   var osiot = [];
   var tila = {};
   var dwell = {};
@@ -89,12 +93,12 @@
     bar.hidden = true;
     bar.innerHTML =
       '<div class="osio-polku__nyt"><span class="osio-polku__nyt-etu"></span> <strong class="osio-polku__nyt-nimi"></strong></div>' +
-      '<div class="osio-polku__rata"><div class="osio-polku__viiva"><div class="osio-polku__tayte"></div></div>' +
+      '<div class="osio-polku__rata"><div class="osio-polku__viiva"></div><div class="osio-polku__osat"></div>' +
       '<ol class="osio-polku__lista"></ol></div>' +
       '<button type="button" class="osio-polku__nollaa" hidden></button>';
     ref.parentNode.insertBefore(bar, ref);
     nytNimi = bar.querySelector(".osio-polku__nyt-nimi");
-    tayte = bar.querySelector(".osio-polku__tayte");
+    osat = bar.querySelector(".osio-polku__osat");
     lista = bar.querySelector(".osio-polku__lista");
     nollaaNappi = bar.querySelector(".osio-polku__nollaa");
     nollaaNappi.addEventListener("click", function () {
@@ -176,6 +180,17 @@
     });
     lista.innerHTML = html;
 
+    /* jana edellisestä pysäkistä tähän: väri vain jos tämä pysäkki on käyty/tehty */
+    var janat = "";
+    osiot.forEach(function (sec, i) {
+      if (i === 0) return;
+      var s = osionTila(sec);
+      if (s !== "kaynyt" && s !== "tehty") return;
+      janat += '<span class="osio-polku__osa" data-tila="' + s + '" style="left:' +
+        (((i - 1) / (n - 1)) * 100).toFixed(3) + '%;width:' + (100 / (n - 1)).toFixed(3) + '%"></span>';
+    });
+    osat.innerHTML = janat;
+
     /* sivupalkin linkkeihin vihreä ruksi tehdyille */
     if (nav) {
       Array.prototype.forEach.call(nav.querySelectorAll("a[href^='#']"), function (a) {
@@ -193,17 +208,10 @@
   function paivitaRulla() {
     if (!bar || bar.hidden || !osiot.length) return;
     var vh = window.innerHeight, raja = vh * 0.35;
-    var idx = -1, frac = 0;
+    var idx = -1;
     osiot.forEach(function (sec, i) {
-      var r = sec.getBoundingClientRect();
-      if (r.top <= raja) {
-        idx = i;
-        frac = Math.max(0, Math.min(1, (raja - r.top) / Math.max(1, r.height)));
-      }
+      if (sec.getBoundingClientRect().top <= raja) idx = i;
     });
-    var n = osiot.length;
-    var p = idx < 0 ? 0 : Math.min(1, (idx + frac) / (n - 1));
-    tayte.style.width = (p * 100).toFixed(2) + "%";
     aktiivinenId = idx < 0 ? null : osiot[idx].id;
     nytNimi.textContent = idx < 0 ? "" : osionNimi(osiot[idx]);
     Array.prototype.forEach.call(lista.querySelectorAll("a"), function (a) {
@@ -219,14 +227,41 @@
     requestAnimationFrame(function () { odottaa = false; paivitaRulla(); });
   }
 
-  /* ---- "käyty": osiossa viivytty vähintään 8 s (ei pelkkä ohivieritys) ---- */
+  /* ---- "käyty": osiossa viivytty vähintään 8 s JA siinä on tehty jotain ----
+     (avattu tehtävä/paneeli, klikattu, kirjoitettu tai siirrytty tehtävän iframeen).
+     Pelkkä vieritys tai lukitun/kiinni olevan osion ohitus ei riitä. */
+  var vuorovaikutus = {};
+  function osioElementista(el) {
+    while (el && el !== main) {
+      if (el.parentNode === main && el.matches && el.matches("section.aihe-osio")) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+  function merkitseVuorovaikutus(el) {
+    if (!el || !el.closest) return;
+    if (el.closest(".osio-tehty-rivi, .osio-ope-btn, .opettaja-lataus")) return;
+    var sec = osioElementista(el);
+    if (sec && !sec.classList.contains("osio-lukittu")) vuorovaikutus[sec.id] = true;
+  }
+  ["click", "keydown", "input", "change"].forEach(function (tyyppi) {
+    main.addEventListener(tyyppi, function (e) { merkitseVuorovaikutus(e.target); }, true);
+  });
+  /* Klikkaus iframen sisällä ei kupli tänne, mutta fokus siirtyy iframeen */
+  window.addEventListener("blur", function () {
+    setTimeout(function () {
+      var a = document.activeElement;
+      if (a && a.tagName === "IFRAME") merkitseVuorovaikutus(a);
+    }, 0);
+  });
+
   setInterval(function () {
     if (document.hidden || !aktiivinenId || opeTila()) return;
     var sec = document.getElementById(aktiivinenId);
     if (!sec || sec.classList.contains("osio-lukittu")) return;
     if (tila[aktiivinenId]) return; // kaynyt tai tehty
     dwell[aktiivinenId] = (dwell[aktiivinenId] || 0) + 1;
-    if (dwell[aktiivinenId] >= 8) {
+    if (dwell[aktiivinenId] >= 8 && vuorovaikutus[aktiivinenId]) {
       tila[aktiivinenId] = "kaynyt";
       kirjoita(tila);
       piirra();
