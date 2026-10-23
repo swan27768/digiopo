@@ -36,22 +36,18 @@ body .aihe-osio > .tasks-section {
 /* Toiminnallinen */
 body .mission-card {
   background: linear-gradient(135deg, #fefce8, #fef08a);
-  border: 2px solid var(--kt-toiminta);
-  border-bottom-width: 6px;
 }
 
 /* Hero-kortit (tumma tausta, oma väri): tyyppi näkyy kehyksenä ja tunnisteena.
    data-korttityyppi asetetaan js/osio-rakenne.js:ssä kortin data-tyyppi-merkinnästä. */
-body .ak-hero,
-body .elamapeli-hero {
-  outline: 5px double #2dd4bf;
-  outline-offset: -9px;
-}
-/* Kehys piirretään ::after-elementillä, jotta kortin omat taustakerrokset eivät peitä sitä */
-body [data-korttityyppi]:not(.mission-card) {
+/* Kehys piirretään ::after-elementillä, jotta kortin omat taustakerrokset eivät peitä sitä.
+   Sama kehys kaikilla korteilla: hero-kortit (data-korttityyppi) ja keltaiset mission-card-kortit. */
+body [data-korttityyppi],
+body .mission-card {
   position: relative;
 }
-body [data-korttityyppi]:not(.mission-card)::after {
+body [data-korttityyppi]::after,
+body .mission-card::after {
   content: "";
   position: absolute;
   inset: 7px;
@@ -60,8 +56,12 @@ body [data-korttityyppi]:not(.mission-card)::after {
   z-index: 6;
 }
 body [data-korttityyppi="peli"]::after { border: 5px double #2dd4bf; }
-body [data-korttityyppi="toiminta"]:not(.mission-card)::after { border: 3px solid #fbbf24; }
+body [data-korttityyppi="toiminta"]::after { border: 3px solid #fbbf24; }
 body [data-korttityyppi="tehtava"]::after { border: 3px dashed #f9a8d4; }
+body .mission-card::after { border: 3px solid #d97706; }
+/* mission-card: reuna pois, kehys tulee ::after-elementistä (sama rakenne kuin muilla korteilla) */
+body .mission-card { border: 0; }
+
 /* Tyyppitunniste saa tyypin värin */
 .tehtava-badge--peli { background: #0d9488; border-color: #5eead4; color: #fff; }
 .tehtava-badge--toiminta { background: #ca8a04; border-color: #fde047; color: #fff; }
