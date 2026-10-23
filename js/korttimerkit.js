@@ -105,7 +105,19 @@
     });
   }
 
+  /* Työtapa-tunniste (Yksilö-/Ryhmätehtävä) kortin oikeaan yläkulmaan */
+  function siirraTunnisteet() {
+    document.querySelectorAll("[data-korttityyppi]").forEach(function (kortti) {
+      var meta = kortti.querySelector(".tehtava-meta");
+      if (meta && meta.parentElement !== kortti) {
+        meta.classList.add("tehtava-meta--kulma");
+        kortti.appendChild(meta);
+      }
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    siirraTunnisteet();
     varitaKortit();
     merkitse();
     var main = document.getElementById("main-content");

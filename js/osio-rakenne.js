@@ -200,7 +200,7 @@
       var meta = el("div", "tehtava-meta");
       if (tapa) meta.appendChild(badge(tapa, "tehtava-badge tehtava-badge--tapa"));
       var kt = KORTTITYYPPI[hero.getAttribute("data-tyyppi")];
-      if (tyyppi) meta.appendChild(badge(tyyppi, "tehtava-badge" + (kt ? " tehtava-badge--" + kt : "")));
+      /* Tyyppi (Pelitehtävä jne.) näkyy kortin tekstimerkkinä (Pelaa/Tee/Toimi, korttimerkit.js), joten erillistä tyyppitunnistetta ei enää lisätä. */
       if (kt) {
         var kortti = korttiJuuri(hero);
         if (kortti && !kortti.hasAttribute("data-korttityyppi")) kortti.setAttribute("data-korttityyppi", kt);
@@ -210,7 +210,9 @@
       var vanhaBadge = hero.classList.contains("hero-badge")
         ? hero
         : hero.querySelector(".hero-badge");
-      if (vanhaBadge) vanhaBadge.replaceWith(meta);
+      if (!meta.childNodes.length) {
+        if (vanhaBadge) vanhaBadge.remove();
+      } else if (vanhaBadge) vanhaBadge.replaceWith(meta);
       else {
         var h3 = juuri.querySelector("h3");
         if (h3) h3.insertAdjacentElement("beforebegin", meta);
