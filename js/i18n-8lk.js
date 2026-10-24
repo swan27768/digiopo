@@ -128,42 +128,6 @@
         if (slideNames[s]) slideNimiEls[s].textContent = slideNames[s];
       }
 
-      /* Koulutusala-testi kortti */
-      var testiH3 = document.querySelector('#koulutus [data-tapa="yksin"][data-tyyppi="testi"] ~ h3, #koulutus h3');
-      var testiCards = document.querySelectorAll('#koulutus [style*="min-height: 240px"], #koulutus [style*="min-height:240px"]');
-      if (testiCards[0]) {
-        var testiH3el = testiCards[0].querySelector('h3');
-        var testiPel  = testiCards[0].querySelector('p');
-        if (testiH3el && kou.testi_heading) testiH3el.textContent = kou.testi_heading;
-        if (testiPel && kou.testi_desc) testiPel.textContent = kou.testi_desc;
-        var testiBadge = testiCards[0].querySelector('.hero-badge');
-        if (testiBadge && kou.testi_badge) {
-          var icon = testiBadge.querySelector('i');
-          testiBadge.textContent = kou.testi_badge;
-          if (icon) testiBadge.insertBefore(icon, testiBadge.firstChild);
-        }
-        var testiBtnEl = testiCards[0].querySelector('a.btn-hero');
-        if (testiBtnEl && kou.testi_btn) testiBtnEl.textContent = kou.testi_btn;
-        var testiVinkki = testiCards[0].querySelector('p[style*="opacity: 0.75"], p[style*="opacity:0.75"]');
-        if (testiVinkki && kou.testi_vinkki) testiVinkki.textContent = kou.testi_vinkki;
-      }
-
-      /* AmmattiSet */
-      if (testiCards[1]) {
-        var asetH3 = testiCards[1].querySelector('h3');
-        var asetP  = testiCards[1].querySelector('p');
-        if (asetH3 && kou.alaset_heading) asetaOtsikko(asetH3, kou.alaset_heading);
-        if (asetP && kou.alaset_desc) asetP.textContent = kou.alaset_desc;
-        var asetBadge = testiCards[1].querySelector('.hero-badge');
-        if (asetBadge && kou.alaset_badge) {
-          var asetIcon = asetBadge.querySelector('i');
-          asetBadge.textContent = kou.alaset_badge;
-          if (asetIcon) asetBadge.insertBefore(asetIcon, asetBadge.firstChild);
-        }
-        var asetBtn = testiCards[1].querySelector('a.btn-hero');
-        if (asetBtn && kou.alaset_btn) asetBtn.textContent = kou.alaset_btn;
-      }
-
       /* Maailma tarvitsee sinua */
       var maailmaCard = document.getElementById('koulutus-mission');
       if (maailmaCard) {
@@ -197,27 +161,6 @@
       if (vahIntros[0] && vah.intro1) vahIntros[0].textContent = vah.intro1;
       if (vahIntros[1] && vah.intro2) vahIntros[1].textContent = vah.intro2;
 
-      /* Vahvuusmatka */
-      var vmCard = document.querySelector('#vahvuudet [data-tyyppi="tarina"]');
-      if (vmCard) {
-        var vmParent = vmCard.closest('[style*="min-height"]');
-        if (vmParent) {
-          var vmBadge = vmParent.querySelector('.hero-badge');
-          var vmH3    = vmParent.querySelector('h3');
-          var vmP     = vmParent.querySelector('p:not(.btn-hero)');
-          var vmBtn   = vmParent.querySelector('button.btn-hero');
-          var vmVinkki = vmParent.querySelector('p[style*="opacity"]');
-          if (vmBadge && vah.vahvuusmatka_badge) {
-            var vmIcon = vmBadge.querySelector('i');
-            vmBadge.textContent = vah.vahvuusmatka_badge;
-            if (vmIcon) vmBadge.insertBefore(vmIcon, vmBadge.firstChild);
-          }
-          if (vmH3 && vah.vahvuusmatka_heading) asetaOtsikko(vmH3, vah.vahvuusmatka_heading);
-          if (vmP && vah.vahvuusmatka_desc) vmP.textContent = vah.vahvuusmatka_desc;
-          if (vmBtn && vah.vahvuusmatka_btn) vmBtn.textContent = vah.vahvuusmatka_btn;
-          if (vmVinkki && vah.vahvuusmatka_vinkki) vmVinkki.textContent = vah.vahvuusmatka_vinkki;
-        }
-      }
       var suljeVmBtn = document.querySelector('#vahvuusmatkaContainer button');
       if (suljeVmBtn && vah.vahvuusmatka_close) {
         var svIcon = suljeVmBtn.querySelector('i');
@@ -229,7 +172,7 @@
       var fiCard = document.getElementById('vahvuudet-mission');
       if (fiCard) {
         var fiH3    = fiCard.querySelector('h3');
-        var fiP     = fiCard.querySelector('p[style*="opacity: 0.95"]');
+        var fiP     = fiCard.querySelector('p.hero-kortti__teksti');
         var fiBtn   = fiCard.querySelector('button.btn-hero');
         var fiBadge = fiCard.querySelector('.hero-badge');
         var fiMeta  = fiCard.querySelector('span[data-kaannos~="tehtavameta"]');
@@ -307,24 +250,6 @@
         if (panVihje && pd.vihje) panVihje.textContent = pd.vihje;
       }
 
-      /* Pyörä pyörii */
-      var pyoraCard = document.getElementById('tet-mission');
-      if (pyoraCard) {
-        var pyoraH3    = pyoraCard.querySelector('h3');
-        var pyoraP     = pyoraCard.querySelector('p[style*="opacity: 0.95"]');
-        var pyoraBtn   = pyoraCard.querySelector('button.btn-hero');
-        var pyoraBadge = pyoraCard.querySelector('.hero-badge');
-        var pyoraMeta  = pyoraCard.querySelector('span[style*="font-size:13px"]');
-        if (pyoraBadge && tet.pyora_badge) {
-          var pyIcon = pyoraBadge.querySelector('i');
-          pyoraBadge.textContent = tet.pyora_badge;
-          if (pyIcon) pyoraBadge.insertBefore(pyIcon, pyoraBadge.firstChild);
-        }
-        if (pyoraH3  && tet.pyora_heading)   asetaOtsikko(pyoraH3, tet.pyora_heading);
-        if (pyoraP   && tet.pyora_desc)       pyoraP.textContent    = tet.pyora_desc;
-        if (pyoraBtn && tet.pyora_btn_open)   pyoraBtn.textContent  = tet.pyora_btn_open;
-        if (pyoraMeta && tet.pyora_meta)      pyoraMeta.textContent = tet.pyora_meta;
-      }
       var pyoraCloseBtn = document.querySelector('#pyora-wrapper button');
       if (pyoraCloseBtn && tet.pyora_btn_close) {
         var pcIcon = pyoraCloseBtn.querySelector('i');
@@ -359,71 +284,12 @@
       if (tulTheory[1] && tul.p2) tulTheory[1].textContent = tul.p2;
 
       /* Tehtävä 1: Rakenna huomisen koulu */
-      var task1Heading = document.querySelector('#tulevaisuus h3[style*="color:#3b0764"]');
-      if (task1Heading && tul.task1_heading) task1Heading.textContent = tul.task1_heading;
-      var task1Desc = document.querySelector('#tulevaisuus p[style*="margin:0 0 12px 42px"]');
-      if (task1Desc && tul.task1_desc) task1Desc.textContent = tul.task1_desc;
-
       /* Avaa-nappi */
       var task1Btn = document.getElementById('tulevaisuus8-btn');
       if (task1Btn) {
         var t1BtnSpan = task1Btn.querySelector('span:first-child');
         if (t1BtnSpan && tul.task1_btn_open) t1BtnSpan.textContent = tul.task1_btn_open;
       }
-
-      /* Sisällön rakenne - step headings */
-      var t1Label = document.querySelector('#tulevaisuus8-sisalto [style*="display: inline-block"]');
-      if (t1Label && tul.task1_label) t1Label.textContent = tul.task1_label;
-      var t1StepsH3 = document.querySelector('#tulevaisuus8-sisalto h3[style*="color: #3b0764"]');
-      if (t1StepsH3 && tul.task1_steps_heading) t1StepsH3.textContent = tul.task1_steps_heading;
-
-      var stepDivs = document.querySelectorAll('#tulevaisuus8-sisalto > div:first-of-type [style*="border-radius:10px"]');
-      if (stepDivs[0]) {
-        var s1h = stepDivs[0].querySelector('[style*="font-weight:600"]');
-        var s1p = stepDivs[0].querySelector('[style*="color:#6b7280"]');
-        if (s1h && tul.task1_step1_heading) s1h.textContent = tul.task1_step1_heading;
-        if (s1p && tul.task1_step1_desc)    s1p.textContent = tul.task1_step1_desc;
-      }
-      if (stepDivs[1]) {
-        var s2h = stepDivs[1].querySelector('[style*="font-weight:600"]');
-        var s2p = stepDivs[1].querySelector('[style*="color:#6b7280"]');
-        if (s2h && tul.task1_step2_heading) s2h.textContent = tul.task1_step2_heading;
-        if (s2p && tul.task1_step2_desc)    s2p.textContent = tul.task1_step2_desc;
-      }
-      if (stepDivs[2]) {
-        var s3h = stepDivs[2].querySelector('[style*="font-weight:600"]');
-        var s3p = stepDivs[2].querySelector('[style*="color:#6b7280"]');
-        if (s3h && tul.task1_step3_heading) s3h.textContent = tul.task1_step3_heading;
-        if (s3p && tul.task1_step3_desc)    s3p.textContent = tul.task1_step3_desc;
-      }
-
-      /* Palautusmuoto-kortit */
-      setTxt('#tulevaisuus8-sisalto [style*="color: #6d28d9"][style*="font-size: 0.7rem"]', tul.submission_title);
-      var submDesc = document.querySelector('#tulevaisuus8-sisalto p[style*="font-size:0.85rem"]');
-      if (submDesc && tul.submission_desc) submDesc.textContent = tul.submission_desc;
-      var submCards = document.querySelectorAll('#tulevaisuus8-sisalto [style*="border:1.5px solid #ddd6fe"]');
-      if (submCards[0]) {
-        var canvaH = submCards[0].querySelector('[style*="font-weight:700"]');
-        var canvaP = submCards[0].querySelector('[style*="font-size:0.8rem"]');
-        if (canvaH && tul.canva_title) canvaH.textContent = tul.canva_title;
-        if (canvaP && tul.canva_desc_html) canvaP.innerHTML = tul.canva_desc_html;
-      }
-      if (submCards[1]) {
-        var hdH = submCards[1].querySelector('[style*="font-weight:700"]');
-        var hdP = submCards[1].querySelector('[style*="font-size:0.8rem"]');
-        if (hdH && tul.handdrawn_title) hdH.textContent = tul.handdrawn_title;
-        if (hdP && tul.handdrawn_desc) hdP.textContent = tul.handdrawn_desc;
-      }
-      if (submCards[2]) {
-        var gsH = submCards[2].querySelector('[style*="font-weight:700"]');
-        var gsP = submCards[2].querySelector('[style*="font-size:0.8rem"]');
-        if (gsH && tul.slides_title) gsH.textContent = tul.slides_title;
-        if (gsP && tul.slides_desc) gsP.textContent = tul.slides_desc;
-      }
-      var submTip = document.querySelector('#tulevaisuus8-sisalto [style*="color: #5b21b6"][style*="italic"]');
-      if (submTip && tul.submission_tip) submTip.textContent = tul.submission_tip;
-      var openBtn = document.querySelector('#tulevaisuus8-sisalto a[href*="Tulevaisuus_8lk"]');
-      if (openBtn && tul.open_task_btn) openBtn.textContent = tul.open_task_btn;
 
       /* Ryhmä jumissa */
       var varaSisalto = document.querySelector('#vara-sisalto');
@@ -464,57 +330,13 @@
       }
 
       /* Onnenpyörä - vaihe 1 */
-      var phase1Label = document.querySelector('#tyopaikka8-sisalto [style*="color:#6d28d9"][style*="0.7rem"]');
-      if (phase1Label && tul.spinner_phase1) phase1Label.textContent = tul.spinner_phase1;
-      var phase1P = document.querySelector('#tyopaikka8-sisalto > div p[style*="0.88rem"]');
-      if (phase1P && tul.spinner_phase1_p) phase1P.textContent = tul.spinner_phase1_p;
-      var resulLabel = document.querySelector('#tp-tulos [style*="color:#7c3aed"]');
-      if (resulLabel && tul.spinner_result_label) resulLabel.textContent = tul.spinner_result_label;
       var spinBtn = document.getElementById('tp-pyora-btn');
       if (spinBtn && tul.spinner_btn) spinBtn.textContent = tul.spinner_btn;
-      var spinHint = document.querySelector('#tyopaikka8-sisalto p[style*="color:#9ca3af"]');
-      if (spinHint && tul.spinner_hint) spinHint.textContent = tul.spinner_hint;
 
       /* Päivitä spinner-kysymykset JS-muuttujaan */
       if (tul.spinner_questions && tul.spinner_questions.length) {
         window.tpKysymykset = tul.spinner_questions;
       }
-
-      /* Vaihe 2 - Rakenna */
-      var phase2Label = document.querySelector('#tyopaikka8-sisalto [style*="color:#6d28d9"][style*="0.7rem"]:last-of-type, #tyopaikka8-sisalto [style*="Nyt rakennetaan"]');
-      // Haetaan vaihe 2 -otsikko position-perusteisesti
-      var allPhaseLabels = document.querySelectorAll('#tyopaikka8-sisalto [style*="color:#6d28d9"][style*="0.7rem"]');
-      if (allPhaseLabels[1] && tul.build_phase_title) allPhaseLabels[1].textContent = tul.build_phase_title;
-      var buildP = document.querySelector('#tyopaikka8-sisalto [style*="color:#4b5563"][style*="0.88rem"]:last-of-type');
-      if (buildP && tul.build_phase_p) buildP.textContent = tul.build_phase_p;
-
-      /* LEGO ja vaihtoehdot */
-      var legoCard = document.querySelector('#tyopaikka8-sisalto [style*="border:2px solid #7c3aed"]');
-      if (legoCard) {
-        var legoH = legoCard.querySelector('strong');
-        var legoP = legoCard.querySelector('p');
-        if (legoH && tul.lego_title) legoH.textContent = tul.lego_title;
-        if (legoP && tul.lego_p)     legoP.textContent = tul.lego_p;
-      }
-      var noLegoCard = document.querySelector('#tyopaikka8-sisalto [style*="border:1.5px solid #ddd6fe"]');
-      if (noLegoCard) {
-        var noLegoH = noLegoCard.querySelector('strong');
-        if (noLegoH && tul.nolego_title) noLegoH.textContent = tul.nolego_title;
-        var altCards = noLegoCard.querySelectorAll('[style*="border-radius:8px"]');
-        var altData = [
-          { title: tul.draw_title,      desc: tul.draw_desc },
-          { title: tul.prototype_title, desc: tul.prototype_desc },
-          { title: tul.sticker_title,   desc: tul.sticker_desc }
-        ];
-        for (var ai = 0; ai < altCards.length && ai < altData.length; ai++) {
-          var aH = altCards[ai].querySelector('[style*="font-weight:700"]');
-          var aP = altCards[ai].querySelector('[style*="font-size:0.82rem"]');
-          if (aH && altData[ai].title) aH.textContent = altData[ai].title;
-          if (aP && altData[ai].desc)  aP.textContent = altData[ai].desc;
-        }
-      }
-      var buildTip = document.querySelector('#tyopaikka8-sisalto [style*="color: #5b21b6"][style*="italic"]');
-      if (buildTip && tul.build_tip) buildTip.textContent = tul.build_tip;
 
       /* Mission 2 */
       var m2Card = document.getElementById('tulevaisuus2-mission');
