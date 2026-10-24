@@ -46,8 +46,10 @@ for (const sivu of SIVUT) {
     const href = (m[0].match(/href=["']([^"']+)["']/i) || [])[1];
     if (!href || /^https?:/.test(href)) continue;
     const tiedosto = href.startsWith("/") ? join(JUURI, href) : join(JUURI, "sivut", href);
-    if (!existsSync(tiedosto)) continue;
-    const css = readFileSync(tiedosto, "utf8");
+    // Rakennettu paketti (css/paketti-Nlk.css): analysoidaan sen lähteenä oleva manifesti (css/kerrokset-Nlk.css), jotta tiedostokohtaiset törmäykset näkyvät
+    const luettava = /paketti-[^/]+\.css$/.test(tiedosto) ? tiedosto.replace("paketti-", "kerrokset-") : tiedosto;
+    if (!existsSync(luettava)) continue;
+    const css = readFileSync(luettava, "utf8");
     // Seurataan @import url("x.css") -tuonteja (esim. css/kerrokset-Nlk.css), jotta kerroksiin siirretyt tiedostot tarkistetaan edelleen
     const tuonnit = [...css.matchAll(/@import\s+url\(["']?([^"')]+)["']?\)/gi)].map((m) => m[1]).filter((u) => !/^https?:|^\//.test(u));
     if (tuonnit.length) {
