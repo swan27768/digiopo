@@ -232,7 +232,7 @@
         var fiP     = fiCard.querySelector('p[style*="opacity: 0.95"]');
         var fiBtn   = fiCard.querySelector('button.btn-hero');
         var fiBadge = fiCard.querySelector('.hero-badge');
-        var fiMeta  = fiCard.querySelector('span[style*="font-size:13px"]');
+        var fiMeta  = fiCard.querySelector('span[data-kaannos~="tehtavameta"]');
         if (fiBadge && vah.fakeinsta_badge) {
           var fiIcon = fiBadge.querySelector('i');
           fiBadge.textContent = vah.fakeinsta_badge;
@@ -343,9 +343,9 @@
     if (kli) {
       setTxt('#otsikko-klinikka', kli.heading);
       setTxt('#klinikka .aihe-otsikko p', kli.subtitle);
-      var kliBadge = document.querySelector('#klinikka .hero-card span, #klinikka span[style*="background:rgba"]');
+      var kliBadge = document.querySelector('#klinikka span[data-kaannos~="klinikka-merkki"]');
       if (kliBadge && kli.badge) kliBadge.textContent = kli.badge;
-      var kliP = document.querySelector('#klinikka p[style*="0.92rem"]');
+      var kliP = document.querySelector('#klinikka p[data-kaannos~="klinikka-kulku"]');
       if (kliP && kli.kulku_html) kliP.innerHTML = kli.kulku_html;
     }
 
@@ -690,7 +690,7 @@
         if (vaiheSpan) v1h.insertBefore(vaiheSpan, v1h.firstChild);
       }
       var v1sub = amisPanel.querySelector('.tj-kiinnostukset + p, .tj-kiinnostukset').previousElementSibling;
-      var v1subEl = amisPanel.querySelector('.tj-kuvaus[style]');
+      var v1subEl = amisPanel.querySelector('.tj-kuvaus[data-kaannos~="amis-v1-alaotsikko"]');
       if (v1subEl && tj.amis_v1_subtitle) v1subEl.textContent = tj.amis_v1_subtitle;
 
       /* Suodatinnapit */
@@ -943,7 +943,7 @@
         lv1h.textContent = tj.lukio_v1_heading;
         if (lv1span) lv1h.insertBefore(lv1span, lv1h.firstChild);
       }
-      var lv1sub = lukioPanel.querySelector('.tj-kuvaus[style]');
+      var lv1sub = lukioPanel.querySelector('.tj-kuvaus[data-kaannos~="lukio-v1-alaotsikko"]');
       if (lv1sub && tj.lukio_v1_subtitle) lv1sub.textContent = tj.lukio_v1_subtitle;
 
       /* Suodatinnapit */
@@ -1204,10 +1204,10 @@
       var p = kortti.querySelector('p');
       if (p && td.description) p.textContent = td.description;
       // "Ryhmäkeskustelu" -badge
-      var badge = kortti.querySelector('[style*="border-radius:999px"]');
+      var badge = kortti.querySelector('[data-kaannos~="ryhmakeskustelu-merkki"]');
       if (badge && tasks.discussion_label) badge.textContent = tasks.discussion_label;
       // "👥 Keskustele..." -hint
-      var hint = kortti.querySelector('[style*="border-left"]');
+      var hint = kortti.querySelector('[data-kaannos~="ryhmakeskustelu-vihje"]');
       if (hint && tasks.discussion_hint) hint.textContent = tasks.discussion_hint;
     });
   }
