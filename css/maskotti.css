@@ -5,14 +5,20 @@
 
 /* --- Maskotti-laatikko (fixed, desktop) -------------------- */
 
+/* Robotti seisoo näkymän vasemmassa alakulmassa sivuvalikon alapuolella,
+   jotta se ei peitä valikon tekstiä. Jos valikko on niin pitkä, ettei tilaa
+   jää, js/maskotti-tunne.js piilottaa ensin puhekuplan (.kupla-piilossa)
+   ja viime kädessä koko robotin (.ei-tilaa). */
 .maskotti-laatikko {
   position: fixed;
-  top: 100px;
-  /* Asemoi maskotti sivupalkin sisään oikeaan reunaan.
-     Puhekupla on 220px leveä — vähennetään 220px jotta oikea reuna osuu
-     täsmälleen sivupalkin/sisältöalueen rajalle leveillä näytöillä. */
-  left: calc(max(0px, (100vw - 1200px) / 2) + var(--sidebar-width) - 220px);
+  bottom: 16px;
+  left: calc(max(0px, (100vw - 1200px) / 2) + 20px);
   z-index: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: calc(var(--sidebar-width) - 40px);
   opacity: 0;
   transform: translateY(10px);
   pointer-events: none;
@@ -27,17 +33,22 @@
   pointer-events: auto;
 }
 
-.maskotti-laatikko.piilossa {
-  opacity: 0;
+.maskotti-laatikko.piilossa,
+.maskotti-laatikko.ei-tilaa {
+  opacity: 0 !important;
   transform: translateY(10px);
-  pointer-events: none;
+  pointer-events: none !important;
 }
+
+.maskotti-laatikko.kupla-piilossa .puhekupla { display: none; }
+.maskotti-laatikko.pieni-robo .maskotti { width: 60px; }
 
 /* --- Maskotti-kuva ----------------------------------------- */
 
 .maskotti {
-  width: 120px;
+  width: 84px;
   max-width: 20vw;
+  flex: none;
   height: auto;
   display: block;
   transition: transform 0.3s ease;
@@ -54,15 +65,17 @@
 /* --- Puhekupla --------------------------------------------- */
 
 .puhekupla {
-  margin-bottom: 10px;
+  order: 2;
+  margin-bottom: 46px;
   background: white;
   color: #222;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1.35;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 220px;
+  max-width: 190px;
   position: relative;
   opacity: 1;
   transition: opacity 0.3s ease;
@@ -71,11 +84,11 @@
 .puhekupla::after {
   content: "";
   position: absolute;
-  bottom: -8px;
-  left: 20px;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid white;
+  bottom: 14px;
+  left: -8px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid white;
 }
 
 /* --- Hero (etusivu) ---------------------------------------- */
@@ -208,7 +221,7 @@
 
 /* --- Mobiili ---------------------------------------------- */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .maskotti-laatikko {
     position: fixed;
     right: 12px;

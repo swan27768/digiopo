@@ -164,6 +164,34 @@
 
     window.addEventListener("scroll", ajastaPaivitys, { passive: true });
 
+    /* Sovita robotti sivuvalikon alapuolelle: jos tilaa ei ole, piilota ensin
+       puhekupla, sitten pienennä robotti ja viime kädessä piilota se. Mobiilissa robotti on oikeassa alakulmassa. */
+    var sovitusOdottaa = false;
+    function sovita() {
+      sovitusOdottaa = false;
+      if (!laatikko) return;
+      var valikko = document.querySelector(".aihelista");
+      laatikko.classList.remove("kupla-piilossa", "pieni-robo", "ei-tilaa");
+      if (!valikko || window.innerWidth <= 900) return;
+      var vb = valikko.getBoundingClientRect();
+      if (vb.bottom < 0 || vb.top > window.innerHeight) return;
+      function mahtuu() { return laatikko.getBoundingClientRect().top >= vb.bottom + 8; }
+      if (mahtuu()) return;
+      laatikko.classList.add("kupla-piilossa");
+      if (mahtuu()) return;
+      laatikko.classList.add("pieni-robo");
+      if (mahtuu()) return;
+      laatikko.classList.add("ei-tilaa");
+    }
+    function ajastaSovitus() {
+      if (sovitusOdottaa) return;
+      sovitusOdottaa = true;
+      requestAnimationFrame(sovita);
+    }
+    window.addEventListener("scroll", ajastaSovitus, { passive: true });
+    window.addEventListener("resize", ajastaSovitus);
+    sovita();
+
     /* Kun kuva vaihtuu (sivun oma osiokohtainen ilme tai minun vaihtoni),
        tarkista hetken päästä, vastaako se vielä tilannetta. */
     new MutationObserver(function () {
