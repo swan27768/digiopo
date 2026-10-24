@@ -1488,6 +1488,9 @@ input:focus-visible,
 }
 
 .maskotti-laatikko.kupla-piilossa .puhekupla { display: none; }
+/* Kun vasemmassa reunassa ei ole tilaa (pitkä valikko), pieni robotti siirtyy
+   oikeaan alakulmaan eikä katoa näkyvistä. */
+.maskotti-laatikko.oikealla { left: auto; right: 16px; }
 .maskotti-laatikko.pieni-robo .maskotti { width: 60px; }
 
 /* --- Maskotti-kuva ----------------------------------------- */
@@ -2879,7 +2882,7 @@ h3 { color: #3b1080; }
   overflow: hidden;
   margin: 0 -28px 22px;
   padding: 26px 28px 24px;
-  text-align: start;
+  text-align: center;
   color: #fff;
   background: linear-gradient(120deg, var(--osio-accent-dk) 0%, var(--osio-accent) 100%);
   border-bottom: 0 !important;
@@ -2897,12 +2900,12 @@ h3 { color: #3b1080; }
   margin: 0 0 6px;
   font-size: 1.5rem;
   line-height: 1.25;
-  text-align: start;
+  text-align: center;
   color: #fff;
 }
 .aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko p {
   margin: 0;
-  text-align: start;
+  text-align: center;
   color: rgba(255, 255, 255, 0.88);
 }
 @media (max-width: 768px) {
@@ -2915,9 +2918,10 @@ h3 { color: #3b1080; }
   }
 }
 
-/* Osion otsikko (h2 + alaotsikko + opettajan ohje -painike) tasataan aina vasemmalle,
-   samaan reunaan kuin sivun otsikko ja kortit. */
-.aihe-otsikko { text-align: start; }
+/* Sivun pääotsikko (h1) ja osioiden otsikot (h2 + alaotsikko) tasataan keskelle.
+   Opettajan ohje -painike ja muu otsikon sisältö seuraavat samaa tasausta. */
+#main-content > h1 { text-align: center; }
+.aihe-otsikko { text-align: center; }
 }
 
 /* osio-hero.css */
@@ -2948,7 +2952,10 @@ h3 { color: #3b1080; }
   --h-soft2: #ddd6fe;
   --h-ink: #5b21b6;
   position: relative;
-  height: clamp(150px, 25vw, 220px);
+  --hero-h: clamp(150px, 25vw, 220px);
+  --robo-r: 0.575; /* maskottikuvan leveys/korkeus, bubble ankkuroidaan sen viereen */
+  --robo-w: calc(var(--hero-h) * 0.94 * var(--robo-r));
+  height: var(--hero-h);
   overflow: hidden;
   isolation: isolate;
   background: linear-gradient(120deg, var(--h-from) 0%, var(--h-to) 100%);
@@ -2988,18 +2995,22 @@ h3 { color: #3b1080; }
   mask-image: linear-gradient(90deg, transparent 0, #000 26%);
 }
 
-/* --- Viivapiirros: sama kylläinen luokkasävy kuin muissa heroissa,
-       piirros valkoisella "paperilla", jotta musta viiva erottuu --- */
+/* --- Viivapiirros: vaalea tausta, jotta musta viiva erottuu --- */
+.osio-hero--piirros {
+  background: linear-gradient(120deg, var(--h-soft) 0%, var(--h-soft2) 100%);
+  color: var(--h-ink);
+}
+.osio-hero--piirros::before {
+  background:
+    radial-gradient(circle at 18% 130%, rgba(255, 255, 255, 0.7) 0 120px, transparent 121px),
+    radial-gradient(circle at 62% -10%, rgba(255, 255, 255, 0.5) 0 100px, transparent 101px);
+}
 .aihe-osio > .osio-hero--piirros > img {
-  right: 12%;
-  bottom: 12%;
-  height: 76% !important;
-  box-sizing: border-box;
-  padding: 8px 12px;
-  background: #fff;
-  border-radius: 14px;
+  right: 10%;
+  bottom: 8%;
+  height: 84% !important;
   object-fit: contain;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
 }
 
 /* --- Maskotti: seisoo bannerin alareunassa --- */
@@ -3032,10 +3043,11 @@ h3 { color: #3b1080; }
 /* --- Robon puhekupla bannerin vasemmassa laidassa --- */
 .aihe-osio > .osio-hero > .osio-hero__kupla {
   position: absolute;
-  left: clamp(16px, 4vw, 40px);
+  left: auto;
+  right: calc(12% + var(--robo-w) + 18px);
   top: 50%;
   transform: translateY(-50%);
-  max-width: min(46%, 380px);
+  max-width: min(calc(88% - var(--robo-w) - 18px), 380px);
   margin: 0;
   padding: 12px 18px;
   background: #eeedfe;
@@ -3059,8 +3071,9 @@ h3 { color: #3b1080; }
 }
 @media (max-width: 600px) {
   .aihe-osio > .osio-hero > .osio-hero__kupla {
-    left: 10px;
-    max-width: calc(100% - 128px);
+    left: auto;
+    right: calc(4% + var(--robo-w) + 14px);
+    max-width: calc(96% - var(--robo-w) - 24px);
     padding: 8px 12px;
     font-size: 0.78rem;
     line-height: 1.4;

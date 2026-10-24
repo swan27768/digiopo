@@ -165,23 +165,23 @@
     window.addEventListener("scroll", ajastaPaivitys, { passive: true });
 
     /* Sovita robotti sivuvalikon alapuolelle: jos tilaa ei ole, piilota ensin
-       puhekupla, sitten pienennä robotti ja viime kädessä piilota se. Mobiilissa robotti on oikeassa alakulmassa. */
+       puhekupla, sitten pienennä robotti ja viime kädessä siirrä se oikeaan alakulmaan. Mobiilissa robotti on oikeassa alakulmassa. */
     var sovitusOdottaa = false;
     function sovita() {
       sovitusOdottaa = false;
       if (!laatikko) return;
       var valikko = document.querySelector(".aihelista");
-      laatikko.classList.remove("kupla-piilossa", "pieni-robo", "ei-tilaa");
+      laatikko.classList.remove("kupla-piilossa", "pieni-robo", "oikealla");
       if (!valikko || window.innerWidth <= 900) return;
       var vb = valikko.getBoundingClientRect();
       if (vb.bottom < 0 || vb.top > window.innerHeight) return;
-      function mahtuu() { return laatikko.getBoundingClientRect().top >= vb.bottom + 8; }
+      function mahtuu() { return laatikko.getBoundingClientRect().top >= vb.bottom - 6; }
       if (mahtuu()) return;
       laatikko.classList.add("kupla-piilossa");
       if (mahtuu()) return;
       laatikko.classList.add("pieni-robo");
       if (mahtuu()) return;
-      laatikko.classList.add("ei-tilaa");
+      laatikko.classList.add("oikealla");
     }
     function ajastaSovitus() {
       if (sovitusOdottaa) return;

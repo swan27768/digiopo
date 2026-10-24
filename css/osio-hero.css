@@ -24,7 +24,10 @@
   --h-soft2: #ddd6fe;
   --h-ink: #5b21b6;
   position: relative;
-  height: clamp(150px, 25vw, 220px);
+  --hero-h: clamp(150px, 25vw, 220px);
+  --robo-r: 0.575; /* maskottikuvan leveys/korkeus, bubble ankkuroidaan sen viereen */
+  --robo-w: calc(var(--hero-h) * 0.94 * var(--robo-r));
+  height: var(--hero-h);
   overflow: hidden;
   isolation: isolate;
   background: linear-gradient(120deg, var(--h-from) 0%, var(--h-to) 100%);
@@ -64,18 +67,22 @@
   mask-image: linear-gradient(90deg, transparent 0, #000 26%);
 }
 
-/* --- Viivapiirros: sama kylläinen luokkasävy kuin muissa heroissa,
-       piirros valkoisella "paperilla", jotta musta viiva erottuu --- */
+/* --- Viivapiirros: vaalea tausta, jotta musta viiva erottuu --- */
+.osio-hero--piirros {
+  background: linear-gradient(120deg, var(--h-soft) 0%, var(--h-soft2) 100%);
+  color: var(--h-ink);
+}
+.osio-hero--piirros::before {
+  background:
+    radial-gradient(circle at 18% 130%, rgba(255, 255, 255, 0.7) 0 120px, transparent 121px),
+    radial-gradient(circle at 62% -10%, rgba(255, 255, 255, 0.5) 0 100px, transparent 101px);
+}
 .aihe-osio > .osio-hero--piirros > img {
-  right: 12%;
-  bottom: 12%;
-  height: 76% !important;
-  box-sizing: border-box;
-  padding: 8px 12px;
-  background: #fff;
-  border-radius: 14px;
+  right: 10%;
+  bottom: 8%;
+  height: 84% !important;
   object-fit: contain;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
 }
 
 /* --- Maskotti: seisoo bannerin alareunassa --- */
@@ -108,10 +115,11 @@
 /* --- Robon puhekupla bannerin vasemmassa laidassa --- */
 .aihe-osio > .osio-hero > .osio-hero__kupla {
   position: absolute;
-  left: clamp(16px, 4vw, 40px);
+  left: auto;
+  right: calc(12% + var(--robo-w) + 18px);
   top: 50%;
   transform: translateY(-50%);
-  max-width: min(46%, 380px);
+  max-width: min(calc(88% - var(--robo-w) - 18px), 380px);
   margin: 0;
   padding: 12px 18px;
   background: #eeedfe;
@@ -135,8 +143,9 @@
 }
 @media (max-width: 600px) {
   .aihe-osio > .osio-hero > .osio-hero__kupla {
-    left: 10px;
-    max-width: calc(100% - 128px);
+    left: auto;
+    right: calc(4% + var(--robo-w) + 14px);
+    max-width: calc(96% - var(--robo-w) - 24px);
     padding: 8px 12px;
     font-size: 0.78rem;
     line-height: 1.4;
