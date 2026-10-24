@@ -715,17 +715,6 @@
 
       setTxt('#paatoksenteko .aihe-otsikko p', pa.subtitle);
 
-      /* Tietopaketti */
-      (function () {
-        var infoDiv = document.querySelector('#paatoksenteko > div[style*="eff6ff"]');
-        if (!infoDiv) return;
-        var h3 = infoDiv.querySelector('h3');
-        if (h3) h3.textContent = pa.theory_h3;
-        var ps = infoDiv.querySelectorAll('p');
-        if (ps[0] && pa.theory_p1) ps[0].textContent = pa.theory_p1;
-        if (ps[1] && pa.theory_p2) ps[1].textContent = pa.theory_p2;
-      })();
-
       /* Neuvonantaja-tehtävä */
       if (pa.neuvonantaja) {
         var na = pa.neuvonantaja;
@@ -748,45 +737,6 @@
               var icon = btnSpan.querySelector('i');
               btnSpan.textContent = na.btn_open;
               if (icon) btnSpan.insertBefore(icon, btnSpan.firstChild);
-            }
-          }
-          /* Phase 1 */
-          var sisalto = document.getElementById('neuvonantajaSisalto2');
-          if (sisalto) {
-            var phase1 = sisalto.querySelector('div:first-child');
-            if (phase1) {
-              var p1badge = phase1.querySelector('p[style*="0.78rem"]');
-              if (p1badge) p1badge.textContent = na.phase1_badge;
-              var p1h4 = phase1.querySelector('h4');
-              if (p1h4) p1h4.textContent = na.phase1_h4;
-              var p1p = phase1.querySelector('p:not([style*="0.78rem"])');
-              if (p1p) p1p.textContent = na.phase1_p;
-              /* Decision tool cards */
-              if (na.tool) {
-                var toolCards = phase1.querySelectorAll('div[style*="eff6ff"][style*="border-radius:10px"]');
-                for (var i = 0; i < toolCards.length && i < na.tool.length; i++) {
-                  var strong = toolCards[i].querySelector('strong');
-                  var desc = toolCards[i].querySelector('p');
-                  if (strong) strong.textContent = na.tool[i].title;
-                  if (desc) desc.textContent = na.tool[i].desc;
-                }
-              }
-            }
-            /* Phase 2 */
-            var phase2 = sisalto.querySelectorAll('div[style*="border:1.5px"]')[1];
-            if (phase2) {
-              var p2badge = phase2.querySelector('p[style*="0.78rem"]');
-              if (p2badge) p2badge.textContent = na.phase2_badge;
-              var p2h4 = phase2.querySelector('h4');
-              if (p2h4) p2h4.textContent = na.phase2_h4;
-            }
-            /* Phase 3 */
-            var phase3 = sisalto.querySelectorAll('div[style*="border:1.5px"]')[2];
-            if (phase3) {
-              var p3badge = phase3.querySelector('p[style*="0.78rem"]');
-              if (p3badge) p3badge.textContent = na.phase3_badge;
-              var p3h4 = phase3.querySelector('h4');
-              if (p3h4) p3h4.textContent = na.phase3_h4;
             }
           }
         }

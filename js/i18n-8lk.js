@@ -283,61 +283,6 @@
       if (tulTheory[0] && tul.p1) tulTheory[0].innerHTML = tul.p1;
       if (tulTheory[1] && tul.p2) tulTheory[1].textContent = tul.p2;
 
-      /* Tehtävä 1: Rakenna huomisen koulu */
-      /* Avaa-nappi */
-      var task1Btn = document.getElementById('tulevaisuus8-btn');
-      if (task1Btn) {
-        var t1BtnSpan = task1Btn.querySelector('span:first-child');
-        if (t1BtnSpan && tul.task1_btn_open) t1BtnSpan.textContent = tul.task1_btn_open;
-      }
-
-      /* Ryhmä jumissa */
-      var varaSisalto = document.querySelector('#vara-sisalto');
-      var stuckToggle = varaSisalto ? varaSisalto.previousElementSibling : null;
-      if (stuckToggle) {
-        var stuckSpan = stuckToggle.querySelector('span > span:last-child');
-        // Riisu mahdollinen vanha emoji käännöksen alusta (selaimen välimuisti
-        // voi tarjota vanhaa 🤫-versiota — ikoni on jo erillisessä spanissa).
-        if (stuckSpan && tul.stuck_toggle) stuckSpan.textContent = tul.stuck_toggle.replace(/^[\s🤫🛟]+/, '');
-      }
-      var stuckIntroP = document.querySelector('#vara-sisalto > p');
-      if (stuckIntroP && tul.stuck_intro) stuckIntroP.textContent = tul.stuck_intro;
-
-      /* Mission 1 */
-      var m1Card = document.getElementById('tulevaisuus-mission');
-      if (m1Card) {
-        var m1H4 = m1Card.querySelector('h4');
-        var m1Badge = m1Card.querySelector('.mission-badge');
-        var m1P = m1Card.querySelector('p:not(.mission-hint)');
-        var m1Lis = m1Card.querySelectorAll('li');
-        var m1Hint = m1Card.querySelector('.mission-hint');
-        if (m1H4    && tul.mission1_heading) m1H4.textContent    = tul.mission1_heading;
-        if (m1Badge && tul.mission1_badge)   m1Badge.textContent = tul.mission1_badge;
-        if (m1P     && tul.mission1_p)       m1P.textContent     = tul.mission1_p;
-        if (m1Lis[0] && tul.mission1_li1)    m1Lis[0].textContent = tul.mission1_li1;
-        if (m1Lis[1] && tul.mission1_li2)    m1Lis[1].textContent = tul.mission1_li2;
-        if (m1Lis[2] && tul.mission1_li3)    m1Lis[2].textContent = tul.mission1_li3;
-        if (m1Hint  && tul.mission1_hint)    m1Hint.textContent  = tul.mission1_hint;
-      }
-
-      /* Tehtävä 2: Tulevaisuuden työpaikka */
-      var task2H3 = document.getElementById('otsikko-tyopaikka');
-      if (task2H3 && tul.task2_heading) task2H3.textContent = tul.task2_heading;
-      var task2Btn = document.getElementById('tyopaikka8-btn');
-      if (task2Btn) {
-        var t2Span = task2Btn.querySelector('span:first-child');
-        if (t2Span && tul.task2_btn_open) t2Span.textContent = tul.task2_btn_open;
-      }
-
-      /* Onnenpyörä - vaihe 1 */
-      var spinBtn = document.getElementById('tp-pyora-btn');
-      if (spinBtn && tul.spinner_btn) spinBtn.textContent = tul.spinner_btn;
-
-      /* Päivitä spinner-kysymykset JS-muuttujaan */
-      if (tul.spinner_questions && tul.spinner_questions.length) {
-        window.tpKysymykset = tul.spinner_questions;
-      }
-
       /* Mission 2 */
       var m2Card = document.getElementById('tulevaisuus2-mission');
       if (m2Card) {
@@ -456,24 +401,6 @@
     setTxt('#tutkija-alue .ala-karuselli-otsikko', tj.heading);
     var subtitleEl = document.querySelector('#tutkija-alue > p');
     if (subtitleEl && tj.subtitle) subtitleEl.textContent = tj.subtitle;
-
-    /* Opettajan ohje -nappi */
-    var teacherBtn = document.querySelector('button[aria-controls="opettaja-ohje-sisalto"]');
-    if (teacherBtn && tj.teacher_btn) {
-      var span = teacherBtn.querySelector('span');
-      teacherBtn.textContent = ' ' + tj.teacher_btn;
-      if (span) teacherBtn.insertBefore(span, teacherBtn.firstChild);
-    }
-    /* Opettajan ohje -sisältö */
-    var teacherBox = document.getElementById('opettaja-ohje-sisalto');
-    if (teacherBox && tj.teacher_p1) {
-      var ps = teacherBox.querySelectorAll('p');
-      var lis = teacherBox.querySelectorAll('li');
-      if (ps[0] && tj.teacher_p1) ps[0].textContent = tj.teacher_p1;
-      if (lis[0] && tj.teacher_amis) lis[0].innerHTML = '<strong>Amispolku</strong> — ' + tj.teacher_amis;
-      if (lis[1] && tj.teacher_lukio) lis[1].innerHTML = '<strong>Lukiopolku</strong> — ' + tj.teacher_lukio;
-      if (ps[1] && tj.teacher_p2) ps[1].textContent = tj.teacher_p2;
-    }
 
     /* Välilehdet */
     var tabAmis  = document.getElementById('tab-amis');
@@ -609,39 +536,6 @@
           var kaSpan = kuittaaA.querySelector('span');
           kuittaaA.textContent = ' ' + tj.v2a_kuittaa;
           if (kaSpan) kuittaaA.insertBefore(kaSpan, kuittaaA.firstChild);
-        }
-      }
-
-      /* ── Vaihe 2 OSA B ── */
-      var osaB = document.getElementById('amis-osa-b');
-      if (osaB) {
-        /* OSA B label */
-        var osaBLabel = osaB.querySelector('.amis-v2-label');
-        if (osaBLabel && tj.v2b_label) osaBLabel.textContent = tj.v2b_label;
-
-        /* Reveal-nappi */
-        var revealOtsikko = osaB.querySelector('.amis-reveal-otsikko');
-        if (revealOtsikko && tj.v2b_reveal_otsikko) revealOtsikko.textContent = tj.v2b_reveal_otsikko;
-        var revealKuvaus = osaB.querySelector('.amis-reveal-kuvaus');
-        if (revealKuvaus && tj.v2b_reveal_kuvaus) revealKuvaus.textContent = tj.v2b_reveal_kuvaus;
-
-        /* Tarina-tabit */
-        var tarinaTabit = osaB.querySelectorAll('.tj-tarina-nappi');
-        var tarinaLabels = [
-          tj.v2b_tab_lahihoitaja, tj.v2b_tab_kokki,    tj.v2b_tab_datanomi,
-          tj.v2b_tab_asentaja,    tj.v2b_tab_ymparistonhoitaja, tj.v2b_tab_artesaani,
-          tj.v2b_tab_myynti,      tj.v2b_tab_liikunta
-        ];
-        for (var ti = 0; ti < tarinaTabit.length && ti < tarinaLabels.length; ti++) {
-          if (tarinaLabels[ti]) tarinaTabit[ti].textContent = tarinaLabels[ti];
-        }
-
-        /* Kuittaa B */
-        var kuittaaB = document.getElementById('kuittaa-b');
-        if (kuittaaB && tj.v2b_kuittaa && !kuittaaB.classList.contains('kuitattu')) {
-          var kbSpan = kuittaaB.querySelector('span');
-          kuittaaB.textContent = ' ' + tj.v2b_kuittaa;
-          if (kbSpan) kuittaaB.insertBefore(kbSpan, kuittaaB.firstChild);
         }
       }
 
