@@ -128,6 +128,32 @@
         if (slideNames[s]) slideNimiEls[s].textContent = slideNames[s];
       }
 
+      /* Pelaa ja testaa -väliotsikko ja AmmattiSet-kortti */
+      setTxt('[data-kaannos~="pelaa-otsikko"]', kou.pelaa_otsikko);
+      var asetCard = document.querySelector('[data-kaannos~="ammattiset"]');
+      if (asetCard) {
+        var asetH3 = asetCard.querySelector('h3');
+        var asetP = asetCard.querySelector('p');
+        var asetBtn = asetCard.querySelector('button.btn-hero');
+        var asetBadge = asetCard.querySelector('.hero-badge');
+        if (asetH3 && kou.alaset_heading) asetaOtsikko(asetH3, kou.alaset_heading);
+        if (asetP && kou.alaset_desc) asetP.textContent = kou.alaset_desc;
+        if (asetBtn && kou.alaset_btn) asetBtn.textContent = kou.alaset_btn;
+        if (asetBadge && kou.alaset_badge) {
+          /* vaihdetaan vain tekstisolmu, jotta ikoni ja muut lapsielementit säilyvät */
+          var asetTeksti = null;
+          asetBadge.childNodes.forEach(function (n) {
+            if (n.nodeType === 3 && n.nodeValue.trim()) asetTeksti = n;
+          });
+          if (asetTeksti) asetTeksti.nodeValue = ' ' + kou.alaset_badge + ' ';
+        }
+      }
+
+      /* Väliotsikko: Maailma tarvitsee tekijöitä */
+      setTxt('[data-kaannos~="maailma-valiotsikko"]', kou.maailma_valiotsikko);
+      setTxt('[data-kaannos~="maailma-valiteksti-1"]', kou.maailma_valiteksti1);
+      setTxt('[data-kaannos~="maailma-valiteksti-2"]', kou.maailma_valiteksti2);
+
       /* Maailma tarvitsee sinua */
       var maailmaCard = document.getElementById('koulutus-mission');
       if (maailmaCard) {
