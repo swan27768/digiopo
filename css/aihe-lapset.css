@@ -1,0 +1,79 @@
+/* ============================================================
+   AIHE-LAPSET — .aihe-osio-säiliön suorien lasten reunus- ja sisennyssäännöt
+   Siirretty tiedostosta aihe.css, jotta ne ovat kerroksessa "komponentit"
+   (sivukohtaisten <style>-lohkojen yläpuolella) niin kuin ne aiemmin
+   voittivat tarkkuudellaan (specificity).
+   ============================================================ */
+
+.aihe-osio > *:first-child {
+  padding-top: 24px;
+}
+.aihe-osio > *:last-child {
+  padding-bottom: 28px;
+}
+
+/* Poikkeukset: elementit jotka saavat oman paddinginsa */
+.aihe-osio > .theory-card,
+.aihe-osio > .tasks-section,
+.aihe-osio > .mission-section,
+.aihe-osio > .ala-karuselli-wrapper,
+.aihe-osio > .interactive-hero,
+.aihe-osio > div[style] {
+  margin-left: 28px;
+  margin-right: 28px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* mission-card: marginit mutta säilytetään oma padding */
+.aihe-osio > .mission-card {
+  margin-left: 28px;
+  margin-right: 28px;
+}
+
+/* Hero-kortti johdannossa — reunasta reunaan */
+#johdanto > div[style] {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Yhtenäinen leveys tasks-sectionin kanssa
+   + nollataan aihe-osio > * automaattinen padding */
+.aihe-osio > .theory-card,
+.aihe-osio > .tasks-section {
+  box-sizing: border-box;
+  width: calc(100% - 56px);
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 18px;   /* ← ei nolla, vaan cardin oma padding */
+  padding-right: 18px;  /* ← sama */
+}
+@media (max-width: 768px) {
+
+  .aihe-osio > .theory-card,
+  .aihe-osio > .tasks-section,
+  .aihe-osio > .mission-section,
+  .aihe-osio > .ala-karuselli-wrapper,
+  .aihe-osio > .interactive-hero,
+  .aihe-osio > div[style] {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .aihe-osio > .mission-card {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  /* Hero-kortti johdannossa — reunasta reunaan myös mobiilissa */
+  #johdanto > div[style] {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Korjattu leveys: 2 × 16 px marginaali = 32 px */
+  .aihe-osio > .theory-card,
+  .aihe-osio > .tasks-section {
+    width: calc(100% - 32px);
+  }
+}

@@ -47,7 +47,17 @@ for (const sivu of SIVUT) {
     if (!href || /^https?:/.test(href)) continue;
     const tiedosto = href.startsWith("/") ? join(JUURI, href) : join(JUURI, "sivut", href);
     if (!existsSync(tiedosto)) continue;
-    paikat.set(href.replace(/^\.\.\//, ""), luokatCssSta(readFileSync(tiedosto, "utf8")));
+    const css = readFileSync(tiedosto, "utf8");
+    // Seurataan @import url("x.css") -tuonteja (esim. css/kerrokset-Nlk.css), jotta kerroksiin siirretyt tiedostot tarkistetaan edelleen
+    const tuonnit = [...css.matchAll(/@import\s+url\(["']?([^"')]+)["']?\)/gi)].map((m) => m[1]).filter((u) => !/^https?:|^\//.test(u));
+    if (tuonnit.length) {
+      for (const u of tuonnit) {
+        const t = join(dirname(tiedosto), u);
+        if (existsSync(t)) paikat.set("css/" + u, luokatCssSta(readFileSync(t, "utf8")));
+      }
+    } else {
+      paikat.set(href.replace(/^\.\.\//, ""), luokatCssSta(css));
+    }
   }
   let n = 0;
   for (const m of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) {
