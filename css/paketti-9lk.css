@@ -1454,8 +1454,7 @@ input:focus-visible,
 
 /* Robotti seisoo näkymän vasemmassa alakulmassa sivuvalikon alapuolella,
    jotta se ei peitä valikon tekstiä. Jos valikko on niin pitkä, ettei tilaa
-   jää, js/maskotti-tunne.js piilottaa ensin puhekuplan (.kupla-piilossa)
-   ja viime kädessä koko robotin (.ei-tilaa). */
+   jää, js/maskotti-tunne.js nostaa robotin ylemmäs (.ylos). */
 .maskotti-laatikko {
   position: fixed;
   bottom: 16px;
@@ -1488,9 +1487,9 @@ input:focus-visible,
 }
 
 .maskotti-laatikko.kupla-piilossa .puhekupla { display: none; }
-/* Kun vasemmassa reunassa ei ole tilaa (pitkä valikko), pieni robotti siirtyy
-   oikeaan alakulmaan eikä katoa näkyvistä. */
-.maskotti-laatikko.oikealla { left: auto; right: 16px; }
+/* Pitkä valikko (esim. 9. luokka): robotti nostetaan ylemmäs valikon päälle,
+   jotta se pysyy näkyvissä. */
+.maskotti-laatikko.ylos { bottom: 96px; }
 .maskotti-laatikko.pieni-robo .maskotti { width: 60px; }
 
 /* --- Maskotti-kuva ----------------------------------------- */
