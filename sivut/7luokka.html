@@ -1907,6 +1907,7 @@
 
       /* ── Maskotti ── */
       function setupMaskotti() {
+        window.maskottiOsioKuplat = true; /* osiokohtaiset kuplat ohittavat yleiset (maskotti-tunne.js) */
         if (window.innerWidth <= 768) return;
 
         const maskotti = document.querySelector(".maskotti-laatikko");
@@ -1924,7 +1925,7 @@
           "mina-oppijana":  { teksti: "Ei aina jaksa – mistä se johtuu?",             ilme: "miettiva" },
           "omat-vahvuudet": { teksti: "Missä jutussa sä oot hyvä – ihan oikeesti?",    ilme: "kannustaa" },
           tulevaisuus:      { teksti: "Uskalla unelmoida isosti – kaikki suuri alkaa haaveesta!", ilme: "kannustaa" },
-          "koulun-jalkeen": { teksti: "Löydä kivaa tekemistä koulun jälkeen",         ilme: "" },
+          "koulun-jalkeen": { teksti: null, ilme: "" }, // ei puhekuplaa: robotti piiloon
         };
 
         const maskottiKuva = maskotti.querySelector(".maskotti");
@@ -1969,16 +1970,23 @@
             return;
           }
 
+          /* Aktiivinen osio = viimeinen, jonka yläreuna on ohittanut kynnyksen.
+             (Aiemmin valittiin ensimmäinen vielä näkyvissä oleva osio, jolloin
+             kupla jäi aina edellisen osion tekstiin.) */
+          let aktiivinen = null;
           for (const osio of osiot) {
-            const rect = osio.getBoundingClientRect();
-            if (rect.top < kynnys && rect.bottom > 0) {
-              const tiedot = osioTiedot[osio.id];
-              if (tiedot && viimeisin !== osio.id) {
-                viimeisin = osio.id;
-                naytaMaskotti(tiedot.teksti, tiedot.ilme);
-              }
-              break;
-            }
+            if (osio.getBoundingClientRect().top < kynnys) aktiivinen = osio;
+          }
+          if (!aktiivinen) return;
+          const tiedot = osioTiedot[aktiivinen.id];
+          if (!tiedot || viimeisin === aktiivinen.id) return;
+          viimeisin = aktiivinen.id;
+          if (tiedot.teksti === null) {
+            clearTimeout(piilotusAjastin);
+            maskotti.classList.remove("nakyvissa");
+            maskotti.classList.add("piilossa");
+          } else {
+            naytaMaskotti(tiedot.teksti, tiedot.ilme);
           }
         }
 

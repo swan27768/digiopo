@@ -96,6 +96,7 @@
 
   function naytaKupla(konteksti, el) {
     if (!suomeksi() || !laatikko || !kupla) return;
+    if (window.maskottiOsioKuplat) return; // sivulla on omat osiokohtaiset kuplat
     if (laatikko.classList.contains("nakyvissa")) return; // toinen kupla on jo näkyvissä
     var nyt = Date.now();
     if (nyt - viimeKupla < 8000 || esitelty.has(el) || window.scrollY < 80) return;
