@@ -372,3 +372,53 @@
 .ala-osio > .aihe-otsikko h3 {
   color: var(--osio-accent-dk);
 }
+
+/* Ala-osion otsikkopalkki: sama ilme kuin osion hero-kuvassa (luokkavärin liukuväri,
+   pehmeät ympyrät), leveys reunasta reunaan samoin kuin kortit, teksti vasemmalla
+   samassa reunassa kuin korttien sisältö. */
+.ala-osio--otsikkopalkki {
+  margin-top: 2rem;
+  padding-top: 0;
+  border-top: 0;
+}
+.aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 0 -28px 22px;
+  padding: 26px 28px 24px;
+  text-align: start;
+  color: #fff;
+  background: linear-gradient(120deg, var(--osio-accent-dk) 0%, var(--osio-accent) 100%);
+  border-bottom: 0 !important;
+}
+.aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 92% 140%, rgba(255, 255, 255, 0.22) 0 110px, transparent 111px),
+    radial-gradient(circle at 70% -30%, rgba(255, 255, 255, 0.14) 0 90px, transparent 91px);
+}
+.aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko h3 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  text-align: start;
+  color: #fff;
+}
+.aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko p {
+  margin: 0;
+  text-align: start;
+  color: rgba(255, 255, 255, 0.88);
+}
+@media (max-width: 768px) {
+  .aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko {
+    margin: 0 -16px 18px;
+    padding: 20px 16px 18px;
+  }
+  .aihe-osio > .ala-osio--otsikkopalkki > .aihe-otsikko h3 {
+    font-size: 1.3rem;
+  }
+}
