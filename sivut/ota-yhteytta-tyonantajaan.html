@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ota yhteyttä työnantajaan</title>
+<style>
+  :root{
+    --bg:#f0fdfa; --card:#ffffff; --line:#99e1cb; --text:#0f2e2a; --muted:#475569;
+    --accent:#0f766e; --accent2:#0d9488; --soft:#ecfdf5;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:16px; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#f0fdfa 0%,#ffffff 70%);
+    color:var(--text); line-height:1.55;
+  }
+  .wrap{max-width:720px; margin:0 auto}
+  header{text-align:center; padding:14px 8px 6px}
+  h1{font-size:1.6rem; margin:0 0 6px; color:var(--accent)}
+  header p{margin:0 auto; max-width:34em; color:var(--muted)}
+  .kortti{
+    background:var(--card); border:1.5px solid var(--line); border-radius:16px;
+    padding:20px; margin:16px 0; box-shadow:0 6px 20px rgba(15,118,110,.08);
+  }
+  .kortti h2{font-size:1.05rem; margin:0 0 4px; color:#0f5147}
+  .kortti .vihje{margin:0 0 14px; font-size:.9rem; color:var(--muted)}
+  .kentta{margin:0 0 14px}
+  .kentta label{display:block; font-weight:700; font-size:.92rem; margin-bottom:5px}
+  .kentta input,.kentta textarea{
+    width:100%; padding:11px 13px; font-size:1rem; font-family:inherit; color:var(--text);
+    background:#fff; border:1.5px solid var(--line); border-radius:10px;
+  }
+  .kentta input:focus,.kentta textarea:focus{outline:2px solid var(--accent2); outline-offset:1px; border-color:var(--accent2)}
+  .kentta textarea{min-height:90px; resize:vertical}
+  .viesti-otsikko{font-size:.9rem; font-weight:700; color:#0f5147; margin:0 0 8px}
+  #pohja{
+    background:#fff; border:1.5px solid var(--line); border-radius:12px;
+    padding:18px; font-size:.95rem; line-height:1.8; white-space:pre-wrap; min-height:160px;
+  }
+  .toiminnot{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px}
+  .btn{
+    border:none; cursor:pointer; color:#fff; font-weight:800; font-size:.95rem;
+    padding:11px 20px; border-radius:10px; font-family:inherit;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+  }
+  .btn:focus-visible{outline:3px solid #134e4a; outline-offset:2px}
+  #kopioitu{font-size:.88rem; color:var(--accent); display:none; font-weight:700}
+  .seuraavaksi{background:var(--soft); border:1.5px solid var(--line); border-radius:12px; padding:14px 16px; font-size:.92rem; color:#0f5147}
+  .seuraavaksi strong.otsikko{display:block; margin-bottom:8px}
+  .seuraavaksi ol{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px}
+  .seuraavaksi .lisa{margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.86rem; color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ota yhteyttä työnantajaan</h1>
+    <p>Harjoittele TET-paikan hakemista. Täytä tiedot – saat valmiin viestin, jonka voit lähettää tai muokata.</p>
+  </header>
+
+  <section class="kortti" aria-labelledby="tiedot-otsikko">
+    <h2 id="tiedot-otsikko">Täytä tiedot – luodaan viesti sinulle</h2>
+    <p class="vihje">Voit käyttää oikeaa TET-paikkaa tai keksittyä. Tärkeintä on harjoitella!</p>
+
+    <div class="kentta">
+      <label for="haku-nimi">Etunimesi</label>
+      <input id="haku-nimi" type="text" placeholder="esim. Emmi" autocomplete="off">
+    </div>
+    <div class="kentta">
+      <label for="haku-paikka">Minne haluat TET:iin? (yritys tai paikka)</label>
+      <input id="haku-paikka" type="text" placeholder="esim. kirjasto, eläinlääkäri, rakennusliike..." autocomplete="off">
+    </div>
+    <div class="kentta">
+      <label for="haku-miksi">Miksi juuri tämä paikka kiinnostaa sinua?</label>
+      <textarea id="haku-miksi" placeholder="esim. Olen aina pitänyt eläimistä ja haluaisin nähdä, miltä eläinlääkärin työ oikeasti näyttää."></textarea>
+    </div>
+    <div class="kentta">
+      <label for="haku-aika">TET-ajankohta (viikko tai kuukausi)</label>
+      <input id="haku-aika" type="text" placeholder="esim. viikolla 6 tai helmikuussa" autocomplete="off">
+    </div>
+  </section>
+
+  <section class="kortti" aria-labelledby="viesti-otsikko">
+    <h2 id="viesti-otsikko" class="viesti-otsikko">Valmis viesti</h2>
+    <div id="pohja" aria-live="polite"></div>
+    <div class="toiminnot">
+      <button type="button" class="btn" id="kopioi">Kopioi viesti</button>
+      <span id="kopioitu" role="status">Kopioitu!</span>
+    </div>
+  </section>
+
+  <section class="seuraavaksi" aria-labelledby="seur-otsikko">
+    <strong class="otsikko" id="seur-otsikko">Mitä seuraavaksi?</strong>
+    <ol>
+      <li><strong>Kopioi viesti</strong> yllä olevasta napista</li>
+      <li><strong>Etsi työnantajan sähköpostiosoite</strong> yrityksen nettisivuilta tai Google Maps -profiilista</li>
+      <li><strong>Avaa sähköposti</strong> (esim. koulun Gmail) ja liitä viesti siihen – tarkista ennen lähetystä</li>
+      <li><strong>Lähetä</strong> – ja odota vastausta muutama päivä</li>
+    </ol>
+    <div class="lisa">Ei sähköpostia? Voit soittaa tai käydä paikan päällä – kerro sama asia puhelimessa.</div>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var pohja = $("pohja");
+  var tyhja = false;
+
+  function arvo(id, oletus) {
+    var v = $(id).value.trim();
+    if (!v) return oletus;
+    return v;
+  }
+
+  function paivita() {
+    var nimi = arvo("haku-nimi", "[etunimesi]");
+    var paikka = arvo("haku-paikka", "[TET-paikka]");
+    var miksi = arvo("haku-miksi", "[Kerro lyhyesti, miksi juuri tämä paikka kiinnostaa sinua.]");
+    var aika = arvo("haku-aika", "[ajankohta]");
+    pohja.textContent =
+      "Hei!\n\n" +
+      "Nimeni on " + nimi + " ja olen 9-luokkalainen.\n\n" +
+      "Olen kiinnostunut suorittamaan TET-harjoittelun " + paikka + ":ssä. " + miksi + "\n\n" +
+      "TET-jaksoni ajoittuu " + aika + ". Onko teillä mahdollisuus ottaa TET-harjoittelija silloin?\n\n" +
+      "Ystävällisin terveisin,\n" + nimi;
+  }
+
+  function nayta() {
+    var k = $("kopioitu");
+    k.style.display = "inline";
+    setTimeout(function () { k.style.display = "none"; }, 2000);
+  }
+
+  function kopioi() {
+    var teksti = pohja.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(teksti).then(nayta, vara);
+    } else {
+      vara();
+    }
+    function vara() {
+      var ta = document.createElement("textarea");
+      ta.value = teksti;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { if (document.execCommand("copy")) nayta(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+
+  ["haku-nimi", "haku-paikka", "haku-miksi", "haku-aika"].forEach(function (id) {
+    $(id).addEventListener("input", paivita);
+  });
+  $("kopioi").addEventListener("click", kopioi);
+  paivita();
+})();
+</script>
+</body>
+</html>

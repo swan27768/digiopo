@@ -1118,75 +1118,22 @@
             </div>
           </div>
 
-          <!-- Hakuharjoitus – lomake (piilotettu) -->
-          <div id="haku-wrapper" style="display: none; margin-top: 8px; margin-bottom:16px;">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-              <button type="button"
-                onclick="toggleHaku(document.querySelector('[aria-controls=haku-wrapper]'))"
-                style="background:#0f766e; color:white; border:none; padding:8px 18px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;"
-              >
-                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Sulje tehtävä
+          <!-- Hakuharjoitus – iframe (piilossa ennen klikkausta) -->
+          <div id="haku-wrapper" style="display: none; margin-top: 8px; margin-bottom: 16px;">
+            <div class="tetjakso-sulje-rivi">
+              <button type="button" class="tetjakso-sulje-btn" onclick="toggleHaku(document.querySelector('[aria-controls=haku-wrapper]'))">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                Sulje tehtävä
               </button>
             </div>
-
-            <div style="background:#f0fdfa; border:1.5px solid #99e1cb; border-radius:14px; padding:24px;">
-              <h4 style="margin:0 0 6px; color:#0f5147; font-size:1rem;">Täytä tiedot — luodaan viesti sinulle</h4>
-              <p style="font-size:0.85rem; color:#374151; margin:0 0 20px;">Voit käyttää oikeaa TET-paikkaa tai keksittyä. Tärkeintä on harjoitella!</p>
-
-              <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
-                <div>
-                  <label class="is9-049" for="haku-nimi">Etunimesi</label>
-                  <input id="haku-nimi" type="text" placeholder="esim. Emmi"
-                    style="width:100%; padding:10px 14px; border:1.5px solid #99e1cb; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-                <div>
-                  <label class="is9-049" for="haku-paikka">Minne haluat TET:iin? (yritys tai paikka)</label>
-                  <input id="haku-paikka" type="text" placeholder="esim. kirjasto, eläinlääkäri, rakennusliike..."
-                    style="width:100%; padding:10px 14px; border:1.5px solid #99e1cb; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-                <div>
-                  <label class="is9-049" for="haku-miksi">Miksi juuri tämä paikka kiinnostaa sinua?</label>
-                  <textarea id="haku-miksi" placeholder="esim. Olen aina pitänyt eläimistä ja haluaisin nähdä, miltä eläinlääkärin työ oikeasti näyttää."
-                    style="width:100%; min-height:80px; padding:10px 14px; border:1.5px solid #99e1cb; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none; resize:vertical;"
-                    oninput="paivitaHakuPohja()"></textarea>
-                </div>
-                <div>
-                  <label class="is9-049" for="haku-aika">TET-ajankohta (viikko tai kuukausi)</label>
-                  <input id="haku-aika" type="text" placeholder="esim. viikolla 6 tai helmikuussa"
-                    style="width:100%; padding:10px 14px; border:1.5px solid #99e1cb; border-radius:9px; font-size:0.9rem; font-family:inherit; box-sizing:border-box; outline:none;"
-                    oninput="paivitaHakuPohja()" />
-                </div>
-              </div>
-
-              <div>
-                <div style="font-size:0.82rem; font-weight:700; color:#0f5147; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                  <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Valmis viesti:
-                </div>
-                <div id="haku-pohja" style="background:#fff; border:1.5px solid #99e1cb; border-radius:10px; padding:18px; font-size:0.88rem; line-height:1.8; color:#1f2937; white-space:pre-wrap; font-family:inherit; min-height:160px;">Täytä tiedot yllä niin viesti ilmestyy tähän.</div>
-              </div>
-
-              <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; align-items:center;">
-                <button type="button" onclick="kopioiHakuViesti()" style="background:linear-gradient(135deg,#0f766e,#0d9488); color:#fff; border:none; padding:10px 20px; border-radius:10px; font-size:0.9rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                  <i class="fa-solid fa-copy" aria-hidden="true"></i> Kopioi viesti
-                </button>
-                <span id="haku-kopioitu" style="font-size:0.82rem; color:#0f766e; display:none;">✓ Kopioitu!</span>
-              </div>
-
-              <div style="margin-top:16px; background:#ecfdf5; border:1.5px solid #99e1cb; border-radius:10px; padding:14px 16px; font-size:0.85rem; color:#0f5147;">
-                <div style="font-weight:700; margin-bottom:10px;">Mitä seuraavaksi?</div>
-                <ol style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; line-height:1.6;">
-                  <li><strong>Kopioi viesti</strong> yllä olevasta napista</li>
-                  <li><strong>Etsi työnantajan sähköpostiosoite</strong> yrityksen nettisivuilta tai Google Maps -profiilista</li>
-                  <li><strong>Avaa sähköposti</strong> (esim. koulun Gmail) ja liitä viesti siihen — tarkista ennen lähetystä</li>
-                  <li><strong>Lähetä</strong> — ja odota vastausta muutama päivä</li>
-                </ol>
-                <div style="margin-top:10px; padding-top:10px; border-top:1px solid #99e1cb; font-size:0.8rem; color:#0f766e;">
-                  Ei sähköpostia? Voit soittaa tai käydä paikan päällä — kerro sama asia puhelimessa.
-                </div>
-              </div>
-            </div>
+            <iframe class="is9-022"
+              id="hakuFrame"
+              width="100%"
+              height="1100px"
+              sandbox="allow-scripts allow-same-origin allow-forms"
+              title="Ota yhteyttä työnantajaan -tehtävä"
+              loading="lazy"
+            ></iframe>
           </div>
 
           <!-- Jatkumo-liitin: yhteys luotu, paikka ehkä löytyi -> valmistaudu työhön -->
@@ -3797,36 +3744,17 @@
       /* ── Ota yhteyttä työnantajaan – hakuharjoitus ── */
       function toggleHaku(btn) {
         var wrapper = document.getElementById('haku-wrapper');
+        var frame = document.getElementById('hakuFrame');
         var open = wrapper.style.display === 'block';
         wrapper.style.display = open ? 'none' : 'block';
         btn.textContent = open ? 'Avaa tehtävä' : 'Sulje tehtävä';
         btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-        if (!open) { paivitaHakuPohja(); wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-      }
-
-      function paivitaHakuPohja() {
-        var nimi   = (document.getElementById('haku-nimi')  && document.getElementById('haku-nimi').value.trim())   || '[etunimesi]';
-        var paikka = (document.getElementById('haku-paikka') && document.getElementById('haku-paikka').value.trim()) || '[TET-paikka]';
-        var miksi  = (document.getElementById('haku-miksi') && document.getElementById('haku-miksi').value.trim())  || '[Kerro lyhyesti, miksi juuri tämä paikka kiinnostaa sinua.]';
-        var aika   = (document.getElementById('haku-aika')  && document.getElementById('haku-aika').value.trim())   || '[ajankohta]';
-        var pohja  = document.getElementById('haku-pohja');
-        if (!pohja) return;
-        pohja.textContent =
-          'Hei!\n\n' +
-          'Nimeni on ' + nimi + ' ja olen 9-luokkalainen.\n\n' +
-          'Olen kiinnostunut suorittamaan TET-harjoittelun ' + paikka + ':ssä. ' + miksi + '\n\n' +
-          'TET-jaksoni ajoittuu ' + aika + '. Onko teillä mahdollisuus ottaa TET-harjoittelija silloin?\n\n' +
-          'Ystävällisin terveisin,\n' + nimi;
-      }
-
-      function kopioiHakuViesti() {
-        var pohja = document.getElementById('haku-pohja');
-        if (!pohja || !pohja.textContent || pohja.textContent.indexOf('[') === 0) return;
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(pohja.textContent).then(function() {
-            var k = document.getElementById('haku-kopioitu');
-            if (k) { k.style.display = 'inline'; setTimeout(function(){ k.style.display = 'none'; }, 2000); }
-          });
+        if (!open) {
+          if (!frame.getAttribute('src')) frame.src = '../sivut/ota-yhteytta-tyonantajaan.html';
+          wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          var hero = document.getElementById('tet-yhteydenotto-hero');
+          if (hero) hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }
 
