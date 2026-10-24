@@ -5,8 +5,8 @@
  * teeman mukaan ([data-teema]). Oppilas valitsee kysymyksistä 1–2 tai kaikki,
  * kirjoittaa lyhyet vastaukset ja lataa merkinnän PDF:nä omaan Drive-kansioonsa.
  *
- * Ei palvelintallennusta. Nimi ja luokka muistetaan vain laitteelle ja
- * synkataan kaikkien saman sivun päiväkirjojen välillä (kirjoita kerran).
+ * Ei palvelintallennusta. Nimeä ja luokkaa ei kysytä: PDF nimetään päivämäärän
+ * ja teeman mukaan.
  */
 (function () {
   'use strict';
@@ -125,14 +125,7 @@
       .replace(/[^A-Za-z0-9ÅÄÖåäö._-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
   }
   function esc(s) { return (s == null ? '' : String(s)); }
-  function muista(avain, arvo) { try { localStorage.setItem(avain, arvo); } catch (e) {} }
-  function palauta(avain) { try { return localStorage.getItem(avain) || ''; } catch (e) { return ''; } }
 
-  /* ── Nimen/luokan synkkaus kaikkien instanssien välillä ─────────────── */
-  var nimiKentat = [], luokkaKentat = [];
-  function paivitaKaikki(kentat, val) {
-    for (var i = 0; i < kentat.length; i++) { if (kentat[i].value !== val) kentat[i].value = val; }
-  }
 
   /* ── PDF ────────────────────────────────────────────────────────────── */
   function lataaJsPDF(cb) {
@@ -162,7 +155,7 @@
       doc.setFont('helvetica', 'bold'); doc.text(label, M, y);
       doc.setFont('helvetica', 'normal'); doc.text(esc(val), M + 96, y); y += 18;
     }
-    meta('Nimi:', t.nimi); meta('Luokka:', t.luokka); meta('Päivämäärä:', t.pvmFI); meta('Teema:', t.teema);
+    meta('Päivämäärä:', t.pvmFI); meta('Teema:', t.teema);
     y += 8; doc.setDrawColor(220, 210, 250); doc.line(M, y, W - M, y); y += 24;
 
     function sivuTarvittaessa(k) { if (y + k > H - M) { doc.addPage(); y = M; } }
@@ -221,26 +214,6 @@
       'Hyvä tietää: tämä on koulutehtävä. Opettaja voi joskus pyytää sinua näyttämään päiväkirjasi. Se auttaa häntä tukemaan sinua. Kirjoita rehellisesti — ja juuri niin paljon kuin sinusta tuntuu hyvältä.');
     body.appendChild(tieto);
 
-    /* Nimi + luokka */
-    var tunnistus = el('div', 'pk-tunnistus');
-    function kentta(labelTeksti, id, place) {
-      var wrap = el('div', 'pk-kentta');
-      var lab = el('label', null, labelTeksti); lab.setAttribute('for', id + '-' + idx);
-      var inp = el('input'); inp.type = 'text'; inp.id = id + '-' + idx;
-      inp.autocomplete = 'off'; inp.placeholder = place;
-      wrap.appendChild(lab); wrap.appendChild(inp);
-      return { wrap: wrap, inp: inp };
-    }
-    var kNimi = kentta('Nimi', 'pk-nimi', 'Etunimi');
-    var kLuokka = kentta('Luokka', 'pk-luokka', 'esim. 7A');
-    kNimi.inp.value = palauta('pk_nimi');
-    kLuokka.inp.value = palauta('pk_luokka');
-    kNimi.inp.addEventListener('input', function () { muista('pk_nimi', kNimi.inp.value); paivitaKaikki(nimiKentat, kNimi.inp.value); });
-    kLuokka.inp.addEventListener('input', function () { muista('pk_luokka', kLuokka.inp.value); paivitaKaikki(luokkaKentat, kLuokka.inp.value); });
-    nimiKentat.push(kNimi.inp); luokkaKentat.push(kLuokka.inp);
-    tunnistus.appendChild(kNimi.wrap); tunnistus.appendChild(kLuokka.wrap);
-    body.appendChild(tunnistus);
-
     body.appendChild(el('p', 'pk-ohje', 'Valitse 1–2 kysymystä tai kaikki. Kirjoita lyhyt vastaus.'));
 
     /* Kysymykset */
@@ -279,17 +252,15 @@
     function nayta(v, huom) { vahvistus.textContent = v; vahvistus.classList.add('pk-nakyy'); vahvistus.classList.toggle('pk-huom', !!huom); }
 
     nappi.addEventListener('click', function () {
-      var nimi = kNimi.inp.value.trim(), lk = kLuokka.inp.value.trim();
-      if (!nimi || !lk) { nayta('Kirjoita ensin nimesi ja luokkasi, niin merkintä nimetään oikein.', true); return; }
       var parit = [];
       viittaukset.forEach(function (r) { if (r.cb.checked && r.ta.value.trim()) parit.push({ kysymys: r.teksti, vastaus: r.ta.value.trim() }); });
       if (!parit.length) { nayta('Valitse ainakin yksi kysymys ja kirjoita siihen vastaus.', true); return; }
       nappi.disabled = true; var vanha = nappi.lastChild.textContent; nappi.lastChild.textContent = 'Tehdään PDF…';
       lataaJsPDF(function (err) {
         if (err) { nappi.disabled = false; nappi.lastChild.textContent = vanha; nayta('PDF:n teko ei onnistunut. Yritä uudelleen hetken kuluttua.', true); return; }
-        var tiedostonimi = 'paivakirjani_' + pvmISO(d) + '_' + (siisti(lk) || 'luokka') + '_' + (siisti(nimi) || 'oppilas') + '.pdf';
+        var tiedostonimi = 'paivakirjani_' + pvmISO(d) + '_' + (siisti(setti.teema) || 'merkinta') + '.pdf';
         try {
-          teePDF({ nimi: nimi, luokka: lk, teema: setti.teema, pvmFI: pvmFI(d), parit: parit, tiedostonimi: tiedostonimi });
+          teePDF({ teema: setti.teema, pvmFI: pvmFI(d), parit: parit, tiedostonimi: tiedostonimi });
           nayta('Merkintä ladattu (' + tiedostonimi + '). Tallenna se päiväkirja-kansioosi Drivessä.');
         } catch (e) { nayta('PDF:n teko ei onnistunut. Yritä uudelleen.', true); }
         nappi.disabled = false; nappi.lastChild.textContent = vanha;
