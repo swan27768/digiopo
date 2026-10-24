@@ -1,6 +1,6 @@
 /* ============================================================
    PÄIVÄN KYSYMYS
-   Näyttää luokan avaushero-kuvan alla yhden positiivisen pohdintakysymyksen.
+   Näyttää luokan avaushero-laatikon alareunassa yhden positiivisen pohdintakysymyksen.
    - Kysymys vaihtuu paikallisessa keskiyössä (voimassa 24 h), joten kaikki
      saman päivän katsojat näkevät saman kysymyksen.
    - Kysymykset ovat käännöstiedostoissa: translations/<kieli>.json -> paivan_kysymys
@@ -82,7 +82,10 @@
         '<p class="paivan-kysymys__otsikko"></p>' +
         '<p class="paivan-kysymys__teksti"></p>' +
         '<p class="paivan-kysymys__huomenna"></p>';
-      hero.insertAdjacentElement('afterend', el);
+      /* Kysymys asuu hero-laatikon sisällä (kuvan alareunassa) */
+      hero.classList.add('osio-hero--pk');
+      hero.removeAttribute('aria-hidden'); /* kysymys on sisältöä, ei koriste */
+      hero.appendChild(el);
     }
     el.setAttribute('aria-label', data.otsikko || '');
     el.querySelector('.paivan-kysymys__otsikko').textContent = data.otsikko || '';
