@@ -367,7 +367,7 @@
       <div class="brain-fact">
         <span class="fact-icon">💧</span>
         <strong>Janottavaa hommaa</strong>
-        Juo vettä – kuiva aivosolu muistaa huonosti!
+        Kun olet kovin janoinen, keskittyminen voi heiketä. Juo kun jano tulee, mutta suurin ero syntyy unesta ja kertaamisesta.
       </div>
       <div class="brain-fact">
         <span class="fact-icon">😴</span>
@@ -837,19 +837,24 @@ const quizData = [
     q: "Kuinka monta asiaa lyhytkestoinen muisti muistaa kerrallaan?",
     opts: ["Noin 4", "Noin 20", "Noin 50", "Rajattomasti"],
     ans: 0,
-    feedback: "Oikein! Lyhytkestoinen muisti pitää kerralla vain noin 4 asiaa. Siksi esimerkiksi puhelinnumerot kannattaa muistaa pieninä paloina."
+    feedback: "Lyhytkestoinen muisti pitää kerralla vain noin 4 asiaa. Siksi esimerkiksi puhelinnumerot kannattaa muistaa pieninä paloina."
   },
   {
     q: "Mikä muistitekniikka tarkoittaa alkukirjainten ottamista hankalasta sanalistasta?",
     opts: ["Yhdistely", "Mnemonikka", "Toistaminen", "Piirtäminen"],
     ans: 1,
-    feedback: "Juuri niin! Mnemonikka tarkoittaa muistisääntöä, kuten 'Äiti Laittoi Minulle Lämpimiä Villasukkia Näin' – se on helppo tapa muistaa lista!"
+    feedback: "Mnemonikka tarkoittaa muistisääntöä, kuten 'Äiti Laittoi Minulle Lämpimiä Villasukkia Näin' – se on helppo tapa muistaa lista!"
   },
   {
     q: "Milloin kannattaa toistaa asia ensimmäistä kertaa sen oppimisen jälkeen?",
     opts: ["Kuukauden päästä", "Viikon päästä", "Pian oppimisen jälkeen", "Ei tarvitse toistaa"],
     ans: 2,
-    feedback: "Oikein! Toistaminen pian oppimisen jälkeen on tärkeintä – muuten aivojen on vaikea tallentaa asia pitkäkestoiseen muistiin."
+    feedback: "Ensimmäinen kertaus kannattaa tehdä pian oppimisen jälkeen – muuten aivojen on vaikea tallentaa asia pitkäkestoiseen muistiin.",
+    wrong: {
+      0: "Kuukauden päästä suurin osa asiasta on jo ehtinyt unohtua. Ensimmäinen kertaus kannattaa tehdä pian oppimisen jälkeen.",
+      1: "Viikko on jo liian pitkä aika, ja moni asia ehtii unohtua. Ensimmäinen kertaus kannattaa tehdä pian oppimisen jälkeen.",
+      3: "Kertaaminen auttaa muistamaan. Ilman sitä asia unohtuu nopeasti, ja ensimmäinen kertaus kannattaa tehdä pian oppimisen jälkeen."
+    }
   },
   {
     q: "Miksi uni on tärkeää muistamiselle?",
@@ -860,18 +865,23 @@ const quizData = [
       "Uni auttaa vain urheilussa"
     ],
     ans: 1,
-    feedback: "Aivan! Nukkuessa aivot käyvät läpi päivän tapahtumat ja tallentavat tärkeimmät asiat – siksi oppiminen illalla juuri ennen nukkumaanmenoa toimii usein hyvin."
+    feedback: "Nukkuessa aivot käyvät läpi päivän tapahtumat ja tallentavat tärkeimmät asiat – siksi oppiminen illalla juuri ennen nukkumaanmenoa toimii usein hyvin."
   },
   {
     q: "Miten juominen vaikuttaa muistiin?",
     opts: [
       "Ei mitenkään",
-      "Liika juominen heikentää muistia",
-      "Vesi auttaa aivosoluja toimimaan paremmin",
+      "Mitä enemmän juot, sitä paremmin muistat",
+      "Kova janoisuus voi heikentää keskittymistä ja muistia",
       "Vain energiajuomat auttavat"
     ],
     ans: 2,
-    feedback: "Kyllä! Aivosolut tarvitsevat vettä toimiakseen. Kun olet janoinen, muistisi ja keskittymisesi heikkenevät. Juo vettä!"
+    feedback: "Kun olet kunnolla janoinen, keskittyminen ja muisti voivat heikentyä hieman. Jos olet juonut tarpeeksi, lisävesi ei enää paranna muistia. Siksi riittää, että juot silloin kun on jano.",
+    wrong: {
+      0: "Kyllä vaikuttaa: kun olet kunnolla janoinen, keskittyminen ja muisti voivat heikentyä hieman.",
+      1: "Lisävesi ei paranna muistia, jos olet jo juonut tarpeeksi. Haittaa tulee vasta, kun on kunnolla janoinen. Riittää, että juot silloin kun on jano.",
+      3: "Energiajuoman kofeiini voi hetkeksi piristää, mutta se ei paranna muistia. Se voi myös häiritä unta, ja uni on muistille paljon tärkeämpää. Vesi riittää."
+    }
   }
 ];
 
@@ -909,13 +919,13 @@ function answerQuiz(qi, oi) {
   if(oi === q.ans) {
     opts[oi].classList.add('correct');
     fb.className = 'quiz-feedback ok show';
-    fb.textContent = '✅ ' + q.feedback;
+    fb.textContent = '✅ Oikein! ' + q.feedback;
     quizScore++;
   } else {
     opts[oi].classList.add('wrong');
     opts[q.ans].classList.add('correct');
     fb.className = 'quiz-feedback nope show';
-    fb.textContent = '❌ Ei ihan oikein. ' + q.feedback;
+    fb.textContent = '❌ Ei ihan oikein. ' + ((q.wrong && q.wrong[oi]) || q.feedback);
   }
   quizAnswered++;
   if(quizAnswered === quizData.length) {
