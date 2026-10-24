@@ -107,7 +107,7 @@
     setTxt('.johdanto-maskotti-teksti', g(g9, 'johdanto.maskotti_teksti'));
     /* Suurenna-painike: säilytetään emoji, vaihdetaan vain teksti */
     (function () {
-      var zoomSpan = document.querySelector('#johdanto span[style*="absolute"]');
+      var zoomSpan = document.querySelector('#johdanto span[data-kaannos~="zoom"]');
       if (zoomSpan && g9.johdanto && g9.johdanto.zoom) {
         zoomSpan.textContent = g9.johdanto.zoom;
       }
@@ -497,7 +497,7 @@
           var bonusP = osio.querySelector('label[for="tetOppiminenBonus"] + p');
           if (bonusP) bonusP.textContent = op.bonus_hint;
           /* Tip (loppuhuomio) */
-          var tip = osio.querySelector('div[style*="border-left"]');
+          var tip = osio.querySelector('div[data-kaannos~="vinkki"]');
           if (tip && op.tip) {
             var tipIcon = tip.querySelector('i');
             var tipStrong = tip.querySelector('strong');
@@ -731,10 +731,10 @@
         var na = pa.neuvonantaja;
         var naDiv = document.querySelector('#paatoksenteko button[onclick*="_toggleNeuvonantaja2"]');
         if (naDiv) {
-          var wrapper = naDiv.closest('div[style*="linear-gradient"]');
+          var wrapper = naDiv.closest('div[data-kaannos~="vaihekehys"]');
           if (wrapper) {
             /* badge div */
-            var badgeDiv = wrapper.querySelector('div[style*="0.7rem"]');
+            var badgeDiv = wrapper.querySelector('div[data-kaannos~="merkki"]');
             if (badgeDiv) badgeDiv.textContent = na.badge;
             /* h3 */
             var h3 = wrapper.querySelector('h3');
@@ -797,9 +797,9 @@
         var sk = pa.skenaario;
         var skBtn = document.querySelector('#paatoksenteko button[onclick*="_toggleSkenaario"]');
         if (skBtn) {
-          var skWrapper = skBtn.closest('div[style*="linear-gradient"]');
+          var skWrapper = skBtn.closest('div[data-kaannos~="vaihekehys"]');
           if (skWrapper) {
-            var skBadge = skWrapper.querySelector('div[style*="0.7rem"]');
+            var skBadge = skWrapper.querySelector('div[data-kaannos~="merkki"]');
             if (skBadge) skBadge.textContent = sk.badge;
             var skH3 = skWrapper.querySelector('h3');
             if (skH3) skH3.textContent = sk.h3;
@@ -844,7 +844,7 @@
         var v1 = ev.v1;
         var v1div = document.getElementById('epavarmuus-v1');
         if (v1div) {
-          var v1badge = v1div.querySelector('div[style*="0.7rem"]');
+          var v1badge = v1div.querySelector('div[data-kaannos~="merkki"]');
           if (v1badge) v1badge.textContent = v1.badge;
           var v1h3 = v1div.querySelector('h3');
           if (v1h3) v1h3.textContent = v1.h3;
@@ -887,7 +887,7 @@
         var v2 = ev.v2;
         var v2div = document.getElementById('epavarmuus-v2');
         if (v2div) {
-          var v2badge = v2div.querySelector('div[style*="0.7rem"]');
+          var v2badge = v2div.querySelector('div[data-kaannos~="merkki"]');
           if (v2badge) v2badge.textContent = v2.badge;
           var v2h3 = v2div.querySelector('h3');
           if (v2h3) v2h3.textContent = v2.h3;
@@ -910,7 +910,7 @@
         var v3 = ev.v3;
         var v3div = document.getElementById('epavarmuus-v3');
         if (v3div) {
-          var v3badge = v3div.querySelector('div[style*="0.7rem"]');
+          var v3badge = v3div.querySelector('div[data-kaannos~="merkki"]');
           if (v3badge) v3badge.textContent = v3.badge;
           var v3h3 = v3div.querySelector('h3');
           if (v3h3) v3h3.textContent = v3.h3;
@@ -938,7 +938,7 @@
           if (res5 && v3.res5_label) res5.textContent = v3.res5_label;
           /* Luokkaosuus heading */
           if (v3.class_heading) {
-            var classPs = v3div.querySelectorAll('p[style*="0.8rem"]');
+            var classPs = v3div.querySelectorAll('p[data-kaannos~="luokkaotsikko"]');
             for (var i = 0; i < classPs.length; i++) {
               if (classPs[i].textContent.indexOf('Luokkaosuus') !== -1) {
                 classPs[i].textContent = v3.class_heading;
@@ -954,7 +954,7 @@
         var v4 = ev.v4;
         var v4div = document.getElementById('epavarmuus-v4');
         if (v4div) {
-          var v4badge = v4div.querySelector('div[style*="0.7rem"]');
+          var v4badge = v4div.querySelector('div[data-kaannos~="merkki"]');
           if (v4badge) v4badge.textContent = v4.badge;
           var v4h3 = v4div.querySelector('h3');
           if (v4h3) v4h3.textContent = v4.h3;
@@ -974,12 +974,12 @@
           if (legend && v4.legend) legend.textContent = v4.legend;
           /* Instruction */
           if (v4.instruction) {
-            var instrP = v4div.querySelector('p[style*="font-weight:600"]');
+            var instrP = v4div.querySelector('p[data-kaannos~="ohjeteksti"]');
             if (instrP) instrP.textContent = v4.instruction;
           }
           /* Checkbox items */
           if (v4.items) {
-            var chkLabels = v4div.querySelectorAll('label[style*="display:flex"]');
+            var chkLabels = v4div.querySelectorAll('label[data-kaannos~="valintarivi"]');
             for (var i = 0; i < chkLabels.length && i < v4.items.length; i++) {
               var spanEl = chkLabels[i].querySelector('span:not([style])');
               if (spanEl) spanEl.textContent = v4.items[i];
@@ -987,7 +987,7 @@
           }
           /* Reflektio intro */
           if (v4.reflektio_intro) {
-            var reflIntroP = v4div.querySelector('p[style*="font-weight:600"]:last-of-type');
+            var reflIntroP = v4div.querySelector('p[data-kaannos~="ohjeteksti"]:last-of-type');
             /* find the "Mieti hetki:" paragraph */
             var allBoldPs = v4div.querySelectorAll('p');
             for (var i = 0; i < allBoldPs.length; i++) {
@@ -1104,10 +1104,10 @@
       var p = kortti.querySelector('p');
       if (p && td.description) p.textContent = td.description;
       // Badge "Ryhmäkeskustelu"
-      var badge = kortti.querySelector('[style*="border-radius:999px"]');
+      var badge = kortti.querySelector('[data-kaannos~="ryhmakeskustelu-merkki"]');
       if (badge && tasks.discussion_label) badge.textContent = tasks.discussion_label;
       // Hint "👥 Keskustele..."
-      var hint = kortti.querySelector('[style*="border-left"]');
+      var hint = kortti.querySelector('[data-kaannos~="ryhmakeskustelu-vihje"]');
       if (hint && tasks.discussion_hint) hint.textContent = tasks.discussion_hint;
     });
 
@@ -1130,7 +1130,7 @@
       var p = kortti.querySelector('p');
       if (p && td.description) p.textContent = td.description;
       // Badge "✏️ Yksilötehtävä"
-      var badge = kortti.querySelector('span[style*="fef08a"]');
+      var badge = kortti.querySelector('span[data-kaannos~="yksilotehtava-merkki"]');
       if (badge && tasks.individual_label) badge.textContent = tasks.individual_label;
     });
   }

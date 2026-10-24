@@ -22,7 +22,7 @@ function luoTehtavaKortti(tehtava) {
             color: #7c3aed;
           "><i class="fa-solid fa-people-group"></i></div>
           <div style="flex:1;">
-            <div style="
+            <div data-kaannos="ryhmakeskustelu-merkki" style="
               display:inline-block;
               background:#7c3aed;
               color:white;
@@ -40,7 +40,7 @@ function luoTehtavaKortti(tehtava) {
             <p style="margin:0 0 10px; font-size:13px; color:#6d28d9; line-height:1.5;">
               ${tehtava.description}
             </p>
-            <div style="
+            <div data-kaannos="ryhmakeskustelu-vihje" style="
               background: rgba(255,255,255,0.7);
               border-left: 3px solid #a855f7;
               border-radius: 6px;
@@ -111,7 +111,7 @@ function luoTehtavaKortti(tehtava) {
       <p style="margin:0 0 10px; font-size:13px; color:#475569; line-height:1.5;">
         ${tehtava.description}
       </p>
-      <span style="
+      <span data-kaannos="yksilotehtava-merkki" style="
         display:inline-block;
         background:#fef08a;
         color:#713f12;
