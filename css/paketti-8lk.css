@@ -1,6 +1,6 @@
 /* AUTOMAATTISESTI RAKENNETTU — älä muokkaa tätä tiedostoa.
    Lähde: css/kerrokset-8lk.css. Rakenna uudelleen: npm run css
-   Sisältää 26 tiedostoa: base.css, navbar.css, layout.css, components.css, aihe.css, maskotti.css, utils.css, koulutusalakaruselli.css, kirja-oletukset.css, teema.css, pinkkiteema.css, aihe-lapset.css, osio-rakenne.css, osio-hero.css, edistyminen.css, fakta.css, korttityypit.css, hero-kortti.css, jarjestys.css, kirja-pohja.css, grade-8lk.css, sivu-8lk-alku.css, paivakirja.css, sivu-8lk.css, inline-8lk.css, fokus.css */
+   Sisältää 27 tiedostoa: base.css, navbar.css, layout.css, components.css, aihe.css, maskotti.css, utils.css, koulutusalakaruselli.css, kirja-oletukset.css, teema.css, pinkkiteema.css, aihe-lapset.css, osio-rakenne.css, osio-hero.css, edistyminen.css, fakta.css, korttityypit.css, hero-kortti.css, paivan-kysymys.css, jarjestys.css, kirja-pohja.css, grade-8lk.css, sivu-8lk-alku.css, paivakirja.css, sivu-8lk.css, inline-8lk.css, fokus.css */
 @layer base, teema, sivu-alku, komponentit, sivu;
 
 /* base.css */
@@ -4001,6 +4001,57 @@ body[data-luokka="7"] .hero-kortti.hero-kortti--kortit {
 @media (max-width: 640px) {
   .hero-kortti--startti .hero-kortti__sisalto { padding-right: 32px; }
   .hero-kortti--startti .stetti-valot { display: none; }
+}
+}
+
+/* paivan-kysymys.css */
+@layer komponentit {
+/* ============================================================
+   PÄIVÄN KYSYMYS — kapea kysymyskaista avaushero-kuvan alla.
+   Luo js/paivan-kysymys.js. Luokkasävy tulee modifierista --7 / --8 / --9.
+   ============================================================ */
+.paivan-kysymys {
+  --pk-from: #5b21b6;
+  --pk-soft: #f5f3ff;
+  --pk-line: #ddd6fe;
+  margin: -22px 0 22px;
+  padding: 14px 20px 12px;
+  background: var(--pk-soft);
+  border: 1px solid var(--pk-line);
+  border-inline-start: 5px solid var(--pk-from);
+  border-radius: 0 0 14px 14px;
+  text-align: start;
+}
+.paivan-kysymys--8 { --pk-from: #9d174d; --pk-soft: #fdf2f8; --pk-line: #f9a8d4; }
+.paivan-kysymys--9 { --pk-from: #0f766e; --pk-soft: #f0fdfa; --pk-line: #99f6e4; }
+
+.paivan-kysymys p { margin: 0; }
+.paivan-kysymys__otsikko {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pk-from);
+}
+.paivan-kysymys__teksti {
+  margin-top: 4px !important;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1f2937;
+}
+.paivan-kysymys__huomenna {
+  margin-top: 6px !important;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+@media (max-width: 600px) {
+  .paivan-kysymys { padding: 12px 14px 10px; }
+  .paivan-kysymys__teksti { font-size: 1.05rem; }
+}
+@media print {
+  .paivan-kysymys { display: none; }
 }
 }
 
