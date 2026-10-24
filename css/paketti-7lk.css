@@ -3043,6 +3043,7 @@ h3 { color: #3b1080; }
   border-radius: 999px;
   box-shadow: 0 4px 14px rgba(20, 18, 48, 0.1);
   backdrop-filter: blur(6px);
+  overflow-x: clip; /* sisältö ei saa leventää sivua mobiilissa (clip ei riko sticky-toimintaa) */
 }
 .edist-polku[hidden] { display: none; }
 
@@ -4711,6 +4712,8 @@ body::before {
   .book-page-left { border-radius: 14px 14px 0 0; }
   .book-page-right { border-radius: 0 0 14px 14px; }
   .book-spread { filter: drop-shadow(0 10px 24px rgba(0,0,0,0.18)); }
+  /* Sarake ei saa venyä sisällön mukaan näyttöä leveämmäksi (1fr = minmax(auto,1fr)) */
+  .book-spread { grid-template-columns: minmax(0, 1fr); }
 }
 }
 

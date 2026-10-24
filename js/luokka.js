@@ -49,7 +49,7 @@ function luoTehtavaKortti(tehtava) {
               color: #4c1d95;
               font-style: italic;
             ">
-              👥 Keskustele parin tai pienryhmän kanssa
+              Keskustele parin tai pienryhmän kanssa
             </div>
           </div>
         </div>
@@ -120,7 +120,7 @@ function luoTehtavaKortti(tehtava) {
         font-size:11px;
         font-weight:700;
         padding:2px 10px;
-      ">✏️ Yksilötehtävä</span>
+      ">Yksilötehtävä</span>
     </a>
   `;
 }

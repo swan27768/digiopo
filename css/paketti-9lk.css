@@ -3574,6 +3574,7 @@ h3 { color: #3b1080; }
   border-radius: 999px;
   box-shadow: 0 4px 14px rgba(20, 18, 48, 0.1);
   backdrop-filter: blur(6px);
+  overflow-x: clip; /* sisältö ei saa leventää sivua mobiilissa (clip ei riko sticky-toimintaa) */
 }
 .edist-polku[hidden] { display: none; }
 
@@ -5242,6 +5243,8 @@ body::before {
   .book-page-left { border-radius: 14px 14px 0 0; }
   .book-page-right { border-radius: 0 0 14px 14px; }
   .book-spread { filter: drop-shadow(0 10px 24px rgba(0,0,0,0.18)); }
+  /* Sarake ei saa venyä sisällön mukaan näyttöä leveämmäksi (1fr = minmax(auto,1fr)) */
+  .book-spread { grid-template-columns: minmax(0, 1fr); }
 }
 }
 
@@ -5542,20 +5545,12 @@ body::before {
       line-height: 1;
       pointer-events: none;
     }
+    /* Vaiheen numero näkyy ympyrän keskellä (ikonia ei käytetä) */
     .tet-vaihenro {
-      position: absolute;
-      top: -3px;
-      right: -3px;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      background: #0d9488;
-      color: #fff;
-      font-size: 0.62rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: inherit;
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1;
       pointer-events: none;
     }
     .tet-noodi-label {
@@ -5566,12 +5561,12 @@ body::before {
       line-height: 1.3;
       font-weight: 600;
     }
-    .tet-noodi--violetti  { background: #EEEDFE; border-color: #534AB7; }
-    .tet-noodi--vihrea    { background: #E1F5EE; border-color: #0F6E56; }
-    .tet-noodi--sinivihrea{ background: #EAF3DE; border-color: #3B6D11; }
-    .tet-noodi--sininen   { background: #E6F1FB; border-color: #185FA5; }
-    .tet-noodi--oranssi   { background: #FAECE7; border-color: #993C1D; }
-    .tet-noodi--keltainen { background: #FAEEDA; border-color: #854F0B; }
+    .tet-noodi--violetti  { background: #EEEDFE; border-color: #534AB7; color: #534AB7; }
+    .tet-noodi--vihrea    { background: #E1F5EE; border-color: #0F6E56; color: #0F6E56; }
+    .tet-noodi--sinivihrea{ background: #EAF3DE; border-color: #3B6D11; color: #3B6D11; }
+    .tet-noodi--sininen   { background: #E6F1FB; border-color: #185FA5; color: #185FA5; }
+    .tet-noodi--oranssi   { background: #FAECE7; border-color: #993C1D; color: #993C1D; }
+    .tet-noodi--keltainen { background: #FAEEDA; border-color: #854F0B; color: #854F0B; }
     .tet-paneeli {
       margin-top: 14px;
       padding: 16px 20px;

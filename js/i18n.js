@@ -49,7 +49,7 @@
   /* ── Näytä/piilota fi-only-varoitukset ── */
   function applyWarnings(lang, t) {
     var els = document.querySelectorAll('[data-fi-only]');
-    var msg = (t && getKey(t, 'fi_only')) || '⚠️ This content is only available in Finnish';
+    var msg = (t && getKey(t, 'fi_only')) || 'This content is only available in Finnish';
     var isFi = (lang === 'fi');
 
     for (var i = 0; i < els.length; i++) {
