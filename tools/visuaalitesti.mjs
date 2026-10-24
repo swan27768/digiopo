@@ -41,6 +41,8 @@ const RAJA = Number(arg("raja", "0.1"));
 const PORTTI = process.env.PORT || 8000;
 let BASE = arg("url", `http://localhost:${PORTTI}`);
 
+const ANIMAATIOT = `*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; scroll-behavior: auto !important; }`;
+const KEHYKSET = [["otsikkopalkki", "header.navbar"], ["sivuvalikko", "aside.book-page-left"], ["sunmatka", ".sun-matka"], ["leipapolku", ".breadcrumb"]];
 const TYYLI = `
   *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; scroll-behavior: auto !important; }
   .navbar, .edist-polku, .maskotti-laatikko, #cookie-banner, .teoria-modal { display: none !important; }
@@ -81,6 +83,15 @@ async function otaKuvat(selain, kansio) {
       globalThis.Date = KiinteaDate;
     });
     await page.goto(`${BASE}/sivut/${sivu}luokka.html`, { waitUntil: "load" });
+    await page.addStyleTag({ content: ANIMAATIOT });
+    await page.evaluate(() => document.fonts && document.fonts.ready);
+    await page.waitForTimeout(400);
+    // Sivun kehys (otsikkopalkki, sivuvalikko, sun-matka, leipäpolku) ennen kuin TYYLI piilottaa osan niistä
+    await page.screenshot({ path: join(kansio, `${sivu}lk-${leveys}-_kehys-ylos.png`) });
+    for (const [nimi, sel] of KEHYKSET) {
+      const el = await page.$(sel);
+      if (el) { try { await el.screenshot({ path: join(kansio, `${sivu}lk-${leveys}-_kehys-${nimi}.png`) }); lkm++; } catch {} }
+    }
     await page.addStyleTag({ content: TYYLI });
     // lataa laiskat kuvat: vieritä sivu läpi
     await page.evaluate(async () => {
