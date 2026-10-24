@@ -80,8 +80,10 @@
       el.className = 'paivan-kysymys paivan-kysymys--' + lk;
       el.innerHTML =
         '<p class="paivan-kysymys__otsikko"></p>' +
+        '<button type="button" class="paivan-kysymys__suurenna"></button>' +
         '<p class="paivan-kysymys__teksti"></p>' +
         '<p class="paivan-kysymys__huomenna"></p>';
+      el.querySelector('.paivan-kysymys__suurenna').addEventListener('click', avaaIso);
       /* Oma hero-tyylinen laatikko päähero-laatikon alla */
       hero.insertAdjacentElement('afterend', el);
     }
@@ -89,7 +91,45 @@
     el.querySelector('.paivan-kysymys__otsikko').textContent = data.otsikko || '';
     el.querySelector('.paivan-kysymys__teksti').textContent = teksti;
     el.querySelector('.paivan-kysymys__huomenna').textContent = data.huomenna || '';
+    var nappi = el.querySelector('.paivan-kysymys__suurenna');
+    nappi.textContent = data.suurenna || '';
+    nappi.hidden = !data.suurenna;
+    paivitaIso(el, data, teksti, lk);
     ajastaVaihto();
+  }
+
+  /* Suurennettu näkymä (opettaja voi näyttää kysymyksen koko luokalle) */
+  function luoIso() {
+    var d = document.getElementById('paivan-kysymys-iso');
+    if (d) return d;
+    d = document.createElement('dialog');
+    d.id = 'paivan-kysymys-iso';
+    d.className = 'paivan-kysymys-iso';
+    d.innerHTML =
+      '<button type="button" class="paivan-kysymys-iso__sulje"></button>' +
+      '<div class="paivan-kysymys-iso__sisalto">' +
+        '<p class="paivan-kysymys-iso__otsikko"></p>' +
+        '<p class="paivan-kysymys-iso__teksti"></p>' +
+      '</div>';
+    d.addEventListener('click', function () { d.close(); });
+    document.body.appendChild(d);
+    return d;
+  }
+
+  function paivitaIso(el, data, teksti, lk) {
+    var d = luoIso();
+    d.className = 'paivan-kysymys-iso paivan-kysymys-iso--' + lk;
+    d.setAttribute('aria-label', data.otsikko || '');
+    d.querySelector('.paivan-kysymys-iso__otsikko').textContent = data.otsikko || '';
+    d.querySelector('.paivan-kysymys-iso__teksti').textContent = teksti;
+    var sulje = d.querySelector('.paivan-kysymys-iso__sulje');
+    sulje.textContent = data.sulje || '';
+    sulje.setAttribute('aria-label', data.sulje || '');
+  }
+
+  function avaaIso() {
+    var d = document.getElementById('paivan-kysymys-iso');
+    if (d && typeof d.showModal === 'function' && !d.open) d.showModal();
   }
 
   /* Vaihdetaan kysymys, kun päivä vaihtuu myös avoinna olevalla sivulla */

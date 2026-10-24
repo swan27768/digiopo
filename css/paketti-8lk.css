@@ -4078,6 +4078,83 @@ body[data-luokka="7"] .hero-kortti.hero-kortti--kortit {
 @media print {
   .paivan-kysymys { display: none; }
 }
+
+/* ---------- Suurenna-painike ja suurennettu näkymä ---------- */
+.paivan-kysymys__suurenna {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  align-self: start;
+  padding: 6px 16px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.paivan-kysymys__suurenna:hover { background: rgba(255, 255, 255, 0.3); }
+.paivan-kysymys__suurenna[hidden] { display: none; }
+.paivan-kysymys__otsikko { grid-column: 1; align-self: center; }
+.paivan-kysymys__teksti { grid-row: 2; }
+.paivan-kysymys__huomenna { grid-row: 3; grid-column: 1 / -1; justify-self: end; }
+@media (max-width: 600px) {
+  .paivan-kysymys { grid-template-columns: 1fr auto; }
+  .paivan-kysymys__teksti { grid-column: 1 / -1; }
+  .paivan-kysymys__huomenna { grid-column: 1 / -1; justify-self: start; grid-row: 3; }
+}
+
+.paivan-kysymys-iso {
+  --pk-from: #5b21b6; --pk-to: #8b5cf6; --pk-soft: #ddd6fe;
+  width: 100vw; height: 100vh; height: 100dvh;
+  max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: linear-gradient(120deg, var(--pk-from) 0%, var(--pk-to) 100%);
+  color: #fff;
+  cursor: pointer;
+}
+.paivan-kysymys-iso--8 { --pk-from: #9d174d; --pk-to: #ec4899; --pk-soft: #fbcfe8; }
+.paivan-kysymys-iso--9 { --pk-from: #0f766e; --pk-to: #2dd4bf; --pk-soft: #ccfbf1; }
+.paivan-kysymys-iso[open] { display: flex; align-items: center; justify-content: center; }
+.paivan-kysymys-iso::backdrop { background: #000; }
+.paivan-kysymys-iso__sisalto {
+  max-width: 1100px;
+  padding: clamp(24px, 6vw, 80px);
+  text-align: center;
+}
+.paivan-kysymys-iso p { margin: 0; }
+.paivan-kysymys-iso__otsikko {
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pk-soft);
+  margin-bottom: clamp(12px, 3vw, 28px) !important;
+}
+.paivan-kysymys-iso__teksti {
+  font-size: clamp(2rem, 6.5vw, 5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+}
+.paivan-kysymys-iso__sulje {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  padding: 10px 22px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.paivan-kysymys-iso__sulje:hover { background: rgba(0, 0, 0, 0.4); }
+@media print { .paivan-kysymys-iso { display: none !important; } }
 }
 
 /* jarjestys.css */
