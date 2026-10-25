@@ -253,47 +253,6 @@
   .mood-btn.sel-neg { background: var(--coral-fill);  border-color: var(--coral-border);  color: var(--coral-text); }
   .mood-btn:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
 
-  /* ---- Ajastin ---- */
-  .timer-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 1rem;
-    padding: 0.75rem 1rem;
-    background: var(--gray-fill);
-    border-radius: var(--rs);
-    border: 1px solid var(--border);
-  }
-  .timer-lbl {
-    font-size: 14px;                     /* aiempi 12px */
-    color: var(--text-secondary);
-    flex: 1;
-    font-weight: 500;
-  }
-  .timer-val {
-    font-size: 20px;                     /* aiempi 17px */
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-    min-width: 50px;
-  }
-  .timer-val.running { color: var(--teal-text); }
-  .timer-val.done    { color: var(--coral-text); }
-  .tbtn {
-    padding: 7px 14px;
-    border-radius: var(--rs);
-    border: 1.5px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text-secondary);
-    font-size: 16px;
-    font-family: 'DM Mono', monospace;
-    cursor: pointer;
-    min-height: 44px;
-    min-width: 44px;
-  }
-  .tbtn:hover { background: var(--bg); }
-  .tbtn:focus-visible { outline: 3px solid var(--purple-border); outline-offset: 2px; }
-
   /* ---- Napit ---- */
   .btn-save {
     display: inline-flex;
@@ -436,7 +395,6 @@
   /* ---- Tulostusnäkymä ---- */
   @media print {
     .phase-nav,
-    .timer-row,
     .btn-save,
     .btn-next,
     .btn-ghost,
@@ -516,12 +474,6 @@
       <div class="box box-teal" style="margin-top:14px" role="note">
         <strong>Parikeskustelu:</strong> Jaa sanasi vierustoverin kanssa — mitä yhtäläisyyksiä tai eroja?
       </div>
-      <div class="timer-row" role="timer" aria-label="Osion ajastin">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-0" aria-live="off">3:00</span>
-        <button class="tbtn" onclick="startT(0,180)" aria-label="Käynnistä ajastin">▶</button>
-        <button class="tbtn" onclick="resetT(0,180)" aria-label="Nollaa ajastin">↺</button>
-      </div>
     </div>
   </div>
 
@@ -561,12 +513,6 @@
           <li>Missä kohtaa tuntui raskaimmalta?</li>
         </ul>
       </div>
-      <div class="timer-row" role="timer">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-1">7:00</span>
-        <button class="tbtn" onclick="startT(1,420)" aria-label="Käynnistä">▶</button>
-        <button class="tbtn" onclick="resetT(1,420)" aria-label="Nollaa">↺</button>
-      </div>
     </div>
   </div>
 
@@ -599,12 +545,6 @@
       <div class="box box-amber" role="note">
         "Vaikka työ olisi yksinkertaista, se voi vaatia yllättävän paljon taitoja."
       </div>
-      <div class="timer-row" role="timer">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-2">7:00</span>
-        <button class="tbtn" onclick="startT(2,420)" aria-label="Käynnistä">▶</button>
-        <button class="tbtn" onclick="resetT(2,420)" aria-label="Nollaa">↺</button>
-      </div>
     </div>
   </div>
 
@@ -633,12 +573,6 @@
       <div class="box box-amber" role="note">
         Normalisoidaan kaikki kokemukset — ei tarvitse olla "kiva jakso".
       </div>
-      <div class="timer-row" role="timer">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-3">7:00</span>
-        <button class="tbtn" onclick="startT(3,420)" aria-label="Käynnistä">▶</button>
-        <button class="tbtn" onclick="resetT(3,420)" aria-label="Nollaa">↺</button>
-      </div>
     </div>
   </div>
 
@@ -664,12 +598,6 @@
         <button class="btn-save" onclick="savePhase(4)">Tallenna</button>
         <button class="btn-next" onclick="saveAndNext(4)">Yhteenveto →</button>
       </div>
-      <div class="timer-row" role="timer">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-4">7:00</span>
-        <button class="tbtn" onclick="startT(4,420)" aria-label="Käynnistä">▶</button>
-        <button class="tbtn" onclick="resetT(4,420)" aria-label="Nollaa">↺</button>
-      </div>
     </div>
   </div>
 
@@ -688,12 +616,6 @@
       <textarea id="p5-reflection" placeholder="Mitä opin työelämästä, jota en tiennyt ennen jaksoa?"></textarea>
       <div class="btn-row">
         <button class="btn-save" onclick="savePhase(5)">Tallenna ja näytä yhteenveto</button>
-      </div>
-      <div class="timer-row" role="timer">
-        <span class="timer-lbl">Ajastin</span>
-        <span class="timer-val" id="tv-5">5:00</span>
-        <button class="tbtn" onclick="startT(5,300)" aria-label="Käynnistä">▶</button>
-        <button class="tbtn" onclick="resetT(5,300)" aria-label="Nollaa">↺</button>
       </div>
     </div>
 
@@ -769,7 +691,6 @@
 <script>
 const KEY = 'tyoelamatunti_v2';
 const PHASES = 6;
-let timers = {};
 let mood = '';
 
 /* ---- localStorage ---- */
@@ -962,38 +883,6 @@ function clearData() {
   if (!confirm('Poistetaanko kaikki omat vastauksesi tältä laitteelta?')) return;
   localStorage.removeItem(KEY);
   location.reload();
-}
-
-/* ---- Ajastimet ---- */
-function fmt(s) {
-  const m = Math.floor(s/60);
-  return m + ':' + (s%60 < 10 ? '0' : '') + s%60;
-}
-function startT(id, total) {
-  if (timers[id]?.running) return;
-  const el = document.getElementById('tv-'+id);
-  let left = parseInt(el.dataset.left || total);
-  el.classList.remove('done'); el.classList.add('running');
-  const iv = setInterval(() => {
-    left--;
-    el.dataset.left = left;
-    el.textContent  = fmt(left);
-    if (left <= 0) {
-      clearInterval(iv);
-      timers[id].running = false;
-      el.classList.remove('running');
-      el.classList.add('done');
-      el.textContent = 'Aika!';
-    }
-  }, 1000);
-  timers[id] = { iv, running: true };
-}
-function resetT(id, total) {
-  if (timers[id]) { clearInterval(timers[id].iv); timers[id].running = false; }
-  const el = document.getElementById('tv-'+id);
-  el.dataset.left = total;
-  el.textContent  = fmt(total);
-  el.classList.remove('running','done');
 }
 
 /* ---- Käynnistys ---- */
