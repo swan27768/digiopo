@@ -742,29 +742,6 @@
         }
       }
 
-      /* Skenaariotehtävä */
-      if (pa.skenaario) {
-        var sk = pa.skenaario;
-        var skBtn = document.querySelector('#paatoksenteko button[onclick*="_toggleSkenaario"]');
-        if (skBtn) {
-          var skWrapper = skBtn.closest('div[data-kaannos~="vaihekehys"]');
-          if (skWrapper) {
-            var skBadge = skWrapper.querySelector('div[data-kaannos~="merkki"]');
-            if (skBadge) skBadge.textContent = sk.badge;
-            var skH3 = skWrapper.querySelector('h3');
-            if (skH3) skH3.textContent = sk.h3;
-            var skP = skWrapper.querySelector('p');
-            if (skP) skP.textContent = sk.p;
-            var skSpan = skBtn.querySelector('span:first-child');
-            if (skSpan && sk.btn_open) {
-              var skIcon = skSpan.querySelector('span[aria-hidden]');
-              skSpan.textContent = sk.btn_open;
-              if (skIcon) skSpan.insertBefore(skIcon, skSpan.firstChild);
-            }
-          }
-        }
-      }
-
       /* Opettajan materiaali */
       (function () {
         var el = document.querySelector('#paatoksenteko .opettaja-toggle .opettaja-toggle-left span:last-child');
