@@ -1858,17 +1858,20 @@
                 'Hyvä päätös ei vaadi varmuutta — mitä se sitten vaatii?'
               ];
               var i=0,busy=false;
+              window.__kpReset=function(){i=0;};
               ball.addEventListener('click',function(){
                 if(busy)return;busy=true;
+                var KT=window.__kpT||{};
+                var qs=(KT.q&&KT.q.length===kysymykset.length)?KT.q:kysymykset;
                 q.classList.remove('kp-show');
                 ball.classList.remove('kp-spin');void ball.offsetWidth;ball.classList.add('kp-spin');
                 setTimeout(function(){
-                  q.textContent=kysymykset[i];
+                  q.textContent=qs[i];
                   q.classList.add('kp-show');
                   for(var d=0;d<dots.length;d++)dots[d].classList.toggle('kp-on',d<=i);
                   i++;
-                  if(i>=kysymykset.length){i=0;hint.textContent='Kaikki kolme nähty. Klikkaa palloa, niin se aloittaa alusta.';}
-                  else hint.textContent='Klikkaa uudelleen — pallo näyttää seuraavan kysymyksen.';
+                  if(i>=kysymykset.length){i=0;hint.textContent=KT.hint_done||'Kaikki kolme nähty. Klikkaa palloa, niin se aloittaa alusta.';}
+                  else hint.textContent=KT.hint_next||'Klikkaa uudelleen — pallo näyttää seuraavan kysymyksen.';
                   ball.classList.remove('kp-spin');busy=false;
                 },700);
               });

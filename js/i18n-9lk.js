@@ -742,6 +742,113 @@
         }
       }
 
+      /* Teoria-laatikko (otsikko + kaksi kappaletta) */
+      (function () {
+        var ajat = document.querySelector('#paatoksenteko .paatos-ajattelu');
+        if (!ajat) return;
+        var box = ajat.parentNode;
+        var h = box.querySelector('h3');
+        if (h && pa.theory_h3) h.textContent = pa.theory_h3;
+        var ps = box.querySelectorAll(':scope > p:not(.paatos-ajattelu-summa)');
+        if (ps[0] && pa.theory_p1) ps[0].textContent = pa.theory_p1;
+        if (ps[1] && pa.theory_p2) ps[1].textContent = pa.theory_p2;
+      })();
+
+      /* Nopea ja hidas ajattelu */
+      if (pa.ajattelu) {
+        var aj = pa.ajattelu;
+        var ajEl = document.querySelector('#paatoksenteko .paatos-ajattelu');
+        if (ajEl && aj.aria) ajEl.setAttribute('aria-label', aj.aria);
+        setTxt('#paatoksenteko .paatos-ajattelu-kortti.nopea .paatos-ajattelu-otsikko', aj.nopea_h);
+        setTxt('#paatoksenteko .paatos-ajattelu-kortti.nopea .paatos-ajattelu-teksti', aj.nopea_p);
+        setTxt('#paatoksenteko .paatos-ajattelu-kortti.hidas .paatos-ajattelu-otsikko', aj.hidas_h);
+        setTxt('#paatoksenteko .paatos-ajattelu-kortti.hidas .paatos-ajattelu-teksti', aj.hidas_p);
+        var sum = document.querySelector('#paatoksenteko .paatos-ajattelu-summa');
+        if (sum && aj.summa) {
+          var nuoli = sum.querySelector('span');
+          sum.textContent = ' ' + aj.summa;
+          if (nuoli) sum.insertBefore(nuoli, sum.firstChild);
+        }
+      }
+
+      /* Päätöskompassi */
+      if (pa.kompassi) {
+        var ko = pa.kompassi;
+        setTxt('#paatoksenteko .paatos-kompassi-osa h3', ko.h3);
+        var fc = document.querySelector('#paatoksenteko .paatos-kompassi-osa figcaption');
+        if (fc && ko.caption1) {
+          while (fc.firstChild) fc.removeChild(fc.firstChild);
+          fc.appendChild(document.createTextNode(ko.caption1));
+          if (ko.caption2) {
+            fc.appendChild(document.createElement('br'));
+            var st = document.createElement('strong');
+            st.textContent = ko.caption2_label || '';
+            fc.appendChild(st);
+            fc.appendChild(document.createTextNode(' ' + ko.caption2));
+          }
+        }
+        document.querySelectorAll('#paatoksenteko .paatos-kompassi-osa img, #kompassiDialog img').forEach(function (im) {
+          if (ko.alt) im.setAttribute('alt', ko.alt);
+        });
+        var sbtn = document.querySelector('#paatoksenteko .paatos-kompassi-suurenna span');
+        if (sbtn && ko.suurenna) sbtn.textContent = ko.suurenna;
+        var dlg = document.getElementById('kompassiDialog');
+        if (dlg && ko.dialog) dlg.setAttribute('aria-label', ko.dialog);
+      }
+
+      /* Näin harjoittelet */
+      if (pa.harjoittele) {
+        setTxt('#paatoksenteko .paatos-harjoittele', pa.harjoittele.h3);
+        setTxt('#paatoksenteko .paatos-harjoittele-teksti', pa.harjoittele.p);
+      }
+
+      /* Päätösraati-kortti */
+      if (pa.paatosraati) {
+        var pr = pa.paatosraati;
+        var prBtn = document.querySelector('#paatoksenteko button[onclick*="_togglePaatosraati"]');
+        var prKortti = prBtn && prBtn.closest('.paatos-kortti');
+        if (prKortti) {
+          var prBadge = prKortti.querySelector('.is9-039');
+          if (prBadge && pr.badge) prBadge.textContent = pr.badge;
+          var prH3 = prKortti.querySelector('h3');
+          if (prH3 && pr.h3) prH3.textContent = pr.h3;
+          var prP = prKortti.querySelector('.paatos-kortti-teksti');
+          if (prP && pr.p) prP.textContent = pr.p;
+          var prSpan = prBtn.querySelector('span:first-child');
+          if (prSpan && pr.btn_open) prSpan.textContent = pr.btn_open;
+        }
+        var prIkkuna = document.getElementById('paatosraatiContainer');
+        if (prIkkuna && pr.h3) {
+          prIkkuna.setAttribute('data-tp-otsikko', pr.h3);
+          var prIf = prIkkuna.querySelector('iframe');
+          if (prIf) prIf.setAttribute('title', pr.h3);
+        }
+      }
+
+      /* Purku ja kristallipallo */
+      if (pa.purku) {
+        var pu = pa.purku;
+        window.__kpT = pu;
+        var kpWrap = document.getElementById('kp-wrap');
+        var puBox = kpWrap && kpWrap.parentNode;
+        if (puBox) {
+          var puLabel = puBox.querySelector('div[style*="text-transform:uppercase"]');
+          if (puLabel && pu.label) puLabel.textContent = pu.label;
+          var puH3 = puBox.querySelector('h3');
+          if (puH3 && pu.h3) puH3.textContent = pu.h3;
+          var puP = puBox.querySelector(':scope > p');
+          if (puP && pu.p) puP.textContent = pu.p;
+        }
+        var kpBall = document.getElementById('kp-ball');
+        if (kpBall && pu.ball_aria) kpBall.setAttribute('aria-label', pu.ball_aria);
+        var kpHint = document.getElementById('kp-hint');
+        if (kpHint && pu.hint_start) kpHint.textContent = pu.hint_start;
+        var kpQ = document.getElementById('kp-q');
+        if (kpQ) { kpQ.textContent = ''; kpQ.classList.remove('kp-show'); }
+        document.querySelectorAll('#kp-wrap .kp-dot').forEach(function (dd) { dd.classList.remove('kp-on'); });
+        if (typeof window.__kpReset === 'function') window.__kpReset();
+      }
+
       /* Opettajan materiaali */
       (function () {
         var el = document.querySelector('#paatoksenteko .opettaja-toggle .opettaja-toggle-left span:last-child');
@@ -952,6 +1059,8 @@
 
   var FI_ONLY_SELECTORS = [
     'button[onclick*="avaaLaskuri"]',
+    'button[onclick*="_togglePaatosraati"]',
+    'button[onclick*="_toggleNeuvonantaja2"]',
     'button[onclick*="avaaAjattelupeli"]',
     'button[onclick*="avaaDuuniinTet"]',
     'button[onclick*="avaaTetJakso"]',
