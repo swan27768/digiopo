@@ -194,6 +194,51 @@ select jobname, schedule, active from cron.job;
 
 ---
 
+### Pelien tulostaulujen tyhjennys käsin
+
+Tulostaulut tyhjenevät itsestään vain suursiivouksessa (1.8.). Jos taulu pitää
+tyhjentää muulloin (uusi luokka, testidata, vanhat oikeat nimet), tee se käsin.
+
+| Peli | Taulu | Tyhjennys |
+|---|---|---|
+| Tiedon temppeli | `tiedontemppeli_tulostaulu` | SQL Editor |
+| AmmattiSet | `ammattiset_tulostaulu` | SQL Editor tai API |
+
+⚠️ **Poisto on pysyvä.** Ota halutessasi ensin varmuuskopio: Supabase →
+Table Editor → taulu → Export CSV.
+
+**SQL Editor (toimii molemmille):** Supabase → SQL Editor.
+
+```sql
+-- Tarkista rivimäärät (vapaaehtoinen)
+select count(*) from tiedontemppeli_tulostaulu;
+select count(*) from ammattiset_tulostaulu;
+
+-- Tyhjennä
+delete from tiedontemppeli_tulostaulu;   -- Tiedon temppeli
+delete from ammattiset_tulostaulu;       -- AmmattiSet
+
+-- Varmista (pitäisi olla 0)
+select count(*) from tiedontemppeli_tulostaulu;
+select count(*) from ammattiset_tulostaulu;
+```
+
+Tiedon temppelille on myös valmis tiedosto `supabase_tyhjenna_tiedontemppeli.sql`.
+
+**AmmattiSet API:n kautta:** `api/ammattiset.js` tukee opettajan
+tyhjennystoimintoa. Se kutsuu tietokannan funktiota
+`ammattiset_tyhjenna_tulostaulu()` ja vaatii ympäristömuuttujan
+`AMMATTISET_ADMIN_KEY` arvon:
+
+```
+POST /api/ammattiset
+{ "toiminto": "tyhjenna_tulostaulu", "admin_key": "<AMMATTISET_ADMIN_KEY>" }
+```
+
+Tiedon temppelillä ei ole vastaavaa API-toimintoa. Pelien sivuilla ei ole
+tyhjennyspainiketta näille kahdelle pelille. (Duuniskaba on poikkeus: siinä on
+opettajan salasanalla toimiva "Tyhjennä tulostaulu" -painike.)
+
 ## 3. Hälytykset
 
 | Hälytys | Laukeaa | Lähde |

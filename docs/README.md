@@ -21,7 +21,7 @@ ei tunne tätä projektia lainkaan.
 | 06 | [Lisenssien hallinta](06-lisenssit.md) | Koodit, voimassaolo, laiteseuranta, ylikäyttö | ✅ |
 | 07 | [Sisällön ylläpito](07-sisallon-yllapito.md) | Uusi tehtävä, käännösavaimet, kuvat | ✅ |
 | 08 | [Julkaisu ja välimuisti](08-julkaisu.md) | Deploy, service worker, cache-versiointi | ✅ |
-| 09 | [Ylläpitorutiinit](09-yllapito.md) | Cronit, siivoukset, virhelokit, seuranta | ✅ |
+| 09 | [Ylläpitorutiinit](09-yllapito.md) | Cronit, siivoukset, tulostaulujen tyhjennys, virhelokit, seuranta | ✅ |
 | 10 | [Tunnetut rajoitteet](10-rajoitteet.md) | Rate limitit, Vercel Hobby, keskeneräiset asiat | ✅ |
 | 11 | [Vuosittainen tarkistus](11-vuosittainen-tarkistus.md) | Elokuun tarkistuslista: yhteishaku, TUVA/TELMA, YO, "tarkistettu"-päiväykset | ✅ |
 
