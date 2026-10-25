@@ -97,12 +97,12 @@ window.OSIO_DATA = {
     "paatoksenteko": {
       rakenne: [
         "Johdanto: mitä päätöksenteko tarkoittaa?",
+        "Päätösraati: harjoittele kuutta näkökulmaa yksin",
         "Neuvonantaja-ryhmätehtävä: auta fiktiivistä henkilöä",
-        "Skenaariotehtävä yksilötehtävänä",
         "Purku: mitä hyvä päätös vaatii?"
       ],
       tavoitteet: [
-        "Opit neljän kohdan päätösmallin: puolesta · vastaan · en tiedä · miltä tuntuu",
+        "Opit kuusi näkökulmaa päätökseen: faktat · fiilis · hyvät puolet · riskit · vaihtoehdot · seuraava askel",
         "Harjoittelet päätöksentekoa neuvomalla toista — se auttaa myös omissa valinnoissasi",
         "Huomaat, että hyvä päätös ei vaadi varmuutta — se vaatii harkintaa"
       ],

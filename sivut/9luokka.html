@@ -1701,8 +1701,39 @@
             <p class="paatos-ajattelu-summa"><span aria-hidden="true">→</span> Hyvä päätös käyttää molempia.</p>
           </div>
 
-          <!-- Kaksi tehtävää rinnakkain: 1 Neuvonantaja, 2 Skenaario -->
+          <!-- Kaksi tehtävää rinnakkain: 1 Päätösraati, 2 Neuvonantaja -->
           <div class="paatos-tehtavat">
+          <!-- Päätösraati -->
+          <div class="paatos-kortti" style="
+            background: linear-gradient(135deg, #e0faf5, #ccfbf1);
+            border: 1.5px solid #5eead4;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+          ">
+            <div class="is9-034">
+              <span class="is9-069" aria-hidden="true">1</span>
+              <div>
+                <div class="is9-039">
+                  Yksilötehtävä
+                </div>
+                <h3 class="is9-023">Päätösraati</h3>
+              </div>
+            </div>
+
+            <p class="paatos-kortti-teksti" style="color:#115e59; margin-bottom:16px; line-height:1.7; font-size:0.93rem;">
+              Harjoittele päätöksentekoa kuuden näkökulman avulla. Valitse tilanne,
+              lajittele ajatukset, tee päätös ja kokeile, miten uusi tieto muuttaa sitä.
+            </p>
+
+            <button class="is9-040" type="button" onclick="_togglePaatosraati(this)"
+              aria-expanded="false" aria-controls="paatosraatiContainer">
+              <span>Avaa tehtävä</span>
+              <span class="is9-007" aria-hidden="true"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+            </button>
+
+          </div>
+
           <!-- Neuvonantaja-tehtävä -->
           <div data-kaannos="vaihekehys" class="paatos-kortti" style="
             background: linear-gradient(135deg, #e0faf5, #ccfbf1);
@@ -1712,7 +1743,7 @@
             margin-top: 16px;
           ">
             <div class="is9-034">
-              <span class="is9-069" aria-hidden="true">1</span>
+              <span class="is9-069" aria-hidden="true">2</span>
               <div>
                 <div class="is9-039" data-kaannos="merkki">
                   Ryhmätehtävä
@@ -1735,47 +1766,14 @@
             </button>
 
           </div>
-
-          <!-- Skenaariotehtävä -->
-          <div data-kaannos="vaihekehys" class="paatos-kortti" style="
-            background: linear-gradient(135deg, #e0faf5, #ccfbf1);
-            border: 1.5px solid #5eead4;
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
-          ">
-            <div class="is9-034">
-              <span class="is9-069" aria-hidden="true">2</span>
-              <div>
-                <div class="is9-039" data-kaannos="merkki">
-                  Yksilötehtävä
-                </div>
-                <h3 class="is9-023">Valitse oma skenaariosi</h3>
-              </div>
-            </div>
-
-            <p class="paatos-kortti-teksti" style="color:#115e59; margin-bottom:16px; line-height:1.7; font-size:0.93rem;">
-              Kaksi tilannetta — valitse se, joka tuntuu sinulle läheisemmältä.
-              Pohdi, mitä tekisit ja miksi. Kukaan muu ei näe valintaasi.
-            </p>
-
-            <button class="is9-040" type="button" onclick="_toggleSkenaario(this)"
-             
-              aria-expanded="false"
-              aria-controls="skenaarioContainer">
-              <span>Avaa tehtävä</span>
-              <span class="is9-007" aria-hidden="true" id="skenaarioIkoni"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-            </button>
-
-          </div>
           </div><!-- /paatos-tehtavat -->
 
           <div class="paatos-paneelit">
             <div id="neuvonantajaSisalto2" class="paatos-ikkuna" data-tp-ikkuna data-tp-otsikko="Neuvonantaja — päätöksentekoa yhdessä" hidden>
               <iframe class="is9-070" src="../tehtavat/neuvonantaja_9lk.html" title="Neuvonantaja — päätöksentekoa yhdessä" loading="lazy"></iframe>
             </div>
-            <div id="skenaarioContainer" class="paatos-ikkuna" data-tp-ikkuna data-tp-otsikko="Valitse oma skenaariosi" hidden>
-              <iframe class="is9-070" src="../tehtavat/skenaario_9lk.html" title="Valitse oma skenaariosi" loading="lazy" sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"></iframe>
+            <div id="paatosraatiContainer" class="paatos-ikkuna" data-tp-ikkuna data-tp-otsikko="Päätösraati" hidden>
+              <iframe class="is9-070" src="../tehtavat/paatosraati_9lk.html" title="Päätösraati" loading="lazy"></iframe>
             </div>
           </div><!-- /paatos-paneelit -->
 
@@ -4222,8 +4220,8 @@
     btn.setAttribute('aria-expanded', String(!auki));
     sisalto.hidden = auki;
   }
-  function _toggleSkenaario(btn) { _paatosPaneeli(btn, 'skenaarioContainer'); }
   function _toggleNeuvonantaja2(btn) { _paatosPaneeli(btn, 'neuvonantajaSisalto2'); }
+  function _togglePaatosraati(btn) { _paatosPaneeli(btn, 'paatosraatiContainer'); }
 
   function _toggleHakuPopup(e) {
     e.stopPropagation();

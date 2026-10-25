@@ -29,7 +29,7 @@
                 <p style="color:#374151; font-size:0.88rem; line-height:1.7; margin-bottom:14px;">
                   Päätöksen vaikein kohta on
                   vaihtoehtojen punninta — siihen käytät päätöskompassia.
-                  Se on neljän kohdan työkalu:
+                  Se on kompassi, jossa on neljä suuntaa. Päätösraadissa harjoittelit kuutta näkökulmaa. Kompassi kattaa niistä neljä, ja sen alla on vielä kaksi kohtaa: vaihtoehdot ja seuraava askel.
                 </p>
                 <img loading="lazy" class="paatos-kompassi-img" width="1200" height="1200" src="../images/paatoskompassi-teal2.webp" alt="Päätöskompassi: neljä ilmansuuntaa keskellä olevan Päätös-hubin ympärillä. Pohjoisessa Puolesta – mitkä asiat tukevat tätä valintaa. Etelässä Vastaan – mikä mietityttää tai pelottaa. Idässä Miltä tuntuu – mitä vatsa sanoo, vaikka järki sanoisi muuta. Lännessä En tiedä – mitä tietoa tarvitsisin lisää." style="display:block; width:100%; max-width:520px; height:auto; margin:4px auto 0;">
                 <!-- Täytettävä päätöskompassi (digityökalu) -->
@@ -37,7 +37,7 @@
                   <h5 style="margin:0 0 4px; color:#134e4a; font-size:0.95rem;">Täytä oma päätöskompassi</h5>
                   <p style="color:#374151; font-size:0.85rem; line-height:1.6; margin:0 0 14px;">
                     Kirjoita valinta, jota mietit — omasi tai valitsemanne henkilön.
-                    Täytä sitten neljä kohtaa. Vastaukset tallentuvat vain tähän
+                    Täytä sitten kuusi kohtaa. Vastaukset tallentuvat vain tähän
                     selaimeen, joten voit jatkaa myöhemmin.
                   </p>
 
@@ -66,6 +66,16 @@
                       <label for="kompassiEntieda" style="display:block; font-weight:700; color:#134e4a; font-size:0.85rem; margin-bottom:3px;"><span aria-hidden="true">❓</span> En tiedä</label>
                       <p style="margin:0 0 6px; color:#4b5563; font-size:0.78rem; line-height:1.5;">Mitä tietoa tarvitsisin lisää?</p>
                       <textarea id="kompassiEntieda" oninput="tallennaKompassi()" style="width:100%; min-height:80px; border:1.5px solid #5eead4; border-radius:8px; padding:10px; font-size:0.88rem; font-family:inherit; color:#134e4a; resize:vertical; box-sizing:border-box; background:#f0fdfa;"></textarea>
+                    </div>
+                    <div>
+                      <label for="kompassiVaihtoehdot" style="display:block; font-weight:700; color:#134e4a; font-size:0.85rem; margin-bottom:3px;"><span aria-hidden="true">💡</span> Vaihtoehdot</label>
+                      <p style="margin:0 0 6px; color:#4b5563; font-size:0.78rem; line-height:1.5;">Mitä muita ratkaisuja on?</p>
+                      <textarea id="kompassiVaihtoehdot" oninput="tallennaKompassi()" style="width:100%; min-height:80px; border:1.5px solid #5eead4; border-radius:8px; padding:10px; font-size:0.88rem; font-family:inherit; color:#134e4a; resize:vertical; box-sizing:border-box; background:#f0fdfa;"></textarea>
+                    </div>
+                    <div>
+                      <label for="kompassiAskel" style="display:block; font-weight:700; color:#134e4a; font-size:0.85rem; margin-bottom:3px;"><span aria-hidden="true">🧭</span> Seuraava askel</label>
+                      <p style="margin:0 0 6px; color:#4b5563; font-size:0.78rem; line-height:1.5;">Mitä teet ensin ja milloin päätät?</p>
+                      <textarea id="kompassiAskel" oninput="tallennaKompassi()" style="width:100%; min-height:80px; border:1.5px solid #5eead4; border-radius:8px; padding:10px; font-size:0.88rem; font-family:inherit; color:#134e4a; resize:vertical; box-sizing:border-box; background:#f0fdfa;"></textarea>
                     </div>
                   </div>
 
@@ -138,7 +148,7 @@
                   <ol style="margin:0; padding-left:18px; color:#374151; font-size:0.87rem; line-height:1.9;">
                     <li>Lukekaa valitsemanne henkilön tarina.</li>
                     <li>Täyttäkää päätöstyökalu hänen puolestaan:<br>
-                      <em>Puolesta · Vastaan · En tiedä · Miltä tuntuu</em></li>
+                      <em>Puolesta · Vastaan · Miltä tuntuu · En tiedä · Vaihtoehdot · Seuraava askel</em></li>
                     <li>Sopikaa ryhmässä: <strong>mitä neuvoisitte hänelle?</strong></li>
                     <li>Valmistautukaa kertomaan yksi neuvo koko luokalle.</li>
                   </ol>
@@ -186,7 +196,7 @@
 <script>
 // Päätöskompassi: täytettävä digityökalu (localStorage-tallennus)
     (function() {
-      var kentat = ['kompassiPaatos','kompassiPuolesta','kompassiVastaan','kompassiTuntuu','kompassiEntieda'];
+      var kentat = ['kompassiPaatos','kompassiPuolesta','kompassiVastaan','kompassiTuntuu','kompassiEntieda','kompassiVaihtoehdot','kompassiAskel'];
       window.tallennaKompassi = function() {
         kentat.forEach(function(id) {
           var el = document.getElementById(id);
@@ -226,7 +236,9 @@
           + '✅ PUOLESTA (mikä tukee):\n' + (g('kompassiPuolesta') || '-') + '\n\n'
           + '❌ VASTAAN (mikä mietityttää):\n' + (g('kompassiVastaan') || '-') + '\n\n'
           + '💭 MILTÄ TUNTUU:\n' + (g('kompassiTuntuu') || '-') + '\n\n'
-          + '❓ EN TIEDÄ (mitä tietoa tarvitsen):\n' + (g('kompassiEntieda') || '-') + '\n';
+          + '❓ EN TIEDÄ (mitä tietoa tarvitsen):\n' + (g('kompassiEntieda') || '-') + '\n\n'
+          + '💡 VAIHTOEHDOT (mitä muita ratkaisuja on):\n' + (g('kompassiVaihtoehdot') || '-') + '\n\n'
+          + '🧭 SEURAAVA ASKEL (mitä teen ensin ja milloin päätän):\n' + (g('kompassiAskel') || '-') + '\n';
         var blob = new Blob([teksti], { type: 'text/plain;charset=utf-8' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');

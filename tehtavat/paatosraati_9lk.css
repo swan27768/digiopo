@@ -1,0 +1,91 @@
+:root{
+  --mint:#4EE1A0; --mint-dark:#1a7a52; --mint-light:#DFF3E6;
+  --violet:#5B2C6F; --violet-light:#F3EAF8; --pastel:#C9A9E1;
+  --text:#222; --muted:#555; --white:#fff;
+  --ok:#1a7a52; --ok-bg:#e7f8ef; --virhe:#9a3412; --virhe-bg:#fff1e6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--mint-light);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6;padding:20px 16px 40px;min-height:100vh}
+.pr-sivu{max-width:760px;margin:0 auto}
+button{font-family:inherit;font-size:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+
+.pr-johdanto,.pr-kortti{background:var(--white);border-radius:14px;box-shadow:0 4px 18px rgba(91,44,111,.10);padding:20px 22px;margin-bottom:18px}
+.pr-johdanto{border-top:4px solid var(--mint)}
+.pr-merkki{display:inline-block;background:var(--mint-light);color:var(--mint-dark);font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;border-radius:20px;padding:3px 12px;margin-bottom:10px}
+h1{font-size:1.3rem;color:var(--violet);font-weight:800;margin-bottom:8px}
+h2{font-size:1.1rem;color:var(--violet);font-weight:800;margin-bottom:8px}
+h3{font-size:1rem;color:var(--violet);margin-bottom:6px}
+p{color:var(--muted);margin-bottom:10px}
+p strong{color:var(--violet)}
+
+.pr-vaiheet{list-style:none;display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pr-vaiheet li{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px;background:#eee;color:#666}
+.pr-vaiheet li.on{background:var(--violet);color:#fff}
+.pr-vaiheet li.valmis{background:var(--mint);color:#064e3b}
+
+/* Valitse tilanne */
+.pr-tilanteet{display:grid;gap:12px}
+.pr-tilanne-nappi{text-align:left;background:var(--white);border:2px solid var(--pastel);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s}
+.pr-tilanne-nappi:hover{border-color:var(--violet);background:var(--violet-light)}
+.pr-tilanne-nappi b{display:block;color:var(--violet)}
+.pr-tilanne-nappi span{color:var(--muted);font-size:.92rem}
+.pr-tarina{background:var(--violet-light);border-left:4px solid var(--violet);border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.pr-tarina p{color:var(--text);margin-bottom:8px}
+.pr-tarina p:last-child{margin-bottom:0}
+
+/* Näkökulmat */
+.pr-nakokulmat{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:12px 0 16px}
+.pr-nako{background:#faf7fc;border:1px solid var(--pastel);border-radius:10px;padding:8px 12px;font-size:.88rem}
+.pr-nako b{color:var(--violet)}
+.pr-nako span{display:block;color:var(--muted)}
+
+/* Ajatuskortit */
+.pr-ajatus{border:2px solid #e3d6ec;border-radius:12px;padding:12px 14px;margin-bottom:12px;background:#fff}
+.pr-ajatus.ok{border-color:var(--ok);background:var(--ok-bg)}
+.pr-ajatus-teksti{font-weight:600;color:var(--text);margin-bottom:8px}
+.pr-valinnat{display:flex;flex-wrap:wrap;gap:6px}
+.pr-nappi-nako{background:#fff;border:1.5px solid var(--pastel);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.88rem;min-height:36px}
+.pr-nappi-nako:hover:not(:disabled){background:var(--violet-light);border-color:var(--violet)}
+.pr-nappi-nako:disabled{cursor:default;opacity:.55}
+.pr-nappi-nako.oikein{background:var(--ok);border-color:var(--ok);color:#fff;opacity:1}
+.pr-nappi-nako.vaarin{background:var(--virhe-bg);border-color:var(--virhe);text-decoration:line-through}
+.pr-palaute{margin-top:8px;font-size:.9rem;padding:8px 10px;border-radius:8px}
+.pr-palaute.ok{background:#d4f3e1;color:#14532d}
+.pr-palaute.hmm{background:var(--virhe-bg);color:var(--virhe)}
+.pr-edistyminen{font-weight:700;color:var(--violet);margin:6px 0 12px}
+
+/* Lomakkeet */
+.pr-vaihtoehdot{display:grid;gap:8px;margin:10px 0 16px}
+.pr-vaihtoehto{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--pastel);border-radius:12px;padding:10px 14px;cursor:pointer;background:#fff}
+.pr-vaihtoehto:hover{background:var(--violet-light)}
+.pr-vaihtoehto input{margin-top:5px;flex:none;width:18px;height:18px;accent-color:var(--violet)}
+.pr-vaihtoehto.valittu{border-color:var(--violet);background:var(--violet-light)}
+fieldset{border:none;margin-bottom:12px}
+legend{font-weight:700;color:var(--violet);margin-bottom:6px}
+textarea,input[type=text]{width:100%;border:1.5px solid var(--pastel);border-radius:10px;padding:10px 12px;font:inherit;color:var(--text);background:#fff}
+textarea{min-height:84px;resize:vertical}
+label.pr-kysymys{display:block;font-weight:700;color:var(--violet);margin:12px 0 4px}
+
+.pr-nappi{display:inline-block;background:var(--violet);color:#fff;border:none;border-radius:10px;padding:11px 20px;font-weight:700;cursor:pointer}
+.pr-nappi:hover:not(:disabled){opacity:.9}
+.pr-nappi:disabled{background:#bbb;cursor:not-allowed}
+.pr-nappi.vihrea{background:linear-gradient(135deg,var(--mint),#22c55e);color:#064e3b}
+.pr-nappi.hento{background:#fff;color:var(--violet);border:2px solid var(--violet)}
+.pr-rivi{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.pr-vihje{font-size:.85rem;color:var(--muted)}
+
+.pr-twist{background:#fff8e6;border:2px dashed #e0a800;border-radius:12px;padding:14px 16px;margin:10px 0 16px}
+.pr-twist p{color:#5c4400;margin:0;font-weight:600}
+.pr-yhteenveto dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin-bottom:14px}
+.pr-yhteenveto dt{font-weight:700;color:var(--violet)}
+.pr-yhteenveto dd{color:var(--text)}
+.pr-ei-valittu li{margin:0 0 6px 18px;color:var(--text)}
+.pr-ilmoitus{margin-top:10px;font-size:.9rem;color:var(--mint-dark);font-weight:600}
+
+@media (max-width:480px){
+  body{padding:14px 12px 36px}
+  .pr-yhteenveto dl{grid-template-columns:1fr}
+  .pr-yhteenveto dd{margin-bottom:6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
