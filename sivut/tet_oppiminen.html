@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miten minä opin?</title>
+<style>
+  @import '/vendor/fonts/fonts.css';
+  :root { --teal:#0f766e; --teal-border:#5eead4; --teal-fill:#f0fdfa; --text:#1e293b; --muted:#4b5563; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family:'DM Sans', system-ui, sans-serif; background:linear-gradient(135deg,#f0fdfa,#ccfbf1); color:var(--text); padding:20px 16px 28px; line-height:1.6; }
+  .wrap { max-width:720px; margin:0 auto; }
+  .lbl { font-size:.75rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+  h1 { font-size:1.4rem; margin:2px 0 8px; color:#134e4a; }
+  .intro { font-size:.95rem; color:var(--muted); margin-bottom:18px; }
+  .q { background:#fff; border:1.5px solid var(--teal-border); border-radius:14px; padding:16px 18px; margin-bottom:14px; }
+  .q-head { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
+  .num { flex:none; width:28px; height:28px; border-radius:50%; background:var(--teal); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
+  label { display:block; font-weight:600; font-size:1rem; }
+  .hint { font-size:.88rem; color:var(--muted); margin-top:2px; }
+  textarea { width:100%; min-height:90px; border:1.5px solid var(--teal-border); border-radius:8px; padding:12px; font-size:.95rem; font-family:inherit; color:var(--text); resize:vertical; background:var(--teal-fill); }
+  textarea:focus-visible, summary:focus-visible { outline:3px solid #7b74d8; outline-offset:2px; }
+  details { background:#fff; border:1.5px solid var(--teal-border); border-radius:14px; padding:14px 18px; margin-bottom:14px; }
+  summary { cursor:pointer; color:var(--teal); font-weight:700; font-size:.95rem; }
+  .bonus { margin-top:12px; }
+  .bonus textarea { min-height:80px; margin-top:8px; }
+  #ilmoitus { min-height:1px; border-radius:8px; font-size:.88rem; color:#166534; margin-bottom:12px; }
+  #ilmoitus.nayta { background:#dcfce7; border:1px solid #86efac; padding:10px 14px; }
+  .vinkki { background:var(--teal-fill); border-left:3px solid var(--teal); border-radius:0 8px 8px 0; padding:12px 14px; font-size:.9rem; color:#134e4a; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="lbl">Lisätehtävä TET:n jälkeen · Yksilötehtävä</div>
+  <h1>Miten minä opin?</h1>
+  <p class="intro">TET-jakso ei opeta vain työelämästä — se kertoo myös siitä, <strong>miten sinä opit</strong>. Pohdi hetki, miten parhaiten opit uusia asioita.</p>
+
+  <div class="q">
+    <div class="q-head"><span class="num" aria-hidden="true">1</span><div>
+      <label for="tetOppiminen1">Miten opit parhaiten TET-jaksolla?</label>
+      <p class="hint">Valitse tai kirjoita omin sanoin. Opitko parhaiten <strong>tekemällä itse</strong>, <strong>seuraamalla muita</strong>, <strong>kysymällä</strong> vai <strong>lukemalla ja kuuntelemalla</strong>? Voit valita useamman tavan.</p>
+    </div></div>
+    <textarea id="tetOppiminen1" oninput="tallenna()"></textarea>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num" aria-hidden="true">2</span><div>
+      <label for="tetOppiminen2">Kerro yksi tilanne TET-jaksolta, jossa opit jotain uutta.</label>
+      <p class="hint">Mitä tapahtui? Miten se oppi syntyi — tehtiinkö jotain, selitettiinkö sinulle, vai hoksasitko itse? Pieni esimerkki riittää.</p>
+    </div></div>
+    <textarea id="tetOppiminen2" oninput="tallenna()"></textarea>
+  </div>
+
+  <div class="q">
+    <div class="q-head"><span class="num" aria-hidden="true">3</span><div>
+      <label for="tetOppiminen3">Mitä tämä kertoo sinusta oppijana?</label>
+      <p class="hint">Missä tilanteessa oppiminen on sinulle helppoa? Onko jotain, mikä tekee oppimisesta vaikeampaa? Voi olla koulusta, harrastuksista tai muualta elämästä.</p>
+    </div></div>
+    <textarea id="tetOppiminen3" oninput="tallenna()"></textarea>
+  </div>
+
+  <details>
+    <summary>Haluatko miettiä lisää? — valinnainen kysymys</summary>
+    <div class="bonus">
+      <label for="tetOppiminenBonus">Jos saisit itse päättää, miten haluaisit oppia uusia asioita töissä tai koulussa — millainen oppimistapa sopisi sinulle parhaiten?</label>
+      <p class="hint">Voit kuvitella tilanteen, jossa opettelu on juuri sellaista kuin haluaisit. Mitä siinä tapahtuu?</p>
+      <textarea id="tetOppiminenBonus" oninput="tallenna()"></textarea>
+    </div>
+  </details>
+
+  <div id="ilmoitus" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="vinkki"><strong>Miksi tämä on tärkeää?</strong> Kun tiedät, miten opit parhaiten, voit etsiä töitä ja opiskelupaikkoja, joissa oppiminen tapahtuu sinulle sopivalla tavalla.</div>
+</main>
+<script>
+var KENTAT = ['1','2','3','Bonus'];
+KENTAT.forEach(function(n){
+  try {
+    var v = localStorage.getItem('tetOppiminen' + n), el = document.getElementById('tetOppiminen' + n);
+    if (v && el) { el.value = v; if (n === 'Bonus') el.closest('details').open = true; }
+  } catch(e) {}
+});
+function tallenna(){
+  try { KENTAT.forEach(function(n){ localStorage.setItem('tetOppiminen' + n, document.getElementById('tetOppiminen' + n).value); }); } catch(e) {}
+  var i = document.getElementById('ilmoitus');
+  i.textContent = '✓ Vastauksesi on tallennettu tähän selaimeen.';
+  i.classList.add('nayta');
+  clearTimeout(window._t);
+  window._t = setTimeout(function(){ i.textContent=''; i.classList.remove('nayta'); }, 3000);
+}
+</script>
+</body>
+</html>

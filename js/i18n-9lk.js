@@ -460,7 +460,7 @@
           setTxt('#tetOppimisOsio h3', op.h3);
           setTxt('#tetOppimisOsio > p', op.p);
           /* Avaa-painike */
-          var openBtn = osio.querySelector('button[onclick="toggleTetOppiminen(this)"]');
+          var openBtn = osio.querySelector('.btn-tetoppiminen');
           if (openBtn && op.btn_open) {
             var span = openBtn.querySelector('span:first-child');
             if (span) {
@@ -468,6 +468,12 @@
               span.textContent = op.btn_open;
               if (icon) span.insertBefore(icon, span.firstChild);
             }
+          }
+          var opClose = osio.querySelector('.tetjakso-sulje-btn');
+          if (opClose && tet.tetjakso) {
+            var opIcon = opClose.querySelector('i');
+            opClose.textContent = tet.tetjakso.btn_close;
+            if (opIcon) opClose.insertBefore(opIcon, opClose.firstChild);
           }
           /* Kysymykset */
           var q1 = osio.querySelector('label[for="tetOppiminen1"]');

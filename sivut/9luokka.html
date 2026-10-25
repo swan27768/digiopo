@@ -1333,160 +1333,21 @@
               opit uusia asioita.
             </p>
 
-            <button type="button"
-              onclick="toggleTetOppiminen(this)"
-              style="
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                background: #0f766e;
-                color: white;
-                border: none;
-                border-radius: 10px;
-                padding: 12px 20px;
-                font-size: 0.95rem;
-                font-weight: 600;
-                cursor: pointer;
-                width: 100%;
-                justify-content: space-between;
-                transition: background 0.2s;
-                outline-offset: 3px;
-              "
-              aria-expanded="false"
-              aria-controls="tetOppiminesSisalto"
-            >
-              <span>
-                <i class="fa-solid fa-brain is9-005" aria-hidden="true"></i>Avaa tehtävä
-              </span>
-              <span aria-hidden="true" id="tetOppimisIkoni" style="font-size:1rem; transition: transform 0.3s;"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
+            <button type="button" class="btn-tetoppiminen" onclick="avaaTetOppiminen()"
+              style="display:flex;align-items:center;gap:10px;background:#0f766e;color:white;border:none;border-radius:10px;padding:12px 20px;font-size:0.95rem;font-weight:600;cursor:pointer;width:100%;justify-content:center;outline-offset:3px;"
+              aria-expanded="false" aria-controls="tetOppimisContainer">
+              <span><i class="fa-solid fa-brain is9-005" aria-hidden="true"></i>Avaa tehtävä</span>
             </button>
 
-            <div id="tetOppiminesSisalto" style="display:none; margin-top:14px;">
-
-              <!-- Kysymys 1 -->
-              <div class="is9-057">
-                <div class="is9-035">
-                  <span class="is9-058" aria-hidden="true">1</span>
-                  <div>
-                    <label class="is9-036" for="tetOppiminen1">
-                      Miten opit parhaiten TET-jaksolla?
-                    </label>
-                    <p class="is9-037">
-                      Valitse tai kirjoita omin sanoin. Opitko parhaiten
-                      <strong>tekemällä itse</strong>, <strong>seuraamalla muita</strong>,
-                      <strong>kysymällä</strong> vai <strong>lukemalla ja kuuntelemalla</strong>?
-                      Voit valita useamman tavan.
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="tetOppiminen1"
-                  aria-required="false"
-                  oninput="tallennaTetOppiminen()"
-                  style="width:100%; min-height:90px; border:1.5px solid #5eead4; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#f0fdfa;"
-                ></textarea>
+            <!-- Miten minä opin? iframe (piilossa ennen klikkausta) -->
+            <div id="tetOppimisContainer" style="display: none; margin-top: 12px;">
+              <div class="tetjakso-sulje-rivi">
+                <button type="button" class="tetjakso-sulje-btn" onclick="suljeTetOppiminen()">
+                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                  Sulje tehtävä
+                </button>
               </div>
-
-              <!-- Kysymys 2 -->
-              <div class="is9-057">
-                <div class="is9-035">
-                  <span class="is9-058" aria-hidden="true">2</span>
-                  <div>
-                    <label class="is9-036" for="tetOppiminen2">
-                      Kerro yksi tilanne TET-jaksolta, jossa opit jotain uutta.
-                    </label>
-                    <p class="is9-037">
-                      Mitä tapahtui? Miten se oppi syntyi — tehtiinkö jotain,
-                      selitettiinkö sinulle, vai hoksasitko itse? Pieni esimerkki riittää.
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="tetOppiminen2"
-                  aria-required="false"
-                  oninput="tallennaTetOppiminen()"
-                  style="width:100%; min-height:90px; border:1.5px solid #5eead4; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#f0fdfa;"
-                ></textarea>
-              </div>
-
-              <!-- Kysymys 3 -->
-              <div class="is9-057">
-                <div class="is9-035">
-                  <span class="is9-058" aria-hidden="true">3</span>
-                  <div>
-                    <label class="is9-036" for="tetOppiminen3">
-                      Mitä tämä kertoo sinusta oppijana?
-                    </label>
-                    <p class="is9-037">
-                      Missä tilanteessa oppiminen on sinulle helppoa?
-                      Onko jotain, mikä tekee oppimisesta vaikeampaa?
-                      Voi olla koulusta, harrastuksista tai muualta elämästä.
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="tetOppiminen3"
-                  aria-required="false"
-                  oninput="tallennaTetOppiminen()"
-                  style="width:100%; min-height:90px; border:1.5px solid #5eead4; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#f0fdfa;"
-                ></textarea>
-              </div>
-
-              <!-- Valinnainen haastekysymys -->
-              <details style="
-                background: white;
-                border: 1.5px solid #5eead4;
-                border-radius: 14px;
-                padding: 16px 20px;
-                margin-bottom: 14px;
-                cursor: pointer;
-              ">
-                <summary style="
-                  color: #0f766e;
-                  font-size: 0.9rem;
-                  font-weight: 700;
-                  list-style: none;
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                ">
-                  
-                  Haluatko miettiä lisää? — valinnainen kysymys
-                </summary>
-                <div class="is9-024">
-                  <label for="tetOppiminenBonus" style="display:block; color:#1e293b; font-size:0.95rem; font-weight:600; line-height:1.6; margin-bottom:6px;">
-                    Jos saisit itse päättää, miten haluaisit oppia uusia asioita töissä tai koulussa — millainen oppimistapa sopisi sinulle parhaiten?
-                  </label>
-                  <p style="color:#4b5563; font-size:0.87rem; line-height:1.6; margin-bottom:10px;">
-                    Voit kuvitella tilanteen, jossa opettelu on juuri sellaista kuin haluaisit.
-                    Mitä siinä tapahtuu?
-                  </p>
-                  <textarea
-                    id="tetOppiminenBonus"
-                    aria-required="false"
-                    oninput="tallennaTetOppiminen()"
-                    style="width:100%; min-height:80px; border:1.5px solid #5eead4; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#f0fdfa;"
-                  ></textarea>
-                </div>
-              </details>
-
-              <!-- Tallennusilmoitus (aria-live) -->
-              <div
-                id="tetOppimisIlmoitus"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-                style="min-height:1px; border-radius:8px; padding:0; font-size:0.85rem; color:#166534; margin-bottom:12px; transition: all 0.2s;"
-              ></div>
-
-              <!-- Loppuhuomio -->
-              <div data-kaannos="vinkki" style="background:#f0fdfa; border-left:3px solid #0f766e; border-radius:0 8px 8px 0; padding:12px 14px; font-size:0.87rem; color:#134e4a; line-height:1.6;">
-                <i class="fa-solid fa-lightbulb is9-015" aria-hidden="true"></i>
-                <strong>Miksi tämä on tärkeää?</strong>
-                Kun tiedät, miten opit parhaiten, voit etsiä töitä ja opiskelupaikkoja,
-                joissa oppiminen tapahtuu sinulle sopivalla tavalla.
-              </div>
-
+              <iframe id="tetOppimisFrame" width="100%" height="900px" style="border:none;border-radius:14px;" title="Miten minä opin? -tehtävä" loading="lazy"></iframe>
             </div>
           </div>
           <!-- /Lisätehtävä 1B -->
@@ -4159,45 +4020,22 @@
 
 
     <script>
-    // TET-oppiminen: avaa/sulje
-    function toggleTetOppiminen(btn) {
-      var sisalto = document.getElementById('tetOppiminesSisalto');
-      var ikoni   = document.getElementById('tetOppimisIkoni');
-      var auki    = sisalto.style.display !== 'none';
-      sisalto.style.display = auki ? 'none' : 'block';
-      ikoni.style.transform  = auki ? '' : 'rotate(180deg)';
-      btn.setAttribute('aria-expanded', String(!auki));
-      if (!auki) {
-        ['1','2','3','Bonus'].forEach(function(n) {
-          var saved = localStorage.getItem('tetOppiminen' + n);
-          if (saved) {
-            var el = document.getElementById('tetOppiminen' + n);
-            if (el) el.value = saved;
-          }
-        });
+    // TET-oppiminen: avaa/sulje iframeen
+    function avaaTetOppiminen() {
+      var container = document.getElementById("tetOppimisContainer");
+      var frame = document.getElementById("tetOppimisFrame");
+      if (!frame.getAttribute("src")) {
+        frame.src = "../sivut/tet_oppiminen.html";
       }
+      container.style.display = "block";
+      document.querySelector(".btn-tetoppiminen").setAttribute("aria-expanded", "true");
+      container.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // Tallenna TET-oppiminen vastaukset
-    function tallennaTetOppiminen() {
-      ['1','2','3','Bonus'].forEach(function(n) {
-        var el = document.getElementById('tetOppiminen' + n);
-        if (el) localStorage.setItem('tetOppiminen' + n, el.value);
-      });
-      var ilmoitus = document.getElementById('tetOppimisIlmoitus');
-      if (ilmoitus) {
-        ilmoitus.textContent = '✓ Vastauksesi on tallennettu tähän selaimeen.';
-        ilmoitus.style.background = '#dcfce7';
-        ilmoitus.style.border     = '1px solid #86efac';
-        ilmoitus.style.padding    = '10px 14px';
-        clearTimeout(window._tetOppiTimer);
-        window._tetOppiTimer = setTimeout(function() {
-          ilmoitus.textContent      = '';
-          ilmoitus.style.background = 'transparent';
-          ilmoitus.style.border     = 'none';
-          ilmoitus.style.padding    = '0';
-        }, 3000);
-      }
+    function suljeTetOppiminen() {
+      document.getElementById("tetOppimisContainer").style.display = "none";
+      document.querySelector(".btn-tetoppiminen").setAttribute("aria-expanded", "false");
+      document.getElementById("tetOppimisOsio").scrollIntoView({ behavior: "smooth", block: "start" });
     }
     </script>
 
