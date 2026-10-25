@@ -4,7 +4,9 @@
    - Kysymys vaihtuu paikallisessa keskiyössä (voimassa 24 h), joten kaikki
      saman päivän katsojat näkevät saman kysymyksen.
    - Kysymykset ovat käännöstiedostoissa: translations/<kieli>.json -> paivan_kysymys
-       yhteinen = kaikille luokille, g8 / g9 = luokkakohtaiset lisäkysymykset.
+       yhteinen = kaikille luokille, g8 / g9 = luokkakohtaiset lisäkysymykset,
+       g7 = 7. luokan oma lista, g89 = 8. ja 9. luokan oma lista (korvaavat yhteinen + g8/g9;
+       puuttuessa käytetään vanhoja listoja).
      Kaikissa kielissä listat ovat samassa järjestyksessä, joten sama
      indeksi on sama kysymys kaikilla kielillä.
    - Kysymysten järjestys sekoitetaan kierros kerrallaan (siemenarvo = kierros),
@@ -52,8 +54,13 @@
   }
 
   function valitse(data, lk, paiva) {
-    var yhteinen = data.yhteinen || [];
-    var oma = (data['g' + lk] || []);
+    /* Luokkakohtaiset kysymyslistat (g7 = 7. lk, g89 = 8. ja 9. lk), jos kieleltä
+       löytyvät. Muuten (kieli, jolle listaa ei ole vielä käännetty) käytetään
+       vanhaa yhteinen + g8/g9 -listaa. */
+    var oma89 = (lk === '7') ? data.g7 : (lk === '8' || lk === '9') ? data.g89 : null;
+    var luokkalista = (oma89 && oma89.length) ? oma89 : null;
+    var yhteinen = luokkalista || data.yhteinen || [];
+    var oma = luokkalista ? [] : (data['g' + lk] || []);
     var pituus = yhteinen.length + oma.length;
     if (!pituus) return null;
     var kierros = Math.floor(paiva / pituus);
