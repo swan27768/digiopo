@@ -23,6 +23,7 @@ ei tunne tätä projektia lainkaan.
 | 08 | [Julkaisu ja välimuisti](08-julkaisu.md) | Deploy, service worker, cache-versiointi | ✅ |
 | 09 | [Ylläpitorutiinit](09-yllapito.md) | Cronit, siivoukset, virhelokit, seuranta | ✅ |
 | 10 | [Tunnetut rajoitteet](10-rajoitteet.md) | Rate limitit, Vercel Hobby, keskeneräiset asiat | ✅ |
+| 11 | [Vuosittainen tarkistus](11-vuosittainen-tarkistus.md) | Elokuun tarkistuslista: yhteishaku, TUVA/TELMA, YO, "tarkistettu"-päiväykset | ✅ |
 
 ⬜ = kesken · ✅ = valmis
 
