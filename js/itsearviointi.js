@@ -17,9 +17,9 @@
   if (!LUOKKA || !avaaNappi || !suljeNappi || !c || !f) return;
 
   var T = {
-    fi: { nappi: "Avaa itsearviointi", sulje: "✕ Sulje tehtävä", otsikko: "Itsearviointi", ohje: "Kuusi lyhyttä kysymystä. Vastaus on nimetön." },
-    sv: { nappi: "Öppna självbedömningen", sulje: "✕ Stäng uppgiften", otsikko: "Självbedömning", ohje: "Sex korta frågor. Svaret är anonymt." },
-    en: { nappi: "Open self-assessment", sulje: "✕ Close task", otsikko: "Self-assessment", ohje: "Six short questions. Your answer is anonymous." }
+    fi: { nappi: "Avaa itsearviointi", sulje: "✕ Sulje tehtävä", otsikko: "Itsearviointi", ohje: "Palauta itsearviointilomake opolle." },
+    sv: { nappi: "Öppna självbedömningen", sulje: "✕ Stäng uppgiften", otsikko: "Självbedömning", ohje: "Lämna in självbedömningen till studiehandledaren." },
+    en: { nappi: "Open self-assessment", sulje: "✕ Close task", otsikko: "Self-assessment", ohje: "Return the self-assessment form to your guidance counsellor." }
   };
   function kieli() {
     var l = (document.documentElement.getAttribute("lang") || "fi").toLowerCase().slice(0, 2);

@@ -14,7 +14,7 @@
 import crypto from 'node:crypto';
 import { kirjaaVirhe } from './_lib/virhelogi.js';
 import { haeIp, vertaaSalaisuus } from './_lib/turva.js';
-import { haeKirjautunutOpettaja, haeIstunnonKoulu } from './_lib/opettaja.js';
+import { haeKirjautunutOpettaja } from './_lib/opettaja.js';
 import { sbFetch } from './_lib/supabase.js';
 import { rateLimitSallittu } from './_lib/rate.js';
 
@@ -70,21 +70,6 @@ async function haeOpettajanKoulukoodi(email) {
     }
   }
   return null;
-}
-
-// ─── Itsearviointi (nimetön, lukuvuoden lopussa) ─────────────────────────────
-const ITSEARV_MIN_N = 5; // opettaja näkee yhteenvedon vasta, kun vastauksia on näin monta
-
-// Lukuvuosi "2026-2027": elokuusta eteenpäin alkava vuosi, muuten edellinen.
-function nykyinenLukuvuosi(d = new Date()) {
-  const y = d.getFullYear();
-  const alku = d.getMonth() >= 7 ? y : y - 1; // getMonth: elokuu = 7
-  return `${alku}-${alku + 1}`;
-}
-
-function validiVastaukset(arr) {
-  return Array.isArray(arr) && arr.length === 6 &&
-    arr.every((x) => Number.isInteger(x) && x >= 1 && x <= 5);
 }
 
 // ─── Handler ─────────────────────────────────────────────────────────────────
@@ -172,13 +157,8 @@ export default async function handler(req, res) {
   }
 
   // ── Rate limit POST-toiminnoille (Redis, jaettu instanssien kesken) ──
-  // Itsearviointi tallennetaan koko luokalta yhtä aikaa koulun yhteisestä IP:stä,
-  // joten sillä on oma, korkeampi raja (muuten 40 pyynnön raja täyttyisi luokassa).
   const ip = haeIp(req);
-  const onItsearviointi = body && body.toiminto === 'itsearviointi_tallenna';
-  const rlAvain = onItsearviointi ? `rl:itsearv:ip:${ip}` : `rl:jarjestys:ip:${ip}`;
-  const rlMax = onItsearviointi ? 400 : RL_MAX;
-  if (!(await rateLimitSallittu(rlAvain, rlMax, RL_IKKUNA_S))) {
+  if (!(await rateLimitSallittu(`rl:jarjestys:ip:${ip}`, RL_MAX, RL_IKKUNA_S))) {
     return res.status(429).json({ ok: false, virhe: 'liikaa_yrityksia' });
   }
 
@@ -240,45 +220,11 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── ITSEARVIOINTI: tallennus (ei kirjautumista, ei henkilötietoa) ──
-  // Koulu luetaan allekirjoitetusta evästeestä, ei selaimelta. Ryhmäkoodi
-  // hyväksytään vain, jos ryhmä on olemassa; muuten tallennetaan ilman sitä.
-  if (toiminto === 'itsearviointi_tallenna') {
-    try {
-      const luokka = String(body.luokka || '');
-      if (!SALLITUT_LUOKAT.includes(luokka) || !validiVastaukset(body.vastaukset)) {
-        return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-      }
-      let ryhmakoodi = String(body.ryhma || '').trim().toUpperCase();
-      if (/^[A-Z0-9-]{4,16}$/.test(ryhmakoodi)) {
-        if (!(await haeRyhma(ryhmakoodi))) ryhmakoodi = null;
-      } else {
-        ryhmakoodi = null;
-      }
-      const koulukoodi = (await haeIstunnonKoulu(req)) || null;
-      const v = body.vastaukset;
-      const r = await sb('itsearviointi', {
-        method: 'POST',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          koulukoodi, ryhmakoodi, luokka, lukuvuosi: nykyinenLukuvuosi(),
-          v1: v[0], v2: v[1], v3: v[2], v4: v[3], v5: v[4], v6: v[5],
-        }),
-      });
-      if (r.status >= 300) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-      return res.status(200).json({ ok: true });
-    } catch (err) {
-      console.error('jarjestys itsearviointi_tallenna:', err);
-      await kirjaaVirhe('jarjestys itsearviointi_tallenna', err);
-      return res.status(500).json({ ok: false, virhe: 'palvelinvirhe' });
-    }
-  }
-
   // ── OPETTAJATILI-toiminnot (istunto + omistajuus, ei PIN:iä) ──
   // Opettaja hallitsee vain omia ryhmiään (omistaja_email = kirjautunut email).
   // Valtuutus tulee lisenssievästeestä, ei PIN:stä → sijoitettu ennen avain-
   // tarkistusta, koska nämä eivät käytä avain-kenttää.
-  const OMAT_TOIMINNOT = ['omat_ryhmat', 'luo_oma', 'nimea_oma', 'poista_oma', 'tallenna_oma', 'itsearviointi_yhteenveto'];
+  const OMAT_TOIMINNOT = ['omat_ryhmat', 'luo_oma', 'nimea_oma', 'poista_oma', 'tallenna_oma'];
   if (OMAT_TOIMINNOT.includes(toiminto)) {
     const opettaja = await haeKirjautunutOpettaja(req);
     if (!opettaja) return res.status(403).json({ ok: false, virhe: 'ei_kirjautunut' });
@@ -324,32 +270,6 @@ export default async function handler(req, res) {
       if (!rivi) return res.status(404).json({ ok: false, virhe: 'ryhmaa_ei_loydy' });
       if (rivi.omistaja_email !== opettaja) {
         return res.status(403).json({ ok: false, virhe: 'ei_omistaja' });
-      }
-
-      // ITSEARVIOINNIN YHTEENVETO: vain oman ryhmän, nimetön, vasta kun n >= ITSEARV_MIN_N.
-      if (toiminto === 'itsearviointi_yhteenveto') {
-        const luokka = String(body.luokka || '');
-        const lukuvuosi = /^\d{4}-\d{4}$/.test(String(body.lukuvuosi || ''))
-          ? String(body.lukuvuosi) : nykyinenLukuvuosi();
-        if (!SALLITUT_LUOKAT.includes(luokka)) {
-          return res.status(400).json({ ok: false, virhe: 'virheellinen_pyynto' });
-        }
-        const r = await sb(`itsearviointi?ryhmakoodi=eq.${encodeURIComponent(ryhma)}&luokka=eq.${luokka}&lukuvuosi=eq.${lukuvuosi}&select=v1,v2,v3,v4,v5,v6&limit=2000`);
-        if (!r.ok) throw new Error(`DB-virhe ${r.status}: ${await r.text()}`);
-        const rivit = await r.json();
-        const n = rivit.length;
-        if (n < ITSEARV_MIN_N) {
-          return res.status(200).json({ ok: true, n, riittamaton: true, minimi: ITSEARV_MIN_N, lukuvuosi });
-        }
-        const jakaumat = [], keskiarvot = [];
-        for (let q = 1; q <= 6; q++) {
-          const j = [0, 0, 0, 0, 0];
-          let summa = 0;
-          for (const x of rivit) { j[x['v' + q] - 1]++; summa += x['v' + q]; }
-          jakaumat.push(j);
-          keskiarvot.push(Math.round((summa / n) * 10) / 10);
-        }
-        return res.status(200).json({ ok: true, n, minimi: ITSEARV_MIN_N, lukuvuosi, keskiarvot, jakaumat });
       }
 
       // TALLENNA oma järjestys (istunto+omistajuus, ei PIN:iä) — kuten 'tallenna'

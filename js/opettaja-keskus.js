@@ -128,8 +128,6 @@
             '<div class="ok-kortti-head"><span class="ok-nimi">' + nimi + '</span><span class="ok-koodi">' + esc(r.ryhmakoodi) + '</span></div>' +
             '<div class="ok-rivi"><span class="ok-lbl">Osiojärjestys:</span>' + [7, 8, 9].map(function (l) { return '<button type="button" class="ok-mini" data-jarj="' + l + '">' + l + '. lk</button>'; }).join("") + '</div>' +
             '<div class="ok-rivi"><span class="ok-lbl">Aikataulu:</span>' + [7, 8, 9].map(function (l) { return '<button type="button" class="ok-mini" data-aika="' + l + '">' + l + '. lk</button>'; }).join("") + '</div>' +
-            '<div class="ok-rivi"><span class="ok-lbl">Itsearviointi:</span>' + [7, 8, 9].map(function (l) { return '<button type="button" class="ok-mini" data-itsearv="' + l + '">' + l + '. lk</button>'; }).join("") + '</div>' +
-            '<div class="ok-itsearv" aria-live="polite" style="display:none"></div>' +
             '<div class="ok-rivi"><span class="ok-lbl">Jaa oppilaille:</span> <code class="ok-jako">' + esc(r.ryhmakoodi) + '</code> <button type="button" class="ok-mini ok-kopioi">Kopioi koodi</button></div>' +
             '<div class="ok-rivi"><button type="button" class="ok-mini ok-poista" style="color:#b91c1c;border-color:#e0a3a3">🗑 Poista ryhmä</button></div>' +
           '</div>';
@@ -138,38 +136,6 @@
       html += '<div class="ok-alanapit"><button type="button" class="ok-nappi ok-luo">➕ Luo uusi ryhmä</button></div>';
       q(".ok-body").innerHTML = html;
       kytke();
-    }
-
-    var ITSEARV_VAITTEET = {
-      "7": ["Tiedän, miten opin parhaiten.", "Tiedän, mikä saa minut innostumaan koulussa.", "Osaan nimetä kolme vahvuuttani.", "Osaan suunnitella aikatauluni koeviikolle.", "Tiedän, keneltä voin pyytää apua koulussa."],
-      "8": ["Tunnen vaihtoehdot peruskoulun jälkeen.", "Tiedän, mitkä alat kiinnostavat minua ja miksi.", "Osaan etsiä koulutuksista tietoa Opintopolusta.", "Tiedän, miten haen TET-paikkaa ja mitä siellä tapahtuu.", "Uskon, että voin vaikuttaa omaan tulevaisuuteeni."],
-      "9": ["Tiedän, miten yhteishaku toimii.", "Minulla on suunnitelma ja varasuunnitelma.", "Osaan vertailla vaihtoehtoja ja perustella valintani.", "Tiedän, mistä saan apua, jos suunnitelma ei toimi.", "Luotan siihen, että pärjään seuraavassa vaiheessa."]
-    };
-    var ITSEARV_V6 = "Kun vertaat lukuvuoden alkuun, miten taitosi ovat muuttuneet? (1 = paljon heikommat, 5 = paljon paremmat)";
-
-    function naytaItsearviointi(kortti, koodi, luokka) {
-      var laatikko = kortti.querySelector(".ok-itsearv");
-      laatikko.style.display = "block";
-      laatikko.innerHTML = '<p class="ok-tila">Haetaan…</p>';
-      post(API_J, { toiminto: "itsearviointi_yhteenveto", ryhma: koodi, luokka: String(luokka) }).then(function (v) {
-        var html = '<div style="border-top:1px solid #e6ddf5;margin-top:.5rem;padding-top:.5rem;font-size:.85rem;line-height:1.5">';
-        if (!v || !v.ok) {
-          html += '<p style="color:#b91c1c">Yhteenvedon haku epäonnistui.</p>';
-        } else if (v.riittamaton) {
-          html += '<p><strong>' + luokka + '. lk, ' + esc(v.lukuvuosi) + ':</strong> ' + v.n + ' vastausta. Yhteenveto näkyy, kun vastauksia on vähintään ' + v.minimi + ' (nimettömyyden suojaamiseksi).</p>';
-        } else {
-          html += '<p><strong>' + luokka + '. lk, ' + esc(v.lukuvuosi) + ':</strong> ' + v.n + ' vastausta. Keskiarvo asteikolla 1–5.</p>';
-          var tekstit = ITSEARV_VAITTEET[String(luokka)].concat([ITSEARV_V6]);
-          html += tekstit.map(function (t, i) {
-            var ka = v.keskiarvot[i];
-            return '<div style="margin:.35rem 0"><div>' + esc(t) + ' <strong>' + String(ka).replace(".", ",") + '</strong></div>' +
-              '<div style="background:#efeaf9;border-radius:.3rem;height:.5rem"><div style="background:#7c3aed;height:.5rem;border-radius:.3rem;width:' + Math.round((ka - 1) / 4 * 100) + '%"></div></div></div>';
-          }).join("");
-          html += '<p style="color:#6b5f88;margin-top:.5rem">Huom. kysymys 6 mittaa oppilaiden omaa arviota muutoksesta, ei mitattua kehitystä. Saman laitteen kaksoisvastausta ei voi täysin estää.</p>';
-        }
-        html += '<p style="color:#6b5f88;margin:.4rem 0 0">Itsearviointi on oma osionsa oppilaiden sivulla. Voit piilottaa tai lukita sen Osiojärjestys-näkymässä kuten muutkin osiot.</p></div>';
-        laatikko.innerHTML = html;
-      });
     }
 
     function kytke() {
@@ -230,9 +196,6 @@
         });
         Array.prototype.forEach.call(kortti.querySelectorAll("[data-aika]"), function (b) {
           b.addEventListener("click", function () { location.href = "/" + b.getAttribute("data-aika") + "luokka?tili_ryhma=" + encodeURIComponent(koodi) + "&aikataulu=1"; });
-        });
-        Array.prototype.forEach.call(kortti.querySelectorAll("[data-itsearv]"), function (b) {
-          b.addEventListener("click", function () { naytaItsearviointi(kortti, koodi, b.getAttribute("data-itsearv")); });
         });
         var kop = kortti.querySelector(".ok-kopioi");
         if (kop) kop.addEventListener("click", function () {

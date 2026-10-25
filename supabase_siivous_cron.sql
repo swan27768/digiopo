@@ -86,12 +86,6 @@ begin
   delete from admin_viestit
     where laheta_at < now() - interval '24 months';
 
-  -- ─── Oppilaiden itsearvioinnit (> 24 kk) ────────────────────────────────
-  -- Nimettömiä ryhmäyhteenvetoja varten. Ei henkilötietoa, mutta ei tarvita
-  -- pidempään kuin vuosivertailuun.
-  delete from itsearviointi
-    where luotu_at < now() - interval '24 months';
-
   -- ─── Päättyneiden asiakkuuksien tiedot (ei voimassa olevaa lisenssiä 6 kk) ──
   --
   -- Oppilastyöt on sidottu koulun NIMEEN, ei lisenssikoodiin, eikä
