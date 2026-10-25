@@ -1,0 +1,198 @@
+/* ============================================================
+   ITSEARVIOINTI — lukuvuoden lopun nimetön itsearvio (7./8./9. lk)
+   - 5 luokka-asteen väitettä + yhteinen 6. kysymys, asteikko 1–5.
+   - Näkyy omana osionaan (#itsearviointi) sivulla koko ajan. Opettaja voi
+     piilottaa tai lukita osion kuten muutkin osiot (jarjestys.js).
+   - Ei nimeä eikä tunnistetta. Palvelin tallentaa vain luokka-asteen,
+     lukuvuoden, koulun (evästeestä) ja ryhmäkoodin (jos oppilas on liittynyt).
+   - Yksi vastaus per laite per lukuvuosi (localStorage; vain muistutus,
+     ei tietoturvaa). Opettaja näkee ryhmäkeskiarvot hallintapaneelista,
+     kun vastauksia on vähintään 5.
+   - Osio-elementti on sivun HTML:ssä; tämä skripti täyttää sen sisällön
+     (#itsearviointi-sisalto).
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var LUOKKA = (location.pathname.match(/(\d)luokka/) || [])[1];
+  var kortti = document.getElementById("itsearviointi-sisalto");
+  if (!LUOKKA || !kortti) return;
+
+  function lukuvuosi() {
+    var d = new Date(), y = d.getFullYear();
+    var alku = d.getMonth() >= 7 ? y : y - 1;
+    return alku + "-" + (alku + 1);
+  }
+  var LS_AVAIN = "digiopo-itsearv-" + LUOKKA + "-" + lukuvuosi();
+  function lue(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function kirjoita(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var VAITTEET = {
+    "7": {
+      fi: ["Tiedän, miten opin parhaiten.", "Tiedän, mikä saa minut innostumaan koulussa.", "Osaan nimetä kolme vahvuuttani.", "Osaan suunnitella aikatauluni koeviikolle.", "Tiedän, keneltä voin pyytää apua koulussa."],
+      sv: ["Jag vet hur jag lär mig bäst.", "Jag vet vad som gör mig motiverad i skolan.", "Jag kan nämna tre av mina styrkor.", "Jag kan planera mitt schema inför provveckan.", "Jag vet vem jag kan be om hjälp i skolan."],
+      en: ["I know how I learn best.", "I know what makes me excited about school.", "I can name three of my strengths.", "I can plan my schedule for exam week.", "I know who I can ask for help at school."]
+    },
+    "8": {
+      fi: ["Tunnen vaihtoehdot peruskoulun jälkeen (lukio, amis jne.).", "Tiedän, mitkä alat kiinnostavat minua ja miksi.", "Osaan etsiä koulutuksista tietoa Opintopolusta.", "Tiedän, miten haen TET-paikkaa ja mitä siellä tapahtuu.", "Uskon, että voin vaikuttaa omaan tulevaisuuteeni."],
+      sv: ["Jag känner till alternativen efter grundskolan (gymnasium, yrkesskola osv.).", "Jag vet vilka branscher som intresserar mig och varför.", "Jag kan söka information om utbildningar på Studieinfo.", "Jag vet hur jag söker TET-plats och vad som händer där.", "Jag tror att jag kan påverka min egen framtid."],
+      en: ["I know the options after comprehensive school (upper secondary, vocational school, etc.).", "I know which fields interest me and why.", "I can find information about programmes on Opintopolku.", "I know how to apply for a work experience placement and what happens there.", "I believe I can influence my own future."]
+    },
+    "9": {
+      fi: ["Tiedän, miten yhteishaku toimii.", "Minulla on suunnitelma ja varasuunnitelma.", "Osaan vertailla vaihtoehtoja ja perustella valintani.", "Tiedän, mistä saan apua, jos suunnitelma ei toimi.", "Luotan siihen, että pärjään seuraavassa vaiheessa."],
+      sv: ["Jag vet hur gemensam ansökan fungerar.", "Jag har en plan och en reservplan.", "Jag kan jämföra alternativ och motivera mitt val.", "Jag vet var jag får hjälp om planen inte fungerar.", "Jag litar på att jag klarar mig i nästa skede."],
+      en: ["I know how the joint application works.", "I have a plan and a backup plan.", "I can compare options and explain my choice.", "I know where to get help if my plan doesn't work.", "I trust that I will do fine in the next stage."]
+    }
+  };
+
+  var TEKSTIT = {
+    fi: {
+      otsikko: "Miten taitosi ovat kehittyneet?",
+      ohje: "Vastaa omasta mielestäsi. Vastaus on nimetön: nimeä ei kysytä eikä tallenneta. Opettaja näkee vain koko ryhmän yhteenvedon.",
+      ala: "Valitse jokaiseen väitteeseen sopivin vaihtoehto.",
+      ankkuri15: "1 = ei lainkaan totta · 5 = täysin totta",
+      v6: "Kun vertaat lukuvuoden alkuun, miten taitosi ovat muuttuneet?",
+      a6: "1 = paljon heikommat · 3 = ennallaan · 5 = paljon paremmat",
+      laheta: "Lähetä vastaus", puuttuu: "Vastaa kaikkiin kysymyksiin ensin.",
+      kiitos: "Kiitos vastauksestasi! Vastaus on tallennettu nimettömänä.",
+      jo: "Olet jo vastannut tällä laitteella tänä lukuvuonna. Kiitos!",
+      virhe: "Lähetys ei onnistunut. Yritä hetken päästä uudelleen.",
+      laheta_ph: "Lähetetään…", vaittama: "Väite", asteikko: "Asteikko 1–5"
+    },
+    sv: {
+      otsikko: "Hur har dina färdigheter utvecklats?",
+      ohje: "Svara utifrån din egen uppfattning. Svaret är anonymt: ditt namn frågas inte och sparas inte. Läraren ser bara gruppens sammanfattning.",
+      ala: "Välj det alternativ som passar bäst för varje påstående.",
+      ankkuri15: "1 = stämmer inte alls · 5 = stämmer helt",
+      v6: "När du jämför med läsårets början, hur har dina färdigheter förändrats?",
+      a6: "1 = mycket sämre · 3 = oförändrade · 5 = mycket bättre",
+      laheta: "Skicka svaret", puuttuu: "Svara på alla frågor först.",
+      kiitos: "Tack för ditt svar! Svaret har sparats anonymt.",
+      jo: "Du har redan svarat på den här enheten under det här läsåret. Tack!",
+      virhe: "Det gick inte att skicka. Försök igen om en stund.",
+      laheta_ph: "Skickar…", vaittama: "Påstående", asteikko: "Skala 1–5"
+    },
+    en: {
+      otsikko: "How have your skills developed?",
+      ohje: "Answer based on your own view. The answer is anonymous: your name is not asked or saved. Your teacher only sees a summary of the whole group.",
+      ala: "Pick the best option for each statement.",
+      ankkuri15: "1 = not true at all · 5 = completely true",
+      v6: "Compared with the start of the school year, how have your skills changed?",
+      a6: "1 = much weaker · 3 = the same · 5 = much better",
+      laheta: "Send answer", puuttuu: "Please answer all questions first.",
+      kiitos: "Thank you! Your answer was saved anonymously.",
+      jo: "You have already answered on this device this school year. Thank you!",
+      virhe: "Sending failed. Please try again in a moment.",
+      laheta_ph: "Sending…", vaittama: "Statement", asteikko: "Scale 1–5"
+    }
+  };
+
+  function kieli() {
+    var l = (document.documentElement.getAttribute("lang") || "fi").toLowerCase().slice(0, 2);
+    return TEKSTIT[l] ? l : "fi";
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  kortti.classList.add("itsearv-kortti");
+  var tila = "lomake"; // lomake | kiitos | jo | virhe
+  var vastaukset = [0, 0, 0, 0, 0, 0];
+
+  function lisaaTyylit() {
+    if (document.getElementById("itsearv-tyylit")) return;
+    var st = document.createElement("style");
+    st.id = "itsearv-tyylit";
+    st.textContent = [
+      ".itsearv-kortti{max-width:820px;margin:1rem auto;padding:1.4rem 1.3rem;background:var(--card,#fff);color:var(--text,#1e1b4b);border:2px solid var(--border,#e9d5ff);border-radius:1rem;box-shadow:0 4px 18px rgba(124,58,237,.10)}",
+      ".itsearv-kortti h3{margin:0 0 .5rem;font-size:1.3rem;color:var(--primary,#7c3aed)}",
+      ".itsearv-ohje{margin:0 0 1rem;font-size:.95rem;line-height:1.5;color:var(--text-light,#6b21a8)}",
+      ".itsearv-ankkuri{font-size:.82rem;color:var(--text-light,#6b21a8);margin:.1rem 0 .5rem}",
+      ".itsearv-ryhma{border:0;border-top:1px solid var(--border,#e9d5ff);margin:0;padding:.85rem 0}",
+      ".itsearv-ryhma legend{font-weight:600;line-height:1.4;padding:0;margin-bottom:.45rem;float:left;width:100%}",
+      ".itsearv-ryhma legend+*{clear:both}",
+      ".itsearv-valinnat{display:flex;gap:.5rem;flex-wrap:wrap}",
+      ".itsearv-valinnat label{position:relative;flex:1 1 3rem;max-width:4.5rem;min-width:2.8rem}",
+      ".itsearv-valinnat input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}",
+      ".itsearv-valinnat span{display:flex;align-items:center;justify-content:center;min-height:2.8rem;border:2px solid var(--border,#e9d5ff);border-radius:.6rem;font-weight:700;font-size:1.05rem;background:#fff;color:var(--text,#1e1b4b)}",
+      ".itsearv-valinnat input:hover+span{border-color:var(--primary,#7c3aed)}",
+      ".itsearv-valinnat input:checked+span{background:var(--primary,#7c3aed);border-color:var(--primary,#7c3aed);color:#fff}",
+      ".itsearv-valinnat input:focus-visible+span{outline:3px solid #f59e0b;outline-offset:2px}",
+      ".itsearv-laheta{margin-top:1rem;background:var(--primary,#7c3aed);color:#fff;border:0;border-radius:.7rem;padding:.75rem 1.4rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit}",
+      ".itsearv-laheta:hover{background:var(--primary-hover,#6d28d9)}",
+      ".itsearv-laheta[disabled]{opacity:.6;cursor:default}",
+      ".itsearv-viesti{margin:.8rem 0 0;font-size:.95rem}",
+      ".itsearv-viesti.virhe{color:#b91c1c}",
+      ".itsearv-kiitos{font-size:1.05rem;margin:.4rem 0 0}",
+      "@media print{.itsearv-kortti{display:none}}"
+    ].join("");
+    document.head.appendChild(st);
+  }
+
+  function piirra() {
+    var k = kieli(), T = TEKSTIT[k], V = VAITTEET[LUOKKA][k];
+    var html = '<h3 class="itsearv-otsikko">' + esc(T.otsikko) + "</h3>";
+    if (tila === "kiitos" || tila === "jo") {
+      html += '<p class="itsearv-kiitos" role="status">' + esc(tila === "jo" ? T.jo : T.kiitos) + "</p>";
+      kortti.innerHTML = html;
+      return;
+    }
+    html += '<p class="itsearv-ohje">' + esc(T.ohje) + "</p>";
+    html += '<p class="itsearv-ankkuri">' + esc(T.ala) + " " + esc(T.ankkuri15) + "</p>";
+    html += '<form class="itsearv-lomake" novalidate>';
+    function ryhma(i, teksti, ankkuri) {
+      var s = '<fieldset class="itsearv-ryhma"><legend>' + (i + 1) + ". " + esc(teksti) + "</legend>";
+      if (ankkuri) s += '<div class="itsearv-ankkuri">' + esc(ankkuri) + "</div>";
+      s += '<div class="itsearv-valinnat">';
+      for (var n = 1; n <= 5; n++) {
+        s += '<label><input type="radio" name="v' + i + '" value="' + n + '"' + (vastaukset[i] === n ? " checked" : "") +
+          ' aria-label="' + n + '"><span aria-hidden="true">' + n + "</span></label>";
+      }
+      return s + "</div></fieldset>";
+    }
+    for (var i = 0; i < 5; i++) html += ryhma(i, V[i], null);
+    html += ryhma(5, T.v6, T.a6);
+    html += '<button type="submit" class="itsearv-laheta">' + esc(T.laheta) + "</button>";
+    html += '<p class="itsearv-viesti' + (tila === "virhe" ? " virhe" : "") + '" role="status" aria-live="polite">' +
+      (tila === "virhe" ? esc(T.virhe) : "") + "</p></form>";
+    kortti.innerHTML = html;
+
+    var lomake = kortti.querySelector("form");
+    var viesti = kortti.querySelector(".itsearv-viesti");
+    lomake.addEventListener("change", function (e) {
+      var m = /^v(\d)$/.exec(e.target.name || "");
+      if (m) vastaukset[+m[1]] = +e.target.value;
+    });
+    lomake.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (vastaukset.some(function (x) { return !x; })) {
+        viesti.className = "itsearv-viesti virhe";
+        viesti.textContent = T.puuttuu;
+        return;
+      }
+      var nappi = lomake.querySelector(".itsearv-laheta");
+      nappi.disabled = true;
+      nappi.textContent = T.laheta_ph;
+      var ryhmaKoodi = (lue("digiopo-ryhma") || "").trim();
+      fetch("/api/jarjestys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ toiminto: "itsearviointi_tallenna", luokka: LUOKKA, vastaukset: vastaukset, ryhma: ryhmaKoodi })
+      }).then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (v) {
+          if (v && v.ok) { kirjoita(LS_AVAIN, "1"); tila = "kiitos"; }
+          else tila = "virhe";
+          piirra();
+        })
+        .catch(function () { tila = "virhe"; piirra(); });
+    });
+  }
+
+  lisaaTyylit();
+  if (lue(LS_AVAIN) === "1") tila = "jo";
+  piirra();
+  new MutationObserver(piirra).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+})();

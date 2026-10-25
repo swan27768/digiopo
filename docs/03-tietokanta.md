@@ -20,6 +20,7 @@ funktioihin. Aja nämä ylhäältä alas.
 | 1 | `supabase_schema.sql` | `lisenssit`, funktio `paivita_muokattu_at()` | — |
 | 2 | `supabase_jarjestys.sql` | `opetusryhmat`, `jarjestykset` | 1 (funktio) |
 | 2b | `supabase_piilotetut_osiot.sql` | `jarjestykset.piilotetut` (jo olemassa olevaan kantaan; tuoreessa asennuksessa mukana vaiheessa 2) | 2 |
+| 2c | `supabase_itsearviointi.sql` | `itsearviointi` (nimetön oppilaan itsearvio, ei viiteavaimia) | — |
 | 3 | `supabase_opettajatili_vaihe1.sql` | `opetusryhmat.omistaja_email` | 2 |
 | 4 | `supabase_poista_pin.sql` | pudottaa `opetusryhmat.avain_hash` | 2, 3 |
 | 5 | `supabase_lukuvuosi_aikataulu.sql` | `lukuvuosi_tapahtumat` | 1, 2 |
@@ -116,6 +117,7 @@ se vain vertaa käyttöä `paikat`-kenttään ylikäyttöhälytystä varten.
 | `opetusryhmat` | Ryhmäkoodi (jaetaan oppilaille), `omistaja_email`, koulukoodi, nimi |
 | `jarjestykset` | Osioiden järjestys, lukitukset ja piilotukset (`jarjestys`, `lukitut`, `piilotetut`) per ryhmä + luokka-aste (7/8/9), jsonb |
 | `lukuvuosi_tapahtumat` | Koulukohtainen lukuvuosikalenteri per ryhmä + luokka-aste |
+| `itsearviointi` | Oppilaan nimetön itsearvio (6 vastausta 1–5) per luokka-aste ja lukuvuosi. Ei nimeä, IP:tä eikä laitetunnistetta; `koulukoodi` luetaan evästeestä, `ryhmakoodi` on valinnainen. Siivotaan 24 kk:n jälkeen. |
 
 Molemmat viimeiset viittaavat `opetusryhmat`-tauluun `on delete cascade`
 -säännöllä: ryhmän poisto vie mukanaan järjestykset ja tapahtumat.

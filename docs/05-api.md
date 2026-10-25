@@ -79,6 +79,19 @@ samat kolme listaa. Jos `piilotetut`-saraketta ei ole vielä tietokannassa
 (`supabase_piilotetut_osiot.sql` ajamatta), luku toimii ilman sitä ja tallennus palauttaa
 `tietokanta_paivittamatta`, kun jotain yritetään piilottaa.
 
+### Oppilaan itsearviointi
+
+`POST /api/jarjestys { toiminto: "itsearviointi_tallenna", luokka, vastaukset: [6 lukua 1–5], ryhma? }`
+tallentaa nimettömän vastauksen. Ei vaadi kirjautumista. Koulu luetaan lisenssievästeestä, lukuvuosi
+lasketaan palvelimella (elokuusta alkaen), ja ryhmäkoodi hyväksytään vain jos ryhmä on olemassa.
+Oma rate limit (400 / 10 min / IP), koska koko luokka tallentaa samasta koulun IP:stä.
+
+`POST /api/jarjestys { toiminto: "itsearviointi_yhteenveto", ryhma, luokka, lukuvuosi? }`
+(opettajan istunto + ryhmän omistajuus) palauttaa `n`, `keskiarvot` ja `jakaumat` (6 × 5).
+Alle 5 vastauksella palautuu vain `n` ja `riittamaton: true`, jottei yksittäinen oppilas tunnistu.
+Vastauksia ei voi yhdistää oppilaaseen; saman laitteen kaksoisvastaus estetään vain selaimen
+localStorage-merkinnällä (tunnettu rajoite).
+
 ### Pelit ja oppilastyöt
 
 | Endpoint | Metodi | Valtuutus |
