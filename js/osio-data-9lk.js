@@ -108,7 +108,7 @@ window.OSIO_DATA = {
       ],
       miksi: "Päätöksentekoa on tutkittu laajasti kognitiivisessa psykologiassa. Ihmisillä on kaksi ajattelujärjestelmää: nopea (tunne, vaisto) ja hidas (analyysi, järki). Hyvä päätöksenteko vaatii molempia. Nuorten päätöksentekoon vaikuttaa erityisesti sosiaalinen paine — tämä harjoitus auttaa tunnistamaan, mikä on oikeasti oma tahto.",
       yhteenveto: [
-        "Osaat käyttää päätösmallia: puolesta, vastaan, en tiedä, miltä tuntuu",
+        "Osaat katsoa päätöstä kuudelta puolelta: faktat, fiilis, hyvät puolet, riskit, vaihtoehdot, seuraava askel",
         "Tiedät, miten sosiaalinen paine vaikuttaa päätöksentekoon",
         "Olet harjoitellut neuvomista — taito, joka auttaa myös omissa isoissa valinnoissa"
       ]
