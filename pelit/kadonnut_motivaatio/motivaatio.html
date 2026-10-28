@@ -605,37 +605,130 @@ body[data-passage="Kansi"] .passage {
   .btn-lataa { animation: none !important; transition: none !important; }
 }
 
-/* ---- Loppu-sivun yhteenveto ---- */
-.yhteenveto-kortti {
-  background: var(--white);
-  border-radius: 0.75rem;
-  border-left: 5px solid var(--mint);
-  padding: 0.7rem 0.9rem;
-  margin: 0.5rem 0;
-  box-shadow: 0 2px 10px rgba(91,44,111,0.08);
-}
-.yhteenveto-otsikko {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--violet);
-  margin-bottom: 0.75rem;
-}
-.yhteenveto-rivi {
-  display: flex;
-  gap: 0.75rem;
-  margin: 0.4rem 0;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.yhteenveto-label {
-  font-weight: 700;
-  color: var(--violet);
-  flex-shrink: 0;
-  min-width: 120px;
-}
-.yhteenveto-teksti {
+/* ---- Motivaatiokortti (ruutu + tuloste) ----
+   Periaate: PELIN teksti = violetti/minttu, tyylikäs sans-serif.
+             OPPILAAN oma teksti = sininen "kuulakärkikynä" käsinkirjoitusfontilla viivoitetulla vihkopaperilla. */
+.motivaatiokortti-alue { margin: 0.8rem 0; }
+.mk-kortti {
+  --mk-ink: #1d3f9e;
+  --mk-paper: #fffdf4;
+  --mk-line: #c7d3ee;
+  background: #fff;
+  border: 2px solid var(--violet);
+  border-radius: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(91,44,111,0.16);
   color: var(--text);
-  white-space: pre-wrap;
+  text-align: left;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.4;
+}
+.mk-yla {
+  position: relative;
+  background: linear-gradient(135deg, var(--violet) 0%, #7a3d92 100%);
+  color: #fff;
+  padding: 1.05rem 1.2rem 1.3rem;
+  overflow: hidden;
+}
+.mk-yla::before {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 0.4rem;
+  background: var(--mint);
+}
+.mk-yla::after {
+  content: "🔑";
+  position: absolute; right: 1rem; top: 50%;
+  transform: translateY(-55%) rotate(18deg);
+  font-size: 3.4rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.mk-kicker {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--mint); margin: 0 0 0.15rem;
+}
+.mk-otsikko { font-size: 1.7rem; font-weight: 800; line-height: 1.1; color: #fff; margin: 0; }
+.mk-alaotsikko { margin: 0.35rem 0 0; font-size: 0.95rem; padding-right: 4.5rem; color: #f3eaf8; }
+.mk-tiedot {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+  padding: 0.8rem 1.2rem 0.1rem; font-size: 0.85rem; color: #555;
+}
+.mk-tieto { flex: 1 1 8rem; display: flex; align-items: flex-end; gap: 0.4rem; }
+.mk-tieto b { color: var(--violet); font-weight: 700; flex: none; }
+.mk-viiva { flex: 1; min-height: 1.4rem; border-bottom: 1.5px solid #9a8fa3; padding: 0 0.2rem; color: #333; }
+.mk-selite {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.9rem;
+  margin: 0.7rem 1.2rem 0.2rem; padding: 0.5rem 0.7rem;
+  background: #f6f2f9; border: 1.5px dashed var(--pastel); border-radius: 0.7rem;
+  font-size: 0.82rem; color: #444;
+}
+.mk-selite-pari { display: inline-flex; align-items: center; gap: 0.4rem; }
+.mk-naytekirjoitus {
+  font-family: "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS","Marker Felt",cursive;
+  color: var(--mk-ink); background: var(--mk-paper); border: 1px solid var(--mk-line);
+  border-left: 3px solid var(--mk-ink); border-radius: 0.3rem; padding: 0.05rem 0.5rem; font-size: 0.9rem;
+}
+.mk-polut { padding: 0.6rem 1.2rem 1.1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.mk-polku {
+  --a: var(--violet);
+  background: #fff; border: 1px solid #e4dcea; border-left: 6px solid var(--a);
+  border-radius: 0.8rem; padding: 0.7rem 0.9rem 0.9rem;
+  break-inside: avoid; page-break-inside: avoid;
+}
+.mk-polku-otsikko { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem; }
+.mk-avatar {
+  width: 54px; height: 54px; flex: none; border-radius: 50%;
+  border: 3px solid var(--a); background: #fff; object-fit: cover;
+}
+.mk-polku-nimi { font-weight: 800; color: var(--violet); font-size: 1.08rem; line-height: 1.2; }
+.mk-polku-taito { font-size: 0.85rem; color: #555; }
+.mk-peli-rivi { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.5rem; margin: 0 0 0.35rem; }
+.mk-tunniste {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violet);
+}
+.mk-chip {
+  background: var(--beige); border: 1.5px solid var(--mint); color: #1a1a1a;
+  border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 0.88rem; font-weight: 600;
+}
+.mk-kentta { margin: 0.55rem 0 0; break-inside: avoid; page-break-inside: avoid; }
+.mk-kentta-otsikko {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--violet); margin: 0 0 0.2rem;
+}
+.mk-oma-merkki { color: var(--mk-ink); text-transform: none; letter-spacing: 0; font-weight: 700; font-size: 0.78rem; white-space: nowrap; }
+.mk-kirjoitus {
+  font-family: "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS","Marker Felt",cursive;
+  font-size: 1.02rem; line-height: 1.7rem; color: var(--mk-ink);
+  background-color: var(--mk-paper);
+  background-image: linear-gradient(to bottom, transparent calc(100% - 1.5px), var(--mk-line) calc(100% - 1.5px));
+  background-size: 100% 1.7rem;
+  border: 1px solid var(--mk-line); border-left: 4px solid var(--mk-ink); border-radius: 0.4rem;
+  padding: 0 0.75rem; min-height: 3.4rem;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.mk-ala {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.3rem 1rem;
+  padding: 0.6rem 1.2rem 0.85rem; border-top: 2px dotted var(--pastel);
+  font-size: 0.8rem; color: #5d5566;
+}
+.mk-tulosta-vihje { text-align: center; font-size: 0.9rem; color: #555; margin: 0.4rem 0 0; }
+.btn-lataa.toissijainen { background: #fff; color: var(--violet); border: 2px solid var(--violet); box-shadow: none; margin-left: 0.4rem; }
+.btn-lataa.toissijainen:hover { background: #f3eaf8; color: var(--violet); }
+
+/* Tulostus: vain kortti, A4 pysty */
+#tulostus-alue { display: none; }
+@page { size: A4 portrait; margin: 9mm; }
+@media print {
+  html.tulostetaan-kortti, html.tulostetaan-kortti body { background: #fff !important; height: auto !important; overflow: visible !important; }
+  html.tulostetaan-kortti body > *:not(#tulostus-alue) { display: none !important; }
+  html.tulostetaan-kortti #tulostus-alue { display: block !important; }
+  #tulostus-alue, #tulostus-alue * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #tulostus-alue .mk-kortti { box-shadow: none; border: 0; border-radius: 0; overflow: visible; font-size: 10.5pt; }
+  #tulostus-alue .mk-yla { border-radius: 4mm; }
+  #tulostus-alue .mk-ala { border-top: 2px dotted var(--pastel); }
+  #tulostus-alue .mk-otsikko { font-size: 22pt; }
+  #tulostus-alue .mk-kirjoitus { font-size: 11.5pt; }
+  #tulostus-alue .mk-polku, #tulostus-alue .mk-kentta { break-inside: avoid; page-break-inside: avoid; }
 }
 
 /* ---- TEHTÄVÄ-otsikko ja ohje ---- */
@@ -903,72 +996,174 @@ $(document).on(':passageleave', function() {
 
 });
 
-/* ---- Loppu-passagen yhteenveto ---- */
-window.naytaYhteenveto = function() {
+/* ---- Loppu-passagen motivaatiokortti ---- */
+window.MK_HAHMOT = [
+  { id: 'topi', nimi: 'Topin polku', taito: 'Aloittamisen taito',    kuva: 'img/motiv-2.webp', vari: '#E8833A' },
+  { id: 'dani', nimi: 'Danin polku', taito: 'Keskittymisen taito',   kuva: 'img/motiv-3.webp', vari: '#1FA39A' },
+  { id: 'eeli', nimi: 'Eelin polku', taito: 'Rohkeuden taito',       kuva: 'img/motiv-4.webp', vari: '#3F6FD1' },
+  { id: 'taru', nimi: 'Tarun polku', taito: 'Oman syyn löytäminen',  kuva: 'img/motiv-5.webp', vari: '#8E4FB0' }
+];
+
+/* Apu: luo elementti. Teksti asetetaan aina textContentilla (oppilaan teksti ei koskaan HTML:ksi). */
+window.mkEl = function(tag, cls, teksti) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (teksti !== undefined && teksti !== null) e.textContent = teksti;
+  return e;
+};
+window.mkArvo = function(v) {
+  return (v && String(v).trim()) ? String(v).trim() : '';
+};
+
+/* Oppilaan itse kirjoittama kenttä: viivoitettu vihkopaperi + käsinkirjoitusfontti + ✍️-merkintä */
+window.mkKentta = function(otsikko, arvo) {
+  var k = mkEl('div', 'mk-kentta');
+  var o = mkEl('div', 'mk-kentta-otsikko');
+  o.appendChild(mkEl('span', '', otsikko));
+  o.appendChild(mkEl('span', 'mk-oma-merkki', arvo ? '✍️ kirjoitin itse' : '✍️ kirjoita tähän käsin'));
+  k.appendChild(o);
+  k.appendChild(mkEl('div', 'mk-kirjoitus', arvo));
+  return k;
+};
+
+window.mkRakennaKortti = function() {
   var vars = State.variables;
-  var loydetty = false;
+  var polut = [];
 
-  function asetaRivi(elId, arvo) {
-    var el = document.getElementById(elId);
-    if (!el) return;
-    var rivi = el.parentElement;
-    if (arvo && String(arvo).trim()) {
-      el.textContent = String(arvo).trim();
-      if (rivi) rivi.style.display = 'flex';
-    } else {
-      if (rivi) rivi.style.display = 'none';
+  MK_HAHMOT.forEach(function(h) {
+    var d = {
+      tapa:   mkArvo(vars[h.id + 'Opiskelutapa']),
+      teko:   mkArvo(vars[h.id + 'Teko']),
+      pNappi: mkArvo(vars[h.id + 'PalkintoNappi']),
+      pOma:   mkArvo(vars[h.id + 'PalkintoOma']),
+      ref:    mkArvo(vars[h.id + 'Reflektio']),
+      valinta:mkArvo(vars[h.id + 'OmaValinta'])
+    };
+    if (d.tapa || d.teko || d.pNappi || d.pOma || d.ref || d.valinta) polut.push({ h: h, d: d });
+  });
+
+  if (!polut.length) return null;
+
+  var kortti = mkEl('div', 'mk-kortti');
+
+  /* Yläpalkki */
+  var yla = mkEl('div', 'mk-yla');
+  yla.appendChild(mkEl('div', 'mk-kicker', 'Kadonnut motivaatio'));
+  yla.appendChild(mkEl('div', 'mk-otsikko', 'Motivaatiokortti'));
+  yla.appendChild(mkEl('div', 'mk-alaotsikko', 'Minun motivaation avaimeni'));
+  kortti.appendChild(yla);
+
+  /* Nimi / luokka / päivä – täytetään käsin */
+  var tiedot = mkEl('div', 'mk-tiedot');
+  [['Nimi:', ''], ['Luokka:', ''], ['Päivä:', new Date().toLocaleDateString('fi-FI')]].forEach(function(p) {
+    var t = mkEl('div', 'mk-tieto');
+    t.appendChild(mkEl('b', '', p[0]));
+    t.appendChild(mkEl('span', 'mk-viiva', p[1]));
+    tiedot.appendChild(t);
+  });
+  kortti.appendChild(tiedot);
+
+  /* Selite: mikä on pelin tekstiä, mikä omaa */
+  var selite = mkEl('div', 'mk-selite');
+  var s1 = mkEl('span', 'mk-selite-pari');
+  s1.appendChild(mkEl('span', 'mk-chip', 'Näin pelin teksti näkyy'));
+  var s2 = mkEl('span', 'mk-selite-pari');
+  s2.appendChild(mkEl('span', 'mk-naytekirjoitus', '✍️ Näin omat sanani näkyvät'));
+  selite.appendChild(s1);
+  selite.appendChild(s2);
+  kortti.appendChild(selite);
+
+  /* Hahmopolut */
+  var lista = mkEl('div', 'mk-polut');
+  polut.forEach(function(p) {
+    var h = p.h, d = p.d;
+    var polku = mkEl('div', 'mk-polku');
+    polku.style.setProperty('--a', h.vari);
+
+    var ots = mkEl('div', 'mk-polku-otsikko');
+    var img = mkEl('img', 'mk-avatar');
+    img.src = h.kuva;
+    img.alt = '';
+    ots.appendChild(img);
+    var ot = mkEl('div');
+    ot.appendChild(mkEl('div', 'mk-polku-nimi', h.nimi));
+    ot.appendChild(mkEl('div', 'mk-polku-taito', h.taito));
+    ots.appendChild(ot);
+    polku.appendChild(ots);
+
+    /* Pelissä valitut (nappivalinnat) */
+    if (d.tapa || d.pNappi) {
+      var rivi = mkEl('div', 'mk-peli-rivi');
+      rivi.appendChild(mkEl('span', 'mk-tunniste', 'Pelissä valitsin'));
+      if (d.tapa)   rivi.appendChild(mkEl('span', 'mk-chip', d.tapa));
+      if (d.pNappi) rivi.appendChild(mkEl('span', 'mk-chip', 'Palkinto: ' + d.pNappi));
+      polku.appendChild(rivi);
     }
-  }
 
-  function naytaKortti(korttiId, tarkista) {
-    var onko = tarkista.some(function(k) {
-      return vars[k] && String(vars[k]).trim();
-    });
-    var el = document.getElementById(korttiId);
-    if (el) el.style.display = onko ? 'block' : 'none';
-    if (onko) loydetty = true;
-  }
+    /* Oppilaan omat kirjoitukset */
+    polku.appendChild(mkKentta('🔑 Avain 1 · Oma pieni teko', d.teko));
+    if (d.pOma) polku.appendChild(mkKentta('🎁 Oma palkintoni', d.pOma));
+    polku.appendChild(mkKentta('💬 Oivallukseni', d.ref));
+    polku.appendChild(mkKentta('🔑 Avain 2 · Näin jatkan', d.valinta));
 
-  /* Topi */
-  naytaKortti('yhteenveto-topi', ['topiOpiskelutapa','topiTeko','topiPalkintoNappi','topiPalkintoOma','topiReflektio','topiOmaValinta']);
-  asetaRivi('nayta-topi-tapa',    vars.topiOpiskelutapa);
-  asetaRivi('nayta-topi-teko',    vars.topiTeko);
-  asetaRivi('nayta-topi-palkinto',vars.topiPalkintoOma || vars.topiPalkintoNappi);
-  asetaRivi('nayta-topi-ref',     vars.topiReflektio);
-  asetaRivi('nayta-topi-valinta', vars.topiOmaValinta);
+    lista.appendChild(polku);
+  });
+  kortti.appendChild(lista);
 
-  /* Dani */
-  naytaKortti('yhteenveto-dani', ['daniOpiskelutapa','daniTeko','daniPalkintoNappi','daniPalkintoOma','daniReflektio','daniOmaValinta']);
-  asetaRivi('nayta-dani-tapa',    vars.daniOpiskelutapa);
-  asetaRivi('nayta-dani-teko',    vars.daniTeko);
-  asetaRivi('nayta-dani-palkinto',vars.daniPalkintoOma || vars.daniPalkintoNappi);
-  asetaRivi('nayta-dani-ref',     vars.daniReflektio);
-  asetaRivi('nayta-dani-valinta', vars.daniOmaValinta);
+  /* Alatunniste */
+  var ala = mkEl('div', 'mk-ala');
+  ala.appendChild(mkEl('span', '', '🔐 Salainen tehtävä jää vain sinulle – sitä ei ole tässä kortissa.'));
+  ala.appendChild(mkEl('span', '', 'DigiOpo · Kadonnut motivaatio'));
+  kortti.appendChild(ala);
 
-  /* Eeli */
-  naytaKortti('yhteenveto-eeli', ['eeliOpiskelutapa','eeliTeko','eeliPalkintoNappi','eeliPalkintoOma','eeliReflektio','eeliOmaValinta']);
-  asetaRivi('nayta-eeli-tapa',    vars.eeliOpiskelutapa);
-  asetaRivi('nayta-eeli-teko',    vars.eeliTeko);
-  asetaRivi('nayta-eeli-palkinto',vars.eeliPalkintoOma || vars.eeliPalkintoNappi);
-  asetaRivi('nayta-eeli-ref',     vars.eeliReflektio);
-  asetaRivi('nayta-eeli-valinta', vars.eeliOmaValinta);
+  return kortti;
+};
 
-  /* Taru */
-  naytaKortti('yhteenveto-taru', ['taruOpiskelutapa','taruTeko','taruPalkintoNappi','taruPalkintoOma','taruReflektio','taruOmaValinta']);
-  asetaRivi('nayta-taru-tapa',    vars.taruOpiskelutapa);
-  asetaRivi('nayta-taru-teko',    vars.taruTeko);
-  asetaRivi('nayta-taru-palkinto',vars.taruPalkintoOma || vars.taruPalkintoNappi);
-  asetaRivi('nayta-taru-ref',     vars.taruReflektio);
-  asetaRivi('nayta-taru-valinta', vars.taruOmaValinta);
+window.naytaYhteenveto = function() {
+  var alue = document.getElementById('motivaatiokortti');
+  var ei   = document.getElementById('ei-vastauksia');
+  var tulostaBtn = document.getElementById('btn-tulosta-kortti');
+  if (!alue) return;
+  while (alue.firstChild) alue.removeChild(alue.firstChild);
 
-  var ei = document.getElementById('ei-vastauksia');
-  if (ei) ei.style.display = loydetty ? 'none' : 'block';
+  var kortti = mkRakennaKortti();
+  if (kortti) alue.appendChild(kortti);
+  if (ei) ei.style.display = kortti ? 'none' : 'block';
+  if (tulostaBtn) tulostaBtn.style.display = kortti ? '' : 'none';
 };
 
 $(document).on(':passagedisplay', function(ev) {
   if (ev.passage.name !== 'Loppu') return;
   setTimeout(window.naytaYhteenveto, 50);
 });
+
+/* ---- Tulostus: kopioidaan kortti omaan tulostusalueeseen, muu sivu piiloon (CSS @media print) ---- */
+window.mkValmistaTuloste = function() {
+  var lahde = document.getElementById('motivaatiokortti');
+  if (!lahde || !lahde.firstElementChild) return false;
+  mkSiivoaTuloste();
+  var alue = document.createElement('div');
+  alue.id = 'tulostus-alue';
+  alue.appendChild(lahde.firstElementChild.cloneNode(true));
+  document.body.appendChild(alue);
+  document.documentElement.classList.add('tulostetaan-kortti');
+  return true;
+};
+window.mkSiivoaTuloste = function() {
+  var a = document.getElementById('tulostus-alue');
+  if (a && a.parentNode) a.parentNode.removeChild(a);
+  document.documentElement.classList.remove('tulostetaan-kortti');
+};
+window.tulostaKortti = function() {
+  if (!mkValmistaTuloste()) return;
+  setTimeout(function() { window.print(); }, 60);
+};
+/* Myös Ctrl+P / selaimen oma tulostus Loppu-sivulla tulostaa kortin */
+window.addEventListener('beforeprint', function() {
+  if (document.body.getAttribute('data-passage') === 'Loppu') mkValmistaTuloste();
+});
+window.addEventListener('afterprint', mkSiivoaTuloste);
+$(document).on(':passageend', mkSiivoaTuloste);
 
 /* ---- Motivaatiokortin lataus ---- */
 window.lataaKortti = function() {
@@ -1107,7 +1302,7 @@ window.lisaaNuolet = function() {
       var a = lapset[i], b = lapset[i + 1];
       /* ei nuolta peräkkäisten hahmokorttien tai yhteenvetokorttien väliin */
       if (a.classList.contains('hahmo-kortti') && b.classList.contains('hahmo-kortti')) continue;
-      if (a.classList.contains('yhteenveto-kortti') || b.classList.contains('yhteenveto-kortti')) continue;
+      if (a.classList.contains('motivaatiokortti-alue') || b.classList.contains('motivaatiokortti-alue')) continue;
       var n = document.createElement('div');
       n.className = 'jatkuu-nuoli';
       n.textContent = '⬇️';
@@ -1505,60 +1700,27 @@ html, body { margin:0; padding:0; overflow:hidden; }
 
   &lt;div class=&quot;tapahtumabox&quot;&gt;
     &lt;p&gt;Olet kulkenut motivaation jahdissa ja oppinut jotain tärkeää.&lt;/p&gt;
-    &lt;p&gt;Alla näet omat vastauksesi. Tarkista ne ja lataa sitten motivaation avaimesi opettajalle.&lt;/p&gt;
+    &lt;p&gt;Alla on &lt;strong&gt;motivaatiokorttisi&lt;/strong&gt;. Pelin tekstit näkyvät violetilla ja minttuvihreällä. &lt;strong&gt;Omat kirjoituksesi&lt;/strong&gt; näkyvät sinisellä viivoitetulla paperilla ✍️. Tarkista kortti ja tulosta se tai lataa se opettajalle.&lt;/p&gt;
   &lt;/div&gt;
 
-  &lt;div id=&quot;yhteenveto-topi&quot; class=&quot;yhteenveto-kortti&quot; style=&quot;display:none;&quot;&gt;
-    &lt;div class=&quot;yhteenveto-otsikko&quot;&gt;🔧 Topin polku — Aloittamisen taito&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Opiskelutapa:&lt;/span&gt;&lt;span id=&quot;nayta-topi-tapa&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 1 — oma teko:&lt;/span&gt;&lt;span id=&quot;nayta-topi-teko&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Palkinto:&lt;/span&gt;&lt;span id=&quot;nayta-topi-palkinto&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Oivallus:&lt;/span&gt;&lt;span id=&quot;nayta-topi-ref&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 2 — oma valinta:&lt;/span&gt;&lt;span id=&quot;nayta-topi-valinta&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div id=&quot;yhteenveto-dani&quot; class=&quot;yhteenveto-kortti&quot; style=&quot;display:none;&quot;&gt;
-    &lt;div class=&quot;yhteenveto-otsikko&quot;&gt;📱 Danin polku — Keskittymisen taito&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Opiskelutapa:&lt;/span&gt;&lt;span id=&quot;nayta-dani-tapa&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 1 — oma teko:&lt;/span&gt;&lt;span id=&quot;nayta-dani-teko&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Palkinto:&lt;/span&gt;&lt;span id=&quot;nayta-dani-palkinto&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Oivallus:&lt;/span&gt;&lt;span id=&quot;nayta-dani-ref&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 2 — oma valinta:&lt;/span&gt;&lt;span id=&quot;nayta-dani-valinta&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div id=&quot;yhteenveto-eeli&quot; class=&quot;yhteenveto-kortti&quot; style=&quot;display:none;&quot;&gt;
-    &lt;div class=&quot;yhteenveto-otsikko&quot;&gt;💭 Eelin polku — Rohkeuden taito&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Opiskelutapa:&lt;/span&gt;&lt;span id=&quot;nayta-eeli-tapa&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 1 — oma teko:&lt;/span&gt;&lt;span id=&quot;nayta-eeli-teko&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Palkinto:&lt;/span&gt;&lt;span id=&quot;nayta-eeli-palkinto&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Oivallus:&lt;/span&gt;&lt;span id=&quot;nayta-eeli-ref&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 2 — oma valinta:&lt;/span&gt;&lt;span id=&quot;nayta-eeli-valinta&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-  &lt;div id=&quot;yhteenveto-taru&quot; class=&quot;yhteenveto-kortti&quot; style=&quot;display:none;&quot;&gt;
-    &lt;div class=&quot;yhteenveto-otsikko&quot;&gt;🏆 Tarun polku — Oman syyn löytäminen&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Opiskelutapa:&lt;/span&gt;&lt;span id=&quot;nayta-taru-tapa&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 1 — oma teko:&lt;/span&gt;&lt;span id=&quot;nayta-taru-teko&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Palkinto:&lt;/span&gt;&lt;span id=&quot;nayta-taru-palkinto&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;Oivallus:&lt;/span&gt;&lt;span id=&quot;nayta-taru-ref&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-    &lt;div class=&quot;yhteenveto-rivi&quot;&gt;&lt;span class=&quot;yhteenveto-label&quot;&gt;🔑 Avain 2 — oma valinta:&lt;/span&gt;&lt;span id=&quot;nayta-taru-valinta&quot; class=&quot;yhteenveto-teksti&quot;&gt;&lt;/span&gt;&lt;/div&gt;
-  &lt;/div&gt;
+  &lt;div id=&quot;motivaatiokortti&quot; class=&quot;motivaatiokortti-alue&quot;&gt;&lt;/div&gt;
 
   &lt;div id=&quot;ei-vastauksia&quot; class=&quot;tapahtumabox&quot; style=&quot;display:none;&quot;&gt;
     &lt;p&gt;Et ole vielä käynyt yhdenkään hahmon polkua loppuun. Palaa takaisin ja valitse hahmo!&lt;/p&gt;
   &lt;/div&gt;
 
   &lt;div class=&quot;palautus-ohje&quot;&gt;
-    &lt;h3&gt;📎 Näin palautat motivaation avaimesi:&lt;/h3&gt;
+    &lt;h3&gt;📎 Näin käytät korttiasi:&lt;/h3&gt;
     &lt;ol&gt;
-      &lt;li&gt;Klikkaa &lt;strong&gt;Lataa motivaation avaimet&lt;/strong&gt; -nappia.&lt;/li&gt;
-      &lt;li&gt;Tiedosto tallentuu nimellä &lt;strong&gt;motivaation-avaimet.txt&lt;/strong&gt;.&lt;/li&gt;
-      &lt;li&gt;Avaa &lt;strong&gt;Google Classroom&lt;/strong&gt; ja palauta tiedosto tehtävään.&lt;/li&gt;
+      &lt;li&gt;Tarkista, että kortissa on kaikki ajatuksesi.&lt;/li&gt;
+      &lt;li&gt;Klikkaa &lt;strong&gt;Tulosta kortti&lt;/strong&gt;, jos opettaja pyytää paperiversion.&lt;/li&gt;
+      &lt;li&gt;Klikkaa &lt;strong&gt;Lataa tiedostona&lt;/strong&gt;, jos palautat tehtävän &lt;strong&gt;Google Classroomiin&lt;/strong&gt;. Tiedosto tallentuu nimellä &lt;strong&gt;motivaation-avaimet.txt&lt;/strong&gt;.&lt;/li&gt;
     &lt;/ol&gt;
   &lt;/div&gt;
 
   &lt;div class=&quot;napit-rivi&quot;&gt;
-    &lt;button class=&quot;btn-lataa&quot; onclick=&quot;lataaKortti()&quot;&gt;💾 Lataa motivaation avaimet&lt;/button&gt;
+    &lt;button class=&quot;btn-lataa&quot; id=&quot;btn-tulosta-kortti&quot; onclick=&quot;tulostaKortti()&quot;&gt;🖨️ Tulosta kortti&lt;/button&gt;
+    &lt;button class=&quot;btn-lataa toissijainen&quot; onclick=&quot;lataaKortti()&quot;&gt;💾 Lataa tiedostona&lt;/button&gt;
   &lt;/div&gt;
 
   &lt;div id=&quot;lataus-vahvistus&quot; class=&quot;lataus-vahvistus&quot; style=&quot;display:none;&quot;&gt;
