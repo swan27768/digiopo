@@ -715,6 +715,54 @@ body[data-passage="Kansi"] .passage {
 .btn-lataa.toissijainen { background: #fff; color: var(--violet); border: 2px solid var(--violet); box-shadow: none; margin-left: 0.4rem; }
 .btn-lataa.toissijainen:hover { background: #f3eaf8; color: var(--violet); }
 
+.mk-pdf { box-shadow: none !important; border: 0 !important; border-radius: 0 !important; overflow: visible !important; }
+.mk-pdf .mk-yla { border-radius: 0; }
+.mk-pdf .mk-kirjoitus { background-image: linear-gradient(to bottom, #fffdf4 0px, #fffdf4 25.7px, #c7d3ee 25.7px, #c7d3ee 27.2px); background-size: 100% 27.2px; }
+.mk-teksti-linkki { display: block; margin: 0.6rem auto 0; background: none; border: 0; color: var(--violet); text-decoration: underline; font: inherit; font-size: 0.9rem; cursor: pointer; }
+.btn-lataa:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
+/* ---- Loppu-sivun rakenne: hero, muistutus, tallennusosio ---- */
+.loppu-hero { text-align: center; margin-bottom: 0.2rem; }
+.loppu-hero h1 { margin: 0.2rem 0 0.35rem; }
+.loppu-lead { margin: 0 auto; max-width: 31rem; font-size: 1.05rem; color: var(--text); }
+.muistutus {
+  display: flex; gap: 0.85rem; align-items: flex-start;
+  background: #FFF6D6; border: 2px solid #F2B705; border-left-width: 8px;
+  border-radius: 0.9rem; padding: 0.8rem 1rem; margin: 0.9rem 0 1rem;
+  box-shadow: 0 3px 12px rgba(242,183,5,0.22);
+}
+.muistutus-ikoni { font-size: 1.8rem; line-height: 1.1; flex: none; }
+.muistutus-otsikko { display: block; color: #3d2f00; font-size: 1.12rem; font-weight: 800; }
+.muistutus p { margin: 0.2rem 0 0.4rem; font-size: 1rem; color: #3d2f00; }
+.muistutus-linkki { cursor: pointer; font-weight: 700; color: var(--violet); text-decoration: underline; }
+.mk-toiminnot {
+  margin: 1.1rem 0 0.4rem; padding: 0.9rem 1rem 1rem; text-align: center;
+  background: linear-gradient(180deg, rgba(78,225,160,0.16), rgba(78,225,160,0.06));
+  border: 2px solid var(--mint); border-radius: 1rem;
+}
+.mk-toiminnot-otsikko { font-size: 1.2rem; font-weight: 800; color: var(--violet); margin-bottom: 0.65rem; }
+.mk-askeleet { list-style: none; counter-reset: askel; padding: 0; margin: 0 0 0.9rem; text-align: left; display: flex; flex-direction: column; gap: 0.45rem; }
+.mk-askeleet li {
+  counter-increment: askel; display: flex; gap: 0.7rem; align-items: flex-start;
+  background: #fff; border-radius: 0.7rem; padding: 0.5rem 0.75rem; font-size: 1rem;
+  box-shadow: 0 1px 5px rgba(91,44,111,0.08); margin: 0;
+}
+.mk-askeleet li::before {
+  content: counter(askel); flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  background: var(--violet); color: #fff; font-weight: 800; font-size: 0.95rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.mk-toiminnot .napit-rivi { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin: 0.3rem 0 0; }
+.mk-toiminnot .btn-lataa { margin: 0; }
+.mk-toiminnot .btn-lataa.toissijainen { margin-left: 0; }
+.mk-vaihtoehto { font-size: 0.88rem; color: #555; margin: 0.7rem 0 0; }
+.mk-toiminnot .lataus-vahvistus {
+  background: #fff; border: 2px solid var(--violet); border-radius: 0.7rem;
+  padding: 0.55rem 0.8rem; margin: 0.8rem 0 0;
+}
+.loppu-nav { margin-top: 1.4rem; }
+.loppu-sivu br { display: none; } /* SugarCube muuttaa rivinvaihdot <br>-tageiksi ja ne venyttäisivät sivun */
+
 /* Tulostus: vain kortti, A4 pysty */
 #tulostus-alue { display: none; }
 @page { size: A4 portrait; margin: 9mm; }
@@ -1130,6 +1178,12 @@ window.naytaYhteenveto = function() {
   if (kortti) alue.appendChild(kortti);
   if (ei) ei.style.display = kortti ? 'none' : 'block';
   if (tulostaBtn) tulostaBtn.style.display = kortti ? '' : 'none';
+  var pdfBtn = document.getElementById('btn-pdf');
+  if (pdfBtn) pdfBtn.style.display = kortti ? '' : 'none';
+  ['loppu-muistutus', 'mk-toiminnot'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = kortti ? '' : 'none';
+  });
 };
 
 $(document).on(':passagedisplay', function(ev) {
@@ -1165,7 +1219,78 @@ window.addEventListener('beforeprint', function() {
 window.addEventListener('afterprint', mkSiivoaTuloste);
 $(document).on(':passageend', mkSiivoaTuloste);
 
-/* ---- Motivaatiokortin lataus ---- */
+/* ---- PDF-lataus: kortti kuvataan lohkoittain ja kootaan A4-sivuille (kirjastot ladataan vasta napin painalluksesta) ---- */
+window.mkLataaScript = function(src) {
+  return new Promise(function(res, rej) {
+    if (document.querySelector('script[data-mk="' + src + '"]')) return res();
+    var s = document.createElement('script');
+    s.src = src; s.setAttribute('data-mk', src);
+    s.onload = res; s.onerror = function() { rej(new Error('lataus epäonnistui: ' + src)); };
+    document.head.appendChild(s);
+  });
+};
+window.lataaPdf = function() {
+  var lahde = document.getElementById('motivaatiokortti');
+  if (!lahde || !lahde.firstElementChild) return;
+  var btn = document.getElementById('btn-pdf');
+  var vahv = document.getElementById('lataus-vahvistus');
+  var vanhaTeksti = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Luodaan PDF…'; }
+  if (vahv) vahv.style.display = 'none';
+
+  var tyotila = null;
+  function valmis(viesti) {
+    if (tyotila && tyotila.parentNode) tyotila.parentNode.removeChild(tyotila);
+    if (btn) { btn.disabled = false; btn.textContent = vanhaTeksti; }
+    if (vahv && viesti) { vahv.textContent = viesti; vahv.style.display = 'block'; }
+  }
+
+  Promise.all([mkLataaScript('lib/html2canvas.min.js'), mkLataaScript('lib/jspdf.umd.min.js')]).then(function() {
+    tyotila = document.createElement('div');
+    tyotila.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;';
+    var klooni = lahde.firstElementChild.cloneNode(true);
+    klooni.classList.add('mk-pdf');
+    tyotila.appendChild(klooni);
+    document.body.appendChild(tyotila);
+
+    var lohkot = [];
+    Array.prototype.forEach.call(klooni.children, function(el) {
+      if (el.classList.contains('mk-polut')) {
+        Array.prototype.forEach.call(el.children, function(p) { lohkot.push(p); });
+      } else {
+        lohkot.push(el);
+      }
+    });
+    var kRect = klooni.getBoundingClientRect();
+    var K = 210 / 794; /* mm per px */
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    var y = 0, ensimmainen = true;
+
+    return lohkot.reduce(function(ketju, el) {
+      return ketju.then(function() {
+        var r = el.getBoundingClientRect();
+        return window.html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(function(c) {
+          var x = (r.left - kRect.left) * K, w = r.width * K, h = r.height * K;
+          var tayslaajuus = el.classList.contains('mk-yla');
+          if (y + h > 287 && y > 12) { doc.addPage(); y = 0; }
+          if (y === 0 && !tayslaajuus && !ensimmainen) y = 10;
+          doc.addImage(c.toDataURL('image/jpeg', 0.92), 'JPEG', x, y, w, h);
+          y += h + (tayslaajuus ? 1 : 3);
+          ensimmainen = false;
+        });
+      });
+    }, Promise.resolve()).then(function() {
+      doc.save('motivaatiokortti.pdf');
+      valmis('✅ PDF on ladattu koneelle! Seuraavaksi: avaa Google Classroom ja palauta tiedosto tehtävään.');
+    });
+  }).catch(function(e) {
+    if (window.console) console.error(e);
+    valmis('⚠️ PDF:n luonti ei onnistunut. Klikkaa "Tulosta kortti" ja valitse kohteeksi "Tallenna PDF:ksi".');
+  });
+};
+
+/* ---- Motivaatiokortin lataus (.txt, varalle) ---- */
 window.lataaKortti = function() {
 
   var vars = State.variables;
@@ -1239,7 +1364,7 @@ window.lataaKortti = function() {
   URL.revokeObjectURL(url);
 
   var v = document.getElementById('lataus-vahvistus');
-  if (v) v.style.display = 'block';
+  if (v) { v.textContent = '✅ Tekstitiedosto on ladattu koneelle! Seuraavaksi: avaa Google Classroom ja palauta tiedosto tehtävään.'; v.style.display = 'block'; }
 };
 
 /* ---- Valintojen sivutus: enintään 2 vaihtoehtoa kerrallaan ---- */
@@ -1291,6 +1416,7 @@ window.sivutaValinnat = function() {
 window.lisaaNuolet = function() {
   document.querySelectorAll('#passages .story-section').forEach(function(sec) {
     if (sec.dataset.nuolet) return;
+    if (sec.classList.contains('loppu-sivu')) return;
     sec.dataset.nuolet = '1';
     var lapset = Array.prototype.filter.call(sec.children, function(el) {
       return (el.tagName === 'DIV' || el.tagName === 'H1' || el.tagName === 'H2')
@@ -1696,38 +1822,42 @@ html, body { margin:0; padding:0; overflow:hidden; }
    &lt;a onclick=&quot;goTo(&#39;Alku&#39;)&quot; style=&quot;cursor:pointer&quot;&gt;🔄 Kokeile toista hahmoa&lt;/a&gt;
 &lt;/div&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="12" name="Loppu" tags="" position="387.5,925" size="100,100">&lt;div class=&quot;story-section loppu-sivu&quot;&gt;
-  &lt;h1&gt;🎉 Hienoa työtä!&lt;/h1&gt;
-
-  &lt;div class=&quot;tapahtumabox&quot;&gt;
-    &lt;p&gt;Olet kulkenut motivaation jahdissa ja oppinut jotain tärkeää.&lt;/p&gt;
-    &lt;p&gt;Alla on &lt;strong&gt;motivaatiokorttisi&lt;/strong&gt;. Pelin tekstit näkyvät violetilla ja minttuvihreällä. &lt;strong&gt;Omat kirjoituksesi&lt;/strong&gt; näkyvät sinisellä viivoitetulla paperilla ✍️. Tarkista kortti ja tulosta se tai lataa se opettajalle.&lt;/p&gt;
+  &lt;div class=&quot;loppu-hero&quot;&gt;
+    &lt;h1&gt;🎉 Hienoa työtä!&lt;/h1&gt;
+    &lt;p class=&quot;loppu-lead&quot;&gt;Kuljit motivaation jahdissa ja kokosit omat avaimesi. Tässä on &lt;strong&gt;motivaatiokorttisi&lt;/strong&gt;.&lt;/p&gt;
   &lt;/div&gt;
 
-  &lt;div id=&quot;motivaatiokortti&quot; class=&quot;motivaatiokortti-alue&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;loppu-muistutus&quot; class=&quot;muistutus&quot; role=&quot;note&quot;&gt;
+    &lt;div class=&quot;muistutus-ikoni&quot; aria-hidden=&quot;true&quot;&gt;📌&lt;/div&gt;
+    &lt;div&gt;
+      &lt;span class=&quot;muistutus-otsikko&quot;&gt;Muista ladata kortti koneelle ja palauttaa se Classroomiin!&lt;/span&gt;
+      &lt;p&gt;Tehtävä ei ole valmis ennen kuin kortti on palautettu. Latausnappi on kortin alapuolella.&lt;/p&gt;
+      &lt;a class=&quot;muistutus-linkki&quot; onclick=&quot;document.getElementById(&#39;mk-toiminnot&#39;).scrollIntoView({behavior:&#39;smooth&#39;,block:&#39;center&#39;})&quot;&gt;⬇️ Siirry latausnappiin&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 
   &lt;div id=&quot;ei-vastauksia&quot; class=&quot;tapahtumabox&quot; style=&quot;display:none;&quot;&gt;
     &lt;p&gt;Et ole vielä käynyt yhdenkään hahmon polkua loppuun. Palaa takaisin ja valitse hahmo!&lt;/p&gt;
   &lt;/div&gt;
 
-  &lt;div class=&quot;palautus-ohje&quot;&gt;
-    &lt;h3&gt;📎 Näin käytät korttiasi:&lt;/h3&gt;
-    &lt;ol&gt;
-      &lt;li&gt;Tarkista, että kortissa on kaikki ajatuksesi.&lt;/li&gt;
-      &lt;li&gt;Klikkaa &lt;strong&gt;Tulosta kortti&lt;/strong&gt;, jos opettaja pyytää paperiversion.&lt;/li&gt;
-      &lt;li&gt;Klikkaa &lt;strong&gt;Lataa tiedostona&lt;/strong&gt;, jos palautat tehtävän &lt;strong&gt;Google Classroomiin&lt;/strong&gt;. Tiedosto tallentuu nimellä &lt;strong&gt;motivaation-avaimet.txt&lt;/strong&gt;.&lt;/li&gt;
+  &lt;div id=&quot;motivaatiokortti&quot; class=&quot;motivaatiokortti-alue&quot;&gt;&lt;/div&gt;
+
+  &lt;div id=&quot;mk-toiminnot&quot; class=&quot;mk-toiminnot&quot;&gt;
+    &lt;div class=&quot;mk-toiminnot-otsikko&quot;&gt;💾 Tallenna ja palauta korttisi&lt;/div&gt;
+    &lt;ol class=&quot;mk-askeleet&quot;&gt;
+      &lt;li&gt;&lt;span&gt;Tarkista, että kortissa on kaikki ajatuksesi.&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Klikkaa &lt;strong&gt;Lataa PDF&lt;/strong&gt;. Kortti tallentuu koneelle nimellä &lt;strong&gt;motivaatiokortti.pdf&lt;/strong&gt;.&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Avaa &lt;strong&gt;Google Classroom&lt;/strong&gt; ja palauta tiedosto tehtävään.&lt;/span&gt;&lt;/li&gt;
     &lt;/ol&gt;
+    &lt;div class=&quot;napit-rivi&quot;&gt;
+      &lt;button class=&quot;btn-lataa&quot; id=&quot;btn-pdf&quot; onclick=&quot;lataaPdf()&quot;&gt;📄 Lataa PDF&lt;/button&gt;
+      &lt;button class=&quot;btn-lataa toissijainen&quot; id=&quot;btn-tulosta-kortti&quot; onclick=&quot;tulostaKortti()&quot;&gt;🖨️ Tulosta kortti&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;p class=&quot;mk-vaihtoehto&quot;&gt;Opettaja pyysi paperiversion? Käytä &lt;strong&gt;Tulosta kortti&lt;/strong&gt;. Tarvitsetko tekstitiedoston? &lt;button class=&quot;mk-teksti-linkki&quot; style=&quot;display:inline;margin:0&quot; onclick=&quot;lataaKortti()&quot;&gt;Lataa .txt&lt;/button&gt;&lt;/p&gt;
+    &lt;div id=&quot;lataus-vahvistus&quot; class=&quot;lataus-vahvistus&quot; style=&quot;display:none;&quot; role=&quot;status&quot;&gt;&lt;/div&gt;
   &lt;/div&gt;
 
-  &lt;div class=&quot;napit-rivi&quot;&gt;
-    &lt;button class=&quot;btn-lataa&quot; id=&quot;btn-tulosta-kortti&quot; onclick=&quot;tulostaKortti()&quot;&gt;🖨️ Tulosta kortti&lt;/button&gt;
-    &lt;button class=&quot;btn-lataa toissijainen&quot; onclick=&quot;lataaKortti()&quot;&gt;💾 Lataa tiedostona&lt;/button&gt;
-  &lt;/div&gt;
-
-  &lt;div id=&quot;lataus-vahvistus&quot; class=&quot;lataus-vahvistus&quot; style=&quot;display:none;&quot;&gt;
-    ✅ Tiedosto ladattu! Muista palauttaa se Classroomiin.
-  &lt;/div&gt;
-
-  &lt;div class=&quot;choices&quot; style=&quot;margin-top:2rem;&quot;&gt;
+  &lt;div class=&quot;choices loppu-nav&quot;&gt;
     &lt;a class=&quot;link-internal&quot; onclick=&quot;goTo(&#39;Alku&#39;)&quot;&gt;🔄 Pelaa uudestaan&lt;/a&gt;
     &lt;a class=&quot;link-internal&quot; onclick=&quot;goTo(&#39;Kansi&#39;)&quot;&gt;✕ Sulje peli&lt;/a&gt;
   &lt;/div&gt;
