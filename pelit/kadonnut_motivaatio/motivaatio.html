@@ -706,6 +706,15 @@ body[data-passage="Kansi"] .passage {
   padding: 0 0.75rem; min-height: 3.4rem;
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
+textarea.mk-kirjoitus {
+  display: block; width: 100%; box-sizing: border-box; margin: 0; resize: none; overflow: hidden;
+  background-attachment: local; -webkit-appearance: none; appearance: none;
+}
+textarea.mk-kirjoitus::placeholder { color: #9aa7c7; font-style: italic; }
+textarea.mk-kirjoitus:focus, input.mk-viiva:focus {
+  outline: 3px solid var(--mint); outline-offset: 1px; background-color: #fffbe0;
+}
+input.mk-viiva { font: inherit; color: var(--mk-ink); background: transparent; border: 0; border-bottom: 1.5px solid #9a8fa3; border-radius: 0; min-width: 0; width: 100%; }
 .mk-ala {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.3rem 1rem;
   padding: 0.6rem 1.2rem 0.85rem; border-top: 2px dotted var(--pastel);
@@ -761,6 +770,7 @@ body[data-passage="Kansi"] .passage {
   padding: 0.55rem 0.8rem; margin: 0.8rem 0 0;
 }
 .loppu-nav { margin-top: 1.4rem; }
+.loppu-vihje { margin: 0.5rem auto 0; font-size: 0.95rem; color: var(--violet); font-weight: 600; }
 .loppu-sivu br { display: none; } /* SugarCube muuttaa rivinvaihdot <br>-tageiksi ja ne venyttäisivät sivun */
 
 /* Tulostus: vain kortti, A4 pysty */
@@ -1063,15 +1073,52 @@ window.mkArvo = function(v) {
   return (v && String(v).trim()) ? String(v).trim() : '';
 };
 
-/* Oppilaan itse kirjoittama kenttä: viivoitettu vihkopaperi + käsinkirjoitusfontti + ✍️-merkintä */
-window.mkKentta = function(otsikko, arvo) {
+/* Oppilaan itse kirjoittama kenttä: muokattava, viivoitettu vihkopaperi + käsinkirjoitusfontti + ✍️-merkintä.
+   Muutokset tallentuvat heti pelin muuttujiin, joten tulostus, PDF ja .txt saavat uusimman tekstin. */
+window.mkAutosize = function(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.max(ta.scrollHeight + 2, 0) + 'px';
+};
+window.mkKentta = function(otsikko, arvo, muuttuja) {
   var k = mkEl('div', 'mk-kentta');
   var o = mkEl('div', 'mk-kentta-otsikko');
   o.appendChild(mkEl('span', '', otsikko));
-  o.appendChild(mkEl('span', 'mk-oma-merkki', arvo ? '✍️ kirjoitin itse' : '✍️ kirjoita tähän käsin'));
+  var merkki = mkEl('span', 'mk-oma-merkki', arvo ? '✍️ kirjoitin itse' : '✍️ kirjoita tähän');
+  o.appendChild(merkki);
   k.appendChild(o);
-  k.appendChild(mkEl('div', 'mk-kirjoitus', arvo));
+  var ta = mkEl('textarea', 'mk-kirjoitus');
+  ta.value = arvo || '';
+  ta.rows = 2;
+  ta.maxLength = 600;
+  ta.placeholder = 'Kirjoita tähän…';
+  ta.setAttribute('aria-label', otsikko);
+  ta.addEventListener('input', function() {
+    State.variables[muuttuja] = ta.value;
+    merkki.textContent = ta.value.trim() ? '✍️ kirjoitin itse' : '✍️ kirjoita tähän';
+    mkAutosize(ta);
+  });
+  k.appendChild(ta);
   return k;
+};
+
+/* Kopio kortista tulostusta/PDF:ää varten: lomakekentät muutetaan tavalliseksi tekstiksi */
+window.mkKloonaaKortti = function(kortti) {
+  var klooni = kortti.cloneNode(true);
+  var lahteet = kortti.querySelectorAll('textarea, input');
+  var kopiot = klooni.querySelectorAll('textarea, input');
+  for (var i = 0; i < lahteet.length; i++) {
+    var l = lahteet[i], c = kopiot[i], uusi;
+    if (l.tagName === 'TEXTAREA') {
+      uusi = mkEl('div', 'mk-kirjoitus', l.value);
+      var kt = c.closest ? c.closest('.mk-kentta') : null;
+      var mr = kt ? kt.querySelector('.mk-oma-merkki') : null;
+      if (mr) mr.textContent = l.value.trim() ? '✍️ kirjoitin itse' : '✍️ kirjoita tähän käsin';
+    } else {
+      uusi = mkEl('span', 'mk-viiva', l.value);
+    }
+    c.parentNode.replaceChild(uusi, c);
+  }
+  return klooni;
 };
 
 window.mkRakennaKortti = function() {
@@ -1103,12 +1150,22 @@ window.mkRakennaKortti = function() {
 
   /* Nimi / luokka / päivä – täytetään käsin */
   var tiedot = mkEl('div', 'mk-tiedot');
-  [['Nimi:', ''], ['Luokka:', ''], ['Päivä:', new Date().toLocaleDateString('fi-FI')]].forEach(function(p) {
+  [['Nimi:', 'mkNimi'], ['Luokka:', 'mkLuokka']].forEach(function(p) {
     var t = mkEl('div', 'mk-tieto');
     t.appendChild(mkEl('b', '', p[0]));
-    t.appendChild(mkEl('span', 'mk-viiva', p[1]));
+    var inp = mkEl('input', 'mk-viiva');
+    inp.type = 'text';
+    inp.maxLength = 60;
+    inp.value = vars[p[1]] || '';
+    inp.setAttribute('aria-label', p[0].replace(':', ''));
+    inp.addEventListener('input', function() { State.variables[p[1]] = inp.value; });
+    t.appendChild(inp);
     tiedot.appendChild(t);
   });
+  var pv = mkEl('div', 'mk-tieto');
+  pv.appendChild(mkEl('b', '', 'Päivä:'));
+  pv.appendChild(mkEl('span', 'mk-viiva', new Date().toLocaleDateString('fi-FI')));
+  tiedot.appendChild(pv);
   kortti.appendChild(tiedot);
 
   /* Selite: mikä on pelin tekstiä, mikä omaa */
@@ -1149,10 +1206,10 @@ window.mkRakennaKortti = function() {
     }
 
     /* Oppilaan omat kirjoitukset */
-    polku.appendChild(mkKentta('🔑 Avain 1 · Oma pieni teko', d.teko));
-    if (d.pOma) polku.appendChild(mkKentta('🎁 Oma palkintoni', d.pOma));
-    polku.appendChild(mkKentta('💬 Oivallukseni', d.ref));
-    polku.appendChild(mkKentta('🔑 Avain 2 · Näin jatkan', d.valinta));
+    polku.appendChild(mkKentta('🔑 Avain 1 · Oma pieni teko', d.teko, h.id + 'Teko'));
+    if (d.pOma) polku.appendChild(mkKentta('🎁 Oma palkintoni', d.pOma, h.id + 'PalkintoOma'));
+    polku.appendChild(mkKentta('💬 Oivallukseni', d.ref, h.id + 'Reflektio'));
+    polku.appendChild(mkKentta('🔑 Avain 2 · Näin jatkan', d.valinta, h.id + 'OmaValinta'));
 
     lista.appendChild(polku);
   });
@@ -1175,7 +1232,10 @@ window.naytaYhteenveto = function() {
   while (alue.firstChild) alue.removeChild(alue.firstChild);
 
   var kortti = mkRakennaKortti();
-  if (kortti) alue.appendChild(kortti);
+  if (kortti) {
+    alue.appendChild(kortti);
+    Array.prototype.forEach.call(alue.querySelectorAll('textarea'), mkAutosize);
+  }
   if (ei) ei.style.display = kortti ? 'none' : 'block';
   if (tulostaBtn) tulostaBtn.style.display = kortti ? '' : 'none';
   var pdfBtn = document.getElementById('btn-pdf');
@@ -1192,13 +1252,16 @@ $(document).on(':passagedisplay', function(ev) {
 });
 
 /* ---- Tulostus: kopioidaan kortti omaan tulostusalueeseen, muu sivu piiloon (CSS @media print) ---- */
+window.addEventListener('resize', function() {
+  Array.prototype.forEach.call(document.querySelectorAll('#motivaatiokortti textarea'), mkAutosize);
+});
 window.mkValmistaTuloste = function() {
   var lahde = document.getElementById('motivaatiokortti');
   if (!lahde || !lahde.firstElementChild) return false;
   mkSiivoaTuloste();
   var alue = document.createElement('div');
   alue.id = 'tulostus-alue';
-  alue.appendChild(lahde.firstElementChild.cloneNode(true));
+  alue.appendChild(mkKloonaaKortti(lahde.firstElementChild));
   document.body.appendChild(alue);
   document.documentElement.classList.add('tulostetaan-kortti');
   return true;
@@ -1248,7 +1311,7 @@ window.lataaPdf = function() {
   Promise.all([mkLataaScript('lib/html2canvas.min.js'), mkLataaScript('lib/jspdf.umd.min.js')]).then(function() {
     tyotila = document.createElement('div');
     tyotila.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;';
-    var klooni = lahde.firstElementChild.cloneNode(true);
+    var klooni = mkKloonaaKortti(lahde.firstElementChild);
     klooni.classList.add('mk-pdf');
     tyotila.appendChild(klooni);
     document.body.appendChild(tyotila);
@@ -1825,6 +1888,7 @@ html, body { margin:0; padding:0; overflow:hidden; }
   &lt;div class=&quot;loppu-hero&quot;&gt;
     &lt;h1&gt;🎉 Hienoa työtä!&lt;/h1&gt;
     &lt;p class=&quot;loppu-lead&quot;&gt;Kuljit motivaation jahdissa ja kokosit omat avaimesi. Tässä on &lt;strong&gt;motivaatiokorttisi&lt;/strong&gt;.&lt;/p&gt;
+    &lt;p class=&quot;loppu-vihje&quot;&gt;✏️ Voit vielä korjata tekstejäsi suoraan kortissa ennen tallennusta. Kirjoita nimesi kortin yläreunaan.&lt;/p&gt;
   &lt;/div&gt;
 
   &lt;div id=&quot;loppu-muistutus&quot; class=&quot;muistutus&quot; role=&quot;note&quot;&gt;
@@ -1845,15 +1909,13 @@ html, body { margin:0; padding:0; overflow:hidden; }
   &lt;div id=&quot;mk-toiminnot&quot; class=&quot;mk-toiminnot&quot;&gt;
     &lt;div class=&quot;mk-toiminnot-otsikko&quot;&gt;💾 Tallenna ja palauta korttisi&lt;/div&gt;
     &lt;ol class=&quot;mk-askeleet&quot;&gt;
-      &lt;li&gt;&lt;span&gt;Tarkista, että kortissa on kaikki ajatuksesi.&lt;/span&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;span&gt;Tarkista kortti ja korjaa tekstejäsi tarvittaessa suoraan kortissa. Kirjoita myös nimesi.&lt;/span&gt;&lt;/li&gt;
       &lt;li&gt;&lt;span&gt;Klikkaa &lt;strong&gt;Lataa PDF&lt;/strong&gt;. Kortti tallentuu koneelle nimellä &lt;strong&gt;motivaatiokortti.pdf&lt;/strong&gt;.&lt;/span&gt;&lt;/li&gt;
       &lt;li&gt;&lt;span&gt;Avaa &lt;strong&gt;Google Classroom&lt;/strong&gt; ja palauta tiedosto tehtävään.&lt;/span&gt;&lt;/li&gt;
     &lt;/ol&gt;
     &lt;div class=&quot;napit-rivi&quot;&gt;
       &lt;button class=&quot;btn-lataa&quot; id=&quot;btn-pdf&quot; onclick=&quot;lataaPdf()&quot;&gt;📄 Lataa PDF&lt;/button&gt;
-      &lt;button class=&quot;btn-lataa toissijainen&quot; id=&quot;btn-tulosta-kortti&quot; onclick=&quot;tulostaKortti()&quot;&gt;🖨️ Tulosta kortti&lt;/button&gt;
     &lt;/div&gt;
-    &lt;p class=&quot;mk-vaihtoehto&quot;&gt;Opettaja pyysi paperiversion? Käytä &lt;strong&gt;Tulosta kortti&lt;/strong&gt;. Tarvitsetko tekstitiedoston? &lt;button class=&quot;mk-teksti-linkki&quot; style=&quot;display:inline;margin:0&quot; onclick=&quot;lataaKortti()&quot;&gt;Lataa .txt&lt;/button&gt;&lt;/p&gt;
     &lt;div id=&quot;lataus-vahvistus&quot; class=&quot;lataus-vahvistus&quot; style=&quot;display:none;&quot; role=&quot;status&quot;&gt;&lt;/div&gt;
   &lt;/div&gt;
 
