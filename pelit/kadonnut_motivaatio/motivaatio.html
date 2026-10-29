@@ -611,7 +611,7 @@ body[data-passage="Kansi"] .passage {
 .motivaatiokortti-alue { margin: 0.8rem 0; }
 .mk-kortti {
   --mk-ink: #1d3f9e;
-  --mk-paper: #fffdf4;
+  --mk-paper: #ffffff;
   --mk-line: #c7d3ee;
   background: #fff;
   border: 2px solid var(--violet);
@@ -664,7 +664,7 @@ body[data-passage="Kansi"] .passage {
 .mk-selite-pari { display: inline-flex; align-items: center; gap: 0.4rem; }
 .mk-naytekirjoitus {
   font-family: "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS","Marker Felt",cursive;
-  color: var(--mk-ink); background: var(--mk-paper); border: 1px solid var(--mk-line);
+  color: #000; background: var(--mk-paper); border: 1px solid var(--mk-line);
   border-left: 3px solid var(--mk-ink); border-radius: 0.3rem; padding: 0.05rem 0.5rem; font-size: 0.9rem;
 }
 .mk-polut { padding: 0.6rem 1.2rem 1.1rem; display: flex; flex-direction: column; gap: 0.9rem; }
@@ -698,7 +698,7 @@ body[data-passage="Kansi"] .passage {
 .mk-oma-merkki { color: var(--mk-ink); text-transform: none; letter-spacing: 0; font-weight: 700; font-size: 0.78rem; white-space: nowrap; }
 .mk-kirjoitus {
   font-family: "Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS","Marker Felt",cursive;
-  font-size: 1.02rem; line-height: 1.7rem; color: var(--mk-ink);
+  font-size: 1.02rem; line-height: 1.7rem; color: #000;
   background-color: var(--mk-paper);
   background-image: linear-gradient(to bottom, transparent calc(100% - 1.5px), var(--mk-line) calc(100% - 1.5px));
   background-size: 100% 1.7rem;
@@ -710,11 +710,16 @@ textarea.mk-kirjoitus {
   display: block; width: 100%; box-sizing: border-box; margin: 0; resize: none; overflow: hidden;
   background-attachment: local; -webkit-appearance: none; appearance: none;
 }
-textarea.mk-kirjoitus::placeholder { color: #9aa7c7; font-style: italic; }
-textarea.mk-kirjoitus:focus, input.mk-viiva:focus {
-  outline: 3px solid var(--mint); outline-offset: 1px; background-color: #fffbe0;
+textarea.mk-kirjoitus, textarea.mk-kirjoitus:focus, textarea.mk-kirjoitus:active, textarea.mk-kirjoitus:hover,
+input.mk-viiva, input.mk-viiva:focus, input.mk-viiva:active {
+  background-color: #ffffff !important; color: #000000 !important; -webkit-text-fill-color: #000000;
+  caret-color: #000; box-shadow: none;
 }
-input.mk-viiva { font: inherit; color: var(--mk-ink); background: transparent; border: 0; border-bottom: 1.5px solid #9a8fa3; border-radius: 0; min-width: 0; width: 100%; }
+textarea.mk-kirjoitus::placeholder { color: #8f98ad; font-style: italic; -webkit-text-fill-color: #8f98ad; }
+textarea.mk-kirjoitus:focus, input.mk-viiva:focus {
+  outline: 3px solid var(--mint); outline-offset: 1px;
+}
+input.mk-viiva { font: inherit; color: #000; background: #fff; border: 0; border-bottom: 1.5px solid #9a8fa3; border-radius: 0; min-width: 0; width: 100%; }
 .mk-ala {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.3rem 1rem;
   padding: 0.6rem 1.2rem 0.85rem; border-top: 2px dotted var(--pastel);
@@ -726,7 +731,7 @@ input.mk-viiva { font: inherit; color: var(--mk-ink); background: transparent; b
 
 .mk-pdf { box-shadow: none !important; border: 0 !important; border-radius: 0 !important; overflow: visible !important; }
 .mk-pdf .mk-yla { border-radius: 0; }
-.mk-pdf .mk-kirjoitus { background-image: linear-gradient(to bottom, #fffdf4 0px, #fffdf4 25.7px, #c7d3ee 25.7px, #c7d3ee 27.2px); background-size: 100% 27.2px; }
+.mk-pdf .mk-kirjoitus { background-image: linear-gradient(to bottom, #ffffff 0px, #ffffff 25.7px, #c7d3ee 25.7px, #c7d3ee 27.2px); background-size: 100% 27.2px; }
 .mk-teksti-linkki { display: block; margin: 0.6rem auto 0; background: none; border: 0; color: var(--violet); text-decoration: underline; font: inherit; font-size: 0.9rem; cursor: pointer; }
 .btn-lataa:disabled { opacity: 0.6; cursor: wait; transform: none; }
 
