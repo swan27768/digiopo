@@ -501,10 +501,21 @@
         .vertailu-taulukko { font-size: 0.85rem; }
       }
       @media print {
-        .toiminnot, #scrollTopBtn, .btn-avaa-osa2 { display: none !important; }
-        .osa2-lukittu { opacity: 1; filter: none; pointer-events: auto; }
-        body { background: white; }
-        .aihe-osio { box-shadow: none; break-inside: avoid; }
+        /* base.css himmentää kaiken tulosteessa (vesileima). Tässä tehtävässä PDF on palautettava työ, joten sisältö pidetään luettavana. */
+        html body > * { opacity: 1 !important; }
+        html, body { background: #fff !important; }
+        body, .book-spread, .book-page-right { color: #111 !important; }
+        .book-spread { display: block !important; box-shadow: none !important; background: #fff !important; }
+        .book-page-left { display: none !important; }
+        .book-page-right { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; background: #fff !important; }
+        .toiminnot, #scrollTopBtn, .btn-avaa-osa2, #osa2-lukittu-viesti, #edistymisPalkki, .vaihe-erottaja { display: none !important; }
+        .osa2-lukittu { display: none !important; }
+        .aihe-osio { box-shadow: none; break-inside: auto; background: #fff !important; }
+        .kentta-rivi, .liuku-rivi, .vaihtoehto-kortti, .yhteenveto-kortti, .tavoite-palkki, tr { break-inside: avoid; }
+        h2, h3 { break-after: avoid; }
+        input, textarea, select { color: #111 !important; background: #fff !important; border: 1px solid #555 !important; resize: none; }
+        textarea { overflow: visible !important; }
+        * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       }
     </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -892,16 +903,12 @@
               Osa 1 valmis? Palauta opolle.
             </p>
             <p style="margin:0 0 14px;font-size:0.92rem;color:#475569;">
-              Lataa tai tulosta Osa 1 ja palauta se opollesi. Palaa Osaan 2 sen jälkeen kun olet käynyt tutustumassa kouluun – esimerkiksi viikon tai kahden viikon päästä.
+              Tallenna Osa 1 PDF-tiedostoksi (valitse tulostusikkunassa "Tallenna PDF:ksi") ja palauta se opollesi. Palaa Osaan 2 sen jälkeen kun olet käynyt tutustumassa kouluun – esimerkiksi viikon tai kahden viikon päästä.
             </p>
             <div class="toiminnot">
-              <button class="btn-primary" onclick="lataaOsa1()">
-                <i class="fa-solid fa-download" aria-hidden="true"></i>
-                Lataa Osa 1 TXT opolle
-              </button>
-              <button class="btn-secondary" onclick="window.print()">
-                <i class="fa-solid fa-print" aria-hidden="true"></i>
-                Tulosta / PDF
+              <button class="btn-primary" onclick="window.print()">
+                <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+                Tallenna Osa 1 PDF-tiedostoksi
               </button>
             </div>
           </div>
@@ -1175,7 +1182,7 @@
               <span class="vaihe-label"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Yhteenveto</span><br>
               Oma hakusuunnitelma tiivistettynä
             </h2>
-            <p>Tässä koostuu se, mitä olet täyttänyt. Näytä tämä opolle tai lataa se itsellesi.</p>
+            <p>Tässä koostuu se, mitä olet täyttänyt. Tallenna tämä PDF-tiedostoksi ja näytä se opolle.</p>
           </div>
 
           <!-- Yhteenvetokortit – generoituvat JS:llä -->
@@ -1188,13 +1195,9 @@
               <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
               Päivitä yhteenveto
             </button>
-            <button class="btn-secondary" onclick="lataaYhteenveto()">
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-              Lataa TXT opolle
-            </button>
             <button class="btn-secondary" onclick="window.print()">
-              <i class="fa-solid fa-print" aria-hidden="true"></i>
-              Tulosta / PDF
+              <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+              Tallenna PDF-tiedostoksi
             </button>
             <button class="btn-danger" onclick="tyhjennaVastaukset()">
               <i class="fa-solid fa-trash" aria-hidden="true"></i>
@@ -1441,107 +1444,6 @@
         document.getElementById('yhteenveto-sisalto').innerHTML = html;
       }
 
-      // ── TXT-lataus (yksi yhteinen rakentaja) ──────────────────────────
-      function txtRivit(otsikko, rivit) {
-        return [otsikko, '-'.repeat(otsikko.length), ...rivit.map(([k, v]) => `${k}: ${v || '-'}`), ''];
-      }
-
-      function rakennaTxt(vainOsa1) {
-        const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
-        const pisteet = paivitaPisteet();
-        const hakukohteet = [1, 2, 3].flatMap(n => [
-          [`Hakukohde ${n}`, `${arvo('hakukohde' + n)} (${arvo('hakukohde' + n + '_paikka') || '-'})`],
-          ['  Tyyppi', arvo('hakukohde' + n + '_tyyppi')],
-          ['  Viime vuoden alin raja', arvo('hakukohde' + n + '_raja')],
-          ['  Kiinnostaa', arvo('hakukohde' + n + '_plus')],
-          ['  Epäilyttää', arvo('hakukohde' + n + '_miinus')],
-        ]);
-
-        const rivit = [
-          vainOsa1 ? 'HAKUSTRATEGIA – OSA 1' : 'HAKUSTRATEGIA – DIGIOPO',
-          '========================',
-          ...txtRivit('PERUSTIEDOT', [
-            ['Nimi', arvo('nimi')], ['Luokka', arvo('luokka')], ['Päivämäärä', arvo('paivays')],
-          ]),
-          ...txtRivit('MINÄ OPISKELIJANA (asteikko 1–5)', [
-            ['Jaksan opiskella paljon teoriaa', radioArvo('teoria')],
-            ['Opin parhaiten tekemällä', radioArvo('tekemalla')],
-            ['Tarvitsen vielä aikaa miettiä', radioArvo('aikaa')],
-            ['Minulla on selkeä toive', radioArvo('toive')],
-            ['Tarvitsen tukea', radioArvo('tuki')],
-            ['Minua kiinnostaa', arvo('kiinnostukset')],
-            ['Olen hyvä', arvo('vahvuudet')],
-            ['En halua ainakaan', arvo('ei_kiinnosta')],
-            ['Oma päätelmä', arvo('mina_paatelma')],
-          ]),
-          ...txtRivit('VAIHTOEHDOT', [
-            ['Lukio – kiinnostaa', arvo('lukio_plus')], ['Lukio – mietityttää', arvo('lukio_miinus')],
-            ['Ammatillinen – kiinnostaa', arvo('amis_plus')], ['Ammatillinen – mietityttää', arvo('amis_miinus')],
-            ['TUVA – kiinnostaa', arvo('tuva_plus')], ['TUVA – mietityttää', arvo('tuva_miinus')],
-            ['Kansanopisto – kiinnostaa', arvo('kansa_plus')], ['Kansanopisto – mietityttää', arvo('kansa_miinus')],
-            ['Kiinnostavin vaihtoehto', arvo('vaihtoehdot_paatelma')],
-          ]),
-          ...txtRivit('HAKUKOHTEET', [
-            ['Oma keskiarvo', arvo('oma_keskiarvo')],
-            ...hakukohteet,
-            ['Tietolähteet', arvo('tietolahteet')],
-            ['Paras hakukohde', arvo('paras_hakukohde')],
-          ]),
-        ];
-
-        if (vainOsa1) {
-          rivit.push('-- OSA 2 täytetään tutustumisen jälkeen --');
-        } else {
-          rivit.push(
-            ...txtRivit('OSA 2 – TUTUSTUMINEN', [
-              ['Tutustumispäivä', arvo('osa2_paivays')],
-              ['Tutustumistapa', arvo('tutustumistapa')],
-              ['Koulu', arvo('tutustumispaikka')],
-              ['Tunnelma', arvo('tunnelma')],
-              ['Opiskelijat', arvo('opiskelijat')],
-              ['Opetus', arvo('opetus')],
-              ['Näenkö itseni siellä', arvo('naenko_itseni')],
-              ['Muuttuiko mieli', arvo('muuttuiko')],
-              ['Tärkein havainto', arvo('tutustuminen_paatelma')],
-            ]),
-            ...txtRivit('ARKI JA TODELLISUUS', [
-              ['Koulumatka', arvo('koulumatka')],
-              ['Päivärytmi', arvo('paivarytmi')],
-              ['Tuen tarve', arvo('tuki_arjessa')],
-              ['Jaksaminen', arvo('jaksaminen')],
-              ['Haastattelu tai some', arvo('haastattelu')],
-            ]),
-            ...txtRivit('PÄÄTÖSMATRIISI (pisteet / 25)',
-              Object.entries(pisteet).map(([v, p]) => [nimet[v], p > 0 ? String(p) : ''])),
-            ...txtRivit('HAKUSUUNNITELMA', [
-              ['1. hakutoive', arvo('haku1')],
-              ['2. hakutoive', arvo('haku2')],
-              ['3. hakutoive', arvo('haku3')],
-              ['Varavaihtoehto', arvo('vara')],
-              ['Perustelut', arvo('hakujarjestys_perustelu')],
-              ['Kirje itselleni', arvo('paatoskirje')],
-            ])
-          );
-        }
-        return rivit.join('\n');
-      }
-
-      function lataaTxt(vainOsa1) {
-        tallenna();
-        const blob = new Blob([rakennaTxt(vainOsa1)], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const nimi = (arvo('nimi') || 'oppilas').replace(/\s+/g, '_').toLowerCase();
-        a.href = url;
-        a.download = `hakustrategia${vainOsa1 ? '_osa1' : ''}_${nimi}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-      function lataaOsa1() { lataaTxt(true); }
-      function lataaYhteenveto() { lataaTxt(false); }
-
       // ── Tyhjennä ─────────────────────────────────────────────────
       function tyhjennaVastaukset() {
         if (!confirm('Haluatko varmasti tyhjentää kaikki vastaukset? Tätä ei voi peruuttaa.')) return;
@@ -1552,6 +1454,23 @@
         paivitaPisteet();
         paivitaYhteenveto();
       }
+
+      // ── Tulostus / PDF: koko teksti näkyviin ja järkevä tiedostonimi ──
+      let _alkuperainenOtsikko = document.title;
+      window.addEventListener('beforeprint', () => {
+        document.querySelectorAll('textarea').forEach(t => {
+          t.dataset.alkuKorkeus = t.style.height || '';
+          t.style.height = 'auto';
+          t.style.height = (t.scrollHeight + 4) + 'px';
+        });
+        _alkuperainenOtsikko = document.title;
+        const n = arvo('nimi');
+        document.title = 'Hakustrategia' + (n ? ' – ' + n : '');
+      });
+      window.addEventListener('afterprint', () => {
+        document.querySelectorAll('textarea').forEach(t => { t.style.height = t.dataset.alkuKorkeus || ''; });
+        document.title = _alkuperainenOtsikko;
+      });
 
       // ── Scrollnäppäin ─────────────────────────────────────────────
       const scrollBtn = document.getElementById('scrollTopBtn');
