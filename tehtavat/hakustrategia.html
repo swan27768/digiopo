@@ -322,6 +322,10 @@
       .hakutoive-taulukko th:nth-child(2) { width: 38%; }
       .hakutoive-taulukko th:nth-child(3) { width: 30%; }
       .hakutoive-taulukko td textarea { width: 100%; min-height: 190px; box-sizing: border-box; }
+      .classroom-ohje {
+        margin: 14px 0 0; padding: 10px 14px; border-radius: 10px;
+        background: #fef9c3; border: 1.5px solid #fde047; color: #713f12; font-size: 0.95rem;
+      }
       .hakutoive-otsikko { font-weight: 800; color: #0f766e; margin-bottom: 6px; font-size: 0.95rem; }
       .vertailu-taulukko td textarea::placeholder { font-size: 0.85rem; }
 
@@ -535,6 +539,9 @@
         input, textarea, select { color: #111 !important; background: #fff !important; border: 1px solid #555 !important; resize: none; }
         textarea { overflow: visible !important; }
         * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        body[data-tulostus="1"] #osa2-sisalto, body[data-tulostus="1"] #yhteenveto { display: none !important; }
+        body[data-tulostus="2"] main > :not(#osa2-sisalto) { display: none !important; }
+        .classroom-ohje, .palautus-laatikko { display: none !important; }
       }
     </style>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
@@ -609,10 +616,9 @@
             </div>
           </div>
 
-          <p class="sr-only">Vastauksesi tallentuvat automaattisesti tähän selaimeen. Voit sulkea sivun ja jatkaa myöhemmin.</p>
-          <p style="font-size:0.88rem;color:#6b7280;margin-top:8px;">
-            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
-            Vastauksesi tallentuvat automaattisesti. Voit palata tähän tehtävään myöhemmin.
+          <p class="classroom-ohje" role="note">
+            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+            <strong>Muista palauttaa tehtävä Classroomin kautta opolle.</strong>
           </p>
         </section>
 
@@ -920,16 +926,16 @@
           </div>
 
           <!-- Osa 1 palautus -->
-          <div style="background:#f0fdfa;border:1.5px solid var(--lk9-teal-bd);border-radius:14px;padding:16px 18px;margin-top:18px;">
+          <div class="palautus-laatikko" style="background:#f0fdfa;border:1.5px solid var(--lk9-teal-bd);border-radius:14px;padding:16px 18px;margin-top:18px;">
             <p style="margin:0 0 8px;font-weight:700;color:#134e4a;">
               <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
-              Osa 1 valmis? Palauta opolle.
+              Osa 1 valmis? Palauta se Classroomiin.
             </p>
             <p style="margin:0 0 14px;font-size:0.92rem;color:#475569;">
-              Tallenna Osa 1 PDF-tiedostoksi (valitse tulostusikkunassa "Tallenna PDF:ksi") ja palauta se opollesi. Palaa Osaan 2 sen jälkeen kun olet käynyt tutustumassa kouluun – esimerkiksi viikon tai kahden viikon päästä.
+              Tallenna Osa 1 PDF-tiedostoksi (valitse tulostusikkunassa "Tallenna PDF:ksi"). <strong>Muista palauttaa tehtävä Classroomin kautta opolle.</strong> Tee Osa 2 sen jälkeen, kun olet käynyt tutustumassa kouluun – esimerkiksi viikon tai kahden viikon päästä. Tallenna ja palauta Osa 2 erikseen.
             </p>
             <div class="toiminnot">
-              <button class="btn-primary" onclick="window.print()">
+              <button class="btn-primary" onclick="tulostaOsa(1)">
                 <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
                 Tallenna Osa 1 PDF-tiedostoksi
               </button>
@@ -952,7 +958,7 @@
 
         <!-- Lukittu viesti + avaa-nappi -->
         <div id="osa2-lukittu-viesti" class="osa2-lukittu-viesti" aria-live="polite">
-          <p><strong>Täytä Osa 2 sen jälkeen, kun olet käynyt Avoimilla Ovilla, tutustunut kouluun tai haastatellut jonkun.</strong><br>Osa 1:n vastauksesi ovat tallessa – palaa tänne silloin.</p>
+          <p><strong>Täytä Osa 2 sen jälkeen, kun olet käynyt Avoimilla Ovilla, tutustunut kouluun tai haastatellut jonkun.</strong><br>Osa 1 on jo palautettu opolle Classroomin kautta.</p>
           <button class="btn-avaa-osa2" onclick="avaaOsa2()" aria-expanded="false" aria-controls="osa2-sisalto">
             <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
             Olen käynyt tutustumassa – avaa Osa 2
@@ -970,9 +976,15 @@
               </h2>
               <p>Nyt kirjaat, mitä tapahtui – ja teet lopullisen suunnitelman.</p>
             </div>
-            <div class="kentta-rivi">
-              <label for="osa2_paivays">Milloin kävit tutustumassa?</label>
-              <input id="osa2_paivays" type="date" data-save />
+            <div class="kentta-grid-2">
+              <div class="kentta-rivi">
+                <label for="osa2_nimi">Nimesi</label>
+                <input id="osa2_nimi" type="text" data-save autocomplete="name" placeholder="Etunimi Sukunimi" />
+              </div>
+              <div class="kentta-rivi">
+                <label for="osa2_paivays">Milloin kävit tutustumassa?</label>
+                <input id="osa2_paivays" type="date" data-save />
+              </div>
             </div>
           </section>
 
@@ -1197,11 +1209,24 @@
               <textarea id="paatoskirje" data-save aria-describedby="ohje-kirje" style="min-height:130px;" placeholder="Valitsin ensisijaisesti... koska... Jos en pääse sinne, suunnitelmani on..."></textarea>
             </div>
 
-            <div class="toiminnot">
-              <button type="button" class="btn-danger" onclick="tyhjennaOsa(2)">
-                <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                Tyhjennä Osa 2
-              </button>
+            <div class="palautus-laatikko" style="background:#f0fdfa;border:1.5px solid var(--lk9-teal-bd);border-radius:14px;padding:16px 18px;margin-top:18px;">
+              <p style="margin:0 0 8px;font-weight:700;color:#134e4a;">
+                <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
+                Osa 2 valmis? Palauta se Classroomiin.
+              </p>
+              <p style="margin:0 0 14px;font-size:0.92rem;color:#475569;">
+                Tallenna Osa 2 PDF-tiedostoksi (valitse tulostusikkunassa "Tallenna PDF:ksi"). <strong>Muista palauttaa tehtävä Classroomin kautta opolle.</strong>
+              </p>
+              <div class="toiminnot">
+                <button type="button" class="btn-primary" onclick="tulostaOsa(2)">
+                  <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+                  Tallenna Osa 2 PDF-tiedostoksi
+                </button>
+                <button type="button" class="btn-danger" onclick="tyhjennaOsa(2)">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                  Tyhjennä Osa 2
+                </button>
+              </div>
             </div>
           </section>
 
@@ -1216,7 +1241,7 @@
               <span class="vaihe-label"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Yhteenveto</span><br>
               Oma hakusuunnitelma tiivistettynä
             </h2>
-            <p>Tässä koostuu se, mitä olet täyttänyt. Tallenna tämä PDF-tiedostoksi ja näytä se opolle.</p>
+            <p>Tässä koostuu se, mitä olet täyttänyt. Tallenna tämä PDF-tiedostoksi ja palauta se Classroomin kautta opolle.</p>
           </div>
 
           <!-- Yhteenvetokortit – generoituvat JS:llä -->
@@ -1229,9 +1254,9 @@
               <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
               Päivitä yhteenveto
             </button>
-            <button class="btn-secondary" onclick="window.print()">
+            <button class="btn-secondary" onclick="tulostaOsa(0)">
               <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
-              Tallenna PDF-tiedostoksi
+              Tallenna koko tehtävä PDF-tiedostoksi
             </button>
             <button class="btn-danger" onclick="tyhjennaVastaukset()">
               <i class="fa-solid fa-trash" aria-hidden="true"></i>
@@ -1524,10 +1549,17 @@
           t.style.height = (t.scrollHeight + 4) + 'px';
         });
         _alkuperainenOtsikko = document.title;
-        const n = arvo('nimi');
-        document.title = 'Hakustrategia' + (n ? ' – ' + n : '');
+        const osa = document.body.dataset.tulostus;
+        const n = arvo('nimi') || arvo('osa2_nimi');
+        document.title = 'Hakustrategia' + (osa === '1' || osa === '2' ? ' – Osa ' + osa : '') + (n ? ' – ' + n : '');
       });
+      // osa 1 = vain Osa 1, 2 = vain Osa 2, 0 = koko tehtävä
+      function tulostaOsa(osa) {
+        document.body.dataset.tulostus = String(osa);
+        window.print();
+      }
       window.addEventListener('afterprint', () => {
+        delete document.body.dataset.tulostus;
         document.querySelectorAll('textarea').forEach(t => { t.style.height = t.dataset.alkuKorkeus || ''; });
         document.title = _alkuperainenOtsikko;
       });
