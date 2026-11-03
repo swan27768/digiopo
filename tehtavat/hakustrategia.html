@@ -601,7 +601,7 @@
           </div>
 
           <h3>Arvioi itsesi – valitse sopivin numero</h3>
-          <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">1 = ei sovi minulle &nbsp;·&nbsp; 5 = sopii hyvin minulle</p>
+          <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">1 = ei pidä paikkaansa &nbsp;·&nbsp; 5 = pitää täysin paikkansa</p>
 
           <!-- Liukuarviot -->
           <div role="group" aria-label="Itsearviointikysymykset">
@@ -615,7 +615,7 @@
                 <input type="radio" name="teoria" id="teoria5" value="5" data-save-radio="teoria" /><label for="teoria5">5</label>
               </div>
             </div>
-            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei pidä paikkaansa</span><span>pitää täysin paikkansa</span></div>
 
             <div class="liuku-rivi">
               <span class="liuku-teksti" id="label-tekemalla">Opin parhaiten tekemällä ja kokeilemalla.</span>
@@ -627,7 +627,7 @@
                 <input type="radio" name="tekemalla" id="tekemalla5" value="5" data-save-radio="tekemalla" /><label for="tekemalla5">5</label>
               </div>
             </div>
-            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei pidä paikkaansa</span><span>pitää täysin paikkansa</span></div>
 
             <div class="liuku-rivi">
               <span class="liuku-teksti" id="label-aikaa">Tarvitsen vielä aikaa miettiä, mitä haluan tehdä.</span>
@@ -639,7 +639,7 @@
                 <input type="radio" name="aikaa" id="aikaa5" value="5" data-save-radio="aikaa" /><label for="aikaa5">5</label>
               </div>
             </div>
-            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei pidä paikkaansa</span><span>pitää täysin paikkansa</span></div>
 
             <div class="liuku-rivi">
               <span class="liuku-teksti" id="label-toive">Minulla on jo selkeä ammatti tai ala, jota haluan opiskella.</span>
@@ -651,7 +651,7 @@
                 <input type="radio" name="toive" id="toive5" value="5" data-save-radio="toive" /><label for="toive5">5</label>
               </div>
             </div>
-            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei pidä paikkaansa</span><span>pitää täysin paikkansa</span></div>
 
             <div class="liuku-rivi">
               <span class="liuku-teksti" id="label-tuki">Tarvitsen tukea opiskeluun tai arkeen.</span>
@@ -663,7 +663,7 @@
                 <input type="radio" name="tuki" id="tuki5" value="5" data-save-radio="tuki" /><label for="tuki5">5</label>
               </div>
             </div>
-            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei sovi</span><span>sopii hyvin</span></div>
+            <div class="liuku-paatymerkit" aria-hidden="true"><span>ei pidä paikkaansa</span><span>pitää täysin paikkansa</span></div>
           </div>
 
           <div class="kentta-grid-3" style="margin-top:18px;">
@@ -793,6 +793,20 @@
             </div>
           </div>
 
+          <div class="kentta-rivi" style="max-width:420px;">
+            <label for="oma_keskiarvo">Oma keskiarvoni tällä hetkellä</label>
+            <span class="ohje" id="ohje-oma-ka">Katso viimeisimmästä todistuksesta tai kysy opolta. Arvio riittää, esim. 7,5.</span>
+            <input id="oma_keskiarvo" type="text" inputmode="decimal" data-save aria-describedby="ohje-oma-ka" placeholder="esim. 7,5" />
+          </div>
+
+          <div class="theory-card" style="margin-bottom:16px;">
+            <div class="theory-text">
+              <h3>Mistä löydän pisterajan?</h3>
+              <p>Hae hakukohde <strong>Opintopolusta</strong> (opintopolku.fi). Hakukohteen sivulta löytyy yleensä <strong>edellisen vuoden alin pistemäärä tai keskiarvo</strong>, jolla viimeinen opiskelija pääsi sisään. Joihinkin kohteisiin on myös pääsy- tai soveltuvuuskoe. Rajat vaihtelevat vuosittain, joten pidä niitä suuntaa antavina. Jos tietoa ei löydy, kirjoita "ei löytynyt" ja kysy opolta.</p>
+              <p><strong>Unelma:</strong> raja on selvästi omaa keskiarvoa korkeampi, mutta kokeilla kannattaa. <strong>Realistinen:</strong> oma keskiarvo on lähellä rajaa tai sen yli. <strong>Varma:</strong> pääset todennäköisesti sisään.</p>
+            </div>
+          </div>
+
           <div class="kentta-rivi">
             <table class="vertailu-taulukko" aria-label="Hakukohteiden vertailu">
               <caption class="sr-only">Kirjoita hakukohteen nimi, paikkakunta ja mitä ajattelet siitä.</caption>
@@ -808,6 +822,13 @@
                   <td>
                     <input id="hakukohde1" type="text" data-save aria-label="Hakukohde 1 nimi" placeholder="Koulu ja linja" />
                     <input id="hakukohde1_paikka" type="text" data-save aria-label="Hakukohde 1 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde1_raja" type="text" data-save aria-label="Hakukohde 1 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
+                    <select id="hakukohde1_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 1 tyyppi" style="margin-top:6px;width:100%;">
+                      <option value="">Unelma / realistinen / varma?</option>
+                      <option>Unelma</option>
+                      <option>Realistinen</option>
+                      <option>Varma</option>
+                    </select>
                   </td>
                   <td><textarea id="hakukohde1_plus" data-save aria-label="Hakukohde 1 – mikä kiinnostaa"></textarea></td>
                   <td><textarea id="hakukohde1_miinus" data-save aria-label="Hakukohde 1 – mikä epäilyttää"></textarea></td>
@@ -816,6 +837,13 @@
                   <td>
                     <input id="hakukohde2" type="text" data-save aria-label="Hakukohde 2 nimi" placeholder="Koulu ja linja" />
                     <input id="hakukohde2_paikka" type="text" data-save aria-label="Hakukohde 2 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde2_raja" type="text" data-save aria-label="Hakukohde 2 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
+                    <select id="hakukohde2_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 2 tyyppi" style="margin-top:6px;width:100%;">
+                      <option value="">Unelma / realistinen / varma?</option>
+                      <option>Unelma</option>
+                      <option>Realistinen</option>
+                      <option>Varma</option>
+                    </select>
                   </td>
                   <td><textarea id="hakukohde2_plus" data-save aria-label="Hakukohde 2 – mikä kiinnostaa"></textarea></td>
                   <td><textarea id="hakukohde2_miinus" data-save aria-label="Hakukohde 2 – mikä epäilyttää"></textarea></td>
@@ -824,6 +852,13 @@
                   <td>
                     <input id="hakukohde3" type="text" data-save aria-label="Hakukohde 3 nimi" placeholder="Koulu ja linja" />
                     <input id="hakukohde3_paikka" type="text" data-save aria-label="Hakukohde 3 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde3_raja" type="text" data-save aria-label="Hakukohde 3 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
+                    <select id="hakukohde3_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 3 tyyppi" style="margin-top:6px;width:100%;">
+                      <option value="">Unelma / realistinen / varma?</option>
+                      <option>Unelma</option>
+                      <option>Realistinen</option>
+                      <option>Varma</option>
+                    </select>
                   </td>
                   <td><textarea id="hakukohde3_plus" data-save aria-label="Hakukohde 3 – mikä kiinnostaa"></textarea></td>
                   <td><textarea id="hakukohde3_miinus" data-save aria-label="Hakukohde 3 – mikä epäilyttää"></textarea></td>
@@ -831,6 +866,8 @@
               </tbody>
             </table>
           </div>
+
+          <div id="tyyppi-vihje" class="kannustus nakyvissa" role="status" aria-live="polite" style="display:none;"></div>
 
           <div class="kentta-rivi">
             <label for="tietolahteet">Mistä löysit tietoa?</label>
@@ -889,7 +926,7 @@
         </div>
 
         <!-- OSA 2 sisältö (alussa piilotettu blur) -->
-        <div id="osa2-sisalto" class="osa2-lukittu" aria-hidden="true">
+        <div id="osa2-sisalto" class="osa2-lukittu" aria-hidden="true" inert>
 
           <section id="osa2-otsikko" class="aihe-osio" aria-labelledby="otsikko-osa2" style="border-top:3px solid var(--lk9-teal);">
             <div class="aihe-otsikko">
@@ -1218,6 +1255,7 @@
         const nappi = document.querySelector('.btn-avaa-osa2');
         sisalto.classList.remove('osa2-lukittu');
         sisalto.setAttribute('aria-hidden', 'false');
+        sisalto.removeAttribute('inert');
         if (nappi) nappi.setAttribute('aria-expanded', 'true');
         viesti.innerHTML = '<p style="color:#134e4a;font-weight:700;"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Osa 2 on auki. Kirjaa kokemuksesi alla.</p>';
         if (!hiljainen) {
@@ -1228,7 +1266,6 @@
 
       // ── Edistymispalkki ──────────────────────────────────────────
       function paivitaEdistyminen() {
-        const kaikki = haeKentat().length + haeRadiot().filter(r => r.checked).length;
         const taystetyt = haeKentat().filter(f => f.value.trim()).length
           + ['teoria','tekemalla','aikaa','toive','tuki'].filter(nimi => {
               return document.querySelector(`input[name="${nimi}"]:checked`);
@@ -1241,9 +1278,15 @@
                       prosentti > 0 ? `${prosentti}% – hyvä alku!` : 'Aloita täyttäminen ⬇';
         document.getElementById('edistymisLabel').textContent = label;
 
-        // Kannustusviestit
-        if (taystetyt > 8) document.getElementById('kann1').classList.add('nakyvissa');
-        if (taystetyt > 16) document.getElementById('kann2').classList.add('nakyvissa');
+        // Kannustusviestit: näkyvät vasta, kun osion tärkeimmät kohdat on tehty
+        const radiotValittu = ['teoria','tekemalla','aikaa','toive','tuki']
+          .every(nimi => document.querySelector(`input[name="${nimi}"]:checked`));
+        const kohta1Valmis = radiotValittu && !!arvo('mina_paatelma');
+        const hakukohteita = [1,2,3].filter(n => arvo('hakukohde' + n)).length;
+        const osa1Valmis = kohta1Valmis && !!arvo('vaihtoehdot_paatelma')
+          && hakukohteita >= 3 && !!arvo('paras_hakukohde');
+        document.getElementById('kann1').classList.toggle('nakyvissa', kohta1Valmis);
+        document.getElementById('kann2').classList.toggle('nakyvissa', osa1Valmis);
       }
 
       // ── Pisteet ──────────────────────────────────────────────────
@@ -1286,14 +1329,46 @@
         const arvoStr = teksti || '';
         return `<div class="yhteenveto-rivi">
           <span class="yhteenveto-rivi-otsikko">${otsikko}</span>
-          <span class="yhteenveto-rivi-arvo ${arvoStr ? '' : 'yhteenveto-tyhja'}">${arvoStr || 'ei vastattu'}</span>
+          <span class="yhteenveto-rivi-arvo ${arvoStr ? '' : 'yhteenveto-tyhja'}">${arvoStr ? esc(arvoStr) : 'ei vastattu'}</span>
         </div>`;
       }
       function radioRivi(otsikko, nimi) {
         return rivi(otsikko, radioArvo(nimi));
       }
 
+      function esc(t) {
+        return String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+      function hakukohdeTeksti(n) {
+        const nimi = arvo('hakukohde' + n);
+        const paikka = arvo('hakukohde' + n + '_paikka');
+        const raja = arvo('hakukohde' + n + '_raja');
+        const tyyppi = arvo('hakukohde' + n + '_tyyppi');
+        const osat = [nimi + (paikka ? ' – ' + paikka : '')];
+        if (tyyppi) osat.push('[' + tyyppi + ']');
+        if (raja) osat.push('(viime vuoden raja: ' + raja + ')');
+        return nimi || paikka || raja || tyyppi ? osat.join(' ').trim() : '';
+      }
+
+      function paivitaTyyppiVihje() {
+        const el = document.getElementById('tyyppi-vihje');
+        if (!el) return;
+        const valitut = [1,2,3].map(n => arvo('hakukohde' + n + '_tyyppi')).filter(Boolean);
+        let teksti = '';
+        if (valitut.length === 3) {
+          const puuttuu = ['Unelma','Realistinen','Varma'].filter(t => !valitut.includes(t));
+          teksti = puuttuu.length === 0
+            ? 'Hienoa! Sinulla on unelma, realistinen ja varma vaihtoehto.'
+            : 'Valinnoistasi puuttuu vielä: ' + puuttuu.join(', ').toLowerCase() + '. Mieti, tarvitsetko sellaisen turvaksi.';
+        } else if (valitut.length > 0) {
+          teksti = 'Merkitse kaikki kolme hakukohdetta: unelma, realistinen vai varma?';
+        }
+        el.textContent = teksti;
+        el.style.display = teksti ? '' : 'none';
+      }
+
       function paivitaYhteenveto() {
+        paivitaTyyppiVihje();
         const pisteet = paivitaPisteet();
         const maks = Math.max(...Object.values(pisteet));
         const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
@@ -1332,9 +1407,8 @@
 
           <div class="yhteenveto-kortti">
             <h3>🔍 Hakukohteet</h3>
-            ${rivi('Hakukohde 1', arvo('hakukohde1') + (arvo('hakukohde1_paikka') ? ' – ' + arvo('hakukohde1_paikka') : ''))}
-            ${rivi('Hakukohde 2', arvo('hakukohde2') + (arvo('hakukohde2_paikka') ? ' – ' + arvo('hakukohde2_paikka') : ''))}
-            ${rivi('Hakukohde 3', arvo('hakukohde3') + (arvo('hakukohde3_paikka') ? ' – ' + arvo('hakukohde3_paikka') : ''))}
+            ${rivi('Oma keskiarvo', arvo('oma_keskiarvo'))}
+            ${[1,2,3].map(n => rivi('Hakukohde ' + n, hakukohdeTeksti(n))).join('')}
             ${rivi('Paras hakukohde', arvo('paras_hakukohde'))}
           </div>
 
@@ -1367,143 +1441,106 @@
         document.getElementById('yhteenveto-sisalto').innerHTML = html;
       }
 
-      // ── Osa 1 TXT-lataus ─────────────────────────────────────────────
-      function lataaOsa1() {
-        tallenna();
-        const txt = [
-          'HAKUSTRATEGIA – OSA 1',
-          '======================',
-          `Nimi: ${arvo('nimi') || '-'}`,
-          `Luokka: ${arvo('luokka') || '-'}`,
-          `Päivämäärä: ${arvo('paivays') || '-'}`,
-          '',
-          'MINÄ OPISKELIJANA',
-          '-----------------',
-          `Teorian opiskelu (1–5): ${radioArvo('teoria') || '-'}`,
-          `Tekemällä oppiminen (1–5): ${radioArvo('tekemalla') || '-'}`,
-          `Tarvitsen lisäaikaa (1–5): ${radioArvo('aikaa') || '-'}`,
-          `Selkeä toive (1–5): ${radioArvo('toive') || '-'}`,
-          `Tuen tarve (1–5): ${radioArvo('tuki') || '-'}`,
-          `Minua kiinnostaa: ${arvo('kiinnostukset') || '-'}`,
-          `Olen hyvä: ${arvo('vahvuudet') || '-'}`,
-          `En halua ainakaan: ${arvo('ei_kiinnosta') || '-'}`,
-          `Oma päätelmä: ${arvo('mina_paatelma') || '-'}`,
-          '',
-          'VAIHTOEHDOT',
-          '-----------',
-          `Lukio – kiinnostaa: ${arvo('lukio_plus') || '-'}`,
-          `Lukio – mietityttää: ${arvo('lukio_miinus') || '-'}`,
-          `Ammatillinen – kiinnostaa: ${arvo('amis_plus') || '-'}`,
-          `Ammatillinen – mietityttää: ${arvo('amis_miinus') || '-'}`,
-          `TUVA – kiinnostaa: ${arvo('tuva_plus') || '-'}`,
-          `TUVA – mietityttää: ${arvo('tuva_miinus') || '-'}`,
-          `Kansanopisto – kiinnostaa: ${arvo('kansa_plus') || '-'}`,
-          `Kansanopisto – mietityttää: ${arvo('kansa_miinus') || '-'}`,
-          `Kiinnostavin vaihtoehto: ${arvo('vaihtoehdot_paatelma') || '-'}`,
-          '',
-          'HAKUKOHTEET',
-          '-----------',
-          `Hakukohde 1: ${arvo('hakukohde1') || '-'} (${arvo('hakukohde1_paikka') || '-'})`,
-          `  Kiinnostaa: ${arvo('hakukohde1_plus') || '-'}`,
-          `  Epäilyttää: ${arvo('hakukohde1_miinus') || '-'}`,
-          `Hakukohde 2: ${arvo('hakukohde2') || '-'} (${arvo('hakukohde2_paikka') || '-'})`,
-          `  Kiinnostaa: ${arvo('hakukohde2_plus') || '-'}`,
-          `  Epäilyttää: ${arvo('hakukohde2_miinus') || '-'}`,
-          `Hakukohde 3: ${arvo('hakukohde3') || '-'} (${arvo('hakukohde3_paikka') || '-'})`,
-          `  Kiinnostaa: ${arvo('hakukohde3_plus') || '-'}`,
-          `  Epäilyttää: ${arvo('hakukohde3_miinus') || '-'}`,
-          `Tietolähteet: ${arvo('tietolahteet') || '-'}`,
-          `Paras hakukohde: ${arvo('paras_hakukohde') || '-'}`,
-          '',
-          '-- OSA 2 täytetään tutustumisen jälkeen --',
-        ].join('\n');
-
-        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `hakustrategia_osa1_${(arvo('nimi') || 'oppilas').replace(/\s+/g,'_').toLowerCase()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+      // ── TXT-lataus (yksi yhteinen rakentaja) ──────────────────────────
+      function txtRivit(otsikko, rivit) {
+        return [otsikko, '-'.repeat(otsikko.length), ...rivit.map(([k, v]) => `${k}: ${v || '-'}`), ''];
       }
 
-      // ── TXT-lataus ───────────────────────────────────────────────
-      function lataaYhteenveto() {
-        tallenna();
+      function rakennaTxt(vainOsa1) {
         const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
         const pisteet = paivitaPisteet();
+        const hakukohteet = [1, 2, 3].flatMap(n => [
+          [`Hakukohde ${n}`, `${arvo('hakukohde' + n)} (${arvo('hakukohde' + n + '_paikka') || '-'})`],
+          ['  Tyyppi', arvo('hakukohde' + n + '_tyyppi')],
+          ['  Viime vuoden alin raja', arvo('hakukohde' + n + '_raja')],
+          ['  Kiinnostaa', arvo('hakukohde' + n + '_plus')],
+          ['  Epäilyttää', arvo('hakukohde' + n + '_miinus')],
+        ]);
 
-        const txt = [
-          'HAKUSTRATEGIA – DIGIOPO',
+        const rivit = [
+          vainOsa1 ? 'HAKUSTRATEGIA – OSA 1' : 'HAKUSTRATEGIA – DIGIOPO',
           '========================',
-          `Nimi: ${arvo('nimi') || '-'}`,
-          `Luokka: ${arvo('luokka') || '-'}`,
-          `Päivämäärä: ${arvo('paivays') || '-'}`,
-          '',
-          'OSA 1 – MINÄ OPISKELIJANA',
-          '--------------------------',
-          `Teorian opiskelu (1–5): ${radioArvo('teoria') || '-'}`,
-          `Tekemällä oppiminen (1–5): ${radioArvo('tekemalla') || '-'}`,
-          `Tarvitsen lisäaikaa (1–5): ${radioArvo('aikaa') || '-'}`,
-          `Selkeä toive (1–5): ${radioArvo('toive') || '-'}`,
-          `Tuen tarve (1–5): ${radioArvo('tuki') || '-'}`,
-          `Kiinnostaa: ${arvo('kiinnostukset') || '-'}`,
-          `Vahvuudet: ${arvo('vahvuudet') || '-'}`,
-          `Ei kiinnosta: ${arvo('ei_kiinnosta') || '-'}`,
-          `Oma päätelmä: ${arvo('mina_paatelma') || '-'}`,
-          '',
-          'HAKUKOHTEET',
-          '-----------',
-          `Hakukohde 1: ${arvo('hakukohde1') || '-'} (${arvo('hakukohde1_paikka') || '-'})`,
-          `Hakukohde 2: ${arvo('hakukohde2') || '-'} (${arvo('hakukohde2_paikka') || '-'})`,
-          `Hakukohde 3: ${arvo('hakukohde3') || '-'} (${arvo('hakukohde3_paikka') || '-'})`,
-          `Paras hakukohde: ${arvo('paras_hakukohde') || '-'}`,
-          '',
-          'OSA 2 – TUTUSTUMINEN',
-          '--------------------',
-          `Tutustumistapa: ${arvo('tutustumistapa') || '-'}`,
-          `Koulu: ${arvo('tutustumispaikka') || '-'}`,
-          `Tunnelma: ${arvo('tunnelma') || '-'}`,
-          `Opiskelijat: ${arvo('opiskelijat') || '-'}`,
-          `Opetus: ${arvo('opetus') || '-'}`,
-          `Näenkö itseni siellä: ${arvo('naenko_itseni') || '-'}`,
-          `Muuttuiko mieli: ${arvo('muuttuiko') || '-'}`,
-          `Tärkein havainto: ${arvo('tutustuminen_paatelma') || '-'}`,
-          '',
-          'ARKI JA TODELLISUUS',
-          '-------------------',
-          `Koulumatka: ${arvo('koulumatka') || '-'}`,
-          `Päivärytmi: ${arvo('paivarytmi') || '-'}`,
-          `Tuen tarve: ${arvo('tuki_arjessa') || '-'}`,
-          `Jaksaminen: ${arvo('jaksaminen') || '-'}`,
-          `Haastattelu tai some: ${arvo('haastattelu') || '-'}`,
-          '',
-          'PÄÄTÖSMATRIISI (pisteet / 25)',
-          '-----------------------------',
-          ...Object.entries(pisteet).map(([v, p]) => `${nimet[v]}: ${p > 0 ? p : '-'}`),
-          '',
-          'HAKUSUUNNITELMA',
-          '---------------',
-          `1. hakutoive: ${arvo('haku1') || '-'}`,
-          `2. hakutoive: ${arvo('haku2') || '-'}`,
-          `3. hakutoive: ${arvo('haku3') || '-'}`,
-          `Varavaihtoehto: ${arvo('vara') || '-'}`,
-          `Perustelut: ${arvo('hakujarjestys_perustelu') || '-'}`,
-          `Kirje itselleni: ${arvo('paatoskirje') || '-'}`,
-        ].join('\n');
+          ...txtRivit('PERUSTIEDOT', [
+            ['Nimi', arvo('nimi')], ['Luokka', arvo('luokka')], ['Päivämäärä', arvo('paivays')],
+          ]),
+          ...txtRivit('MINÄ OPISKELIJANA (asteikko 1–5)', [
+            ['Jaksan opiskella paljon teoriaa', radioArvo('teoria')],
+            ['Opin parhaiten tekemällä', radioArvo('tekemalla')],
+            ['Tarvitsen vielä aikaa miettiä', radioArvo('aikaa')],
+            ['Minulla on selkeä toive', radioArvo('toive')],
+            ['Tarvitsen tukea', radioArvo('tuki')],
+            ['Minua kiinnostaa', arvo('kiinnostukset')],
+            ['Olen hyvä', arvo('vahvuudet')],
+            ['En halua ainakaan', arvo('ei_kiinnosta')],
+            ['Oma päätelmä', arvo('mina_paatelma')],
+          ]),
+          ...txtRivit('VAIHTOEHDOT', [
+            ['Lukio – kiinnostaa', arvo('lukio_plus')], ['Lukio – mietityttää', arvo('lukio_miinus')],
+            ['Ammatillinen – kiinnostaa', arvo('amis_plus')], ['Ammatillinen – mietityttää', arvo('amis_miinus')],
+            ['TUVA – kiinnostaa', arvo('tuva_plus')], ['TUVA – mietityttää', arvo('tuva_miinus')],
+            ['Kansanopisto – kiinnostaa', arvo('kansa_plus')], ['Kansanopisto – mietityttää', arvo('kansa_miinus')],
+            ['Kiinnostavin vaihtoehto', arvo('vaihtoehdot_paatelma')],
+          ]),
+          ...txtRivit('HAKUKOHTEET', [
+            ['Oma keskiarvo', arvo('oma_keskiarvo')],
+            ...hakukohteet,
+            ['Tietolähteet', arvo('tietolahteet')],
+            ['Paras hakukohde', arvo('paras_hakukohde')],
+          ]),
+        ];
 
-        const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        if (vainOsa1) {
+          rivit.push('-- OSA 2 täytetään tutustumisen jälkeen --');
+        } else {
+          rivit.push(
+            ...txtRivit('OSA 2 – TUTUSTUMINEN', [
+              ['Tutustumispäivä', arvo('osa2_paivays')],
+              ['Tutustumistapa', arvo('tutustumistapa')],
+              ['Koulu', arvo('tutustumispaikka')],
+              ['Tunnelma', arvo('tunnelma')],
+              ['Opiskelijat', arvo('opiskelijat')],
+              ['Opetus', arvo('opetus')],
+              ['Näenkö itseni siellä', arvo('naenko_itseni')],
+              ['Muuttuiko mieli', arvo('muuttuiko')],
+              ['Tärkein havainto', arvo('tutustuminen_paatelma')],
+            ]),
+            ...txtRivit('ARKI JA TODELLISUUS', [
+              ['Koulumatka', arvo('koulumatka')],
+              ['Päivärytmi', arvo('paivarytmi')],
+              ['Tuen tarve', arvo('tuki_arjessa')],
+              ['Jaksaminen', arvo('jaksaminen')],
+              ['Haastattelu tai some', arvo('haastattelu')],
+            ]),
+            ...txtRivit('PÄÄTÖSMATRIISI (pisteet / 25)',
+              Object.entries(pisteet).map(([v, p]) => [nimet[v], p > 0 ? String(p) : ''])),
+            ...txtRivit('HAKUSUUNNITELMA', [
+              ['1. hakutoive', arvo('haku1')],
+              ['2. hakutoive', arvo('haku2')],
+              ['3. hakutoive', arvo('haku3')],
+              ['Varavaihtoehto', arvo('vara')],
+              ['Perustelut', arvo('hakujarjestys_perustelu')],
+              ['Kirje itselleni', arvo('paatoskirje')],
+            ])
+          );
+        }
+        return rivit.join('\n');
+      }
+
+      function lataaTxt(vainOsa1) {
+        tallenna();
+        const blob = new Blob([rakennaTxt(vainOsa1)], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
+        const nimi = (arvo('nimi') || 'oppilas').replace(/\s+/g, '_').toLowerCase();
         a.href = url;
-        a.download = `hakustrategia_${(arvo('nimi') || 'oppilas').replace(/\s+/g,'_').toLowerCase()}.txt`;
+        a.download = `hakustrategia${vainOsa1 ? '_osa1' : ''}_${nimi}.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
+      function lataaOsa1() { lataaTxt(true); }
+      function lataaYhteenveto() { lataaTxt(false); }
 
       // ── Tyhjennä ─────────────────────────────────────────────────
       function tyhjennaVastaukset() {
