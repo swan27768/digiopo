@@ -933,6 +933,10 @@
                 <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
                 Tallenna Osa 1 PDF-tiedostoksi
               </button>
+              <button type="button" class="btn-danger" onclick="tyhjennaOsa(1)">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                Tyhjennä Osa 1
+              </button>
             </div>
           </div>
         </section>
@@ -1191,6 +1195,13 @@
               <label for="paatoskirje">Kirje itsellesi</label>
               <span class="ohje" id="ohje-kirje">Kirjoita kuin puhuisit kaverillesi. Kerro, miksi valitsit tämän – ja mitä teet, jos et pääse ensimmäiseen vaihtoehtoon.</span>
               <textarea id="paatoskirje" data-save aria-describedby="ohje-kirje" style="min-height:130px;" placeholder="Valitsin ensisijaisesti... koska... Jos en pääse sinne, suunnitelmani on..."></textarea>
+            </div>
+
+            <div class="toiminnot">
+              <button type="button" class="btn-danger" onclick="tyhjennaOsa(2)">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                Tyhjennä Osa 2
+              </button>
             </div>
           </section>
 
@@ -1470,11 +1481,35 @@
       }
 
       // ── Tyhjennä ─────────────────────────────────────────────────
+      const OSA2_VIESTI_ALKU = document.getElementById('osa2-lukittu-viesti').innerHTML;
+
+      function lukitseOsa2() {
+        const sisalto = document.getElementById('osa2-sisalto');
+        sisalto.classList.add('osa2-lukittu');
+        sisalto.setAttribute('aria-hidden', 'true');
+        sisalto.setAttribute('inert', '');
+        document.getElementById('osa2-lukittu-viesti').innerHTML = OSA2_VIESTI_ALKU;
+      }
+
+      function tyhjennaKentat(sopiiko) {
+        haeKentat().filter(f => sopiiko(f)).forEach(f => { f.value = ''; });
+        haeRadiot().filter(r => sopiiko(r)).forEach(r => { r.checked = false; });
+      }
+
+      // osa: 1 = Osa 1, 2 = Osa 2
+      function tyhjennaOsa(osa) {
+        const osa2 = document.getElementById('osa2-sisalto');
+        const nimi = osa === 2 ? 'Osa 2' : 'Osa 1';
+        if (!confirm('Haluatko varmasti tyhjentää kohdan ' + nimi + '? Vastaukset poistuvat eikä tätä voi peruuttaa.')) return;
+        tyhjennaKentat(el => osa2.contains(el) === (osa === 2));
+        tallenna();
+      }
+
       function tyhjennaVastaukset() {
-        if (!confirm('Haluatko varmasti tyhjentää kaikki vastaukset? Tätä ei voi peruuttaa.')) return;
+        if (!confirm('Haluatko varmasti tyhjentää kaikki vastaukset (Osa 1 ja Osa 2)? Tätä ei voi peruuttaa.')) return;
         localStorage.removeItem(AVAIN);
-        haeKentat().forEach(f => f.value = '');
-        haeRadiot().forEach(r => r.checked = false);
+        tyhjennaKentat(() => true);
+        lukitseOsa2();
         paivitaEdistyminen();
         paivitaPisteet();
         paivitaYhteenveto();
