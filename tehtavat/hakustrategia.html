@@ -316,6 +316,14 @@
         font-weight: 700;
       }
       .vertailu-taulukko td textarea { min-height: 70px; }
+      .hakutoive-taulukko { table-layout: fixed; min-width: 640px; }
+      .hakutoive-taulukko th:nth-child(1) { width: 32%; }
+      .hakutoive-taulukko td select { font-size: 0.9rem; }
+      .hakutoive-taulukko th:nth-child(2) { width: 38%; }
+      .hakutoive-taulukko th:nth-child(3) { width: 30%; }
+      .hakutoive-taulukko td textarea { width: 100%; min-height: 190px; box-sizing: border-box; }
+      .hakutoive-otsikko { font-weight: 800; color: #0f766e; margin-bottom: 6px; font-size: 0.95rem; }
+      .vertailu-taulukko td textarea::placeholder { font-size: 0.85rem; }
 
       /* Päätösmatriisi */
       .matriisi-taulukko {
@@ -801,17 +809,18 @@
               <span class="vaihe-label"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Kohta 3</span><br>
               Mihin haluat hakea?
             </h2>
-            <p>Etsi tietoa vähintään kolmesta paikasta, joihin voisit hakea.</p>
+            <p>Etsi tietoa vähintään kolmesta paikasta, joihin voisit hakea. Laita ne omaan järjestykseensä ja kirjoita jokaiselle perustelu.</p>
           </div>
 
           <div class="tavoite-palkki" role="note">
-            <strong>Tavoite:</strong> Sinulla on ainakin kolme hakukohdetta mietittynä – ja tiedät, mikä niistä tuntuu parhaimmalta.
+            <strong>Tavoite:</strong> Sinulla on ainakin kolme hakutoivetta järjestyksessä – ja osaat kertoa, miksi juuri tämä koulu on ensimmäisenä, toisena ja kolmantena.
           </div>
 
           <div class="theory-card" style="margin-bottom:16px;">
             <div class="theory-text">
               <h3>Hakustrategia: unelma, realistinen, varma</h3>
               <p>Hyvä strategia on hakea kolmeen paikkaan: yksi unelmahakukohde, yksi realistinen ja yksi varma vaihtoehto. Näin sinulla on mahdollisuus, mutta myös turvaverkko.</p>
+              <p>Hakutoiveiden järjestys on tärkeä: <strong>1. toive on se, jonne haluat eniten.</strong> Kirjoita jokaiselle perustelu, miksi se on juuri sillä sijalla. Perustelu auttaa myös myöhemmin, kun teet lopullisen päätöksen.</p>
             </div>
           </div>
 
@@ -830,60 +839,63 @@
           </div>
 
           <div class="kentta-rivi">
-            <table class="vertailu-taulukko" aria-label="Hakukohteiden vertailu">
-              <caption class="sr-only">Kirjoita hakukohteen nimi, paikkakunta ja mitä ajattelet siitä.</caption>
+            <table class="vertailu-taulukko hakutoive-taulukko" aria-label="Hakutoiveet ja perustelut">
+              <caption class="sr-only">Kirjoita jokaiselle hakutoiveelle koulu, paikkakunta ja perustelu: miksi tämä koulu on juuri tässä kohdassa.</caption>
               <thead>
                 <tr>
-                  <th scope="col">Hakukohde ja paikkakunta</th>
-                  <th scope="col">Mikä kiinnostaa?</th>
-                  <th scope="col">Mikä epäilyttää?</th>
+                  <th scope="col">Hakutoive, koulu ja paikkakunta</th>
+                  <th scope="col">Miksi haet tänne? Perustele</th>
+                  <th scope="col">Mitä pitää vielä selvittää?</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <input id="hakukohde1" type="text" data-save aria-label="Hakukohde 1 nimi" placeholder="Koulu ja linja" />
-                    <input id="hakukohde1_paikka" type="text" data-save aria-label="Hakukohde 1 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde1_raja" type="text" data-save aria-label="Hakukohde 1 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
-                    <select id="hakukohde1_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 1 tyyppi" style="margin-top:6px;width:100%;">
-                      <option value="">Unelma / realistinen / varma?</option>
+                    <div class="hakutoive-otsikko">1. hakutoive</div>
+                    <input id="hakukohde1" type="text" data-save aria-label="1. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
+                    <input id="hakukohde1_paikka" type="text" data-save aria-label="1. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde1_raja" type="text" data-save aria-label="1. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <select id="hakukohde1_tyyppi" data-save class="hakukohde-tyyppi" aria-label="1. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
+                      <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
                       <option>Realistinen</option>
                       <option>Varma</option>
                     </select>
                   </td>
-                  <td><textarea id="hakukohde1_plus" data-save aria-label="Hakukohde 1 – mikä kiinnostaa"></textarea></td>
-                  <td><textarea id="hakukohde1_miinus" data-save aria-label="Hakukohde 1 – mikä epäilyttää"></textarea></td>
+                  <td><textarea id="hakukohde1_plus" data-save aria-label="1. hakutoive: miksi haet tänne" placeholder="Miksi tämä on ensimmäinen toiveesi? Mikä tässä koulussa tai linjassa sopii juuri sinulle?"></textarea></td>
+                  <td><textarea id="hakukohde1_miinus" data-save aria-label="1. hakutoive: mitä pitää vielä selvittää" placeholder="Esim. pääsenkö sinne keskiarvollani? Millainen arki siellä on?"></textarea></td>
                 </tr>
                 <tr>
                   <td>
-                    <input id="hakukohde2" type="text" data-save aria-label="Hakukohde 2 nimi" placeholder="Koulu ja linja" />
-                    <input id="hakukohde2_paikka" type="text" data-save aria-label="Hakukohde 2 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde2_raja" type="text" data-save aria-label="Hakukohde 2 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
-                    <select id="hakukohde2_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 2 tyyppi" style="margin-top:6px;width:100%;">
-                      <option value="">Unelma / realistinen / varma?</option>
+                    <div class="hakutoive-otsikko">2. hakutoive</div>
+                    <input id="hakukohde2" type="text" data-save aria-label="2. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
+                    <input id="hakukohde2_paikka" type="text" data-save aria-label="2. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde2_raja" type="text" data-save aria-label="2. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <select id="hakukohde2_tyyppi" data-save class="hakukohde-tyyppi" aria-label="2. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
+                      <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
                       <option>Realistinen</option>
                       <option>Varma</option>
                     </select>
                   </td>
-                  <td><textarea id="hakukohde2_plus" data-save aria-label="Hakukohde 2 – mikä kiinnostaa"></textarea></td>
-                  <td><textarea id="hakukohde2_miinus" data-save aria-label="Hakukohde 2 – mikä epäilyttää"></textarea></td>
+                  <td><textarea id="hakukohde2_plus" data-save aria-label="2. hakutoive: miksi haet tänne" placeholder="Miksi tämä on toinen toiveesi? Mikä tässä on hyvää, vaikka se ei ole ensimmäinen?"></textarea></td>
+                  <td><textarea id="hakukohde2_miinus" data-save aria-label="2. hakutoive: mitä pitää vielä selvittää" placeholder="Esim. kulkuyhteydet, pääsyvaatimukset, ryhmäkoko..."></textarea></td>
                 </tr>
                 <tr>
                   <td>
-                    <input id="hakukohde3" type="text" data-save aria-label="Hakukohde 3 nimi" placeholder="Koulu ja linja" />
-                    <input id="hakukohde3_paikka" type="text" data-save aria-label="Hakukohde 3 paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde3_raja" type="text" data-save aria-label="Hakukohde 3 viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden alin raja" style="margin-top:6px;" />
-                    <select id="hakukohde3_tyyppi" data-save class="hakukohde-tyyppi" aria-label="Hakukohde 3 tyyppi" style="margin-top:6px;width:100%;">
-                      <option value="">Unelma / realistinen / varma?</option>
+                    <div class="hakutoive-otsikko">3. hakutoive</div>
+                    <input id="hakukohde3" type="text" data-save aria-label="3. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
+                    <input id="hakukohde3_paikka" type="text" data-save aria-label="3. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
+                    <input id="hakukohde3_raja" type="text" data-save aria-label="3. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <select id="hakukohde3_tyyppi" data-save class="hakukohde-tyyppi" aria-label="3. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
+                      <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
                       <option>Realistinen</option>
                       <option>Varma</option>
                     </select>
                   </td>
-                  <td><textarea id="hakukohde3_plus" data-save aria-label="Hakukohde 3 – mikä kiinnostaa"></textarea></td>
-                  <td><textarea id="hakukohde3_miinus" data-save aria-label="Hakukohde 3 – mikä epäilyttää"></textarea></td>
+                  <td><textarea id="hakukohde3_plus" data-save aria-label="3. hakutoive: miksi haet tänne" placeholder="Miksi tämä on kolmas toiveesi? Mitä hyvää tässä on, jos ensimmäiset eivät onnistu?"></textarea></td>
+                  <td><textarea id="hakukohde3_miinus" data-save aria-label="3. hakutoive: mitä pitää vielä selvittää" placeholder="Esim. onko tämä varmasti turvallinen vaihtoehto? Kiinnostaako se oikeasti?"></textarea></td>
                 </tr>
               </tbody>
             </table>
@@ -1422,7 +1434,9 @@
           <div class="yhteenveto-kortti">
             <h3>🔍 Hakukohteet</h3>
             ${rivi('Oma keskiarvo', arvo('oma_keskiarvo'))}
-            ${[1,2,3].map(n => rivi('Hakukohde ' + n, hakukohdeTeksti(n))).join('')}
+            ${[1,2,3].map(n => rivi(n + '. hakutoive', hakukohdeTeksti(n))
+              + rivi('  Perustelu', arvo('hakukohde' + n + '_plus'))
+              + rivi('  Selvitettävää', arvo('hakukohde' + n + '_miinus'))).join('')}
             ${rivi('Paras hakukohde', arvo('paras_hakukohde'))}
           </div>
 
