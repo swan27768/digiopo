@@ -424,67 +424,6 @@
       }
       .kannustus.nakyvissa { display: flex; }
 
-      /* Yhteenveto */
-      .yhteenveto-kortti {
-        background: linear-gradient(135deg, #f0fdfa, #fff);
-        border: 2px solid var(--lk9-teal-bd);
-        border-radius: 16px;
-        padding: 20px 22px;
-        margin: 16px 0;
-      }
-      .yhteenveto-kortti h3 {
-        color: #134e4a;
-        margin: 0 0 14px;
-        font-size: 1.1rem;
-      }
-      .yhteenveto-rivi {
-        display: flex;
-        gap: 10px;
-        margin: 8px 0;
-        align-items: flex-start;
-        font-size: 0.97rem;
-      }
-      .yhteenveto-rivi-otsikko {
-        font-weight: 700;
-        color: #374151;
-        min-width: 140px;
-        flex-shrink: 0;
-      }
-      .yhteenveto-rivi-arvo {
-        color: #1f2937;
-        word-break: break-word;
-      }
-      .yhteenveto-tyhja { color: #9ca3af; font-style: italic; }
-      .matriisi-tulos-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 10px 0;
-      }
-      .matriisi-tulos-kortti {
-        background: #fff;
-        border: 1.5px solid var(--lk9-teal-bd);
-        border-radius: 12px;
-        padding: 12px;
-        text-align: center;
-      }
-      .matriisi-tulos-nimi {
-        font-weight: 700;
-        font-size: 0.88rem;
-        color: #134e4a;
-        margin-bottom: 4px;
-      }
-      .matriisi-tulos-pisteet {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--lk9-teal);
-      }
-      .matriisi-tulos-max { font-size: 0.78rem; color: #9ca3af; }
-      .matriisi-voittaja {
-        border-color: var(--lk9-teal);
-        background: #f0fdfa;
-        box-shadow: 0 0 0 3px #ccfbf1;
-      }
 
       /* Toimintopainikkeet */
       .toiminnot {
@@ -519,7 +458,6 @@
       .btn-danger:hover { background: #fecaca; }
 
       @media (max-width: 500px) {
-        .matriisi-tulos-grid { grid-template-columns: repeat(2, 1fr); }
         .liuku-arvio label { width: 30px; height: 30px; font-size: 0.82rem; }
         .vertailu-taulukko { font-size: 0.85rem; }
       }
@@ -534,7 +472,7 @@
         .toiminnot, #scrollTopBtn, .btn-avaa-osa2, #osa2-lukittu-viesti, #edistymisPalkki, .vaihe-erottaja { display: none !important; }
         .osa2-lukittu { display: none !important; }
         .aihe-osio { box-shadow: none; break-inside: auto; background: #fff !important; }
-        .kentta-rivi, .liuku-rivi, .vaihtoehto-kortti, .yhteenveto-kortti, .tavoite-palkki, tr { break-inside: avoid; }
+        .kentta-rivi, .liuku-rivi, .vaihtoehto-kortti, .tavoite-palkki, tr { break-inside: avoid; }
         h2, h3 { break-after: avoid; }
         input, textarea, select { color: #111 !important; background: #fff !important; border: 1px solid #555 !important; resize: none; }
         textarea { overflow: visible !important; }
@@ -570,7 +508,7 @@
           <a href="#osa2-tutustuminen">4. Tutustuminen</a>
           <a href="#osa2-arki">5. Arki ja todellisuus</a>
           <a href="#osa2-paatos">6. Päätös</a>
-          <a href="#yhteenveto">✅ Yhteenveto</a>
+          <a href="#yhteenveto">✅ Palautus</a>
         </nav>
       </aside>
 
@@ -1238,31 +1176,14 @@
         <section id="yhteenveto" class="aihe-osio" aria-labelledby="otsikko-yhteenveto">
           <div class="aihe-otsikko">
             <h2 id="otsikko-yhteenveto">
-              <span class="vaihe-label"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Yhteenveto</span><br>
-              Oma hakusuunnitelma tiivistettynä
+              <span class="vaihe-label"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Palautus</span><br>
+              Muista palauttaa
             </h2>
-            <p>Tässä koostuu se, mitä olet täyttänyt. Tallenna tämä PDF-tiedostoksi ja palauta se Classroomin kautta opolle.</p>
           </div>
-
-          <!-- Yhteenvetokortit – generoituvat JS:llä -->
-          <div id="yhteenveto-sisalto" aria-live="polite">
-            <p style="color:#9ca3af;font-style:italic;">Yhteenveto ilmestyy, kun alat täyttää tehtävää.</p>
-          </div>
-
-          <div class="toiminnot">
-            <button class="btn-primary" onclick="paivitaYhteenveto()">
-              <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
-              Päivitä yhteenveto
-            </button>
-            <button class="btn-secondary" onclick="tulostaOsa(0)">
-              <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
-              Tallenna koko tehtävä PDF-tiedostoksi
-            </button>
-            <button class="btn-danger" onclick="tyhjennaVastaukset()">
-              <i class="fa-solid fa-trash" aria-hidden="true"></i>
-              Tyhjennä kaikki
-            </button>
-          </div>
+          <p class="classroom-ohje" style="margin:0 28px 24px;font-size:1.05rem;" role="note">
+            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+            <strong>Tallenna Osa 1 ja Osa 2 erikseen ja palauta molemmat Classroomin kautta opolle.</strong>
+          </p>
         </section>
 
       </main>
@@ -1293,7 +1214,7 @@
         localStorage.setItem(AVAIN, JSON.stringify(d));
         paivitaEdistyminen();
         paivitaPisteet();
-        paivitaYhteenveto();
+        paivitaTyyppiVihje();
       }
 
       function lataaData() {
@@ -1378,7 +1299,7 @@
         return pisteet;
       }
 
-      // ── Yhteenveto ───────────────────────────────────────────────
+      // ── Apufunktiot ──────────────────────────────────────────────
       function arvo(id) {
         const el = document.getElementById(id);
         return el ? (el.value || '').trim() : '';
@@ -1387,31 +1308,6 @@
         const el = document.querySelector(`input[name="${nimi}"]:checked`);
         return el ? el.value : '';
       }
-      function rivi(otsikko, teksti) {
-        const arvoStr = teksti || '';
-        return `<div class="yhteenveto-rivi">
-          <span class="yhteenveto-rivi-otsikko">${otsikko}</span>
-          <span class="yhteenveto-rivi-arvo ${arvoStr ? '' : 'yhteenveto-tyhja'}">${arvoStr ? esc(arvoStr) : 'ei vastattu'}</span>
-        </div>`;
-      }
-      function radioRivi(otsikko, nimi) {
-        return rivi(otsikko, radioArvo(nimi));
-      }
-
-      function esc(t) {
-        return String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-      }
-      function hakukohdeTeksti(n) {
-        const nimi = arvo('hakukohde' + n);
-        const paikka = arvo('hakukohde' + n + '_paikka');
-        const raja = arvo('hakukohde' + n + '_raja');
-        const tyyppi = arvo('hakukohde' + n + '_tyyppi');
-        const osat = [nimi + (paikka ? ' – ' + paikka : '')];
-        if (tyyppi) osat.push('[' + tyyppi + ']');
-        if (raja) osat.push('(viime vuoden raja: ' + raja + ')');
-        return nimi || paikka || raja || tyyppi ? osat.join(' ').trim() : '';
-      }
-
       function paivitaTyyppiVihje() {
         const el = document.getElementById('tyyppi-vihje');
         if (!el) return;
@@ -1429,93 +1325,7 @@
         el.style.display = teksti ? '' : 'none';
       }
 
-      function paivitaYhteenveto() {
-        paivitaTyyppiVihje();
-        const pisteet = paivitaPisteet();
-        const maks = Math.max(...Object.values(pisteet));
-        const nimet = { lukio:'Lukio', amis:'Ammatillinen', tuva:'TUVA', kansa:'Kansanopisto' };
-        const emojit = { lukio:'🎓', amis:'🔧', tuva:'🌱', kansa:'🏡' };
-
-        // Pisteytyskortit
-        const matrGrid = `<div class="matriisi-tulos-grid">
-          ${VAIHTOEHDOT.map(v => `
-            <div class="matriisi-tulos-kortti ${pisteet[v] === maks && pisteet[v] > 0 ? 'matriisi-voittaja' : ''}">
-              <div class="matriisi-tulos-nimi">${emojit[v]} ${nimet[v]}</div>
-              <div class="matriisi-tulos-pisteet">${pisteet[v] > 0 ? pisteet[v] : '–'}</div>
-              <div class="matriisi-tulos-max">${pisteet[v] > 0 ? '/ 25' : ''}</div>
-            </div>`).join('')}
-        </div>`;
-
-        const html = `
-          <div class="yhteenveto-kortti">
-            <h3>👤 Perustiedot</h3>
-            ${rivi('Nimi', arvo('nimi'))}
-            ${rivi('Luokka', arvo('luokka'))}
-            ${rivi('Päivämäärä', arvo('paivays'))}
-          </div>
-
-          <div class="yhteenveto-kortti">
-            <h3>🙋 Minä opiskelijana</h3>
-            ${radioRivi('Teorian opiskelu', 'teoria')}
-            ${radioRivi('Tekemällä oppiminen', 'tekemalla')}
-            ${radioRivi('Tarvitsen lisäaikaa', 'aikaa')}
-            ${radioRivi('Selkeä toive', 'toive')}
-            ${radioRivi('Tuen tarve', 'tuki')}
-            ${rivi('Kiinnostaa', arvo('kiinnostukset'))}
-            ${rivi('Vahvuudet', arvo('vahvuudet'))}
-            ${rivi('Ei kiinnosta', arvo('ei_kiinnosta'))}
-            ${rivi('Oma päätelmä', arvo('mina_paatelma'))}
-          </div>
-
-          <div class="yhteenveto-kortti">
-            <h3>🔍 Hakukohteet</h3>
-            ${rivi('Oma keskiarvo', arvo('oma_keskiarvo'))}
-            ${[1,2,3].map(n => rivi(n + '. hakutoive', hakukohdeTeksti(n))
-              + rivi('  Perustelu', arvo('hakukohde' + n + '_plus'))
-              + rivi('  Selvitettävää', arvo('hakukohde' + n + '_miinus'))).join('')}
-            ${rivi('Paras hakukohde', arvo('paras_hakukohde'))}
-          </div>
-
-          <div class="yhteenveto-kortti">
-            <h3>📋 Tutustuminen (Osa 2)</h3>
-            ${rivi('Tutustumistapa', arvo('tutustumistapa'))}
-            ${rivi('Koulu', arvo('tutustumispaikka'))}
-            ${rivi('Tunnelma', arvo('tunnelma'))}
-            ${rivi('Näenkö itseni siellä', arvo('naenko_itseni'))}
-            ${rivi('Muuttuiko mieli', arvo('muuttuiko'))}
-            ${rivi('Tärkein havainto', arvo('tutustuminen_paatelma'))}
-          </div>
-
-          <div class="yhteenveto-kortti">
-            <h3>📊 Päätösmatriisi</h3>
-            ${matrGrid}
-          </div>
-
-          <div class="yhteenveto-kortti">
-            <h3>✅ Hakusuunnitelma</h3>
-            ${rivi('1. hakutoive', arvo('haku1'))}
-            ${rivi('2. hakutoive', arvo('haku2'))}
-            ${rivi('3. hakutoive', arvo('haku3'))}
-            ${rivi('Varavaihtoehto', arvo('vara'))}
-            ${rivi('Perustelut', arvo('hakujarjestys_perustelu'))}
-            ${rivi('Kirje itselleni', arvo('paatoskirje'))}
-          </div>
-        `;
-
-        document.getElementById('yhteenveto-sisalto').innerHTML = html;
-      }
-
       // ── Tyhjennä ─────────────────────────────────────────────────
-      const OSA2_VIESTI_ALKU = document.getElementById('osa2-lukittu-viesti').innerHTML;
-
-      function lukitseOsa2() {
-        const sisalto = document.getElementById('osa2-sisalto');
-        sisalto.classList.add('osa2-lukittu');
-        sisalto.setAttribute('aria-hidden', 'true');
-        sisalto.setAttribute('inert', '');
-        document.getElementById('osa2-lukittu-viesti').innerHTML = OSA2_VIESTI_ALKU;
-      }
-
       function tyhjennaKentat(sopiiko) {
         haeKentat().filter(f => sopiiko(f)).forEach(f => { f.value = ''; });
         haeRadiot().filter(r => sopiiko(r)).forEach(r => { r.checked = false; });
@@ -1528,16 +1338,6 @@
         if (!confirm('Haluatko varmasti tyhjentää kohdan ' + nimi + '? Vastaukset poistuvat eikä tätä voi peruuttaa.')) return;
         tyhjennaKentat(el => osa2.contains(el) === (osa === 2));
         tallenna();
-      }
-
-      function tyhjennaVastaukset() {
-        if (!confirm('Haluatko varmasti tyhjentää kaikki vastaukset (Osa 1 ja Osa 2)? Tätä ei voi peruuttaa.')) return;
-        localStorage.removeItem(AVAIN);
-        tyhjennaKentat(() => true);
-        lukitseOsa2();
-        paivitaEdistyminen();
-        paivitaPisteet();
-        paivitaYhteenveto();
       }
 
       // ── Tulostus / PDF: koko teksti näkyviin ja järkevä tiedostonimi ──
@@ -1598,7 +1398,7 @@
         document.querySelectorAll('[id^="m_"]').forEach(s => s.addEventListener('change', paivitaPisteet));
         paivitaEdistyminen();
         paivitaPisteet();
-        paivitaYhteenveto();
+        paivitaTyyppiVihje();
       });
     </script>
   <script src="/js/tekijanoikeus.js" defer></script>
