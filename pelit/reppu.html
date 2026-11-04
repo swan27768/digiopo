@@ -207,6 +207,11 @@
       font-family:'Nunito',sans-serif; font-size:.92rem; padding:.5rem .7rem; }
     .cv-input:focus { outline:2px solid var(--teal); border-color:var(--teal); }
 
+    .opt-tag { display:inline-block; margin-left:.5rem; padding:.05rem .6rem; border-radius:99px;
+      border:1px solid var(--purple); color:#a78fd4; font-size:.72rem; font-weight:700;
+      letter-spacing:.03em; vertical-align:middle; }
+    select.cv-input { cursor:pointer; }
+
     .bigmoji { font-size:3rem; display:block; text-align:center; margin:.5rem 0; }
     textarea { width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.13);
       border-radius:10px; color:var(--text); font-family:'Nunito',sans-serif;
@@ -747,10 +752,32 @@ function showCV(){
         oninput="S.cv_text.vahvuudet=this.value">${esc(S.cv_text.vahvuudet||(packed.join(', ')))}</textarea>
     </div>
 
-    <!-- CV Step 5 -->
+    <!-- CV Step 5 (vapaaehtoinen) -->
     <div class="cv-step">
       <div class="cv-header">
         <span class="cv-step-num">5</span>
+        <span class="cv-step-title">Näytä vahvuutesi käytännössä<span class="opt-tag">vapaaehtoinen</span></span>
+      </div>
+      <div class="cv-step-body">
+        Valitse yksi reppusi vahvuus ja kerro yksi tilanne, jossa se näkyi. Kerro lyhyesti, mitä teit ja mitä sitten tapahtui. Näin lukija uskoo, että vahvuus on totta. Voit myös jättää tämän väliin.
+      </div>
+      <div class="example-box">Esimerkki: "Sinnikäs: harjoittelin pelin tasoa viikon, kunnes sain sen läpi."</div>
+      <label class="cv-label" style="margin-left:2.1rem;display:block">Vahvuus
+        <select id="cv_esim_vahvuus" class="cv-input" style="max-width:320px"
+          onchange="S.cv_text.esim_vahvuus=this.value">
+          ${packed.map(c => `<option value="${esc(c)}"${(S.cv_text.esim_vahvuus ? S.cv_text.esim_vahvuus===c : c===packed[0]) ? ' selected' : ''}>${esc(c)}</option>`).join('')}
+        </select>
+      </label>
+      <textarea id="cv_esim_tilanne" rows="3" style="margin-top:.6rem"
+        placeholder="Kirjoita tähän tilanne, jossa tämä vahvuus näkyi…"
+        aria-label="Tilanne, jossa vahvuus näkyi"
+        oninput="S.cv_text.esim_tilanne=this.value">${esc(S.cv_text.esim_tilanne||'')}</textarea>
+    </div>
+
+    <!-- CV Step 6 -->
+    <div class="cv-step">
+      <div class="cv-header">
+        <span class="cv-step-num">6</span>
         <span class="cv-step-title">Harrastukset ja kokemus</span>
       </div>
       <div class="cv-step-body">
@@ -770,12 +797,26 @@ function showCV(){
 
 // ── CV HELPERS ────────────────────────────────────────────────────────────────
 function saveCVFields(){
-  ['nimi','paikkakunta','sahkoposti','puhelin','esittely','koulutus','vahvuudet','harrastukset'].forEach(k=>{
+  ['nimi','paikkakunta','sahkoposti','puhelin','esittely','koulutus','vahvuudet','esim_vahvuus','esim_tilanne','harrastukset'].forEach(k=>{
     const el = $('cv_'+k);
     if(el) S.cv_text[k] = el.value;
   });
 }
 
+// Vapaaehtoinen: yksi vahvuus + tilanne, jossa se näkyi
+function cvExample(){
+  const packed = S.slots.filter(Boolean);
+  const sel = packed.includes(S.cv_text.esim_vahvuus) ? S.cv_text.esim_vahvuus : (packed[0] || '');
+  const text = (S.cv_text.esim_tilanne || '').trim();
+  return (sel && text) ? { v: sel, t: text } : null;
+}
+function cvExampleHTML(){
+  const ex = cvExample();
+  if(!ex) return '';
+  const label = ex.v.charAt(0).toUpperCase() + ex.v.slice(1);
+  return `<h2>Vahvuus käytännössä</h2>
+      <p><strong>${esc(label)}:</strong> ${nl(ex.t)}</p>`;
+}
 function cvName(){ return (S.cv_text.nimi||'').trim(); }
 function cvContact(){
   return [S.cv_text.paikkakunta, S.cv_text.sahkoposti, S.cv_text.puhelin]
@@ -798,6 +839,7 @@ function cvHTML(forPrint){
       <p>${nl(S.cv_text.koulutus||'–')}</p>
       <h2>Vahvuudet ja taidot</h2>
       <p>${chips}</p>${extra}
+      ${cvExampleHTML()}
       <h2>Harrastukset ja kokemus</h2>
       <p>${nl(S.cv_text.harrastukset||'–')}</p>
     </div>`;
@@ -876,6 +918,7 @@ function printCV(){
   <p>${packed.map(c=>`<span class="chip">${esc(c)}</span>`).join(' ')}</p>
   ${S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
     ? `<p>${nl(S.cv_text.vahvuudet)}</p>` : ''}
+  ${cvExampleHTML()}
   <h2>Harrastukset ja kokemus</h2>
   <p>${nl(S.cv_text.harrastukset||'–')}</p>
 
