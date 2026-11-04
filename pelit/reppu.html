@@ -199,6 +199,14 @@
     .cv-step-body { color:var(--muted); font-size:.9rem; margin:.4rem 0 0 2.1rem; line-height:1.6; }
     .cv-header { display:flex; align-items:center; margin-bottom:.1rem; }
 
+    .cv-fields { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-top:.7rem; }
+    @media(max-width:520px){ .cv-fields { grid-template-columns:1fr; } }
+    .cv-label { display:block; font-size:.8rem; font-weight:700; color:var(--muted); }
+    .cv-input { display:block; width:100%; margin-top:.25rem; background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.13); border-radius:10px; color:var(--text);
+      font-family:'Nunito',sans-serif; font-size:.92rem; padding:.5rem .7rem; }
+    .cv-input:focus { outline:2px solid var(--teal); border-color:var(--teal); }
+
     .bigmoji { font-size:3rem; display:block; text-align:center; margin:.5rem 0; }
     textarea { width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.13);
       border-radius:10px; color:var(--text); font-family:'Nunito',sans-serif;
@@ -273,6 +281,13 @@ const VM_AREAS = [
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
+const MIN_STRENGTHS = 5;
+// Turvallinen tekstin tulostus HTML:ään (oppilaan kirjoittama teksti)
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+// Turvallinen JS-merkkijono HTML-attribuutin (onclick) sisällä
+const q = s => esc(JSON.stringify(String(s)));
+// Teksti riveineen
+const nl = s => esc(s).replace(/\n/g,'<br>');
 function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); }
 // Piirtää saman näkymän uudelleen niin, että vieritys pysyy paikallaan (esim. vahvuuden valinta)
 function rerenderKeepScroll(fn){
@@ -285,7 +300,7 @@ function pb(pct, label){
   <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>`;
 }
 function allChips(){
-  return [...S.sv_chips, ...S.vm_chips];
+  return [...new Set([...S.sv_chips, ...S.vm_chips])];
 }
 
 // ── SCREEN 0: START ───────────────────────────────────────────────────────────
@@ -323,10 +338,10 @@ function showSV(){
 
   const chipHtml = S.sv_type ? SV_TYPES[S.sv_type].chips.map(c =>
     `<span class="chip${S.sv_chips.has(c)?' on':''}"
-      onclick="toggleSV('${c}')"
-      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSV('${c}')}"
+      onclick="toggleSV(${q(c)})"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSV(${q(c)})}"
       tabindex="0" role="checkbox" aria-checked="${S.sv_chips.has(c)?'true':'false'}"
-      aria-label="Vahvuus: ${c}">${c}</span>`
+      aria-label="Vahvuus: ${esc(c)}">${esc(c)}</span>`
   ).join('') : '';
 
   render(`
@@ -360,7 +375,7 @@ function showSV(){
         ${[...S.sv_chips].filter(c => !SV_TYPES[S.sv_type]?.chips.includes(c)).length > 0 ?
           `<div class="chips-wrap" style="margin-top:.5rem">
             ${[...S.sv_chips].filter(c => !SV_TYPES[S.sv_type].chips.includes(c)).map(c =>
-              `<span class="chip on" onclick="toggleSV('${c}')">${c} ✕</span>`
+              `<span class="chip on" onclick="toggleSV(${q(c)})">${esc(c)} ✕</span>`
             ).join('')}
           </div>` : ''}
       </div>
@@ -386,7 +401,7 @@ function toggleSV(c){
 function addSVCustom(){
   const inp = $('svCustom');
   const val = (inp?.value||'').trim();
-  if(val){ S.sv_chips.add(val); rerenderKeepScroll(showSV); }
+  if(val){ S.sv_chips.add(val.slice(0,30)); rerenderKeepScroll(showSV); }
 }
 
 // ── SCREEN 2: VAHVUUSMATKA MUISTUTUS ─────────────────────────────────────────
@@ -396,7 +411,9 @@ function showVM(){
       <div class="area-title">${area.label}</div>
       <div class="chips-wrap">
         ${area.chips.map(c =>
-          `<span class="chip teal${S.vm_chips.has(c)?' on':''}" onclick="toggleVM('${c}','${area.id}')">${c}</span>`
+          `<span class="chip teal${S.vm_chips.has(c)?' on':''}" onclick="toggleVM(${q(c)})"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)})}"
+            tabindex="0" role="checkbox" aria-checked="${S.vm_chips.has(c)?'true':'false'}">${esc(c)}</span>`
         ).join('')}
       </div>
       <div style="display:flex;gap:.4rem;margin-top:.5rem">
@@ -411,6 +428,21 @@ function showVM(){
     </div>`
   ).join('');
 
+  // Oppilaan itse lisäämät vahvuudet (ei valmiissa listoissa) näkyviin, poistettavissa ✕:llä
+  const areaSet = new Set(VM_AREAS.flatMap(a => a.chips));
+  const customVM = [...S.vm_chips].filter(c => !areaSet.has(c));
+  const customHtml = customVM.length ? `
+    <div class="area-section">
+      <div class="area-title">✨ Omat vahvuutesi</div>
+      <div class="chips-wrap">
+        ${customVM.map(c =>
+          `<span class="chip teal on" onclick="toggleVM(${q(c)})"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)})}"
+            tabindex="0" role="button" aria-label="Poista vahvuus: ${esc(c)}">${esc(c)} ✕</span>`
+        ).join('')}
+      </div>
+    </div>` : '';
+
   render(`
     ${pb(45,'Vaihe 2 / 3 – Vahvuusmatka')}
     <div class="phase-badge">8. LUOKKA · VAHVUUSMATKA</div>
@@ -420,16 +452,18 @@ function showVM(){
       Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.
     </div>
     ${areaSections}
+    ${customHtml}
 
     <div style="margin-top:.8rem;width:100%;text-align:center">
       <span style="font-size:.9rem;color:var(--muted)">Valittu yhteensä: </span>
-      <span style="font-size:.9rem;color:var(--teal);font-weight:700">${S.vm_chips.size} vahvuutta</span>
+      <span style="font-size:.9rem;color:var(--teal);font-weight:700">${allChips().length} vahvuutta</span>
+      <span style="font-size:.85rem;color:var(--muted)"> (tarvitset vähintään ${MIN_STRENGTHS}, jotta reppu voidaan pakata)</span>
     </div>
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
-      ${S.vm_chips.size > 0 ?
+      ${allChips().length >= MIN_STRENGTHS ?
         `<button class="btn btn-primary" onclick="showReppu()">Pakkaa reppu →</button>` :
-        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse vähintään 1 vahvuus</button>`}
+        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse vähintään ${MIN_STRENGTHS} vahvuutta (nyt ${allChips().length})</button>`}
       <button class="btn btn-ghost" onclick="showSV()">← Takaisin</button>
     </div>
   `);
@@ -443,12 +477,13 @@ function toggleVM(c){
 function addVMCustom(areaId){
   const inp = $(`vm_${areaId}`);
   const val = (inp?.value||'').trim();
-  if(val){ S.vm_chips.add(val); rerenderKeepScroll(showVM); }
+  if(val){ S.vm_chips.add(val.slice(0,30)); rerenderKeepScroll(showVM); }
 }
 
 // ── SCREEN 3: REPPU ───────────────────────────────────────────────────────────
 function showReppu(){
   const chips = allChips();
+  S.slots = S.slots.map(v => (v && chips.includes(v)) ? v : null);
   const usedSet = new Set(S.slots.filter(Boolean));
   const packed = S.slots.filter(Boolean).length;
 
@@ -456,9 +491,14 @@ function showReppu(){
     `<span class="pool-chip${usedSet.has(c)?' used':''}"
       draggable="true"
       id="chip_${i}"
-      data-chip="${c}"
-      ondragstart="onDragStart(event,'${c.replace(/'/g,"\\'")}')">
-      ${c}
+      data-chip="${esc(c)}"
+      role="button" tabindex="${usedSet.has(c)?'-1':'0'}"
+      aria-disabled="${usedSet.has(c)?'true':'false'}"
+      aria-label="Lisää reppuun: ${esc(c)}"
+      onclick="addToNextSlot(${q(c)})"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();addToNextSlot(${q(c)})}"
+      ondragstart="onDragStart(event,${q(c)})">
+      ${esc(c)}
     </span>`
   ).join('');
 
@@ -468,9 +508,9 @@ function showReppu(){
       ondragleave="onDragLeave(event)">
       <span class="slot-num">${i+1}</span>
       ${v
-        ? `<span class="slot-content">${v}</span>
-           <button class="slot-remove" onclick="removeSlot(${i})" title="Poista">✕</button>`
-        : `<span class="slot-empty">Vedä tähän…</span>`}
+        ? `<span class="slot-content">${esc(v)}</span>
+           <button class="slot-remove" onclick="removeSlot(${i})" title="Poista" aria-label="Poista ${esc(v)} reppusta">✕</button>`
+        : `<span class="slot-empty">Tyhjä paikka</span>`}
     </div>`
   ).join('');
 
@@ -479,7 +519,7 @@ function showReppu(){
     <div class="phase-badge">9. LUOKKA · REPPU</div>
     <h1>Pakkaa reppusi 🎒</h1>
     <div class="card-info">
-      💡 Vedä vasemmalta omat tärkeimmät vahvuutesi reppuun – <strong>valitse 5</strong>. Nämä ovat ne, jotka otat mukaan tulevaisuuden matkalle!
+      💡 Napauta vahvuutta tai vedä se reppuun – <strong>valitse 5</strong>. Nämä ovat ne, jotka otat mukaan tulevaisuuden matkalle!
     </div>
 
     <div class="reppu-layout">
@@ -538,8 +578,6 @@ function showReppu(){
     </div>
   `);
 
-  // Touch drag support
-  setupTouchDrag();
 }
 
 // ── DRAG & DROP ───────────────────────────────────────────────────────────────
@@ -561,70 +599,40 @@ function onDrop(e, slotIdx){
   e.preventDefault();
   e.currentTarget.classList.remove('over');
   const chip = e.dataTransfer.getData('text/plain') || S.dragItem;
-  if(!chip) return;
-  if(S.slots.includes(chip)) return; // already packed
-  if(S.slots[slotIdx] === null){
-    S.slots[slotIdx] = chip;
-    showReppu();
-  } else {
-    // swap: put what was in slot back to pool, place new
-    S.slots[slotIdx] = chip;
-    showReppu();
-  }
+  if(!chip || S.slots.includes(chip)) return; // jo repussa
+  S.slots[slotIdx] = chip;
+  refreshReppu();
+}
+// Napautus / Enter: lisää vahvuus seuraavaan vapaaseen paikkaan
+function addToNextSlot(chip){
+  if(S.slots.includes(chip)) return;
+  const idx = S.slots.indexOf(null);
+  if(idx === -1){ scrollToPackDone(); return; } // reppu jo täynnä
+  S.slots[idx] = chip;
+  refreshReppu();
 }
 function removeSlot(i){
   S.slots[i] = null;
-  showReppu();
+  refreshReppu();
 }
-
-// ── TOUCH DRAG ────────────────────────────────────────────────────────────────
-function setupTouchDrag(){
-  let dragChip = null, ghost = null;
-
-  document.querySelectorAll('.pool-chip:not(.used)').forEach(el => {
-    el.addEventListener('touchstart', e => {
-      dragChip = el.dataset.chip;
-      ghost = el.cloneNode(true);
-      ghost.style.cssText = `position:fixed;opacity:.75;pointer-events:none;z-index:9999;
-        background:#f5a623;color:#1a1200;border-radius:10px;padding:.4rem .85rem;
-        font-family:Nunito,sans-serif;font-weight:700;font-size:.87rem;`;
-      document.body.appendChild(ghost);
-      const t = e.touches[0];
-      ghost.style.left = (t.clientX - 40)+'px';
-      ghost.style.top  = (t.clientY - 20)+'px';
-      e.preventDefault();
-    },{passive:false});
-
-    el.addEventListener('touchmove', e => {
-      if(!ghost) return;
-      const t = e.touches[0];
-      ghost.style.left = (t.clientX - 40)+'px';
-      ghost.style.top  = (t.clientY - 20)+'px';
-      e.preventDefault();
-    },{passive:false});
-
-    el.addEventListener('touchend', e => {
-      if(ghost){ ghost.remove(); ghost = null; }
-      if(!dragChip) return;
-      const t = e.changedTouches[0];
-      const target = document.elementFromPoint(t.clientX, t.clientY);
-      const slot = target?.closest('.slot');
-      if(slot){
-        const idx = parseInt(slot.id.replace('slot_',''));
-        if(!isNaN(idx) && !S.slots.includes(dragChip)){
-          S.slots[idx] = dragChip;
-          showReppu();
-        }
-      }
-      dragChip = null;
-    });
-  });
+function scrollToPackDone(){
+  const btn = document.querySelector('.bag-panel .btn-primary');
+  if(btn) btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
+// Piirtää reppunäkymän uudelleen: vieritys ja näppäimistökohdistus säilyvät
+function refreshReppu(){
+  const activeId = document.activeElement && document.activeElement.id;
+  rerenderKeepScroll(showReppu);
+  const el = activeId && activeId.startsWith('chip_') ? $(activeId) : null;
+  const target = (el && el.tabIndex >= 0) ? el : (activeId && activeId.startsWith('chip_') ? document.querySelector('.pool-chip:not(.used)') : null);
+  if(target) target.focus({preventScroll:true});
+  if(S.slots.every(Boolean)) scrollToPackDone();
 }
 
 // ── SCREEN 4: DONE ───────────────────────────────────────────────────────────
 function showDone(){
   const packed = S.slots.filter(Boolean);
-  const tagsHtml = packed.map(c=>`<span class="packed-tag">${c}</span>`).join('');
+  const tagsHtml = packed.map(c=>`<span class="packed-tag">${esc(c)}</span>`).join('');
 
   render(`
     ${pb(100,'Valmis!')}
@@ -665,7 +673,7 @@ function showCV(){
     <div class="card" style="margin:.4rem 0">
       <strong style="color:var(--gold)">Reppusi vahvuudet:</strong><br>
       <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem">
-        ${packed.map(c=>`<span class="chip on" style="cursor:default">${c}</span>`).join('')}
+        ${packed.map(c=>`<span class="chip on" style="cursor:default">${esc(c)}</span>`).join('')}
       </div>
     </div>
 
@@ -677,6 +685,21 @@ function showCV(){
       </div>
       <div class="cv-step-body">Nimi, paikkakunta, sähköposti ja puhelinnumero.<br>
         <em>Et tarvitse osoitetta – pelkkä paikkakunta riittää.</em>
+        <div class="cv-fields">
+          <label class="cv-label">Nimi
+            <input id="cv_nimi" class="cv-input" type="text" maxlength="60" autocomplete="name"
+              value="${esc(S.cv_text.nimi||'')}" oninput="S.cv_text.nimi=this.value"></label>
+          <label class="cv-label">Paikkakunta
+            <input id="cv_paikkakunta" class="cv-input" type="text" maxlength="40" autocomplete="address-level2"
+              value="${esc(S.cv_text.paikkakunta||'')}" oninput="S.cv_text.paikkakunta=this.value"></label>
+          <label class="cv-label">Sähköposti
+            <input id="cv_sahkoposti" class="cv-input" type="email" maxlength="80" autocomplete="email"
+              value="${esc(S.cv_text.sahkoposti||'')}" oninput="S.cv_text.sahkoposti=this.value"></label>
+          <label class="cv-label">Puhelinnumero
+            <input id="cv_puhelin" class="cv-input" type="tel" maxlength="30" autocomplete="tel"
+              value="${esc(S.cv_text.puhelin||'')}" oninput="S.cv_text.puhelin=this.value"></label>
+        </div>
+        <div class="example-box" style="margin-top:.6rem">🔒 Tiedot pysyvät vain tällä sivulla ja tulosteessa – niitä ei tallenneta mihinkään. Voit käyttää harjoituksessa myös keksittyjä tietoja.</div>
       </div>
     </div>
 
@@ -690,10 +713,10 @@ function showCV(){
         2–3 lausetta siitä, kuka olet. Käytä reppusi vahvuuksia!
       </div>
       <div class="example-box">
-        Esimerkki: "Olen ${type?typeStr+'-tyyppinen ':''}yhdeksäsluokkalainen, joka on ${packed[0]||'sinnikäs'} ja ${packed[1]||'luova'}. Pidän työskentelystä ihmisten kanssa ja haluaisin tulevaisuudessa tehdä töitä, joissa voin auttaa muita."
+        Esimerkki: "Olen ${type?typeStr+'-tyyppinen ':''}yhdeksäsluokkalainen, joka on ${esc(packed[0]||'sinnikäs')} ja ${esc(packed[1]||'luova')}. Pidän työskentelystä ihmisten kanssa ja haluaisin tulevaisuudessa tehdä töitä, joissa voin auttaa muita."
       </div>
       <textarea id="cv_esittely" placeholder="Kirjoita oma esittelysi tähän…"
-        oninput="S.cv_text.esittely=this.value">${S.cv_text.esittely||''}</textarea>
+        oninput="S.cv_text.esittely=this.value">${esc(S.cv_text.esittely||'')}</textarea>
     </div>
 
     <!-- CV Step 3 -->
@@ -707,7 +730,7 @@ function showCV(){
       </div>
       <div class="example-box">Esimerkki: "Perusopetus · Esimerkkikoulu, Tampere · 2025"</div>
       <textarea id="cv_koulutus" placeholder="Koulutuksesi tähän…" rows="2"
-        oninput="S.cv_text.koulutus=this.value">${S.cv_text.koulutus||''}</textarea>
+        oninput="S.cv_text.koulutus=this.value">${esc(S.cv_text.koulutus||'')}</textarea>
     </div>
 
     <!-- CV Step 4 -->
@@ -719,9 +742,9 @@ function showCV(){
       <div class="cv-step-body">
         Tässä käytät suoraan reppusi vahvuuksia! Voit myös lisätä kielitaidon ja muut taidot.
       </div>
-      <div class="example-box">Esimerkki: "${packed.slice(0,3).join(', ')}, suomi (äidinkieli), englanti (hyvä)"</div>
+      <div class="example-box">Esimerkki: "${esc(packed.slice(0,3).join(', '))}, suomi (äidinkieli), englanti (hyvä)"</div>
       <textarea id="cv_vahvuudet" placeholder="Vahvuutesi ja taitosi…"
-        oninput="S.cv_text.vahvuudet=this.value">${S.cv_text.vahvuudet||(packed.join(', '))}</textarea>
+        oninput="S.cv_text.vahvuudet=this.value">${esc(S.cv_text.vahvuudet||(packed.join(', ')))}</textarea>
     </div>
 
     <!-- CV Step 5 -->
@@ -734,7 +757,7 @@ function showCV(){
         Harrastukset kertovat paljon sinusta. Lisää myös vapaaehtoistyö, kesätyö tai muut kokemukset jos sinulla on sellaisia.
       </div>
       <textarea id="cv_harrastukset" placeholder="Harrastuksesi ja kokemuksesi…"
-        oninput="S.cv_text.harrastukset=this.value">${S.cv_text.harrastukset||''}</textarea>
+        oninput="S.cv_text.harrastukset=this.value">${esc(S.cv_text.harrastukset||'')}</textarea>
     </div>
 
     <!-- Print button -->
@@ -747,30 +770,36 @@ function showCV(){
 
 // ── CV HELPERS ────────────────────────────────────────────────────────────────
 function saveCVFields(){
-  ['esittely','koulutus','vahvuudet','harrastukset'].forEach(k=>{
+  ['nimi','paikkakunta','sahkoposti','puhelin','esittely','koulutus','vahvuudet','harrastukset'].forEach(k=>{
     const el = $('cv_'+k);
     if(el) S.cv_text[k] = el.value;
   });
 }
 
+function cvName(){ return (S.cv_text.nimi||'').trim(); }
+function cvContact(){
+  return [S.cv_text.paikkakunta, S.cv_text.sahkoposti, S.cv_text.puhelin]
+    .map(x => (x||'').trim()).filter(Boolean).map(esc).join(' · ');
+}
 function cvHTML(forPrint){
   const packed = S.slots.filter(Boolean);
   const type   = S.sv_type;
-  const chips  = packed.map(c=>`<span class="cv-chip">${c}</span>`).join(' ');
+  const chips  = packed.map(c=>`<span class="cv-chip">${esc(c)}</span>`).join(' ');
   const extra  = S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
-    ? `<p>${(S.cv_text.vahvuudet||'').replace(/\n/g,'<br>')}</p>` : '';
+    ? `<p>${nl(S.cv_text.vahvuudet||'')}</p>` : '';
   return `
     <div class="cv-preview">
-      <h1>Oma CV</h1>
+      <h1>${cvName() ? esc(cvName()) : 'Oma CV'}</h1>
+      ${cvContact() ? `<p class="cv-sub" style="margin-bottom:.2rem">${cvContact()}</p>` : ''}
       <p class="cv-sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</p>
       <h2>Esittely</h2>
-      <p>${(S.cv_text.esittely||'–').replace(/\n/g,'<br>')}</p>
+      <p>${nl(S.cv_text.esittely||'–')}</p>
       <h2>Koulutus</h2>
-      <p>${(S.cv_text.koulutus||'–').replace(/\n/g,'<br>')}</p>
+      <p>${nl(S.cv_text.koulutus||'–')}</p>
       <h2>Vahvuudet ja taidot</h2>
       <p>${chips}</p>${extra}
       <h2>Harrastukset ja kokemus</h2>
-      <p>${(S.cv_text.harrastukset||'–').replace(/\n/g,'<br>')}</p>
+      <p>${nl(S.cv_text.harrastukset||'–')}</p>
     </div>`;
 }
 
@@ -836,18 +865,19 @@ function printCV(){
   </style><script defer src="/_vercel/insights/script.js"><\/script>
 </head><body>
   <div class="brand"><b>digi</b>opo · Omilla Jäljillä 2026</div>
-  <h1>Oma CV</h1>
+  <h1>${cvName() ? esc(cvName()) : 'Oma CV'}</h1>
+  ${cvContact() ? `<div class="sub" style="margin-bottom:.3rem">${cvContact()}</div>` : ''}
   <div class="sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</div>
   <h2>Esittely</h2>
-  <p>${(S.cv_text.esittely||'–').replace(/\n/g,'<br>')}</p>
+  <p>${nl(S.cv_text.esittely||'–')}</p>
   <h2>Koulutus</h2>
-  <p>${(S.cv_text.koulutus||'–').replace(/\n/g,'<br>')}</p>
+  <p>${nl(S.cv_text.koulutus||'–')}</p>
   <h2>Vahvuudet ja taidot</h2>
-  <p>${packed.map(c=>`<span class="chip">${c}</span>`).join(' ')}</p>
+  <p>${packed.map(c=>`<span class="chip">${esc(c)}</span>`).join(' ')}</p>
   ${S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
-    ? `<p>${S.cv_text.vahvuudet.replace(/\n/g,'<br>')}</p>` : ''}
+    ? `<p>${nl(S.cv_text.vahvuudet)}</p>` : ''}
   <h2>Harrastukset ja kokemus</h2>
-  <p>${(S.cv_text.harrastukset||'–').replace(/\n/g,'<br>')}</p>
+  <p>${nl(S.cv_text.harrastukset||'–')}</p>
 
   <div style="margin-top:2rem;border-top:1px solid #ddd;padding-top:1.2rem;
     background:#fafafa;border-radius:8px;padding:1rem 1.2rem;border:1px solid #e0d8f0;">
