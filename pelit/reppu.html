@@ -205,6 +205,26 @@
       font-family:'Nunito',sans-serif; font-size:.92rem; padding:.5rem .7rem; }
     .cv-input:focus { outline:2px solid var(--teal); border-color:var(--teal); }
 
+    /* Kiinteä laskuripalkki (vain Reppu-vaihe, vain pieni näyttö) */
+    .bag-bar { display:none; }
+    @media (max-width:580px){
+      .bag-bar:not([hidden]) { display:flex; align-items:center; justify-content:space-between; gap:.8rem;
+        position:fixed; left:0; right:0; bottom:0; z-index:90;
+        padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));
+        background:rgba(15,15,26,.96); backdrop-filter:blur(8px);
+        border-top:1px solid rgba(245,166,35,.55); }
+    }
+    .bag-bar-count { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:var(--text); white-space:nowrap; }
+    .bag-bar-count strong { color:var(--gold); }
+    .bag-bar-dots { display:flex; gap:.3rem; margin-top:.25rem; }
+    .bag-bar-dot { width:.65rem; height:.65rem; border-radius:50%; border:1.5px solid var(--gold); background:transparent; }
+    .bag-bar-dot.on { background:var(--gold); }
+    .bag-bar.full .bag-bar-count strong { color:var(--teal); }
+    .bag-bar.full .bag-bar-dot { border-color:var(--teal); }
+    .bag-bar.full .bag-bar-dot.on { background:var(--teal); }
+    .bag-bar-btn { min-height:44px; padding:.5rem 1.1rem; border:none; border-radius:12px; background:var(--accent);
+      color:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:.95rem; cursor:pointer; white-space:nowrap; }
+
     /* Isommat kosketuskohteet ja 16 px kentät (estää iPhonen automaattisen zoomauksen) */
     input, textarea, select { font-size:16px !important; }
     input[type=text], input[type=email], input[type=tel], select { min-height:44px; }
@@ -264,6 +284,7 @@
   <span class="brand-year">2026</span>
 </div>
 <div id="app"><div class="screen" id="screen"></div></div>
+<div id="bagBar" class="bag-bar" role="status" aria-live="polite" hidden></div>
 
 <script>
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -355,7 +376,7 @@ const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>'
 const q = s => esc(JSON.stringify(String(s)));
 // Teksti riveineen
 const nl = s => esc(s).replace(/\n/g,'<br>');
-function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); }
+function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); const bb = $('bagBar'); if(bb) bb.hidden = true; }
 // Piirtää saman näkymän uudelleen niin, että vieritys pysyy paikallaan (esim. vahvuuden valinta)
 function rerenderKeepScroll(fn){
   const y = window.scrollY;
@@ -649,6 +670,7 @@ function showReppu(){
       <button class="btn btn-ghost" onclick="showVM()">← Muokkaa vahvuuksia</button>
     </div>
   `);
+  updateBagBar(packed);
 
 }
 
@@ -686,6 +708,19 @@ function addToNextSlot(chip){
 function removeSlot(i){
   S.slots[i] = null;
   refreshReppu();
+}
+// Kiinteä laskuripalkki (näkyy CSS:llä vain pienellä näytöllä)
+function updateBagBar(n){
+  const bar = $('bagBar'); if(!bar) return;
+  const full = n === 5;
+  bar.className = 'bag-bar' + (full ? ' full' : '');
+  bar.innerHTML = `
+    <div>
+      <div class="bag-bar-count">🎒 <strong>${n}</strong> / 5 pakattu</div>
+      <div class="bag-bar-dots" aria-hidden="true">${[0,1,2,3,4].map(i => `<span class="bag-bar-dot${i < n ? ' on' : ''}"></span>`).join('')}</div>
+    </div>
+    ${full ? `<button class="bag-bar-btn" onclick="showDone()">Reppu täynnä! →</button>` : ''}`;
+  bar.hidden = false;
 }
 function scrollToPackDone(){
   const btn = document.querySelector('.bag-panel .btn-primary');
