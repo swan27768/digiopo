@@ -274,6 +274,12 @@ const VM_AREAS = [
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); }
+// Piirtää saman näkymän uudelleen niin, että vieritys pysyy paikallaan (esim. vahvuuden valinta)
+function rerenderKeepScroll(fn){
+  const y = window.scrollY;
+  fn();
+  window.scrollTo(0, y);
+}
 function pb(pct, label){
   return `<div class="step-label">${label}</div>
   <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>`;
@@ -375,17 +381,12 @@ function selectSVType(name){
 function toggleSV(c){
   if(S.sv_chips.has(c)) S.sv_chips.delete(c);
   else S.sv_chips.add(c);
-  showSV();
-  // scroll to chips section
-  setTimeout(()=>{
-    const el = document.querySelector('.chips-wrap');
-    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
-  },100);
+  rerenderKeepScroll(showSV);
 }
 function addSVCustom(){
   const inp = $('svCustom');
   const val = (inp?.value||'').trim();
-  if(val){ S.sv_chips.add(val); showSV(); }
+  if(val){ S.sv_chips.add(val); rerenderKeepScroll(showSV); }
 }
 
 // ── SCREEN 2: VAHVUUSMATKA MUISTUTUS ─────────────────────────────────────────
@@ -437,12 +438,12 @@ function showVM(){
 function toggleVM(c){
   if(S.vm_chips.has(c)) S.vm_chips.delete(c);
   else S.vm_chips.add(c);
-  showVM();
+  rerenderKeepScroll(showVM);
 }
 function addVMCustom(areaId){
   const inp = $(`vm_${areaId}`);
   const val = (inp?.value||'').trim();
-  if(val){ S.vm_chips.add(val); showVM(); }
+  if(val){ S.vm_chips.add(val); rerenderKeepScroll(showVM); }
 }
 
 // ── SCREEN 3: REPPU ───────────────────────────────────────────────────────────
