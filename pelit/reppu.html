@@ -258,7 +258,7 @@ const S = {
   sv_type: null,
   sv_chips: new Set(),
   // Phase 2 – Vahvuusmatka
-  vm_chips: new Set(),
+  vm: {},            // alueen id -> Set vahvuuksia (valinta on alueittain)
   // Phase 3 – Reppu
   slots: [null,null,null,null,null], // 5 slots
   dragItem: null,
@@ -304,8 +304,15 @@ function pb(pct, label){
   return `<div class="step-label">${label}</div>
   <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>`;
 }
+// Poistaa repun paikoista vahvuudet, joita oppilas ei ole enää valinnut. Palauttaa poistettujen määrän.
+function syncSlots(){
+  const valid = new Set(allChips());
+  let n = 0;
+  S.slots = S.slots.map(v => { if(v && !valid.has(v)){ n++; return null; } return v; });
+  return n;
+}
 function allChips(){
-  return [...new Set([...S.sv_chips, ...S.vm_chips])];
+  return [...new Set([...S.sv_chips, ...Object.values(S.vm).flatMap(x => [...x])])];
 }
 
 // ── SCREEN 0: START ───────────────────────────────────────────────────────────
@@ -333,8 +340,8 @@ function showStart(){
 function showSV(){
   const typeCards = Object.entries(SV_TYPES).map(([name,t]) => `
     <div class="type-card${S.sv_type===name?' selected':''}"
-      onclick="selectSVType('${name}')"
-      onkeydown="if(event.key==='Enter'||event.key===' ')selectSVType('${name}')"
+      onclick="selectSVType(${q(name)})"
+      onkeydown="if(event.key==='Enter'||event.key===' ')selectSVType(${q(name)})"
       tabindex="0" role="radio" aria-checked="${S.sv_type===name?'true':'false'}"
       aria-label="${name} ${t.emoji}">
       <span class="tc-emoji" aria-hidden="true">${t.emoji}</span>
@@ -350,7 +357,7 @@ function showSV(){
   ).join('') : '';
 
   render(`
-    ${pb(15,'Vaihe 1 / 3 – Supervoimat')}
+    ${pb(20,'Vaihe 1 / 4 – Supervoimat')}
     <div class="phase-badge">7. LUOKKA · SUPERVOIMAT</div>
     <h1>Mikä on sinun supertyyppisi?</h1>
     <div class="card">
@@ -410,46 +417,43 @@ function addSVCustom(){
 }
 
 // ── SCREEN 2: VAHVUUSMATKA MUISTUTUS ─────────────────────────────────────────
+function vmSet(id){ return S.vm[id] || (S.vm[id] = new Set()); }
 function showVM(){
-  const areaSections = VM_AREAS.map(area => `
+  const areaSections = VM_AREAS.map(area => {
+    const set = vmSet(area.id);
+    const customs = [...set].filter(c => !area.chips.includes(c));
+    const aid = q(area.id);
+    const plainLabel = area.label.replace(/^\S+\s/, '');
+    return `
     <div class="area-section">
       <div class="area-title">${area.label}</div>
       <div class="chips-wrap">
         ${area.chips.map(c =>
-          `<span class="chip teal${S.vm_chips.has(c)?' on':''}" onclick="toggleVM(${q(c)})"
-            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)})}"
-            tabindex="0" role="checkbox" aria-checked="${S.vm_chips.has(c)?'true':'false'}">${esc(c)}</span>`
+          `<span class="chip teal${set.has(c)?' on':''}" onclick="toggleVM(${q(c)},${aid})"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)},${aid})}"
+            tabindex="0" role="checkbox" aria-checked="${set.has(c)?'true':'false'}">${esc(c)}</span>`
         ).join('')}
-      </div>
-      <div style="display:flex;gap:.4rem;margin-top:.5rem">
-        <input id="vm_${area.id}" type="text" placeholder="Oma vahvuus…"
-          style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
-          border-radius:8px;color:var(--text);font-family:Nunito,sans-serif;font-size:.85rem;padding:.4rem .7rem;"
-          onkeydown="if(event.key==='Enter')addVMCustom('${area.id}')">
-        <button onclick="addVMCustom('${area.id}')" style="background:rgba(0,212,170,.2);border:1px solid var(--teal);
-          border-radius:8px;color:var(--teal);font-family:Nunito,sans-serif;font-weight:700;font-size:.82rem;
-          padding:.4rem .7rem;cursor:pointer;white-space:nowrap;">+ Lisää</button>
-      </div>
-    </div>`
-  ).join('');
-
-  // Oppilaan itse lisäämät vahvuudet (ei valmiissa listoissa) näkyviin, poistettavissa ✕:llä
-  const areaSet = new Set(VM_AREAS.flatMap(a => a.chips));
-  const customVM = [...S.vm_chips].filter(c => !areaSet.has(c));
-  const customHtml = customVM.length ? `
-    <div class="area-section">
-      <div class="area-title">✨ Omat vahvuutesi</div>
-      <div class="chips-wrap">
-        ${customVM.map(c =>
-          `<span class="chip teal on" onclick="toggleVM(${q(c)})"
-            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)})}"
+        ${customs.map(c =>
+          `<span class="chip teal on" onclick="toggleVM(${q(c)},${aid})"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVM(${q(c)},${aid})}"
             tabindex="0" role="button" aria-label="Poista vahvuus: ${esc(c)}">${esc(c)} ✕</span>`
         ).join('')}
       </div>
-    </div>` : '';
+      <div style="display:flex;gap:.4rem;margin-top:.5rem">
+        <input id="vm_${area.id}" type="text" maxlength="30" placeholder="Oma vahvuus…"
+          aria-label="Oma vahvuus: ${esc(plainLabel)}"
+          style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+          border-radius:8px;color:var(--text);font-family:Nunito,sans-serif;font-size:.85rem;padding:.4rem .7rem;"
+          onkeydown="if(event.key==='Enter')addVMCustom(${aid})">
+        <button onclick="addVMCustom(${aid})" style="background:rgba(0,212,170,.2);border:1px solid var(--teal);
+          border-radius:8px;color:var(--teal);font-family:Nunito,sans-serif;font-weight:700;font-size:.82rem;
+          padding:.4rem .7rem;cursor:pointer;white-space:nowrap;">+ Lisää</button>
+      </div>
+    </div>`;
+  }).join('');
 
   render(`
-    ${pb(45,'Vaihe 2 / 3 – Vahvuusmatka')}
+    ${pb(40,'Vaihe 2 / 4 – Vahvuusmatka')}
     <div class="phase-badge">8. LUOKKA · VAHVUUSMATKA</div>
     <h1>Vahvuusmatkan saldo</h1>
     <div class="card">
@@ -457,7 +461,6 @@ function showVM(){
       Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.
     </div>
     ${areaSections}
-    ${customHtml}
 
     <div style="margin-top:.8rem;width:100%;text-align:center">
       <span style="font-size:.9rem;color:var(--muted)">Valittu yhteensä: </span>
@@ -474,21 +477,21 @@ function showVM(){
   `);
 }
 
-function toggleVM(c){
-  if(S.vm_chips.has(c)) S.vm_chips.delete(c);
-  else S.vm_chips.add(c);
+function toggleVM(c, areaId){
+  const set = vmSet(areaId);
+  if(set.has(c)) set.delete(c); else set.add(c);
   rerenderKeepScroll(showVM);
 }
 function addVMCustom(areaId){
   const inp = $(`vm_${areaId}`);
   const val = (inp?.value||'').trim();
-  if(val){ S.vm_chips.add(val.slice(0,30)); rerenderKeepScroll(showVM); }
+  if(val){ vmSet(areaId).add(val.slice(0,30)); rerenderKeepScroll(showVM); }
 }
 
 // ── SCREEN 3: REPPU ───────────────────────────────────────────────────────────
 function showReppu(){
   const chips = allChips();
-  S.slots = S.slots.map(v => (v && chips.includes(v)) ? v : null);
+  const removedCount = syncSlots();
   const usedSet = new Set(S.slots.filter(Boolean));
   const packed = S.slots.filter(Boolean).length;
 
@@ -520,9 +523,10 @@ function showReppu(){
   ).join('');
 
   render(`
-    ${pb(75,'Vaihe 3 / 3 – Reppu')}
+    ${pb(65,'Vaihe 3 / 4 – Reppu')}
     <div class="phase-badge">9. LUOKKA · REPPU</div>
     <h1>Pakkaa reppusi 🎒</h1>
+    ${removedCount ? `<div class="card-info" role="status">Reppu päivitettiin: ${removedCount===1 ? 'yksi vahvuus poistui' : removedCount+' vahvuutta poistui'}, koska poistit ${removedCount===1 ? 'sen' : 'ne'} valinnoistasi. Täytä vapaat paikat.</div>` : ''}
     <div class="card-info">
       💡 Napauta vahvuutta tai vedä se reppuun – <strong>valitse 5</strong>. Nämä ovat ne, jotka otat mukaan tulevaisuuden matkalle!
     </div>
@@ -636,11 +640,12 @@ function refreshReppu(){
 
 // ── SCREEN 4: DONE ───────────────────────────────────────────────────────────
 function showDone(){
+  syncSlots();
   const packed = S.slots.filter(Boolean);
   const tagsHtml = packed.map(c=>`<span class="packed-tag">${esc(c)}</span>`).join('');
 
   render(`
-    ${pb(100,'Valmis!')}
+    ${pb(80,'Vaihe 3 / 4 – Reppu pakattu')}
     <div class="bag-done">
       <span class="bigmoji">🎒</span>
       <h1 style="color:var(--teal)">Reppu on pakattu!</h1>
@@ -663,12 +668,13 @@ function showDone(){
 
 // ── SCREEN 5: CV ─────────────────────────────────────────────────────────────
 function showCV(){
+  syncSlots();
   const packed = S.slots.filter(Boolean);
   const type   = S.sv_type;
   const typeStr = type ? `${SV_TYPES[type].emoji} ${type}` : '';
 
   render(`
-    ${pb(100,'CV-ohjeet')}
+    ${pb(100,'Vaihe 4 / 4 – Oma CV')}
     <span class="bigmoji">📄</span>
     <h1>Oma CV</h1>
     <div class="card-info">
@@ -745,11 +751,11 @@ function showCV(){
         <span class="cv-step-title">Vahvuudet ja taidot</span>
       </div>
       <div class="cv-step-body">
-        Tässä käytät suoraan reppusi vahvuuksia! Voit myös lisätä kielitaidon ja muut taidot.
+        Reppusi vahvuudet tulevat CV:hen automaattisesti. Lisää tähän vain muut taitosi, esimerkiksi kielitaito ja tietokoneen käyttö.
       </div>
-      <div class="example-box">Esimerkki: "${esc(packed.slice(0,3).join(', '))}, suomi (äidinkieli), englanti (hyvä)"</div>
-      <textarea id="cv_vahvuudet" placeholder="Vahvuutesi ja taitosi…"
-        oninput="S.cv_text.vahvuudet=this.value">${esc(S.cv_text.vahvuudet||(packed.join(', ')))}</textarea>
+      <div class="example-box">Esimerkki: "suomi (äidinkieli), englanti (hyvä), tekstinkäsittely"</div>
+      <textarea id="cv_vahvuudet" placeholder="Muut taitosi (voit jättää tyhjäksi)…" aria-label="Muut taidot"
+        oninput="S.cv_text.vahvuudet=this.value">${esc(S.cv_text.vahvuudet||'')}</textarea>
     </div>
 
     <!-- CV Step 5 (vapaaehtoinen) -->
@@ -817,6 +823,20 @@ function cvExampleHTML(){
   return `<h2>Vahvuus käytännössä</h2>
       <p><strong>${esc(label)}:</strong> ${nl(ex.t)}</p>`;
 }
+// Yksi CV-osio; tyhjä osio jätetään kokonaan pois
+function cvSec(title, text){
+  const t = (text||'').trim();
+  return t ? `<h2>${esc(title)}</h2>
+      <p>${nl(t)}</p>` : '';
+}
+// Mitä CV:stä vielä puuttuu (näytetään varoituksena esikatselussa)
+function cvMissing(){
+  const m = [];
+  if(!(S.cv_text.nimi||'').trim()) m.push('Nimi');
+  if(!(S.cv_text.esittely||'').trim()) m.push('Esittely');
+  if(!(S.cv_text.koulutus||'').trim()) m.push('Koulutus');
+  return m;
+}
 function cvName(){ return (S.cv_text.nimi||'').trim(); }
 function cvContact(){
   return [S.cv_text.paikkakunta, S.cv_text.sahkoposti, S.cv_text.puhelin]
@@ -826,22 +846,19 @@ function cvHTML(forPrint){
   const packed = S.slots.filter(Boolean);
   const type   = S.sv_type;
   const chips  = packed.map(c=>`<span class="cv-chip">${esc(c)}</span>`).join(' ');
-  const extra  = S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
+  const extra  = (S.cv_text.vahvuudet||'').trim()
     ? `<p>${nl(S.cv_text.vahvuudet||'')}</p>` : '';
   return `
     <div class="cv-preview">
       <h1>${cvName() ? esc(cvName()) : 'Oma CV'}</h1>
       ${cvContact() ? `<p class="cv-sub" style="margin-bottom:.2rem">${cvContact()}</p>` : ''}
       <p class="cv-sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</p>
-      <h2>Esittely</h2>
-      <p>${nl(S.cv_text.esittely||'–')}</p>
-      <h2>Koulutus</h2>
-      <p>${nl(S.cv_text.koulutus||'–')}</p>
+      ${cvSec('Esittely', S.cv_text.esittely)}
+      ${cvSec('Koulutus', S.cv_text.koulutus)}
       <h2>Vahvuudet ja taidot</h2>
       <p>${chips}</p>${extra}
       ${cvExampleHTML()}
-      <h2>Harrastukset ja kokemus</h2>
-      <p>${nl(S.cv_text.harrastukset||'–')}</p>
+      ${cvSec('Harrastukset ja kokemus', S.cv_text.harrastukset)}
     </div>`;
 }
 
@@ -862,6 +879,9 @@ function previewCV(){
         text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;border:none">
         📄 CV-esikatselu
       </h2>
+      ${cvMissing().length ? `<div role="status" style="background:#fff3d9;border:1.5px solid #c87c20;color:#7c5010;border-radius:10px;padding:.6rem .9rem;font-size:.88rem;margin-bottom:1rem;line-height:1.5">
+        ⚠️ Vielä puuttuu: <strong>${cvMissing().join(', ')}</strong>.<br>Tyhjät kohdat jäävät pois tulosteesta. Voit palata kirjoittamaan ne tai tulostaa CV:n tällaisenaan.
+      </div>` : ''}
       ${cvHTML(false)}
       <div class="modal-actions">
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">← Muokkaa vielä</button>
@@ -910,17 +930,14 @@ function printCV(){
   <h1>${cvName() ? esc(cvName()) : 'Oma CV'}</h1>
   ${cvContact() ? `<div class="sub" style="margin-bottom:.3rem">${cvContact()}</div>` : ''}
   <div class="sub">${type ? type+' · ' : ''}Laadittu Reppu-tehtävässä</div>
-  <h2>Esittely</h2>
-  <p>${nl(S.cv_text.esittely||'–')}</p>
-  <h2>Koulutus</h2>
-  <p>${nl(S.cv_text.koulutus||'–')}</p>
+  ${cvSec('Esittely', S.cv_text.esittely)}
+  ${cvSec('Koulutus', S.cv_text.koulutus)}
   <h2>Vahvuudet ja taidot</h2>
   <p>${packed.map(c=>`<span class="chip">${esc(c)}</span>`).join(' ')}</p>
-  ${S.cv_text.vahvuudet && S.cv_text.vahvuudet !== packed.join(', ')
+  ${(S.cv_text.vahvuudet||'').trim()
     ? `<p>${nl(S.cv_text.vahvuudet)}</p>` : ''}
   ${cvExampleHTML()}
-  <h2>Harrastukset ja kokemus</h2>
-  <p>${nl(S.cv_text.harrastukset||'–')}</p>
+  ${cvSec('Harrastukset ja kokemus', S.cv_text.harrastukset)}
 
   <div style="margin-top:2rem;border-top:1px solid #ddd;padding-top:1.2rem;
     background:#fafafa;border-radius:8px;padding:1rem 1.2rem;border:1px solid #e0d8f0;">
