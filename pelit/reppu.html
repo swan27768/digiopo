@@ -564,7 +564,7 @@ function render(html){
 // Puhekupla + robo (n = 1 tai 2)
 function puhe(teksti, n){
   return `<div class="puhe"><div class="kupla" role="note">${teksti}</div>
-    <img class="robo" src="/images/supervoimat-robo${n===2?'2':''}.webp" width="360" height="${n===2?639:625}" alt="" aria-hidden="true"></div>`;
+    <img class="robo" src="/images/supervoimat-robo${n===2?'2':'3'}.webp" width="360" height="${n===2?639:540}" alt="" aria-hidden="true"></div>`;
 }
 // Piirtää saman näkymän uudelleen niin, että vieritys pysyy paikallaan (esim. vahvuuden valinta)
 function rerenderKeepScroll(fn){
@@ -600,7 +600,7 @@ function showStart(){
         <p class="cover-sub">Kokoat tähän kaiken, mitä olet oppinut itsestäsi.</p>
         <div class="alku-chipit" aria-hidden="true">${chips}</div>
       </div>
-      <div class="alku-hahmo alku-hahmo--l" aria-hidden="true"><img src="/images/supervoimat-robo.webp" width="360" height="625" alt=""></div>
+      <div class="alku-hahmo alku-hahmo--l" aria-hidden="true"><img src="/images/supervoimat-robo3.webp" width="360" height="540" alt=""></div>
       <div class="alku-hahmo alku-hahmo--r" aria-hidden="true"><img src="/images/supervoimat-robo2.webp" width="360" height="639" alt=""></div>
       <div class="alku-ala">
         <div class="card" style="text-align:center">Muistatko supervoimasi 7. luokalta ja vahvuusmatkasi 8. luokalta? Käy ne nyt nopeasti läpi. Sitten valitset 5 tärkeintä vahvuuttasi reppuusi.</div>
@@ -636,6 +636,7 @@ function showSV(){
     <div class="phase-badge">7. LUOKKA · SUPERVOIMAT</div>
     <h1>Mikä suunta tuntuu sinulta nyt?</h1>
     ${puhe('Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>Valitse alta suunta, joka tuntuu sinulta nyt. Jos et muista, valitse se, joka tuntuu tänään oikeimmalta.', 1)}
+    <div class="card-info" style="text-align:center;margin:.2rem 0 .4rem">Valitse ensin suunta alta. Valitse sitten vähintään 1 vahvuus.</div>
     <div class="type-grid">${typeCards}</div>
     <p class="tyyppi-huom">Tämä on tämänhetkinen suuntasi, ja se voi muuttua. Se ei ole leima. Voit vaihtaa sitä milloin vain.</p>
 
@@ -667,12 +668,12 @@ function showSV(){
             ).join('')}
           </div>` : ''}
       </div>
-    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">Valitse ensin suunta ylhäältä</div>`}
+    ` : ''}
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
       ${S.sv_type && S.sv_chips.size > 0 ?
         `<button class="btn btn-primary" onclick="showVM()">Seuraava: Vahvuusmatka →</button>` :
-        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse suunta ja vähintään 1 vahvuus</button>`}
+        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Seuraava: Vahvuusmatka →</button>`}
     </div>
   `);
 }
