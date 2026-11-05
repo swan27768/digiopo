@@ -293,6 +293,12 @@
       margin: 0.7rem 0 1.5rem; line-height: 1.55;
     }
 
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    [tabindex="-1"]:focus { outline: none; }
+
     /* Print */
     @media print {
       body { background: #fff !important; }
@@ -379,7 +385,44 @@ function pb(pct, lbl) {
   return `<div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${lbl||'Edistyminen '+pct+'%'}"><div class="pfill" style="width:${pct}%"></div></div>`;
 }
 const $ = id => document.getElementById(id);
-function render(html) { $('screen').innerHTML = html; window.scrollTo(0,0); }
+const EMOJI_RE = /(?:\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*|[✓→←])/gu;
+// Emojit ja nuolet piiloon ruudunlukijalta (teksti jää luettavaksi)
+function hideEmojis(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    const p = n.parentElement;
+    if (!p || p.closest('textarea, pre, script, style, [aria-hidden="true"]')) return;
+    EMOJI_RE.lastIndex = 0;
+    if (!EMOJI_RE.test(n.nodeValue)) return;
+    EMOJI_RE.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    const txt = n.nodeValue;
+    while ((m = EMOJI_RE.exec(txt)) !== null) {
+      if (m.index > last) frag.appendChild(document.createTextNode(txt.slice(last, m.index)));
+      const sp = document.createElement('span');
+      sp.setAttribute('aria-hidden', 'true');
+      sp.textContent = m[0];
+      frag.appendChild(sp);
+      last = m.index + m[0].length;
+    }
+    if (last < txt.length) frag.appendChild(document.createTextNode(txt.slice(last)));
+    n.replaceWith(frag);
+  });
+}
+let firstRender = true;
+function render(html) {
+  const scr = $('screen');
+  scr.innerHTML = html;
+  hideEmojis(scr);
+  window.scrollTo(0,0);
+  // Siirrä fokus uuden näkymän otsikkoon, jotta ruudunlukija huomaa sisällön vaihtuneen
+  if (firstRender) { firstRender = false; return; }
+  const h = scr.querySelector('h1, h2, .cover-logo');
+  if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+}
 
 // ─── TYPE DATA ────────────────────────────────────────────────────────────────
 const TYPES = {
@@ -581,7 +624,7 @@ function showRouteSelect() {
   const cards = ids.map(id => {
     const r = ROUTES[id];
     const done = S.done.has(id);
-    return `<button class="route-btn${done?' done':''}" onclick="startRoute('${id}')">${done?'<span class="done-mark">✓</span>':''}<span class="remoji">${r.emoji}</span>${r.name}</button>`;
+    return `<button class="route-btn${done?' done':''}" onclick="startRoute('${id}')">${done?'<span class="done-mark" aria-hidden="true">✓</span><span class="sr-only">(tehty)</span>':''}<span class="remoji">${r.emoji}</span>${r.name}</button>`;
   }).join('');
 
   render(`
@@ -744,13 +787,14 @@ function showResults() {
   render(`
     ${pb(100,'Valmis')}
     <h1>🎉 Sinun supervoimasi</h1>
-    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea. Vahvuudet voivat myös muuttua.</div>
+    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea.</div>
 
     <div class="result-card">
       <span class="bigmoji">${td.emoji}</span>
       <div class="type-badge" style="background:${td.color}">${type}</div>
       <p style="margin:0.8rem 0 0.4rem">${td.desc}</p>
       <p style="color:var(--teal);font-size:0.88rem;font-style:italic;margin:0">${td.super}</p>
+      <p style="color:var(--muted);font-size:0.85rem;margin:0.7rem 0 0">Tämä on tämänhetkinen suuntasi, ja se voi muuttua.</p>
     </div>
 
     ${top5.length > 0 ? `<div class="card"><h3>⭐ Löytämäsi supervoimat</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet ovat peräisin VIA-luonteenvahvuuksista. Se on tutkijoiden tekemä lista ihmisen vahvuuksista.</p></div>` : ''}
@@ -758,6 +802,13 @@ function showResults() {
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:0.5rem">
       <button class="btn btn-primary" onclick="showVahvuuskortti()">🌟 Luo vahvuuskortti</button>
       <button class="btn btn-gold"    onclick="dlTxt()">📥 Lataa tulokset tekstitiedostona</button>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <h3>💬 Parikeskustelu</h3>
+      <p style="margin:0.3rem 0;text-align:center">Kerro kaverille, mitkä supervoimat sait. Kysy häneltä:</p>
+      <p style="margin:0.5rem 0;text-align:center"><strong>Minkä vahvuuden sinä näet minussa?</strong></p>
+      <p style="margin:0.3rem 0 0;text-align:center;color:var(--muted);font-size:0.9rem">Yllättikö kaverin vastaus sinut?</p>
     </div>
 
     <!-- Teacher summary -->
