@@ -338,6 +338,7 @@
       .robo { width: 150px; margin: 0; align-self: flex-end; }
     }
 
+    .tyyppi-huom { width:100%; margin:.2rem 0 .4rem; text-align:center; font-size:.88rem; color:var(--muted); }
     .alku-ala { grid-area: nappi; width:100%; max-width:560px; display:flex; flex-direction:column; align-items:center; margin-top:.8rem; }
     .alku-ala .alku-nappi { margin-top:.8rem; }
     /* Etusivu */
@@ -633,9 +634,10 @@ function showSV(){
   render(`
     ${pb(20,'Vaihe 1 / 4 – Supervoimat')}
     <div class="phase-badge">7. LUOKKA · SUPERVOIMAT</div>
-    <h1>Mikä on sinun supertyyppisi?</h1>
-    ${puhe('Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>Valitse alta tyyppi, joka tuntuu sinulta. Jos et muista, valitse se, joka tuntuu nyt oikeimmalta.', 1)}
+    <h1>Mikä suunta tuntuu sinulta nyt?</h1>
+    ${puhe('Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>Valitse alta suunta, joka tuntuu sinulta nyt. Jos et muista, valitse se, joka tuntuu tänään oikeimmalta.', 1)}
     <div class="type-grid">${typeCards}</div>
+    <p class="tyyppi-huom">Tämä on tämänhetkinen suuntasi, ja se voi muuttua. Se ei ole leima. Voit vaihtaa sitä milloin vain.</p>
 
     ${S.sv_type ? `
       <div class="card" style="margin-top:.8rem">
@@ -665,12 +667,12 @@ function showSV(){
             ).join('')}
           </div>` : ''}
       </div>
-    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">Valitse ensin tyyppi ylhäältä</div>`}
+    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">Valitse ensin suunta ylhäältä</div>`}
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
       ${S.sv_type && S.sv_chips.size > 0 ?
         `<button class="btn btn-primary" onclick="showVM()">Seuraava: Vahvuusmatka →</button>` :
-        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse tyyppi ja vähintään 1 vahvuus</button>`}
+        `<button class="btn btn-ghost" disabled style="opacity:.4;cursor:not-allowed">Valitse suunta ja vähintään 1 vahvuus</button>`}
     </div>
   `);
 }
@@ -935,7 +937,7 @@ function showDone(){
       </div>
       <div class="packed-list">${tagsHtml}</div>
       <p style="color:var(--muted);font-size:.9rem;margin:.5rem 0 1.5rem">
-        ${S.sv_type ? `Supertyyppisi: ${SV_TYPES[S.sv_type].emoji} <strong style="color:var(--text)">${S.sv_type}</strong> · ` : ''}
+        ${S.sv_type ? `Tämänhetkinen suuntasi: ${SV_TYPES[S.sv_type].emoji} <strong style="color:var(--text)">${S.sv_type}</strong> · ` : ''}
         Huomasit itsessäsi yhteensä ${allChips().length} vahvuutta.
       </p>
     </div>
