@@ -384,23 +384,23 @@ function render(html) { $('screen').innerHTML = html; window.scrollTo(0,0); }
 // ─── TYPE DATA ────────────────────────────────────────────────────────────────
 const TYPES = {
   Tekijä:     { emoji:'🔨', color:'#e94560',
-    desc:  'Sinä saat asiat liikkeelle! Olet toimelias, sinnikäs ja tavoitteellinen. Kun muut vielä miettivät, sinä olet jo aloittanut.',
-    super: 'Tekijä saa homman tehtyä – se on arvokas ja harvinainen taito.' },
+    desc:  'Sinä saat asiat liikkeelle! Aloitat nopeasti etkä anna helposti periksi. Kun muut vielä miettivät, sinä olet jo aloittanut.',
+    super: 'Tekijä saa asiat valmiiksi. Se on arvokas taito.' },
   Ajattelija: { emoji:'🔬', color:'#00a8ff',
-    desc:  'Sinä ymmärrät syvällisesti. Olet analyyttinen, utelias ja järjestelmällinen. Löydät yhteyksiä, joita muut eivät edes huomaa.',
-    super: 'Ajattelija ratkaisee ongelmat, joihin muilla ei ole vastausta.' },
+    desc:  'Sinä haluat ymmärtää asioita kunnolla. Olet utelias ja mietit asioita tarkasti. Huomaat yhteyksiä, joita muut eivät huomaa.',
+    super: 'Ajattelija keksii ratkaisuja ongelmiin, joihin muilla ei ole vastausta.' },
   Auttaja:    { emoji:'🤝', color:'#00d4aa',
-    desc:  'Sinä kannat muita. Olet empaattinen, kuunteleva ja luotettava. Ihmisten hyvinvointi on sinulle aidosti tärkeää.',
-    super: 'Auttajan läsnäolo tekee koko ryhmästä paremman.' },
+    desc:  'Sinä tuet muita. Kuuntelet, ymmärrät ja olet luotettava. Toisten hyvinvointi on sinulle oikeasti tärkeää.',
+    super: 'Kun Auttaja on mukana, koko ryhmä voi paremmin.' },
   Luova:      { emoji:'🎨', color:'#f5a623',
-    desc:  'Sinä keksit uutta. Olet idearikas, rohkea ja mielikuvituksellinen. Perinteinen tapa ei riitä – sinulla on aina oma näkemys.',
-    super: 'Luovan mielikuvitus on se kipinä, josta syntyy jotain ainutlaatuista.' },
+    desc:  'Sinä keksit uutta. Sinulla on paljon ideoita ja mielikuvitusta. Tavallinen tapa ei aina riitä sinulle, sillä sinulla on oma näkemys.',
+    super: 'Luovan mielikuvituksesta syntyy jotain, mitä ei ole ennen ollut.' },
   Seikkailija:{ emoji:'🗺️', color:'#e05fff',
-    desc:  'Sinä uskallat. Olet rohkea, ennakkoluuloton ja joustava. Uudet tilanteet innostavat sen sijaan että pelottaisivat.',
-    super: 'Seikkailija vie muut sinne, minne kukaan muu ei uskaltanut mennä.' },
+    desc:  'Sinä uskallat. Olet rohkea ja joustava. Uudet tilanteet innostavat sinua enemmän kuin pelottavat.',
+    super: 'Seikkailija uskaltaa mennä sinne, minne muut eivät vielä uskalla.' },
   Johtaja:    { emoji:'⭐', color:'#7c5cbf',
-    desc:  'Sinä viet eteenpäin. Olet aloitteellinen, vastuullinen ja motivoiva. Sinulla on taito saada muut innostumaan yhteisistä tavoitteista.',
-    super: 'Johtaja luo yhteisön, jossa jokainen pääsee parhaimmilleen.' }
+    desc:  'Sinä viet asioita eteenpäin. Teet aloitteita ja kannat vastuuta. Osaat saada muut innostumaan yhteisestä tekemisestä.',
+    super: 'Johtaja luo porukan, jossa jokainen pääsee loistamaan.' }
 };
 
 // ─── ROUTE DATA ───────────────────────────────────────────────────────────────
@@ -408,18 +408,18 @@ const ROUTES = {
   harrastus: {
     name:'Harrastus', emoji:'🏅',
     title:'Harrastuksesi kertoo sinusta',
-    intro:'Mieti harrastustasi tai vapaa-ajan tekemistäsi. Mitä siinä tehdään? Miksi se tuntuu hyvältä?',
+    intro:'Mieti harrastustasi tai sitä, mitä teet vapaa-ajalla. Mitä siinä tapahtuu? Miksi se tuntuu hyvältä?',
     questions:[
-      { text:'Mitä sinussa tapahtuu harrastuksessa?', opts:[
+      { text:'Mitä sinä teet harrastuksessa?', opts:[
         { text:'Autan muita tai teen yhteistyötä',          s:['Ystävällisyys','Yhteistyö'], t:'Auttaja' },
-        { text:'Keksin itse ratkaisuja ja uusia tapoja',    s:['Luovuus'],           t:'Luova' },
-        { text:'Harjoittelen paljon ja kehityn jatkuvasti', s:['Sinnikkyys'],           t:'Tekijä' },
-        { text:'Otan vastuuta ja vien joukkuetta eteenpäin', s:['Johtajuus','Luotettavuus'], t:'Johtaja' }
+        { text:'Keksin ratkaisuja ja uusia tapoja',    s:['Luovuus'],           t:'Luova' },
+        { text:'Harjoittelen paljon ja paranen koko ajan', s:['Sinnikkyys'],           t:'Tekijä' },
+        { text:'Otan vastuuta ja vien porukkaa eteenpäin', s:['Johtajuus','Luotettavuus'], t:'Johtaja' }
       ]},
-      { text:'Kun harrastuksessa tulee epäonnistuminen, sinä…', opts:[
+      { text:'Kun harrastuksessa menee pieleen, sinä…', opts:[
         { text:'Yritän uudelleen eri tavalla',          s:['Sinnikkyys','Rohkeus'],           t:'Tekijä' },
         { text:'Keksin uuden tavan tehdä sama asia',    s:['Luovuus'],         t:'Luova' },
-        { text:'Mietin tarkasti, miksi meni pieleen',   s:['Arvostelukyky','Oppimisen ilo'],t:'Ajattelija' },
+        { text:'Mietin, miksi se meni pieleen',   s:['Pohtiminen','Oppimisen ilo'],t:'Ajattelija' },
         { text:'Kokeilen jotain täysin erilaista',      s:['Avoin mieli'],t:'Seikkailija' }
       ]}
     ]
@@ -427,17 +427,17 @@ const ROUTES = {
   lempiaine: {
     name:'Lempiaine', emoji:'📚',
     title:'Lempiaineen salaisuus',
-    intro:'Mikä kouluaine tuntuu sinusta eniten omalta? Ei tarvitse olla helpoin – mieti mikä kiinnostaa tai jättää mieleen jäljän.',
+    intro:'Mikä kouluaine tuntuu sinusta omimmalta? Sen ei tarvitse olla helpoin. Mieti, mikä kiinnostaa sinua eniten.',
     questions:[
       { text:'Mikä siinä aineessa on sinusta parasta?', opts:[
         { text:'Opin uutta ja faktat jäävät mieleen',      s:['Oppimisen ilo','Uteliaisuus'],  t:'Ajattelija' },
         { text:'Saan tehdä tai keksiä jotain itse',        s:['Luovuus','Uteliaisuus'],          t:'Luova' },
-        { text:'Pääsen selittämään muille tai auttamaan',  s:['Empatia','Ystävällisyys'],  t:'Auttaja' },
-        { text:'Pääsen johtamaan tai organisoimaan',       s:['Johtajuus','Luotettavuus'],t:'Johtaja' }
+        { text:'Pääsen selittämään muille tai auttamaan',  s:['Toisten ymmärtäminen','Ystävällisyys'],  t:'Auttaja' },
+        { text:'Pääsen johtamaan tai järjestämään asioita',       s:['Johtajuus','Luotettavuus'],t:'Johtaja' }
       ]},
       { text:'Opettaja antaa vapaan tehtävän. Mitä sinä teet?', opts:[
-        { text:'Aloitan heti ilman pitkää suunnittelua', s:['Rohkeus','Tarmokkuus'],          t:'Tekijä' },
-        { text:'Suunnittelen ensin huolella',             s:['Harkitsevuus'],t:'Ajattelija' },
+        { text:'Aloitan heti, en suunnittele pitkään', s:['Rohkeus','Toimeliaisuus'],          t:'Tekijä' },
+        { text:'Suunnittelen ensin huolella',             s:['Suunnitelmallisuus'],t:'Ajattelija' },
         { text:'Kysyn kavereilta ja teemme yhdessä',      s:['Yhteistyö','Ystävällisyys'],t:'Auttaja' },
         { text:'Keksin jotain omaa ja erilaista',         s:['Luovuus'],           t:'Luova' }
       ]}
@@ -446,49 +446,49 @@ const ROUTES = {
   kaverit: {
     name:'Kaverit', emoji:'🤝',
     title:'Sinä ja muut',
-    intro:'Mieti kavereita, luokkaa tai perhettä. Miten sinä toimit ihmisten kanssa?',
+    intro:'Mieti kavereita, luokkaa tai perhettä. Millainen sinä olet muiden kanssa?',
     questions:[
       { text:'Millainen sinä olet ryhmässä?', opts:[
-        { text:'Kuuntelen enemmän kuin puhun',                        s:['Empatia'],    t:'Auttaja' },
+        { text:'Kuuntelen enemmän kuin puhun',                        s:['Toisten ymmärtäminen'],    t:'Auttaja' },
         { text:'Heitän ideoita ja ehdotuksia',                        s:['Luovuus','Optimismi'],       t:'Luova' },
         { text:'Vien asioita eteenpäin ja teen päätöksiä',            s:['Johtajuus'],    t:'Johtaja' },
-        { text:'Uskallan ehdottaa jotain uutta ja kokeilen ensimmäisenä', s:['Rohkeus','Avoin mieli'], t:'Seikkailija' }
+        { text:'Ehdotan jotain uutta ja kokeilen ensimmäisenä', s:['Rohkeus','Avoin mieli'], t:'Seikkailija' }
       ]},
-      { text:'Kaverisi on surullinen tai hermostunut. Mitä sinä teet?', opts:[
-        { text:'Kuuntelen ja yritän aidosti ymmärtää',      s:['Ystävällisyys'],  t:'Auttaja' },
-        { text:'Yritän piristää ja keksiä ratkaisun',       s:['Optimismi','Tarmokkuus'],  t:'Tekijä' },
+      { text:'Kaverisi on surullinen tai jännittää jotain. Mitä teet?', opts:[
+        { text:'Kuuntelen ja yritän oikeasti ymmärtää',      s:['Ystävällisyys'],  t:'Auttaja' },
+        { text:'Yritän piristää ja keksiä ratkaisun',       s:['Optimismi','Toimeliaisuus'],  t:'Tekijä' },
         { text:'En tiedä mitä sanoa, mutta olen paikalla',  s:['Luotettavuus','Sinnikkyys'],       t:'Auttaja' },
-        { text:'Ehdotan yhteistä tekemistä ja järjestän sen', s:['Yhteistyö','Empatia'], t:'Johtaja' }
+        { text:'Ehdotan, että tehdään jotain yhdessä, ja järjestän sen', s:['Yhteistyö','Toisten ymmärtäminen'], t:'Johtaja' }
       ]}
     ]
   },
   vaikeus: {
     name:'Vaikeus', emoji:'💪',
     title:'Kun on vaikeaa',
-    intro:'Kaikilla on joskus vaikeita hetkiä. Sinussa on kuitenkin jotain, joka auttaa sinua eteenpäin.',
+    intro:'Kaikilla on joskus vaikeita hetkiä. Sinussa on jotain, mikä auttaa sinua jaksamaan.',
     questions:[
-      { text:'Kun jokin tuntuu todella vaikealta, sinä yleensä…', opts:[
+      { text:'Kun jokin on todella vaikeaa, sinä yleensä…', opts:[
         { text:'Jatkan silti, vaikka on raskasta',               s:['Sinnikkyys'],           t:'Tekijä' },
-        { text:'Pysähdyn miettimään, mikä voisi auttaa',         s:['Arvostelukyky','Harkitsevuus'],t:'Ajattelija' },
-        { text:'Teen suunnitelman ja pyydän muut mukaan',         s:['Harkitsevuus','Yhteistyö'],t:'Johtaja' },
+        { text:'Pysähdyn miettimään, mikä voisi auttaa',         s:['Pohtiminen','Suunnitelmallisuus'],t:'Ajattelija' },
+        { text:'Teen suunnitelman ja pyydän muut mukaan',         s:['Suunnitelmallisuus','Yhteistyö'],t:'Johtaja' },
         { text:'Muutan suuntaa tai kokeilen jotain muuta',       s:['Avoin mieli'],  t:'Seikkailija' }
       ]},
-      { text:'Muistatko tilanteen, jossa selvisit vaikeudesta? Mitä teit?', opts:[
-        { text:'Tein asiat yksi kerrallaan, järjestelmällisesti', s:['Harkitsevuus'],t:'Ajattelija' },
+      { text:'Muistatko tilanteen, jossa selvisit jostain vaikeasta? Mitä teit?', opts:[
+        { text:'Tein asiat yksi kerrallaan, järjestyksessä', s:['Suunnitelmallisuus'],t:'Ajattelija' },
         { text:'Muistin, että olen selvinnyt ennenkin',           s:['Rohkeus','Optimismi'],  t:'Seikkailija' },
-        { text:'Sain apua tai tukea joltain tärkeältä',           s:['Empatia','Avoin mieli'],           t:'Auttaja' },
-        { text:'Vain tein – en miettinyt liikaa',                 s:['Tarmokkuus','Sinnikkyys'],              t:'Tekijä' }
+        { text:'Sain apua jostakusta tärkeästä',           s:['Toisten ymmärtäminen','Avoin mieli'],           t:'Auttaja' },
+        { text:'Tein vain enkä miettinyt liikaa',                 s:['Toimeliaisuus','Sinnikkyys'],              t:'Tekijä' }
       ]}
     ]
   },
   seikkailija: {
     name:'Seikkailija-polku', emoji:'🗺️',
-    title:'Uusi, tuntematon ja rohkeus',
-    intro:'Tämä polku kertoo sinun tavastasi kohdata muutoksia, uusia tilanteita ja omaa itseäsi.',
+    title:'Uudet tilanteet ja rohkeus',
+    intro:'Tämä reitti kertoo, miten kohtaat muutoksia ja uusia tilanteita.',
     questions:[
       { text:'Kun tulee iso muutos tai uusi tilanne, sinä…', opts:[
-        { text:'Olen innoissani – uutta koettavaa!',                      s:['Avoin mieli','Tarmokkuus'],   t:'Seikkailija' },
-        { text:'Mietin ensin tarkasti, mitä se tarkoittaa',               s:['Harkitsevuus','Arvostelukyky'],     t:'Ajattelija' },
+        { text:'Olen innoissani – uutta koettavaa!',                      s:['Avoin mieli','Toimeliaisuus'],   t:'Seikkailija' },
+        { text:'Mietin ensin tarkasti, mitä se tarkoittaa',               s:['Suunnitelmallisuus','Pohtiminen'],     t:'Ajattelija' },
         { text:'Haluan olla mukana päättämässä, miten toimitaan',         s:['Johtajuus','Luotettavuus'],  t:'Johtaja' },
         { text:'Mietin, miten tästä saisi jotain uutta ja kivaa',         s:['Luovuus','Optimismi'],          t:'Luova' }
       ]},
@@ -504,33 +504,33 @@ const ROUTES = {
 
 // ─── QUICK TEST ───────────────────────────────────────────────────────────────
 const QT = [
-  { text:'Koulu alkaa uuden projektin. Sinä…', opts:[
-    { text:'Aloitan heti ilman suurta suunnittelua', s:'Tarmokkuus',        t:'Tekijä' },
-    { text:'Suunnittelen tarkasti ensin',             s:'Harkitsevuus',t:'Ajattelija' },
+  { text:'Koulussa alkaa uusi projekti. Sinä…', opts:[
+    { text:'Aloitan heti, en suunnittele paljon', s:'Toimeliaisuus',        t:'Tekijä' },
+    { text:'Suunnittelen tarkasti ensin',             s:'Suunnitelmallisuus',t:'Ajattelija' },
     { text:'Keksin jotain luovaa ja omaa',            s:'Luovuus',            t:'Luova' },
     { text:'Kysyn, haluaako joku tehdä yhdessä',      s:'Yhteistyö',t:'Auttaja' },
-    { text:'Ehdotan, että johtaisin projektia',       s:'Johtajuus',   t:'Johtaja' }
+    { text:'Ehdotan, että minä johdan projektia',       s:'Johtajuus',   t:'Johtaja' }
   ]},
   { text:'Välitunnilla kaverisi riitelevät. Sinä…', opts:[
-    { text:'Yritän sovitella heidät yhteen',     s:'Empatia', t:'Auttaja' },
-    { text:'Mietin, miksi riita alkoi',           s:'Arvostelukyky',t:'Ajattelija' },
+    { text:'Yritän saada heidät sopimaan',     s:'Toisten ymmärtäminen', t:'Auttaja' },
+    { text:'Mietin, miksi riita alkoi',           s:'Pohtiminen',t:'Ajattelija' },
     { text:'Ehdotan jotain muuta tekemistä',      s:'Optimismi',   t:'Luova' },
-    { text:'Astun väliin ja otan tilanteen haltuun',s:'Johtajuus',t:'Johtaja' }
+    { text:'Menen väliin ja otan tilanteen hoitaakseni',s:'Johtajuus',t:'Johtaja' }
   ]},
-  { text:'Saat vapaata aikaa. Mitä teet?', opts:[
-    { text:'Harrastan tai teen jotain aktiivista', s:'Tarmokkuus', t:'Tekijä' },
+  { text:'Sinulla on vapaa-aikaa. Mitä teet?', opts:[
+    { text:'Harrastan tai teen jotain aktiivista', s:'Toimeliaisuus', t:'Tekijä' },
     { text:'Luen, pelaan tai ajattelen rauhassa',  s:'Uteliaisuus',   t:'Ajattelija' },
-    { text:'Soittelen kavereille tai nähdään',     s:'Ystävällisyys',t:'Auttaja' },
-    { text:'Keksin jotain uutta tai kokeilen',     s:'Rohkeus',    t:'Seikkailija' }
+    { text:'Soitan kavereille tai tavataan',     s:'Ystävällisyys',t:'Auttaja' },
+    { text:'Kokeilen jotain uutta',     s:'Rohkeus',    t:'Seikkailija' }
   ]},
-  { text:'Jossakin olet selvästi hyvä. Se on…', opts:[
-    { text:'Selittäminen tai puhuminen',              s:'Empatia', t:'Auttaja' },
-    { text:'Keksiminen tai ongelmanratkaisu',         s:'Arvostelukyky',           t:'Luova' },
-    { text:'Aloittaminen ja asioiden tekeminen',      s:'Tarmokkuus',       t:'Tekijä' },
-    { text:'Asioiden ymmärtäminen syvällisesti',      s:'Oppimisen ilo', t:'Ajattelija' },
-    { text:'Johtaminen tai organisoiminen',           s:'Luotettavuus',    t:'Johtaja' }
+  { text:'Olet selvästi hyvä jossakin. Se on…', opts:[
+    { text:'Selittäminen tai puhuminen',              s:'Toisten ymmärtäminen', t:'Auttaja' },
+    { text:'Keksiminen tai ongelmien ratkaiseminen',         s:'Pohtiminen',           t:'Luova' },
+    { text:'Aloittaminen ja asioiden tekeminen',      s:'Toimeliaisuus',       t:'Tekijä' },
+    { text:'Asioiden ymmärtäminen kunnolla',      s:'Oppimisen ilo', t:'Ajattelija' },
+    { text:'Johtaminen tai asioiden järjestäminen',           s:'Luotettavuus',    t:'Johtaja' }
   ]},
-  { text:'Mikä saa sinut tuntemaan, että olet parhaimmillasi?', opts:[
+  { text:'Milloin tunnet olevasi parhaimmillasi?', opts:[
     { text:'Kun pääsen auttamaan jotakuta',      s:'Ystävällisyys',t:'Auttaja' },
     { text:'Kun keksin jotain omaa',             s:'Luovuus',      t:'Luova' },
     { text:'Kun saan jonkin valmiiksi',          s:'Sinnikkyys',     t:'Tekijä' },
@@ -546,7 +546,7 @@ function showStart() {
     <div class="cover">
       <span class="bigmoji">🔍</span>
       <div class="cover-logo">Supervoima-<br>etsintä</div>
-      <p class="cover-sub">Sinussa on vahvuuksia, joita et ehkä itse edes huomaa.<br>Löydetään ne yhdessä!</p>
+      <p class="cover-sub">Sinussa on vahvuuksia, joita et ehkä itse huomaa.<br>Etsitään ne yhdessä!</p>
     </div>
     <div class="btn-group" style="max-width:360px;width:100%">
       <button class="btn btn-primary" onclick="showIntro()">Aloita matka →</button>
@@ -560,11 +560,11 @@ function showIntro() {
     ${pb(5)}
     <h1>Mikä on supervoima?</h1>
     <div class="card">
-      Supervoima on asia, joka on sinulle <strong>helppo ja luonteva</strong>. Se voi olla taito, tapa toimia tai tapa ajatella.<br><br>
-      Se ei tarkoita parhaana olemista – se tarkoittaa sitä, mikä <em>tuntuu</em> sinulle omalta.
+      Supervoima on jotain, mikä on sinulle <strong>helppoa ja luontevaa</strong>. Se voi olla taito tai tapa toimia.<br><br>
+      Sinun ei tarvitse olla siinä paras. Riittää, että se tuntuu sinusta omalta.
     </div>
     <div class="card-info">
-      🤔 Ajattele hetki: onko joku sanonut sinulle "olet hyvä tuossa"? Tai onko jokin asia sinulle selvästi helpompaa kuin muille?
+      🤔 Mieti hetki: onko joku sanonut sinulle "olet hyvä tässä"? Onko jokin asia sinulle helpompaa kuin muille?
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
       <button class="btn btn-primary" onclick="showRouteSelect()">Selvä, lähdetään! →</button>
@@ -587,7 +587,7 @@ function showRouteSelect() {
   render(`
     ${pb(12)}
     <h1>Mistä lähdetään?</h1>
-    <div class="card">Vahvuuksia löytyy kaikkialta. Valitse reitti, joka tuntuu sopivimmalta – tai käy kaikki läpi!</div>
+    <div class="card">Vahvuuksia löytyy joka paikasta. Valitse reitti, joka tuntuu sinusta hyvältä. Voit tehdä myös useamman.</div>
     <div class="route-grid">${cards}</div>
     <div style="width:100%;margin:0.3rem 0">
       <button class="btn ${ptDone?'btn-ghost':'btn-gold'}" onclick="startQuickTest()">
@@ -596,10 +596,10 @@ function showRouteSelect() {
     </div>
     ${ready
       ? `<div style="width:100%;margin-top:0.6rem">
-          <p class="card-warn">💡 Mitä useamman reitin käyt, sitä tarkemman tuloksen saat!</p>
+          <p class="card-warn">💡 Mitä useamman reitin teet, sitä paremmin tulos kuvaa sinua!</p>
           <button class="btn btn-primary" onclick="showReflection()">✅ Olen valmis – katso tulokset →</button>
          </div>`
-      : `<p class="card-warn">💡 Tulosta varten tarvitaan ${need===2?'kaksi reittiä':'vielä yksi reitti'} tai pikatesti. Mitä enemmän vastaat, sitä tarkempi tulos on!</p>`}
+      : `<p class="card-warn">💡 Tulosta varten tee ${need===2?'kaksi reittiä':'vielä yksi reitti'} tai pikatesti. Mitä enemmän vastaat, sitä paremmin tulos kuvaa sinua!</p>`}
   `);
 }
 
@@ -642,12 +642,12 @@ function showRouteDone() {
     <span class="bigmoji">${r.emoji}</span>
     <h2>${r.name} – valmis!</h2>
     <div class="card" style="text-align:center">
-      Hienoa! Sait kerättyä vahvuuksia tältä reitiltä.
-      ${left>0 ? (isReady() ? `<br><br>Haluatko jatkaa vielä ${left} reitille?` : `<br><br>Tulosta varten tarvitaan vielä yksi reitti (tai pikatesti).`) : '<br><br>Olet käynyt kaikki reitit läpi!'}
+      Hienoa! Löysit tältä reitiltä vahvuuksia.
+      ${left>0 ? (isReady() ? `<br><br>Jäljellä on vielä ${left} reittiä. Haluatko tehdä niitä?` : `<br><br>Tulosta varten tee vielä yksi reitti tai pikatesti.`) : '<br><br>Olet tehnyt kaikki reitit!'}
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
       ${isReady() ? `<button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>` : ''}
-      ${left>0 ? `<button class="btn ${isReady()?'btn-gold':'btn-primary'}" onclick="showRouteSelect()">${isReady()?'Jatkan vielä muille reiteille':'Seuraava reitti →'}</button>` : ''}
+      ${left>0 ? `<button class="btn ${isReady()?'btn-gold':'btn-primary'}" onclick="showRouteSelect()">${isReady()?'Teen vielä lisää reittejä':'Seuraava reitti →'}</button>` : ''}
     </div>
   `);
 }
@@ -678,10 +678,10 @@ function answerQT(i) {
       ${pb(85)}
       <span class="bigmoji">🎯</span>
       <h2>Pikatesti valmis!</h2>
-      <div class="card" style="text-align:center">Hienoa! Viisi kysymystä vastattu – vahvuuksia on jo kertynyt.</div>
+      <div class="card" style="text-align:center">Hienoa! Vastasit viiteen kysymykseen. Nyt sinulla on jo vahvuuksia.</div>
       <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
         <button class="btn btn-primary"  onclick="showReflection()">Jatka tuloksiin →</button>
-        <button class="btn btn-gold"     onclick="showRouteSelect()">Käy myös muilla reiteillä</button>
+        <button class="btn btn-gold"     onclick="showRouteSelect()">Tee myös reittejä</button>
       </div>
     `);
   }
@@ -691,13 +691,13 @@ function showReflection() {
   render(`
     ${pb(85)}
     <h2>✍️ Oma pohdinta</h2>
-    <div class="card-info">Tätä ei arvostella. Kirjoita rehellisesti – tai jätä tyhjäksi, se on ok myös!</div>
+    <div class="card-info">Tätä ei arvostella. Kirjoita rehellisesti tai jätä tyhjäksi. Molemmat käyvät!</div>
     <div class="card">
       <h3 style="text-align:left;margin-top:0">Missä olet mielestäsi hyvä?</h3>
       <textarea id="ref1" placeholder="Esim. olen hyvä selittämään asioita, keksin ideoita, olen reilu…">${S.reflection}</textarea>
     </div>
     <div class="card">
-      <h3 style="text-align:left;margin-top:0">Minkä vahvuuden haluaisit kehittää?</h3>
+      <h3 style="text-align:left;margin-top:0">Minkä vahvuuden haluaisit saada vahvemmaksi?</h3>
       <textarea id="ref2" placeholder="Esim. haluaisin olla rohkeampi tai kärsivällisempi…">${S.development}</textarea>
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
@@ -721,7 +721,7 @@ function showResults() {
 
   const strHtml = top5.length > 0
     ? `<ul class="str-list">${top5.map(s=>`<li><span class="str-tag">${s}</span></li>`).join('')}</ul>`
-    : `<p style="color:var(--muted);font-size:0.9rem">Käy ainakin yksi reitti tai pikatesti saadaksesi vahvuudet.</p>`;
+    : `<p style="color:var(--muted);font-size:0.9rem">Tee vähintään yksi reitti tai pikatesti, niin näet vahvuutesi.</p>`;
 
   // Build teacher summary
   const date = new Date().toLocaleDateString('fi-FI');
@@ -744,7 +744,7 @@ function showResults() {
   render(`
     ${pb(100,'Valmis')}
     <h1>🎉 Sinun supervoimasi</h1>
-    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu vain muutamaan vastaukseen, eikä se kerro koko totuutta sinusta. Vahvuudet voivat myös muuttua ajan myötä.</div>
+    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea. Vahvuudet voivat myös muuttua.</div>
 
     <div class="result-card">
       <span class="bigmoji">${td.emoji}</span>
@@ -753,11 +753,11 @@ function showResults() {
       <p style="color:var(--teal);font-size:0.88rem;font-style:italic;margin:0">${td.super}</p>
     </div>
 
-    ${top5.length > 0 ? `<div class="card"><h3>⭐ Löydetyt supervoimasi</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet perustuvat VIA-luonteenvahvuuksiin.</p></div>` : ''}
+    ${top5.length > 0 ? `<div class="card"><h3>⭐ Löytämäsi supervoimat</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet ovat peräisin VIA-luonteenvahvuuksista. Se on tutkijoiden tekemä lista ihmisen vahvuuksista.</p></div>` : ''}
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:0.5rem">
       <button class="btn btn-primary" onclick="showVahvuuskortti()">🌟 Luo vahvuuskortti</button>
-      <button class="btn btn-gold"    onclick="dlTxt()">📥 Lataa tulokset (TXT)</button>
+      <button class="btn btn-gold"    onclick="dlTxt()">📥 Lataa tulokset tekstitiedostona</button>
     </div>
 
     <!-- Teacher summary -->
