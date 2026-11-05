@@ -320,27 +320,31 @@
       border-width: 13px 0 0 15px;
       border-color: #e6f4f1 transparent transparent transparent;
     }
-    /* Leveällä näytöllä kupla on selityskortin vieressä */
+    /* Kupla + robo. Kapealla: kupla ja robo sen alla. Leveällä: kortti | kupla | robo */
     .intro-rivi { width: 100%; display: flex; flex-direction: column; }
+    .puhe { display: flex; flex-direction: column; }
+    .robo { width: 110px; height: auto; align-self: flex-start; margin: -0.6rem 0 0 0.6rem; }
     @media (min-width: 720px) {
-      .screen:has(.intro-rivi) { max-width: 940px; }
-      .intro-rivi { flex-direction: row; align-items: flex-start; gap: 2.2rem; }
-      .intro-rivi .card { flex: 1.25; margin: 0.6rem 0; }
-      .intro-rivi .kupla {
+      .screen:has(.intro-rivi) { max-width: 980px; }
+      .intro-rivi { flex-direction: row; align-items: flex-start; gap: 1.6rem; }
+      .intro-rivi .card { flex: 1.2; margin: 0.6rem 0; }
+      .puhe { flex: 1.35; flex-direction: row; align-items: flex-start; gap: 1.6rem; }
+      .puhe .kupla {
         flex: 1; margin: 1.4rem 0 0.6rem;
-        border-radius: 4px 20px 20px 20px;
+        border-radius: 20px 4px 20px 20px;
       }
-      .intro-rivi .kupla::before, .intro-rivi .kupla::after { bottom: auto; }
-      .intro-rivi .kupla::before {
-        top: 14px; left: -17px;
-        border-width: 10px 17px 10px 0;
-        border-color: transparent rgba(0,121,106,0.4) transparent transparent;
+      .puhe .kupla::before, .puhe .kupla::after { bottom: auto; left: auto; }
+      .puhe .kupla::before {
+        top: 14px; right: -17px;
+        border-width: 10px 0 10px 17px;
+        border-color: transparent transparent transparent rgba(0,121,106,0.4);
       }
-      .intro-rivi .kupla::after {
-        top: 16px; left: -14px;
-        border-width: 8px 14px 8px 0;
-        border-color: transparent #e6f4f1 transparent transparent;
+      .puhe .kupla::after {
+        top: 16px; right: -14px;
+        border-width: 8px 0 8px 14px;
+        border-color: transparent transparent transparent #e6f4f1;
       }
+      .robo { width: 150px; margin: 0; align-self: flex-end; }
     }
 
     .card, .btn, .route-btn, .result-card, .vk-card { box-shadow: 0 1px 3px rgba(20,20,60,0.07); }
@@ -658,8 +662,11 @@ function showIntro() {
       Supervoima on jotain, mikä on sinulle <strong>helppoa ja luontevaa</strong>. Se voi olla taito tai tapa toimia.<br><br>
       Sinun ei tarvitse olla siinä paras. Riittää, että se tuntuu sinusta omalta.
     </div>
+    <div class="puhe">
     <div class="kupla">
       Mieti hetki: onko joku sanonut sinulle "olet hyvä tässä"? Onko jokin asia sinulle helpompaa kuin muille?
+    </div>
+    <img class="robo" src="/images/supervoimat-robo.webp" width="360" height="625" alt="" aria-hidden="true">
     </div>
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
