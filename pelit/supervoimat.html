@@ -320,6 +320,29 @@
       border-width: 13px 0 0 15px;
       border-color: #e6f4f1 transparent transparent transparent;
     }
+    /* Leveällä näytöllä kupla on selityskortin vieressä */
+    .intro-rivi { width: 100%; display: flex; flex-direction: column; }
+    @media (min-width: 720px) {
+      .screen:has(.intro-rivi) { max-width: 940px; }
+      .intro-rivi { flex-direction: row; align-items: flex-start; gap: 2.2rem; }
+      .intro-rivi .card { flex: 1.25; margin: 0.6rem 0; }
+      .intro-rivi .kupla {
+        flex: 1; margin: 1.4rem 0 0.6rem;
+        border-radius: 4px 20px 20px 20px;
+      }
+      .intro-rivi .kupla::before, .intro-rivi .kupla::after { bottom: auto; }
+      .intro-rivi .kupla::before {
+        top: 14px; left: -17px;
+        border-width: 10px 17px 10px 0;
+        border-color: transparent rgba(0,121,106,0.4) transparent transparent;
+      }
+      .intro-rivi .kupla::after {
+        top: 16px; left: -14px;
+        border-width: 8px 14px 8px 0;
+        border-color: transparent #e6f4f1 transparent transparent;
+      }
+    }
+
     .card, .btn, .route-btn, .result-card, .vk-card { box-shadow: 0 1px 3px rgba(20,20,60,0.07); }
     .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -630,12 +653,14 @@ function showIntro() {
   render(`
     ${pb(5)}
     <h1>Mikä on supervoima?</h1>
+    <div class="intro-rivi">
     <div class="card">
       Supervoima on jotain, mikä on sinulle <strong>helppoa ja luontevaa</strong>. Se voi olla taito tai tapa toimia.<br><br>
       Sinun ei tarvitse olla siinä paras. Riittää, että se tuntuu sinusta omalta.
     </div>
     <div class="kupla">
       Mieti hetki: onko joku sanonut sinulle "olet hyvä tässä"? Onko jokin asia sinulle helpompaa kuin muille?
+    </div>
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
       <button class="btn btn-primary" onclick="showRouteSelect()">Selvä, lähdetään! →</button>
