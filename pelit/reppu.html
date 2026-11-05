@@ -7,16 +7,16 @@
   <link rel="stylesheet" href="/vendor/fonts/fonts.css">
   <style>
     :root {
-      --bg:     #0f0f1a;
-      --card:   #16213e;
-      --accent: #e94560;
-      --gold:   #f5a623;
-      --teal:   #00d4aa;
-      --purple: #7c5cbf;
-      --blue:   #00a8ff;
-      --text:   #e8e8f0;
-      --muted:  #a8a8c0;
-      --border: rgba(233,69,96,0.3);
+      --bg:     #f6f7fb;
+      --card:   #ffffff;
+      --accent: #d62b52;
+      --gold:   #a85f00;
+      --teal:   #00796a;
+      --purple: #6b46c1;
+      --blue:   #0a6fc2;
+      --text:   #1f2340;
+      --muted:  #5b6082;
+      --border: rgba(31,35,64,0.14);
     }
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
@@ -27,8 +27,8 @@
 
     /* Progress */
     .pbar { width:100%; max-width:500px; height:8px;
-      background:rgba(255,255,255,0.08); border-radius:99px; margin-bottom:1.5rem; overflow:hidden; }
-    .pfill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold));
+      background:rgba(31,35,64,0.10); border-radius:99px; margin-bottom:1.5rem; overflow:hidden; }
+    .pfill { height:100%; background:linear-gradient(90deg,var(--accent),#e8870e);
       border-radius:99px; transition:width .4s ease; }
     .step-label { font-size:.8rem; color:var(--muted); text-align:center;
       margin-bottom:.4rem; letter-spacing:.04em; text-transform:uppercase; }
@@ -43,7 +43,7 @@
     /* Cards */
     .card { background:var(--card); border:1px solid var(--border); border-radius:16px;
       padding:1rem 1.2rem; margin:.4rem 0; width:100%; line-height:1.7; }
-    .card-info { background:rgba(0,212,170,.07); border:1px solid rgba(0,212,170,.25);
+    .card-info { background:rgba(0,121,106,.07); border:1px solid rgba(0,121,106,.25);
       border-radius:12px; padding:.7rem 1rem; font-size:.9rem; color:var(--teal);
       margin:.4rem 0; width:100%; }
 
@@ -52,15 +52,18 @@
       background:var(--card); border:2px solid var(--border); border-radius:14px;
       color:var(--text); font-family:'Nunito',sans-serif; font-size:.97rem; font-weight:600;
       text-align:left; cursor:pointer; transition:border-color .15s,background .15s,transform .15s; line-height:1.4; }
-    .btn:hover { border-color:var(--accent); background:rgba(233,69,96,.1); transform:translateX(3px); }
+    .btn:hover { border-color:var(--accent); background:rgba(214,43,82,.1); transform:translateX(3px); }
     .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff;
       text-align:center; font-weight:800; font-size:1rem; }
-    .btn-primary:hover { background:#c73a52; border-color:#c73a52; transform:translateY(-2px); }
-    .btn-ghost { background:transparent; border-color:rgba(255,255,255,.12);
+    .btn-primary:hover { background:#b8203f; border-color:#b8203f; transform:translateY(-2px); }
+    .btn-ghost { background:transparent; border-color:rgba(31,35,64,.14);
       color:var(--muted); text-align:center; }
     .btn-ghost:hover { border-color:var(--teal); color:var(--teal); transform:none; }
     .btn-group { display:flex; flex-direction:column; gap:.5rem; width:100%; margin:.8rem 0; }
 
+    .card, .btn, .type-card, .area-section, .cv-step { box-shadow:0 1px 3px rgba(20,20,60,.07); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    [tabindex="-1"]:focus { outline:none; }
     /* Cover */
     .cover { text-align:center; padding:2rem 0 1rem; width:100%; }
     .cover-logo { font-family:'Space Grotesk',sans-serif; font-size:2.5rem; font-weight:700;
@@ -68,8 +71,8 @@
     .cover-sub { color:var(--muted); font-size:1rem; margin:.8rem 0 1.5rem; line-height:1.6; }
 
     /* Phase badge */
-    .phase-badge { display:inline-block; background:rgba(124,92,191,.2);
-      border:1px solid var(--purple); color:#a78fd4; border-radius:99px;
+    .phase-badge { display:inline-block; background:rgba(107,70,193,.2);
+      border:1px solid var(--purple); color:#6b46c1; border-radius:99px;
       padding:.2rem .9rem; font-size:.8rem; font-weight:700;
       letter-spacing:.04em; margin-bottom:.8rem; }
 
@@ -80,21 +83,21 @@
       padding:.85rem .6rem; cursor:pointer; text-align:center;
       font-family:'Nunito',sans-serif; font-weight:700; font-size:.88rem; color:var(--text);
       transition:border-color .15s,background .15s; user-select:none; }
-    .type-card:hover { border-color:var(--gold); background:rgba(245,166,35,.08); }
-    .type-card.selected { border-color:var(--teal); background:rgba(0,212,170,.1); color:var(--teal); }
+    .type-card:hover { border-color:var(--gold); background:rgba(168,95,0,.08); }
+    .type-card.selected { border-color:var(--teal); background:rgba(0,121,106,.1); color:var(--teal); }
     .type-card .tc-emoji { font-size:1.6rem; display:block; margin-bottom:.3rem; }
 
     /* Strength chips (selectable) */
     .chips-wrap { display:flex; flex-wrap:wrap; gap:.45rem; margin:.5rem 0; width:100%; }
     .chip { display:inline-flex; align-items:center; gap:.3rem;
-      background:rgba(245,166,35,.1); border:1.5px solid rgba(245,166,35,.35);
+      background:rgba(168,95,0,.1); border:1.5px solid rgba(168,95,0,.35);
       color:var(--gold); border-radius:99px; padding:.25rem .75rem;
       font-size:.85rem; font-weight:700; cursor:pointer;
       transition:background .15s,border-color .15s,transform .1s; user-select:none; }
-    .chip:hover { background:rgba(245,166,35,.2); transform:scale(1.04); }
-    .chip.on { background:var(--gold); color:#1a1200; border-color:var(--gold); }
-    .chip.teal { background:rgba(0,212,170,.1); border-color:rgba(0,212,170,.35); color:var(--teal); }
-    .chip.teal.on { background:var(--teal); color:#002b22; border-color:var(--teal); }
+    .chip:hover { background:rgba(168,95,0,.2); transform:scale(1.04); }
+    .chip.on { background:var(--gold); color:#fff; border-color:var(--gold); }
+    .chip.teal { background:rgba(0,121,106,.1); border-color:rgba(0,121,106,.35); color:var(--teal); }
+    .chip.teal.on { background:var(--teal); color:#fff; border-color:var(--teal); }
 
     /* Area sections (vahvuusmatka) */
     .area-section { width:100%; background:var(--card); border:1px solid var(--border);
@@ -108,7 +111,7 @@
     .pool-panel { flex:1; min-width:0; }
     .pool-panel h3 { text-align:left; color:var(--gold); font-size:1rem; margin-bottom:.6rem; }
     .pool-chip { display:inline-flex; align-items:center;
-      background:rgba(245,166,35,.12); border:1.5px solid var(--gold);
+      background:rgba(168,95,0,.12); border:1.5px solid var(--gold);
       color:var(--gold); border-radius:10px; padding:.4rem .85rem;
       font-size:.87rem; font-weight:700; margin:.25rem .2rem;
       cursor:grab; user-select:none; transition:opacity .15s,transform .1s; }
@@ -128,11 +131,11 @@
     .bag-counter span { color:var(--gold); }
 
     .slots-list { display:flex; flex-direction:column; gap:.4rem; width:100%; margin-top:.4rem; }
-    .slot { min-height:46px; border:2px dashed rgba(245,166,35,.35); border-radius:12px;
+    .slot { min-height:46px; border:2px dashed rgba(168,95,0,.35); border-radius:12px;
       padding:.35rem .7rem; display:flex; align-items:center; justify-content:space-between;
-      background:rgba(245,166,35,.04); transition:background .2s,border-color .2s; position:relative; }
-    .slot.over { border-color:var(--teal); background:rgba(0,212,170,.1); }
-    .slot.filled { border-style:solid; border-color:var(--gold); background:rgba(245,166,35,.12); }
+      background:rgba(168,95,0,.04); transition:background .2s,border-color .2s; position:relative; }
+    .slot.over { border-color:var(--teal); background:rgba(0,121,106,.1); }
+    .slot.filled { border-style:solid; border-color:var(--gold); background:rgba(168,95,0,.12); }
     .slot-num { font-size:.75rem; color:var(--muted); font-weight:700; margin-right:.5rem; flex-shrink:0; }
     .slot-content { font-size:.88rem; font-weight:700; color:var(--gold); flex:1; }
     .slot-remove { background:none; border:none; color:var(--muted); font-size:1rem;
@@ -160,8 +163,8 @@
     .modal-actions { display:flex; gap:.7rem; margin-top:1.5rem; justify-content:flex-end; }
     .modal-btn { padding:.6rem 1.3rem; border-radius:10px; font-family:'Nunito',sans-serif;
       font-weight:700; font-size:.95rem; cursor:pointer; border:none; }
-    .modal-btn-print { background:#e94560; color:#fff; }
-    .modal-btn-print:hover { background:#c73a52; }
+    .modal-btn-print { background:#d62b52; color:#fff; }
+    .modal-btn-print:hover { background:#b8203f; }
     .modal-btn-cancel { background:#eee; color:#333; }
     .modal-btn-cancel:hover { background:#ddd; }
 
@@ -177,14 +180,14 @@
     .cv-preview .cv-chip { display:inline-block; background:#fff3d9;
       border:1.5px solid #c87c20; color:#7c5010; border-radius:99px;
       padding:.1rem .65rem; font-size:.82rem; font-weight:700; margin:.15rem .1rem; }
-    .slot-empty { font-size:.8rem; color:rgba(255,255,255,.2); font-style:italic; }
+    .slot-empty { font-size:.8rem; color:rgba(31,35,64,.4); font-style:italic; }
 
     /* Completion */
     .bag-done { text-align:center; }
     .bag-done .bigmoji { font-size:3.5rem; display:block; margin:.5rem 0; }
     .packed-list { display:flex; flex-wrap:wrap; gap:.4rem; justify-content:center;
       margin:.8rem 0; }
-    .packed-tag { background:var(--gold); color:#1a1200; border-radius:99px;
+    .packed-tag { background:var(--gold); color:#fff; border-radius:99px;
       padding:.3rem .9rem; font-size:.9rem; font-weight:800; }
 
     /* CV screen */
@@ -200,8 +203,8 @@
     .cv-fields { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-top:.7rem; }
     @media(max-width:520px){ .cv-fields { grid-template-columns:1fr; } }
     .cv-label { display:block; font-size:.8rem; font-weight:700; color:var(--muted); }
-    .cv-input { display:block; width:100%; margin-top:.25rem; background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.13); border-radius:10px; color:var(--text);
+    .cv-input { display:block; width:100%; margin-top:.25rem; background:#ffffff;
+      border:1px solid rgba(31,35,64,.2); border-radius:10px; color:var(--text);
       font-family:'Nunito',sans-serif; font-size:.92rem; padding:.5rem .7rem; }
     .cv-input:focus { outline:2px solid var(--teal); border-color:var(--teal); }
 
@@ -211,8 +214,8 @@
       .bag-bar:not([hidden]) { display:flex; align-items:center; justify-content:space-between; gap:.8rem;
         position:fixed; left:0; right:0; bottom:0; z-index:90;
         padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));
-        background:rgba(15,15,26,.96); backdrop-filter:blur(8px);
-        border-top:1px solid rgba(245,166,35,.55); }
+        background:rgba(255,255,255,.97); backdrop-filter:blur(8px);
+        border-top:1px solid rgba(168,95,0,.55); }
     }
     .bag-bar-count { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:var(--text); white-space:nowrap; }
     .bag-bar-count strong { color:var(--gold); }
@@ -236,11 +239,11 @@
     .chip.on:not(.custom):not(.static)::before { content:"✓ "; content:"✓ " / ""; margin-right:.15rem; }
     /* Linkki 8. luokan Vahvuusmatkaan */
     .task-link-box { width:100%; margin:.4rem 0; padding:.7rem 1rem; border-radius:12px;
-      background:rgba(124,92,191,.1); border:1px solid rgba(124,92,191,.35);
+      background:rgba(107,70,193,.1); border:1px solid rgba(107,70,193,.35);
       font-size:.92rem; line-height:1.6; color:var(--text); }
     .task-link { display:inline-flex; align-items:center; min-height:44px; margin-top:.2rem;
       color:var(--teal); font-weight:800; text-decoration:underline; text-underline-offset:3px; }
-    .task-link:hover { color:#fff; }
+    .task-link:hover { color:var(--accent); }
     .task-link:focus-visible { outline:2px solid var(--teal); outline-offset:3px; border-radius:6px; }
 
     /* Sanojen selitykset */
@@ -251,37 +254,160 @@
     .hints li strong { color:var(--text); }
 
     .opt-tag { display:inline-block; margin-left:.5rem; padding:.05rem .6rem; border-radius:99px;
-      border:1px solid var(--purple); color:#a78fd4; font-size:.72rem; font-weight:700;
+      border:1px solid var(--purple); color:#6b46c1; font-size:.72rem; font-weight:700;
       letter-spacing:.03em; vertical-align:middle; }
     select.cv-input { cursor:pointer; }
 
     .bigmoji { font-size:3rem; display:block; text-align:center; margin:.5rem 0; }
-    textarea { width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.13);
+    textarea { width:100%; background:#ffffff; border:1px solid rgba(31,35,64,.2);
       border-radius:10px; color:var(--text); font-family:'Nunito',sans-serif;
       font-size:.92rem; padding:.6rem .8rem; resize:vertical; min-height:80px; line-height:1.5; }
     textarea:focus { outline:2px solid var(--teal); border-color:var(--teal); }
     textarea::placeholder { color:var(--muted); }
 
-    .example-box { background:rgba(124,92,191,.08); border:1px solid rgba(124,92,191,.25);
-      border-radius:10px; padding:.6rem .9rem; font-size:.85rem; color:#c0a8f0;
+    .example-box { background:rgba(107,70,193,.08); border:1px solid rgba(107,70,193,.25);
+      border-radius:10px; padding:.6rem .9rem; font-size:.85rem; color:#5b3aa8;
       margin:.4rem 0; font-style:italic; }
 
     /* Brand logo */
     .brand-bar { position:fixed; top:0; left:0; right:0; z-index:100;
       padding:.5rem 1rem; display:flex; align-items:center; gap:.4rem;
-      background:rgba(15,15,26,.85); backdrop-filter:blur(8px);
-      border-bottom:1px solid rgba(255,255,255,.05); pointer-events:none; }
+      background:rgba(246,247,251,.92); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(31,35,64,.08); pointer-events:none; }
     .brand-digi { font-family:'Space Grotesk',sans-serif; font-size:.85rem;
-      font-weight:800; color:#a78fd4; letter-spacing:-.02em; }
+      font-weight:800; color:#6b46c1; letter-spacing:-.02em; }
     .brand-opo  { font-family:'Space Grotesk',sans-serif; font-size:.85rem;
-      font-weight:400; color:rgba(167,143,212,.5); }
-    .brand-dot  { color:rgba(167,143,212,.25); font-size:.8rem; margin:0 .2rem; }
-    .brand-label { font-size:.72rem; color:rgba(167,143,212,.45);
+      font-weight:400; color:rgba(107,70,193,.5); }
+    .brand-dot  { color:rgba(107,70,193,.25); font-size:.8rem; margin:0 .2rem; }
+    .brand-label { font-size:.72rem; color:rgba(107,70,193,.45);
       letter-spacing:.1em; text-transform:uppercase; font-weight:500; }
-    .brand-year { font-size:.72rem; color:rgba(167,143,212,.3);
+    .brand-year { font-size:.72rem; color:rgba(107,70,193,.3);
       letter-spacing:.06em; font-weight:500; }
     /* push content below fixed bar */
     #app { padding-top:3rem; }
+    /* Puhekupla: joku kysyy oppilaalta */
+    .kupla {
+      position: relative;
+      width: 100%;
+      background: #e6f4f1;
+      border: 1.5px solid rgba(0,121,106,0.4);
+      border-radius: 20px 20px 20px 4px;
+      padding: 0.9rem 1.2rem;
+      margin: 0.6rem 0 1.6rem;
+      color: #00604f;
+      font-size: 1rem; font-weight: 600; line-height: 1.55;
+    }
+    .kupla::before, .kupla::after {
+      content: ""; position: absolute; left: 22px; width: 0; height: 0;
+      border-style: solid;
+    }
+    .kupla::before {
+      bottom: -15px;
+      border-width: 15px 0 0 18px;
+      border-color: rgba(0,121,106,0.4) transparent transparent transparent;
+    }
+    .kupla::after {
+      bottom: -12px; left: 24px;
+      border-width: 13px 0 0 15px;
+      border-color: #e6f4f1 transparent transparent transparent;
+    }
+    /* Kupla + robo. Kapealla: kupla ja robo sen alla. Leveällä: kortti | kupla | robo */
+    .intro-rivi { width: 100%; display: flex; flex-direction: column; }
+    .puhe { display: flex; flex-direction: column; }
+    .robo { width: 110px; height: auto; align-self: flex-start; margin: -0.6rem 0 0 0.6rem; }
+    @media (min-width: 720px) {
+      .screen:has(.intro-rivi) { max-width: 980px; }
+      .intro-rivi { flex-direction: row; align-items: flex-start; gap: 1.6rem; }
+      .intro-rivi .card { flex: 1.2; margin: 0.6rem 0; }
+      .puhe { flex: 1.35; flex-direction: row; align-items: flex-start; gap: 1.6rem; }
+      .puhe .kupla {
+        flex: 1; margin: 1.4rem 0 0.6rem;
+        border-radius: 20px 4px 20px 20px;
+      }
+      .puhe .kupla::before, .puhe .kupla::after { bottom: auto; left: auto; }
+      .puhe .kupla::before {
+        top: 14px; right: -17px;
+        border-width: 10px 0 10px 17px;
+        border-color: transparent transparent transparent rgba(0,121,106,0.4);
+      }
+      .puhe .kupla::after {
+        top: 16px; right: -14px;
+        border-width: 8px 0 8px 14px;
+        border-color: transparent transparent transparent #e6f4f1;
+      }
+      .robo { width: 150px; margin: 0; align-self: flex-end; }
+    }
+
+    .alku-ala { grid-area: nappi; width:100%; max-width:560px; display:flex; flex-direction:column; align-items:center; margin-top:.8rem; }
+    .alku-ala .alku-nappi { margin-top:.8rem; }
+    /* Etusivu */
+    .alku {
+      position: relative; width: 100%; isolation: isolate;
+      display: grid; gap: 0.6rem 1rem; align-items: end; justify-items: center;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "teksti teksti" "l r" "nappi nappi";
+      padding: 1.2rem 0 1rem;
+    }
+    .alku::before {
+      content: ""; position: absolute; z-index: -1; inset: -5rem -3rem -4rem;
+      background:
+        radial-gradient(ellipse 30% 34% at 50% 38%, rgba(214,43,82,0.13), transparent 100%),
+        radial-gradient(ellipse 22% 30% at 20% 80%, rgba(232,135,14,0.17), transparent 100%),
+        radial-gradient(ellipse 22% 30% at 80% 80%, rgba(107,70,193,0.13), transparent 100%);
+      pointer-events: none;
+    }
+    .alku-teksti { grid-area: teksti; text-align: center; padding-top: 0.8rem; }
+    .alku-nappi  { grid-area: nappi; width: 100%; max-width: 360px; margin-top: 0.8rem; }
+    .alku-hahmo--l { grid-area: l; } .alku-hahmo--r { grid-area: r; }
+    .alku-hahmo { position: relative; line-height: 0; }
+    .alku-hahmo img { width: 118px; height: auto; position: relative; animation: alku-keinu 4s ease-in-out infinite; }
+    .alku-hahmo--r img { animation-delay: -2s; }
+    .alku-hahmo::after {
+      content: ""; position: absolute; left: 50%; bottom: -6px; width: 78%; height: 14px; transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(31,35,64,0.22), transparent 70%);
+    }
+    @keyframes alku-keinu { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    .alku-merkki {
+      display: inline-block; padding: 0.25rem 0.9rem; border-radius: 99px; margin-bottom: 0.7rem;
+      background: rgba(214,43,82,0.1); color: var(--accent); font-weight: 800; font-size: 0.82rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .alku .cover-logo {
+      font-size: 2.7rem;
+      background: linear-gradient(100deg, #d62b52 10%, #e2562b 60%, #e8870e 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--accent);
+    }
+    .alku .cover-sub { margin: 0.8rem 0 1rem; font-size: 1.08rem; }
+    .alku-chipit { display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; max-width: 440px; margin: 0 auto; }
+    .alku-chip {
+      padding: 0.28rem 0.85rem; border-radius: 99px; font-weight: 800; font-size: 0.88rem;
+      color: var(--c); background: color-mix(in srgb, var(--c) 11%, #fff); border: 1.5px solid color-mix(in srgb, var(--c) 35%, #fff);
+      animation: alku-keinu 3.2s ease-in-out infinite; animation-delay: var(--d, 0s);
+    }
+    .btn-iso { padding: 1rem 1.2rem; font-size: 1.15rem; box-shadow: 0 8px 20px rgba(214,43,82,0.3); }
+    @media (prefers-reduced-motion: reduce) { .alku-hahmo img, .alku-chip { animation: none; } }
+    @media (min-width: 720px) {
+      .screen:has(.alku) { max-width: 1000px; justify-content: center; }
+      .alku {
+        grid-template-columns: 1fr minmax(0, 480px) 1fr;
+        grid-template-areas: "l teksti r" "l nappi r"; padding: 2.2rem 0 1.5rem;
+      }
+      .alku-hahmo img { width: 195px; }
+      .alku .cover-logo { font-size: 3.5rem; }
+    }
+
+    .card, .btn, .route-btn, .result-card, .vk-card { box-shadow: 0 1px 3px rgba(20,20,60,0.07); }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    [tabindex="-1"]:focus { outline: none; }
+
+    .alku .cover-logo { font-size: 2.3rem; }
+    @media (min-width: 720px) {
+      .alku { grid-template-columns: 1fr minmax(0, 560px) 1fr; }
+      .alku .cover-logo { font-size: 3rem; }
+    }
   </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -313,12 +439,12 @@ const S = {
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const SV_TYPES = {
-  'Tekijä':     { emoji:'🔨', color:'#e94560', chips:['toimelias','sinnikäs','ahkera','sitkeä','tavoitteellinen','päättäväinen'] },
-  'Ajattelija': { emoji:'🔬', color:'#00a8ff', chips:['analyyttinen','järjestelmällinen','utelias','harkitseva','ratkaisuhakuinen','tarkkaavainen'] },
-  'Auttaja':    { emoji:'🤝', color:'#00d4aa', chips:['avulias','empaattinen','kuunteleva','yhteisöllinen','yhteistyökykyinen','luotettava'] },
-  'Luova':      { emoji:'🎨', color:'#f5a623', chips:['luova','idearikas','mielikuvituksellinen','rohkea','innostuva','omaperäinen'] },
-  'Seikkailija':{ emoji:'🗺️', color:'#e05fff', chips:['rohkea','ennakkoluuloton','joustava','energinen','sopeutuva','utelias'] },
-  'Johtaja':    { emoji:'⭐', color:'#7c5cbf', chips:['aloitteellinen','vastuullinen','motivoiva','ilmaisukykyinen','organisoiva','hyvä vetäjä'] }
+  'Tekijä':     { emoji:'🔨', color:'#d62b52', chips:['toimelias','sinnikäs','ahkera','sitkeä','tavoitteellinen','päättäväinen'] },
+  'Ajattelija': { emoji:'🔬', color:'#0a6fc2', chips:['analyyttinen','järjestelmällinen','utelias','harkitseva','ratkaisuhakuinen','tarkkaavainen'] },
+  'Auttaja':    { emoji:'🤝', color:'#00796a', chips:['avulias','empaattinen','kuunteleva','yhteisöllinen','yhteistyökykyinen','luotettava'] },
+  'Luova':      { emoji:'🎨', color:'#b45f06', chips:['luova','idearikas','mielikuvituksellinen','rohkea','innostuva','omaperäinen'] },
+  'Seikkailija':{ emoji:'🗺️', color:'#a83fc7', chips:['rohkea','ennakkoluuloton','joustava','energinen','sopeutuva','utelias'] },
+  'Johtaja':    { emoji:'⭐', color:'#6b46c1', chips:['aloitteellinen','vastuullinen','motivoiva','ilmaisukykyinen','organisoiva','hyvä vetäjä'] }
 };
 
 const VM_AREAS = [
@@ -398,11 +524,52 @@ const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>'
 const q = s => esc(JSON.stringify(String(s)));
 // Teksti riveineen
 const nl = s => esc(s).replace(/\n/g,'<br>');
-function render(html){ $('screen').innerHTML = html; window.scrollTo(0,0); const bb = $('bagBar'); if(bb) bb.hidden = true; }
+const EMOJI_RE = /(?:\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*|[✓→←])/gu;
+// Emojit ja nuolet piiloon ruudunlukijalta (teksti jää luettavaksi)
+function hideEmojis(root){
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    const p = n.parentElement;
+    if(!p || p.closest('textarea, pre, script, style, option, [aria-hidden="true"]')) return;
+    EMOJI_RE.lastIndex = 0;
+    if(!EMOJI_RE.test(n.nodeValue)) return;
+    EMOJI_RE.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    const txt = n.nodeValue; let last = 0, m;
+    while((m = EMOJI_RE.exec(txt)) !== null){
+      if(m.index > last) frag.appendChild(document.createTextNode(txt.slice(last, m.index)));
+      const sp = document.createElement('span'); sp.setAttribute('aria-hidden','true'); sp.textContent = m[0];
+      frag.appendChild(sp); last = m.index + m[0].length;
+    }
+    if(last < txt.length) frag.appendChild(document.createTextNode(txt.slice(last)));
+    n.replaceWith(frag);
+  });
+}
+let firstRender = true, keepFocus = false;
+function render(html){
+  const scr = $('screen');
+  scr.innerHTML = html;
+  hideEmojis(scr);
+  window.scrollTo(0,0);
+  const bb = $('bagBar'); if(bb) bb.hidden = true;
+  // Uuteen näkymään siirryttäessä fokus menee otsikkoon, jotta ruudunlukija huomaa sisällön vaihtuneen
+  if(firstRender){ firstRender = false; return; }
+  if(keepFocus) return;
+  const h = scr.querySelector('h1, .cover-logo');
+  if(h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
+}
+// Puhekupla + robo (n = 1 tai 2)
+function puhe(teksti, n){
+  return `<div class="puhe"><div class="kupla" role="note">${teksti}</div>
+    <img class="robo" src="/images/supervoimat-robo${n===2?'2':''}.webp" width="360" height="${n===2?639:625}" alt="" aria-hidden="true"></div>`;
+}
 // Piirtää saman näkymän uudelleen niin, että vieritys pysyy paikallaan (esim. vahvuuden valinta)
 function rerenderKeepScroll(fn){
   const y = window.scrollY;
-  fn();
+  keepFocus = true;
+  try { fn(); } finally { keepFocus = false; }
   window.scrollTo(0, y);
 }
 function pb(pct, label){
@@ -422,23 +589,24 @@ function allChips(){
 
 // ── SCREEN 0: START ───────────────────────────────────────────────────────────
 function showStart(){
+  const chips = [['Sinnikäs','#c2410c'],['Luova','#d62b52'],['Rohkea','#0a6fc2'],['Utelias','#6b46c1'],['Luotettava','#00796a'],['Yhteistyökykyinen','#a83fc7']]
+    .map(([n,c],i) => `<span class="alku-chip" style="--c:${c};--d:${i*0.35}s">${n}</span>`).join('');
   render(`
-    <div class="cover">
-      <span style="font-size:4rem;display:block">🎒</span>
-      <div class="cover-logo">Reppu tulevaisuutta<br>varten</div>
-      <p class="cover-sub">
-        9. luokka · Vahvuudet matkaasi<br>
-        Kokoat tähän kaiken, mitä olet oppinut itsestäsi.
-      </p>
+    <div class="alku">
+      <div class="alku-teksti">
+        <span class="alku-merkki">9. luokka · Vahvuudet matkaasi</span>
+        <div class="cover-logo">Reppu tulevaisuutta<br>varten</div>
+        <p class="cover-sub">Kokoat tähän kaiken, mitä olet oppinut itsestäsi.</p>
+        <div class="alku-chipit" aria-hidden="true">${chips}</div>
+      </div>
+      <div class="alku-hahmo alku-hahmo--l" aria-hidden="true"><img src="/images/supervoimat-robo.webp" width="360" height="625" alt=""></div>
+      <div class="alku-hahmo alku-hahmo--r" aria-hidden="true"><img src="/images/supervoimat-robo2.webp" width="360" height="639" alt=""></div>
+      <div class="alku-ala">
+        <div class="card" style="text-align:center">Muistatko supervoimasi 7. luokalta ja vahvuusmatkasi 8. luokalta? Käy ne nyt nopeasti läpi. Sitten valitset 5 tärkeintä vahvuuttasi reppuusi.</div>
+        ${vmLinkHtml()}
+        <div class="alku-nappi"><button class="btn btn-primary btn-iso" onclick="showSV()" style="text-align:center">Aloita</button></div>
+      </div>
     </div>
-    <div class="card-info">
-      💡 Muistatko supervoimasi 7. luokalta ja vahvuusmatkasi 8. luokalta? Käy ne nyt nopeasti läpi. Sitten valitset 5 tärkeintä vahvuuttasi reppuusi.
-    </div>
-    ${vmLinkHtml()}
-    <div class="btn-group" style="max-width:360px;width:100%">
-      <button class="btn btn-primary" onclick="showSV()">Aloita</button>
-    </div>
-    <p style="color:var(--muted);font-size:.85rem;text-align:center;margin-top:.8rem">Kesto: noin 15–20 minuuttia</p>
   `);
 }
 
@@ -466,10 +634,7 @@ function showSV(){
     ${pb(20,'Vaihe 1 / 4 – Supervoimat')}
     <div class="phase-badge">7. LUOKKA · SUPERVOIMAT</div>
     <h1>Mikä on sinun supertyyppisi?</h1>
-    <div class="card">
-      Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>
-      Valitse alta tyyppi, joka tuntuu sinulta. Jos et muista, valitse se, joka tuntuu nyt oikeimmalta.
-    </div>
+    ${puhe('Muistatko 7. luokalla tekemäsi Supervoima-etsintä -tehtävän?<br>Valitse alta tyyppi, joka tuntuu sinulta. Jos et muista, valitse se, joka tuntuu nyt oikeimmalta.', 1)}
     <div class="type-grid">${typeCards}</div>
 
     ${S.sv_type ? `
@@ -484,7 +649,7 @@ function showSV(){
         <div style="font-size:.85rem;color:var(--muted);margin-bottom:.4rem">Tai kirjoita oma vahvuus:</div>
         <div style="display:flex;gap:.5rem">
           <input id="svCustom" type="text" placeholder="Esim. humoristinen"
-            style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.13);
+            style="flex:1;background:#ffffff;border:1px solid rgba(31,35,64,.2);
             border-radius:10px;color:var(--text);font-family:Nunito,sans-serif;font-size:.92rem;
             padding:.55rem .8rem;" onkeydown="if(event.key==='Enter')addSVCustom()">
           <button class="add-btn" onclick="addSVCustom()" style="background:var(--accent);border:none;border-radius:10px;
@@ -500,7 +665,7 @@ function showSV(){
             ).join('')}
           </div>` : ''}
       </div>
-    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">👆 Valitse ensin tyyppi ylhäältä</div>`}
+    ` : `<div class="card-info" style="text-align:center;margin-top:.5rem">Valitse ensin tyyppi ylhäältä</div>`}
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
       ${S.sv_type && S.sv_chips.size > 0 ?
@@ -512,7 +677,7 @@ function showSV(){
 
 function selectSVType(name){
   S.sv_type = name;
-  showSV();
+  rerenderKeepScroll(showSV);
 }
 function toggleSV(c){
   if(S.sv_chips.has(c)) S.sv_chips.delete(c);
@@ -552,10 +717,10 @@ function showVM(){
       <div style="display:flex;gap:.4rem;margin-top:.5rem">
         <input id="vm_${area.id}" type="text" maxlength="30" placeholder="Oma vahvuus…"
           aria-label="Oma vahvuus: ${esc(plainLabel)}"
-          style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+          style="flex:1;background:#ffffff;border:1px solid rgba(31,35,64,.2);
           border-radius:8px;color:var(--text);font-family:Nunito,sans-serif;font-size:.85rem;padding:.4rem .7rem;"
           onkeydown="if(event.key==='Enter')addVMCustom(${aid})">
-        <button class="add-btn" onclick="addVMCustom(${aid})" style="background:rgba(0,212,170,.2);border:1px solid var(--teal);
+        <button class="add-btn" onclick="addVMCustom(${aid})" style="background:rgba(0,121,106,.2);border:1px solid var(--teal);
           border-radius:8px;color:var(--teal);font-family:Nunito,sans-serif;font-weight:700;font-size:.82rem;
           padding:.4rem .7rem;cursor:pointer;white-space:nowrap;">+ Lisää</button>
       </div>
@@ -566,10 +731,7 @@ function showVM(){
     ${pb(40,'Vaihe 2 / 4 – Vahvuusmatka')}
     <div class="phase-badge">8. LUOKKA · VAHVUUSMATKA</div>
     <h1>Mitä Vahvuusmatkasta jäi mieleen?</h1>
-    <div class="card">
-      Muistatko 8. luokalla tekemäsi Vahvuusmatkan? Käyt nyt läpi samat aiheet nopeasti.<br>
-      Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.
-    </div>
+    ${puhe('Muistatko 8. luokalla tekemäsi Vahvuusmatkan? Käyt nyt läpi samat aiheet nopeasti.<br>Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.', 2)}
     ${vmLinkHtml()}
     ${areaSections}
 
@@ -645,11 +807,9 @@ function showReppu(){
   render(`
     ${pb(65,'Vaihe 3 / 4 – Reppu')}
     <div class="phase-badge">9. LUOKKA · REPPU</div>
-    <h1>Pakkaa reppusi 🎒</h1>
+    <h1>Pakkaa reppusi</h1>
     ${removedCount ? `<div class="card-info" role="status">Poistit ${removedCount===1 ? 'vahvuuden' : removedCount+' vahvuutta'} valinnoistasi, joten ${removedCount===1 ? 'se' : 'ne'} lähti myös repusta. Valitse tilalle ${removedCount===1 ? 'uusi' : 'uusia'}.</div>` : ''}
-    <div class="card-info">
-      💡 Napauta vahvuutta tai vedä se reppuun. <strong>Valitse 5</strong>, jotka tuntuvat eniten sinulta. Ei ole oikeaa vastausta. Nämä otat mukaan tulevaisuuden matkalle!
-    </div>
+    ${puhe('Napauta vahvuutta tai vedä se reppuun. <strong>Valitse 5</strong>, jotka tuntuvat eniten sinulta. Ei ole oikeaa vastausta. Nämä otat mukaan tulevaisuuden matkalle!', 1)}
 
     <div class="reppu-layout">
       <!-- POOL -->
@@ -670,7 +830,7 @@ function showReppu(){
             <rect x="173" y="60" width="12" height="90" rx="6" fill="#d4891e"/>
             <path d="M40 64 Q100 55 160 64" stroke="#d4891e" stroke-width="3" fill="none" stroke-linecap="round"/>
             ${bagPills}
-            <circle cx="160" cy="35" r="18" fill="${packed===5?'#00d4aa':'#e94560'}"/>
+            <circle cx="160" cy="35" r="18" fill="${packed===5?'#00796a':'#d62b52'}"/>
             <text x="160" y="41" text-anchor="middle" font-family="Space Grotesk,sans-serif"
               font-size="14" font-weight="700" fill="#fff">${packed}/5</text>
           </svg>
@@ -740,7 +900,7 @@ function updateBagBar(n){
   bar.className = 'bag-bar' + (full ? ' full' : '');
   bar.innerHTML = `
     <div>
-      <div class="bag-bar-count">🎒 <strong>${n}</strong> / 5 pakattu</div>
+      <div class="bag-bar-count"><strong>${n}</strong> / 5 pakattu</div>
       <div class="bag-bar-dots" aria-hidden="true">${[0,1,2,3,4].map(i => `<span class="bag-bar-dot${i < n ? ' on' : ''}"></span>`).join('')}</div>
     </div>
     ${full ? `<button class="bag-bar-btn" onclick="showDone()">Reppu täynnä! →</button>` : ''}`;
@@ -769,7 +929,6 @@ function showDone(){
   render(`
     ${pb(80,'Vaihe 3 / 4 – Reppu pakattu')}
     <div class="bag-done">
-      <span class="bigmoji">🎒</span>
       <h1 style="color:var(--teal)">Reppu on pakattu!</h1>
       <div class="card-info" style="text-align:center;font-size:1rem;padding:1rem">
         Otat nämä vahvuudet mukaan tulevaisuuden matkalle:
@@ -782,7 +941,7 @@ function showDone(){
     </div>
 
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:.5rem">
-      <button class="btn btn-primary" onclick="showCV()">✍️ Kirjoita oma CV →</button>
+      <button class="btn btn-primary" onclick="showCV()">Kirjoita oma CV →</button>
       <button class="btn btn-ghost" onclick="showReppu()">← Muokkaa reppua</button>
     </div>
   `);
@@ -797,11 +956,8 @@ function showCV(){
 
   render(`
     ${pb(100,'Vaihe 4 / 4 – Oma CV')}
-    <span class="bigmoji">📄</span>
     <h1>Oma CV</h1>
-    <div class="card-info">
-      CV eli ansioluettelo kertoo muille, kuka olet ja mitä osaat. Sinulla on jo paras mahdollinen pohja – oma reppusi!
-    </div>
+    ${puhe('CV eli ansioluettelo kertoo muille, kuka olet ja mitä osaat. Sinulla on jo paras mahdollinen pohja – oma reppusi!', 2)}
 
     <div class="card" style="margin:.4rem 0">
       <strong style="color:var(--gold)">Reppusi vahvuudet:</strong><br>
@@ -832,7 +988,7 @@ function showCV(){
             <input id="cv_puhelin" class="cv-input" type="tel" maxlength="30" autocomplete="tel"
               value="${esc(S.cv_text.puhelin||'')}" oninput="S.cv_text.puhelin=this.value"></label>
         </div>
-        <div class="example-box" style="margin-top:.6rem">🔒 Tiedot pysyvät vain tällä sivulla ja tulosteessa – niitä ei tallenneta mihinkään. Voit käyttää harjoituksessa myös keksittyjä tietoja.</div>
+        <div class="example-box" style="margin-top:.6rem">Tiedot pysyvät vain tällä sivulla ja tulosteessa – niitä ei tallenneta mihinkään. Voit käyttää harjoituksessa myös keksittyjä tietoja.</div>
       </div>
     </div>
 
@@ -849,7 +1005,7 @@ function showCV(){
         <strong style="font-style:normal">Malliteksti:</strong> "Olen yhdeksäsluokkalainen. Minua kuvaavat parhaiten sanat ${esc(packed[0]||'sinnikäs')} ja ${esc(packed[1]||'luova')}. Haluan oppia työelämästä uutta ja hoitaa tehtäväni huolellisesti. Työskentelen mielelläni muiden kanssa."
       </div>
       <div class="card-info" style="margin:.4rem 0 .5rem 2.1rem;width:auto">
-        ✏️ Tämä on vain pohja. <strong>Älä kopioi sitä sellaisenaan.</strong> Vaihda sanat omiksesi, kerro mikä sinua kiinnostaa ja poista se, mikä ei kuulosta sinulta.
+        Tämä on vain pohja. <strong>Älä kopioi sitä sellaisenaan.</strong> Vaihda sanat omiksesi, kerro mikä sinua kiinnostaa ja poista se, mikä ei kuulosta sinulta.
       </div>
       <textarea id="cv_esittely" placeholder="Kirjoita oma esittelysi tähän…"
         oninput="S.cv_text.esittely=this.value">${esc(S.cv_text.esittely||'')}</textarea>
@@ -920,7 +1076,7 @@ function showCV(){
 
     <!-- Print button -->
     <div class="btn-group" style="max-width:400px;width:100%;margin-top:1rem">
-      <button class="btn btn-primary" onclick="previewCV()">👁️ Esikatsele CV ennen tulostusta</button>
+      <button class="btn btn-primary" onclick="previewCV()">Esikatsele CV ennen tulostusta</button>
       <button class="btn btn-ghost" onclick="showDone()">← Takaisin</button>
     </div>
   `);
@@ -1001,15 +1157,15 @@ function previewCV(){
       <button class="modal-close" onclick="closeModal()" aria-label="Sulje esikatselu">✕ Sulje</button>
       <h2 style="font-family:'Space Grotesk',sans-serif;color:#c87c20;font-size:1rem;
         text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem;border:none">
-        📄 CV-esikatselu
+        CV-esikatselu
       </h2>
       ${cvMissing().length ? `<div role="status" style="background:#fff3d9;border:1.5px solid #c87c20;color:#7c5010;border-radius:10px;padding:.6rem .9rem;font-size:.88rem;margin-bottom:1rem;line-height:1.5">
-        ⚠️ Vielä puuttuu: <strong>${cvMissing().join(', ')}</strong>.<br>Tyhjät kohdat jäävät pois tulosteesta. Voit palata kirjoittamaan ne tai tulostaa CV:n tällaisenaan.
+        Vielä puuttuu: <strong>${cvMissing().join(', ')}</strong>.<br>Tyhjät kohdat jäävät pois tulosteesta. Voit palata kirjoittamaan ne tai tulostaa CV:n tällaisenaan.
       </div>` : ''}
       ${cvHTML(false)}
       <div class="modal-actions">
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">← Muokkaa vielä</button>
-        <button class="modal-btn modal-btn-print" onclick="printCV()">🖨️ Tulosta / tallenna PDF</button>
+        <button class="modal-btn modal-btn-print" onclick="printCV()">Tulosta / tallenna PDF</button>
       </div>
     </div>`;
   document.body.appendChild(modal);
@@ -1065,7 +1221,7 @@ function printCV(){
   <div style="margin-top:2rem;border-top:1px solid #ddd;padding-top:1.2rem;
     background:#fafafa;border-radius:8px;padding:1rem 1.2rem;border:1px solid #e0d8f0;">
     <p style="font-size:.82rem;color:#7c5cbf;font-weight:800;margin:0 0 .4rem;
-      text-transform:uppercase;letter-spacing:.06em;">📌 Muistutus itselleni</p>
+      text-transform:uppercase;letter-spacing:.06em;">Muistutus itselleni</p>
     <p style="font-size:.88rem;color:#444;line-height:1.7;margin:0 0 .45rem;font-style:italic;">Tämä on harjoitus-CV, ei valmis hakemus.</p>
     <p style="font-size:.88rem;color:#444;line-height:1.7;margin:0 0 .45rem;font-style:italic;">CV kasvaa sinun mukanasi. Päivitä sitä, kun opit uutta tai saat uusia kokemuksia.</p>
     <p style="font-size:.88rem;color:#444;line-height:1.7;margin:0 0 .45rem;font-style:italic;">Lisää kesätöitä, harrastuksia ja kursseja sitä mukaa.</p>
