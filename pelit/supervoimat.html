@@ -348,6 +348,10 @@ const S = {
 const addStr = s => { S.scores[s] = (S.scores[s] || 0) + 1; };
 const addTyp = t => { S.types[t] = (S.types[t] || 0) + 1; };
 
+// Tulokseen riittää pikatesti tai vähintään kaksi valmista reittiä
+function routesDone() { return Object.keys(ROUTES).filter(k => S.done.has(k)).length; }
+function isReady()    { return S.done.has('pikatesti') || routesDone() >= 2; }
+
 function recompute() {
   S.scores = {};
   S.types  = { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 };
@@ -570,7 +574,8 @@ function showIntro() {
 
 function showRouteSelect() {
   const ids = Object.keys(ROUTES);
-  const anyDone = ids.some(r => S.done.has(r)) || S.done.has('pikatesti');
+  const ready = isReady();
+  const need  = 2 - routesDone();
   const ptDone  = S.done.has('pikatesti');
 
   const cards = ids.map(id => {
@@ -589,12 +594,12 @@ function showRouteSelect() {
         ${ptDone?'✓ Pikatesti (tehty)':'⚡ Pikatesti – 5 kysymystä nopeasti'}
       </button>
     </div>
-    ${anyDone
+    ${ready
       ? `<div style="width:100%;margin-top:0.6rem">
           <p class="card-warn">💡 Mitä useamman reitin käyt, sitä tarkemman tuloksen saat!</p>
           <button class="btn btn-primary" onclick="showReflection()">✅ Olen valmis – katso tulokset →</button>
          </div>`
-      : `<p class="card-warn">💡 Käy useammalla reitillä – mitä enemmän reittejä teet, sitä tarkemman tuloksen saat!</p>`}
+      : `<p class="card-warn">💡 Tulosta varten tarvitaan ${need===2?'kaksi reittiä':'vielä yksi reitti'} tai pikatesti. Mitä enemmän vastaat, sitä tarkempi tulos on!</p>`}
   `);
 }
 
@@ -638,11 +643,11 @@ function showRouteDone() {
     <h2>${r.name} – valmis!</h2>
     <div class="card" style="text-align:center">
       Hienoa! Sait kerättyä vahvuuksia tältä reitiltä.
-      ${left>0 ? `<br><br>Haluatko jatkaa vielä ${left} reitille?` : '<br><br>Olet käynyt kaikki reitit läpi!'}
+      ${left>0 ? (isReady() ? `<br><br>Haluatko jatkaa vielä ${left} reitille?` : `<br><br>Tulosta varten tarvitaan vielä yksi reitti (tai pikatesti).`) : '<br><br>Olet käynyt kaikki reitit läpi!'}
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
-      <button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>
-      ${left>0 ? `<button class="btn btn-gold" onclick="showRouteSelect()">Jatkan vielä muille reiteille</button>` : ''}
+      ${isReady() ? `<button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>` : ''}
+      ${left>0 ? `<button class="btn ${isReady()?'btn-gold':'btn-primary'}" onclick="showRouteSelect()">${isReady()?'Jatkan vielä muille reiteille':'Seuraava reitti →'}</button>` : ''}
     </div>
   `);
 }
@@ -723,6 +728,7 @@ function showResults() {
   const lines = [
     'SUPERVOIMA-ETSINTÄ – Oppilaan tulokset',
     '==========================================',
+    '(Tulos on suuntaa-antava, ei testi.)',
     `Päivämäärä: ${date}`,
     '',
     `TYYPPI: ${type} ${td.emoji}`,
@@ -738,6 +744,7 @@ function showResults() {
   render(`
     ${pb(100,'Valmis')}
     <h1>🎉 Sinun supervoimasi</h1>
+    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu vain muutamaan vastaukseen, eikä se kerro koko totuutta sinusta. Vahvuudet voivat myös muuttua ajan myötä.</div>
 
     <div class="result-card">
       <span class="bigmoji">${td.emoji}</span>
