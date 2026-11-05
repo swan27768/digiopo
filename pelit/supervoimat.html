@@ -294,6 +294,32 @@
       margin: 0.7rem 0 1.5rem; line-height: 1.55;
     }
 
+    /* Puhekupla: joku kysyy oppilaalta */
+    .kupla {
+      position: relative;
+      width: 100%;
+      background: #e6f4f1;
+      border: 1.5px solid rgba(0,121,106,0.4);
+      border-radius: 20px 20px 20px 4px;
+      padding: 0.9rem 1.2rem;
+      margin: 0.6rem 0 1.6rem;
+      color: #00604f;
+      font-size: 1rem; font-weight: 600; line-height: 1.55;
+    }
+    .kupla::before, .kupla::after {
+      content: ""; position: absolute; left: 22px; width: 0; height: 0;
+      border-style: solid;
+    }
+    .kupla::before {
+      bottom: -15px;
+      border-width: 15px 0 0 18px;
+      border-color: rgba(0,121,106,0.4) transparent transparent transparent;
+    }
+    .kupla::after {
+      bottom: -12px; left: 24px;
+      border-width: 13px 0 0 15px;
+      border-color: #e6f4f1 transparent transparent transparent;
+    }
     .card, .btn, .route-btn, .result-card, .vk-card { box-shadow: 0 1px 3px rgba(20,20,60,0.07); }
     .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -608,8 +634,8 @@ function showIntro() {
       Supervoima on jotain, mikä on sinulle <strong>helppoa ja luontevaa</strong>. Se voi olla taito tai tapa toimia.<br><br>
       Sinun ei tarvitse olla siinä paras. Riittää, että se tuntuu sinusta omalta.
     </div>
-    <div class="card-info">
-      🤔 Mieti hetki: onko joku sanonut sinulle "olet hyvä tässä"? Onko jokin asia sinulle helpompaa kuin muille?
+    <div class="kupla">
+      Mieti hetki: onko joku sanonut sinulle "olet hyvä tässä"? Onko jokin asia sinulle helpompaa kuin muille?
     </div>
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
       <button class="btn btn-primary" onclick="showRouteSelect()">Selvä, lähdetään! →</button>
