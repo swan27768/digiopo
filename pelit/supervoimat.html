@@ -723,14 +723,12 @@ const QT = [
 function showStart() {
   render(`
     <div class="cover">
-      <span class="bigmoji">🔍</span>
       <div class="cover-logo">Supervoima-<br>etsintä</div>
       <p class="cover-sub">Sinussa on vahvuuksia, joita et ehkä itse huomaa.<br>Etsitään ne yhdessä!</p>
     </div>
     <div class="btn-group" style="max-width:360px;width:100%">
       <button class="btn btn-primary" onclick="showIntro()">Aloita matka →</button>
     </div>
-    <p style="color:var(--muted);font-size:0.85rem;text-align:center;margin-top:0.8rem">Kesto: noin 5–10 minuuttia</p>
   `);
 }
 
@@ -788,14 +786,14 @@ function showRouteSelect() {
       ? `<div class="pika pika--lukittu">
            <div class="pika-teksti">
              <span class="pika-merkki">Lopuksi</span>
-             <p class="pika-otsikko">🔒 Vielä viisi kysymystä</p>
+             <p class="pika-otsikko">Vielä viisi kysymystä</p>
              <p class="pika-ala">Tämä aukeaa, kun olet tehnyt kaksi reittiä.</p>
            </div>
          </div>`
       : `<div class="pika">
            <div class="pika-teksti">
              <span class="pika-merkki">Lopuksi</span>
-             <p class="pika-otsikko">⚡ Vielä viisi kysymystä</p>
+             <p class="pika-otsikko">Vielä viisi kysymystä</p>
              <p class="pika-ala">Lopuksi vastaa vielä näihin kysymyksiin.</p>
            </div>
            <button class="btn-pika" onclick="startQuickTest()">Aloita kysymykset →</button>
@@ -815,7 +813,7 @@ function showRouteSelect() {
     </div>
     ${ready
       ? `<div style="width:100%;max-width:360px;margin:1.2rem auto 0">
-          <button class="btn btn-primary" onclick="showReflection()">✅ Olen valmis – katso tulokset →</button>
+          <button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>
          </div>`
       : ''}
   `);
@@ -887,7 +885,7 @@ function showQTQ() {
     `<button class="btn" onclick="answerQT(${i})">${o.text}</button>`).join('');
   render(`
     ${pb(pct)}
-    <h2>⚡ Lopuksi: viisi kysymystä</h2>
+    <h2>Lopuksi: viisi kysymystä</h2>
     <div class="card-info">Kysymys ${S.qtStep+1}/${QT.length} – Valitse ensimmäinen vaihtoehto, joka tulee mieleen!</div>
     <div class="card"><strong>${q.text}</strong></div>
     <div class="btn-group">${opts}</div>
@@ -902,7 +900,6 @@ function answerQT(i) {
     S.done.add('pikatesti'); recompute();
     render(`
       ${pb(85)}
-      <span class="bigmoji">🎯</span>
       <h2>Kysymykset valmiina!</h2>
       <div class="card" style="text-align:center">Hienoa! Vastasit viiteen kysymykseen. Nyt voit katsoa tuloksen.</div>
       <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
@@ -916,7 +913,7 @@ function answerQT(i) {
 function showReflection() {
   render(`
     ${pb(85)}
-    <h2>✍️ Oma pohdinta</h2>
+    <h2>Oma pohdinta</h2>
     <div class="card-info">Tätä ei arvostella. Kirjoita rehellisesti tai jätä tyhjäksi. Molemmat käyvät!</div>
     <div class="card">
       <h3 style="text-align:left;margin-top:0">Missä olet mielestäsi hyvä?</h3>
@@ -951,8 +948,8 @@ function showResults() {
 
   render(`
     ${pb(100,'Valmis')}
-    <h1>🎉 Sinun supervoimasi</h1>
-    <div class="card-warn">ℹ️ Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea.</div>
+    <h1>Sinun supervoimasi</h1>
+    <div class="card-warn">Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea.</div>
 
     <div class="result-card">
       <span class="bigmoji">${td.emoji}</span>
@@ -962,23 +959,23 @@ function showResults() {
       <p style="color:var(--muted);font-size:0.85rem;margin:0.7rem 0 0">Tämä on tämänhetkinen suuntasi, ja se voi muuttua.</p>
     </div>
 
-    ${top5.length > 0 ? `<div class="card"><h3>⭐ Löytämäsi supervoimat</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet ovat peräisin VIA-luonteenvahvuuksista. Se on tutkijoiden tekemä lista ihmisen vahvuuksista.</p></div>` : ''}
+    ${top5.length > 0 ? `<div class="card"><h3>Löytämäsi supervoimat</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet ovat peräisin VIA-luonteenvahvuuksista. Se on tutkijoiden tekemä lista ihmisen vahvuuksista.</p></div>` : ''}
 
     <div class="card" style="margin-top:1rem">
-      <h3>💬 Parikeskustelu</h3>
+      <h3>Parikeskustelu</h3>
       <p style="margin:0.3rem 0;text-align:center">Kerro kaverille, mitkä supervoimat sait. Kysy häneltä:</p>
       <p style="margin:0.5rem 0;text-align:center"><strong>Minkä vahvuuden sinä näet minussa?</strong></p>
       <p style="margin:0.3rem 0 0;text-align:center;color:var(--muted);font-size:0.9rem">Yllättikö kaverin vastaus sinut?</p>
     </div>
 
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
-      <button class="btn btn-primary" id="pdfBtn" onclick="lataaPdf()">📄 Lataa PDF</button>
+      <button class="btn btn-primary" id="pdfBtn" onclick="lataaPdf()">Lataa PDF</button>
     </div>
-    <div class="card-warn" role="note">📌 Muista palauttaa PDF Classroomiin opolle.</div>
+    <div class="card-warn" role="note">Muista palauttaa PDF Classroomiin opolle.</div>
     <p id="pdfMsg" class="sr-only" aria-live="polite"></p>
 
     <div class="btn-group" style="max-width:360px;width:100%;margin-top:1rem">
-      <button class="btn btn-ghost" onclick="resetAll()">🔄 Aloita alusta</button>
+      <button class="btn btn-ghost" onclick="resetAll()">Aloita alusta</button>
     </div>
   `);
 
@@ -1049,11 +1046,11 @@ async function lataaPdf() {
     d.text('Tulos on suuntaa-antava. Tämä on tämänhetkinen suuntani, ja se voi muuttua.', X, 285);
 
     d.save('supervoimani.pdf');
-    btn.textContent = '✅ PDF ladattu'; hideEmojis(btn);
+    btn.textContent = 'PDF ladattu ✓'; hideEmojis(btn);
     msg.textContent = 'PDF ladattu. Muista palauttaa se Classroomiin opolle.';
   } catch (e) {
     msg.textContent = 'PDF:n lataus ei onnistunut.';
-    btn.textContent = '📄 Yritä PDF:ää uudelleen'; hideEmojis(btn);
+    btn.textContent = 'Yritä PDF:ää uudelleen'; hideEmojis(btn);
   } finally { btn.disabled = false; }
 }
 
