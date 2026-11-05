@@ -347,6 +347,87 @@
       .robo { width: 150px; margin: 0; align-self: flex-end; }
     }
 
+    /* Reitinvalinta */
+    .valinta {
+      width: 100%; display: grid; gap: 0.9rem; grid-template-columns: 1fr;
+      grid-template-areas: "intro" "puhe" "reitit" "pika";
+    }
+    .v-intro { grid-area: intro; margin: 0; }
+    .v-puhe  { grid-area: puhe; }
+    .v-reitit { grid-area: reitit; margin: 0; }
+    .v-pika  { grid-area: pika; }
+    .route-grid.v-reitit { gap: 0.8rem; }
+    .route-btn {
+      border-top: 4px solid var(--rc, var(--border));
+      padding: 1rem 0.7rem 0.9rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .route-btn:hover, .route-btn:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(20,20,60,0.12);
+      border-color: var(--rc, var(--gold));
+      background: #fff;
+    }
+    .route-btn .remoji {
+      width: 54px; height: 54px; margin: 0 auto 0.45rem;
+      display: grid; place-items: center; border-radius: 50%;
+      font-size: 1.75rem;
+      background: color-mix(in srgb, var(--rc, #d62b52) 12%, #fff);
+    }
+    .route-btn:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+    .pika {
+      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+      text-align: center; padding: 1.2rem 1.4rem; border-radius: 18px; color: #fff;
+      background: linear-gradient(135deg, #d62b52, #c2410c);
+      box-shadow: 0 8px 22px rgba(214,43,82,0.32);
+    }
+    .pika-merkki {
+      display: inline-block; background: #fff; color: #c2410c; font-weight: 800;
+      font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 0.15rem 0.7rem; border-radius: 99px;
+    }
+    .pika-otsikko { margin: 0.35rem 0 0.1rem; font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
+    .pika-ala { margin: 0; font-size: 0.98rem; opacity: 0.95; }
+    .btn-pika {
+      background: #fff; color: #c42249; border: 0; border-radius: 14px; cursor: pointer;
+      padding: 0.8rem 1.5rem; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem;
+      white-space: nowrap; animation: pika-hehku 2.4s ease-in-out infinite;
+      transition: transform 0.15s;
+    }
+    .btn-pika:hover, .btn-pika:focus-visible { transform: translateY(-2px); outline: 3px solid rgba(255,255,255,0.6); outline-offset: 2px; }
+    @keyframes pika-hehku {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.55); }
+      50%      { box-shadow: 0 0 0 9px rgba(255,255,255,0); }
+    }
+    @media (prefers-reduced-motion: reduce) { .btn-pika { animation: none; } .route-btn { transition: none; } }
+    .laskuri {
+      display: inline-block; margin-left: 0.3rem; padding: 0.05rem 0.7rem; border-radius: 99px;
+      background: rgba(214,43,82,0.1); color: var(--accent); font-weight: 800; font-size: 0.9rem; white-space: nowrap;
+    }
+    .laskuri.ok { background: var(--teal); color: #fff; }
+    .pika--lukittu {
+      background: #eef0f6; color: var(--muted); box-shadow: none;
+      border: 2px dashed rgba(31,35,64,0.22);
+    }
+    .pika--lukittu .pika-merkki { background: #fff; color: var(--muted); }
+    .pika--lukittu .pika-otsikko { font-size: 1.25rem; }
+    .pika--tehty {
+      background: #fff; color: var(--text); border: 2px solid var(--teal); box-shadow: none;
+      flex-direction: row; justify-content: space-between; padding: 0.8rem 1.2rem;
+    }
+    .pika--tehty .pika-otsikko { margin: 0; font-size: 1.1rem; color: var(--teal); }
+    .btn-pika--hiljainen { background: transparent; color: var(--muted); border: 1.5px solid var(--border); animation: none; padding: 0.5rem 1rem; font-size: 0.92rem; }
+    @media (min-width: 720px) {
+      .screen:has(.valinta) { max-width: 980px; }
+      .valinta {
+        grid-template-columns: 1.45fr 1fr; column-gap: 1.6rem; align-items: start;
+        grid-template-areas: "intro intro" "reitit puhe" "pika pika";
+      }
+      .v-puhe .robo { width: 130px; }
+      .pika { flex-direction: row; justify-content: space-between; text-align: left; padding: 1.3rem 1.8rem; }
+    }
+
     .card, .btn, .route-btn, .result-card, .vk-card { box-shadow: 0 1px 3px rgba(20,20,60,0.07); }
     .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -409,9 +490,9 @@ const S = {
 const addStr = s => { S.scores[s] = (S.scores[s] || 0) + 1; };
 const addTyp = t => { S.types[t] = (S.types[t] || 0) + 1; };
 
-// Tulokseen riittää pikatesti tai vähintään kaksi valmista reittiä
 function routesDone() { return Object.keys(ROUTES).filter(k => S.done.has(k)).length; }
-function isReady()    { return S.done.has('pikatesti') || routesDone() >= 2; }
+// Tulokseen tarvitaan vähintään kaksi reittiä ja lopuksi viisi kysymystä
+function isReady()    { return routesDone() >= 2 && S.done.has('pikatesti'); }
 
 function recompute() {
   S.scores = {};
@@ -675,6 +756,8 @@ function showIntro() {
   `);
 }
 
+const ROUTE_COLORS = { harrastus:'#d62b52', lempiaine:'#6b46c1', kaverit:'#00796a', vaikeus:'#c2410c', seikkailija:'#0a6fc2' };
+
 function showRouteSelect() {
   const ids = Object.keys(ROUTES);
   const ready = isReady();
@@ -684,25 +767,57 @@ function showRouteSelect() {
   const cards = ids.map(id => {
     const r = ROUTES[id];
     const done = S.done.has(id);
-    return `<button class="route-btn${done?' done':''}" onclick="startRoute('${id}')">${done?'<span class="done-mark" aria-hidden="true">✓</span><span class="sr-only">(tehty)</span>':''}<span class="remoji">${r.emoji}</span>${r.name}</button>`;
+    return `<button class="route-btn${done?' done':''}" style="--rc:${ROUTE_COLORS[id]||'#d62b52'}" onclick="startRoute('${id}')">${done?'<span class="done-mark" aria-hidden="true">✓</span><span class="sr-only">(tehty)</span>':''}<span class="remoji">${r.emoji}</span>${r.name}</button>`;
   }).join('');
+
+  const rd = routesDone();
+  const kuplaTeksti = ready
+    ? 'Kaikki valmista! Voit katsoa tuloksen. Mitä enemmän vastaat, sitä paremmin tulos kuvaa sinua!'
+    : rd < 2
+      ? (need===2
+          ? 'Aloita valitsemalla kaksi reittiä. Lopuksi vastaat vielä viiteen kysymykseen. Mitä enemmän vastaat, sitä paremmin tulos kuvaa sinua!'
+          : 'Hyvä alku! Tee vielä yksi reitti. Lopuksi vastaat viiteen kysymykseen.')
+      : 'Hienoa! Nyt voit vastata lopuksi viiteen kysymykseen. Voit tehdä myös lisää reittejä.';
+
+  const pika = ptDone
+    ? `<div class="pika pika--tehty">
+         <div class="pika-teksti"><p class="pika-otsikko">✓ Kysymykset tehty</p></div>
+         <button class="btn-pika btn-pika--hiljainen" onclick="startQuickTest()">Tee uudelleen</button>
+       </div>`
+    : rd < 2
+      ? `<div class="pika pika--lukittu">
+           <div class="pika-teksti">
+             <span class="pika-merkki">Lopuksi</span>
+             <p class="pika-otsikko">🔒 Vielä viisi kysymystä</p>
+             <p class="pika-ala">Tämä aukeaa, kun olet tehnyt kaksi reittiä.</p>
+           </div>
+         </div>`
+      : `<div class="pika">
+           <div class="pika-teksti">
+             <span class="pika-merkki">Lopuksi</span>
+             <p class="pika-otsikko">⚡ Vielä viisi kysymystä</p>
+             <p class="pika-ala">Lopuksi vastaa vielä näihin kysymyksiin.</p>
+           </div>
+           <button class="btn-pika" onclick="startQuickTest()">Aloita kysymykset →</button>
+         </div>`;
 
   render(`
     ${pb(12)}
     <h1>Mistä lähdetään?</h1>
-    <div class="card">Vahvuuksia löytyy joka paikasta. Valitse reitti, joka tuntuu sinusta hyvältä. Voit tehdä myös useamman.</div>
-    <div class="route-grid">${cards}</div>
-    <div style="width:100%;margin:0.3rem 0">
-      <button class="btn ${ptDone?'btn-ghost':'btn-gold'}" onclick="startQuickTest()">
-        ${ptDone?'✓ Pikatesti (tehty)':'⚡ Pikatesti – 5 kysymystä nopeasti'}
-      </button>
+    <div class="valinta">
+      <div class="card v-intro">Vahvuuksia löytyy joka paikasta. <strong>Valitse vähintään 2 asiaa (= reittiä)</strong>, jotka tuntuvat sinusta hyviltä. <span class="laskuri${rd>=2?' ok':''}">Tehty ${Math.min(rd,2)}/2</span></div>
+      <div class="puhe v-puhe">
+        <div class="kupla" role="note">${kuplaTeksti}</div>
+        <img class="robo" src="/images/supervoimat-robo2.webp" width="360" height="639" alt="" aria-hidden="true">
+      </div>
+      <div class="route-grid v-reitit">${cards}</div>
+      <div class="v-pika">${pika}</div>
     </div>
     ${ready
-      ? `<div style="width:100%;margin-top:0.6rem">
-          <p class="card-warn">💡 Mitä useamman reitin teet, sitä paremmin tulos kuvaa sinua!</p>
+      ? `<div style="width:100%;max-width:360px;margin:1.2rem auto 0">
           <button class="btn btn-primary" onclick="showReflection()">✅ Olen valmis – katso tulokset →</button>
          </div>`
-      : `<p class="card-warn">💡 Tulosta varten tee ${need===2?'kaksi reittiä':'vielä yksi reitti'} tai pikatesti. Mitä enemmän vastaat, sitä paremmin tulos kuvaa sinua!</p>`}
+      : ''}
   `);
 }
 
@@ -740,18 +855,26 @@ function answerRoute(i) {
 function showRouteDone() {
   const r = ROUTES[S.currentRoute];
   const left = Object.keys(ROUTES).filter(k => !S.done.has(k)).length;
+  const rd = routesDone(), ptDone = S.done.has('pikatesti');
+  let teksti, napit;
+  if (rd < 2) {
+    teksti = 'Hienoa! Löysit tältä reitiltä vahvuuksia.<br><br>Tee vielä yksi reitti. Lopuksi vastaat viiteen kysymykseen.';
+    napit = `<button class="btn btn-primary" onclick="showRouteSelect()">Seuraava reitti →</button>`;
+  } else if (!ptDone) {
+    teksti = 'Hienoa! Olet tehnyt tarpeeksi reittejä.<br><br>Lopuksi vastaat vielä viiteen kysymykseen.';
+    napit = `<button class="btn btn-primary" onclick="startQuickTest()">Vastaa viiteen kysymykseen →</button>` +
+            (left>0 ? `<button class="btn btn-gold" onclick="showRouteSelect()">Teen vielä lisää reittejä</button>` : '');
+  } else {
+    teksti = 'Hienoa! Löysit tältä reitiltä lisää vahvuuksia.' + (left>0 ? `<br><br>Jäljellä on vielä ${left} reittiä. Haluatko tehdä niitä?` : '<br><br>Olet tehnyt kaikki reitit!');
+    napit = `<button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>` +
+            (left>0 ? `<button class="btn btn-gold" onclick="showRouteSelect()">Teen vielä lisää reittejä</button>` : '');
+  }
   render(`
     ${pb(40)}
     <span class="bigmoji">${r.emoji}</span>
     <h2>${r.name} – valmis!</h2>
-    <div class="card" style="text-align:center">
-      Hienoa! Löysit tältä reitiltä vahvuuksia.
-      ${left>0 ? (isReady() ? `<br><br>Jäljellä on vielä ${left} reittiä. Haluatko tehdä niitä?` : `<br><br>Tulosta varten tee vielä yksi reitti tai pikatesti.`) : '<br><br>Olet tehnyt kaikki reitit!'}
-    </div>
-    <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
-      ${isReady() ? `<button class="btn btn-primary" onclick="showReflection()">Olen valmis – katso tulokset →</button>` : ''}
-      ${left>0 ? `<button class="btn ${isReady()?'btn-gold':'btn-primary'}" onclick="showRouteSelect()">${isReady()?'Teen vielä lisää reittejä':'Seuraava reitti →'}</button>` : ''}
-    </div>
+    <div class="card" style="text-align:center">${teksti}</div>
+    <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">${napit}</div>
   `);
 }
 
@@ -764,7 +887,7 @@ function showQTQ() {
     `<button class="btn" onclick="answerQT(${i})">${o.text}</button>`).join('');
   render(`
     ${pb(pct)}
-    <h2>⚡ Pikatesti</h2>
+    <h2>⚡ Lopuksi: viisi kysymystä</h2>
     <div class="card-info">Kysymys ${S.qtStep+1}/${QT.length} – Valitse ensimmäinen vaihtoehto, joka tulee mieleen!</div>
     <div class="card"><strong>${q.text}</strong></div>
     <div class="btn-group">${opts}</div>
@@ -780,11 +903,11 @@ function answerQT(i) {
     render(`
       ${pb(85)}
       <span class="bigmoji">🎯</span>
-      <h2>Pikatesti valmis!</h2>
-      <div class="card" style="text-align:center">Hienoa! Vastasit viiteen kysymykseen. Nyt sinulla on jo vahvuuksia.</div>
+      <h2>Kysymykset valmiina!</h2>
+      <div class="card" style="text-align:center">Hienoa! Vastasit viiteen kysymykseen. Nyt voit katsoa tuloksen.</div>
       <div class="btn-group" style="max-width:360px;width:100%;margin-top:0.5rem">
         <button class="btn btn-primary"  onclick="showReflection()">Jatka tuloksiin →</button>
-        <button class="btn btn-gold"     onclick="showRouteSelect()">Tee myös reittejä</button>
+        <button class="btn btn-gold"     onclick="showRouteSelect()">Teen vielä lisää reittejä</button>
       </div>
     `);
   }
@@ -824,7 +947,7 @@ function showResults() {
 
   const strHtml = top5.length > 0
     ? `<ul class="str-list">${top5.map(s=>`<li><span class="str-tag">${s}</span></li>`).join('')}</ul>`
-    : `<p style="color:var(--muted);font-size:0.9rem">Tee vähintään yksi reitti tai pikatesti, niin näet vahvuutesi.</p>`;
+    : `<p style="color:var(--muted);font-size:0.9rem">Tee reitit ja vastaa kysymyksiin, niin näet vahvuutesi.</p>`;
 
   render(`
     ${pb(100,'Valmis')}
