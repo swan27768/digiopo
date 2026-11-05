@@ -234,6 +234,15 @@
     .modal-btn, .modal-close { min-height:44px; }
     /* ✓ valitun vahvuuden eteen (ei vain väri) */
     .chip.on:not(.custom):not(.static)::before { content:"✓ "; content:"✓ " / ""; margin-right:.15rem; }
+    /* Linkki 8. luokan Vahvuusmatkaan */
+    .task-link-box { width:100%; margin:.4rem 0; padding:.7rem 1rem; border-radius:12px;
+      background:rgba(124,92,191,.1); border:1px solid rgba(124,92,191,.35);
+      font-size:.92rem; line-height:1.6; color:var(--text); }
+    .task-link { display:inline-flex; align-items:center; min-height:44px; margin-top:.2rem;
+      color:var(--teal); font-weight:800; text-decoration:underline; text-underline-offset:3px; }
+    .task-link:hover { color:#fff; }
+    .task-link:focus-visible { outline:2px solid var(--teal); outline-offset:3px; border-radius:6px; }
+
     /* Sanojen selitykset */
     .hints { width:100%; margin-top:.4rem; font-size:.88rem; color:var(--muted); text-align:left; }
     .hints summary { cursor:pointer; color:var(--teal); font-weight:700; min-height:44px;
@@ -319,6 +328,19 @@ const VM_AREAS = [
   { id:'tulevaisuus',    label:'🔭 Tulevaisuuden taidot', chips:['päämäärätietoinen','suunnitelmallinen','tavoitteellinen','unelmoiva','rohkea','itseohjautuva'] },
   { id:'kaveritaidot',   label:'🫂 Ihmiset ja tunteet', chips:['sosiaalinen','empaattinen','ystävällinen','hyvä kuuntelija','yhteistyökykyinen','rehellinen'] }
 ];
+
+// ── LINKKI 8. LUOKAN VAHVUUSMATKAAN ──────────────────────────────────────────
+// Avautuu uuteen välilehteen, jotta repun tiedot (vain muistissa) eivät katoa.
+const VM_TASK_URL = '/pelit/vahvuusmatka-uusi/index.dc.html';
+function vmLinkHtml(){
+  return `<div class="task-link-box">
+    <strong>Etkö tehnyt Vahvuusmatkaa 8. luokalla?</strong> Se ei haittaa.
+    Voit tehdä sen nyt tai valita vahvuudet suoraan tästä tehtävästä.<br>
+    <a class="task-link" href="${VM_TASK_URL}" target="_blank" rel="noopener"
+      aria-label="Tee 8. luokan Vahvuusmatka (avautuu uuteen välilehteen)">Tee 8. luokan Vahvuusmatka ↗</a>
+    <span style="color:var(--muted);font-size:.85rem"> (avautuu uuteen välilehteen, tämä tehtävä jää odottamaan)</span>
+  </div>`;
+}
 
 // ── SANOJEN SELITYKSET ───────────────────────────────────────────────────────
 const HINTS = {
@@ -412,6 +434,7 @@ function showStart(){
     <div class="card-info">
       💡 Muistatko supervoimasi 7. luokalta ja vahvuusmatkasi 8. luokalta? Käy ne nyt nopeasti läpi. Sitten valitset 5 tärkeintä vahvuuttasi reppuusi.
     </div>
+    ${vmLinkHtml()}
     <div class="btn-group" style="max-width:360px;width:100%">
       <button class="btn btn-primary" onclick="showSV()">Aloita</button>
     </div>
@@ -547,6 +570,7 @@ function showVM(){
       Muistatko 8. luokalla tekemäsi Vahvuusmatkan? Käyt nyt läpi samat aiheet nopeasti.<br>
       Valitse vahvuudet, jotka ovat sinulle tuttuja – tai kirjoita omiasi.
     </div>
+    ${vmLinkHtml()}
     ${areaSections}
 
     <div style="margin-top:.8rem;width:100%;text-align:center">

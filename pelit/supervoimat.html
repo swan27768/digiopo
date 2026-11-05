@@ -332,6 +332,10 @@ const S = {
   scores: {},
   types: { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 },
   done: new Set(),
+  routeAns: {},   // reitti -> valitut vaihtoehdot (pisteet lasketaan vasta valmiista reiteistä)
+  qtAns: null,    // pikatestin vastaukset
+  pending: [],    // keskeneräisen reitin/pikatestin vastaukset
+  result: null,   // tyyppi lasketaan vain kerran
   reflection: '',
   development: '',
   reflSaved: false,
@@ -344,14 +348,25 @@ const S = {
 const addStr = s => { S.scores[s] = (S.scores[s] || 0) + 1; };
 const addTyp = t => { S.types[t] = (S.types[t] || 0) + 1; };
 
+function recompute() {
+  S.scores = {};
+  S.types  = { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 };
+  for (const [id, ans] of Object.entries(S.routeAns)) {
+    ans.forEach((oi, qi) => { const o = ROUTES[id].questions[qi].opts[oi]; o.s.forEach(addStr); addTyp(o.t); });
+  }
+  if (S.qtAns) S.qtAns.forEach((oi, qi) => { const o = QT[qi].opts[oi]; addStr(o.s); addTyp(o.t); });
+  S.result = null;
+}
 function bestType() {
+  if (S.result) return S.result;
   let max = 0, tied = [];
   for (const [k,v] of Object.entries(S.types)) {
     if (v > max)       { max = v; tied = [k]; }
     else if (v === max && v > 0) { tied.push(k); }
   }
   if (tied.length === 0) return 'Tekijä'; // fallback jos ei yhtään vastausta
-  return tied[Math.floor(Math.random() * tied.length)];
+  S.result = tied[Math.floor(Math.random() * tied.length)]; // arvonta vain kerran
+  return S.result;
 }
 function topStrengths(n) {
   return Object.entries(S.scores).sort((a,b) => b[1]-a[1]).slice(0,n).map(e=>e[0]);
@@ -395,11 +410,11 @@ const ROUTES = {
         { text:'Autan muita tai teen yhteistyötä',          s:['Avulias','Yhteistyökykyinen'], t:'Auttaja' },
         { text:'Keksin itse ratkaisuja ja uusia tapoja',    s:['Luova','Idearikas'],           t:'Luova' },
         { text:'Harjoittelen paljon ja kehityn jatkuvasti', s:['Sinnikäs','Ahkera'],           t:'Tekijä' },
-        { text:'Suunnittelen ja mietin strategiaa',         s:['Järjestelmällinen','Analyyttinen'], t:'Ajattelija' }
+        { text:'Otan vastuuta ja vien joukkuetta eteenpäin', s:['Aloitteellinen','Vastuullinen'], t:'Johtaja' }
       ]},
       { text:'Kun harrastuksessa tulee epäonnistuminen, sinä…', opts:[
         { text:'Yritän uudelleen eri tavalla',          s:['Sitkeä','Rohkea'],           t:'Tekijä' },
-        { text:'Kysyn neuvoa tai haen apua',            s:['Avoin','Yhteisöllinen'],     t:'Auttaja' },
+        { text:'Keksin uuden tavan tehdä sama asia',    s:['Luova','Idearikas'],         t:'Luova' },
         { text:'Mietin tarkasti, miksi meni pieleen',   s:['Reflektoiva','Analyyttinen'],t:'Ajattelija' },
         { text:'Kokeilen jotain täysin erilaista',      s:['Ennakkoluuloton','Joustava'],t:'Seikkailija' }
       ]}
@@ -433,13 +448,13 @@ const ROUTES = {
         { text:'Kuuntelen enemmän kuin puhun',                        s:['Kuunteleva','Empaattinen'],    t:'Auttaja' },
         { text:'Heitän ideoita ja ehdotuksia',                        s:['Idearikas','Innostuva'],       t:'Luova' },
         { text:'Vien asioita eteenpäin ja teen päätöksiä',            s:['Aloitteellinen','Johtava'],    t:'Johtaja' },
-        { text:'Olen se, joka saa muut rentoutumaan tai nauramaan',   s:['Sosiaalinen','Rohkea'],        t:'Seikkailija' }
+        { text:'Uskallan ehdottaa jotain uutta ja kokeilen ensimmäisenä', s:['Rohkea','Ennakkoluuloton'], t:'Seikkailija' }
       ]},
       { text:'Kaverisi on surullinen tai hermostunut. Mitä sinä teet?', opts:[
         { text:'Kuuntelen ja yritän aidosti ymmärtää',      s:['Empaattinen','Läsnäoleva'],  t:'Auttaja' },
         { text:'Yritän piristää ja keksiä ratkaisun',       s:['Optimistinen','Toimelias'],  t:'Tekijä' },
         { text:'En tiedä mitä sanoa, mutta olen paikalla',  s:['Luotettava','Sitkeä'],       t:'Auttaja' },
-        { text:'Ehdotan yhteistä tekemistä',                s:['Idearikas','Energinen'],     t:'Luova' }
+        { text:'Ehdotan yhteistä tekemistä ja järjestän sen', s:['Aloitteellinen','Energinen'], t:'Johtaja' }
       ]}
     ]
   },
@@ -451,7 +466,7 @@ const ROUTES = {
       { text:'Kun jokin tuntuu todella vaikealta, sinä yleensä…', opts:[
         { text:'Jatkan silti, vaikka on raskasta',               s:['Sinnikäs','Sitkeä'],           t:'Tekijä' },
         { text:'Pysähdyn miettimään, mikä voisi auttaa',         s:['Ratkaisuhakuinen','Analyyttinen'],t:'Ajattelija' },
-        { text:'Puhun jollekin ja haen tukea',                   s:['Yhteisöllinen','Rohkea'],      t:'Auttaja' },
+        { text:'Teen suunnitelman ja pyydän muut mukaan',         s:['Aloitteellinen','Yhteisöllinen'],t:'Johtaja' },
         { text:'Muutan suuntaa tai kokeilen jotain muuta',       s:['Joustava','Ennakkoluuloton'],  t:'Seikkailija' }
       ]},
       { text:'Muistatko tilanteen, jossa selvisit vaikeudesta? Mitä teit?', opts:[
@@ -471,7 +486,7 @@ const ROUTES = {
         { text:'Olen innoissani – uutta koettavaa!',                      s:['Ennakkoluuloton','Innostuva'],   t:'Seikkailija' },
         { text:'Mietin ensin tarkasti, mitä se tarkoittaa',               s:['Harkitseva','Analyyttinen'],     t:'Ajattelija' },
         { text:'Haluan olla mukana päättämässä, miten toimitaan',         s:['Aloitteellinen','Vastuullinen'],  t:'Johtaja' },
-        { text:'Sopeudun tilanteen mukaan – kyllä se selviää',            s:['Joustava','Rauhallinen'],        t:'Seikkailija' }
+        { text:'Mietin, miten tästä saisi jotain uutta ja kivaa',         s:['Luova','Optimistinen'],          t:'Luova' }
       ]},
       { text:'Mitä haluaisit eniten tehdä tai saada aikaan?', opts:[
         { text:'Kokeilla jotain aivan uutta ja erilaista',              s:['Rohkea','Utelias'],          t:'Seikkailija' },
@@ -496,7 +511,7 @@ const QT = [
     { text:'Yritän sovitella heidät yhteen',     s:'Empaattinen', t:'Auttaja' },
     { text:'Mietin, miksi riita alkoi',           s:'Analyyttinen',t:'Ajattelija' },
     { text:'Ehdotan jotain muuta tekemistä',      s:'Idearikas',   t:'Luova' },
-    { text:'Pysyn erillään – se ei kuulu minulle',s:'Itsenäinen',  t:'Seikkailija' }
+    { text:'Astun väliin ja otan tilanteen haltuun',s:'Aloitteellinen',t:'Johtaja' }
   ]},
   { text:'Saat vapaata aikaa. Mitä teet?', opts:[
     { text:'Harrastan tai teen jotain aktiivista', s:'Energinen', t:'Tekijä' },
@@ -584,7 +599,7 @@ function showRouteSelect() {
 }
 
 function startRoute(id) {
-  S.currentRoute = id; S.routeStep = 0;
+  S.currentRoute = id; S.routeStep = 0; S.pending = [];
   showRouteQ();
 }
 
@@ -606,10 +621,12 @@ function showRouteQ() {
 
 function answerRoute(i) {
   const r = ROUTES[S.currentRoute];
-  const o = r.questions[S.routeStep].opts[i];
-  o.s.forEach(addStr); addTyp(o.t);
+  S.pending.push(i);
   if (S.routeStep < r.questions.length-1) { S.routeStep++; showRouteQ(); }
-  else { S.done.add(S.currentRoute); showRouteDone(); }
+  else {
+    S.routeAns[S.currentRoute] = S.pending.slice(); S.pending = [];
+    S.done.add(S.currentRoute); recompute(); showRouteDone();
+  }
 }
 
 function showRouteDone() {
@@ -630,7 +647,7 @@ function showRouteDone() {
   `);
 }
 
-function startQuickTest() { S.qtStep = 0; showQTQ(); }
+function startQuickTest() { S.qtStep = 0; S.pending = []; showQTQ(); }
 
 function showQTQ() {
   const q = QT[S.qtStep];
@@ -647,11 +664,11 @@ function showQTQ() {
 }
 
 function answerQT(i) {
-  const o = QT[S.qtStep].opts[i];
-  addStr(o.s); addTyp(o.t); S.qtStep++;
+  S.pending.push(i); S.qtStep++;
   if (S.qtStep < QT.length) { showQTQ(); }
   else {
-    S.done.add('pikatesti');
+    S.qtAns = S.pending.slice(); S.pending = [];
+    S.done.add('pikatesti'); recompute();
     render(`
       ${pb(85)}
       <span class="bigmoji">🎯</span>
@@ -828,6 +845,7 @@ function resetAll() {
   S.scores = {};
   S.types  = { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 };
   S.done   = new Set();
+  S.routeAns = {}; S.qtAns = null; S.pending = []; S.result = null;
   S.reflection = ''; S.development = '';
   S.reflSaved  = false;
   showStart();
