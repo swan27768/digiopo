@@ -1097,6 +1097,31 @@
 
           </div><!-- /AmmattiSet -->
 
+          <!-- Asteroidivaellus -->
+          <div style="margin: 0 0 20px;">
+            <div class="hero-kortti hero-kortti--kompakti">
+              <div class="hero-kortti__tausta" aria-hidden="true"></div>
+              <div class="hero-kortti__sisalto">
+                <div class="hero-badge" data-tapa="yksin" data-tyyppi="peli">
+                  <i class="fa-solid fa-user-astronaut" aria-hidden="true"></i>
+                  Tarinapeli
+                </div>
+                <h3 class="hero-kortti__otsikko">Asteroidivaellus – mikä on sinulle tärkeää?</h3>
+                <p class="hero-kortti__teksti">
+                  Vieraile viidellä asteroidilla ja tee valintoja. Lopuksi mietit, mikä tekee tekemisestä sinulle merkityksellistä.
+                </p>
+                <button type="button" class="btn-hero hero-kortti__nappi" onclick="toggleAsteroidivaellus(this)" aria-expanded="false" aria-controls="asteroidivaellus-wrapper">Lähde matkaan!</button>
+              </div>
+            </div>
+            <div id="asteroidivaellus-wrapper" style="display:none;">
+              <iframe class="is8-011"
+                src="../pelit/asteroidivaellus/asteroidivaellus.html"
+                title="Asteroidivaellus – mikä on sinulle tärkeää?"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div><!-- /Asteroidivaellus -->
+
           <div class="tasks-section">
             <div class="task-list" id="tasks-koulutus" aria-live="polite"></div>
           </div>
@@ -1997,6 +2022,14 @@
         var auki = w.style.display !== 'none';
         w.style.display = auki ? 'none' : 'block';
         var b = btn || document.querySelector('[aria-controls="ammattiset-wrapper"]');
+        if (b) b.setAttribute('aria-expanded', String(!auki));
+      }
+      function toggleAsteroidivaellus(btn) {
+        var w = document.getElementById('asteroidivaellus-wrapper');
+        if (!w) return;
+        var auki = w.style.display !== 'none';
+        w.style.display = auki ? 'none' : 'block';
+        var b = btn || document.querySelector('[aria-controls="asteroidivaellus-wrapper"]');
         if (b) b.setAttribute('aria-expanded', String(!auki));
       }
       /* ── Oppimaan oppimisen klinikka: avaa/sulje (tehtävä-ikkuna) ── */
