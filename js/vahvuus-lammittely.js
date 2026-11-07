@@ -21,13 +21,16 @@
   var elVahv = root.querySelector('.lammittely-vahvuus');
   var btnSeur = root.querySelector('[data-lammittely="seuraava"]');
   var btnPalj = root.querySelector('[data-lammittely="paljasta"]');
-  if (!n || !elTeksti || !elLaskuri || !elVahv || !btnSeur || !btnPalj) return;
+  var btnSuur = root.querySelector('[data-lammittely="suurenna"]');
+  var elOhj = root.querySelector('.lammittely-ohjaimet');
+  if (!n || !elOhj || !btnSuur || !elTeksti || !elLaskuri || !elVahv || !btnSeur || !btnPalj) return;
 
   var jono = [];
   var i = 0;              // montako lausetta on näytetty tällä kierroksella
   var nykyinen = -1;      // näytettävän lauseen indeksi
   var tila = 'alku';      // 'alku' | 'lause' | 'valmis'
   var naytetty = false;   // onko vahvuus paljastettu tälle lauseelle
+  var suuri = false;      // onko suurennettu (koko näyttö) -tila päällä
 
   function t(key) {
     var el = root.querySelector('[data-i18n="vahvuuslammittely.' + key + '"]');
@@ -53,6 +56,8 @@
   function piirra() {
     btnSeur.textContent = tila === 'valmis' ? t('alusta') : t('seuraava');
     btnPalj.textContent = t('paljasta');
+    btnSuur.textContent = suuri ? t('pienenna') : t('suurenna');
+    btnSuur.setAttribute('aria-pressed', suuri ? 'true' : 'false');
     if (tila === 'lause') {
       var li = lauseet[nykyinen];
       elTeksti.textContent = li.textContent.trim();
@@ -72,7 +77,7 @@
     }
   }
 
-  btnSeur.addEventListener('click', function () {
+  function seuraava() {
     naytetty = false;
     if (tila === 'valmis') {
       sekoita();
@@ -85,12 +90,64 @@
       tila = 'lause';
     }
     piirra();
-  });
+  }
+  btnSeur.addEventListener('click', seuraava);
 
   btnPalj.addEventListener('click', function () {
     if (tila !== 'lause') return;
     naytetty = true;
     piirra();
+  });
+
+  // Suurenna: koko näytön tila heijastamista varten. Käytetään Fullscreen API:a
+  // kun se on tuettu, ja muuten (esim. iPhone) koko ikkunan peittävää tilaa.
+  function aseta(arvo) {
+    suuri = arvo;
+    elOhj.classList.toggle('lammittely-suuri', suuri);
+    document.documentElement.classList.toggle('lammittely-lukittu', suuri);
+    piirra();
+  }
+
+  function fsElementti() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  btnSuur.addEventListener('click', function () {
+    if (!suuri) {
+      aseta(true);
+      var pyyda = elOhj.requestFullscreen || elOhj.webkitRequestFullscreen;
+      if (pyyda) {
+        try {
+          var lupaus = pyyda.call(elOhj);
+          if (lupaus && lupaus.catch) lupaus.catch(function () {});
+        } catch (e) { /* jää koko ikkunan tilaan */ }
+      }
+    } else {
+      var poistu = document.exitFullscreen || document.webkitExitFullscreen;
+      if (fsElementti() && poistu) {
+        try { poistu.call(document); } catch (e) {}
+      }
+      aseta(false);
+    }
+    btnSuur.focus();
+  });
+
+  function fsMuuttui() {
+    // Käyttäjä poistui koko näytöstä Esc-näppäimellä
+    if (suuri && !fsElementti() && elOhj.getAttribute('data-fs') === '1') aseta(false);
+    elOhj.setAttribute('data-fs', fsElementti() ? '1' : '0');
+  }
+  document.addEventListener('fullscreenchange', fsMuuttui);
+  document.addEventListener('webkitfullscreenchange', fsMuuttui);
+
+  document.addEventListener('keydown', function (e) {
+    if (!suuri) return;
+    if (e.key === 'Escape') {
+      aseta(false);
+    } else if ((e.key === 'ArrowRight' || e.key === 'PageDown') && document.activeElement && !/^(BUTTON)$/.test(document.activeElement.tagName)) {
+      e.preventDefault();
+      seuraava();
+    }
   });
 
   // Kielenvaihto: päivitä näkyvät tekstit uudelle kielelle
