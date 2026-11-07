@@ -309,6 +309,11 @@
       if (tulTheory[0] && tul.p1) tulTheory[0].innerHTML = tul.p1;
       if (tulTheory[1] && tul.p2) tulTheory[1].textContent = tul.p2;
 
+      /* Hero-kysymyskuplat */
+      [1, 2, 3, 4].forEach(function (n) {
+        setTxt('#tulevaisuus-kupla' + n, tul['kupla' + n]);
+      });
+
       /* Vaihepolku (kuvittele / rakenna / esittele) */
       [1, 2, 3].forEach(function (n) {
         setTxt('#tulevaisuus-vaihe' + n + '-nimi', tul['vaihe' + n + '_nimi']);
