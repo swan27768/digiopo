@@ -58,7 +58,8 @@
     '8-tulevaisuus': { teema: 'Tulevaisuus', kysymykset: [
       'Millaisen tulevaisuuden työpaikan kuvittelit?',
       'Mikä yllättävä ala alkoi tuntua kiinnostavalta?',
-      'Mitä toivot tulevaisuudeltasi?'
+      'Mitä toivot tulevaisuudeltasi?',
+      'Minkä toisen ryhmän idea sai sinut ajattelemaan tulevaisuutta uudella tavalla?'
     ]},
 
     // ── 9. luokka ──
