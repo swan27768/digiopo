@@ -111,6 +111,31 @@
   .step-content ul { padding-left: 1.2rem; margin-top: .35rem; }
   .step-content ul li { font-size: .95rem; color: #333; margin-bottom: .25rem; }
 
+
+  /* ── Askelkortit: yksi vaihe kerrallaan ── */
+  .step-nyt { font-size: 1.2rem; font-weight: 800; line-height: 1.35; color: var(--text); margin: .3rem 0 .7rem; padding: .6rem .9rem; background: #fff5f8; border-left: 5px solid #dc2743; border-radius: 0 10px 10px 0; }
+  .step-nyt-lbl { display: block; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #dc2743; margin-bottom: .15rem; }
+  .stepper-nav { display: flex; gap: .4rem; justify-content: space-between; margin: 0 0 1rem; overflow-x: auto; padding: .2rem 0 .4rem; }
+  .stepper-nav[hidden] { display: none; }
+  .stepper-pallo { flex: 1 1 0; min-width: 58px; display: flex; flex-direction: column; align-items: center; gap: .15rem; background: transparent; border: 0; cursor: pointer; font: inherit; color: var(--ig-gray); padding: .2rem .1rem; }
+  .stepper-pallo-ikoni { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; background: #fff; border: 2px solid var(--ig-border); transition: transform .15s; }
+  .stepper-pallo-nimi { font-size: .72rem; font-weight: 700; line-height: 1.15; text-align: center; }
+  .stepper-pallo-tila { font-size: .8rem; line-height: 1; }
+  .stepper-pallo.on .stepper-pallo-ikoni { background: var(--ig-grad); border-color: transparent; transform: scale(1.12); box-shadow: 0 3px 10px rgba(220,39,67,.35); }
+  .stepper-pallo.on { color: var(--text); }
+  .stepper-pallo.tehty .stepper-pallo-ikoni { background: #ecfdf5; border-color: #66bb6a; }
+  .stepper-pallo:focus-visible { outline: 3px solid var(--ig-blue); outline-offset: 2px; border-radius: 10px; }
+  .stepper-js .step { display: none; }
+  .stepper-js .step.on, .stepper-js.stepper-nayta-kaikki .step { display: flex; }
+  .stepper-ohjaimet { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .4rem 0 1rem; }
+  .stepper-ohjaimet[hidden] { display: none; }
+  .stepper-btn { font: inherit; font-weight: 800; font-size: 1rem; min-height: 50px; padding: .6rem 1.4rem; border-radius: 14px; border: 2px solid #dc2743; background: #fff; color: #dc2743; cursor: pointer; }
+  .stepper-btn--seuraava { background: var(--ig-grad); color: #fff; border-color: transparent; margin-left: auto; }
+  .stepper-btn:disabled { opacity: .4; cursor: default; }
+  .stepper-btn:focus-visible, .stepper-kaikki:focus-visible { outline: 3px solid var(--ig-blue); outline-offset: 2px; }
+  .stepper-kaikki { flex-basis: 100%; background: none; border: 0; color: var(--ig-gray); font: inherit; font-size: .85rem; text-decoration: underline; cursor: pointer; padding: .3rem; }
+  @media (max-width: 520px) { .stepper-pallo-nimi { display: none; } .stepper-pallo { min-width: 40px; } .stepper-pallo-ikoni { width: 40px; height: 40px; font-size: 1.15rem; } .stepper-btn { flex: 1 1 40%; padding: .6rem .8rem; } }
+  @media print { .stepper-nav, .stepper-ohjaimet { display: none !important; } .stepper-js .step { display: flex !important; } }
   /* Roolikortit */
   .role-row { display: flex; gap: .7rem; margin-top: .6rem; flex-wrap: wrap; }
   .role-card {
@@ -410,12 +435,14 @@
 
   <div class="steps-wrap">
     <p class="steps-title">Näin tehtävä etenee</p>
+    <nav class="stepper-nav" aria-label="Tehtävän vaiheet" hidden></nav>
 
     <!-- Vaihe 1 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Roolit" data-tila="👥">
       <div class="step-bubble">🎭</div>
       <div class="step-content">
         <h2>Vaihe 1 – Valitse roolit</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Sopikaa: kumpi on ensin tähti ja kumpi somemanageri?</p>
         <p>Parisi kanssa sovitaan: kumpi on ensin <strong>tähti</strong> ja kumpi <strong>somemanageri</strong>.</p>
         <div class="role-row">
           <div class="role-card role-star">
@@ -439,10 +466,11 @@
     </div>
 
     <!-- Vaihe 2 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Haastattelu" data-tila="👥">
       <div class="step-bubble">💬</div>
       <div class="step-content">
         <h2>Vaihe 2 – Somemanageri haastattelee</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Somemanageri kysyy ja kirjoittaa. Tähti kertoo.</p>
         <p>Somemanageri kysyy tähdeltä näitä kysymyksiä ja kirjoittaa vastaukset profiilipohjaan:</p>
         <div class="q-grid">
           <div class="q-card">Mihin asiaan kaverit tai perhe pyytää sinua apuun?</div>
@@ -469,10 +497,11 @@
     </div>
 
     <!-- Vaihe 3 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Profiili" data-tila="✏️">
       <div class="step-bubble">🎨</div>
       <div class="step-content">
         <h2>Vaihe 3 – Viimeistele profiilisi</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Tee oma profiili: kuva, vahvuudet ja yksi ammatti.</p>
         <p>Täydennä oma profiilisi loppuun:</p>
         <ul>
           <li>Piirrä profiilikuva tai symboli, joka kuvaa sinua</li>
@@ -486,10 +515,11 @@
     </div>
 
     <!-- Vaihe 4 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Galleria" data-tila="🏫">
       <div class="step-bubble">🖼</div>
       <div class="step-content">
         <h2>Vaihe 4 – Galleria & vahvuustähdet</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Kierrä katsomassa. Anna kolme vahvuustähteä.</p>
         <p>Kierrä katsomassa muiden profiileja ja anna vahvuustähtiä:</p>
         <ul>
           <li>Kiinnitä paperit seinälle</li>
@@ -502,10 +532,11 @@
     </div>
 
     <!-- Vaihe 5 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Lause" data-tila="🏫">
       <div class="step-bubble">🧠</div>
       <div class="step-content">
         <h2>Vaihe 5 – Yksi lause loppuun</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Sano tai kirjoita yksi lause.</p>
         <p>Kierros: jokainen sanoo tai kirjoittaa yhden lauseen.</p>
         <ul>
           <li><em>"Yllätyin siitä, että minulla on vahvuus: ___"</em></li>
@@ -516,10 +547,11 @@
     </div>
 
     <!-- Vaihe 6 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Pohdinta" data-tila="👥">
       <div class="step-bubble">🔎</div>
       <div class="step-content">
         <h2>Vaihe 6 – Huomaa, mitä profiili tekee</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Keskustelkaa: mitä profiili ei näyttänyt?</p>
         <p>Teit juuri profiilin, jossa näkyy vain parhaat puolesi. Keskustelkaa parin tai luokan kanssa:</p>
         <ul>
           <li>Mitä sinusta EI näkynyt profiilissa? (Esimerkiksi väsymys, epäonnistumiset, tylsät päivät.)</li>
@@ -534,10 +566,11 @@
     </div>
 
     <!-- Vaihe 7 -->
-    <div class="step">
+    <div class="step" data-lyhyt="Ryhmä" data-tila="👥">
       <div class="step-bubble">🎁</div>
       <div class="step-content">
         <h2>Vaihe 7 – Anna vahvuuksia ryhmällesi</h2>
+        <p class="step-nyt"><span class="step-nyt-lbl">Tee nyt</span>Kirjoita ryhmäsi jokaiselle 2–3 vahvuutta.</p>
         <p>Nyt käännetään katse toisiin. Pysytään samassa pienryhmässä, jonka kanssa työskentelit — te tunnette jo toistenne juttuja. Tee <strong>jokaiselle ryhmäsi jäsenelle</strong> pieni kortti:</p>
         <ul>
           <li>Kirjoita ryhmäläisen nimi.</li>
@@ -553,6 +586,12 @@
       </div>
     </div>
 
+  
+    <div class="stepper-ohjaimet" hidden>
+      <button type="button" class="stepper-btn stepper-btn--takaisin" data-ohje="takaisin">← Edellinen</button>
+      <button type="button" class="stepper-btn stepper-btn--seuraava" data-ohje="seuraava">Seuraava vaihe →</button>
+      <button type="button" class="stepper-kaikki" data-ohje="kaikki" aria-pressed="false">Näytä kaikki vaiheet</button>
+    </div>
   </div><!-- /steps-wrap -->
 
   <div class="footer-links" style="margin-top:1rem;">
@@ -863,6 +902,62 @@
   </div>
 </div><!-- /view-pohja -->
 
+<script>
+  /* Askelkortit: oppilas näkee yhden vaiheen kerrallaan. Ilman JS:ää kaikki vaiheet näkyvät. */
+  (function () {
+    var wrap = document.querySelector('.steps-wrap');
+    if (!wrap) return;
+    var steps = Array.prototype.slice.call(wrap.querySelectorAll('.step'));
+    var nav = wrap.querySelector('.stepper-nav');
+    var ctl = wrap.parentNode.querySelector('.stepper-ohjaimet');
+    if (!steps.length || !nav || !ctl) return;
+    var btnPrev = ctl.querySelector('[data-ohje="takaisin"]');
+    var btnNext = ctl.querySelector('[data-ohje="seuraava"]');
+    var btnAll = ctl.querySelector('[data-ohje="kaikki"]');
+    var cur = 0, all = false, palloja = [];
+
+    steps.forEach(function (st, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'stepper-pallo';
+      b.innerHTML = '<span class="stepper-pallo-ikoni" aria-hidden="true">' + st.querySelector('.step-bubble').textContent.trim() + '</span>' +
+        '<span class="stepper-pallo-nimi">' + st.getAttribute('data-lyhyt') + '</span>' +
+        '<span class="stepper-pallo-tila" aria-hidden="true">' + st.getAttribute('data-tila') + '</span>';
+      b.setAttribute('aria-label', 'Vaihe ' + (i + 1) + ': ' + st.getAttribute('data-lyhyt'));
+      b.addEventListener('click', function () { nayta(i, true); });
+      nav.appendChild(b); palloja.push(b);
+    });
+
+    function nayta(i, siirra) {
+      cur = Math.max(0, Math.min(steps.length - 1, i));
+      steps.forEach(function (st, k) { st.classList.toggle('on', k === cur); });
+      palloja.forEach(function (b, k) {
+        b.classList.toggle('on', k === cur); b.classList.toggle('tehty', k < cur);
+        if (k === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      });
+      btnPrev.disabled = cur === 0;
+      btnNext.disabled = cur === steps.length - 1;
+      btnNext.textContent = cur === steps.length - 1 ? 'Valmis ✓' : 'Seuraava vaihe →';
+      if (siirra) { var y = nav.getBoundingClientRect().top + window.pageYOffset - 12; window.scrollTo({ top: y, behavior: 'smooth' }); }
+    }
+    btnPrev.addEventListener('click', function () { nayta(cur - 1, true); });
+    btnNext.addEventListener('click', function () { nayta(cur + 1, true); });
+    btnAll.addEventListener('click', function () {
+      all = !all; wrap.classList.toggle('stepper-nayta-kaikki', all);
+      btnAll.setAttribute('aria-pressed', String(all));
+      btnAll.textContent = all ? 'Näytä yksi vaihe kerrallaan' : 'Näytä kaikki vaiheet';
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      var v = document.getElementById('view-oppilas');
+      if (!v || !v.classList.contains('active') || all) return;
+      if (e.key === 'ArrowRight') nayta(cur + 1, false); else if (e.key === 'ArrowLeft') nayta(cur - 1, false);
+    });
+
+    nav.hidden = false; ctl.hidden = false;
+    wrap.classList.add('stepper-js');
+    nayta(0, false);
+  })();
+</script>
 <script>
   function showView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));

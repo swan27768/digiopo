@@ -56,6 +56,21 @@
     .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
     .hero-chip { background: rgba(255,255,255,0.22); border-radius: 20px; padding: 4px 14px; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
 
+
+    /* Kulku yhdellä silmäyksellä */
+    .kulku-rivi { list-style: none; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; position: relative; margin: 6px 0 12px; }
+    .kulku-rivi::before { content: ""; position: absolute; left: 7%; right: 7%; top: 44px; height: 4px; background: repeating-linear-gradient(90deg, var(--pinkki-reuna) 0 8px, transparent 8px 14px); z-index: 0; }
+    .kulku-linkki { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; text-decoration: none; color: var(--teksti); padding: 4px 2px; border-radius: 12px; }
+    .kulku-linkki:hover { background: var(--pinkki-vaalea); }
+    .kulku-linkki:focus-visible { outline: 3px solid var(--pinkki); outline-offset: 2px; }
+    .kulku-nro { font-size: .7rem; font-weight: 800; color: var(--pinkki); letter-spacing: .06em; }
+    .kulku-ikoni { width: 52px; height: 52px; border-radius: 50%; background: #fff; border: 3px solid var(--pinkki-keski); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .kulku-vaihe:nth-child(2) .kulku-ikoni { background: linear-gradient(135deg, #fce7f3, #fff); border-color: var(--oranssi); }
+    .kulku-nimi { font-size: .8rem; font-weight: 800; line-height: 1.15; }
+    .kulku-tila { font-size: .72rem; font-weight: 700; color: var(--pinkki); background: var(--pinkki-vaalea); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+    .kulku-vihje { font-size: .88rem; color: var(--teksti-kevyt); background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 8px 12px; }
+    @media (max-width: 640px) { .kulku-rivi { grid-template-columns: repeat(4, 1fr); row-gap: 14px; } .kulku-rivi::before { display: none; } }
+    @media (max-width: 380px) { .kulku-rivi { grid-template-columns: repeat(2, 1fr); } }
     .card {
       background: #fff;
       border-radius: 16px;
@@ -184,6 +199,72 @@
   </div>
 
   <main>
+
+    <!-- 0. Kulku yhdellä silmäyksellä -->
+    <section class="card kulku-kortti" aria-labelledby="kulku-otsikko">
+      <h2 class="card-title" id="kulku-otsikko">
+        <span aria-hidden="true">🗺️</span> Tehtävän kulku yhdellä silmäyksellä
+      </h2>
+      <ol class="kulku-rivi">
+        <li class="kulku-vaihe">
+          <a href="#rakenne-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">1</span>
+            <span class="kulku-ikoni" aria-hidden="true">🎭</span>
+            <span class="kulku-nimi">Roolit</span>
+            <span class="kulku-tila"><span aria-hidden="true">👥</span> pari</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#rakenne-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">2</span>
+            <span class="kulku-ikoni" aria-hidden="true">💬</span>
+            <span class="kulku-nimi">Haastattelu</span>
+            <span class="kulku-tila"><span aria-hidden="true">👥</span> pari</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#rakenne-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">3</span>
+            <span class="kulku-ikoni" aria-hidden="true">🎨</span>
+            <span class="kulku-nimi">Profiili</span>
+            <span class="kulku-tila"><span aria-hidden="true">✏️</span> yksin</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#rakenne-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">4</span>
+            <span class="kulku-ikoni" aria-hidden="true">🖼</span>
+            <span class="kulku-nimi">Galleria</span>
+            <span class="kulku-tila"><span aria-hidden="true">🏫</span> luokka</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#rakenne-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">5</span>
+            <span class="kulku-ikoni" aria-hidden="true">🧠</span>
+            <span class="kulku-nimi">Yksi lause</span>
+            <span class="kulku-tila"><span aria-hidden="true">🔁</span> kierros</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#lopetus-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">6</span>
+            <span class="kulku-ikoni" aria-hidden="true">🔎</span>
+            <span class="kulku-nimi">Pohdinta</span>
+            <span class="kulku-tila"><span aria-hidden="true">💬</span> keskustelu</span>
+          </a>
+        </li>
+        <li class="kulku-vaihe">
+          <a href="#lopetus-otsikko" class="kulku-linkki">
+            <span class="kulku-nro" aria-hidden="true">7</span>
+            <span class="kulku-ikoni" aria-hidden="true">🎁</span>
+            <span class="kulku-nimi">Vahvuudet ryhmälle</span>
+            <span class="kulku-tila"><span aria-hidden="true">👥</span> pienryhmä</span>
+          </a>
+        </li>
+      </ol>
+      <p class="kulku-vihje"><strong>Ydin:</strong> vaihe 2. Vaiheet 1–3 tehdään pareittain, ja vaihe 2 tehdään kaksi kertaa (roolit vaihtuvat). Vaiheessa 7 vain aitoja ja ystävällisiä vahvuuksia. Voit heijastaa tämän rivin taululle.</p>
+    </section>
 
     <!-- 1. Oppimistavoitteet -->
     <section class="card" aria-labelledby="tavoitteet-otsikko">
