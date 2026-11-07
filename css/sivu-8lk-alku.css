@@ -95,6 +95,14 @@
       border-left: 3px solid #db2777;
       border-radius: 0 6px 6px 0;
     }
+    /* Laita hyvä kiertämään -tehtävä: teksti vasemmalla, Robo ruusun kanssa oikealla */
+    .haaste-sisalto.haaste-kuvallinen:not([hidden]) { display: flex; align-items: center; gap: 18px; }
+    .haaste-kuvallinen .haaste-teksti { flex: 1; min-width: 0; }
+    .haaste-kuvallinen .haaste-kuva { flex: none; width: clamp(96px, 20%, 140px); height: auto; }
+    @media (max-width: 480px) {
+      .haaste-sisalto.haaste-kuvallinen:not([hidden]) { flex-direction: column-reverse; }
+      .haaste-kuvallinen .haaste-kuva { width: 96px; align-self: center; }
+    }
 
     /* ── tasks-section: poistetaan ulompi boksiefekti ── */
     /* Rajattu: suorien .aihe-osio-lasten laatikon määrää korttityypit.css (!important-kerrosjärjestys) */
