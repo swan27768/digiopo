@@ -24,9 +24,9 @@
       'Mikä auttaisi sinua, kun into loppuu?'
     ]},
     vahvuudet: { teema: 'Vahvuudet', kysymykset: [
-      'Minkä huomasit osaavasi?',
-      'Mistä sait tällä viikolla hyvän fiiliksen tai kehut?',
-      'Missä haluaisit tulla paremmaksi?'
+      'Tunnistitko jonkin supervoimistasi omaksesi? Milloin se näkyi viimeksi?',
+      'Minkä vahvuuden kaveri näki sinussa? Yllättikö se sinut?',
+      'Minkä vahvuuden haluaisit harjoitella vahvemmaksi? Miten?'
     ]},
     tulevaisuus: { teema: 'Tulevaisuus', kysymykset: [
       'Mikä sai sinut tällä viikolla innostumaan?',
