@@ -27,14 +27,14 @@ window.OSIO_DATA = {
 
     "vahvuudet": {
       rakenne: [
-        "Aloitus: mitä vahvuuksia muistat 7. luokalta?",
         "Interaktiivinen tarina: Vahvuusmatka",
         "Ryhmätehtävä: Fake Insta — ammatti-identiteetti somessa",
-        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen?"
+        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen?",
+        "Lisätehtävä: Laita hyvä kiertämään: kehu tai kiitä"
       ],
       tavoitteet: [
         "Syvennät kuvaa omista vahvuuksistasi ja kiinnostuksistasi",
-        "Yhdistät vahvuutesi koulutusaloihin ja ammatteihin",
+        "Yhdistät vahvuutesi johonkin ammattiin tai alaan",
         "Harjoittelet esittelemään osaamistasi muille",
         "Pohdit ja perustelet oman mielipiteesi – onko sometyö oikeaa työtä?"
       ],
