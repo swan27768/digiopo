@@ -186,7 +186,17 @@
     resize: vertical;
     min-height: 90px;
   }
-  textarea::placeholder { color: #9a9a9a; }
+  textarea::placeholder, .kentta-rivi::placeholder { color: #9a9a9a; }
+  .kentta-rivi {
+    width: 100%;
+    border: 2px solid var(--pastel);
+    border-radius: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    font-family: inherit;
+    font-size: 1.05rem;
+    color: var(--text);
+    background: var(--white);
+  }
 
   /* ---- Napit ---- */
   .nappi {
@@ -266,7 +276,7 @@
   }
 
   /* ---- Saavutettavuus: fokus ---- */
-  a:focus-visible, button:focus-visible, textarea:focus-visible, .valinta:focus-visible {
+  a:focus-visible, button:focus-visible, textarea:focus-visible, .kentta-rivi:focus-visible, .valinta:focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
@@ -373,6 +383,8 @@
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🌍 Puhtaampi luonto ja uusi energia</button>
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🚀 Matkat avaruuteen</button>
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🎮 Uudet pelit ja virtuaalimaailmat</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🏡 Uudenlaiset kodit ja arki</button>
+      <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🎨 Uudet harrastukset ja kokemukset</button>
     </div>
 
     <label class="kentta-otsikko" for="k_arki">Miksi valitsit juuri sen? Kirjoita lyhyesti.</label>
@@ -411,8 +423,11 @@
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🔬 Työ, jossa tutkin ja ratkaisen ongelmia</button>
     </div>
 
-    <label class="kentta-otsikko" for="k_tyo">Keksi oma tulevaisuuden ammatti. Sen ei tarvitse olla vielä olemassa.</label>
-    <textarea id="k_tyo" placeholder="Esimerkiksi: Olen unelmarobottien suunnittelija. Minä..."></textarea>
+    <label class="kentta-otsikko" for="k_ammatti">Keksi oma tulevaisuuden ammatti. Mikä sen nimi on? Ammatin ei tarvitse olla vielä olemassa.</label>
+    <input type="text" id="k_ammatti" class="kentta-rivi" maxlength="60" placeholder="Esimerkiksi: Unelmarobottien suunnittelija">
+
+    <label class="kentta-otsikko" for="k_tyo">Mitä teet tässä ammatissa? Kirjoita 1–2 lausetta.</label>
+    <textarea id="k_tyo" placeholder="Esimerkiksi: Minä suunnittelen robotteja, jotka..."></textarea>
 
     <div class="vinkki">
       <strong>Hyvä muistaa:</strong> Sinun ei tarvitse tietää vielä, mikä sinusta tulee.
@@ -471,7 +486,9 @@
     <div class="tapahtuma" aria-label="Koonti vastauksistasi">
       <div class="koonti-rivi"><span class="koonti-otsikko">Minulle on nyt tärkeää:</span><span class="koonti-teksti" id="n_nyt"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Tulevaisuudessa kiinnostaa:</span><span class="koonti-teksti" id="n_arki"></span></div>
-      <div class="koonti-rivi"><span class="koonti-otsikko">Haluamani työ ja oma ammatti-idea:</span><span class="koonti-teksti" id="n_tyo"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Haluamani työ:</span><span class="koonti-teksti" id="n_tyo"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Oma tulevaisuuden ammattini:</span><span class="koonti-teksti" id="n_ammatti"></span></div>
+      <div class="koonti-rivi"><span class="koonti-otsikko">Mitä teen ammatissa:</span><span class="koonti-teksti" id="n_ammattikuvaus"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Unelmani:</span><span class="koonti-teksti" id="n_unelma"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Hyötyä muille:</span><span class="koonti-teksti" id="n_hyva"></span></div>
       <div class="koonti-rivi"><span class="koonti-otsikko">Pieni askel jo nyt:</span><span class="koonti-teksti" id="n_askel"></span></div>
@@ -481,9 +498,10 @@
       <button class="nappi minttu" onclick="lataaKoonti()">💾 Lataa tehtävä</button>
     </div>
     <div class="vinkki">
-      <strong>Muista palauttaa tehtävä Classroomiin!</strong> Lataa tiedosto tästä napista. Lisää se sitten Classroomiin ja paina Palauta.
+      <strong>Muista palauttaa tehtävä Classroomiin!</strong> Lataa tiedosto tästä napista. Lisää se sitten Classroomiin ja paina Palauta.<br>
+      <strong>Pidä koonti myös itselläsi.</strong> Se löytyy koneen Lataukset-kansiosta nimellä <em>aikamatka_tulevaisuuteen.txt</em>. Tarvitset sitä seuraavassa tehtävässä, Unelmatoimistossa.
     </div>
-    <p class="vahvistus" id="vahvistus" role="status">✓ Tehtävä on ladattu. Muista palauttaa se Classroomiin.</p>
+    <p class="vahvistus" id="vahvistus" role="status">✓ Tehtävä on ladattu. Muista palauttaa se Classroomiin. Pidä koonti tallessa, sillä tarvitset sitä seuraavassa tehtävässä.</p>
 
     <div class="nappi-rivi">
       <button class="nappi-takaisin nappi" onclick="mene(4)">← Takaisin</button>
@@ -558,7 +576,9 @@ function valittuTeksti(ryhma) {
 function rakennaKoonti() {
   document.getElementById("n_nyt").textContent    = arvo("k_nyt");
   document.getElementById("n_arki").textContent   = valittuTeksti("arki") + " — " + arvo("k_arki");
-  document.getElementById("n_tyo").textContent    = valittuTeksti("tyo") + " — " + arvo("k_tyo");
+  document.getElementById("n_tyo").textContent    = valittuTeksti("tyo");
+  document.getElementById("n_ammatti").textContent = arvo("k_ammatti");
+  document.getElementById("n_ammattikuvaus").textContent = arvo("k_tyo");
   document.getElementById("n_unelma").textContent = arvo("k_unelma");
   document.getElementById("n_hyva").textContent   = arvo("k_hyva");
   document.getElementById("n_askel").textContent  = arvo("k_askel");
@@ -574,7 +594,9 @@ function lataaKoonti() {
 "==========================================\n\n" +
 "Minulle on nyt tärkeää:\n" + arvo("k_nyt") + "\n\n" +
 "Tulevaisuudessa kiinnostaa:\n" + valittuTeksti("arki") + "\nMiksi: " + arvo("k_arki") + "\n\n" +
-"Haluamani työ:\n" + valittuTeksti("tyo") + "\nOma ammatti-idea: " + arvo("k_tyo") + "\n\n" +
+"Haluamani työ:\n" + valittuTeksti("tyo") + "\n\n" +
+"Oma tulevaisuuden ammattini:\n" + arvo("k_ammatti") + "\n" +
+"Mitä teen ammatissa: " + arvo("k_tyo") + "\n\n" +
 "Unelmani:\n" + arvo("k_unelma") + "\n\n" +
 "Hyötyä muille:\n" + arvo("k_hyva") + "\n\n" +
 "Pieni askel jo nyt:\n" + arvo("k_askel") + "\n\n" +
@@ -594,7 +616,7 @@ function lataaKoonti() {
 }
 
 function aloitaAlusta() {
-  ["k_nyt","k_arki","k_tyo","k_unelma","k_hyva","k_askel"].forEach(function (id) {
+  ["k_nyt","k_arki","k_ammatti","k_tyo","k_unelma","k_hyva","k_askel"].forEach(function (id) {
     var el = document.getElementById(id); if (el) el.value = "";
   });
   document.querySelectorAll(".valinta.valittu").forEach(function (el) {

@@ -11,7 +11,7 @@ h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
 .askeleet li { counter-increment:a; position:relative; padding-left:40px; min-height:28px; }
 .askeleet li::before { content:counter(a); position:absolute; left:0; top:0; width:28px; height:28px; border-radius:50%; background:var(--viol); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.85rem; }
 .vinkki { margin-top:12px; padding:10px 14px; background:var(--mint-bg); border-left:5px solid var(--mint); border-radius:0 12px 12px 0; }
-.arvonta { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.arvonta { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
 .arpa { text-align:center; }
 .arpa .nayto { min-height:130px; display:flex; align-items:center; justify-content:center; padding:14px; margin:8px 0 14px; background:var(--mint-bg); border:3px dashed var(--viol); border-radius:18px; font-size:clamp(1.3rem,3.6vw,2.1rem); font-weight:900; color:var(--viol); line-height:1.2; }
 .arpa .nayto.vaihtuu { animation: mt-pop .35s ease; }
@@ -49,7 +49,7 @@ h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
 .mk-hinta span { width:22px; height:22px; border:1.5px solid var(--viol); border-radius:50%; font-size:.7rem; font-weight:800; display:flex; align-items:center; justify-content:center; color:var(--viol); }
 .mk-ohje { margin-top:8px; padding:6px 10px; background:#fff8e6; border-left:4px solid #f0b429; border-radius:0 8px 8px 0; font-size:.78rem; }
 
-@media (max-width:700px) { .arvonta, .unelmakortit { grid-template-columns:1fr; } }
+@media (max-width:700px) { .unelmakortit { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce) { .arpa .nayto.vaihtuu { animation:none; } }
 @media print {
   body { background:#fff; padding:0; }
@@ -58,3 +58,9 @@ h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
   .laput-osio { break-after:page; page-break-after:always; }
   .unelmakortit { gap:10px; }
 }
+
+/* Taulukko: koonnin kiinnostus -> paketin tyyppi */
+.kartta { width:100%; border-collapse:collapse; margin-top:14px; font-size:.92rem; }
+.kartta caption { text-align:left; font-weight:800; color:var(--viol); margin-bottom:6px; }
+.kartta th, .kartta td { text-align:left; padding:7px 10px; border:1.5px solid var(--pastel); vertical-align:top; }
+.kartta th { background:var(--mint-bg); color:var(--viol); }

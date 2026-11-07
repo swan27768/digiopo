@@ -6,6 +6,20 @@
     "Matka Kuuhun", "Matka Marsiin", "Matka merenpohjaan", "Uusi koti tulevaisuuden kaupungissa",
     "Unelmaharrastus", "Unelmatyöpäivä", "Seikkailu, jota ei ole vielä olemassa", "Maailman paras koulupäivä"
   ];
+  var AMMATIT = [
+    "Avaruusopas", "Robottien hoitaja", "Merilevän viljelijä", "Kuun rakentaja",
+    "Tekoälyn kouluttaja", "Pilvikaupungin suunnittelija", "Aikamatkaopas", "Kaupunkimetsän hoitaja",
+    "Virtuaalimaailman rakentaja", "Energian keksijä", "Avaruushotellin kokki", "Merenpohjan tutkija",
+    "Robottikoiran kouluttaja", "Painottoman urheilun valmentaja", "Unelmien suunnittelija", "Tulevaisuuden ruoan keksijä"
+  ];
+  var viimeisinAmmatti = null;
+  function arvoAmmatti() {
+    var v, n = 0;
+    do { v = AMMATIT[Math.floor(Math.random() * AMMATIT.length)]; n++; } while (v === viimeisinAmmatti && n < 20);
+    viimeisinAmmatti = v;
+    return v;
+  }
+
   var TOIVEET = [
     "Haluan nähdä Maan avaruudesta.",
     "Haluan tavata uusia kavereita matkalla.",
@@ -53,6 +67,15 @@
       pakettiNappi.addEventListener("click", function () {
         pakettiNayto.textContent = arvoPaketti();
         pop(pakettiNayto);
+      });
+    }
+
+    var ammattiNappi = document.getElementById("arvo-ammatti");
+    var ammattiNayto = document.getElementById("nayto-ammatti");
+    if (ammattiNappi && ammattiNayto) {
+      ammattiNappi.addEventListener("click", function () {
+        ammattiNayto.textContent = arvoAmmatti();
+        pop(ammattiNayto);
       });
     }
 

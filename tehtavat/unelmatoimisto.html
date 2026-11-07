@@ -26,14 +26,26 @@
   <section class="kortti ohje-kortti" aria-labelledby="ohje-otsikko">
     <h2 id="ohje-otsikko">Opettajalle: näin tehtävä etenee</h2>
     <ol class="askeleet">
-      <li><strong>Toiveet kerätään (5 min).</strong> Aikamatkan jälkeen oppilas ottaa koontinsa esiin ja kirjoittaa kohdan <em>Unelmani</em> nimettömänä lapulle. Laput leikataan alla olevasta sivusta ja kerätään laatikkoon. Jos lappuja on liian vähän, käytä apuna arvontaa.</li>
+      <li><strong>Toiveet kerätään (5 min).</strong> Aikamatkan jälkeen oppilas ottaa koontinsa esiin ja kirjoittaa kohdan <em>Unelmani</em> nimettömänä lapulle. Laput leikataan alla olevasta sivusta ja kerätään laatikkoon. Jos lappuja on liian vähän, käytä apuna arvontaa. Jos oppilaalla ei ole koontia mukana, hän kirjoittaa unelman suoraan lapulle. Koonti on tiedostona <em>aikamatka_tulevaisuuteen.txt</em> koneen Lataukset-kansiossa.</li>
       <li><strong>Tarkista laput.</strong> Lue laput nopeasti ennen jakoa ja poista sellaiset, jotka eivät sovi luokan nähtäväksi. Sekoita laput.</li>
-      <li><strong>Toimistot (3–4 oppilasta).</strong> Ryhmä nimeää toimistonsa, arpoo unelmapaketin tyypin ja ottaa laatikosta 3 asiakastoivetta. Tyypin voi valita myös ryhmän koonnoissa olevista kiinnostuksista (<em>Tulevaisuudessa kiinnostaa</em>).</li>
-      <li><strong>Henkilökunta.</strong> Jokainen tuo toimistoon oman tulevaisuuden ammattinsa koonnista (<em>Oma ammatti-idea</em> tai <em>Haluamani työ</em>). Ammatin saa myös keksiä uudelleen. Jokaiselle on tehtävä paketissa.</li>
+      <li><strong>Toimistot (3–4 oppilasta).</strong> Ryhmä nimeää toimistonsa, arpoo unelmapaketin tyypin ja ottaa laatikosta 3 asiakastoivetta. Tyypin voi valita myös jäsenten koonnoissa olevista kiinnostuksista (<em>Tulevaisuudessa kiinnostaa</em>, katso taulukko alla).</li>
+      <li><strong>Henkilökunta.</strong> Jokainen tuo toimistoon oman tulevaisuuden ammattinsa koonnista (<em>Oma tulevaisuuden ammattini</em> ja <em>Mitä teen ammatissa</em>). Jos oppilaalla ei ole ammattia, hän voi arpoa sellaisen arvonnasta. Jokaiselle on tehtävä paketissa.</li>
       <li><strong>Suunnittelu (15–20 min).</strong> Ryhmä täyttää unelmakortin: paketin nimi, mitä paketissa tapahtuu, kenelle se sopii, hinta ja mainoslause. Paketin pitää täyttää asiakastoiveet.</li>
       <li><strong>Esittely (1 min / ryhmä).</strong> Toimisto esittelee pakettinsa kuin mainoksen. Luokka voi valita yhdessä paketin, jolle antaisi kolikon.</li>
       <li><strong>Purku.</strong> Mitkä toiveet toistuivat? Mikä toive voisi toteutua oikeasti? Mikä oma <em>Pieni askel jo nyt</em> (koonnista) vie sitä kohti?</li>
     </ol>
+    <table class="kartta" aria-label="Kiinnostuksen ja paketin tyypin yhteys">
+      <caption>Mistä paketin tyypin voi valita koonnin kiinnostuksesta?</caption>
+      <thead><tr><th scope="col">Koonnissa kiinnostaa</th><th scope="col">Paketin tyyppi</th></tr></thead>
+      <tbody>
+        <tr><td>🤖 Robotit, jotka auttavat ihmisiä</td><td>Seikkailu, jota ei ole vielä olemassa · Unelmatyöpäivä</td></tr>
+        <tr><td>🌍 Puhdas luonto ja uusi energia</td><td>Matka merenpohjaan · Uusi koti tulevaisuuden kaupungissa</td></tr>
+        <tr><td>🚀 Matkat avaruuteen</td><td>Matka Kuuhun · Matka Marsiin</td></tr>
+        <tr><td>🎮 Uudet pelit ja virtuaalimaailmat</td><td>Seikkailu, jota ei ole vielä olemassa · Unelmaharrastus</td></tr>
+        <tr><td>🏡 Uudenlaiset kodit ja arki</td><td>Uusi koti tulevaisuuden kaupungissa · Maailman paras koulupäivä</td></tr>
+        <tr><td>🎨 Uudet harrastukset ja kokemukset</td><td>Unelmaharrastus · Unelmatyöpäivä</td></tr>
+      </tbody>
+    </table>
     <p class="vinkki"><strong>Muista:</strong> koonti on oppilaan oma. Hän päättää, mitä siitä kertoo. Unelmat jaetaan nimettöminä, ja kaikki unelmat ovat yhtä arvokkaita. Toisten ideoita ei arvostella.</p>
   </section>
 
@@ -44,6 +56,11 @@
         <strong>Unelmapaketin tyyppi</strong>
         <div class="nayto" id="nayto-paketti" aria-live="polite">Paina nappia</div>
         <button type="button" class="nappi minttu" id="arvo-paketti">🎲 Arvo paketti</button>
+      </div>
+      <div class="arpa">
+        <strong>Ammatti (jos oma puuttuu)</strong>
+        <div class="nayto" id="nayto-ammatti" aria-live="polite">Paina nappia</div>
+        <button type="button" class="nappi minttu" id="arvo-ammatti">🎲 Arvo ammatti</button>
       </div>
       <div class="arpa">
         <strong>Asiakastoiveet (esimerkkejä)</strong>
@@ -60,6 +77,7 @@
 
   <section class="laput-osio" aria-labelledby="laput-otsikko">
     <h2 class="otsikko-tulostus" id="laput-otsikko">✂ Toivelaput — leikkaa ja kerää laatikkoon</h2>
+    <p class="ei-tulostu" style="text-align:center;margin-bottom:8px">Ei koontia mukana? Kirjoita unelma suoraan lapulle.</p>
     <div class="laput">
     <div class="toivelappu"><div class="t">Unelmani tulevaisuudessa</div><div class="viiva"></div><div class="viiva"></div><div class="alle">Älä kirjoita nimeä.</div></div>
     <div class="toivelappu"><div class="t">Unelmani tulevaisuudessa</div><div class="viiva"></div><div class="viiva"></div><div class="alle">Älä kirjoita nimeä.</div></div>
