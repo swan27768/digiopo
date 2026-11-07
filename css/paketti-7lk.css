@@ -5188,6 +5188,17 @@ body::before {
             .haaste-kuvallinen .haaste-teksti { flex:1; min-width:0; }
             .haaste-kuvallinen .haaste-kuva { flex:none; width:clamp(96px, 20%, 140px); height:auto; }
             @media (max-width:480px) { .haaste-sisalto.haaste-kuvallinen:not([hidden]) { flex-direction:column-reverse; text-align:left; } .haaste-kuvallinen .haaste-kuva { width:96px; align-self:center; } }
+            /* Laita hyvä kiertämään -lisätehtävä: oma tila ja oma väri (ruusu), jotta se erottuu Vahvuushuutokaupasta */
+            #omat-vahvuudet .haaste-osio { margin-top:52px; margin-bottom:14px; }
+            #omat-vahvuudet .haaste-toggle { background:linear-gradient(135deg,#be123c,#e11d48); border-color:#9f1239; padding:14px 20px; font-size:1.05rem; box-shadow:0 6px 18px rgba(225,29,72,0.28); }
+            #omat-vahvuudet .haaste-toggle-left::before { content:"🌹"; font-size:1.35rem; line-height:1; }
+            #omat-vahvuudet .haaste-toggle[aria-expanded="false"] .haaste-nuoli { animation:haaste-nuoli-hyppy 1.8s ease-in-out infinite; }
+            @keyframes haaste-nuoli-hyppy { 0%,70%,100% { transform:translateY(0); } 80% { transform:translateY(4px); } 90% { transform:translateY(-2px); } }
+            @media (prefers-reduced-motion:reduce) { #omat-vahvuudet .haaste-toggle .haaste-nuoli { animation:none !important; } }
+            #omat-vahvuudet .haaste-sisalto { background:linear-gradient(160deg,#fff1f2 0%,#ffe4e6 100%); border-color:#fda4af; color:#881337; }
+            #omat-vahvuudet .haaste-ohje { color:#881337; }
+            #omat-vahvuudet .haaste-ohje strong { color:#be123c; }
+            #omat-vahvuudet .haaste-vihje { color:#9f1239; background:rgba(244,63,94,0.12); border-left-color:#e11d48; }
             /* Suurenna: koko näytön / koko ikkunan tila heijastamiseen */
             html.lammittely-lukittu { overflow:hidden; }
             #vahvuuslammittely-mission.lammittely-js .lammittely-ohjaimet.lammittely-suuri { position:fixed; inset:0; z-index:10000; display:flex; flex-direction:column; justify-content:center; gap:3vh; padding:4vh 5vw; background:var(--tk-tausta); overflow:auto; }
