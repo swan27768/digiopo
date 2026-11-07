@@ -99,19 +99,23 @@
       </div>
     </sc-if>
 
-    <!-- STEP 4: TIETO1A -->
+    <!-- STEP 4: TIETO1A (pakollinen tehtävä) -->
     <sc-if value="{{ isTieto1a }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .4s ease;">
         <h1 style="font-family:'Space Grotesk', sans-serif; font-size:32px; font-weight:700; margin:0 0 20px; color:#d62b52;">Miten löydät omat vahvuutesi?</h1>
         <p style="font-size:18px; line-height:1.75; color:#1f2340; margin:0 0 24px;">Vahvuuksia ei aina huomaa heti, koska ne tuntuvat sinulle <b>helpoilta ja tavallisilta</b>. Siksi niitä täytyy joskus pysähtyä etsimään.</p>
-        <div style="background:#eceef8; border-radius:14px; padding:22px 26px;">
-          <div style="font-weight:600; font-size:16px; margin-bottom:14px; color:#1f2340;">MiniTehtävä — tee yksi näistä:</div>
-          <ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.9; color:#1f2340;">
-            <li>Ajattele yhtä asiaa, jossa onnistut usein.</li>
-            <li>Kysy yhdeltä ihmiseltä: <i>"Missä sinun mielestäsi olen hyvä?"</i></li>
-            <li>Kysy kaverilta: <i>"Milloin olen ollut tosi hyvä jossakin?"</i></li>
-            <li>Tarkkaile itseäsi: milloin innostut eniten ja toimit omalla tavallasi?</li>
-          </ul>
+        <div style="background:#fff; border:1px solid #dcdfeb; border-radius:16px; padding:24px 26px;">
+          <div style="font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:24px; margin-bottom:6px; color:#1f2340;">Tee yksi näistä nyt</div>
+          <p style="font-size:15.5px; line-height:1.6; color:#5b6082; margin:0 0 16px;">Tämä on koko tehtävän tärkein kohta. Pääset eteenpäin vasta, kun olet valinnut yhden tavan ja kirjoittanut, mitä huomasit.</p>
+          <div style="font-size:14px; font-weight:800; color:{{ accentColor }}; margin-bottom:10px;">1. Valitse yksi</div>
+          <div style="display:flex; flex-direction:column; gap:9px; margin-bottom:20px;">
+            <sc-for list="{{ miniOptions }}" as="mo" hint-placeholder-count="4">
+              <div onClick="{{ onMiniPick }}" data-idx="{{ mo.idx }}" role="button" tabindex="0" style="{{ mo.style }}">{{ mo.label }}</div>
+            </sc-for>
+          </div>
+          <div style="font-size:14px; font-weight:800; color:{{ accentColor }}; margin-bottom:8px;">2. Kirjoita, mitä huomasit</div>
+          <textarea data-field="miniVastaus" onInput="{{ onReflectChange }}" value="{{ miniVastaus }}" placeholder="Esim. Kaveri sanoi, että olen hyvä kuuntelemaan. Huomasin myös, että…" style="width:100%; box-sizing:border-box; min-height:84px; border:2px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff; color:#1f2340;"></textarea>
+          <div style="font-size:13.5px; font-weight:700; margin-top:8px; color:{{ miniStatusColor }};">{{ miniStatus }}</div>
         </div>
       </div>
     </sc-if>
@@ -219,6 +223,9 @@
 
           <sc-if value="{{ hasReflections }}" hint-placeholder-val="{{ false }}">
             <div style="border-top:1px solid #dcdfeb; margin-top:6px; padding-top:20px; display:flex; flex-direction:column; gap:14px;">
+              <sc-if value="{{ miniVastaus }}" hint-placeholder-val="{{ false }}">
+                <div><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Selvitin vahvuuksiani: {{ miniTeko }}</div><div style="font-size:15px; color:#1f2340;">{{ miniVastaus }}</div></div>
+              </sc-if>
               <sc-if value="{{ ref4 }}" hint-placeholder-val="{{ false }}">
                 <div style="background:#eceef8; border-radius:10px; padding:10px 14px;"><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Vahvuuteni auttaa muita</div><div style="font-size:15px; color:#1f2340;">{{ ref4 }}</div></div>
               </sc-if>
@@ -318,6 +325,14 @@ const POOLS = {
   }
 };
 
+const MINI_OPTIONS = [
+  "Mieti yhtä asiaa, jossa onnistut usein.",
+  "Kysy yhdeltä ihmiseltä: \"Missä sinun mielestäsi olen hyvä?\"",
+  "Kysy kaverilta: \"Milloin olen ollut tosi hyvä jossakin?\"",
+  "Tarkkaile itseäsi: milloin innostut eniten ja toimit omalla tavallasi?"
+];
+const MINI_MIN = 10;
+
 const PICK_STEPS = ["innostus", "selviytyminen", "tulevaisuus"];
 const TOTAL_STEPS = 10;
 
@@ -332,7 +347,9 @@ class Component extends DCLogic {
     ref1: "",
     ref2: "",
     ref3: "",
-    ref4: ""
+    ref4: "",
+    miniValinta: -1,
+    miniVastaus: ""
   };
 
   start = () => this.setState({ step: 1 });
@@ -352,7 +369,7 @@ class Component extends DCLogic {
   restart = () => this.setState({
     step: 0, quizIdx: 0, tyypit: {}, vahvuudet: [],
     lahteet: { innostus: [], selviytyminen: [], tulevaisuus: [] },
-    omaVahvuus: "", ref1: "", ref2: "", ref3: "", ref4: ""
+    omaVahvuus: "", ref1: "", ref2: "", ref3: "", ref4: "", miniValinta: -1, miniVastaus: ""
   });
 
   printCard = () => window.print();
@@ -368,6 +385,10 @@ class Component extends DCLogic {
         ? { tyypit, vahvuudet, quizIdx: 0, step: 3 }
         : { tyypit, vahvuudet, quizIdx: s.quizIdx + 1 };
     });
+  };
+
+  onMiniPick = (e) => {
+    this.setState({ miniValinta: +e.currentTarget.dataset.idx });
   };
 
   onReflectChange = (e) => {
@@ -464,8 +485,25 @@ class Component extends DCLogic {
       9: "Avaa oma vahvuuskortti"
     };
 
+    const miniValittu = s.miniValinta >= 0;
+    const miniPituus = (s.miniVastaus || "").trim().length;
+    const miniValmis = miniValittu && miniPituus >= MINI_MIN;
+    const miniOptions = MINI_OPTIONS.map((label, idx) => {
+      const on = s.miniValinta === idx;
+      return {
+        idx, label: on ? label + " ✓" : label,
+        style: on
+          ? `background:#00796a; color:#fff; border:2px solid #00796a; border-radius:12px; padding:13px 16px; font-size:15.5px; font-weight:700; line-height:1.5; cursor:pointer;`
+          : `background:#fff; color:#1f2340; border:2px solid #dcdfeb; border-radius:12px; padding:13px 16px; font-size:15.5px; font-weight:600; line-height:1.5; cursor:pointer;`
+      };
+    });
+    const miniStatus = !miniValittu ? "Valitse ensin yksi tapa."
+      : miniPituus < MINI_MIN ? "Kirjoita vielä vähän, niin pääset jatkamaan."
+      : "Hyvä! Nyt voit jatkaa.";
+    const miniStatusColor = miniValmis ? "#00796a" : "#a85f00";
+
     const showNav = step !== 0 && step !== 2 && step !== 10;
-    const nextDisabled = isPick && selected.length < 1;
+    const nextDisabled = (isPick && selected.length < 1) || (step === 4 && !miniValmis);
 
     return {
       bgColor, accentColor,
@@ -501,6 +539,8 @@ class Component extends DCLogic {
       vahvuudetChips: s.vahvuudet,
 
       omaVahvuus: s.omaVahvuus,
+      miniOptions, onMiniPick: this.onMiniPick, miniVastaus: s.miniVastaus, miniStatus, miniStatusColor,
+      miniTeko: s.miniValinta >= 0 ? MINI_OPTIONS[s.miniValinta] : "",
       ref1: s.ref1, ref2: s.ref2, ref3: s.ref3, ref4: s.ref4,
       onReflectChange: this.onReflectChange,
 
@@ -510,7 +550,7 @@ class Component extends DCLogic {
       onChipClick: this.onChipClick,
 
       finalCategories,
-      hasReflections: !!(s.ref1 || s.ref2 || s.ref3 || s.ref4),
+      hasReflections: !!(s.miniVastaus || s.ref1 || s.ref2 || s.ref3 || s.ref4),
       onPillDragStart: this.onPillDragStart,
       onPillDragOver: this.onPillDragOver,
       onPillDrop: this.onPillDrop,
@@ -518,7 +558,7 @@ class Component extends DCLogic {
       showNav,
       canBack: step > 0 && step !== 3,
       backBtnStyle: `background:transparent; border:none; color:#5b6082; font-family:'Nunito', sans-serif; font-size:15px; font-weight:600; cursor:pointer; padding:12px 8px; visibility:${(step > 0 && step !== 3) ? "visible" : "hidden"};`,
-      nextLabel: navLabels[step] || "Jatka",
+      nextLabel: (step === 4 && !miniValmis) ? "Tee tehtävä ensin" : (navLabels[step] || "Jatka"),
       nextDisabled,
       nextBtnStyle: `background:${nextDisabled ? "#f7c6d1" : accentColor}; color:${nextDisabled ? "#8f1735" : "#fff"}; border:none; font-family:'Nunito', sans-serif; font-size:15px; font-weight:800; padding:14px 28px; border-radius:14px; cursor:${nextDisabled ? "not-allowed" : "pointer"};${nextDisabled ? " border:2px solid #ee9db0;" : ""}`
     };
