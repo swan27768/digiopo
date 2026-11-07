@@ -72,9 +72,10 @@ window.OSIO_DATA = {
 
     "omat-vahvuudet": {
       rakenne: [
-        "Aloitus: missä olet hyvä — koulun ulkopuolellakin?",
-        "Tehtävä: Supervoimat — löydä omat vahvuutesi",
-        "Parikeskustelu: minkä vahvuuden kaveri näkee sinussa?"
+        "Lue: mikä vahvuus on ja miltä se näyttää arjessa",
+        "Yksilötehtävä: Supervoimat — löydä omat vahvuutesi",
+        "Parikeskustelu: minkä vahvuuden kaveri näkee sinussa?",
+        "Ryhmätehtävä: Vahvuushuutokauppa — osta ja perustele"
       ],
       tavoitteet: [
         "Tunnistat vähintään kolme omaa luonteenvahvuuttasi",
