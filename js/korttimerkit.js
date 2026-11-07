@@ -81,6 +81,12 @@
     Array.prototype.forEach.call(kohteet, function (el) {
       var ty = tyyppi(el);
       if (!ty) return;
+      // tehtäväsäiliö, jonka sisällä on Aikakone-hero: hero kantaa oman merkkinsä (Pelaa), säiliö ei saa toista
+      if (el.classList.contains("tasks-section") && el.querySelector(".ak-hero")) {
+        var vanha = el.querySelector(":scope > .kortti-merkki");
+        if (vanha) vanha.remove();
+        return;
+      }
       // tehtäväsäiliö: merkki vain kun siinä on sisältöä
       if (el.classList.contains("tasks-section") && !el.querySelector(".task-card, iframe, button")) return;
       var m = el.querySelector(":scope > .kortti-merkki");
