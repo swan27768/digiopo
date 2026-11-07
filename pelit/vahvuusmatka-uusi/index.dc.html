@@ -19,22 +19,22 @@
 <helmet>
   <link rel="stylesheet" href="/vendor/fonts/fonts.css">
   <style>
-    body { margin: 0; }
+    body { margin: 0; background:#f6f7fb; }
     @keyframes vm-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes vm-pop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   </style>
 </helmet>
 
-<div style="min-height:100vh; width:100%; background:{{ bgColor }}; color:#2B2A26; font-family:'IBM Plex Sans', sans-serif; display:flex; flex-direction:column; align-items:center; box-sizing:border-box;">
+<div style="min-height:100vh; width:100%; background:{{ bgColor }}; color:#1f2340; font-family:'Nunito', sans-serif; display:flex; flex-direction:column; align-items:center; box-sizing:border-box;">
 
   <sc-if value="{{ showProgress }}" hint-placeholder-val="{{ false }}">
     <div style="width:100%; max-width:720px; padding:28px 32px 0; box-sizing:border-box;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-        <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#6B6A61; font-weight:600;">Vahvuusmatka</div>
-        <div style="font-size:13px; color:#6B6A61; font-weight:500;">Vaihe {{ stepDisplay }} / {{ totalSteps }}</div>
+        <div style="display:inline-block; background:rgba(107,70,193,.2); border:1px solid #6b46c1; color:#6b46c1; border-radius:99px; padding:3px 13px; font-size:12.5px; font-weight:700; letter-spacing:.04em;">8. LUOKKA · VAHVUUSMATKA</div>
+        <div style="font-size:13px; color:#5b6082; font-weight:500;">Vaihe {{ stepDisplay }} / {{ totalSteps }}</div>
       </div>
-      <div style="width:100%; height:6px; background:#E7DFCC; border-radius:6px; overflow:hidden;">
-        <div style="height:100%; background:{{ accentColor }}; border-radius:6px; transition:width .4s ease; width:{{ progressPct }}%;"></div>
+      <div style="width:100%; height:8px; background:rgba(31,35,64,.10); border-radius:99px; overflow:hidden;">
+        <div style="height:100%; background:linear-gradient(90deg,{{ accentColor }},#e8870e); border-radius:99px; transition:width .4s ease; width:{{ progressPct }}%;"></div>
       </div>
     </div>
   </sc-if>
@@ -44,21 +44,21 @@
     <!-- STEP 0: COVER -->
     <sc-if value="{{ isCover }}" hint-placeholder-val="{{ true }}">
       <div style="text-align:center; padding:40px 12px; animation: vm-fade-in .5s ease;">
-        <div style="font-size:14px; letter-spacing:0.14em; text-transform:uppercase; color:{{ accentColor }}; font-weight:600; margin-bottom:18px;">✨ Vahvuustehtävä</div>
-        <h1 style="font-family:'Newsreader', serif; font-size:52px; line-height:1.08; font-weight:600; margin:0 0 20px; color:#211F1A;">Sinussa on enemmän<br>kuin arvaat</h1>
-        <p style="font-size:18px; line-height:1.6; color:#4A483F; max-width:480px; margin:0 auto 36px;">Tämä ei ole vain tehtävä. Tämä on matka siihen, missä olet oikeasti hyvä. Valitse, mieti ja kirjoita omalla tavallasi — ei ole oikeita tai vääriä vastauksia.</p>
-        <button onClick="{{ start }}" style="background:{{ accentColor }}; color:#fff; border:none; font-family:'IBM Plex Sans', sans-serif; font-size:17px; font-weight:600; padding:16px 34px; border-radius:100px; cursor:pointer;" style-hover="{{ btnHover }}">Aloita matka →</button>
+        <div style="display:inline-block; background:rgba(107,70,193,.2); border:1px solid #6b46c1; color:#6b46c1; border-radius:99px; padding:3px 14px; font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:18px;">8. LUOKKA · VAHVUUSMATKA</div>
+        <h1 style="font-family:'Space Grotesk', sans-serif; font-size:52px; line-height:1.08; font-weight:700; margin:0 0 20px; color:#d62b52;">Sinussa on enemmän<br>kuin arvaat</h1>
+        <p style="font-size:18px; line-height:1.6; color:#343a5e; max-width:480px; margin:0 auto 36px;">Tämä ei ole vain tehtävä. Tämä on matka siihen, missä olet oikeasti hyvä. Valitse, mieti ja kirjoita omalla tavallasi — ei ole oikeita tai vääriä vastauksia.</p>
+        <button onClick="{{ start }}" style="background:{{ accentColor }}; color:#fff; border:none; font-family:'Nunito', sans-serif; font-size:17px; font-weight:800; padding:16px 34px; border-radius:14px; cursor:pointer;" style-hover="{{ btnHover }}">Aloita matka →</button>
       </div>
     </sc-if>
 
     <!-- STEP 1: TIETO1 -->
     <sc-if value="{{ isTieto1 }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .4s ease;">
-        <h1 style="font-family:'Newsreader', serif; font-size:34px; font-weight:600; margin:0 0 22px; color:#211F1A;">Mikä on vahvuus?</h1>
-        <p style="font-size:18px; line-height:1.75; color:#3A3830; margin:0 0 18px;">Vahvuus on asia, joka on sinulle <b>helppoa</b>. Usein se tuntuu niin tavalliselta, ettet edes huomaa sitä.</p>
-        <p style="font-size:18px; line-height:1.75; color:#3A3830; margin:0 0 18px;">Se mistä pidät, ei aina ole vahvuutesi. Se mitä teet vastahakoisesti ja huonosti, ei myöskään ole vahvuutesi.</p>
-        <p style="font-size:18px; line-height:1.75; color:#3A3830; margin:0 0 26px;">Jos joku asia on sinulle helppoa ja muille vaikeaa, se on tärkeä vihje omasta vahvuudestasi.</p>
-        <div style="background:#F3ECDD; border-radius:14px; padding:20px 24px; font-size:16px; line-height:1.6; color:#3A3830;">
+        <h1 style="font-family:'Space Grotesk', sans-serif; font-size:34px; font-weight:700; margin:0 0 22px; color:#d62b52;">Mikä on vahvuus?</h1>
+        <p style="font-size:18px; line-height:1.75; color:#1f2340; margin:0 0 18px;">Vahvuus on asia, joka on sinulle <b>helppoa</b>. Usein se tuntuu niin tavalliselta, ettet edes huomaa sitä.</p>
+        <p style="font-size:18px; line-height:1.75; color:#1f2340; margin:0 0 18px;">Se mistä pidät, ei aina ole vahvuutesi. Se mitä teet vastahakoisesti ja huonosti, ei myöskään ole vahvuutesi.</p>
+        <p style="font-size:18px; line-height:1.75; color:#1f2340; margin:0 0 26px;">Jos joku asia on sinulle helppoa ja muille vaikeaa, se on tärkeä vihje omasta vahvuudestasi.</p>
+        <div style="background:#eceef8; border-radius:14px; padding:20px 24px; font-size:16px; line-height:1.6; color:#1f2340;">
           Kun tunnistat vahvuutesi ja käytät niitä, oppiminen helpottuu ja itseluottamus kasvaa.
         </div>
       </div>
@@ -68,10 +68,10 @@
     <sc-if value="{{ isQuiz }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .35s ease;">
         <div style="font-size:14px; font-weight:600; color:{{ accentColor }}; margin-bottom:10px;">Pikavahvuustesti — {{ quizProgressLabel }}</div>
-        <h2 style="font-family:'Newsreader', serif; font-size:28px; font-weight:600; margin:0 0 28px; color:#211F1A;">{{ currentQuestion.text }}</h2>
+        <h2 style="font-family:'Space Grotesk', sans-serif; font-size:28px; font-weight:700; margin:0 0 28px; color:#a85f00;">{{ currentQuestion.text }}</h2>
         <div style="display:flex; flex-direction:column; gap:12px;">
           <sc-for list="{{ currentQuestion.options }}" as="opt" hint-placeholder-count="3">
-            <div onClick="{{ onQuizAnswer }}" data-trait="{{ opt.trait }}" data-type="{{ opt.type }}" style="background:#fff; border:2px solid #E7DFCC; border-radius:14px; padding:18px 22px; font-size:17px; font-weight:500; cursor:pointer; transition:border-color .15s ease;" style-hover="{{ quizOptHover }}">
+            <div onClick="{{ onQuizAnswer }}" data-trait="{{ opt.trait }}" data-type="{{ opt.type }}" style="background:#fff; border:2px solid #dcdfeb; border-radius:14px; padding:18px 22px; font-size:17px; font-weight:500; cursor:pointer; transition:border-color .15s ease;" style-hover="{{ quizOptHover }}">
               {{ opt.label }}
             </div>
           </sc-for>
@@ -82,18 +82,17 @@
     <!-- STEP 3: RESULT -->
     <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
       <div style="text-align:center; animation: vm-pop .4s ease;">
-        <div style="font-size:44px; margin-bottom:6px;">✨</div>
-        <div style="font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:#6B6A61; font-weight:600; margin-bottom:8px;">Vahvuustyyppisi juuri nyt</div>
-        <h1 style="font-family:'Newsreader', serif; font-size:40px; font-weight:600; margin:0 0 14px; color:{{ accentColor }};">{{ tyyppiNimi }}</h1>
-        <p style="font-size:18px; line-height:1.6; color:#3A3830; max-width:460px; margin:0 auto 32px;">{{ tyyppiKuvaus }}</p>
-        <div style="background:#F3ECDD; border-radius:12px; padding:14px 18px; max-width:460px; margin:-14px auto 30px; font-size:14.5px; line-height:1.6; color:#5A584E; text-align:left;">
-          <b style="color:#3A3830;">Tämä ei ole lokero.</b> Se kertoo vain, mikä tapa sinulla korostuu juuri nyt — ja se voi muuttua, kun opit lisää ja kokeilet uutta.
+                <div style="font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:#5b6082; font-weight:600; margin-bottom:8px;">Vahvuustyyppisi juuri nyt</div>
+        <h1 style="font-family:'Space Grotesk', sans-serif; font-size:40px; font-weight:700; margin:0 0 14px; color:{{ accentColor }};">{{ tyyppiNimi }}</h1>
+        <p style="font-size:18px; line-height:1.6; color:#1f2340; max-width:460px; margin:0 auto 32px;">{{ tyyppiKuvaus }}</p>
+        <div style="background:#eceef8; border-radius:12px; padding:14px 18px; max-width:460px; margin:-14px auto 30px; font-size:14.5px; line-height:1.6; color:#5b6082; text-align:left;">
+          <b style="color:#1f2340;">Tämä ei ole lokero.</b> Se kertoo vain, mikä tapa sinulla korostuu juuri nyt — ja se voi muuttua, kun opit lisää ja kokeilet uutta.
         </div>
-        <div style="background:#fff; border:1px solid #E7DFCC; border-radius:16px; padding:22px 26px;">
-          <div style="font-size:13px; font-weight:600; color:#6B6A61; margin-bottom:14px;">Näitä vahvuuksia näkyi vastauksissasi</div>
+        <div style="background:#fff; border:1px solid #dcdfeb; border-radius:16px; padding:22px 26px;">
+          <div style="font-size:13px; font-weight:600; color:#5b6082; margin-bottom:14px;">Näitä vahvuuksia näkyi vastauksissasi</div>
           <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
             <sc-for list="{{ vahvuudetChips }}" as="v" hint-placeholder-count="5">
-              <span style="background:#F3ECDD; color:#3A3830; font-size:14px; font-weight:500; padding:7px 14px; border-radius:100px;">{{ v }}</span>
+              <span style="background:#eceef8; color:#1f2340; font-size:14px; font-weight:500; padding:7px 14px; border-radius:100px;">{{ v }}</span>
             </sc-for>
           </div>
         </div>
@@ -103,11 +102,11 @@
     <!-- STEP 4: TIETO1A -->
     <sc-if value="{{ isTieto1a }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .4s ease;">
-        <h1 style="font-family:'Newsreader', serif; font-size:32px; font-weight:600; margin:0 0 20px; color:#211F1A;">Miten löydät omat vahvuutesi?</h1>
-        <p style="font-size:18px; line-height:1.75; color:#3A3830; margin:0 0 24px;">Vahvuuksia ei aina huomaa heti, koska ne tuntuvat sinulle <b>helpoilta ja tavallisilta</b>. Siksi niitä täytyy joskus pysähtyä etsimään.</p>
-        <div style="background:#F3ECDD; border-radius:14px; padding:22px 26px;">
-          <div style="font-weight:600; font-size:16px; margin-bottom:14px; color:#211F1A;">MiniTehtävä — tee yksi näistä:</div>
-          <ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.9; color:#3A3830;">
+        <h1 style="font-family:'Space Grotesk', sans-serif; font-size:32px; font-weight:700; margin:0 0 20px; color:#d62b52;">Miten löydät omat vahvuutesi?</h1>
+        <p style="font-size:18px; line-height:1.75; color:#1f2340; margin:0 0 24px;">Vahvuuksia ei aina huomaa heti, koska ne tuntuvat sinulle <b>helpoilta ja tavallisilta</b>. Siksi niitä täytyy joskus pysähtyä etsimään.</p>
+        <div style="background:#eceef8; border-radius:14px; padding:22px 26px;">
+          <div style="font-weight:600; font-size:16px; margin-bottom:14px; color:#1f2340;">MiniTehtävä — tee yksi näistä:</div>
+          <ul style="margin:0; padding-left:20px; font-size:16px; line-height:1.9; color:#1f2340;">
             <li>Ajattele yhtä asiaa, jossa onnistut usein.</li>
             <li>Kysy yhdeltä ihmiseltä: <i>"Missä sinun mielestäsi olen hyvä?"</i></li>
             <li>Kysy kaverilta: <i>"Milloin olen ollut tosi hyvä jossakin?"</i></li>
@@ -120,28 +119,28 @@
     <!-- STEP 5: REFLECTION -->
     <sc-if value="{{ isReflect }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .4s ease;">
-        <h2 style="font-family:'Newsreader', serif; font-size:30px; font-weight:600; margin:0 0 10px; color:#211F1A;">Pysähdy hetkeksi</h2>
-        <p style="font-size:16px; line-height:1.6; color:#6B6A61; margin:0 0 26px;">Kirjoita rauhassa omin sanoin. Tätä ei arvostella.</p>
+        <h2 style="font-family:'Space Grotesk', sans-serif; font-size:30px; font-weight:700; margin:0 0 10px; color:#a85f00;">Pysähdy hetkeksi</h2>
+        <p style="font-size:16px; line-height:1.6; color:#5b6082; margin:0 0 26px;">Kirjoita rauhassa omin sanoin. Tätä ei arvostella.</p>
 
         <div style="margin-bottom:20px;">
-          <label style="display:block; font-size:15px; font-weight:600; color:#211F1A; margin-bottom:8px;">Minun vahvuuteni on</label>
-          <textarea data-field="omaVahvuus" onInput="{{ onReflectChange }}" value="{{ omaVahvuus }}" placeholder="Kirjoita tähän yksi vahvuutesi…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #E7DFCC; border-radius:12px; padding:14px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
+          <label style="display:block; font-size:15px; font-weight:600; color:#1f2340; margin-bottom:8px;">Minun vahvuuteni on</label>
+          <textarea data-field="omaVahvuus" onInput="{{ onReflectChange }}" value="{{ omaVahvuus }}" placeholder="Kirjoita tähän yksi vahvuutesi…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
         </div>
         <div style="margin-bottom:20px;">
-          <label style="display:block; font-size:15px; font-weight:600; color:#211F1A; margin-bottom:8px;">Yksi vahvuus, jonka huomasin itsessäni</label>
-          <textarea data-field="ref1" onInput="{{ onReflectChange }}" value="{{ ref1 }}" placeholder="Esim. olen sinnikäs, rohkea, hyvä kuuntelija…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #E7DFCC; border-radius:12px; padding:14px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
+          <label style="display:block; font-size:15px; font-weight:600; color:#1f2340; margin-bottom:8px;">Yksi vahvuus, jonka huomasin itsessäni</label>
+          <textarea data-field="ref1" onInput="{{ onReflectChange }}" value="{{ ref1 }}" placeholder="Esim. olen sinnikäs, rohkea, hyvä kuuntelija…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
         </div>
         <div style="margin-bottom:20px;">
-          <label style="display:block; font-size:15px; font-weight:600; color:#211F1A; margin-bottom:8px;">Yksi asia, joka tuntuu minusta helpolta</label>
-          <textarea data-field="ref2" onInput="{{ onReflectChange }}" value="{{ ref2 }}" placeholder="Esim. keskittyminen, uusien asioiden oppiminen…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #E7DFCC; border-radius:12px; padding:14px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
+          <label style="display:block; font-size:15px; font-weight:600; color:#1f2340; margin-bottom:8px;">Yksi asia, joka tuntuu minusta helpolta</label>
+          <textarea data-field="ref2" onInput="{{ onReflectChange }}" value="{{ ref2 }}" placeholder="Esim. keskittyminen, uusien asioiden oppiminen…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
         </div>
         <div>
-          <label style="display:block; font-size:15px; font-weight:600; color:#211F1A; margin-bottom:8px;">Missä asiassa kaverit tai perhe pyytävät sinulta apua?</label>
-          <textarea data-field="ref3" onInput="{{ onReflectChange }}" value="{{ ref3 }}" placeholder="Esim. tietokoneessa, piirtämisessä, rauhoittelemisessa…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #E7DFCC; border-radius:12px; padding:14px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
+          <label style="display:block; font-size:15px; font-weight:600; color:#1f2340; margin-bottom:8px;">Missä asiassa kaverit tai perhe pyytävät sinulta apua?</label>
+          <textarea data-field="ref3" onInput="{{ onReflectChange }}" value="{{ ref3 }}" placeholder="Esim. tietokoneessa, piirtämisessä, rauhoittelemisessa…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
         </div>
         <div style="margin-top:20px;">
-          <label style="display:block; font-size:15px; font-weight:600; color:#211F1A; margin-bottom:8px;">Miten vahvuutesi voi auttaa muita tai ryhmää?</label>
-          <textarea data-field="ref4" onInput="{{ onReflectChange }}" value="{{ ref4 }}" placeholder="Esim. autan kavereita, saan ryhmän toimimaan yhdessä, piristän muita…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #E7DFCC; border-radius:12px; padding:14px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
+          <label style="display:block; font-size:15px; font-weight:600; color:#1f2340; margin-bottom:8px;">Miten vahvuutesi voi auttaa muita tai ryhmää?</label>
+          <textarea data-field="ref4" onInput="{{ onReflectChange }}" value="{{ ref4 }}" placeholder="Esim. autan kavereita, saan ryhmän toimimaan yhdessä, piristän muita…" style="width:100%; box-sizing:border-box; min-height:56px; border:1.5px solid #dcdfeb; border-radius:12px; padding:14px 16px; font-family:'Nunito', sans-serif; font-size:16px; resize:vertical; background:#fff;"></textarea>
         </div>
       </div>
     </sc-if>
@@ -149,19 +148,19 @@
     <!-- STEP 6: TIETO2 -->
     <sc-if value="{{ isTieto2 }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .4s ease;">
-        <h2 style="font-family:'Newsreader', serif; font-size:30px; font-weight:600; margin:0 0 24px; text-align:center; color:#211F1A;">Tiesitkö, että…</h2>
+        <h2 style="font-family:'Space Grotesk', sans-serif; font-size:30px; font-weight:700; margin:0 0 24px; text-align:center; color:#a85f00;">Tiesitkö, että…</h2>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px;">
           <sc-for list="{{ roleModels }}" as="rm" hint-placeholder-count="4">
-            <div style="background:#fff; border:1px solid #E7DFCC; border-radius:14px; padding:18px;">
+            <div style="background:#fff; border:1px solid #dcdfeb; border-radius:14px; padding:18px;">
               <div style="width:88px; height:88px; margin-bottom:10px;">
                 <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ rm.slotId }}" shape="circle" placeholder="{{ rm.placeholder }}" src="{{ rm.src }}" style="width:88px; height:88px;" hint-size="88px,88px"></x-import>
               </div>
-              <div style="font-weight:600; font-size:15px; margin-bottom:6px; color:#211F1A;">{{ rm.name }}</div>
-              <div style="font-size:13.5px; line-height:1.5; color:#5A584E;">{{ rm.desc }}</div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:6px; color:#1f2340;">{{ rm.name }}</div>
+              <div style="font-size:13.5px; line-height:1.5; color:#5b6082;">{{ rm.desc }}</div>
             </div>
           </sc-for>
         </div>
-        <div style="text-align:center; font-family:'Newsreader', serif; font-size:20px; line-height:1.6; color:#211F1A; margin-bottom:22px;">
+        <div style="text-align:center; font-family:'Space Grotesk', sans-serif; font-size:20px; line-height:1.6; color:#1f2340; margin-bottom:22px;">
           He eivät olleet huonoja.<br>He eivät vain olleet hyviä kaikessa.<br><span style="color:{{ accentColor }};">Ja silti he muuttivat maailmaa.</span>
         </div>
         <div style="background:{{ accentColor }}; color:#fff; border-radius:16px; padding:22px 24px; text-align:center;">
@@ -174,8 +173,8 @@
     <!-- STEPS 7-9: PICK SCREENS -->
     <sc-if value="{{ isPick }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .35s ease;">
-        <h2 style="font-family:'Newsreader', serif; font-size:28px; font-weight:600; margin:0 0 14px; color:#211F1A;">{{ currentPick.title }}</h2>
-        <p style="font-size:16px; line-height:1.7; color:#4A483F; margin:0 0 20px;">{{ currentPick.intro }}</p>
+        <h2 style="font-family:'Space Grotesk', sans-serif; font-size:28px; font-weight:700; margin:0 0 14px; color:#a85f00;">{{ currentPick.title }}</h2>
+        <p style="font-size:16px; line-height:1.7; color:#343a5e; margin:0 0 20px;">{{ currentPick.intro }}</p>
         <div style="font-size:14px; font-weight:600; color:{{ accentColor }}; margin-bottom:14px;">{{ currentPick.instruction }}</div>
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
           <sc-for list="{{ currentPick.pool }}" as="chip" hint-placeholder-count="12">
@@ -189,58 +188,58 @@
     <sc-if value="{{ isFinal }}" hint-placeholder-val="{{ false }}">
       <div style="animation: vm-fade-in .45s ease;">
         <div style="text-align:center; margin-bottom:26px;">
-          <div style="font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:#6B6A61; font-weight:600; margin-bottom:8px;">Valmista tuli</div>
-          <h1 style="font-family:'Newsreader', serif; font-size:34px; font-weight:600; margin:0; color:#211F1A;">Minun vahvuuskorttini</h1>
+          <div style="font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:#5b6082; font-weight:600; margin-bottom:8px;">Valmista tuli</div>
+          <h1 style="font-family:'Space Grotesk', sans-serif; font-size:34px; font-weight:700; margin:0; color:#d62b52;">Minun vahvuuskorttini</h1>
         </div>
 
-        <div style="background:#fff; border:1px solid #E7DFCC; border-radius:18px; padding:28px; margin-bottom:20px;">
+        <div style="background:#fff; border:1px solid #dcdfeb; border-radius:16px; padding:28px; margin-bottom:20px;">
           <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px;">
-            <span style="background:{{ accentColor }}; color:#fff; font-size:13px; font-weight:600; padding:7px 14px; border-radius:100px;">🧭 {{ tyyppiNimi }}</span>
+            <span style="background:{{ accentColor }}; color:#fff; font-size:13px; font-weight:600; padding:7px 14px; border-radius:100px;">{{ tyyppiNimi }}</span>
             <sc-if value="{{ omaVahvuus }}" hint-placeholder-val="{{ false }}">
-              <span style="background:#F3ECDD; color:#3A3830; font-size:13px; font-weight:500; padding:7px 14px; border-radius:100px;">✏️ {{ omaVahvuus }}</span>
+              <span style="background:#eceef8; color:#1f2340; font-size:13px; font-weight:500; padding:7px 14px; border-radius:100px;">{{ omaVahvuus }}</span>
             </sc-if>
           </div>
 
-          <div style="text-align:center; font-size:12.5px; color:#8A887D; margin:-14px 0 18px; line-height:1.55;">🧭 kertoo, mikä tapa sinulla korostuu nyt — <b>ei lokero, johon jäät</b>. Se voi muuttua.</div>
-          <div style="font-size:12px; color:#8A887D; text-align:center; margin-bottom:20px;">Vinkki: raahaa vahvuudet tärkeysjärjestykseen — tärkein ensin.</div>
+          <div style="text-align:center; font-size:12.5px; color:#5b6082; margin:-14px 0 18px; line-height:1.55;">Tyyppi kertoo, mikä tapa sinulla korostuu nyt — <b>ei lokero, johon jäät</b>. Se voi muuttua.</div>
+          <div style="font-size:12px; color:#5b6082; text-align:center; margin-bottom:20px;">Vinkki: raahaa vahvuudet tärkeysjärjestykseen — tärkein ensin.</div>
 
           <sc-for list="{{ finalCategories }}" as="cat" hint-placeholder-count="3">
             <div style="margin-bottom:22px;">
-              <div style="font-weight:600; font-size:15px; margin-bottom:10px; color:#211F1A;">{{ cat.icon }} {{ cat.label }}</div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:10px; color:#1f2340;">{{ cat.label }}</div>
               <div style="display:flex; flex-wrap:wrap; gap:8px;">
                 <sc-for list="{{ cat.items }}" as="pill" hint-placeholder-count="3">
-                  <span draggable="true" onDragStart="{{ onPillDragStart }}" onDragOver="{{ onPillDragOver }}" onDrop="{{ onPillDrop }}" data-cat="{{ cat.key }}" data-idx="{{ pill.idx }}" style="background:#F3ECDD; color:#3A3830; font-size:14px; font-weight:500; padding:8px 15px; border-radius:100px; cursor:grab; border:1px solid transparent;">{{ pill.word }}</span>
+                  <span draggable="true" onDragStart="{{ onPillDragStart }}" onDragOver="{{ onPillDragOver }}" onDrop="{{ onPillDrop }}" data-cat="{{ cat.key }}" data-idx="{{ pill.idx }}" style="background:#eceef8; color:#1f2340; font-size:14px; font-weight:500; padding:8px 15px; border-radius:100px; cursor:grab; border:1px solid transparent;">{{ pill.word }}</span>
                 </sc-for>
                 <sc-if value="{{ cat.empty }}" hint-placeholder-val="{{ false }}">
-                  <span style="color:#B0AE9F; font-size:14px; font-style:italic;">Ei vielä valintoja</span>
+                  <span style="color:#7b80a0; font-size:14px; font-style:italic;">Ei vielä valintoja</span>
                 </sc-if>
               </div>
             </div>
           </sc-for>
 
           <sc-if value="{{ hasReflections }}" hint-placeholder-val="{{ false }}">
-            <div style="border-top:1px solid #E7DFCC; margin-top:6px; padding-top:20px; display:flex; flex-direction:column; gap:14px;">
+            <div style="border-top:1px solid #dcdfeb; margin-top:6px; padding-top:20px; display:flex; flex-direction:column; gap:14px;">
               <sc-if value="{{ ref4 }}" hint-placeholder-val="{{ false }}">
-                <div style="background:#F3ECDD; border-radius:10px; padding:10px 14px;"><div style="font-size:12px; font-weight:600; color:#6B6A61; margin-bottom:3px;">Vahvuuteni auttaa muita</div><div style="font-size:15px; color:#3A3830;">{{ ref4 }}</div></div>
+                <div style="background:#eceef8; border-radius:10px; padding:10px 14px;"><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Vahvuuteni auttaa muita</div><div style="font-size:15px; color:#1f2340;">{{ ref4 }}</div></div>
               </sc-if>
               <sc-if value="{{ ref1 }}" hint-placeholder-val="{{ false }}">
-                <div><div style="font-size:12px; font-weight:600; color:#6B6A61; margin-bottom:3px;">Huomasin itsessäni</div><div style="font-size:15px; color:#3A3830;">{{ ref1 }}</div></div>
+                <div><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Huomasin itsessäni</div><div style="font-size:15px; color:#1f2340;">{{ ref1 }}</div></div>
               </sc-if>
               <sc-if value="{{ ref2 }}" hint-placeholder-val="{{ false }}">
-                <div><div style="font-size:12px; font-weight:600; color:#6B6A61; margin-bottom:3px;">Minulle helppoa</div><div style="font-size:15px; color:#3A3830;">{{ ref2 }}</div></div>
+                <div><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Minulle helppoa</div><div style="font-size:15px; color:#1f2340;">{{ ref2 }}</div></div>
               </sc-if>
               <sc-if value="{{ ref3 }}" hint-placeholder-val="{{ false }}">
-                <div><div style="font-size:12px; font-weight:600; color:#6B6A61; margin-bottom:3px;">Apua pyydetään minulta</div><div style="font-size:15px; color:#3A3830;">{{ ref3 }}</div></div>
+                <div><div style="font-size:12px; font-weight:600; color:#5b6082; margin-bottom:3px;">Apua pyydetään minulta</div><div style="font-size:15px; color:#1f2340;">{{ ref3 }}</div></div>
               </sc-if>
             </div>
           </sc-if>
 
-          <div style="text-align:center; font-size:13px; color:#8A887D; margin-top:20px; font-style:italic;">Tämä kortti elää ja muuttuu, kun opit lisää itsestäsi.</div>
+          <div style="text-align:center; font-size:13px; color:#5b6082; margin-top:20px; font-style:italic;">Tämä kortti elää ja muuttuu, kun opit lisää itsestäsi.</div>
         </div>
 
         <div style="display:flex; gap:12px; justify-content:center;">
-          <button onClick="{{ printCard }}" style="background:{{ accentColor }}; color:#fff; border:none; font-family:'IBM Plex Sans', sans-serif; font-size:15px; font-weight:600; padding:13px 24px; border-radius:100px; cursor:pointer;">📥 Tulosta / tallenna PDF</button>
-          <button onClick="{{ restart }}" style="background:transparent; color:#6B6A61; border:1.5px solid #E7DFCC; font-family:'IBM Plex Sans', sans-serif; font-size:15px; font-weight:600; padding:13px 24px; border-radius:100px; cursor:pointer;">Aloita alusta</button>
+          <button onClick="{{ printCard }}" style="background:{{ accentColor }}; color:#fff; border:none; font-family:'Nunito', sans-serif; font-size:15px; font-weight:800; padding:13px 24px; border-radius:14px; cursor:pointer;">Tulosta / tallenna PDF</button>
+          <button onClick="{{ restart }}" style="background:transparent; color:#5b6082; border:1.5px solid #dcdfeb; font-family:'Nunito', sans-serif; font-size:15px; font-weight:800; padding:13px 24px; border-radius:14px; cursor:pointer;">Aloita alusta</button>
         </div>
       </div>
     </sc-if>
@@ -257,7 +256,7 @@
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 780, &quot;height&quot;: 900}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#6d28d9&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#6d28d9&quot;, &quot;#1F6F5C&quot;, &quot;#B2543A&quot;, &quot;#2A6FDB&quot;]}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 780, &quot;height&quot;: 900}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#d62b52&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#d62b52&quot;, &quot;#00796a&quot;, &quot;#6b46c1&quot;, &quot;#0a6fc2&quot;]}}">
 const QUESTIONS = [
   { text: "Kun opettaja antaa uuden tehtävän, sinä yleensä…", options: [
     { label: "Aloitan heti", trait: "Toimelias", type: "Tekija" },
@@ -413,8 +412,8 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const step = s.step;
-    const accentColor = this.props.accentColor || "#6d28d9";
-    const bgColor = "#FAF3E8";
+    const accentColor = this.props.accentColor || "#d62b52";
+    const bgColor = "#f6f7fb";
 
     const parasTyyppi = (() => {
       const order = ["Tekija", "Ajattelija", "Auttaja", "Luova", "Oppija"];
@@ -438,8 +437,8 @@ class Component extends DCLogic {
           word: w,
           label: sel ? w + " ✓" : w,
           style: sel
-            ? `background:${accentColor}; color:#fff; font-size:15px; font-weight:500; padding:10px 18px; border-radius:100px; cursor:pointer; border:2px solid ${accentColor};`
-            : `background:#fff; color:#3A3830; font-size:15px; font-weight:500; padding:10px 18px; border-radius:100px; cursor:pointer; border:2px solid #E7DFCC;`
+            ? `background:#00796a; color:#fff; font-size:15px; font-weight:700; padding:10px 18px; border-radius:100px; cursor:pointer; border:2px solid #00796a;`
+            : `background:rgba(0,121,106,.1); color:#00796a; font-size:15px; font-weight:700; padding:10px 18px; border-radius:100px; cursor:pointer; border:2px solid rgba(0,121,106,.35);`
         };
       })
     } : null;
@@ -448,7 +447,6 @@ class Component extends DCLogic {
       const items = (s.lahteet[key] || []).map((word, idx) => ({ word, idx }));
       return {
         key,
-        icon: key === "innostus" ? "😊" : key === "selviytyminen" ? "💪" : "🚀",
         label: key === "innostus" ? "Kun innostun tai opin uutta" : key === "selviytyminen" ? "Kun olen selvinnyt vaikeasta tilanteesta" : "Tulevaisuudessa ja muiden kanssa",
         items,
         empty: items.length === 0
@@ -519,10 +517,10 @@ class Component extends DCLogic {
 
       showNav,
       canBack: step > 0 && step !== 3,
-      backBtnStyle: `background:transparent; border:none; color:#6B6A61; font-family:'IBM Plex Sans', sans-serif; font-size:15px; font-weight:600; cursor:pointer; padding:12px 8px; visibility:${(step > 0 && step !== 3) ? "visible" : "hidden"};`,
+      backBtnStyle: `background:transparent; border:none; color:#5b6082; font-family:'Nunito', sans-serif; font-size:15px; font-weight:600; cursor:pointer; padding:12px 8px; visibility:${(step > 0 && step !== 3) ? "visible" : "hidden"};`,
       nextLabel: navLabels[step] || "Jatka",
       nextDisabled,
-      nextBtnStyle: `background:${nextDisabled ? "#D8D2C0" : accentColor}; color:#fff; border:none; font-family:'IBM Plex Sans', sans-serif; font-size:15px; font-weight:600; padding:14px 28px; border-radius:100px; cursor:${nextDisabled ? "not-allowed" : "pointer"};`
+      nextBtnStyle: `background:${nextDisabled ? "#f7c6d1" : accentColor}; color:${nextDisabled ? "#8f1735" : "#fff"}; border:none; font-family:'Nunito', sans-serif; font-size:15px; font-weight:800; padding:14px 28px; border-radius:14px; cursor:${nextDisabled ? "not-allowed" : "pointer"};${nextDisabled ? " border:2px solid #ee9db0;" : ""}`
     };
   }
 }
