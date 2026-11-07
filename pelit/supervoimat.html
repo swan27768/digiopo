@@ -533,7 +533,6 @@ const S = {
   routeAns: {},   // reitti -> valitut vaihtoehdot (pisteet lasketaan vasta valmiista reiteistä)
   qtAns: null,    // pikatestin vastaukset
   pending: [],    // keskeneräisen reitin/pikatestin vastaukset
-  result: null,   // tyyppi lasketaan vain kerran
   reflection: '',
   development: '',
   reflSaved: false,
@@ -557,19 +556,21 @@ function recompute() {
     ans.forEach((oi, qi) => { const o = ROUTES[id].questions[qi].opts[oi]; o.s.forEach(addStr); addTyp(o.t); });
   }
   if (S.qtAns) S.qtAns.forEach((oi, qi) => { const o = QT[qi].opts[oi]; addStr(o.s); addTyp(o.t); });
-  S.result = null;
 }
-function bestType() {
-  if (S.result) return S.result;
+function bestTypes() {
   let max = 0, tied = [];
   for (const [k,v] of Object.entries(S.types)) {
     if (v > max)       { max = v; tied = [k]; }
     else if (v === max && v > 0) { tied.push(k); }
   }
-  if (tied.length === 0) return 'Tekijä'; // fallback jos ei yhtään vastausta
-  S.result = tied[Math.floor(Math.random() * tied.length)]; // arvonta vain kerran
-  return S.result;
+  if (tied.length === 0) return ['Tekijä']; // fallback jos ei yhtään vastausta
+  return tied; // tasatilanteessa kaikki tasan olevat tyypit näytetään, ei arvontaa
 }
+// "Tekijä", "Tekijä ja Auttaja", "Tekijä, Auttaja ja Luova"
+function typesText(ts) {
+  return ts.length === 1 ? ts[0] : ts.slice(0, -1).join(', ') + ' ja ' + ts[ts.length - 1];
+}
+const LUKUSANAT = ['', 'yksi', 'kaksi', 'kolme', 'neljä', 'viisi', 'kuusi'];
 function topStrengths(n) {
   return Object.entries(S.scores).sort((a,b) => b[1]-a[1]).slice(0,n).map(e=>e[0]);
 }
@@ -1002,9 +1003,21 @@ function saveReflection() {
 }
 
 function showResults() {
-  const type = bestType();
-  const td   = TYPES[type];
+  const types = bestTypes();
   const top5 = topStrengths(5);
+  const tieHtml = types.length > 1
+    ? `<div class="card" style="margin-bottom:0.6rem"><p style="margin:0;text-align:center">Sait <strong>${LUKUSANAT[types.length]} tasaväkistä tulosta</strong>: olet <strong>${typesText(types)}</strong>. Vastauksesi sopivat yhtä hyvin jokaiseen näistä.</p></div>`
+    : '';
+  const typeCards = types.map(type => {
+    const td = TYPES[type];
+    return `
+    <div class="result-card">
+      <span class="bigmoji">${td.emoji}</span>
+      <div class="type-badge" style="background:${td.color}">${type}</div>
+      <p style="margin:0.8rem 0 0.4rem">${td.desc}</p>
+      <p style="color:var(--teal);font-size:0.88rem;font-style:italic;margin:0">${td.super}</p>
+    </div>`;
+  }).join('');
 
   const strHtml = top5.length > 0
     ? `<ul class="str-list">${top5.map(s=>`<li><span class="str-tag">${s}</span></li>`).join('')}</ul>`
@@ -1015,13 +1028,9 @@ function showResults() {
     <h1>Sinun supervoimasi</h1>
     <div class="card-warn">Tulos on suuntaa-antava. Se perustuu muutamaan vastaukseen, joten se ei kerro sinusta kaikkea.</div>
 
-    <div class="result-card">
-      <span class="bigmoji">${td.emoji}</span>
-      <div class="type-badge" style="background:${td.color}">${type}</div>
-      <p style="margin:0.8rem 0 0.4rem">${td.desc}</p>
-      <p style="color:var(--teal);font-size:0.88rem;font-style:italic;margin:0">${td.super}</p>
-      <p style="color:var(--muted);font-size:0.85rem;margin:0.7rem 0 0">Tämä on tämänhetkinen suuntasi, ja se voi muuttua.</p>
-    </div>
+    ${tieHtml}
+    ${typeCards}
+    <p style="color:var(--muted);font-size:0.85rem;margin:0.4rem 0 0;text-align:center">${types.length > 1 ? 'Nämä ovat' : 'Tämä on'} tämänhetkinen suuntasi, ja se voi muuttua.</p>
 
     ${top5.length > 0 ? `<div class="card"><h3>Löytämäsi supervoimat</h3>${strHtml}<p style="color:var(--muted);font-size:0.8rem;text-align:center;margin:0.6rem 0 0">Vahvuudet ovat peräisin VIA-luonteenvahvuuksista. Se on tutkijoiden tekemä lista ihmisen vahvuuksista. Samat vahvuudet ovat mukana myös Vahvuushuutokaupassa.</p></div>` : ''}
 
@@ -1062,7 +1071,7 @@ async function lataaPdf() {
   try {
     btn.disabled = true;
     await lataaJsPdf();
-    const type = bestType(), td = TYPES[type], top5 = topStrengths(5);
+    const types = bestTypes(), top5 = topStrengths(5);
     const date = new Date().toLocaleDateString('fi-FI');
     const d = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
     const X = 20, W = 170;
@@ -1085,16 +1094,21 @@ async function lataaPdf() {
 
     // Tyyppi
     y = 50;
-    d.setFont('helvetica', 'bold'); d.setFontSize(13); ink(); d.text('Suuntani', X, y);
+    d.setFont('helvetica', 'bold'); d.setFontSize(13); ink(); d.text(types.length > 1 ? 'Suuntani (tasatulos)' : 'Suuntani', X, y);
     y += 5;
-    d.setFont('helvetica', 'bold'); d.setFontSize(15);
-    const bw = d.getTextWidth(type) + 14;
-    d.setFillColor(...hexRgb(td.color)); d.roundedRect(X, y, bw, 10, 5, 5, 'F');
-    d.setTextColor(255, 255, 255); d.text(type, X + 7, y + 7);
-    y += 20;
-    para(td.desc, 11);
-    y += 2;
-    para(td.super, 11, 'italic', [0, 121, 106]);
+    types.forEach(type => {
+      const td = TYPES[type];
+      need(50);
+      d.setFont('helvetica', 'bold'); d.setFontSize(15);
+      const bw = d.getTextWidth(type) + 14;
+      d.setFillColor(...hexRgb(td.color)); d.roundedRect(X, y, bw, 10, 5, 5, 'F');
+      d.setTextColor(255, 255, 255); d.text(type, X + 7, y + 7);
+      y += 20;
+      para(td.desc, 11);
+      y += 2;
+      para(td.super, 11, 'italic', [0, 121, 106]);
+      y += 6;
+    });
 
     // Vahvuudet
     head('Supervoimani');
@@ -1122,7 +1136,7 @@ function resetAll() {
   S.scores = {};
   S.types  = { Tekijä:0, Ajattelija:0, Auttaja:0, Luova:0, Seikkailija:0, Johtaja:0 };
   S.done   = new Set();
-  S.routeAns = {}; S.qtAns = null; S.pending = []; S.result = null;
+  S.routeAns = {}; S.qtAns = null; S.pending = [];
   S.reflection = ''; S.development = '';
   S.reflSaved  = false;
   showStart();
