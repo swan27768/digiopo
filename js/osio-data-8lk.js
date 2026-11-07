@@ -193,7 +193,8 @@ window.OSIO_DATA = {
       lahteet: [
         "Miller, R. (toim.) (2018). <em>Transforming the Future: Anticipation in the 21st Century</em>. UNESCO/Routledge.",
         "Sitra (2023). <em>Megatrendit 2023</em>.",
-        "Kolb, D. (1984). <em>Experiential Learning</em>. Prentice Hall."
+        "Kolb, D. (1984). <em>Experiential Learning</em>. Prentice Hall.",
+        "Keltikangas-Järvinen, L. (2026). <em>Itsekkyyden aika</em>. WSOY."
       ]
     }
   }
