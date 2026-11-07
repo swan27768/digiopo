@@ -1,10 +1,10 @@
-/* Tulevaisuuden matkatoimisto — arpoo kohteen ja asiakastoiveita (tehtavat/matkatoimisto.html). */
+/* Tulevaisuuden unelmatoimisto — arpoo unelmapaketin tyypin ja asiakastoiveita (tehtavat/unelmatoimisto.html). */
 (function () {
   "use strict";
 
-  var KOHTEET = [
-    "Kuu", "Mars", "Kuun kaukainen puoli", "Avaruushotelli Maan ympärillä",
-    "Merenpohjan kaupunki", "Jääkuu Europa", "Pilvikaupunki Venuksen yllä", "Kuun kraatterin kylpylä"
+  var PAKETIT = [
+    "Matka Kuuhun", "Matka Marsiin", "Matka merenpohjaan", "Uusi koti tulevaisuuden kaupungissa",
+    "Unelmaharrastus", "Unelmatyöpäivä", "Seikkailu, jota ei ole vielä olemassa", "Maailman paras koulupäivä"
   ];
   var TOIVEET = [
     "Haluan nähdä Maan avaruudesta.",
@@ -24,9 +24,9 @@
   ];
 
   var viimeisin = null;
-  function arvoKohde() {
+  function arvoPaketti() {
     var v, n = 0;
-    do { v = KOHTEET[Math.floor(Math.random() * KOHTEET.length)]; n++; } while (v === viimeisin && n < 20);
+    do { v = PAKETIT[Math.floor(Math.random() * PAKETIT.length)]; n++; } while (v === viimeisin && n < 20);
     viimeisin = v;
     return v;
   }
@@ -47,12 +47,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    var kohdeNappi = document.getElementById("arvo-kohde");
-    var kohdeNayto = document.getElementById("nayto-kohde");
-    if (kohdeNappi && kohdeNayto) {
-      kohdeNappi.addEventListener("click", function () {
-        kohdeNayto.textContent = arvoKohde();
-        pop(kohdeNayto);
+    var pakettiNappi = document.getElementById("arvo-paketti");
+    var pakettiNayto = document.getElementById("nayto-paketti");
+    if (pakettiNappi && pakettiNayto) {
+      pakettiNappi.addEventListener("click", function () {
+        pakettiNayto.textContent = arvoPaketti();
+        pop(pakettiNayto);
       });
     }
 
