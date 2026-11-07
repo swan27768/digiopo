@@ -266,29 +266,34 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 780, &quot;height&quot;: 900}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#d62b52&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#d62b52&quot;, &quot;#00796a&quot;, &quot;#6b46c1&quot;, &quot;#0a6fc2&quot;]}}">
 const QUESTIONS = [
   { text: "Kun opettaja antaa uuden tehtävän, sinä yleensä…", options: [
-    { label: "Aloitan heti", trait: "Toimelias", type: "Tekija" },
-    { label: "Suunnittelen ensin", trait: "Järjestelmällinen", type: "Ajattelija" },
-    { label: "Kysyn muilta neuvoa", trait: "Ryhmätyötaitoinen", type: "Auttaja" }
+    { label: "Aloitan heti", trait: "Toimeliaisuus", type: "Tekija" },
+    { label: "Suunnittelen ensin", trait: "Suunnitelmallisuus", type: "Ajattelija" },
+    { label: "Kysyn muilta neuvoa", trait: "Yhteistyö", type: "Auttaja" },
+    { label: "Mietin, miten tekisin sen omalla tavallani", trait: "Luovuus", type: "Luova" }
   ]},
   { text: "Kun joku pyytää sinulta apua, sinä yleensä…", options: [
-    { label: "Autan heti", trait: "Avulias", type: "Auttaja" },
-    { label: "Selitän rauhassa", trait: "Hyvä kuuntelija", type: "Auttaja" },
-    { label: "Keksin ratkaisun", trait: "Ratkaisukeskeinen", type: "Luova" }
+    { label: "Autan heti", trait: "Ystävällisyys", type: "Auttaja" },
+    { label: "Selitän rauhassa", trait: "Toisten ymmärtäminen", type: "Auttaja" },
+    { label: "Keksin ratkaisun", trait: "Luovuus", type: "Luova" },
+    { label: "Sovin, kuka tekee mitä", trait: "Johtajuus", type: "Johtaja" }
   ]},
   { text: "Kun jokin on vaikeaa, sinä yleensä…", options: [
-    { label: "Yritän uudelleen", trait: "Sinnikäs", type: "Tekija" },
-    { label: "Pysyn rauhallisena", trait: "Rauhallinen", type: "Ajattelija" },
-    { label: "Keksin uuden tavan", trait: "Luova", type: "Luova" }
+    { label: "Yritän uudelleen", trait: "Sinnikkyys", type: "Tekija" },
+    { label: "Pysyn rauhallisena ja mietin", trait: "Pohtiminen", type: "Ajattelija" },
+    { label: "Keksin uuden tavan", trait: "Luovuus", type: "Luova" },
+    { label: "Muistutan itselleni, että olen selvinnyt ennenkin", trait: "Optimismi", type: "Seikkailija" }
   ]},
   { text: "Missä olet usein hyvä?", options: [
-    { label: "Oppimisessa", trait: "Oppimistaidollinen", type: "Oppija" },
-    { label: "Kavereiden kanssa", trait: "Sosiaalinen", type: "Auttaja" },
-    { label: "Ideoissa", trait: "Idearikas", type: "Luova" }
+    { label: "Oppimisessa", trait: "Oppimisen ilo", type: "Ajattelija" },
+    { label: "Kavereiden kanssa", trait: "Yhteistyö", type: "Auttaja" },
+    { label: "Ideoissa", trait: "Luovuus", type: "Luova" },
+    { label: "Uusissa tilanteissa", trait: "Rohkeus", type: "Seikkailija" }
   ]},
   { text: "Mikä tuntuu sinusta usein helpolta?", options: [
-    { label: "Keskittyminen", trait: "Tarkka", type: "Ajattelija" },
-    { label: "Selittäminen", trait: "Ilmaisukykyinen", type: "Auttaja" },
-    { label: "Toimiminen", trait: "Toimelias", type: "Tekija" }
+    { label: "Keskittyminen", trait: "Uteliaisuus", type: "Ajattelija" },
+    { label: "Selittäminen", trait: "Toisten ymmärtäminen", type: "Auttaja" },
+    { label: "Toimiminen", trait: "Toimeliaisuus", type: "Tekija" },
+    { label: "Vastuun ottaminen", trait: "Luotettavuus", type: "Johtaja" }
   ]}
 ];
 
@@ -297,7 +302,8 @@ const TYPE_INFO = {
   Ajattelija: { nimi: "Ajattelija", kuvaus: "Mietit asioita rauhassa ja huomaat yksityiskohdat." },
   Auttaja: { nimi: "Auttaja", kuvaus: "Huomaat muut ihmiset ja autat mielelläsi." },
   Luova: { nimi: "Luova", kuvaus: "Keksit uusia ideoita ja tapoja ratkaista asioita." },
-  Oppija: { nimi: "Oppija", kuvaus: "Olet utelias ja opit uutta nopeasti." }
+  Seikkailija: { nimi: "Seikkailija", kuvaus: "Uskallat kokeilla uutta ja sopeudut muutoksiin." },
+  Johtaja: { nimi: "Johtaja", kuvaus: "Otat vastuuta ja viet porukkaa eteenpäin." }
 };
 
 const ROLE_MODELS = [
@@ -307,21 +313,23 @@ const ROLE_MODELS = [
   { slotId: "portrait-beethoven", name: "Ludwig van Beethoven", desc: "Menetti kuulonsa keski-iässä, mutta sävelsi silti kuurona joitakin historian kuuluisimmista sinfonioista.", placeholder: "Beethoven", src: "uploads/beethoven.webp" }
 ];
 
+const VAHVUUDET = ["Luovuus", "Uteliaisuus", "Oppimisen ilo", "Pohtiminen", "Suunnitelmallisuus", "Toimeliaisuus", "Sinnikkyys", "Rohkeus", "Avoin mieli", "Optimismi", "Ystävällisyys", "Toisten ymmärtäminen", "Yhteistyö", "Luotettavuus", "Johtajuus"]; // sama 15 vahvuuden sanasto kuin 7. luokalla
+
 const POOLS = {
   innostus: {
     title: "Missä innostut ja opit parhaiten?",
     intro: "Mieti tekemistä, josta pidät tai jonka opit helposti — mitä teet silloin, mikä siinä on kivaa, ja missä olet siinä hyvä.",
-    words: ["Utelias", "Luova", "Sinnikäs", "Energinen", "Idearikas", "Rohkea", "Ahkera", "Oppimishaluinen", "Nopea oppimaan", "Keskittyvä", "Tarkka", "Itsenäinen"]
+    words: VAHVUUDET
   },
   selviytyminen: {
     title: "Miten selviät vaikeista tilanteista?",
     intro: "Kaikilla on joskus vaikeita hetkiä. Mieti tilannetta, jossa jokin tuntui vaikealta tai jännitti — mutta selvisit siitä silti.",
-    words: ["Sinnikäs", "Rohkea", "Kärsivällinen", "Yritteliäs", "Optimistinen", "Rauhallinen", "Itseluottamuksellinen", "Toiveikas", "Vastuullinen", "Ratkaisuhakuinen", "Itsenäinen", "Avunpyytäjä"]
+    words: VAHVUUDET
   },
   tulevaisuus: {
     title: "Mitä haluat tehdä — ja millainen olet muiden kanssa?",
     intro: "Mieti asiaa, jota haluaisit oppia tai tehdä enemmän tulevaisuudessa — ja sitä, millainen olet kavereiden, luokan tai perheen kanssa.",
-    words: ["Päämäärätietoinen", "Motivoitunut", "Rohkea", "Sitkeä", "Vastuullinen", "Yhteistyökykyinen", "Ystävällinen", "Empaattinen", "Kuunteleva", "Kannustava", "Luotettava", "Reilu"]
+    words: VAHVUUDET
   }
 };
 
@@ -436,11 +444,11 @@ class Component extends DCLogic {
     const accentColor = this.props.accentColor || "#d62b52";
     const bgColor = "#f6f7fb";
 
-    const parasTyyppi = (() => {
-      const order = ["Tekija", "Ajattelija", "Auttaja", "Luova", "Oppija"];
-      let best = "Tekija", max = -1;
-      order.forEach(k => { if ((s.tyypit[k] || 0) > max) { max = s.tyypit[k] || 0; best = k; } });
-      return best;
+    const parasTyypit = (() => {
+      const order = ["Tekija", "Ajattelija", "Auttaja", "Luova", "Seikkailija", "Johtaja"];
+      const max = Math.max(...order.map(k => s.tyypit[k] || 0));
+      const parhaat = order.filter(k => (s.tyypit[k] || 0) === max);
+      return parhaat.length ? parhaat : ["Tekija"];
     })();
 
     const isPick = step >= 7 && step <= 9;
@@ -534,9 +542,9 @@ class Component extends DCLogic {
       quizOptHover: `border-color:${accentColor};`,
       btnHover: `filter:brightness(1.08);`,
 
-      tyyppiNimi: TYPE_INFO[parasTyyppi].nimi,
-      tyyppiKuvaus: TYPE_INFO[parasTyyppi].kuvaus,
-      vahvuudetChips: s.vahvuudet,
+      tyyppiNimi: parasTyypit.map(k => TYPE_INFO[k].nimi).join(parasTyypit.length > 2 ? ", " : " ja "),
+      tyyppiKuvaus: parasTyypit.map(k => TYPE_INFO[k].kuvaus).join(" "),
+      vahvuudetChips: s.vahvuudet.filter((v, i, a) => a.indexOf(v) === i),
 
       omaVahvuus: s.omaVahvuus,
       miniOptions, onMiniPick: this.onMiniPick, miniVastaus: s.miniVastaus, miniStatus, miniStatusColor,
