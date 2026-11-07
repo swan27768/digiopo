@@ -21,6 +21,7 @@
     "/tehtavat/murhamysteeri.html": ".clue-card, .form-card",
     "/tehtavat/motivaatiohuutokauppa.html": ".ongelmakortti",
     "/tehtavat/vahvuushuutokauppa.html": ".ryhmakortti",
+    "/tehtavat/unelmatori.html": ".ryhmakortti",
     "/tehtavat/maailma_tarvitsee_sinua_opettaja.html": ".tuloskortti, .skenaariokortti",
     "/ohjeet/7lk_motivaatio_ope.html": "#tulostettavat .kortti",
     "/ohjeet/malli/7lk_motivaatio_ope.html": "#tulostettavat .kortti"
