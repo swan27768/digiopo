@@ -1,0 +1,60 @@
+/* Tulevaisuuden matkatoimisto — arvonta, toivelaput ja matkakortit (tehtavat/matkatoimisto.html) */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --viol:#5b2c6f; --viol-d:#3d1a4f; --mint:#4ee1a0; --mint-bg:#dff3e6; --pastel:#c9a9e1; --focus:#1a73c0; }
+body { font-family:'Segoe UI', system-ui, Arial, sans-serif; background:var(--mint-bg); color:var(--viol-d); padding:24px 18px 48px; line-height:1.5; }
+.sivu { max-width:960px; margin:0 auto; }
+h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
+.alaotsikko { text-align:center; margin:4px 0 22px; }
+.kortti { background:#fff; border:2px solid var(--viol); border-radius:20px; padding:20px 22px; margin-bottom:20px; box-shadow:0 10px 26px -16px rgba(91,44,111,.5); }
+.kortti h2 { font-size:1.2rem; color:var(--viol); margin-bottom:10px; }
+.askeleet { list-style:none; counter-reset:a; display:grid; gap:8px; }
+.askeleet li { counter-increment:a; position:relative; padding-left:40px; min-height:28px; }
+.askeleet li::before { content:counter(a); position:absolute; left:0; top:0; width:28px; height:28px; border-radius:50%; background:var(--viol); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.85rem; }
+.vinkki { margin-top:12px; padding:10px 14px; background:var(--mint-bg); border-left:5px solid var(--mint); border-radius:0 12px 12px 0; }
+.arvonta { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.arpa { text-align:center; }
+.arpa .nayto { min-height:130px; display:flex; align-items:center; justify-content:center; padding:14px; margin:8px 0 14px; background:var(--mint-bg); border:3px dashed var(--viol); border-radius:18px; font-size:clamp(1.3rem,3.6vw,2.1rem); font-weight:900; color:var(--viol); line-height:1.2; }
+.arpa .nayto.vaihtuu { animation: mt-pop .35s ease; }
+@keyframes mt-pop { from { transform:scale(.92); opacity:.4; } to { transform:scale(1); opacity:1; } }
+.toiveet-lista { list-style:none; display:grid; gap:8px; margin:8px 0 14px; text-align:left; }
+.toiveet-lista li { background:var(--mint-bg); border:2px solid var(--viol); border-radius:14px; padding:10px 14px; font-weight:700; min-height:44px; }
+.nappi { font:inherit; font-weight:800; font-size:1.02rem; background:var(--viol); color:#fff; border:0; border-radius:50px; padding:.7em 1.5em; cursor:pointer; min-height:44px; }
+.nappi:hover { background:var(--viol-d); }
+.nappi.minttu { background:var(--mint); color:#0b3b2a; }
+.nappi.minttu:hover { background:#2fcf8a; }
+.nappi.vaalea { background:#fff; color:var(--viol); border:2px solid var(--viol); }
+.nappi:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+.tulosta-rivi { display:flex; justify-content:center; margin:6px 0 22px; }
+
+/* Toivelaput (leikattavat) */
+.otsikko-tulostus { font-size:1.1rem; font-weight:800; color:var(--viol); margin:0 0 8px; text-align:center; }
+.laput { display:grid; grid-template-columns:1fr 1fr; gap:0; border:2px dashed var(--viol); background:#fff; }
+.toivelappu { border:1px dashed var(--viol); padding:14px 16px; min-height:128px; }
+.toivelappu .t { font-size:.78rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--viol); }
+.toivelappu .viiva { border-bottom:1.5px solid #9a86a8; height:30px; }
+.toivelappu .alle { font-size:.72rem; margin-top:6px; color:#6b5a78; }
+
+/* Matkakortit */
+.matkakortit { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px; }
+.matkakortti { background:#fff; border:2.5px solid var(--viol); border-radius:16px; padding:14px 16px; break-inside:avoid; page-break-inside:avoid; }
+.matkakortti .kh { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.matkakortti .kn { font-weight:900; color:var(--viol); font-size:1.05rem; }
+.matkakortti .kb { background:var(--viol); color:#fff; font-size:.7rem; font-weight:800; padding:3px 10px; border-radius:50px; letter-spacing:.06em; text-transform:uppercase; }
+.mk-rivi { display:flex; gap:8px; align-items:flex-end; margin:6px 0; }
+.mk-label { font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--viol); white-space:nowrap; }
+.mk-viiva { flex:1; border-bottom:1.5px solid #9a86a8; height:22px; }
+.mk-lohko { margin:8px 0; }
+.mk-lohko .mk-viiva { display:block; margin:4px 0; height:22px; }
+.mk-hinta { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.mk-hinta span { width:22px; height:22px; border:1.5px solid var(--viol); border-radius:50%; font-size:.7rem; font-weight:800; display:flex; align-items:center; justify-content:center; color:var(--viol); }
+.mk-ohje { margin-top:8px; padding:6px 10px; background:#fff8e6; border-left:4px solid #f0b429; border-radius:0 8px 8px 0; font-size:.78rem; }
+
+@media (max-width:700px) { .arvonta, .matkakortit { grid-template-columns:1fr; } }
+@media (prefers-reduced-motion: reduce) { .arpa .nayto.vaihtuu { animation:none; } }
+@media print {
+  body { background:#fff; padding:0; }
+  .ei-tulostu, .ohje-kortti, .arvonta-kortti { display:none !important; }
+  .kortti, .matkakortti { box-shadow:none; }
+  .laput-osio { break-after:page; page-break-after:always; }
+  .matkakortit { gap:10px; }
+}
