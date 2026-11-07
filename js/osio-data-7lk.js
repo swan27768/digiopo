@@ -72,6 +72,7 @@ window.OSIO_DATA = {
 
     "omat-vahvuudet": {
       rakenne: [
+        "Lämmittely: nouse seisomaan, jos…",
         "Lue: mikä vahvuus on ja miltä se näyttää arjessa",
         "Yksilötehtävä: Supervoimat — löydä omat vahvuutesi",
         "Parikeskustelu: minkä vahvuuden kaveri näkee sinussa?",
