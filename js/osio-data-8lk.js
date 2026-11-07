@@ -29,14 +29,14 @@ window.OSIO_DATA = {
       rakenne: [
         "Interaktiivinen tarina: Vahvuusmatka",
         "Ryhmätehtävä: Fake Insta — ammatti-identiteetti somessa",
-        "Keskustelutehtävä: Vaikuttaja ammattina – Haave vai painajainen?",
+        "Keskustelutehtävä: Miksi omaa osaamista on vaikea kehua?",
         "Lisätehtävä: Laita hyvä kiertämään: kehu tai kiitä"
       ],
       tavoitteet: [
         "Syvennät kuvaa omista vahvuuksistasi ja kiinnostuksistasi",
         "Yhdistät vahvuutesi johonkin ammattiin tai alaan",
         "Harjoittelet esittelemään osaamistasi muille",
-        "Pohdit ja perustelet oman mielipiteesi – onko sometyö oikeaa työtä?"
+        "Pohdit ja perustelet oman mielipiteesi – miksi omasta osaamisesta on vaikea kertoa?"
       ],
       miksi: "Yhteishakuvalinta kannattaa perustaa siihen, mitä osaat ja mistä innostut — ei siihen, minne kaverit menevät. Vahvuuksien tunteminen on tutkitusti yhteydessä hyvinvointiin, ja käytännössä tarvitset tätä ensi vuonna: yhteishaun perusteluissa, pääsy- ja soveltuvuuskokeissa sekä TET- ja kesätyöhauissa.",
       yhteenveto: [

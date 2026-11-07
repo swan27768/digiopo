@@ -934,7 +934,7 @@
   /* ── Keskustelutehtäväkorttien käännökset ── */
   // Kartta: href-tunniste → g8.tasks-avain
   var TASK_MAP = {
-    'keskustelu-vaikuttaja': 'vaikuttaja',
+    'keskustelu-kehuminen':  'kehuminen',
     'keskustelu-tet':        'tet_discussion'
   };
 
@@ -943,7 +943,7 @@
     if (!tasks) return;
     document.querySelectorAll('a.keskustelu-kortti').forEach(function (kortti) {
       var href = kortti.getAttribute('href') || '';
-      // Tunnista tehtävä href:stä, esim. "?id=keskustelu-vaikuttaja"
+      // Tunnista tehtävä href:stä, esim. "?id=keskustelu-kehuminen"
       var taskKey = null;
       for (var id in TASK_MAP) {
         if (href.indexOf(id) !== -1) { taskKey = TASK_MAP[id]; break; }
