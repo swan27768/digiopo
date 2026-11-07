@@ -309,6 +309,12 @@
       if (tulTheory[0] && tul.p1) tulTheory[0].innerHTML = tul.p1;
       if (tulTheory[1] && tul.p2) tulTheory[1].textContent = tul.p2;
 
+      /* Vaihepolku (kuvittele / rakenna / esittele) */
+      [1, 2, 3].forEach(function (n) {
+        setTxt('#tulevaisuus-vaihe' + n + '-nimi', tul['vaihe' + n + '_nimi']);
+        setTxt('#tulevaisuus-vaihe' + n + '-kuvaus', tul['vaihe' + n + '_kuvaus']);
+      });
+
       /* Mission 2 */
       var m2Card = document.getElementById('tulevaisuus2-mission');
       if (m2Card) {

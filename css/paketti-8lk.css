@@ -1,6 +1,6 @@
 /* AUTOMAATTISESTI RAKENNETTU — älä muokkaa tätä tiedostoa.
    Lähde: css/kerrokset-8lk.css. Rakenna uudelleen: npm run css
-   Sisältää 27 tiedostoa: base.css, navbar.css, layout.css, components.css, aihe.css, maskotti.css, utils.css, koulutusalakaruselli.css, kirja-oletukset.css, teema.css, pinkkiteema.css, aihe-lapset.css, osio-rakenne.css, osio-hero.css, edistyminen.css, fakta.css, korttityypit.css, hero-kortti.css, paivan-kysymys.css, jarjestys.css, kirja-pohja.css, grade-8lk.css, sivu-8lk-alku.css, paivakirja.css, sivu-8lk.css, inline-8lk.css, fokus.css */
+   Sisältää 28 tiedostoa: base.css, navbar.css, layout.css, components.css, aihe.css, maskotti.css, utils.css, koulutusalakaruselli.css, kirja-oletukset.css, teema.css, pinkkiteema.css, aihe-lapset.css, osio-rakenne.css, osio-hero.css, edistyminen.css, fakta.css, korttityypit.css, hero-kortti.css, vaihepolku.css, paivan-kysymys.css, jarjestys.css, kirja-pohja.css, grade-8lk.css, sivu-8lk-alku.css, paivakirja.css, sivu-8lk.css, inline-8lk.css, fokus.css */
 @layer base, teema, sivu-alku, komponentit, sivu;
 
 /* base.css */
@@ -4032,6 +4032,137 @@ body[data-luokka="7"] .hero-kortti.hero-kortti--kortit {
 @media (max-width: 640px) {
   .hero-kortti--startti .hero-kortti__sisalto { padding-right: 32px; }
   .hero-kortti--startti .stetti-valot { display: none; }
+}
+}
+
+/* vaihepolku.css */
+@layer komponentit {
+/* ============================================================
+   VAIHEPOLKU — tehtäväsarja numeroituna polkuna (css/vaihepolku.css)
+   Käyttö (8. luokan "Mitä jos?" -osio):
+     <ol class="vaihepolku" role="list">
+       <li class="vaihe">
+         <div class="vaihe__otsikko">
+           <span class="vaihe__nro" aria-hidden="true">1</span>
+           <h3>Otsikko</h3><p>Lyhyt kuvaus</p>
+         </div>
+         ...tehtäväkortti...
+       </li>
+     </ol>
+   Kortin koko: .hero-kortti--pieni (lämmittely) ja .hero-kortti--iso (pääasia).
+   ============================================================ */
+.vaihepolku {
+  position: relative;
+  list-style: none;
+  margin: 28px 0 8px;
+  padding: 0 0 0 58px;
+}
+.vaihepolku::before {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 20px;
+  bottom: 20px;
+  width: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(to bottom, var(--osio-accent, #db2777) 0 10px, transparent 10px 18px);
+  opacity: 0.45;
+}
+.vaihe {
+  position: relative;
+  margin: 0 0 34px;
+  padding: 0;
+}
+.vaihe:last-child { margin-bottom: 0; }
+.vaihe__otsikko { position: relative; margin: 0 0 12px; min-height: 42px; }
+.vaihe__nro {
+  position: absolute;
+  left: -58px;
+  top: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--osio-accent, #db2777);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.15rem;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--osio-accent, #db2777) 35%, transparent);
+}
+.vaihe__otsikko h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--t-ink-otsikko, #5b21b6);
+}
+.vaihe__otsikko p {
+  margin: 2px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #5b5670;
+}
+
+/* Kortin koko vaiheen mukaan */
+.hero-kortti.hero-kortti--pieni {
+  --hk-marg: 0 0 12px;
+  --hk-min: 0;
+  --hk-pad: 18px 22px;
+  --hk-h-koko: clamp(1.05rem, 2.6vw, 1.3rem);
+  --hk-h-marg: 6px;
+  --hk-p-koko: 14px;
+  --hk-p-rivi: 1.5;
+  --hk-p-marg: 12px;
+  --hk-p-leveys: 520px;
+}
+.hero-kortti.hero-kortti--iso {
+  --hk-marg: 0 0 12px;
+  --hk-min: 300px;
+  --hk-pad: 34px 36px;
+  --hk-h-koko: clamp(1.5rem, 4vw, 2.1rem);
+  --hk-p-koko: 16px;
+  --hk-p-leveys: 400px;
+}
+.hero-kortti--iso .vaihe-kuva {
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  z-index: 1;
+}
+.hero-kortti--iso .vaihe-kuva img { width: 84%; height: auto; display: block; }
+.hero-kortti--iso .hero-kortti__sisalto { padding-right: 290px; }
+@media (max-width: 900px) {
+  .hero-kortti--iso .vaihe-kuva { width: 150px; height: 150px; right: 22px; }
+  .hero-kortti--iso .hero-kortti__sisalto { padding-right: 190px; }
+}
+
+/* Alkuteksti: ensimmäinen kappale isona avauksena */
+.tulevaisuus-avaus .theory-text > p:first-child {
+  margin-bottom: 0;
+  font-size: clamp(1.3rem, 3.4vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--t-ink-otsikko, #5b21b6);
+}
+
+@media (max-width: 640px) {
+  .vaihepolku { padding-left: 46px; }
+  .vaihepolku::before { left: 14px; }
+  .vaihe__nro { left: -46px; width: 34px; height: 34px; font-size: 1rem; }
+  .vaihe__otsikko { min-height: 34px; }
+  .vaihe__otsikko h3 { font-size: 1.15rem; line-height: 34px; }
+  .hero-kortti.hero-kortti--iso { --hk-pad: 24px 22px; --hk-min: 0; }
+  .hero-kortti--iso .vaihe-kuva { display: none; }
+  .hero-kortti--iso .hero-kortti__sisalto { padding-right: 22px; }
 }
 }
 
