@@ -28,8 +28,8 @@ window.OSIO_DATA = {
     "vahvuudet": {
       rakenne: [
         "Interaktiivinen tarina: Vahvuusmatka",
-        "Ryhmätehtävä: Fake Insta — ammatti-identiteetti somessa",
         "Keskustelutehtävä: Miksi omaa osaamista on vaikea kehua?",
+        "Ryhmätehtävä: Fake Insta — ammatti-identiteetti somessa",
         "Lisätehtävä: Laita hyvä kiertämään: kehu tai kiitä"
       ],
       tavoitteet: [
