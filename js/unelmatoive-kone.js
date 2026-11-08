@@ -48,11 +48,25 @@
     var nappi = document.getElementById("unelmakone-nappi");
     var tulos = document.getElementById("unelmakone-tulos");
     if (!nappi || !tulos) return;
-    nappi.addEventListener("click", function () {
+    var kone = nappi.closest(".unelmakone");
+    var ajastin = null;
+    var vahenna = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function nayta() {
       tulos.textContent = arvo();
       tulos.classList.add("on-toive");
+      if (kone) kone.classList.remove("kaynnissa");
+      nappi.disabled = false;
       nappi.textContent = t("unelmakone.uusi", "Arvo uusi toive");
       nappi.removeAttribute("data-i18n");
+    }
+    nappi.addEventListener("click", function () {
+      if (ajastin) return;
+      if (vahenna) { nayta(); return; }
+      nappi.disabled = true;
+      tulos.classList.remove("on-toive");
+      tulos.textContent = t("unelmakone.miettii", "Kone miettii…");
+      if (kone) kone.classList.add("kaynnissa");
+      ajastin = setTimeout(function () { ajastin = null; nayta(); }, 900);
     });
   });
 })();
