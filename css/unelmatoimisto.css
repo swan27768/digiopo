@@ -5,12 +5,6 @@ body { font-family:'Segoe UI', system-ui, Arial, sans-serif; background:var(--mi
 .sivu { max-width:960px; margin:0 auto; }
 h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
 .alaotsikko { text-align:center; margin:4px 0 22px; }
-.kortti { background:#fff; border:2px solid var(--viol); border-radius:20px; padding:20px 22px; margin-bottom:20px; box-shadow:0 10px 26px -16px rgba(91,44,111,.5); }
-.kortti h2 { font-size:1.2rem; color:var(--viol); margin-bottom:10px; }
-.askeleet { list-style:none; counter-reset:a; display:grid; gap:8px; }
-.askeleet li { counter-increment:a; position:relative; padding-left:40px; min-height:28px; }
-.askeleet li::before { content:counter(a); position:absolute; left:0; top:0; width:28px; height:28px; border-radius:50%; background:var(--viol); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.85rem; }
-.vinkki { margin-top:12px; padding:10px 14px; background:var(--mint-bg); border-left:5px solid var(--mint); border-radius:0 12px 12px 0; }
 .nappi { font:inherit; font-weight:800; font-size:1.02rem; background:var(--viol); color:#fff; border:0; border-radius:50px; padding:.7em 1.5em; cursor:pointer; min-height:44px; }
 .nappi:hover { background:var(--viol-d); }
 .nappi.minttu { background:var(--mint); color:#0b3b2a; }
@@ -28,26 +22,26 @@ h1 { font-size:1.7rem; font-weight:900; color:var(--viol); text-align:center; }
 .toivelappu .alle { font-size:.72rem; margin-top:6px; color:#6b5a78; }
 
 /* Matkakortit */
-.unelmakortit { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px; }
-.unelmakortti { background:#fff; border:2.5px solid var(--viol); border-radius:16px; padding:14px 16px; break-inside:avoid; page-break-inside:avoid; }
+.unelmakortit { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:12px; }
+.unelmakortti { min-width:0; background:#fff; border:2.5px solid var(--viol); border-radius:16px; padding:14px 16px; break-inside:avoid; page-break-inside:avoid; }
 .unelmakortti .kh { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
 .unelmakortti .kn { font-weight:900; color:var(--viol); font-size:1.05rem; }
 .unelmakortti .kb { background:var(--viol); color:#fff; font-size:.7rem; font-weight:800; padding:3px 10px; border-radius:50px; letter-spacing:.06em; text-transform:uppercase; }
+.mk-rivi .mk-label { white-space:nowrap; }
 .mk-rivi { display:flex; gap:8px; align-items:flex-end; margin:6px 0; }
-.mk-label { font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--viol); white-space:nowrap; }
+.mk-label { font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--viol); }
 .mk-viiva { flex:1; border-bottom:1.5px solid #9a86a8; height:22px; }
 .mk-lohko { margin:8px 0; }
 .mk-lohko .mk-viiva { display:block; margin:4px 0; height:22px; }
 .mk-ohje { margin-top:8px; padding:6px 10px; background:#fff8e6; border-left:4px solid #f0b429; border-radius:0 8px 8px 0; font-size:.78rem; }
 
-@media (max-width:700px) { .unelmakortit { grid-template-columns:1fr; } }
+@media (max-width:700px) { .unelmakortit { grid-template-columns:minmax(0,1fr); } }
 @media print {
   body { background:#fff; padding:0; }
-  .ei-tulostu, .ohje-kortti { display:none !important; }
-  .kortti, .unelmakortti { box-shadow:none; }
+  .ei-tulostu { display:none !important; }
+  .unelmakortti { box-shadow:none; }
   .laput-osio { break-after:page; page-break-after:always; }
   .unelmakortit { gap:10px; }
 }
 
-.upotus .ohje-kortti { display:none; }
 .upotus { padding-top:8px; }
