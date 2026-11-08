@@ -2,22 +2,30 @@
 (function () {
   "use strict";
   var TOIVEET = [
-    "Haluan asua kodissa, joka tietää, mitä tarvitsen.",
-    "Haluan kokeilla työpäivää, joka on aivan erilainen kuin tämä.",
-    "Haluan oppia taidon, jonka osaan sitten loppuelämän.",
-    "Haluan matkustaa paikkaan, jossa en ole koskaan käynyt.",
-    "Haluan nähdä Maan avaruudesta.",
-    "Haluan harrastuksen, jossa saan uusia kavereita.",
-    "Haluan tehdä jotain, mikä auttaa muita.",
-    "Haluan koulupäivän, jossa kaikki on hauskaa.",
-    "Haluan kokeilla jotain, mitä kukaan ei ole ennen kokeillut.",
-    "Haluan elää tavalla, joka ei kuormita luontoa.",
-    "Haluan paikan, jossa voin rauhoittua.",
-    "Haluan seikkailun, joka vähän jännittää.",
-    "Haluan keksiä jotain, mitä maailmassa ei vielä ole.",
-    "Haluan viettää päivän yhdessä koko perheen kanssa.",
-    "Haluan oppia jotain uutta ilman kirjoja ja kokeita.",
-    "Haluan juhlat, joita kaikki muistavat vielä vuosien päästä."
+    "Haluan sängyn tai tuolin, joka herättää minut aamulla helposti.",
+    "Haluan repun, joka tuntuu kevyeltä, vaikka siinä on kaikki koulutavarat.",
+    "Haluan laukun, joka muistuttaa, jos jotain jäi kotiin.",
+    "Haluan eväsrasian, jossa ruoka pysyy lämpimänä tai kylmänä.",
+    "Haluan takin, joka lämmittää pakkasella ja viilentää kuumalla.",
+    "Haluan lampun tai laitteen, joka auttaa keskittymään läksyihin.",
+    "Haluan kaapin tai hyllyn, joka siivoaa huoneeni melkein itse.",
+    "Haluan tavan löytää avaimet, kuulokkeet ja kengät heti.",
+    "Haluan kerhon, jossa kaikki rakentavat yhdessä robotteja.",
+    "Haluan kerhon, jossa tehdään omia pelejä ja pelataan niitä.",
+    "Haluan kerhon, jossa kokataan välipaloja ja syödään ne yhdessä.",
+    "Haluan kerhon, jossa kuvataan ja leikataan lyhytelokuvia.",
+    "Haluan kerhon, jossa korjataan rikkinäisiä pyöriä ja laitteita.",
+    "Haluan sovelluksen, joka muistuttaa kaikista menoistani ja tehtävistäni.",
+    "Haluan keksiä uuden pelin, jota voi pelata välitunnilla sateellakin.",
+    "Haluan järjestää luokalle yllätyspäivän, jota kaikki muistavat.",
+    "Haluan tehdä koulun pihalle penkin tai nurkkauksen, jossa on mukava istua.",
+    "Haluan tehdä kuvan tai kartan, joka auttaa uutta oppilasta löytämään koulussa perille.",
+    "Haluan keksiä tavan, jolla lemmikkini saa ruokaa, vaikka olen koulussa.",
+    "Haluan keksiä tavan, jolla kaverini pääsevät mukaan peliin, vaikka heillä ei ole omaa välinettä.",
+    "Haluan järjestää koululle tempauksen, joka auttaa jotakuta.",
+    "Haluan tehdä videon, joka opettaa kavereille jonkin kivan taidon.",
+    "Haluan rentoutumispaikan, jossa voi levätä ennen koetta tai esitelmää.",
+    "Haluan keksiä tavan, jolla koulumatka tuntuu turvalliselta myös pimeällä."
   ];
   var kaytetyt = [];
   function arvo() {
