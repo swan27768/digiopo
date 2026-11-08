@@ -3311,6 +3311,7 @@
             <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;">
               <button type="button" onclick="kiitosTallenna()" style="background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">Tallenna</button>
               <button type="button" onclick="kiitosPoista()" style="background:transparent;color:#92400e;border:1.5px solid #f59e0b;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">Poista</button>
+              <button type="button" onclick="kiitosPdf()" style="background:#be185d;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">📄 Lataa PDF</button>
               <span id="kiitos-status" role="status" aria-live="polite" style="font-size:0.9rem;color:#166534;"></span>
             </div>
             <p style="font-size:0.9rem;color:#92400e;margin:10px 0 0;">Jos haluat, voit kertoa sen jollekulle heistä — tai kiittää häntä.</p>
@@ -3325,6 +3326,48 @@
           var st=document.getElementById("kiitos-status");
           if(!ta) return;
           try{ var saved=localStorage.getItem(KEY); if(saved) ta.value=saved; }catch(e){}
+          // PDF: rakennetaan valmis kiitoskortti piilotettuun kehykseen ja avataan tulostusikkuna ("Tallenna PDF:ksi")
+          window.kiitosPdf=function(){
+            var teksti=(ta.value||"").trim();
+            if(!teksti){ if(st) st.textContent="Kirjoita ensin jotain."; return; }
+            try{ localStorage.setItem(KEY, ta.value); }catch(e){}
+            var esc=function(x){ return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); };
+            var pvm=new Date().toLocaleDateString("fi-FI");
+            var kuva=new URL("../images/robo_ruusu.webp", window.location.href).href;
+            var html='<!DOCTYPE html><html lang="fi"><head><meta charset="UTF-8"><title>Kiitollisuus</title><style>'+
+              '@page{size:A4;margin:0}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+              'html,body{margin:0;padding:0}body{font-family:Georgia,"Times New Roman",serif;color:#4a1d36;background:#fff}'+
+              '.kortti{width:210mm;height:297mm;padding:16mm;background:linear-gradient(160deg,#fff7ed 0%,#fdf2f8 55%,#fef3c7 100%);position:relative;overflow:hidden}'+
+              '.kehys{height:100%;border:3px solid #f9a8d4;border-radius:10mm;padding:14mm 14mm 12mm;display:flex;flex-direction:column;align-items:center;text-align:center;background:rgba(255,255,255,.55)}'+
+              '.kicker{font:700 11pt Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#be185d;margin:0 0 4mm}'+
+              'h1{font-size:40pt;margin:0 0 6mm;color:#831843;line-height:1.1}'+
+              'img{height:62mm;width:auto;margin:0 0 8mm}'+
+              '.kysymys{font:italic 14pt Georgia,serif;color:#9d174d;margin:0 0 6mm;max-width:140mm}'+
+              '.vastaus{font-size:15pt;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;text-align:left;background:#fff;border-left:2mm solid #f59e0b;border-radius:3mm;padding:8mm 10mm;width:100%;max-height:112mm;overflow:hidden}'+
+              '.alaosa{margin-top:auto;font:10pt Arial,sans-serif;color:#9d174d;padding-top:6mm}'+
+              '</style></head><body><div class="kortti"><div class="kehys">'+
+              '<p class="kicker">9. luokka · Peruskoulun päätös</p><h1>Kiitos</h1>'+
+              '<img src="'+kuva+'" alt="">'+
+              '<p class="kysymys">Kuka tai mikä on auttanut minua olemaan siinä missä nyt olen?</p>'+
+              '<div class="vastaus">'+esc(teksti)+'</div>'+
+              '<p class="alaosa">'+pvm+' · DigiOpo</p></div></div></body></html>';
+            var fr=document.getElementById("kiitos-pdf-kehys");
+            if(fr) fr.remove();
+            fr=document.createElement("iframe");
+            fr.id="kiitos-pdf-kehys";
+            fr.setAttribute("aria-hidden","true");
+            fr.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;";
+            document.body.appendChild(fr);
+            var d=fr.contentWindow.document;
+            d.open(); d.write(html); d.close();
+            var tulosta=function(){
+              try{ fr.contentWindow.focus(); fr.contentWindow.print(); }catch(e){ if(st) st.textContent="PDF:n luonti ei onnistunut. Kokeile Tallenna-painiketta."; return; }
+              if(st) st.textContent="Valitse tulostusikkunassa kohde \u201dTallenna PDF:ksi\u201d.";
+            };
+            var im=d.querySelector("img"), tehty=false;
+            var kerran=function(){ if(tehty) return; tehty=true; setTimeout(tulosta,150); };
+            if(im.complete) kerran(); else { im.onload=kerran; im.onerror=kerran; setTimeout(kerran,2500); }
+          };
           window.kiitosTallenna=function(){
             var teksti=(ta.value||"").trim();
             if(!teksti){ if(st) st.textContent="Kirjoita ensin jotain."; return; }
