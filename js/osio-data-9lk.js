@@ -271,7 +271,8 @@ window.OSIO_DATA = {
       otsikko: "Kolme minua tulevaisuudessa",
       teksti: [
         "Tehtävä perustuu mahdollisten minuuksien teoriaan (possible selves): mielikuvat tulevasta minästä ohjaavat motivaatiota ja toimintaa nykyhetkessä. Tutkimusten mukaan vaikutus on vahvin, kun toivottuun minään liittyy konkreettisia toimintastrategioita — siksi tehtävässä kysytään myös ensimmäistä askelta.",
-        "Kolmijako (todennäköinen, toivottava, yllättävä) on tulevaisuudentutkimuksen perusmenetelmä, joka estää lukkiutumasta yhteen skenaarioon."
+        "Kolmijako (todennäköinen, toivottava, yllättävä) on tulevaisuudentutkimuksen perusmenetelmä, joka estää lukkiutumasta yhteen skenaarioon.",
+        "Osion perusajatus on, ettei ihminen rakenna tulevaisuuttaan yksin vaan yhdessä muiden kanssa. Oma toivottu minä saa merkityksensä suhteessa toisiin: keneltä saan apua ja kenelle voin itse olla apuna. Tämä noudattaa Keltikangas-Järvisen <em>Itsekkyyden aika</em> -kirjan pääteemaa, jonka mukaan hyvinvointi ja tulevaisuus rakentuvat yhteisöllisyyden varaan."
       ],
       lahteet: [
         "Markus, H. & Nurius, P. (1986). Possible selves. <em>American Psychologist</em>.",
