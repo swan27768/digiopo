@@ -187,14 +187,16 @@ window.OSIO_DATA = {
         "Kuvittelet itsellesi kolme tulevaisuutta viiden vuoden päähän: todennäköisen, toivottavan ja yllättävän",
         "Huomaat, mihin asioihin voit itse vaikuttaa ja mihin et",
         "Tunnistat oman tapasi suhtautua tulevaisuuteen: odotan, reagoin vai suunnittelen etukäteen",
-        "Valitset yhden pienen askeleen, jonka voit ottaa jo tällä viikolla"
+        "Valitset yhden pienen askeleen, jonka voit ottaa jo tällä viikolla",
+        "Huomaat, että tulevaisuutta rakennetaan yhdessä: kuka voi auttaa sinua ja kenelle voit itse olla apuna"
       ],
-      miksi: "Psykologinen tutkimus mahdollisista minuuksista osoittaa: ne nuoret, joilla on konkreettinen kuva toivotusta tulevaisuudestaan ja ensimmäisistä askelista sitä kohti, ponnistelevat enemmän ja voivat paremmin. Pelkkä haave ei riitä — tarvitaan kuva siitä, mitä teen ensi viikolla.",
+      miksi: "Psykologinen tutkimus mahdollisista minuuksista osoittaa: ne nuoret, joilla on konkreettinen kuva toivotusta tulevaisuudestaan ja ensimmäisistä askelista sitä kohti, ponnistelevat enemmän ja voivat paremmin. Pelkkä haave ei riitä — tarvitaan kuva siitä, mitä teen ensi viikolla ja kuka voi auttaa minua.",
       yhteenveto: [
         "Olet kuvannut kolme erilaista tulevaisuuden minääsi",
         "Tiedät, mihin asioihin voit itse vaikuttaa tavoitteesi eteen",
         "Tunnistat oman tapasi suhtautua tulevaisuuteen ja tiedät, mikä tapa vie sinua lähimmäs toivottavaa minääsi",
-        "Olet kirjoittanut yhden konkreettisen askeleen, jonka voit ottaa jo tällä viikolla"
+        "Olet kirjoittanut yhden konkreettisen askeleen, jonka voit ottaa jo tällä viikolla",
+        "Tiedät, että et rakenna tulevaisuuttasi yksin: olet pohtinut, kuka auttaa sinua ja ketkä ovat auttaneet sinua tähän asti"
       ]
     },
   },
