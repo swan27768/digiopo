@@ -3309,7 +3309,6 @@
             <label data-pakollisuus="val" for="kiitollisuus-kentta" style="display:block;font-weight:600;color:#92400e;margin:6px 0 8px;">Kuka tai mikä on auttanut sinua olemaan siinä missä nyt olet?</label>
             <textarea data-aloitukset="Kiitän…|Minua on auttanut…|Eniten minua auttoi, kun…" id="kiitollisuus-kentta" rows="3" style="width:100%;border-radius:8px;border:1.5px solid #f59e0b;padding:10px;font-size:1rem;resize:vertical;box-sizing:border-box;" placeholder="Esim. perhe, kaveri, opettaja, valmentaja, harrastus, sattuma…"></textarea>
             <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;">
-              <button type="button" onclick="kiitosTallenna()" style="background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">Tallenna</button>
               <button type="button" onclick="kiitosPoista()" style="background:transparent;color:#92400e;border:1.5px solid #f59e0b;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">Poista</button>
               <button type="button" onclick="kiitosPdf()" style="background:#be185d;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:600;font-size:0.95rem;cursor:pointer;">📄 Lataa PDF</button>
               <span id="kiitos-status" role="status" aria-live="polite" style="font-size:0.9rem;color:#166534;"></span>
@@ -3368,21 +3367,8 @@
             var kerran=function(){ if(tehty) return; tehty=true; setTimeout(tulosta,150); };
             if(im.complete) kerran(); else { im.onload=kerran; im.onerror=kerran; setTimeout(kerran,2500); }
           };
-          window.kiitosTallenna=function(){
-            var teksti=(ta.value||"").trim();
-            if(!teksti){ if(st) st.textContent="Kirjoita ensin jotain."; return; }
-            try{ localStorage.setItem(KEY, ta.value); }catch(e){}
-            var pvm=new Date().toLocaleDateString("fi-FI");
-            var sisalto="KIITOLLISUUS\nPäivämäärä: "+pvm+"\n\nKuka tai mikä on auttanut sinua olemaan siinä missä nyt olet?\n"+teksti+"\n";
-            try{
-              var blob=new Blob([sisalto],{type:"text/plain;charset=utf-8"});
-              var url=URL.createObjectURL(blob);
-              var a=document.createElement("a"); a.href=url; a.download="kiitollisuus.txt";
-              document.body.appendChild(a); a.click(); document.body.removeChild(a);
-              URL.revokeObjectURL(url);
-            }catch(e){}
-            if(st) st.textContent="Tallennettu. Voit lähettää tiedoston itsellesi sähköpostilla.";
-          };
+          // Teksti tallentuu selaimeen automaattisesti kirjoitettaessa
+          ta.addEventListener("input",function(){ try{ localStorage.setItem(KEY, ta.value); }catch(e){} });
           window.kiitosPoista=function(){
             if(!ta.value || confirm("Haluatko varmasti poistaa vastauksesi?")){
               ta.value="";
