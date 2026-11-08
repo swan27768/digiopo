@@ -27,6 +27,9 @@
     "Haluan rentoutumispaikan, jossa voi levätä ennen koetta tai esitelmää.",
     "Haluan keksiä tavan, jolla koulumatka tuntuu turvalliselta myös pimeällä."
   ];
+  // Yhteinen toivelista: myös tehtavat/unelmatoimisto.js käyttää tätä.
+  window.UNELMATOIVEET = TOIVEET;
+
   var kaytetyt = [];
   function arvo() {
     if (kaytetyt.length >= TOIVEET.length) kaytetyt = [];

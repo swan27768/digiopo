@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tulevaisuuden unelmatoimisto – arvonta ja unelmakortit</title>
+  <title>Tulevaisuuden unelmatoimisto – toiveiden arvonta ja unelmakortit</title>
   <link rel="stylesheet" href="../css/unelmatoimisto.css" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
@@ -15,6 +15,7 @@
 
 <script defer src="/_vercel/insights/script.js"></script>
     <script src="/js/kuuntele.js" defer></script>
+    <script src="../js/unelmatoive-kone.js" defer></script>
     <script src="../js/unelmatoimisto.js" defer></script>
 </head>
 <body>
@@ -22,41 +23,24 @@
 
 <main class="sivu">
   <h1>🌠 Tulevaisuuden unelmatoimisto</h1>
-  <p class="alaotsikko">Vuonna 2045 toimisto tekee ihmisten unelmista totta: matkoja Kuuhun, uusia koteja, harrastuksia tai jotain aivan uutta.</p>
+  <p class="alaotsikko">Vuonna 2045 toimisto keksii ratkaisuja luokkakavereiden unelmiin ja toiveisiin.</p>
 
   <section class="kortti ohje-kortti" aria-labelledby="ohje-otsikko">
     <h2 id="ohje-otsikko">Opettajalle: näin tehtävä etenee</h2>
     <ol class="askeleet">
       <li><strong>Toiveet kerätään (5 min).</strong> Aikamatkan jälkeen oppilas ottaa koontinsa esiin ja kirjoittaa kohdan <em>Unelmani</em> nimettömänä lapulle. Laput tulostetaan <a href="toivelaput.html">toivelappusivulta</a>, leikataan ja kerätään laatikkoon. Jos lappuja on liian vähän, käytä apuna arvontaa. Jos oppilaalla ei ole koontia mukana, hän kirjoittaa unelman suoraan lapulle. Koonti on tiedostona <em>aikamatka_tulevaisuuteen.txt</em> koneen Lataukset-kansiossa.</li>
       <li><strong>Tarkista laput.</strong> Lue laput nopeasti ennen jakoa ja poista sellaiset, jotka eivät sovi luokan nähtäväksi. Sekoita laput.</li>
-      <li><strong>Toimistot (3–4 oppilasta).</strong> Ryhmät on jaettu jo ennen tehtävää. Ryhmä nimeää toimistonsa, arpoo unelmatyöpaikkansa (arvonta paljastaa sen, ennen sitä kukaan ei tiedä) ja ottaa luokan toivelaatikosta 3 unelmatoivelappua. Tyypin voi valita myös jäsenten koonnoissa olevista kiinnostuksista (<em>Tulevaisuudessa kiinnostaa</em>, katso taulukko alla).</li>
+      <li><strong>Toimistot (3–4 oppilasta).</strong> Ryhmät on jaettu jo ennen tehtävää. Ryhmä ottaa luokan toivelaatikosta 3 unelmatoivelappua.</li>
       <li><strong>Suunnittelu (15–20 min).</strong> Ryhmä täyttää unelmakortin: mikä toive valittiin ja mikä ratkaisu sille keksittiin.</li>
-      <li><strong>Esittely (1 min / ryhmä).</strong> Toimisto esittelee pakettinsa kuin mainoksen. Luokka voi valita yhdessä paketin, jolle antaisi kolikon.</li>
+      <li><strong>Esittely (1 min / ryhmä).</strong> Ryhmä esittelee unelmatoiveen ratkaisun kuin mainoksen. Luokka voi valita yhdessä ratkaisun, jolle antaisi kolikon.</li>
       <li><strong>Purku.</strong> Mitä voi tehdä jo nyt? Mikä toive voisi toteutua oikeasti? Mikä pieni askel veisi sitä kohti? Oppilas katsoo koonnistaan kohtaa <em>Pieni askel jo nyt</em>: sopiiko se tähän?</li>
     </ol>
-    <table class="kartta" aria-label="Kiinnostuksen ja paketin tyypin yhteys">
-      <caption>Mistä paketin tyypin voi valita koonnin kiinnostuksesta?</caption>
-      <thead><tr><th scope="col">Koonnissa kiinnostaa</th><th scope="col">Paketin tyyppi</th></tr></thead>
-      <tbody>
-        <tr><td>🤖 Robotit, jotka auttavat ihmisiä</td><td>Seikkailu, jota ei ole vielä olemassa · Unelmatyöpäivä</td></tr>
-        <tr><td>🌍 Puhdas luonto ja uusi energia</td><td>Matka merenpohjaan · Uusi koti tulevaisuuden kaupungissa</td></tr>
-        <tr><td>🚀 Matkat avaruuteen</td><td>Matka Kuuhun · Matka Marsiin</td></tr>
-        <tr><td>🎮 Uudet pelit ja virtuaalimaailmat</td><td>Seikkailu, jota ei ole vielä olemassa · Unelmaharrastus</td></tr>
-        <tr><td>🏡 Uudenlaiset kodit ja arki</td><td>Uusi koti tulevaisuuden kaupungissa · Maailman paras koulupäivä</td></tr>
-        <tr><td>🎨 Uudet harrastukset ja kokemukset</td><td>Unelmaharrastus · Unelmatyöpäivä</td></tr>
-      </tbody>
-    </table>
     <p class="vinkki"><strong>Muista:</strong> koonti on oppilaan oma. Hän päättää, mitä siitä kertoo. Unelmat jaetaan nimettöminä, ja kaikki unelmat ovat yhtä arvokkaita. Toisten ideoita ei arvostella.</p>
   </section>
 
   <section class="kortti arvonta-kortti" aria-labelledby="arvonta-otsikko">
     <h2 id="arvonta-otsikko">Arvonta</h2>
     <div class="arvonta">
-      <div class="arpa">
-        <strong>Unelmapaketin tyyppi</strong>
-        <div class="nayto" id="nayto-paketti" aria-live="polite">Paina nappia</div>
-        <button type="button" class="nappi minttu" id="arvo-paketti">🎲 Arvo paketti</button>
-      </div>
       <div class="arpa">
         <strong>Asiakastoiveet (esimerkkejä)</strong>
         <ul class="toiveet-lista" id="lista-toiveet" aria-live="polite"></ul>

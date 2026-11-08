@@ -1,44 +1,11 @@
-/* Tulevaisuuden unelmatoimisto — arpoo unelmapaketin tyypin ja asiakastoiveita (tehtavat/unelmatoimisto.html). */
+/* Tulevaisuuden unelmatoimisto — arpoo asiakastoiveita (tehtavat/unelmatoimisto.html). */
 (function () {
   "use strict";
 
-  var PAKETIT = [
-    "Matka Kuuhun", "Matka Marsiin", "Matka merenpohjaan", "Uusi koti tulevaisuuden kaupungissa",
-    "Unelmaharrastus", "Unelmatyöpäivä", "Seikkailu, jota ei ole vielä olemassa", "Maailman paras koulupäivä"
-  ];
-  var TOIVEET = [
-    "Haluan nähdä Maan avaruudesta.",
-    "Haluan tavata uusia kavereita matkalla.",
-    "Haluan kokeilla painotonta oloa.",
-    "Haluan matkan, jossa saa levätä ja rauhoittua.",
-    "Haluan oppia jotain aivan uutta.",
-    "Haluan matkustaa koko perheen kanssa.",
-    "Haluan nähdä jotain, mitä kukaan ei ole ennen nähnyt.",
-    "Haluan matkan, joka ei pilaa luontoa.",
-    "Haluan syödä jotain ihan outoa.",
-    "Haluan auttaa muita matkalla.",
-    "Haluan seikkailun, joka vähän jännittää.",
-    "Haluan ottaa matkalta hienoja kuvia.",
-    "Haluan matkan, joka ei maksa paljon.",
-    "Haluan matkalle, jossa ei tarvitse puhua paljon."
-  ];
-
-  var viimeisin = null;
-  function arvoPaketti() {
-    var v, n = 0;
-    do { v = PAKETIT[Math.floor(Math.random() * PAKETIT.length)]; n++; } while (v === viimeisin && n < 20);
-    viimeisin = v;
-    return v;
-  }
-
-  function pop(el) {
-    el.classList.remove("vaihtuu");
-    void el.offsetWidth;
-    el.classList.add("vaihtuu");
-  }
-
   var kaytetyt = [];
   function arvoToive() {
+    var TOIVEET = window.UNELMATOIVEET || [];
+    if (!TOIVEET.length) return "";
     if (kaytetyt.length >= TOIVEET.length) kaytetyt = [];
     var v;
     do { v = TOIVEET[Math.floor(Math.random() * TOIVEET.length)]; } while (kaytetyt.indexOf(v) !== -1);
@@ -47,15 +14,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    var pakettiNappi = document.getElementById("arvo-paketti");
-    var pakettiNayto = document.getElementById("nayto-paketti");
-    if (pakettiNappi && pakettiNayto) {
-      pakettiNappi.addEventListener("click", function () {
-        pakettiNayto.textContent = arvoPaketti();
-        pop(pakettiNayto);
-      });
-    }
-
     var toiveNappi = document.getElementById("arvo-toive");
     var lista = document.getElementById("lista-toiveet");
     var tyhjenna = document.getElementById("tyhjenna-toiveet");
