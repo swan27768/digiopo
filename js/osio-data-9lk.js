@@ -178,18 +178,23 @@ window.OSIO_DATA = {
       teoria: "kolme-minua",
       rakenne: [
         "Tehtävä 1: Kolme minua tulevaisuudessa — yksin",
-        "Jatkotehtävät: toivottava tulevaisuus ja ensimmäinen askel"
+        "Tehtävä 2: Mitä voin itse päättää? — yksin",
+        "Tehtävä 3: Miten suhtaudun tulevaisuuteen — yksin",
+        "Tehtävä 4: Oma pieni askel — yksin",
+        "Yhteinen hetki ja Kiitollisuus: lyhyt jakaminen ja peruskoulun päätös"
       ],
       tavoitteet: [
-        "Kuvittelet itsellesi kolme tulevaisuutta: todennäköisen, toivottavan ja yllättävän",
-        "Tunnistat, mitä voit tehdä jo nyt toivottavan tulevaisuuden eteen",
-        "Ymmärrät, että tulevaisuus rakennetaan — se ei vain tapahdu"
+        "Kuvittelet itsellesi kolme tulevaisuutta viiden vuoden päähän: todennäköisen, toivottavan ja yllättävän",
+        "Huomaat, mihin asioihin voit itse vaikuttaa ja mihin et",
+        "Tunnistat oman tapasi suhtautua tulevaisuuteen: odotan, reagoin vai suunnittelen etukäteen",
+        "Valitset yhden pienen askeleen, jonka voit ottaa jo tällä viikolla"
       ],
       miksi: "Psykologinen tutkimus mahdollisista minuuksista osoittaa: ne nuoret, joilla on konkreettinen kuva toivotusta tulevaisuudestaan ja ensimmäisistä askelista sitä kohti, ponnistelevat enemmän ja voivat paremmin. Pelkkä haave ei riitä — tarvitaan kuva siitä, mitä teen ensi viikolla.",
       yhteenveto: [
         "Olet kuvannut kolme erilaista tulevaisuuden minääsi",
-        "Tiedät yhden konkreettisen askeleen, jonka voit ottaa jo nyt",
-        "Osaat suhtautua tulevaisuuteen aktiivisesti, et vain odottaen"
+        "Tiedät, mihin asioihin voit itse vaikuttaa tavoitteesi eteen",
+        "Tunnistat oman tapasi suhtautua tulevaisuuteen ja tiedät, mikä tapa vie sinua lähimmäs toivottavaa minääsi",
+        "Olet kirjoittanut yhden konkreettisen askeleen, jonka voit ottaa jo tällä viikolla"
       ]
     },
   },
