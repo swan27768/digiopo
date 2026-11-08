@@ -3262,6 +3262,17 @@
             </div>
           </div>
 
+          <!-- Tehtävien askelnavigaatio -->
+          <nav id="tm-askeleet" class="tm-askeleet" aria-label="Tehtävän vaiheet">
+            <p class="tm-askel-teksti" id="tm-askel-teksti" role="status" aria-live="polite"></p>
+            <ol class="tm-askel-lista">
+              <li><button type="button" data-askel="0"><span class="tm-no">1</span><span class="tm-nimi">Kolme minua</span></button></li>
+              <li><button type="button" data-askel="1"><span class="tm-no">2</span><span class="tm-nimi">Mitä päätän itse</span></button></li>
+              <li><button type="button" data-askel="2"><span class="tm-no">3</span><span class="tm-nimi">Suhtautuminen</span></button></li>
+              <li><button type="button" data-askel="3"><span class="tm-no">4</span><span class="tm-nimi">Oma askel</span></button></li>
+            </ol>
+          </nav>
+
           <!-- ① KOLME MINUA TULEVAISUUDESSA -->
           <div class="vaihe-kortti" id="tm1-card" style="margin-bottom:16px;">
             <button
@@ -3416,10 +3427,10 @@
                   <strong>Suunnittelen etukäteen</strong><br>Selvitän asioita ja valmistaudun ennakkoon.
                 </div>
               </div>
-              <p>Tilanteita on kymmenen. Vastaa vähintään viiteen: valitse jokaiseen se vaihtoehto, joka sopii sinuun parhaiten. Ei ole oikeita tai vääriä vastauksia. Kaikilla tavoilla on paikkansa. Valitse se, jonka oikeasti tekisit.</p>
+              <p>Tilanteita on kymmenen. Vastaa vähintään kahteen: klikkaa jokaisessa tilanteessa sitä vaihtoehtoa, joka sopii sinuun parhaiten. Ei ole oikeita tai vääriä vastauksia. Kaikilla tavoilla on paikkansa. Valitse se, jonka oikeasti tekisit.</p>
               <div id="tm4-tilanteet" style="display:flex;flex-direction:column;gap:20px;margin-top:16px;" aria-live="polite"></div>
               <div id="tm4-reflektio" style="display:none;margin-top:20px;padding:16px;background:#f0fdfa;border-radius:12px;border:2px solid #0d9488;">
-                <p style="font-weight:700;color:#0f766e;margin:0 0 10px;">Hyvä — käsittelit kaikki tilanteet!</p>
+                <p style="font-weight:700;color:#0f766e;margin:0 0 10px;">Hyvä — nyt voit pohtia vastauksiasi!</p>
                 <p id="tm4-toiv-rivi" hidden style="margin:0 0 10px;padding:10px 12px;background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;font-size:0.92rem;"><strong>Toivottava minäsi:</strong> <em id="tm4-toiv-teksti"></em></p>
                 <p class="is9-004" data-pakollisuus="val">Minkä tavan valitsit useimmin? Missä tilanteessa jokin toinen tapa olisi sinulle parempi? Mikä tapa auttaisi sinua lähimmäs toivottavaa minääsi?</p>
                 <label for="tm4-vastaus" class="sr-only">Kirjoita pohdintasi tähän</label>
@@ -4522,7 +4533,7 @@
           valittuBtn.style.fontWeight = '600';
           valittuBtn.setAttribute('aria-pressed', 'true');
           tm4Vastattu[tilanneIdx] = tyyppi;
-          if (Object.keys(tm4Vastattu).length >= 5) {
+          if (Object.keys(tm4Vastattu).length >= 2) {
             document.getElementById('tm4-reflektio').style.display = 'block';
             var tv = tmToivottava(), rv = document.getElementById('tm4-toiv-rivi');
             if (rv) { rv.hidden = !tv; document.getElementById('tm4-toiv-teksti').textContent = tv; }
@@ -4624,6 +4635,64 @@
             b.setAttribute('aria-expanded', 'false');
           }
         }
+
+        // ── Tehtävät 1–4 yksi kerrallaan: Edellinen / Seuraava ──
+        var tmAskelKortit = ['tm1', 'tm2', 'tm4', 'tm5'];
+        var tmAskelToggle = { tm1: toggleTM1, tm2: toggleTM2, tm4: toggleTM4, tm5: toggleTM5 };
+        var tmAskelNyt = 0;
+        function tmSiirry(i, vierita) {
+          if (i < 0 || i >= tmAskelKortit.length) return;
+          tmAskelNyt = i;
+          tmAskelKortit.forEach(function(id, k) {
+            var kortti = document.getElementById(id + '-card');
+            if (kortti) kortti.hidden = (k !== i);
+          });
+          var id = tmAskelKortit[i];
+          var sis = document.getElementById(id + '-sisalto');
+          // Avataan aina uudelleen, jotta edellisten tehtävien vastaukset päivittyvät (toivottava minä jne.)
+          sis.hidden = true;
+          tmAskelToggle[id]();
+          var nappeja = document.querySelectorAll('#tm-askeleet [data-askel]');
+          Array.prototype.forEach.call(nappeja, function(n) {
+            var k = Number(n.getAttribute('data-askel'));
+            n.classList.toggle('tm-nyt', k === i);
+            if (k === i) n.setAttribute('aria-current', 'step'); else n.removeAttribute('aria-current');
+          });
+          document.getElementById('tm-askel-teksti').textContent = 'Tehtävä ' + (i + 1) + ' / ' + tmAskelKortit.length;
+          if (vierita) {
+            var nav = document.getElementById('tm-askeleet');
+            nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+        (function() {
+          function alusta() {
+            tmAskelKortit.forEach(function(id, k) {
+              var btn = document.getElementById(id + '-btn');
+              if (btn) { btn.removeAttribute('onclick'); btn.setAttribute('tabindex', '-1'); btn.classList.add('tm-otsikko'); }
+              var sis = document.getElementById(id + '-sisalto');
+              var rivi = document.createElement('div');
+              rivi.className = 'tm-siirtyma';
+              if (k > 0) {
+                var e = document.createElement('button');
+                e.type = 'button'; e.className = 'tm-edellinen'; e.textContent = '← Edellinen';
+                e.addEventListener('click', function() { tmSiirry(k - 1, true); });
+                rivi.appendChild(e);
+              }
+              if (k < tmAskelKortit.length - 1) {
+                var n = document.createElement('button');
+                n.type = 'button'; n.className = 'tm-seuraava'; n.textContent = 'Seuraava →';
+                n.addEventListener('click', function() { tmSiirry(k + 1, true); });
+                rivi.appendChild(n);
+              }
+              sis.appendChild(rivi);
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('#tm-askeleet [data-askel]'), function(n) {
+              n.addEventListener('click', function() { tmSiirry(Number(n.getAttribute('data-askel')), true); });
+            });
+            tmSiirry(0, false);
+          }
+          if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', alusta); else alusta();
+        })();
 
 
 </script>
