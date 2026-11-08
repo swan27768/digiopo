@@ -75,6 +75,7 @@
                   <div id="tp-tulos" style="display:none; background:white; border:2px solid #7c3aed; border-radius:12px; padding:18px 20px; margin:0 auto 20px; max-width:380px; text-align:left;">
                     <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7c3aed; margin-bottom:8px;">Sinun kysymyksesi 🎯</div>
                     <p id="tp-tulos-teksti" style="font-size:1rem; font-weight:700; color:#3b0764; margin:0; line-height:1.5;"></p>
+                    <p id="tp-tulos-jatko" style="font-size:0.95rem; color:#4b5563; margin:8px 0 0; line-height:1.5;"></p>
                   </div>
 
                   <!-- Pyöräytä-nappi -->
@@ -108,13 +109,24 @@
                   <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#6d28d9; margin-bottom:6px;">Vaihe 2 — Nyt rakennetaan! 🔨</div>
                   <p style="font-size:0.88rem; color:#4b5563; margin:0 0 18px;">Valitse ryhmänä yksi "Entäs jos" -tilanne ja rakentakaa sen pohjalta tulevaisuuden työpaikka. Ei tarvitse olla täydellinen — tärkeintä on, että pystytte kertomaan, mitä siellä tehdään.</p>
 
+                  <!-- Apukysymykset -->
+                  <div style="background:white; border:1.5px solid #ddd6fe; border-radius:12px; padding:16px 18px; margin-bottom:14px;">
+                    <div style="font-weight:700; color:#3b0764; font-size:0.95rem; margin-bottom:8px;">💬 Vastatkaa näihin, kun suunnittelette</div>
+                    <ol style="margin:0; padding-left:1.3rem; color:#3b0764; font-size:0.92rem; line-height:1.7; font-weight:600;">
+                      <li>Mitä siellä tehdään?</li>
+                      <li>Ketkä siellä työskentelevät?</li>
+                      <li>Mitä osaamista tarvitaan?</li>
+                      <li>Mitä haluaisit itse tehdä siellä?</li>
+                    </ol>
+                  </div>
+
                   <!-- LEGO-vaihtoehto -->
                   <div style="background:white; border:2px solid #7c3aed; border-radius:12px; padding:18px; margin-bottom:12px;">
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
                       <span style="font-size:1.6rem;" aria-hidden="true">🧱</span>
                       <strong style="color:#3b0764; font-size:0.95rem;">Jos koulussanne on LEGO-palikoita</strong>
                     </div>
-                    <p style="font-size:0.85rem; color:#4b5563; margin:0;">Rakentakaa palikoista teidän työpaikka — rakennus, laite, ajoneuvo tai mikä tahansa muu. Ei tarvitse näyttää oikealta. Tärkeintä on, että pystytte selittämään, <em>mitä siellä tehdään</em> ja <em>miksi se on olemassa.</em></p>
+                    <p style="font-size:0.85rem; color:#4b5563; margin:0;">Rakentakaa palikoista teidän työpaikka — rakennus, laite, ajoneuvo tai mikä tahansa muu, mitä siellä tarvitaan. Ei tarvitse näyttää oikealta. Tärkeintä on, että pystytte selittämään, <em>mitä siellä tehdään</em> ja <em>miksi se on olemassa.</em></p>
                   </div>
 
                   <!-- Vaihtoehto jos ei legoja -->
@@ -155,6 +167,11 @@
                   <div style="margin-top:14px; background:#ede9fe; border-left:3px solid #7c3aed; border-radius:0 8px 8px 0; padding:9px 13px; font-size:0.8rem; color:#5b21b6; font-style:italic;">
                     💡 Ottakaa lopuksi kuva tai kuvakaappaus — palautetaan Classroomiin. Ja valmistautukaa esittelemään muulle luokalle!
                   </div>
+
+                  <div style="margin-top:14px; background:white; border:2px solid #7c3aed; border-radius:12px; padding:16px 18px;">
+                    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7c3aed; margin-bottom:6px;">Lopuksi · vain sinulle</div>
+                    <p style="margin:0; font-size:1.02rem; font-weight:700; color:#3b0764; line-height:1.5;">Mikä tässä työpaikassa kiinnostaisi sinua itseäsi?</p>
+                  </div>
                 </div>
 
 </main>
@@ -174,6 +191,7 @@
         'Entäs jos ihmiseen voisi kiinnittää robottikäsiä tai -jalkoja?',
         'Entäs jos ilmassa ei olisi lainkaan saasteita?'
       ];
+      var tpJatko = 'Millainen työpaikka sitä varten tarvittaisiin?';
 
       function pyoritaTyopaikka() {
         var pyora  = document.getElementById('tp-pyora');
@@ -192,10 +210,11 @@
         tulos.style.display = 'none';
         setTimeout(function () {
           teksti.textContent = tpKysymykset[i];
+          document.getElementById('tp-tulos-jatko').textContent = tpJatko;
           tulos.style.display = 'block';
           nappi.disabled = false;
           nappi.textContent = '🎡 Pyöräytä uudelleen!';
-          nappi.setAttribute('aria-label', 'Pyöräytä uudelleen. Edellinen kysymys: ' + tpKysymykset[i]);
+          nappi.setAttribute('aria-label', 'Pyöräytä uudelleen. Edellinen kysymys: ' + tpKysymykset[i] + ' ' + tpJatko);
         }, 3200);
       }
 
