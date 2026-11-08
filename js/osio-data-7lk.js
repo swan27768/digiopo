@@ -109,19 +109,23 @@ window.OSIO_DATA = {
       teoria: "tulevaisuus-taito",
       rakenne: [
         "Aloitus: mitä haluaisit kokeilla joskus?",
-        "Aikamatka tulevaisuuteen -tehtävä: matka Robon kanssa vuoteen 2045, valinnat ja omat unelmat (yksin tai parin kanssa)",
-        "Tulevaisuuden unelmatoimisto (ryhmätehtävä): ryhmät suunnittelevat luokan nimettömien unelmien pohjalta ratkaisun, joka toteuttaa luokkakavereiden toiveen — mikä pieni askel veisi toivetta kohti?"
+        "Aikamatka tulevaisuuteen -tehtävä: matka Robon kanssa vuoteen 2045, valinnat, oma unelma ja pieni askel (itsenäisesti)",
+        "Välitehtävä Luokan oma toivelaatikko: jokainen kirjoittaa unelman nimettömänä lapulle",
+        "Tulevaisuuden unelmatoimisto (ryhmätehtävä, noin 45 min): ryhmä ottaa laatikosta toiveita, valitsee yhden, suunnittelee sille ratkaisun ja esittelee sen luokalle minuutissa kuin mainos",
+        "Purku: mitä voi tehdä jo nyt, mikä toive voisi toteutua oikeasti ja mikä pieni askel veisi sitä kohti?"
       ],
       tavoitteet: [
         "Harjoittelet kuvittelemaan erilaisia tulevaisuuksia",
         "Huomaat, että haaveilu ja ideointi ovat taitoja, eivät laiskottelua",
-        "Opit toimimaan tilanteessa, jossa ei ole valmista oikeaa vastausta"
+        "Opit toimimaan tilanteessa, jossa ei ole valmista oikeaa vastausta",
+        "Suunnittelet yhdessä ryhmän kanssa ratkaisun luokkakaverin toiveeseen"
       ],
       miksi: "Tulevaisuudentutkijat puhuvat tulevaisuuslukutaidosta: kyvystä kuvitella useita mahdollisia tulevaisuuksia ja toimia, vaikka ei tiedä varmasti mitä tapahtuu. Moni työ, jota teet aikuisena, ei ole vielä olemassa — siksi kuvittelukyky on yhtä tärkeä taito kuin lukeminen tai laskeminen.",
       yhteenveto: [
         "Teit Aikamatka tulevaisuuteen -tehtävän Robon kanssa ja kuvittelit elämääsi vuonna 2045",
         "Pohdit, millaista työtä haluaisit kokeilla — ja keksit jopa oman tulevaisuuden ammatin",
         "Kirjasit yhden unelman ja yhden pienen askeleen, jonka voit tehdä jo nyt",
+        "Suunnittelit ryhmässä ratkaisun luokkakaverin toiveeseen",
         "Osaat sietää tilannetta, jossa oikeaa vastausta ei ole — se on tärkein taito muuttuvassa maailmassa"
       ]
     },
