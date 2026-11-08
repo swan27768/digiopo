@@ -22,6 +22,7 @@
     "/tehtavat/motivaatiohuutokauppa.html": ".ongelmakortti",
     "/tehtavat/vahvuushuutokauppa.html": ".ryhmakortti",
     "/tehtavat/unelmatoimisto.html": ".unelmakortti",
+    "/tehtavat/toivelaput.html": ".toivelappu",
     "/tehtavat/maailma_tarvitsee_sinua_opettaja.html": ".tuloskortti, .skenaariokortti",
     "/ohjeet/7lk_motivaatio_ope.html": "#tulostettavat .kortti",
     "/ohjeet/malli/7lk_motivaatio_ope.html": "#tulostettavat .kortti"
