@@ -110,7 +110,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä haluaisit kokeilla joskus?",
         "Aikamatka tulevaisuuteen -tehtävä: matka Robon kanssa vuoteen 2045, valinnat ja omat unelmat (yksin tai parin kanssa)",
-        "Tulevaisuuden unelmatoimisto (ryhmätehtävä): ryhmät suunnittelevat luokan nimettömien unelmien pohjalta unelmapaketin, jossa jokaisella on oma tulevaisuuden ammatti — mikä toive toistui monella?"
+        "Tulevaisuuden unelmatoimisto (ryhmätehtävä): ryhmät suunnittelevat luokan nimettömien unelmien pohjalta unelmapaketin, joka toteuttaa luokkakavereiden toiveita — mikä toive toistui monella?"
       ],
       tavoitteet: [
         "Harjoittelet kuvittelemaan erilaisia tulevaisuuksia",
