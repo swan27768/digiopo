@@ -305,6 +305,16 @@
     .aloitus .robo-kuva { width: 140px; }
     h1 { font-size: 1.4rem; }
   }
+
+  /* ---- Lauseenaloitukset ja pakollisuus ---- */
+  .aloitukset { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:6px 0 0; }
+  .aloitukset-otsikko { font-size:0.85rem; color:#5b4a6b; margin-right:2px; }
+  .aloitus { font:inherit; font-size:0.9rem; padding:5px 12px; border:2px solid var(--pastel); border-radius:50px; background:#fff; color:var(--violet-dark); cursor:pointer; }
+  .aloitus:hover { border-color:var(--violet); background:#faf5ff; }
+  .pakollisuus { display:inline-block; margin-left:6px; padding:1px 9px; border-radius:50px; background:#eee; color:#555; font-size:0.72rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; vertical-align:middle; }
+  .pakollisuus.pak { background:#5b2c6f; color:#fff; }
+  .virhe { margin:6px 0 0; color:#b3261e; font-weight:700; font-size:0.95rem; }
+  textarea[aria-invalid="true"] { border-color:#b3261e; }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
     <script src="/js/kuuntele.js" defer></script>
@@ -350,9 +360,11 @@
     </div>
     <p>Aikakone surisee. Valot vilkkuvat. Sitten kaikki on hetken hiljaa.</p>
     <p>Ennen kuin lähdetään, mieti yksi asia:</p>
+    <div class="vinkki"><strong>Pakollisia ovat vain unelma ja pieni askel.</strong> Muut kentät ovat vapaaehtoisia. Voit myös käyttää valmiita lauseenalkuja.</div>
 
-    <label class="kentta-otsikko" for="k_nyt">Mikä on sinulle tärkeää juuri nyt? (Esimerkiksi kaverit, harrastus, lemmikki, koulu.)</label>
+    <label class="kentta-otsikko" for="k_nyt">Mikä on sinulle tärkeää juuri nyt? (Esimerkiksi kaverit, harrastus, lemmikki, koulu.) <span class="pakollisuus">vapaaehtoinen</span></label>
     <textarea id="k_nyt" placeholder="Kirjoita 1–2 asiaa. Oikeaa tai väärää vastausta ei ole."></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_nyt',this)">Minulle on tärkeää…</button><button type="button" class="aloitus" onclick="aloita('k_nyt',this)">Juuri nyt ajattelen eniten…</button><button type="button" class="aloitus" onclick="aloita('k_nyt',this)">Tykkään tehdä…</button></div>
 
     <div class="nappi-rivi">
       <button class="nappi-takaisin nappi" onclick="mene(0)">← Takaisin</button>
@@ -387,8 +399,9 @@
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="arki" onclick="valitse(this,'arki')">🎨 Uudet harrastukset ja kokemukset</button>
     </div>
 
-    <label class="kentta-otsikko" for="k_arki">Miksi valitsit juuri sen? Kirjoita lyhyesti.</label>
+    <label class="kentta-otsikko" for="k_arki">Miksi valitsit juuri sen? Kirjoita lyhyesti. <span class="pakollisuus">vapaaehtoinen</span></label>
     <textarea id="k_arki" placeholder="Esimerkiksi: Valitsin robotit, koska..."></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_arki',this)">Valitsin tämän, koska…</button><button type="button" class="aloitus" onclick="aloita('k_arki',this)">Tämä kiinnostaa minua, koska…</button></div>
 
     <div class="nappi-rivi">
       <button class="nappi-takaisin nappi" onclick="mene(1)">← Takaisin</button>
@@ -423,11 +436,12 @@
       <button type="button" class="valinta" aria-pressed="false" data-ryhma="tyo" onclick="valitse(this,'tyo')">🔬 Työ, jossa tutkin ja ratkaisen ongelmia</button>
     </div>
 
-    <label class="kentta-otsikko" for="k_ammatti">Keksi oma tulevaisuuden ammatti. Mikä sen nimi on? Ammatin ei tarvitse olla vielä olemassa.</label>
+    <label class="kentta-otsikko" for="k_ammatti">Keksi oma tulevaisuuden ammatti. Mikä sen nimi on? Ammatin ei tarvitse olla vielä olemassa. <span class="pakollisuus">vapaaehtoinen</span></label>
     <input type="text" id="k_ammatti" class="kentta-rivi" maxlength="60" placeholder="Esimerkiksi: Unelmarobottien suunnittelija">
 
-    <label class="kentta-otsikko" for="k_tyo">Mitä teet tässä ammatissa? Kirjoita 1–2 lausetta.</label>
+    <label class="kentta-otsikko" for="k_tyo">Mitä teet tässä ammatissa? Kirjoita 1–2 lausetta. <span class="pakollisuus">vapaaehtoinen</span></label>
     <textarea id="k_tyo" placeholder="Esimerkiksi: Minä suunnittelen robotteja, jotka..."></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_tyo',this)">Päivän aikana minä…</button><button type="button" class="aloitus" onclick="aloita('k_tyo',this)">Autan ihmisiä…</button><button type="button" class="aloitus" onclick="aloita('k_tyo',this)">Keksin ja rakennan…</button></div>
 
     <div class="vinkki">
       <strong>Hyvä muistaa:</strong> Sinun ei tarvitse tietää vielä, mikä sinusta tulee.
@@ -455,14 +469,19 @@
     <p>Unelma ei ole lupaus. Se voi muuttua monta kertaa.
        Unelma on vain suunta, jota kohti kuljet.</p>
 
-    <label class="kentta-otsikko" for="k_unelma">Yksi unelmani tulevaisuudessa on…</label>
+    <label class="kentta-otsikko" for="k_unelma">Yksi unelmani tulevaisuudessa on… <span class="pakollisuus pak">pakollinen</span></label>
     <textarea id="k_unelma" placeholder="Esimerkiksi: Haluan matkustaa, oppia uuden kielen tai..."></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_unelma',this)">Haluan joskus…</button><button type="button" class="aloitus" onclick="aloita('k_unelma',this)">Haluaisin oppia…</button><button type="button" class="aloitus" onclick="aloita('k_unelma',this)">Haluaisin kokeilla…</button><button type="button" class="aloitus" onclick="aloita('k_unelma',this)">Unelmani on…</button></div>
+    <p class="virhe" id="v_k_unelma" role="alert" hidden>Kirjoita unelmasi vähintään yhdellä lauseella.</p>
 
-    <label class="kentta-otsikko" for="k_hyva">Mitä hyvää unelmastasi voisi olla muille tai maailmalle?</label>
+    <label class="kentta-otsikko" for="k_hyva">Mitä hyvää unelmastasi voisi olla muille tai maailmalle? <span class="pakollisuus">vapaaehtoinen</span></label>
     <textarea id="k_hyva" placeholder="Esimerkiksi: voin auttaa muita, tehdä jotain hyödyllistä, ilahduttaa ihmisiä…"></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_hyva',this)">Voisin auttaa…</button><button type="button" class="aloitus" onclick="aloita('k_hyva',this)">Muut voisivat saada…</button></div>
 
-    <label class="kentta-otsikko" for="k_askel">Yksi pieni asia, jonka voin tehdä jo nyt sitä kohti, on… Ja kuka voisi auttaa sinua matkalla?</label>
+    <label class="kentta-otsikko" for="k_askel">Yksi pieni asia, jonka voin tehdä jo nyt sitä kohti, on… Ja kuka voisi auttaa sinua matkalla? <span class="pakollisuus pak">pakollinen</span></label>
     <textarea id="k_askel" placeholder="Esimerkiksi: Harjoittelen, kysyn neuvoa tai kokeilen..."></textarea>
+    <div class="aloitukset" role="group" aria-label="Lauseenaloituksia, jotka voit valita"><span class="aloitukset-otsikko">Ei keksi mitä kirjoittaa? Valitse lauseen alku:</span><button type="button" class="aloitus" onclick="aloita('k_askel',this)">Voin kysyä neuvoa keneltä…</button><button type="button" class="aloitus" onclick="aloita('k_askel',this)">Voin harjoitella…</button><button type="button" class="aloitus" onclick="aloita('k_askel',this)">Voin kokeilla…</button></div>
+    <p class="virhe" id="v_k_askel" role="alert" hidden>Kirjoita yksi pieni askel vähintään yhdellä lauseella.</p>
 
     <div class="nappi-rivi">
       <button class="nappi-takaisin nappi" onclick="mene(3)">← Takaisin</button>
@@ -539,6 +558,7 @@ function paivitaEdistys() {
 
 function mene(n) {
   if (n < 0 || n >= RUUDUT) return;
+  if (n === 5 && !tarkistaPakolliset()) return;
   document.getElementById("ruutu-" + nykyinen).classList.remove("nakyy");
   document.getElementById("ruutu-" + nykyinen).hidden = true;
   nykyinen = n;
@@ -551,6 +571,32 @@ function mene(n) {
   var otsikko = r.querySelector("h1, h2");
   if (otsikko) { otsikko.setAttribute("tabindex", "-1"); otsikko.focus(); }
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+var MIN_PITUUS = 8;
+function tarkistaPakolliset() {
+  var ensimmainen = null;
+  ["k_unelma", "k_askel"].forEach(function (id) {
+    var el = document.getElementById(id), v = document.getElementById("v_" + id);
+    var ok = el && (el.value || "").trim().length >= MIN_PITUUS;
+    if (v) v.hidden = ok;
+    if (el) el.setAttribute("aria-invalid", ok ? "false" : "true");
+    if (!ok && !ensimmainen) ensimmainen = el;
+  });
+  if (ensimmainen) { ensimmainen.focus(); return false; }
+  return true;
+}
+
+function aloita(id, nappi) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var alku = nappi.textContent.trim();
+  var v = (el.value || "").trim();
+  el.value = v ? v + " " + alku : alku;
+  el.focus();
+  el.setSelectionRange(el.value.length, el.value.length);
+  var virhe = document.getElementById("v_" + id);
+  if (virhe) virhe.hidden = true;
 }
 
 function valitse(el, ryhma) {

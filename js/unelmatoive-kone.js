@@ -55,14 +55,12 @@
       tulos.textContent = arvo();
       tulos.classList.add("on-toive");
       if (kone) kone.classList.remove("kaynnissa");
-      nappi.disabled = false;
       nappi.textContent = t("unelmakone.uusi", "Arvo uusi toive");
       nappi.removeAttribute("data-i18n");
     }
     nappi.addEventListener("click", function () {
       if (ajastin) return;
       if (vahenna) { nayta(); return; }
-      nappi.disabled = true;
       tulos.classList.remove("on-toive");
       tulos.textContent = t("unelmakone.miettii", "Kone miettii…");
       if (kone) kone.classList.add("kaynnissa");
