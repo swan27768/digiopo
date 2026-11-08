@@ -1,4 +1,4 @@
-/* Unelmatoiveiden kone: arpoo ryhmälle toiveen, jos luokan lappuja ei ole tarpeeksi (7. lk, Unelmatoimisto). */
+/* Unelmatoiveiden kone ja Vinkki-linkki: arpoo ryhmälle toiveen, jos luokan lappuja ei ole tarpeeksi (7. lk, Unelmatoimisto). */
 (function () {
   "use strict";
   var TOIVEET = [
@@ -68,6 +68,20 @@
       tulos.textContent = t("unelmakone.miettii", "Kone miettii…");
       if (kone) kone.classList.add("kaynnissa");
       ajastin = setTimeout(function () { ajastin = null; nayta(); }, 900);
+    });
+  });
+
+  // Vinkki-linkki avaa pienen iframen (ladataan vasta ensimmäisellä avauksella).
+  document.addEventListener("DOMContentLoaded", function () {
+    var nappi = document.getElementById("vinkki-nappi");
+    var paneeli = document.getElementById("vinkki-paneeli");
+    var kehys = document.getElementById("vinkki-kehys");
+    if (!nappi || !paneeli || !kehys) return;
+    nappi.addEventListener("click", function () {
+      var auki = nappi.getAttribute("aria-expanded") === "true";
+      if (!auki && !kehys.getAttribute("src")) kehys.setAttribute("src", kehys.getAttribute("data-src"));
+      nappi.setAttribute("aria-expanded", auki ? "false" : "true");
+      paneeli.hidden = auki;
     });
   });
 })();
