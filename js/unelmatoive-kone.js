@@ -71,17 +71,19 @@
     });
   });
 
-  // Vinkki-linkki avaa pienen iframen (ladataan vasta ensimmäisellä avauksella).
+  // Vinkki-linkit avaavat pienen iframen (ladataan vasta ensimmäisellä avauksella).
   document.addEventListener("DOMContentLoaded", function () {
-    var nappi = document.getElementById("vinkki-nappi");
-    var paneeli = document.getElementById("vinkki-paneeli");
-    var kehys = document.getElementById("vinkki-kehys");
-    if (!nappi || !paneeli || !kehys) return;
-    nappi.addEventListener("click", function () {
-      var auki = nappi.getAttribute("aria-expanded") === "true";
-      if (!auki && !kehys.getAttribute("src")) kehys.setAttribute("src", kehys.getAttribute("data-src"));
-      nappi.setAttribute("aria-expanded", auki ? "false" : "true");
-      paneeli.hidden = auki;
+    var napit = document.querySelectorAll(".vinkki-linkki");
+    Array.prototype.forEach.call(napit, function (nappi) {
+      var paneeli = document.getElementById(nappi.getAttribute("aria-controls"));
+      var kehys = paneeli ? paneeli.querySelector("iframe") : null;
+      if (!paneeli || !kehys) return;
+      nappi.addEventListener("click", function () {
+        var auki = nappi.getAttribute("aria-expanded") === "true";
+        if (!auki && !kehys.getAttribute("src")) kehys.setAttribute("src", kehys.getAttribute("data-src"));
+        nappi.setAttribute("aria-expanded", auki ? "false" : "true");
+        paneeli.hidden = auki;
+      });
     });
   });
 })();
