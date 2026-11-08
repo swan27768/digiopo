@@ -40,13 +40,14 @@
   }
   function t(avain, oletus) {
     try {
-      if (window.i18n && typeof window.i18n.t === "function") {
-        var x = window.i18n.t(avain);
-        if (x && x !== avain) return x;
-      }
+      var osat = avain.split(".");
+      var o = window.DIGIOPO_T;
+      for (var i = 0; o && i < osat.length; i++) o = o[osat[i]];
+      if (typeof o === "string" && o) return o;
     } catch (e) { /* ei haittaa */ }
     return oletus;
   }
+
   document.addEventListener("DOMContentLoaded", function () {
     var nappi = document.getElementById("unelmakone-nappi");
     var tulos = document.getElementById("unelmakone-tulos");
@@ -56,6 +57,7 @@
     var vahenna = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     function nayta() {
       tulos.textContent = arvo();
+      tulos.removeAttribute("data-i18n");
       tulos.classList.add("on-toive");
       if (kone) kone.classList.remove("kaynnissa");
       nappi.textContent = t("unelmakone.uusi", "Arvo uusi toive");
@@ -66,6 +68,7 @@
       if (vahenna) { nayta(); return; }
       tulos.classList.remove("on-toive");
       tulos.textContent = t("unelmakone.miettii", "Kone miettii…");
+      tulos.removeAttribute("data-i18n");
       if (kone) kone.classList.add("kaynnissa");
       ajastin = setTimeout(function () { ajastin = null; nayta(); }, 900);
     });
