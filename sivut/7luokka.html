@@ -25,6 +25,7 @@
 
     <!-- DigiOpo CSS -->
 <link rel="stylesheet" href="../css/paketti-7lk.css" />
+<link rel="stylesheet" href="../css/koulun-jalkeen.css" />
 
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
@@ -1482,83 +1483,65 @@
             </div>
           </div>
 
-          <!-- Harrastuspyörä (ensimmäinen tehtävä) -->
-          <div style="margin-top: 24px;">
-            <button type="button" id="harrastuspyora-avaa" aria-expanded="false" aria-controls="harrastuspyoraContainer" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:linear-gradient(135deg,#be185d,#7c3aed);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit"><span>🎡 Tehtävä: Harrastuspyörä</span><span aria-hidden="true">▶</span></button>
-            <div id="harrastuspyoraContainer" class="interactive-wrapper" style="display:none;margin-top:6px">
-              <div class="peli-sulje-rivi"><button type="button" class="peli-sulje-btn" id="harrastuspyora-sulje">✕ Sulje tehtävä</button></div>
-              <iframe id="harrastuspyoraIframe" title="Harrastuspyörä – kokeile jotain uutta" loading="lazy" style="width:100%;height:85vh;min-height:640px;border:none;border-radius:14px"></iframe>
-            </div>
+          <!-- Valintakortit: kaksi avattavaa sisältöä -->
+          <div class="kj-kortit">
+            <button type="button" class="kj-kortti kj-kortti--pyora" id="kj-nappi-pyora" aria-expanded="false" aria-controls="kj-paneeli-pyora">
+              <span class="kj-tarra" aria-hidden="true">👋 Aloita tästä!</span>
+              <span class="kj-emoji" aria-hidden="true">🎡</span>
+              <span class="kj-merkki">Ryhmätehtävä · 20–30 min</span>
+              <span class="kj-otsikko">Harrastuspyörä</span>
+              <span class="kj-teksti">Pyörä arpoo ryhmällesi harrastuksen. Mitä jos joutuisit kokeilemaan jotain aivan outoa?</span>
+              <span class="kj-cta" data-auki="Sulje ✕" data-kiinni="Pyöräytä! →">Pyöräytä! →</span>
+            </button>
+            <button type="button" class="kj-kortti kj-kortti--tieto" id="kj-nappi-tieto" aria-expanded="false" aria-controls="kj-paneeli-tieto">
+              <span class="kj-emoji" aria-hidden="true">🗺️</span>
+              <span class="kj-merkki">Tietoa · 4H, partio, nuta…</span>
+              <span class="kj-otsikko">Mistä löydän toimintaa?</span>
+              <span class="kj-teksti">Löydä paikka, jossa on sinun porukkasi. Katso, mikä voisi sopia sinulle.</span>
+              <span class="kj-cta" data-auki="Sulje ✕" data-kiinni="Tutki →">Tutki →</span>
+            </button>
+          </div>
+
+          <div class="kj-paneeli" id="kj-paneeli-pyora" hidden>
+            <div class="peli-sulje-rivi"><button type="button" class="peli-sulje-btn" data-kj-sulje>✕ Sulje tehtävä</button></div>
+            <iframe data-src="/tehtavat/harrastuspyora.html" title="Harrastuspyörä – ryhmätehtävä" loading="lazy" style="height:85vh;min-height:640px"></iframe>
+          </div>
+          <div class="kj-paneeli" id="kj-paneeli-tieto" hidden>
+            <div class="peli-sulje-rivi"><button type="button" class="peli-sulje-btn" data-kj-sulje>✕ Sulje</button></div>
+            <iframe id="koulunjalkeen-iframe" data-src="/sivut/after-school.html" title="Mistä löydän toimintaa koulun jälkeen" loading="lazy" style="min-height:700px"></iframe>
           </div>
           <script>
             (function () {
-              var a = document.getElementById('harrastuspyora-avaa');
-              var c = document.getElementById('harrastuspyoraContainer');
-              var f = document.getElementById('harrastuspyoraIframe');
-              var x = document.getElementById('harrastuspyora-sulje');
-              if (!a || !c || !f) return;
-              a.addEventListener('click', function () {
-                var auki = c.style.display !== 'none';
-                if (!auki && !f.getAttribute('src')) f.setAttribute('src', '/tehtavat/harrastuspyora.html');
-                c.style.display = auki ? 'none' : 'block';
-                a.setAttribute('aria-expanded', auki ? 'false' : 'true');
-              });
-              if (x) x.addEventListener('click', function () {
-                c.style.display = 'none';
-                a.setAttribute('aria-expanded', 'false');
-                a.focus();
+              var pari = [['kj-nappi-pyora', 'kj-paneeli-pyora'], ['kj-nappi-tieto', 'kj-paneeli-tieto']];
+              function aseta(nappi, paneeli, auki) {
+                var cta = nappi.querySelector('.kj-cta');
+                paneeli.hidden = !auki;
+                nappi.setAttribute('aria-expanded', auki ? 'true' : 'false');
+                if (cta) cta.textContent = cta.getAttribute(auki ? 'data-auki' : 'data-kiinni');
+                if (auki) {
+                  var f = paneeli.querySelector('iframe');
+                  if (f && !f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src'));
+                }
+              }
+              pari.forEach(function (p) {
+                var nappi = document.getElementById(p[0]), paneeli = document.getElementById(p[1]);
+                if (!nappi || !paneeli) return;
+                nappi.addEventListener('click', function () {
+                  var avaa = paneeli.hidden;
+                  pari.forEach(function (q) {
+                    var n = document.getElementById(q[0]), pa = document.getElementById(q[1]);
+                    if (n && pa) aseta(n, pa, false);
+                  });
+                  if (avaa) {
+                    aseta(nappi, paneeli, true);
+                    paneeli.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }
+                });
+                var sulje = paneeli.querySelector('[data-kj-sulje]');
+                if (sulje) sulje.addEventListener('click', function () { aseta(nappi, paneeli, false); nappi.focus(); });
               });
             })();
           </script>
-
-          <!-- Klikkaa auki -nappi -->
-          <div style="margin-top: 24px;">
-            <button
-              onclick="toggleKoulunJalkeen()"
-              id="koulunjalkeen-toggle-btn"
-              style="
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                background: linear-gradient(135deg, #6d28d9, #7c3aed);
-                color: white;
-                border: none;
-                border-radius: 12px;
-                padding: 14px 24px;
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-                width: 100%;
-                justify-content: space-between;
-                transition: all 0.2s;
-              "
-              aria-expanded="false"
-              aria-controls="koulunjalkeen-sisalto"
-            >
-              <span>Avaa Koulupäivän jälkeen -sisältö</span>
-              <span id="koulunjalkeen-toggle-icon" style="font-size:1.2rem; transition: transform 0.3s;">▼</span>
-            </button>
-
-            <!-- Sisältö — piilotettu aluksi -->
-            <div
-              id="koulunjalkeen-sisalto"
-              style="display:none; margin-top: 16px;"
-            >
-              <iframe
-                src="/sivut/after-school.html"
-                style="
-                  width: 100%;
-                  min-height: 700px;
-                  border: none;
-                  border-radius: 14px;
-                  display: block;
-                "
-                title="Mistä löydän toimintaa koulun jälkeen"
-                loading="lazy"
-                id="koulunjalkeen-iframe"
-              ></iframe>
-            </div>
-          </div>
         </section>
 
       </main>
@@ -1971,24 +1954,6 @@
 
       /* ── Tehtävän tieteellinen pohja (i-linkki) ── */
       /* ── Koulupäivän jälkeen ── */
-      function toggleKoulunJalkeen() {
-        var sisalto = document.getElementById('koulunjalkeen-sisalto');
-        var ikoni = document.getElementById('koulunjalkeen-toggle-icon');
-        var nappi = document.getElementById('koulunjalkeen-toggle-btn');
-        var auki = sisalto.style.display === 'none' || sisalto.style.display === '';
-        if (auki) {
-          sisalto.style.display = 'block';
-          ikoni.style.transform = 'rotate(180deg)';
-          nappi.setAttribute('aria-expanded', 'true');
-          nappi.querySelector('span').textContent = 'Sulje Koulupäivän jälkeen -sisältö';
-        } else {
-          sisalto.style.display = 'none';
-          ikoni.style.transform = 'rotate(0deg)';
-          nappi.setAttribute('aria-expanded', 'false');
-          nappi.querySelector('span').textContent = 'Avaa Koulupäivän jälkeen -sisältö';
-        }
-      }
-
       /* ── Maskotti ── */
       function setupMaskotti() {
         window.maskottiOsioKuplat = true; /* osiokohtaiset kuplat ohittavat yleiset (maskotti-tunne.js) */

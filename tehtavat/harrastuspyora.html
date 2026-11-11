@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harrastuspyörä – kokeile jotain uutta</title>
+<title>Harrastuspyörä – ryhmätehtävä</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -71,6 +71,10 @@
   details.teacher summary { cursor: pointer; font-weight: 700; }
   details.teacher ul { padding-left: 1.3rem; margin-top: .5rem; }
   details.teacher li { margin-bottom: .3rem; font-size: .94rem; }
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .6rem; }
+  .role { background: #faf5ff; border: 1.5px solid var(--border); border-radius: 12px; padding: .6rem .7rem; text-align: center; font-size: .92rem; }
+  .role span { font-size: 1.5rem; display: block; }
+  .role small { display: block; color: var(--muted); font-size: .8rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media print { .hero, .btn-row, #card-pyora, details.teacher { display: none !important; } body { background: #fff; } }
 </style>
@@ -86,19 +90,33 @@
 <header class="hero">
   <span class="hero-emoji" aria-hidden="true">🎡</span>
   <h1>Harrastuspyörä</h1>
-  <p>Pyörä arpoo sinulle harrastuksen. Ehkä et ole kuullut siitä ennen. Selvitä, mitä siinä oppisi ja kiinnostaisiko se sinua.</p>
+  <p>Ryhmänne saa arvotun harrastuksen. Ehkä kukaan ei ole kuullut siitä ennen. Selvittäkää yhdessä, mitä siinä oppisi ja kiinnostaisiko se teitä.</p>
   <div class="chips">
     <span class="chip">⏱️ 20–30 min</span>
-    <span class="chip">👥 Yksin + pari</span>
+    <span class="chip">👥 Pienryhmä 3–4</span>
+    <span class="chip">💬 Puhutaan, ei kirjoiteta paljon</span>
   </div>
 </header>
 
 <main class="main">
 
   <section class="card" id="card-pyora" aria-labelledby="h-pyora">
-    <div class="card-title">1 · Pyöräytä</div>
-    <h2 id="h-pyora">Mikä harrastus sinulle osuu?</h2>
-    <p class="lead">Paina nappia. Pyörä pysähtyy yhteen harrastukseen. Jos arvonta ei yhtään innosta, saat pyöräyttää kerran uudestaan.</p>
+    <div class="card-title">1 · Ryhmä ja arvonta</div>
+    <h2 id="h-pyora">Jakakaa roolit ja pyöräyttäkää</h2>
+    <p class="lead">Käyttäkää yhtä laitetta. Jos ryhmässä on vähemmän kuin neljä, yksi voi hoitaa kaksi roolia.</p>
+
+    <div class="roles" aria-label="Roolit">
+      <div class="role"><span aria-hidden="true">🎡</span><strong>Pyöräyttäjä</strong><small>Painaa napit</small></div>
+      <div class="role"><span aria-hidden="true">✍️</span><strong>Kirjuri</strong><small>Kirjoittaa yhden lauseen</small></div>
+      <div class="role"><span aria-hidden="true">🎤</span><strong>Puhuja</strong><small>Kertoo lopuksi luokalle</small></div>
+      <div class="role"><span aria-hidden="true">⏱️</span><strong>Ajanottaja</strong><small>Pitää ajan kasassa</small></div>
+    </div>
+
+    <div class="q" style="margin-top:1rem">
+      <span class="q-label" id="qsize">Montako teitä on ryhmässä?</span>
+      <div class="scale" id="sizeBtns" role="group" aria-labelledby="qsize"></div>
+    </div>
+
     <div class="wheel-wrap">
       <div class="wheel-container">
         <div class="wheel-pointer" aria-hidden="true"></div>
@@ -110,6 +128,7 @@
       <span class="result-emoji" id="resEmoji" aria-hidden="true"></span>
       <div class="result-name" id="resName"></div>
       <p class="result-desc" id="resDesc"></p>
+      <p class="result-desc"><em>Ryhmä saa pyöräyttää kerran uudestaan, jos arvonta ei yhtään innosta.</em></p>
       <div class="btn-row" style="margin-top:.9rem">
         <button class="btn btn-ghost" id="respinBtn" type="button">🔄 Yksi uusi arvonta</button>
       </div>
@@ -117,65 +136,61 @@
   </section>
 
   <section class="card" id="card-pohdinta" aria-labelledby="h-pohdinta" hidden>
-    <div class="card-title">2 · Selvitä</div>
-    <h2 id="h-pohdinta">Tutki harrastusta: <span id="hobbyTitle"></span></h2>
-    <p class="lead">Et tarvitse oikeaa vastausta. Arvaa, kysy parilta tai etsi tietoa netistä. Vastaukset tallentuvat tähän selaimeen.</p>
+    <div class="card-title">2 · Selvittäkää yhdessä (10 min)</div>
+    <h2 id="h-pohdinta">Tutkikaa harrastusta: <span id="hobbyTitle"></span></h2>
+    <p class="lead">Keskustelkaa jokaisesta kohdasta ensin. Valitkaa sitten ryhmän vastaus napeista. Oikeaa vastausta ei ole. Voitte arvata tai etsiä tietoa netistä.</p>
 
     <div class="q">
       <span class="q-label" id="ql1">Mitä taitoja tässä harrastuksessa oppisi?</span>
-      <span class="help">Valitse enintään kolme.</span>
+      <span class="help">Valitkaa enintään kolme.</span>
       <div class="skill-grid" id="skills" role="group" aria-labelledby="ql1"></div>
     </div>
 
     <div class="q">
-      <label for="a2">Missä ja kenen kanssa tätä tehdään?<span class="help">Esim. yksin kotona, joukkueessa, kerhossa, ulkona.</span></label>
-      <textarea id="a2" data-key="a2"></textarea>
+      <span class="q-label" id="ql2">Missä ja kenen kanssa tätä tehdään?</span>
+      <span class="help">Valitkaa kaikki, jotka sopivat.</span>
+      <div class="skill-grid" id="place" role="group" aria-labelledby="ql2"></div>
     </div>
 
     <div class="q">
-      <label for="a3">Mitä tarvitset alkuun?<span class="help">Mieti aikaa, rahaa ja välineitä. Tarvitaanko aikuisen apua?</span></label>
-      <textarea id="a3" data-key="a3"></textarea>
+      <span class="q-label" id="ql3">Mitä tarvitaan alkuun?</span>
+      <span class="help">Mieti aikaa, rahaa ja välineitä.</span>
+      <div class="skill-grid" id="need" role="group" aria-labelledby="ql3"></div>
     </div>
 
     <div class="q">
-      <span class="q-label" id="ql4">Kokeilisitko tätä oikeasti?</span>
-      <div class="scale" id="scale" role="group" aria-labelledby="ql4"></div>
+      <span class="q-label" id="ql4">Montako teistä kokeilisi tätä oikeasti?</span>
+      <div class="scale" id="tryBtns" role="group" aria-labelledby="ql4"></div>
     </div>
 
     <div class="q">
-      <label for="a5">Perustele valintasi.<span class="help">Miksi kokeilisit? Tai miksi et? Molemmat vastaukset käyvät.</span></label>
-      <textarea id="a5" data-key="a5"></textarea>
+      <label for="a5">Kirjurin tehtävä: yksi lause ryhmältä<span class="help">Mikä tässä harrastuksessa yllätti tai kiinnosti eniten? Voi olla lyhyt.</span></label>
+      <textarea id="a5" data-key="surprise" style="min-height:60px"></textarea>
     </div>
 
     <div class="btn-row"><button class="btn" id="toStep3" type="button">Seuraava →</button></div>
   </section>
 
   <section class="card" id="card-oma" aria-labelledby="h-oma" hidden>
-    <div class="card-title">3 · Oma harrastukseni</div>
-    <h2 id="h-oma">Entä sinun oma juttusi?</h2>
-    <p class="lead">Mieti omaa harrastustasi. Jos sinulla ei ole sellaista, mieti jotain, minkä haluaisit aloittaa.</p>
+    <div class="card-title">3 · Meidän omat harrastukset (7 min)</div>
+    <h2 id="h-oma">Entä teidän omat jutut?</h2>
+    <p class="lead">Kertokaa vuorotellen, mikä on teidän oma harrastuksenne. Jos sinulla ei ole sellaista, kerro jokin, minkä haluaisit aloittaa. Jokainen puhuu noin minuutin.</p>
 
-    <div class="q">
-      <label for="b1">Mikä harrastus se on?</label>
-      <textarea id="b1" data-key="b1" style="min-height:56px"></textarea>
-    </div>
-    <div class="q">
-      <label for="b2">Mitä se on opettanut sinulle?<span class="help">Taito, tapa tai jokin asia itsestäsi, jota et ennen tiennyt.</span></label>
-      <textarea id="b2" data-key="b2"></textarea>
-    </div>
-    <div class="q">
-      <label for="b3">Mikä on samanlaista sinun harrastuksessasi ja arvotussa harrastuksessa?</label>
-      <textarea id="b3" data-key="b3"></textarea>
-    </div>
+    <div class="pair"><strong>Kertokaa vuorotellen:</strong> Mikä harrastus on? Mitä se on opettanut sinulle? Mitä taitoa tarvitset siinä eniten?</div>
 
-    <div class="pair"><strong>Kerro parille (2 min):</strong> Mikä harrastus sinulle arvottiin? Kokeilisitko sitä? Mitä taitoa sinun oma harrastuksesi on opettanut?</div>
+    <div class="q" style="margin-top:1.2rem">
+      <span class="q-label" id="ql6">Mikä taito on yhteinen teidän harrastuksissanne ja arvotussa harrastuksessa?</span>
+      <span class="help">Valitkaa enintään kaksi.</span>
+      <div class="skill-grid" id="common" role="group" aria-labelledby="ql6"></div>
+    </div>
 
     <div class="btn-row" style="margin-top:1rem"><button class="btn" id="toSummary" type="button">Valmis – näytä yhteenveto</button></div>
   </section>
 
   <section class="card" id="card-yhteenveto" aria-labelledby="h-yht" hidden>
-    <div class="card-title">Yhteenveto</div>
-    <h2 id="h-yht">Hyvä! Tässä sinun harrastuskorttisi</h2>
+    <div class="card-title">4 · Esitys luokalle (1 min)</div>
+    <h2 id="h-yht">Teidän harrastuskorttinne</h2>
+    <p class="lead">Puhuja kertoo luokalle: mikä harrastus, mitä siinä oppisi ja montako teistä kokeilisi.</p>
     <dl class="summary" id="summary"></dl>
     <div class="btn-row" style="margin-top:1.2rem">
       <button class="btn btn-ghost" id="printBtn" type="button">🖨️ Tulosta</button>
@@ -188,11 +203,12 @@
     <summary>Opettajalle</summary>
     <ul>
       <li><strong>Tavoite:</strong> oppilas tunnistaa, mitä taitoja harrastukset opettavat, ja avaa katsettaan uusille kiinnostuksen kohteille.</li>
-      <li><strong>Kesto:</strong> 20–30 min. Pyöräytys ja pohdinta yksin, parikeskustelu lopuksi.</li>
-      <li><strong>Keskustelun avaus luokalle:</strong> Mikä taito oli yllättävin? Mikä harrastus kuulostaa oudolta, mutta voisi sopia sinulle?</li>
-      <li><strong>Huomioi:</strong> kaikilla ei ole harrastusta tai varaa harrastaa. Kohta 3 sallii myös "haluaisin aloittaa". Älä vaadi jakamaan vastauksia.</li>
-      <li><strong>Jatko:</strong> yhdistä Vahvuudet-tehtäviin. Mitä vahvuuksia harrastus vaatii?</li>
-      <li>Oppilaan vastaukset tallentuvat vain hänen omaan selaimeensa.</li>
+      <li><strong>Ryhmäkoko:</strong> 3–4 oppilasta, yksi laite per ryhmä. Roolit: pyöräyttäjä, kirjuri, puhuja, ajanottaja.</li>
+      <li><strong>Kesto:</strong> 20–30 min. Arvonta 3 min, selvitys 10 min, omat harrastukset 7 min, esitys 1 min per ryhmä.</li>
+      <li><strong>Kirjoittaminen:</strong> vastaukset valitaan napeista. Kirjuri kirjoittaa vain yhden lauseen. Muu työ on keskustelua.</li>
+      <li><strong>Keskustelun avaus luokalle:</strong> Mikä taito oli yllättävin? Mikä harrastus kuulostaa oudolta, mutta voisi sopia jollekin teistä?</li>
+      <li><strong>Huomioi:</strong> kaikilla ei ole harrastusta tai varaa harrastaa. Kohta 3 sallii myös "haluaisin aloittaa". Älä pakota ketään kertomaan omista harrastuksistaan.</li>
+      <li>Vastaukset tallentuvat vain laitteen omaan selaimeen. "Aloita alusta" tyhjentää ne.</li>
     </ul>
   </details>
 </main>
@@ -229,7 +245,9 @@
   ];
   var SKILLS = ['Kärsivällisyys', 'Yhteistyö', 'Luovuus', 'Tarkkuus', 'Rohkeus', 'Kestävyys', 'Tekniikka', 'Ajanhallinta', 'Päättäväisyys', 'Johtaminen'];
   var SCALE = [['1', 'En ikinä'], ['2', 'Tuskin'], ['3', 'Ehkä'], ['4', 'Todennäköisesti'], ['5', 'Heti!']];
-  var STORE = 'digiopo_harrastuspyora_v1';
+  var STORE = 'digiopo_harrastuspyora_v2';
+  var PLACE = ['Yksin', 'Joukkueessa', 'Kaveriporukassa', 'Ohjaajan kanssa', 'Ulkona', 'Sisällä'];
+  var NEED = ['Rahaa', 'Omat välineet', 'Aikuisen apua', 'Paljon aikaa', 'Treenikaveri', 'Ei juuri mitään'];
 
   var N = HOBBIES.length, SEG = 2 * Math.PI / N;
   var COLORS = ['#7c3aed', '#be185d', '#0891b2', '#b45309', '#065f46', '#9f1239', '#1d4ed8', '#7e22ce'];
@@ -239,7 +257,8 @@
   var angle = POINTER, spinning = false;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var data = { hobby: null, respun: false, skills: [], scale: null, a2: '', a3: '', a5: '', b1: '', b2: '', b3: '', step: 1 };
+  function fresh() { return { hobby: null, respun: false, size: 4, skills: [], place: [], need: [], tries: null, surprise: '', common: [], step: 1 }; }
+  var data = fresh();
 
   function $(id) { return document.getElementById(id); }
   function save() { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }
@@ -316,45 +335,55 @@
     if (scroll) $('card-pohdinta').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
-  /* ── Pohdinta ── */
-  function buildSkills() {
-    var box = $('skills'); box.textContent = '';
-    SKILLS.forEach(function (s) {
+  /* ── Valinnat ── */
+  function buildChips(id, options, key, max) {
+    var box = $(id); if (!box) return; box.textContent = '';
+    options.forEach(function (o) {
       var b = document.createElement('button');
-      b.type = 'button'; b.className = 'skill'; b.textContent = s;
-      b.setAttribute('aria-pressed', data.skills.indexOf(s) >= 0 ? 'true' : 'false');
+      b.type = 'button'; b.className = 'skill'; b.textContent = o;
       b.addEventListener('click', function () {
-        var i = data.skills.indexOf(s);
-        if (i >= 0) data.skills.splice(i, 1);
-        else if (data.skills.length < 3) data.skills.push(s);
-        save(); refreshSkills();
+        var arr = data[key], i = arr.indexOf(o);
+        if (i >= 0) arr.splice(i, 1); else if (!max || arr.length < max) arr.push(o);
+        save(); refreshChips(id, options, key, max);
       });
       box.appendChild(b);
     });
-    refreshSkills();
+    refreshChips(id, options, key, max);
   }
-  function refreshSkills() {
-    var btns = $('skills').querySelectorAll('.skill');
+  function refreshChips(id, options, key, max) {
+    var btns = $(id).querySelectorAll('.skill');
     for (var i = 0; i < btns.length; i++) {
-      var on = data.skills.indexOf(SKILLS[i]) >= 0;
+      var on = data[key].indexOf(options[i]) >= 0;
       btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
-      btns[i].disabled = !on && data.skills.length >= 3;
+      btns[i].disabled = !!max && !on && data[key].length >= max;
     }
   }
-  function buildScale() {
-    var box = $('scale'); box.textContent = '';
-    SCALE.forEach(function (p) {
+  function buildNumbers(id, from, to, key, after) {
+    var box = $(id); if (!box) return; box.textContent = '';
+    for (var n = from; n <= to; n++) (function (n) {
       var b = document.createElement('button'); b.type = 'button';
-      var n = document.createElement('span'); n.className = 'num'; n.textContent = p[0];
-      b.appendChild(n); b.appendChild(document.createTextNode(p[1]));
-      b.setAttribute('aria-pressed', String(data.scale) === p[0] ? 'true' : 'false');
+      var s = document.createElement('span'); s.className = 'num'; s.textContent = String(n);
+      b.appendChild(s);
+      b.setAttribute('aria-pressed', data[key] === n ? 'true' : 'false');
       b.addEventListener('click', function () {
-        data.scale = p[0]; save();
+        data[key] = n; save();
         var all = box.querySelectorAll('button');
         for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-pressed', all[i] === b ? 'true' : 'false');
+        if (after) after();
       });
       box.appendChild(b);
+    })(n);
+  }
+  function buildAll() {
+    buildChips('skills', SKILLS, 'skills', 3);
+    buildChips('place', PLACE, 'place', 0);
+    buildChips('need', NEED, 'need', 0);
+    buildChips('common', SKILLS, 'common', 2);
+    buildNumbers('sizeBtns', 2, 5, 'size', function () {
+      if (data.tries !== null && data.tries > data.size) data.tries = null;
+      buildNumbers('tryBtns', 0, data.size, 'tries');
     });
+    buildNumbers('tryBtns', 0, data.size, 'tries');
   }
 
   /* ── Yhteenveto ── */
@@ -363,13 +392,11 @@
     return [
       ['Arvottu harrastus', h ? h.e + ' ' + h.n : ''],
       ['Taidot, joita siinä oppisi', data.skills.join(', ')],
-      ['Missä ja kenen kanssa', data.a2],
-      ['Mitä tarvitsen alkuun', data.a3],
-      ['Kokeilisinko? (1–5)', data.scale ? data.scale + ' / 5' : ''],
-      ['Perustelu', data.a5],
-      ['Minun harrastukseni', data.b1],
-      ['Mitä se on opettanut', data.b2],
-      ['Mikä on samanlaista', data.b3]
+      ['Missä ja kenen kanssa', data.place.join(', ')],
+      ['Mitä tarvitaan alkuun', data.need.join(', ')],
+      ['Montako meistä kokeilisi', data.tries !== null ? data.tries + ' / ' + data.size : ''],
+      ['Yllätti tai kiinnosti', data.surprise],
+      ['Yhteinen taito omien harrastusten kanssa', data.common.join(', ')]
     ];
   }
   function buildSummary() {
@@ -398,19 +425,19 @@
 
   function reset() {
     try { localStorage.removeItem(STORE); } catch (e) {}
-    data = { hobby: null, respun: false, skills: [], scale: null, a2: '', a3: '', a5: '', b1: '', b2: '', b3: '', step: 1 };
+    data = fresh();
     var tas = document.querySelectorAll('textarea[data-key]');
     for (var i = 0; i < tas.length; i++) tas[i].value = '';
     ['result', 'card-pohdinta', 'card-oma', 'card-yhteenveto'].forEach(function (id) { $(id).hidden = true; });
     $('spinBtn').hidden = false; $('spinBtn').disabled = false;
-    buildSkills(); buildScale();
+    buildAll();
     $('card-pyora').scrollIntoView({ block: 'start' });
   }
 
   /* ── Käynnistys ── */
   load();
   drawWheel(angle);
-  buildSkills(); buildScale();
+  buildAll();
   var tas = document.querySelectorAll('textarea[data-key]');
   Array.prototype.forEach.call(tas, function (ta) {
     var k = ta.getAttribute('data-key');
