@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harrastuspyörä – kokeile jotain uutta</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #7c3aed; --pink: #be185d;
+    --grad: linear-gradient(135deg, #be185d 0%, #7c3aed 100%);
+    --bg: #fdf4ff; --card: #fff; --border: #e9d5ff;
+    --text: #1e1b2e; --muted: #5b6070; --radius: 16px;
+    --shadow: 0 4px 20px rgba(124,58,237,.12);
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.55; min-height: 100vh; }
+  html, body { overflow-x: hidden; }
+  button, textarea { font-family: inherit; }
+  :focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+
+  .hero { background: var(--grad); color: #fff; padding: 2rem 1.5rem 1.8rem; text-align: center; }
+  .hero-emoji { font-size: 3rem; line-height: 1; display: block; }
+  .hero h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -1px; margin: .3rem 0 .4rem; }
+  .hero p { font-size: 1.05rem; max-width: 520px; margin: 0 auto; }
+  .chips { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin-top: .9rem; }
+  .chip { background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.4); border-radius: 20px; padding: .25rem .85rem; font-size: .85rem; font-weight: 600; }
+
+  .main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .card { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.5rem; margin-bottom: 1.2rem; box-shadow: var(--shadow); }
+  .card[hidden] { display: none; }
+  .card-title { font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--purple); margin-bottom: .5rem; }
+  .card h2 { font-size: 1.15rem; margin-bottom: .4rem; }
+  .lead { color: var(--muted); margin-bottom: 1rem; }
+
+  .wheel-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .wheel-container { position: relative; width: 100%; max-width: 340px; }
+  .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 26px solid var(--pink); filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); z-index: 2; }
+  #wheelCanvas { display: block; width: 100%; height: auto; border-radius: 50%; box-shadow: 0 8px 32px rgba(124,58,237,.25); }
+
+  .btn { background: var(--grad); color: #fff; border: none; border-radius: 12px; padding: .75rem 2rem; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+  .btn:hover:not(:disabled) { opacity: .92; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-ghost { background: #fff; color: var(--purple); border: 2px solid #c4b5fd; box-shadow: none; padding: .6rem 1.3rem; font-size: .93rem; }
+  .btn-row { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+
+  .result { text-align: center; background: linear-gradient(135deg, #fdf4ff, #ede9fe); border: 2px solid #c4b5fd; border-radius: var(--radius); padding: 1.2rem 1.4rem; }
+  .result-emoji { font-size: 2.6rem; display: block; }
+  .result-name { font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 900; line-height: 1.2; }
+  .result-desc { color: #3b3358; margin-top: .3rem; }
+
+  .q { margin-bottom: 1.2rem; }
+  .q label, .q .q-label { display: block; font-weight: 700; margin-bottom: .3rem; }
+  .q .help { display: block; font-size: .88rem; color: var(--muted); font-weight: 400; }
+  textarea { width: 100%; min-height: 84px; resize: vertical; border: 1.5px solid #d8c8f5; border-radius: 10px; padding: .6rem .75rem; font-size: 1rem; color: var(--text); background: #fff; }
+  textarea:focus { border-color: var(--purple); }
+
+  .skill-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .4rem; }
+  .skill { border: 2px solid #d8c8f5; background: #fff; border-radius: 20px; padding: .35rem .9rem; font-size: .92rem; font-weight: 600; cursor: pointer; color: var(--text); }
+  .skill[aria-pressed="true"] { background: var(--purple); border-color: var(--purple); color: #fff; }
+  .skill:disabled { opacity: .5; cursor: not-allowed; }
+
+  .scale { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .scale button { flex: 1; min-width: 56px; border: 2px solid #d8c8f5; background: #fff; border-radius: 12px; padding: .5rem .3rem; cursor: pointer; font-size: .85rem; font-weight: 600; color: var(--text); }
+  .scale button .num { display: block; font-size: 1.3rem; font-weight: 900; }
+  .scale button[aria-pressed="true"] { background: #ede9fe; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,.18); }
+
+  .pair { background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 0 10px 10px 0; padding: .8rem 1rem; color: #14532d; margin-top: .8rem; }
+  .summary dt { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--purple); margin-top: .8rem; }
+  .summary dd { white-space: pre-wrap; }
+  details.teacher { margin-top: 1rem; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: var(--radius); padding: .9rem 1.2rem; }
+  details.teacher summary { cursor: pointer; font-weight: 700; }
+  details.teacher ul { padding-left: 1.3rem; margin-top: .5rem; }
+  details.teacher li { margin-bottom: .3rem; font-size: .94rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media print { .hero, .btn-row, #card-pyora, details.teacher { display: none !important; } body { background: #fff; } }
+</style>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#7c3aed" />
+<script src="../js/lisenssiportti.js"></script>
+<script src="../js/seuranta.js" defer></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <span class="hero-emoji" aria-hidden="true">🎡</span>
+  <h1>Harrastuspyörä</h1>
+  <p>Pyörä arpoo sinulle harrastuksen. Ehkä et ole kuullut siitä ennen. Selvitä, mitä siinä oppisi ja kiinnostaisiko se sinua.</p>
+  <div class="chips">
+    <span class="chip">⏱️ 20–30 min</span>
+    <span class="chip">👥 Yksin + pari</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <section class="card" id="card-pyora" aria-labelledby="h-pyora">
+    <div class="card-title">1 · Pyöräytä</div>
+    <h2 id="h-pyora">Mikä harrastus sinulle osuu?</h2>
+    <p class="lead">Paina nappia. Pyörä pysähtyy yhteen harrastukseen. Jos arvonta ei yhtään innosta, saat pyöräyttää kerran uudestaan.</p>
+    <div class="wheel-wrap">
+      <div class="wheel-container">
+        <div class="wheel-pointer" aria-hidden="true"></div>
+        <canvas id="wheelCanvas" width="680" height="680" role="img" aria-label="Pyörä, jossa on 24 erilaista harrastusta"></canvas>
+      </div>
+      <button class="btn" id="spinBtn" type="button">🎡 Pyöräytä!</button>
+    </div>
+    <div class="result" id="result" hidden aria-live="polite" style="margin-top:1.2rem">
+      <span class="result-emoji" id="resEmoji" aria-hidden="true"></span>
+      <div class="result-name" id="resName"></div>
+      <p class="result-desc" id="resDesc"></p>
+      <div class="btn-row" style="margin-top:.9rem">
+        <button class="btn btn-ghost" id="respinBtn" type="button">🔄 Yksi uusi arvonta</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="card-pohdinta" aria-labelledby="h-pohdinta" hidden>
+    <div class="card-title">2 · Selvitä</div>
+    <h2 id="h-pohdinta">Tutki harrastusta: <span id="hobbyTitle"></span></h2>
+    <p class="lead">Et tarvitse oikeaa vastausta. Arvaa, kysy parilta tai etsi tietoa netistä. Vastaukset tallentuvat tähän selaimeen.</p>
+
+    <div class="q">
+      <span class="q-label" id="ql1">Mitä taitoja tässä harrastuksessa oppisi?</span>
+      <span class="help">Valitse enintään kolme.</span>
+      <div class="skill-grid" id="skills" role="group" aria-labelledby="ql1"></div>
+    </div>
+
+    <div class="q">
+      <label for="a2">Missä ja kenen kanssa tätä tehdään?<span class="help">Esim. yksin kotona, joukkueessa, kerhossa, ulkona.</span></label>
+      <textarea id="a2" data-key="a2"></textarea>
+    </div>
+
+    <div class="q">
+      <label for="a3">Mitä tarvitset alkuun?<span class="help">Mieti aikaa, rahaa ja välineitä. Tarvitaanko aikuisen apua?</span></label>
+      <textarea id="a3" data-key="a3"></textarea>
+    </div>
+
+    <div class="q">
+      <span class="q-label" id="ql4">Kokeilisitko tätä oikeasti?</span>
+      <div class="scale" id="scale" role="group" aria-labelledby="ql4"></div>
+    </div>
+
+    <div class="q">
+      <label for="a5">Perustele valintasi.<span class="help">Miksi kokeilisit? Tai miksi et? Molemmat vastaukset käyvät.</span></label>
+      <textarea id="a5" data-key="a5"></textarea>
+    </div>
+
+    <div class="btn-row"><button class="btn" id="toStep3" type="button">Seuraava →</button></div>
+  </section>
+
+  <section class="card" id="card-oma" aria-labelledby="h-oma" hidden>
+    <div class="card-title">3 · Oma harrastukseni</div>
+    <h2 id="h-oma">Entä sinun oma juttusi?</h2>
+    <p class="lead">Mieti omaa harrastustasi. Jos sinulla ei ole sellaista, mieti jotain, minkä haluaisit aloittaa.</p>
+
+    <div class="q">
+      <label for="b1">Mikä harrastus se on?</label>
+      <textarea id="b1" data-key="b1" style="min-height:56px"></textarea>
+    </div>
+    <div class="q">
+      <label for="b2">Mitä se on opettanut sinulle?<span class="help">Taito, tapa tai jokin asia itsestäsi, jota et ennen tiennyt.</span></label>
+      <textarea id="b2" data-key="b2"></textarea>
+    </div>
+    <div class="q">
+      <label for="b3">Mikä on samanlaista sinun harrastuksessasi ja arvotussa harrastuksessa?</label>
+      <textarea id="b3" data-key="b3"></textarea>
+    </div>
+
+    <div class="pair"><strong>Kerro parille (2 min):</strong> Mikä harrastus sinulle arvottiin? Kokeilisitko sitä? Mitä taitoa sinun oma harrastuksesi on opettanut?</div>
+
+    <div class="btn-row" style="margin-top:1rem"><button class="btn" id="toSummary" type="button">Valmis – näytä yhteenveto</button></div>
+  </section>
+
+  <section class="card" id="card-yhteenveto" aria-labelledby="h-yht" hidden>
+    <div class="card-title">Yhteenveto</div>
+    <h2 id="h-yht">Hyvä! Tässä sinun harrastuskorttisi</h2>
+    <dl class="summary" id="summary"></dl>
+    <div class="btn-row" style="margin-top:1.2rem">
+      <button class="btn btn-ghost" id="printBtn" type="button">🖨️ Tulosta</button>
+      <button class="btn btn-ghost" id="dlBtn" type="button">⬇️ Lataa tekstinä</button>
+      <button class="btn btn-ghost" id="resetBtn" type="button">↺ Aloita alusta</button>
+    </div>
+  </section>
+
+  <details class="teacher">
+    <summary>Opettajalle</summary>
+    <ul>
+      <li><strong>Tavoite:</strong> oppilas tunnistaa, mitä taitoja harrastukset opettavat, ja avaa katsettaan uusille kiinnostuksen kohteille.</li>
+      <li><strong>Kesto:</strong> 20–30 min. Pyöräytys ja pohdinta yksin, parikeskustelu lopuksi.</li>
+      <li><strong>Keskustelun avaus luokalle:</strong> Mikä taito oli yllättävin? Mikä harrastus kuulostaa oudolta, mutta voisi sopia sinulle?</li>
+      <li><strong>Huomioi:</strong> kaikilla ei ole harrastusta tai varaa harrastaa. Kohta 3 sallii myös "haluaisin aloittaa". Älä vaadi jakamaan vastauksia.</li>
+      <li><strong>Jatko:</strong> yhdistä Vahvuudet-tehtäviin. Mitä vahvuuksia harrastus vaatii?</li>
+      <li>Oppilaan vastaukset tallentuvat vain hänen omaan selaimeensa.</li>
+    </ul>
+  </details>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var HOBBIES = [
+    { n: 'Geokätkentä',     e: '🧭', d: 'Etsit piilotettuja aarteita puhelimen GPS:llä metsistä ja kaupungeista.' },
+    { n: 'Kalastus',        e: '🎣', d: 'Istut veden äärellä ja odotat kalaa. Vaatii kärsivällisyyttä ja luonnon tuntemusta.' },
+    { n: 'Robotiikka',      e: '🤖', d: 'Rakennat ja ohjelmoit robotteja, jotka tekevät tehtäviä.' },
+    { n: 'Tanssi',          e: '💃', d: 'Opettelet koreografioita ja liikut musiikin mukaan, yksin tai ryhmässä.' },
+    { n: 'Skeittaus',       e: '🛹', d: 'Opettelet temppuja laudalla. Kaadut monta kertaa ennen kuin onnistut.' },
+    { n: 'Sarjakuvapiirtäminen', e: '✏️', d: 'Keksit hahmoja ja tarinoita ja piirrät ne ruuduiksi.' },
+    { n: 'Partio',          e: '⛺', d: 'Retkeilet, opit selviytymistaitoja ja teet yhdessä tehtäviä ryhmän kanssa.' },
+    { n: 'Pelien ohjelmointi', e: '👾', d: 'Koodaat omia pelejä ja keksit, miten ne toimivat.' },
+    { n: 'Shakki',          e: '♟️', d: 'Mietit siirtoja monta askelta etukäteen ja yrität voittaa vastustajan.' },
+    { n: 'Kiipeily',        e: '🧗', d: 'Kiipeät seinää pitkin. Pitää suunnitella reitti ja uskaltaa luottaa itseensä.' },
+    { n: 'Leipominen',      e: '🧁', d: 'Teet kakkuja, leipiä ja keksejä ja kokeilet uusia makuja.' },
+    { n: 'Valokuvaus',      e: '📷', d: 'Etsit hyviä kuvakulmia ja opit kertomaan tarinoita kuvilla.' },
+    { n: 'Ratsastus',       e: '🐴', d: 'Hoidat hevosta ja opit ratsastamaan. Tarvitaan tasapainoa ja eläintuntemusta.' },
+    { n: 'Kitaransoitto',   e: '🎸', d: 'Opettelet soittamaan biisejä. Sormet kipeytyvät aluksi, mutta se menee ohi.' },
+    { n: 'Videoiden editointi', e: '🎬', d: 'Leikkaat videoita, lisäät musiikkia ja tehokeinoja.' },
+    { n: 'Jääkiekko',       e: '🏒', d: 'Joukkuepeli luistimilla. Treenataan paljon ja pelataan yhdessä.' },
+    { n: 'Ompelu ja vaatteiden muokkaus', e: '🧵', d: 'Teet tai korjaat vaatteita ja luot oman tyylisi.' },
+    { n: 'Lintubongaus',    e: '🐦', d: 'Tunnistat lintuja äänen ja ulkonäön perusteella ja pidät niistä listaa.' },
+    { n: 'Kamppailulaji',   e: '🥋', d: 'Opettelet tekniikoita ja kunnioitusta. Esimerkiksi judo tai karate.' },
+    { n: 'Lautapelit',      e: '🎲', d: 'Pelaat strategia- ja tarinapelejä kavereiden kanssa.' },
+    { n: 'Sukellus',        e: '🤿', d: 'Tutkit vedenalaista maailmaa. Tarvitaan koulutus ja tarkat turvasäännöt.' },
+    { n: 'Teatteri',        e: '🎭', d: 'Esität rooleja lavalla ja opit olemaan rohkeasti esillä.' },
+    { n: 'Pyöräily ja BMX', e: '🚲', d: 'Ajat pitkiä lenkkejä tai teet temppuja radalla.' },
+    { n: 'Kolikoiden ja korttien keräily', e: '🪙', d: 'Keräät, vaihdat ja selvität, mikä on harvinaista ja arvokasta.' }
+  ];
+  var SKILLS = ['Kärsivällisyys', 'Yhteistyö', 'Luovuus', 'Tarkkuus', 'Rohkeus', 'Kestävyys', 'Tekniikka', 'Ajanhallinta', 'Päättäväisyys', 'Johtaminen'];
+  var SCALE = [['1', 'En ikinä'], ['2', 'Tuskin'], ['3', 'Ehkä'], ['4', 'Todennäköisesti'], ['5', 'Heti!']];
+  var STORE = 'digiopo_harrastuspyora_v1';
+
+  var N = HOBBIES.length, SEG = 2 * Math.PI / N;
+  var COLORS = ['#7c3aed', '#be185d', '#0891b2', '#b45309', '#065f46', '#9f1239', '#1d4ed8', '#7e22ce'];
+  var canvas = document.getElementById('wheelCanvas');
+  var ctx = canvas ? canvas.getContext('2d') : null;
+  var POINTER = -Math.PI / 2;
+  var angle = POINTER, spinning = false;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var data = { hobby: null, respun: false, skills: [], scale: null, a2: '', a3: '', a5: '', b1: '', b2: '', b3: '', step: 1 };
+
+  function $(id) { return document.getElementById(id); }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }
+  function load() {
+    try { var s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s && typeof s === 'object') { for (var k in data) if (k in s) data[k] = s[k]; } } catch (e) {}
+  }
+
+  /* ── Pyörä ── */
+  function drawWheel(a) {
+    if (!ctx) return;
+    var W = canvas.width, CX = W / 2, R = CX - 8;
+    ctx.clearRect(0, 0, W, W);
+    for (var i = 0; i < N; i++) {
+      var s = a + i * SEG;
+      ctx.beginPath(); ctx.moveTo(CX, CX); ctx.arc(CX, CX, R, s, s + SEG); ctx.closePath();
+      ctx.fillStyle = COLORS[i % COLORS.length]; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.65)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.save(); ctx.translate(CX, CX); ctx.rotate(s + SEG / 2);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff';
+      ctx.font = 'bold 24px -apple-system, "Segoe UI", sans-serif';
+      ctx.fillText(HOBBIES[i].e, R - 12, 0);
+      ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(CX, CX, 40, 0, 2 * Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.strokeStyle = '#e9d5ff'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.font = '34px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#000';
+    ctx.fillText('🎡', CX, CX + 2);
+  }
+
+  function spin() {
+    if (spinning) return;
+    if (data.hobby !== null && data.respun) return;
+    var isRespin = data.hobby !== null;
+    spinning = true;
+    $('spinBtn').disabled = true; $('respinBtn').disabled = true;
+
+    var target = Math.floor(Math.random() * N);
+    if (isRespin) { while (target === data.hobby && N > 1) target = Math.floor(Math.random() * N); }
+    var aTarget = POINTER - target * SEG - SEG / 2;
+    var TWO = 2 * Math.PI;
+    var start = angle;
+    var delta = (((aTarget - start) % TWO) + TWO) % TWO + (reduce ? 1 : 6 + Math.floor(Math.random() * 3)) * TWO;
+    var dur = reduce ? 600 : 4500, t0 = null;
+
+    function tick(now) {
+      if (t0 === null) t0 = now;
+      var t = Math.min((now - t0) / dur, 1);
+      angle = start + delta * (1 - Math.pow(1 - t, 4));
+      drawWheel(angle);
+      if (t < 1) { requestAnimationFrame(tick); return; }
+      spinning = false;
+      if (isRespin) data.respun = true;
+      data.hobby = target;
+      if (!isRespin) { data.skills = []; }
+      save(); showResult(true);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function showResult(scroll) {
+    if (data.hobby === null) return;
+    var h = HOBBIES[data.hobby];
+    $('resEmoji').textContent = h.e;
+    $('resName').textContent = h.n;
+    $('resDesc').textContent = h.d;
+    $('result').hidden = false;
+    $('hobbyTitle').textContent = h.n;
+    $('spinBtn').hidden = true;
+    $('respinBtn').disabled = data.respun;
+    $('respinBtn').textContent = data.respun ? '✓ Uusi arvonta käytetty' : '🔄 Yksi uusi arvonta';
+    $('card-pohdinta').hidden = false;
+    if (data.step >= 3) $('card-oma').hidden = false;
+    if (data.step >= 4) { buildSummary(); $('card-yhteenveto').hidden = false; }
+    if (scroll) $('card-pohdinta').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  /* ── Pohdinta ── */
+  function buildSkills() {
+    var box = $('skills'); box.textContent = '';
+    SKILLS.forEach(function (s) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'skill'; b.textContent = s;
+      b.setAttribute('aria-pressed', data.skills.indexOf(s) >= 0 ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        var i = data.skills.indexOf(s);
+        if (i >= 0) data.skills.splice(i, 1);
+        else if (data.skills.length < 3) data.skills.push(s);
+        save(); refreshSkills();
+      });
+      box.appendChild(b);
+    });
+    refreshSkills();
+  }
+  function refreshSkills() {
+    var btns = $('skills').querySelectorAll('.skill');
+    for (var i = 0; i < btns.length; i++) {
+      var on = data.skills.indexOf(SKILLS[i]) >= 0;
+      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+      btns[i].disabled = !on && data.skills.length >= 3;
+    }
+  }
+  function buildScale() {
+    var box = $('scale'); box.textContent = '';
+    SCALE.forEach(function (p) {
+      var b = document.createElement('button'); b.type = 'button';
+      var n = document.createElement('span'); n.className = 'num'; n.textContent = p[0];
+      b.appendChild(n); b.appendChild(document.createTextNode(p[1]));
+      b.setAttribute('aria-pressed', String(data.scale) === p[0] ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        data.scale = p[0]; save();
+        var all = box.querySelectorAll('button');
+        for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-pressed', all[i] === b ? 'true' : 'false');
+      });
+      box.appendChild(b);
+    });
+  }
+
+  /* ── Yhteenveto ── */
+  function rows() {
+    var h = data.hobby !== null ? HOBBIES[data.hobby] : null;
+    return [
+      ['Arvottu harrastus', h ? h.e + ' ' + h.n : ''],
+      ['Taidot, joita siinä oppisi', data.skills.join(', ')],
+      ['Missä ja kenen kanssa', data.a2],
+      ['Mitä tarvitsen alkuun', data.a3],
+      ['Kokeilisinko? (1–5)', data.scale ? data.scale + ' / 5' : ''],
+      ['Perustelu', data.a5],
+      ['Minun harrastukseni', data.b1],
+      ['Mitä se on opettanut', data.b2],
+      ['Mikä on samanlaista', data.b3]
+    ];
+  }
+  function buildSummary() {
+    var dl = $('summary'); dl.textContent = '';
+    rows().forEach(function (r) {
+      var dt = document.createElement('dt'); dt.textContent = r[0];
+      var dd = document.createElement('dd'); dd.textContent = r[1] || '–';
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+  }
+  function download() {
+    var txt = 'HARRASTUSKORTTI\n\n' + rows().map(function (r) { return r[0] + ':\n' + (r[1] || '–'); }).join('\n\n') + '\n';
+    var blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'harrastuskortti.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  function goStep(n, target) {
+    data.step = Math.max(data.step, n); save();
+    $(target).hidden = false;
+    if (n === 4) buildSummary();
+    $(target).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function reset() {
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    data = { hobby: null, respun: false, skills: [], scale: null, a2: '', a3: '', a5: '', b1: '', b2: '', b3: '', step: 1 };
+    var tas = document.querySelectorAll('textarea[data-key]');
+    for (var i = 0; i < tas.length; i++) tas[i].value = '';
+    ['result', 'card-pohdinta', 'card-oma', 'card-yhteenveto'].forEach(function (id) { $(id).hidden = true; });
+    $('spinBtn').hidden = false; $('spinBtn').disabled = false;
+    buildSkills(); buildScale();
+    $('card-pyora').scrollIntoView({ block: 'start' });
+  }
+
+  /* ── Käynnistys ── */
+  load();
+  drawWheel(angle);
+  buildSkills(); buildScale();
+  var tas = document.querySelectorAll('textarea[data-key]');
+  Array.prototype.forEach.call(tas, function (ta) {
+    var k = ta.getAttribute('data-key');
+    ta.value = data[k] || '';
+    ta.addEventListener('input', function () { data[k] = ta.value; save(); });
+  });
+  $('spinBtn').addEventListener('click', spin);
+  $('respinBtn').addEventListener('click', spin);
+  $('toStep3').addEventListener('click', function () { goStep(3, 'card-oma'); });
+  $('toSummary').addEventListener('click', function () { goStep(4, 'card-yhteenveto'); });
+  $('printBtn').addEventListener('click', function () { window.print(); });
+  $('dlBtn').addEventListener('click', download);
+  $('resetBtn').addEventListener('click', reset);
+  if (data.hobby !== null) {
+    angle = POINTER - data.hobby * SEG - SEG / 2; drawWheel(angle);
+    showResult(false);
+  }
+})();
+</script>
+</body>
+</html>

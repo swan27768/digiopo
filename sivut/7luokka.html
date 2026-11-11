@@ -1482,6 +1482,35 @@
             </div>
           </div>
 
+          <!-- Harrastuspyörä (ensimmäinen tehtävä) -->
+          <div style="margin-top: 24px;">
+            <button type="button" id="harrastuspyora-avaa" aria-expanded="false" aria-controls="harrastuspyoraContainer" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:linear-gradient(135deg,#be185d,#7c3aed);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit"><span>🎡 Tehtävä: Harrastuspyörä</span><span aria-hidden="true">▶</span></button>
+            <div id="harrastuspyoraContainer" class="interactive-wrapper" style="display:none;margin-top:6px">
+              <div class="peli-sulje-rivi"><button type="button" class="peli-sulje-btn" id="harrastuspyora-sulje">✕ Sulje tehtävä</button></div>
+              <iframe id="harrastuspyoraIframe" title="Harrastuspyörä – kokeile jotain uutta" loading="lazy" style="width:100%;height:85vh;min-height:640px;border:none;border-radius:14px"></iframe>
+            </div>
+          </div>
+          <script>
+            (function () {
+              var a = document.getElementById('harrastuspyora-avaa');
+              var c = document.getElementById('harrastuspyoraContainer');
+              var f = document.getElementById('harrastuspyoraIframe');
+              var x = document.getElementById('harrastuspyora-sulje');
+              if (!a || !c || !f) return;
+              a.addEventListener('click', function () {
+                var auki = c.style.display !== 'none';
+                if (!auki && !f.getAttribute('src')) f.setAttribute('src', '/tehtavat/harrastuspyora.html');
+                c.style.display = auki ? 'none' : 'block';
+                a.setAttribute('aria-expanded', auki ? 'false' : 'true');
+              });
+              if (x) x.addEventListener('click', function () {
+                c.style.display = 'none';
+                a.setAttribute('aria-expanded', 'false');
+                a.focus();
+              });
+            })();
+          </script>
+
           <!-- Klikkaa auki -nappi -->
           <div style="margin-top: 24px;">
             <button
