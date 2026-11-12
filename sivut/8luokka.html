@@ -1177,26 +1177,61 @@
           </div>
 
           <!-- Hero-kortti -->
-          <div style="
-            background: linear-gradient(135deg, #4EE1A0 0%, #5B2C6F 100%);
-            border-radius: 18px;
-            padding: 24px 22px 20px;
-            color: #fff;
-            margin-bottom: 16px;
-            position: relative;
-          ">
-            <button type="button" onclick="avaaLahteet()" aria-label="Näytä lähteet ja pedagoginen tausta" title="Lähteet ja tausta" style="position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6); background:rgba(255,255,255,0.18); color:#fff; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:800; font-size:16px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(3px); z-index:2;" onmouseover="this.style.background='rgba(255,255,255,0.34)'" onmouseout="this.style.background='rgba(255,255,255,0.18)'">i</button>
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
-              <span data-kaannos="klinikka-merkki" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:999px; font-size:0.75rem; font-weight:700; padding:4px 12px; letter-spacing:0.04em;">
-                Tehdään itsenäisesti omalla laitteella
-              </span>
+          <style>
+            .kli-hero{position:relative;overflow:hidden;border-radius:22px;color:#fff;padding:26px 26px 24px;margin-bottom:16px;
+              background:radial-gradient(circle at 12% 0%,rgba(255,255,255,.22) 0,transparent 42%),linear-gradient(135deg,#34c98a 0%,#4b7f8f 48%,#5B2C6F 100%);
+              box-shadow:0 12px 32px rgba(91,44,111,.28)}
+            .kli-hero::before{content:"";position:absolute;inset:0;opacity:.08;background-image:radial-gradient(circle,#fff 1.5px,transparent 1.5px);background-size:22px 22px;pointer-events:none}
+            .kli-risti{position:absolute;right:-18px;bottom:-26px;font-size:150px;line-height:1;opacity:.13;transform:rotate(-12deg);user-select:none;pointer-events:none}
+            .kli-info{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.6);background:rgba(255,255,255,.18);color:#fff;font:italic 800 16px Georgia,"Times New Roman",serif;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);z-index:2}
+            .kli-info:hover{background:rgba(255,255,255,.34)}
+            .kli-in{position:relative;z-index:1}
+            .kli-merkki{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);border-radius:999px;font-size:.75rem;font-weight:700;padding:5px 13px;letter-spacing:.04em}
+            .kli-otsikko{margin:14px 0 6px;color:#fff;font-size:clamp(1.55rem,4.5vw,2.2rem);font-weight:900;letter-spacing:-.5px;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.25);max-width:88%}
+            .kli-vilkku{display:inline-block;animation:kliVilkku 2.4s ease-in-out infinite;transform-origin:70% 70%}
+            @keyframes kliVilkku{0%,70%,100%{transform:rotate(0)}78%{transform:rotate(-14deg)}86%{transform:rotate(10deg)}94%{transform:rotate(-6deg)}}
+            .kli-teksti{margin:0 0 18px;font-size:1.02rem;line-height:1.55;max-width:34em;opacity:.97}
+            .kli-askeleet{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+            .kli-askeleet li{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(3px);border-radius:14px;padding:8px 12px 8px 8px;font-size:.88rem;font-weight:600}
+            .kli-askeleet b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#5B2C6F;font-size:.8rem;font-weight:800}
+            .kli-resepti{display:flex;align-items:center;gap:10px;margin:0 0 20px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.95);color:#3b1a4a;font-size:.9rem;line-height:1.4;max-width:34em;border-left:5px solid #34c98a;transform:rotate(-.6deg);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+            .kli-resepti > span{font-size:1.4rem}
+            .kli-resepti code{font-family:ui-monospace,Menlo,monospace;background:#efe6f5;border-radius:5px;padding:1px 6px;font-size:.85em}
+            .kli-nappi{cursor:pointer;border:none;background:#fff;color:#3d2fc4;font-weight:800;font-size:1.05rem;font-family:inherit;padding:14px 26px;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.2);transition:transform .15s,box-shadow .15s}
+            .kli-nappi:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.25)}
+            .kli-nappi:focus-visible{outline:3px solid #fff;outline-offset:3px}
+            .kli-vinkki{margin:12px 0 0;font-size:.85rem;opacity:.9}
+            .kli-muu{display:none;font-size:.92rem;line-height:1.65;margin:0 0 4px;opacity:.95}
+            html:not([lang="fi"]) .kli-fi{display:none}
+            html:not([lang="fi"]) .kli-muu{display:block}
+            @media(max-width:520px){.kli-hero{padding:22px 18px 20px}.kli-otsikko{max-width:80%}.kli-risti{font-size:110px}}
+            @media(prefers-reduced-motion:reduce){.kli-vilkku{animation:none}}
+          </style>
+          <div class="kli-hero">
+            <span class="kli-risti" aria-hidden="true">✚</span>
+            <button type="button" class="kli-info" onclick="avaaLahteet()" aria-label="Näytä lähteet ja pedagoginen tausta" title="Lähteet ja tausta">i</button>
+            <div class="kli-in">
+              <span class="kli-merkki"><span aria-hidden="true">🩺</span><span data-kaannos="klinikka-merkki">Oma laite, oma tahti</span></span>
+              <div class="kli-fi">
+                <h3 class="kli-otsikko">Klinikka on auki! <span class="kli-vilkku" aria-hidden="true">🩺</span></h3>
+                <p class="kli-teksti">Opiskelu tökkii? Hyvä, tulit oikeaan paikkaan. Täällä ei ole jonoa, ei pistoksia – vain kokeiltuja keinoja, joilla opiskelu sujuu paremmin.</p>
+                <ol class="kli-askeleet">
+                  <li><b>1</b>Valitse oire</li>
+                  <li><b>2</b>Vastaa</li>
+                  <li><b>3</b>Valitse keino</li>
+                  <li><b>4</b>Kirjoita oppimisen avain</li>
+                </ol>
+                <div class="kli-resepti"><span aria-hidden="true">📝</span>
+                  <div><strong>Resepti mukaan:</strong> lataa <code>oppimisresepti.txt</code> ja palauta se Classroomiin.</div></div>
+              </div>
+              <p class="kli-muu" data-kaannos="klinikka-kulku">
+                <strong>Kulku:</strong> valitse aihe → vastaa → valitse keino → kirjoita oppimisen avain<br>
+                <strong>Palautus:</strong> lataa oppimisresepti.txt → Classroom<br>
+                <strong>Vinkki:</strong> voit käydä useamman aiheen läpi
+              </p>
+              <button type="button" class="kli-nappi" onclick="toggleKlinikka(this)" aria-expanded="false" aria-controls="klinikka-wrapper">Mene vastaanotolle →</button>
+              <p class="kli-vinkki kli-fi">💡 Voit käydä useammankin oireen läpi.</p>
             </div>
-            <p data-kaannos="klinikka-kulku" style="font-size:0.92rem; line-height:1.65; margin:0; opacity:0.95;">
-              <strong>Kulku:</strong> valitse aihe → vastaa → valitse keino → kirjoita oppimisen avain<br>
-              <strong>Palautus:</strong> lataa oppimisresepti.txt → Classroom<br>
-              <strong>Vinkki:</strong> voit käydä useamman aiheen läpi
-            </p>
-            <button type="button" class="btn-hero" onclick="toggleKlinikka(this)" aria-expanded="false" aria-controls="klinikka-wrapper" style="cursor:pointer;border:none;font-size:1rem;margin-top:16px;">Avaa tehtävä</button>
           </div>
 
           <div id="klinikka-wrapper" style="display:none;">
