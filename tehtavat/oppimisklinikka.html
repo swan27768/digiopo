@@ -217,6 +217,7 @@ body { background: linear-gradient(180deg,#e4f6ec 0%,#dff3e6 60%,#eaf0f7 100%); 
 .k-suositus { display:inline-block; margin-left:.4rem; font-size:.72rem; font-weight:800; background:var(--mint); color:#14452f; border-radius:999px; padding:.1rem .55rem; vertical-align:middle; }
 .k-reaktio { background:#fff; border-left:5px solid var(--mint); border-radius:.6rem; padding:.55rem .85rem; margin:.4rem 0; font-size:1.02rem; box-shadow:0 2px 8px rgba(91,44,111,.08); }
 .k-reaktio-t { display:block; font-size:.8rem; font-weight:800; color:var(--violet); margin-bottom:.15rem; }
+.k-ohjerivi { margin:.5rem 0 .2rem; font-size:1.05rem; }
 .k-vinkkibox { --c:#0d9f7a; background:#eafaf2; border:2px solid var(--mint); border-radius:.8rem; padding:.65rem .9rem; margin:.5rem 0; font-size:1.03rem; }
 .k-paranemis { text-align:center; font-weight:800; color:var(--violet); margin:.4rem 0 .2rem; }
 @media (max-width:520px) { .k-aiheet { grid-template-columns:1fr; } .k-kupla { margin-left:2.4rem; } .k-polku li { font-size:.72rem; } }
@@ -285,8 +286,8 @@ var AIHEET = {
       ["🃏", "Muistikortit — kysymys toiselle puolelle, vastaus toiselle, käy läpi kunnes osaat"],
       ["🗺️", "Miellekartta — piirrä asiat ja niiden yhteydet yhdelle paperille muistista"]
     ],
-    palaute: "Hyvä valinta! Kaikissa keinoissa aivot <strong>hakevat tiedon itse mieleen</strong>. Pelkkä lukeminen tuntuu osaamiselta, mutta se ei vielä ole sitä.",
-    avainOhje: "Mieti seuraava koe tai aihe, joka pitää oppia. Kirjoita oppimisreseptiisi, miten ja milloin kertaat sen (päivät ja ajat mukaan):",
+    palaute: "Hyvä valinta! Aivot oppivat eniten, kun <strong>haet tiedon itse mieleen</strong>.",
+    avainOhje: "Kirjoita oppimisreseptiisi, miten ja milloin kertaat seuraavan kokeen asiat:",
     placeholder: "Esim: Kertaan englannin sanat ti, to ja su klo 17, 15 min kerrallaan. Teen itselleni 5 kysymystä."
   },
   koe: {
@@ -305,7 +306,7 @@ var AIHEET = {
       ["🎯", "Vaikein ensin — aloita siitä, mitä osaat huonoiten, kun olet virkeä"],
       ["😴", "Uni ja tauot — lopeta ajoissa, sillä väsyneenä luettu ei jää muistiin"]
     ],
-    palaute: "Hyvä valinta! Suunnitelma helpottaa aloittamista. Kun tiedät, <strong>mitä teet ja milloin</strong>, koe-ilta rauhoittuu.",
+    palaute: "Hyvä valinta! Kun tiedät, <strong>mitä teet ja milloin</strong>, koe-ilta rauhoittuu.",
     avainOhje: "Mieti seuraava kokeesi. Kirjoita oppimisreseptiisi, mitä luet, milloin ja kuinka kauan:",
     placeholder: "Esim: Ma: luen kappaleet 3–4. Ti: teen tehtävät ja 5 omaa kysymystä. Ke: kertaan vaikeimmat ja nukun ajoissa."
   },
@@ -325,8 +326,8 @@ var AIHEET = {
       ["🔍", "Pahin mahdollinen — mieti, mitä pahinta voisi tapahtua ja mitä tekisit silloin"],
       ["🚶", "Liike ja tauko — kävele, ravista kädet, juo vettä ennen suoritusta"]
     ],
-    palaute: "Hyvä valinta! Ihan ok, jos jännittää. Jännitys ei katoa kokonaan — eikä tarvitsekaan. Sopiva jännitys jopa <strong>parantaa suoritusta</strong>. Tavoite on, että sinä ohjaat tilannetta, ei jännitys.",
-    avainOhje: "Mieti tilanne, joka jännittää sinua lähiaikoina. Kirjoita oppimisreseptiisi, mitä keinoa käytät ja milloin harjoittelet sitä:",
+    palaute: "Hyvä valinta! Ihan ok, jos jännittää. Sopiva jännitys voi jopa <strong>auttaa suorituksessa</strong>.",
+    avainOhje: "Mieti jännittävä tilanne. Kirjoita oppimisreseptiisi, mitä keinoa käytät ja milloin harjoittelet:",
     placeholder: "Esim: Harjoittelen 4–6-hengitystä iltaisin. Ennen esitelmää käyn kävelyllä ja sanon itselleni: keho valmistautuu."
   },
   tekoaly: {
@@ -345,8 +346,8 @@ var AIHEET = {
       ["❓", "Harjoituskysymykset — pyydä tekoälyä tekemään sinulle kysymyksiä kokeeseen"],
       ["🧐", "Kysy perustelut — pyydä tekoälyä perustelemaan vastauksensa ja arvioi, vakuuttaako se"]
     ],
-    palaute: "Hyvä valinta! Paras tapa käyttää tekoälyä on <strong>ajattelukumppanina, ei vastausautomaattina</strong>. Kun tekoäly auttaa sinua ymmärtämään — eikä ajattele puolestasi — opit oikeasti.",
-    avainOhje: "Mieti tehtävä tai koe, jossa voisit käyttää tekoälyä fiksusti. Kirjoita oppimisreseptiisi, miten käytät sitä niin, että opit itse:",
+    palaute: "Hyvä valinta! Tekoäly on <strong>ajattelukumppani, ei vastausautomaatti</strong>.",
+    avainOhje: "Kirjoita oppimisreseptiisi, miten käytät tekoälyä niin, että opit itse:",
     placeholder: "Esim: Pyydän tekoälyä tekemään 5 harjoituskysymystä historian kokeeseen ja vastaan niihin itse. Tarkistan vastaukset kirjasta."
   }
 };
@@ -378,15 +379,11 @@ function sivuAlku() {
     '<div class="k-hero-sisalto"><h1>Oppimaan oppimisen klinikka</h1>' +
     '<p>Vastaanotto on auki. Kerro, mikä opiskelussa tyssää.</p></div></div>' +
     askeleet(1) +
-    '<div class="tapahtumabox">' +
-    '<p>Tervetuloa klinikalle! Täällä ei hoideta flunssaa vaan <strong>opiskelun pulmia</strong>.</p>' +
-    '<p>Joskus muistaminen tökkii. Joskus koe jännittää tai tekoäly menee sekaisin. Niihin kaikkiin on tutkittuja keinoja.</p>' +
-    '</div>' +
+    '<div class="tapahtumabox"><p>Täällä ei hoideta flunssaa vaan <strong>opiskelun pulmia</strong>. Niihin on tutkittuja keinoja.</p></div>' +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
-    '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse aihe, joka tuntuu juuri nyt omimmalta.</p>' +
-    '<p><strong>Mikä opiskelussa tyssää?</strong></p>' +
-    '<p class="tehtava-vinkki">💡 Vinkki: Voit käydä läpi useamman kuin yhden aiheen. Opit enemmän!</p>' +
+    '<p class="tehtava-ohje">Valitse aihe, joka tuntuu juuri nyt omimmalta.</p>' +
+    '<p class="tehtava-vinkki">💡 Voit tehdä useamman aiheen.</p>' +
     '</div>' +
     '<div class="k-aiheet">';
   for (var avain in AIHEET) {
@@ -402,18 +399,18 @@ function sivuAlku() {
   return h;
 }
 
+/* Tilanteesta näytetään vain tärkeimmät kappaleet (indeksit) */
+var TILANNE_NAYTA = { kertaus: [0, 2], koe: [0, 1], jannitys: [0, 2], tekoaly: [0, 1] };
+
 function sivuTilanne(avain) {
   var a = AIHEET[avain];
   var h = '<div class="story-section">' + askeleet(2) +
     '<div class="k-potilas" style="--c:' + aiheVari(avain) + '">' +
     '<div class="k-potilas-otsikko"><span class="e" aria-hidden="true">' + a.emoji + '</span><div><small>POTILASKORTTI</small><h2>' + a.nimi + '</h2></div></div>' +
     '<div class="k-potilas-runko"><div class="tilanne-otsikko">📖 Tilanne</div>';
-  a.tilanne.forEach(function(p) { h += '<p>' + p + '</p>'; });
+  (TILANNE_NAYTA[avain] || [0, 1, 2]).forEach(function(i) { h += '<p>' + a.tilanne[i] + '</p>'; });
   h += '<div class="k-kupla">' + a.sitaatti + '</div></div></div>' +
-    '<div class="kysymysbox">' +
-    '<div class="tehtava-otsikko">Miten toimit?</div>' +
-    '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse se, joka kuvaa sinua parhaiten.</p>' +
-    '<p><strong>' + a.kysymys + '</strong></p></div>' +
+    '<p class="k-ohjerivi"><strong>' + a.kysymys + '</strong></p>' +
     '<div class="k-vastaukset">' +
     '<button type="button" class="k-vastaus" onclick="tallennaTunnistus(\'' + avain + '\', \'👍 Joo, usein\')">👍 Joo, usein</button>' +
     '<button type="button" class="k-vastaus" onclick="tallennaTunnistus(\'' + avain + '\', \'🤔 Joskus\')">🤔 Joskus</button>' +
@@ -446,9 +443,9 @@ function keinoJarjestys(avain) {
 function tunnistusReaktio(avain) {
   var t = (vastaukset[avain] || {}).tunnistus || '';
   var teksti = '';
-  if (t.indexOf('Joo') !== -1) teksti = 'Et ole yksin. Tämä on yksi yleisimmistä opiskelun pulmista, ja siihen on hyviä keinoja.';
-  else if (t.indexOf('Joskus') !== -1) teksti = 'Hyvä, että huomaat sen. Kun tiedät, milloin pulma tulee, voit valmistautua siihen etukäteen.';
-  else if (t.indexOf('Ei oikeastaan') !== -1) teksti = 'Hienoa, että haluat silti oppia keinot. Ne auttavat sinua myöhemminkin, esimerkiksi kun koe tai tehtävä on vaikeampi.';
+  if (t.indexOf('Joo') !== -1) teksti = 'Et ole yksin. Tämä on yleinen pulma.';
+  else if (t.indexOf('Joskus') !== -1) teksti = 'Hyvä, että huomaat sen. Silloin voit valmistautua etukäteen.';
+  else if (t.indexOf('Ei oikeastaan') !== -1) teksti = 'Hienoa, että haluat silti oppia keinot. Niistä on hyötyä myöhemminkin.';
   if (!teksti) return '';
   return '<div class="k-reaktio"><span class="k-reaktio-t">Vastasit: ' + escT(t) + '</span>' + teksti + '</div>';
 }
@@ -457,12 +454,7 @@ function sivuKeinot(avain) {
   var a = AIHEET[avain];
   var kj = keinoJarjestys(avain);
   var h = '<div class="story-section">' + askeleet(3) + '<h2>' + a.emoji + ' Klinikan keinot</h2>' + tunnistusReaktio(avain) +
-    '<div class="tapahtumabox"><p>Klinikalla on viisi tutkittua keinoa tähän pulmaan. Kaikki toimivat — valitse se, jota haluat kokeilla ensin.</p>' +
-    (kj.mukautettu ? '<p>Järjestin keinot vastauksesi mukaan. Ylimpänä on keino, josta voi olla sinulle eniten apua aluksi.</p>' : '') + '</div>' +
-    '<div class="kysymysbox">' +
-    '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
-    '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse yksi klikkaamalla.</p>' +
-    '<p><strong>Mitä kokeilet ensin?</strong></p></div>' +
+    '<p class="k-ohjerivi"><strong>Mitä kokeilet ensin?</strong> Kaikki keinot toimivat.' + (kj.mukautettu ? ' Ylimpänä on sinulle sopivin aloitus.' : '') + '</p>' +
     '<div class="k-keinot" style="--c:' + aiheVari(avain) + '">';
   kj.jarjestys.forEach(function(idx, sija) {
     var k = a.keinot[idx];
@@ -531,8 +523,7 @@ function sivuAvain(avain) {
     '<textarea class="vastauskentta" id="kentta-teko" rows="3" placeholder="' + a.placeholder + '" oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).teko) + '</textarea>' +
     '</div>' +
     '<div class="kysymysbox">' +
-    '<p><strong>Mitä sinä ajattelet?</strong></p>' +
-    '<p>Mitä opit tästä aiheesta? Auttaisiko valitsemasi keino sinua oikeasti?</p>' +
+    '<p><strong>Mitä opit? Auttaisiko tämä keino sinua oikeasti?</strong></p>' +
     '<textarea class="vastauskentta" id="kentta-reflektio" rows="3" placeholder="Kirjoita ajatuksesi tähän..." oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).reflektio) + '</textarea>' +
     '</div>' +
     '<div class="k-vastaukset">' +
@@ -544,7 +535,7 @@ function sivuAvain(avain) {
 
 function sivuLoppu() {
   var h = '<div class="story-section">' + askeleet(5) + '<h1>🎉 Hienoa työtä!</h1><p class="k-paranemis">Hyvää paranemista! 🩺</p>' +
-    '<div class="tapahtumabox"><p>Kävit oppimaan oppimisen klinikalla. Alla ovat vastauksesi. Lue ne läpi ja lataa oppimisresepti opettajalle.</p></div>';
+    '<div class="tapahtumabox"><p>Alla ovat vastauksesi. Lue ne läpi ja lataa oppimisresepti.</p></div>';
   var loytyi = false;
   for (var avain in AIHEET) {
     var v = vastaukset[avain];
@@ -559,10 +550,7 @@ function sivuLoppu() {
     h += '</div>';
   }
   if (!loytyi) h += '<div class="tapahtumabox"><p>Et ole vielä käynyt yhtäkään aihetta loppuun. Palaa takaisin ja valitse aihe!</p></div>';
-  h += '<div class="palautus-ohje"><h3>📎 Näin palautat oppimisreseptisi:</h3><ol>' +
-    '<li>Klikkaa <strong>Lataa oppimisresepti</strong> -nappia.</li>' +
-    '<li>Tiedosto tallentuu nimellä <strong>oppimisresepti.txt</strong>.</li>' +
-    '<li>Avaa <strong>Google Classroom</strong> ja palauta tiedosto tehtävään.</li></ol></div>' +
+  h += '<div class="palautus-ohje"><h3>📎 Palauta resepti</h3><p style="margin:0;">Lataa <strong>oppimisresepti.txt</strong> ja palauta se Google Classroomiin.</p></div>' +
     '<div class="napit-rivi">' +
     '<button class="btn-lataa" onclick="lataaResepti()">💾 Lataa oppimisresepti</button>' +
     '<button class="btn-lataa" onclick="window.print()">🖨️ Tulosta</button></div>' +
