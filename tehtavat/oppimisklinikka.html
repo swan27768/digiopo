@@ -146,8 +146,13 @@ textarea.vastauskentta:focus { outline: none; border-color: var(--violet); box-s
 @media (prefers-reduced-motion: reduce) { .story-section, .jatkuu-nuoli { animation: none !important; } }
 @media print {
   body { background: #fff; }
-  .choices, .napit-rivi, .palautus-ohje, .jatkuu-nuoli, .info-nappi, .lataus-vahvistus { display: none !important; }
+  .choices, .napit-rivi, .palautus-ohje, .jatkuu-nuoli, .info-nappi, .lataus-vahvistus,
+  .k-reaktio { box-shadow: none; }
+  .k-vastaukset, .k-aiheet, .k-keinot, .k-polku, .k-hero-risti { display: none !important; }
   .story-section { box-shadow: none; }
+  .k-hero { background: #fff !important; color: #5B2C6F !important; border: 2px solid #5B2C6F; box-shadow: none; }
+  .k-hero h1, .k-hero p { color: #5B2C6F !important; text-shadow: none !important; }
+  .k-resepti textarea.vastauskentta { background: #fff !important; }
 }
 
 /* ===== Klinikka-teema (vastaanotto) ===== */
@@ -209,6 +214,9 @@ body { background: linear-gradient(180deg,#e4f6ec 0%,#dff3e6 60%,#eaf0f7 100%); 
 .k-resepti textarea.vastauskentta { background:repeating-linear-gradient(transparent 0 1.55rem, rgba(91,44,111,.09) 1.55rem 1.6rem); border-color:color-mix(in srgb,var(--c) 40%,#fff); line-height:1.6; }
 .k-resepti p { margin:.3rem 0; }
 .yhteenveto-kortti { border-left-color: var(--c, var(--mint)); }
+.k-reaktio { background:#fff; border-left:5px solid var(--mint); border-radius:.6rem; padding:.55rem .85rem; margin:.4rem 0; font-size:1.02rem; box-shadow:0 2px 8px rgba(91,44,111,.08); }
+.k-reaktio-t { display:block; font-size:.8rem; font-weight:800; color:var(--violet); margin-bottom:.15rem; }
+.k-vinkkibox { --c:#0d9f7a; background:#eafaf2; border:2px solid var(--mint); border-radius:.8rem; padding:.65rem .9rem; margin:.5rem 0; font-size:1.03rem; }
 .k-paranemis { text-align:center; font-weight:800; color:var(--violet); margin:.4rem 0 .2rem; }
 @media (max-width:520px) { .k-aiheet { grid-template-columns:1fr; } .k-kupla { margin-left:2.4rem; } .k-polku li { font-size:.72rem; } }
 @media (prefers-reduced-motion: reduce) { .k-aihe, .k-keino, .k-vastaus { transition:none; } }
@@ -285,7 +293,7 @@ var AIHEET = {
     tilanne: [
       "Koe on tulossa, mutta et tiedä mistä aloittaa — joten et aloita mistään.",
       "Edellisenä iltana yrität lukea kaiken kerralla. Aamulla olet väsynyt ja asiat sekaisin.",
-      "Hyvä koesuoritus ei synny koeillassa vaan sitä edeltävinä päivinä."
+      "Hyvä koesuoritus ei synny koe-iltana vaan sitä edeltävinä päivinä."
     ],
     sitaatti: "“Aloitan huomenna... no, viimeistään koetta edeltävänä iltana.”",
     kysymys: "Tunnistatko tämän tilanteen?",
@@ -296,7 +304,7 @@ var AIHEET = {
       ["🎯", "Vaikein ensin — aloita siitä, mitä osaat huonoiten, kun olet virkeä"],
       ["😴", "Uni ja tauot — lopeta ajoissa, sillä väsyneenä luettu ei jää muistiin"]
     ],
-    palaute: "Hyvä valinta! Suunnitelma poistaa epämääräisen ahdistuksen: kun tiedät <strong>mitä teet ja milloin</strong>, aloittaminen helpottuu ja koeilta rauhoittuu.",
+    palaute: "Hyvä valinta! Suunnitelma poistaa epämääräisen ahdistuksen: kun tiedät <strong>mitä teet ja milloin</strong>, aloittaminen helpottuu ja koe-ilta rauhoittuu.",
     avainOhje: "Mieti seuraava kokeesi. Kirjoita oppimisreseptiisi oma valmistautumissuunnitelmasi (mitä, milloin, kuinka kauan):",
     placeholder: "Esim: Ma: luen kappaleet 3–4. Ti: teen tehtävät ja 5 omaa kysymystä. Ke: kertaan vaikeimmat ja nukun ajoissa."
   },
@@ -324,7 +332,7 @@ var AIHEET = {
     nimi: "Tekoäly opiskelussa", emoji: "🤖", taito: "Kriittisen ajattelun taito",
     tilanne: [
       "Tekoäly antaa vastauksen sekunnissa — mutta opitko sinä silloin mitään?",
-      "Tekoäly myös erehtyy: se voi keksiä faktoja ja lähteitä, jotka kuulostavat todelta.",
+      "Tekoäly myös erehtyy. Pyydät siltä lähteen esitelmääsi, ja se antaa kirjan nimen ja kirjoittajan. Kirjaa ei ole olemassa, mutta vastaus kuulostaa täysin todelta.",
       "Tekoäly on hyvä apulainen mutta huono pomo. Ratkaisevaa on, kumpi ajattelee: sinä vai kone."
     ],
     sitaatti: "“Sain tehtävän valmiiksi tekoälyllä viidessä minuutissa. Kokeessa en osannut mitään.”",
@@ -413,9 +421,19 @@ function sivuTilanne(avain) {
   return h;
 }
 
+function tunnistusReaktio(avain) {
+  var t = (vastaukset[avain] || {}).tunnistus || '';
+  var teksti = '';
+  if (t.indexOf('Joo') !== -1) teksti = 'Et ole yksin. Tämä on yksi yleisimmistä opiskelun pulmista, ja siihen on hyviä keinoja.';
+  else if (t.indexOf('Joskus') !== -1) teksti = 'Hyvä, että huomaat sen. Kun tiedät, milloin pulma tulee, voit valmistautua siihen etukäteen.';
+  else if (t.indexOf('Ei oikeastaan') !== -1) teksti = 'Hienoa, että haluat silti oppia keinot. Ne auttavat sinua myöhemminkin, esimerkiksi kun koe tai tehtävä on vaikeampi.';
+  if (!teksti) return '';
+  return '<div class="k-reaktio"><span class="k-reaktio-t">Vastasit: ' + escT(t) + '</span>' + teksti + '</div>';
+}
+
 function sivuKeinot(avain) {
   var a = AIHEET[avain];
-  var h = '<div class="story-section">' + askeleet(3) + '<h2>' + a.emoji + ' Klinikan keinot</h2>' +
+  var h = '<div class="story-section">' + askeleet(3) + '<h2>' + a.emoji + ' Klinikan keinot</h2>' + tunnistusReaktio(avain) +
     '<div class="tapahtumabox"><p>Klinikalla on viisi tutkittua keinoa tähän pulmaan. Kaikki toimivat — valitse se, jota haluat kokeilla ensin.</p></div>' +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
@@ -434,6 +452,45 @@ function sivuKeinot(avain) {
   return h;
 }
 
+var KEINO_VINKIT = {
+  kertaus: [
+    "Avaa kalenteri ja valitse kolme päivää. Kertaa sama asia vartti kerrallaan. Laita puhelimeen muistutus.",
+    "Sulje kirja ja kirjoita 5 kysymystä siitä, mitä luit. Vastaa niihin huomenna ilman kirjaa. Tarkista vastaukset vasta sitten.",
+    "Kerro asia kaverille tai lemmikille omin sanoin. Jos kohdassa takeltelet, lue se uudelleen.",
+    "Kirjoita kysymys kortin toiselle puolelle ja vastaus toiselle. Käy kortit läpi. Osatut kortit pois, vaikeat takaisin pinoon.",
+    "Kirjoita aihe keskelle paperia ja piirrä siitä haarat. Tee kartta ensin muistista. Katso sitten kirjasta, mitä jäi puuttumaan."
+  ],
+  koe: [
+    "Listaa kokeen aiheet ja jaa ne kahdelle ensimmäiselle päivälle. Viimeinen päivä on vain kertausta.",
+    "Kirjoita lista kaikesta, mitä kokeeseen tulee. Merkitse vihreällä, mitä jo osaat, ja punaisella, mitä et. Aloita punaisista.",
+    "Mieti, mitä kysyisit, jos olisit opettaja. Kirjoita 5 kysymystä ja vastaa niihin ilman kirjaa.",
+    "Valitse aihe, jonka osaat huonoiten. Opiskele se ensin, kun olet virkeä. Helpommat jäävät loppuun.",
+    "Päätä, mihin aikaan lopetat illalla. Pidä lyhyt tauko, kun olet opiskellut noin 25 minuuttia."
+  ],
+  jannitys: [
+    "Hengitä sisään 4 sekuntia ja ulos 6 sekuntia. Toista 5 kertaa. Harjoittele jo kotona, ei vasta kokeessa.",
+    "Kun sydän hakkaa, sano mielessäsi: ”Keho valmistautuu.” Kokeile sitä seuraavassa jännittävässä tilanteessa.",
+    "Harjoittele juuri sellaisia tehtäviä kuin kokeessa tulee. Mitä tutummalta tilanne tuntuu, sitä vähemmän se jännittää.",
+    "Kirjoita, mitä pahinta voi tapahtua. Kirjoita sitten, mitä tekisit silloin. Usein pahin vaihtoehto on pienempi kuin pelkäsit.",
+    "Ennen suoritusta kävele hetki, ravista kädet ja juo vettä. Liike auttaa kehoa rauhoittumaan."
+  ],
+  tekoaly: [
+    "Kirjoita tekoälylle: ”Selitä tämä esimerkillä.” Kerro asia sitten omin sanoin ilman tekoälyä.",
+    "Etsi sama asia myös oppikirjasta tai luotettavalta sivustolta. Jos vastaukset eivät täsmää, luota kirjaan.",
+    "Pyydä tekoälyltä ideoita, mutta valitse ne itse. Kirjoita lopullinen teksti omin sanoin.",
+    "Pyydä tekoälyä tekemään 5 kysymystä aiheesta. Vastaa ensin ilman apua ja tarkista vasta sitten.",
+    "Kysy tekoälyltä: ”Mistä tiedät tämän?” Mieti, vakuuttaako perustelu vai kuulostaako se vain varmalta."
+  ]
+};
+function keinoVinkki(avain, keino) {
+  var a = AIHEET[avain];
+  if (!a || !keino) return '';
+  for (var i = 0; i < a.keinot.length; i++) {
+    if ((a.keinot[i][0] + ' ' + a.keinot[i][1]) === keino) return (KEINO_VINKIT[avain] || [])[i] || '';
+  }
+  return '';
+}
+
 function sivuAvain(avain) {
   var a = AIHEET[avain];
   var keino = (vastaukset[avain] || {}).keino || '';
@@ -441,6 +498,7 @@ function sivuAvain(avain) {
     ? '<div class="valittu-keino-label">Valitsemasi keino</div><h2 class="valittu-keino">' + escT(keino) + '</h2>'
     : '<h2>' + a.emoji + ' Kokeillaan!</h2>';
   return '<div class="story-section">' + askeleet(4) + keinoOtsikko +
+    (keinoVinkki(avain, keino) ? '<div class="k-vinkkibox"><strong>🚀 Näin aloitat:</strong> ' + keinoVinkki(avain, keino) + '</div>' : '') +
     '<div class="tapahtumabox"><p>' + a.palaute + '</p></div>' +
     '<div class="k-resepti" style="--c:' + aiheVari(avain) + '">' +
     '<div class="k-resepti-otsikko"><span class="rx" aria-hidden="true">Rx</span><span>Oma oppimisresepti</span></div>' +
