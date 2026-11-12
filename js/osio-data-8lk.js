@@ -71,19 +71,21 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mikä opiskelussa tökkii juuri nyt?",
         "Oppimisklinikka: valitse oma korttisi ja tutustu keinoihin",
-        "Klinikkapäivystys: kokeile keinoa käytännössä",
+        "Ryhmätehtävä: Muistiliiga — kokeilkaa muistikonsteja ja selittäkää käsitteitä yhdessä",
         "Oppimisresepti opettajalle"
       ],
       tavoitteet: [
         "Tunnistat oman opiskelusi pullonkaulan: kertaus, kokeisiin luku, keskittyminen tai jaksaminen",
         "Saat tutkimukseen perustuvia keinoja juuri omaan ongelmaasi",
-        "Teet itsellesi konkreettisen suunnitelman — oman oppimisreseptin"
+        "Teet itsellesi konkreettisen suunnitelman — oman oppimisreseptin",
+        "Kokeilet ryhmässä muistikonsteja ja huomaat itse, mikä toimii"
       ],
       miksi: "Kahdeksannella luokalla vaatimustaso nousee ja arvosanat alkavat painaa yhteishaussa. Oppimistutkimus osoittaa, että opiskelutaitojen harjoittelu kannattaa kohdentaa: yksi tarvitsee muistitekniikoita, toinen ajanhallintaa. Klinikka toimii kuin oikea vastaanotto — hoito valitaan vaivan mukaan.",
       yhteenveto: [
         "Osaat nimetä, mikä omassa opiskelussasi kaipaa eniten huoltoa",
         "Tunnet vähintään kaksi keinoa, jotka sopivat juuri sinun tilanteeseesi",
-        "Sinulla on oma oppimisresepti, jonka voit näyttää opettajalle ja huoltajalle"
+        "Sinulla on oma oppimisresepti, jonka voit näyttää opettajalle ja huoltajalle",
+        "Tiedät vähintään yhden muistikonstin, jota voit käyttää muissa oppiaineissa"
       ]
     },
 
@@ -182,6 +184,19 @@ window.OSIO_DATA = {
         "Dunlosky, J. ym. (2013). Improving students' learning with effective learning techniques. <em>Psychological Science in the Public Interest</em>.",
         "Gollwitzer, P. (1999). Implementation intentions. <em>American Psychologist</em>.",
         "Flavell, J. (1979). Metacognition and cognitive monitoring. <em>American Psychologist</em>."
+      ]
+    },
+    "muistiliiga": {
+      otsikko: "Muistiliiga – ryhmäpeli",
+      teksti: [
+        "Muistiliiga harjoittelee kahta tutkitusti tehokasta keinoa. Muistikonstit (mnemoniikka), kuten tarinaketju ja muistipalatsi, muuttavat irralliset sanat kuviksi ja tapahtumiksi, jotka jäävät mieleen paremmin. Itsetestaus eli tiedon hakeminen itse mieleen vahvistaa muistia tehokkaammin kuin uudelleen lukeminen.",
+        "Käsitteiden selittäminen toiselle (Alias-tyyppinen kierros) syventää oppimista: kun selität asian omin sanoin, huomaat, mitä et vielä ymmärrä. Ryhmässä tekeminen tekee harjoittelusta hauskaa ja tuo tuloksen näkyviin heti."
+      ],
+      lahteet: [
+        "Bellezza, F. (1981). Mnemonic devices: Classification, characteristics, and criteria. <em>Review of Educational Research</em>.",
+        "Roediger, H. & Karpicke, J. (2006). Test-enhanced learning. <em>Psychological Science</em>.",
+        "Fiorella, L. & Mayer, R. (2013). The relative benefits of learning by teaching and teaching expectancy. <em>Contemporary Educational Psychology</em>.",
+        "Dunlosky, J. ym. (2013). Improving students' learning with effective learning techniques. <em>Psychological Science in the Public Interest</em>."
       ]
     },
     "tulevaisuustuumailu": {

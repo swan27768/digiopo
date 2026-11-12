@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Muistiliiga</title>
+<style>
+:root { --mint:#4EE1A0; --violet:#5B2C6F; --tausta:#DFF3E6; --text:#333; --pastel:#C9A9E1; --white:#fff; --keltainen:#ffd166; }
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:linear-gradient(180deg,#e4f6ec 0%,#dff3e6 60%,#eaf0f7 100%); color:var(--text);
+  font-family:"Segoe UI", system-ui, -apple-system, sans-serif; font-size:16px; line-height:1.5; }
+#peli { max-width:720px; margin:0 auto; padding:.6rem .75rem; }
+h1,h2,h3 { color:var(--violet); margin:0 0 .4rem; }
+h2 { font-size:1.3rem; }
+.kortti { background:#fff; border-radius:1rem; box-shadow:0 4px 20px rgba(91,44,111,.10); padding:1rem 1.1rem; margin:0 auto .8rem; animation:fadeIn .4s ease both; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.k-hero { position:relative; overflow:hidden; border-radius:1rem; color:#fff; padding:1.1rem 1.2rem 1.05rem; margin:0 0 .7rem;
+  background:radial-gradient(circle at 10% 0%,rgba(255,255,255,.22),transparent 45%),linear-gradient(135deg,#7c3aed 0%,#5B2C6F 55%,#34c98a 130%); box-shadow:0 8px 22px rgba(91,44,111,.25); }
+.k-hero::before { content:""; position:absolute; inset:0; opacity:.08; background-image:radial-gradient(circle,#fff 1.5px,transparent 1.5px); background-size:22px 22px; pointer-events:none; }
+.k-hero-risti { position:absolute; right:-6px; bottom:-18px; font-size:100px; line-height:1; opacity:.16; transform:rotate(-10deg); pointer-events:none; }
+.k-hero h1 { position:relative; color:#fff; font-size:clamp(1.4rem,5vw,1.9rem); font-weight:900; letter-spacing:-.4px; margin:0 0 .15rem; text-shadow:0 2px 8px rgba(0,0,0,.25); }
+.k-hero p { position:relative; margin:0; opacity:.96; }
+.k-polku { list-style:none; display:flex; align-items:center; margin:.1rem 0 .8rem; padding:0; counter-reset:k; }
+.k-polku li { flex:1; display:flex; flex-direction:column; align-items:center; gap:.2rem; position:relative; font-size:.76rem; font-weight:700; color:#6b6479; text-align:center; }
+.k-polku li::before { counter-increment:k; content:counter(k); display:grid; place-items:center; width:1.7rem; height:1.7rem; border-radius:50%; background:#fff; border:2px solid #c9bfd6; color:#6b6479; font-size:.85rem; font-weight:800; position:relative; z-index:1; }
+.k-polku li::after { content:""; position:absolute; top:.85rem; left:calc(50% + .85rem); width:calc(100% - 1.7rem); height:3px; background:#c9bfd6; border-radius:2px; }
+.k-polku li:last-child::after { display:none; }
+.k-polku li.valmis { color:#1f7a52; } .k-polku li.valmis::before { content:"✓"; background:var(--mint); border-color:var(--mint); color:#14452f; } .k-polku li.valmis::after { background:var(--mint); }
+.k-polku li.nyt { color:var(--violet); } .k-polku li.nyt::before { background:var(--violet); border-color:var(--violet); color:#fff; box-shadow:0 0 0 4px rgba(91,44,111,.15); }
+.laatikko { background:rgba(250,247,242,.9); border-radius:.75rem; border-top:4px solid var(--mint); padding:.7rem .9rem; margin:.5rem 0; }
+.laatikko p { margin:.3rem 0; }
+.ohjelaatikko { background:rgba(201,169,225,.10); border:2px solid rgba(201,169,225,.35); border-radius:.75rem; padding:.7rem .9rem; margin:.5rem 0; }
+.ohjelaatikko p { margin:.25rem 0; }
+.merkki { display:inline-block; background:var(--violet); color:#fff; font-weight:800; letter-spacing:.08em; font-size:.85rem; padding:.2rem .8rem; border-radius:.5rem; margin:0 0 .4rem; }
+.nappi { font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; background:var(--mint); color:#14281f; border:2px solid var(--mint); border-radius:.8rem; padding:.65rem 1.1rem; box-shadow:0 4px 12px rgba(91,44,111,.12); transition:transform .12s, background .15s; }
+.nappi:hover { transform:translateY(-2px); }
+.nappi.toissija { background:#fff; border-color:var(--mint); }
+.nappi.iso { width:100%; margin-top:.6rem; font-size:1.1rem; padding:.85rem 1rem; }
+.nappi.vaara { background:#fff; border-color:#e0a1a1; color:#7a2a2a; }
+.nappi:disabled { opacity:.45; cursor:default; transform:none; }
+.nappi:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline:3px solid var(--violet); outline-offset:2px; }
+.rivi { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem; }
+.rivi .nappi { flex:1 1 140px; }
+label { display:block; font-weight:700; margin:.5rem 0 .15rem; color:var(--violet); }
+input[type=text], textarea, select { width:100%; font-family:inherit; font-size:1rem; padding:.55rem .75rem; border:2px solid var(--pastel); border-radius:.5rem; background:#fff; color:#1a1a1a; }
+textarea { resize:vertical; }
+.nimet { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.sanat { display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:.5rem; margin:.6rem 0; padding:0; list-style:none; counter-reset:s; }
+.sanat li { counter-increment:s; background:#fff; border:2px solid var(--pastel); border-radius:.7rem; padding:.5rem .7rem; font-size:1.15rem; font-weight:700; color:var(--violet); text-align:center; }
+.sanat li::before { content:counter(s); display:block; font-size:.7rem; font-weight:800; color:#8a7a99; }
+.sanat li.nyt { background:var(--keltainen); border-color:#e0a800; color:#3b2a00; transform:scale(1.04); }
+.sanat.piilo li { color:transparent; background:#f1ebf6; }
+.kortit { display:grid; grid-template-columns:1fr; gap:.5rem; margin:.6rem 0; }
+.k-kortti { background:#fff; border:2px solid var(--pastel); border-left:7px solid var(--violet); border-radius:.7rem; padding:.5rem .8rem; }
+.k-kortti b { color:var(--violet); font-size:1.1rem; display:block; }
+.k-kortti span { font-size:.95rem; color:#4b4357; }
+.aika { display:flex; align-items:center; gap:.6rem; margin:.4rem 0; font-weight:800; color:var(--violet); }
+.aika .rata { flex:1; height:.7rem; background:#e8def0; border-radius:99px; overflow:hidden; }
+.aika .palkki { height:100%; width:100%; background:var(--mint); border-radius:99px; transition:width .25s linear; }
+.aika .palkki.loppu { background:#e57373; }
+.tulos-iso { text-align:center; font-size:2.4rem; font-weight:900; color:var(--violet); line-height:1.1; margin:.2rem 0; }
+.tulos-iso small { font-size:1rem; font-weight:700; color:#6b6479; display:block; }
+.chipit { display:flex; flex-wrap:wrap; gap:.35rem; margin:.4rem 0; }
+.chip { padding:.2rem .65rem; border-radius:99px; font-weight:700; font-size:.92rem; }
+.chip.ok { background:#d5f7e6; color:#14452f; } .chip.ei { background:#f1ebf6; color:#6b6479; }
+.vertailu { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin:.6rem 0; }
+.vertailu > div { background:#fff; border:2px solid var(--pastel); border-radius:.8rem; padding:.6rem; text-align:center; }
+.vertailu b { display:block; font-size:2rem; color:var(--violet); }
+.tekniikat { display:grid; gap:.5rem; margin:.5rem 0; }
+.tekniikat > div { background:#fff; border-left:6px solid var(--mint); border-radius:.6rem; padding:.5rem .8rem; }
+.vuoro-iso { text-align:center; padding:1.2rem .5rem; }
+.vuoro-iso .nimi { font-size:1.8rem; font-weight:900; color:var(--violet); }
+.kasite-kortti { text-align:center; background:#fff; border:3px solid var(--violet); border-radius:1rem; padding:1.4rem .8rem; margin:.6rem 0; }
+.kasite-kortti .sana { font-size:clamp(1.8rem,7vw,2.6rem); font-weight:900; color:var(--violet); line-height:1.15; }
+.kasite-kortti .vihje { color:#6b6479; margin-top:.5rem; font-size:1rem; }
+.tapa { display:inline-block; margin-top:.7rem; background:var(--keltainen); color:#3b2a00; font-weight:800; padding:.3rem .9rem; border-radius:99px; }
+.pisteet { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin:.5rem 0; }
+.pisteet > div { background:#fff; border:2px solid var(--pastel); border-radius:.8rem; padding:.5rem; text-align:center; font-size:.85rem; font-weight:700; color:#6b6479; }
+.pisteet b { display:block; font-size:1.6rem; color:var(--violet); }
+.titteli { text-align:center; font-size:1.5rem; font-weight:900; color:var(--violet); margin:.3rem 0; }
+.valinnat { display:grid; gap:.4rem; margin:.4rem 0; }
+.valinnat label { display:flex; align-items:center; gap:.5rem; font-weight:600; color:var(--text); background:#fff; border:2px solid var(--pastel); border-radius:.6rem; padding:.5rem .7rem; margin:0; cursor:pointer; }
+.pieni { font-size:.88rem; color:#6b6479; }
+.info-nappi { position:absolute; top:.6rem; right:.6rem; z-index:2; width:2rem; height:2rem; border-radius:50%; background:rgba(255,255,255,.2); border:1.5px solid rgba(255,255,255,.6); color:#fff; font-size:1rem; cursor:pointer; }
+@media (max-width:520px) { .nimet { grid-template-columns:1fr; } .vertailu { grid-template-columns:1fr; } }
+@media (prefers-reduced-motion: reduce) { .kortti { animation:none; } .nappi, .aika .palkki { transition:none; } }
+@media print {
+  html, body { background:#fff; }
+  .nappi, .rivi, .k-polku, .info-nappi, .valinnat, label, input, textarea, select, .aika { display:none !important; }
+  .kortti { box-shadow:none; } .k-hero { background:#fff !important; color:var(--violet) !important; border:2px solid var(--violet); }
+  .k-hero h1, .k-hero p { color:var(--violet) !important; text-shadow:none !important; } .k-hero-risti { display:none; }
+}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div id="peli"></div>
+<script src="muistiliiga-sanat.js"></script>
+<script>
+/* ===== Muistiliiga – kevyt pelimoottori ===== */
+var ML = window.MUISTILIIGA || { teemat: {}, paketit: {} };
+var S = { ryhma: '', jasenet: [], k1: null, k2: null, k3: null, vaihdot: 0, valittuTekniikka: '', kokeiluAine: '' };
+var ajastin = null;
+
+var TEKNIIKAT = [
+  ['📖', 'Tarinaketju', 'Keksi hullu tarina, jossa sanat tulevat järjestyksessä. Mitä oudompi, sitä paremmin se jää mieleen.'],
+  ['🏠', 'Muistipalatsi', 'Kävele mielessäsi tuttua reittiä, esimerkiksi omaa huonettasi. Jätä jokainen asia eri paikkaan.'],
+  ['🔤', 'Lyhenne', 'Ota jokaisen sanan alkukirjain ja tee niistä uusi sana tai lause.']
+];
+var SELITYSTAVAT = [
+  ['🧒', 'Selitä kuin viisivuotiaalle'],
+  ['💡', 'Kerro vain esimerkki'],
+  ['✌️', 'Käytä enintään kolme lausetta'],
+  ['🤐', 'Elehdi, älä puhu']
+];
+
+/* ---- Apufunktiot ---- */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function sekoita(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function poimi(a, n) { return sekoita(a).slice(0, n); }
+function norm(s) { return String(s || '').toLowerCase().replace(/[^a-zåäö0-9\- ]/g, '').replace(/\s+/g, ' ').trim(); }
+function lev(a, b) {
+  var m = a.length, n = b.length, d = [], i, j;
+  for (i = 0; i <= m; i++) { d[i] = [i]; }
+  for (j = 1; j <= n; j++) { d[0][j] = j; }
+  for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[m][n];
+}
+function tarkista(syotto, sanat) {
+  var yrit = String(syotto || '').split(/[\n,;]+/).map(norm).filter(Boolean), kaytetty = {}, loydetyt = [], puuttuvat = [];
+  sanat.forEach(function (w) {
+    var nw = norm(w), ok = false;
+    for (var i = 0; i < yrit.length; i++) {
+      if (kaytetty[i]) continue;
+      var d = lev(yrit[i], nw);
+      if (d === 0 || (nw.length >= 5 && d <= 1)) { kaytetty[i] = 1; ok = true; break; }
+    }
+    (ok ? loydetyt : puuttuvat).push(w);
+  });
+  return { loydetyt: loydetyt, puuttuvat: puuttuvat };
+}
+function lopetaAjastin() { if (ajastin) { clearInterval(ajastin); ajastin = null; } }
+function aloitaAjastin(sek, valmis) {
+  lopetaAjastin();
+  var loppu = Date.now() + sek * 1000;
+  function tick() {
+    var j = Math.max(0, Math.ceil((loppu - Date.now()) / 1000));
+    var a = document.getElementById('aika'), p = document.getElementById('palkki');
+    if (a) a.textContent = j + ' s';
+    if (p) { p.style.width = (100 * j / sek) + '%'; p.classList.toggle('loppu', j <= 10); }
+    if (j <= 0) { lopetaAjastin(); valmis(); }
+  }
+  tick();
+  ajastin = setInterval(tick, 250);
+}
+function aikaPalkki() { return '<div class="aika" role="timer" aria-label="Aika"><span id="aika"></span><div class="rata"><div class="palkki" id="palkki"></div></div></div>'; }
+function nimiVuorolla(i) { var n = S.jasenet.length || 1; return S.jasenet[i % n] || ('Pelaaja ' + (i % n + 1)); }
+function askeleet(n) {
+  var nimet = ['Joukkue', 'Kierros 1', 'Kierros 2', 'Kierros 3'];
+  var h = '<ol class="k-polku" aria-label="Etenemisesi">';
+  nimet.forEach(function (nimi, i) {
+    var l = (i + 1 < n) ? 'valmis' : ((i + 1 === n) ? 'nyt' : '');
+    h += '<li class="' + l + '"' + (l === 'nyt' ? ' aria-current="step"' : '') + '>' + nimi + '</li>';
+  });
+  return h + '</ol>';
+}
+function hero(alaotsikko) {
+  return '<div class="k-hero"><span class="k-hero-risti" aria-hidden="true">🧠</span>' +
+    '<button class="info-nappi" onclick="avaaInfo()" title="Tietoa pelistä" aria-label="Tietoa pelistä">ℹ️</button>' +
+    '<h1>Muistiliiga</h1><p>' + alaotsikko + '</p></div>';
+}
+function renderoi(html) {
+  lopetaAjastin();
+  var p = document.getElementById('peli');
+  p.innerHTML = html + (html.indexOf('id="info"') < 0 ? infoIkkuna() : '');
+  window.scrollTo(0, 0);
+}
+function avaaInfo() { var o = document.getElementById('info'); if (o) o.style.display = 'flex'; }
+function suljeInfo() { var o = document.getElementById('info'); if (o) o.style.display = 'none'; }
+
+/* ---- Alku ---- */
+function sivuAlku() {
+  var n = ['', '', '', ''];
+  S.jasenet.forEach(function (x, i) { if (i < 4) n[i] = x; });
+  var h = '<div class="kortti">' + hero('Opi muistamaan yhdessä. Kolme kierrosta, ei arvosanaa.') + askeleet(1) +
+    '<div class="laatikko"><p><strong>Kuinka paljon muistat 20 sanasta?</strong> Ja kuinka paljon enemmän muistat, kun teette yhdessä hullun tarinan?</p>' +
+    '<p>Pelaatte ryhmänä <strong>yhdellä laitteella</strong>. Peli kestää noin 35 minuuttia.</p></div>' +
+    '<div class="ohjelaatikko"><span class="merkki">TEHTÄVÄ</span>' +
+    '<p>Kirjoittakaa ryhmän nimi ja pelaajien nimet. Voit jättää nimen tyhjäksi.</p>' +
+    '<label for="ryhmanimi">Ryhmän nimi</label><input type="text" id="ryhmanimi" maxlength="30" value="' + esc(S.ryhma) + '" placeholder="Esim. Muistimestarit" />' +
+    '<label>Pelaajat</label><div class="nimet">';
+  for (var i = 0; i < 4; i++) h += '<input type="text" class="pnimi" maxlength="20" aria-label="Pelaaja ' + (i + 1) + '" value="' + esc(n[i]) + '" placeholder="Pelaaja ' + (i + 1) + '" />';
+  h += '</div></div><button class="nappi iso" onclick="aloitaPeli()">Aloita kierros 1 →</button></div>' + infoIkkuna();
+  return h;
+}
+function aloitaPeli() {
+  var rn = document.getElementById('ryhmanimi');
+  S.ryhma = rn ? rn.value.trim() : '';
+  var nimet = [];
+  document.querySelectorAll('.pnimi').forEach(function (e) { if (e.value.trim()) nimet.push(e.value.trim()); });
+  S.jasenet = nimet.length >= 2 ? nimet : (nimet.length === 1 ? [nimet[0], 'Pelaaja 2'] : ['Pelaaja 1', 'Pelaaja 2', 'Pelaaja 3']);
+  S.k1 = S.k2 = S.k3 = null; S.valittuTekniikka = ''; S.kokeiluAine = '';
+  valmisteleKierros(1);
+}
+function infoIkkuna() {
+  return '<div id="info" role="dialog" aria-modal="true" aria-label="Tietoa pelistä" onclick="if(event.target===this)suljeInfo()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem;">' +
+    '<div style="background:#fff;max-width:620px;max-height:85vh;overflow:auto;border-radius:1rem;padding:1.2rem 1.4rem;position:relative;">' +
+    '<button class="nappi toissija" style="position:absolute;top:.6rem;right:.7rem;padding:.2rem .7rem;" onclick="suljeInfo()" aria-label="Sulje">✕ Sulje</button>' +
+    '<h2>📚 Tietoa pelistä</h2>' +
+    '<p>Muistiliiga harjoittelee kahta tutkitusti tehokasta keinoa:</p><ul>' +
+    '<li><strong>Muistikonstit</strong> (tarinaketju, muistipalatsi): kuvat ja tarinat jäävät mieleen paremmin kuin irralliset sanat (mm. Yates, 1966; Bellezza, 1981).</li>' +
+    '<li><strong>Itsetestaus</strong>: muistat paremmin, kun haet asian itse mieleen (Roediger &amp; Karpicke, 2006).</li>' +
+    '<li><strong>Selittäminen</strong>: opit asian paremmin, kun selität sen toiselle (Fiorella &amp; Mayer, 2013).</li></ul>' +
+    '<p class="pieni">Kierroksilla 1 ja 2 on eri sanat, jotta ensimmäinen kierros ei auta toista. Kierroksen 3 käsitteet on valittu 8. luokan biologian, historian ja englannin aiheista. Tarkista ne tarvittaessa oman koulun opetussuunnitelman mukaan.</p>' +
+    '</div></div>';
+}
+
+/* ---- Kierrokset 1 ja 2: sanat ---- */
+function teemaValikko(kierros, valittu) {
+  var kaytetty = (kierros === 2 && S.k1) ? S.k1.teema : null;
+  var h = '<label for="teema">Teema</label><select id="teema" onchange="vaihdaTeema(' + kierros + ')">';
+  h += '<option value="">🎲 Arvotaan</option>';
+  Object.keys(ML.teemat).forEach(function (t) {
+    if (t === kaytetty) return;
+    h += '<option value="' + esc(t) + '"' + (t === valittu ? ' selected' : '') + '>' + esc(t) + '</option>';
+  });
+  return h + '</select>';
+}
+function arvoSanat(kierros, teema) {
+  var vaihtoehdot = Object.keys(ML.teemat).filter(function (t) { return !(kierros === 2 && S.k1 && S.k1.teema === t); });
+  var t = teema && ML.teemat[teema] ? teema : vaihtoehdot[Math.floor(Math.random() * vaihtoehdot.length)];
+  return { teema: t, sanat: poimi(ML.teemat[t], 20), valittu: teema || '' };
+}
+function valmisteleKierros(kierros, tuore) {
+  var key = kierros === 1 ? 'k1' : 'k2';
+  if (!S[key] || tuore !== false) { S[key] = arvoSanat(kierros, S[key] ? S[key].valittu : ''); S.vaihdot = 0; }
+  var k = S[key];
+  var h = '<div class="kortti">' + hero(kierros === 1 ? 'Kierros 1 · Tavallinen opettelu' : 'Kierros 2 · Tarinaketju') + askeleet(kierros + 1) + '<h2>' + (kierros === 1 ? '📖 Kierros 1: tavallinen opettelu' : '📖 Kierros 2: tarinaketju') + '</h2>';
+  if (kierros === 1) {
+    h += '<div class="laatikko"><p>Saatte <strong>20 sanaa</strong> ja <strong>2 minuuttia</strong> aikaa opetella ne. Opetelkaa <strong>ihan tavallisesti</strong>, niin kuin luette kokeeseen: lukekaa ja toistakaa. Ei tarinaa!</p>' +
+      '<p>Sitten sanat piilotetaan, ja kirjoitatte ylös kaikki sanat, jotka muistatte.</p></div>';
+  } else {
+    h += '<div class="laatikko"><p>Nyt saatte <strong>uudet 20 sanaa</strong> ja <strong>2 minuuttia</strong>. Tällä kertaa teette <strong>yhteisen hullun tarinan</strong>.</p>' +
+      '<p>Sana kerrallaan: yksi sanoo lauseen, jossa on seuraava sana. Seuraava jatkaa tarinaa. Esimerkki: <em>ankka</em> → "Ankka löysi lampun." <em>juusto</em> → "Lamppu sytytti juuston."</p>' +
+      '<p>Mitä hullumpi, sitä paremmin se jää mieleen!</p></div>';
+  }
+  h += teemaValikko(kierros, k.valittu) +
+    '<div class="rivi"><button class="nappi toissija" id="vaihda" onclick="vaihdaSanat(' + kierros + ')"' + (S.vaihdot >= 3 ? ' disabled' : '') + '>🔄 Vaihda sanat (' + (3 - S.vaihdot) + ' jäljellä)</button></div>' +
+    '<p class="pieni">Sanat ovat piilossa, kunnes aloitatte. Vaihtaa voi vain ennen aloitusta.</p>' +
+    '<button class="nappi iso" onclick="aloitaOpettelu(' + kierros + ')">▶ Aloita opettelu</button></div>' + infoIkkuna();
+  renderoi(h);
+}
+function vaihdaSanat(kierros) {
+  if (S.vaihdot >= 3) return;
+  var key = kierros === 1 ? 'k1' : 'k2', v = S[key].valittu;
+  S[key] = arvoSanat(kierros, v); S[key].valittu = v; S.vaihdot++;
+  valmisteleKierros(kierros, false);
+}
+function vaihdaTeema(kierros) {
+  var s = document.getElementById('teema'), key = kierros === 1 ? 'k1' : 'k2';
+  S[key] = arvoSanat(kierros, s ? s.value : ''); S[key].valittu = s ? s.value : '';
+  valmisteleKierros(kierros, false);
+}
+var tarinaIdx = 0;
+function aloitaOpettelu(kierros) {
+  var k = kierros === 1 ? S.k1 : S.k2;
+  tarinaIdx = 0;
+  var h = '<div class="kortti">' + hero(kierros === 1 ? 'Kierros 1 · Opetelkaa' : 'Kierros 2 · Tehkää tarina') + askeleet(kierros + 1) +
+    '<h2>' + (kierros === 1 ? 'Opetelkaa sanat' : 'Tehkää tarina') + '</h2>' + aikaPalkki();
+  h += '<ol class="sanat" id="sanat">' + k.sanat.map(function (w, i) { return '<li' + (kierros === 2 && i === 0 ? ' class="nyt"' : '') + '>' + esc(w) + '</li>'; }).join('') + '</ol>';
+  if (kierros === 2) {
+    h += '<div class="ohjelaatikko" id="tarinaApu"></div>' +
+      '<button class="nappi iso" id="seur" onclick="seuraavaSana()">Seuraava sana ➜</button>';
+  }
+  h += '<button class="nappi toissija iso" onclick="siirryTestiin(' + kierros + ')">✅ Olemme valmiita, aloitetaan testi</button></div>';
+  renderoi(h);
+  if (kierros === 2) paivitaTarinaApu();
+  aloitaAjastin(120, function () { siirryTestiin(kierros); });
+}
+function paivitaTarinaApu() {
+  var k = S.k2, a = document.getElementById('tarinaApu');
+  if (!a || !k) return;
+  var lis = document.querySelectorAll('#sanat li');
+  lis.forEach(function (li, i) { li.classList.toggle('nyt', i === tarinaIdx); });
+  a.innerHTML = '<p><strong>Vuorossa: ' + esc(nimiVuorolla(tarinaIdx)) + '</strong></p><p>Sano lause, jossa on sana <strong>' + esc(k.sanat[tarinaIdx]) + '</strong> ja joka jatkaa tarinaa.</p>';
+}
+function seuraavaSana() {
+  var k = S.k2;
+  if (!k) return;
+  tarinaIdx = (tarinaIdx + 1) % k.sanat.length;
+  paivitaTarinaApu();
+}
+function siirryTestiin(kierros) {
+  var k = kierros === 1 ? S.k1 : S.k2;
+  var h = '<div class="kortti">' + hero('Kierros ' + kierros + ' · Testi') + askeleet(kierros + 1) + '<h2>Mitä muistatte?</h2>' + aikaPalkki() +
+    '<div class="ohjelaatikko"><span class="merkki">TEHTÄVÄ</span><p>Sanat on piilotettu. Kirjoittakaa ylös <strong>kaikki sanat, jotka muistatte</strong>. Yksi sana per rivi tai pilkulla erotettuna. Kirjoita sana perusmuodossa.</p></div>' +
+    '<textarea id="vastaus" rows="8" aria-label="Muistetut sanat" placeholder="ankka&#10;lamppu&#10;juusto"></textarea>' +
+    '<button class="nappi iso" onclick="tarkistaKierros(' + kierros + ')">✅ Valmis, tarkista</button></div>';
+  renderoi(h);
+  var v = document.getElementById('vastaus'); if (v) v.focus();
+  aloitaAjastin(120, function () { tarkistaKierros(kierros); });
+}
+function tarkistaKierros(kierros) {
+  var k = kierros === 1 ? S.k1 : S.k2, v = document.getElementById('vastaus');
+  if (!k || k.tulos) return;
+  k.tulos = tarkista(v ? v.value : '', k.sanat);
+  k.pisteet = k.tulos.loydetyt.length;
+  naytaTulos(kierros);
+}
+function chipit(a, ok) { return '<div class="chipit">' + a.map(function (w) { return '<span class="chip ' + (ok ? 'ok' : 'ei') + '">' + esc(w) + '</span>'; }).join('') + '</div>'; }
+function naytaTulos(kierros) {
+  var k = kierros === 1 ? S.k1 : S.k2, t = k.tulos;
+  var h = '<div class="kortti">' + hero('Kierros ' + kierros + ' · Tulos') + askeleet(kierros + 1) + '<h2>Tulos</h2>' +
+    '<div class="tulos-iso">' + k.pisteet + ' / 20<small>sanaa muistettu</small></div>';
+  if (t.loydetyt.length) h += '<p><strong>Muistitte:</strong></p>' + chipit(t.loydetyt, true);
+  if (t.puuttuvat.length) h += '<p><strong>Jäi mieleen vaille:</strong></p>' + chipit(t.puuttuvat, false);
+  if (kierros === 1) {
+    h += '<div class="laatikko"><p>Muista tämä luku. Seuraavalla kierroksella kokeilette tarinaketjua ja vertaatte tulosta.</p></div>' +
+      '<button class="nappi iso" onclick="valmisteleKierros(2)">Kierros 2: tarinaketju →</button>';
+  } else {
+    var ero = S.k2.pisteet - S.k1.pisteet;
+    h += '<div class="vertailu"><div><b>' + S.k1.pisteet + '</b>Tavallinen opettelu</div><div><b>' + S.k2.pisteet + '</b>Tarinaketju</div></div>';
+    if (ero > 0) h += '<div class="laatikko"><p><strong>Tarinaketju toimi!</strong> Muistitte ' + ero + ' sanaa enemmän. Tarinat jäävät mieleen, koska aivot muistavat kuvia ja tapahtumia paremmin kuin irrallisia sanoja.</p></div>';
+    else if (ero === 0) h += '<div class="laatikko"><p>Tulos oli sama. Se on ihan ok. Tarina vaatii vähän harjoitusta, ja sanatkin voivat olla eri vaikeita.</p></div>';
+    else h += '<div class="laatikko"><p>Tällä kertaa tavallinen opettelu voitti. Se on ihan ok. Tarina toimii paremmin, kun siihen tottuu. Kokeilkaa seuraavaksi toista konstia.</p></div>';
+    h += '<h3>Kolme muistikonstia</h3><div class="tekniikat">' + TEKNIIKAT.map(function (t) { return '<div><strong>' + t[0] + ' ' + t[1] + '</strong><br>' + t[2] + '</div>'; }).join('') + '</div>' +
+      '<button class="nappi iso" onclick="valmisteleKierros3()">Kierros 3: käsite-ottelu →</button>';
+  }
+  renderoi(h + '</div>' + infoIkkuna());
+}
+
+/* ---- Kierros 3: Käsite-ottelu ---- */
+function valmisteleKierros3() {
+  var h = '<div class="kortti">' + hero('Kierros 3 · Käsite-ottelu') + askeleet(4) + '<h2>⚔️ Kierros 3: käsite-ottelu</h2>' +
+    '<div class="laatikko"><p>Nyt muistatte <strong>oikeita koulun käsitteitä</strong>. Ensin opettelette ne, sitten selitätte ne toisillenne.</p>' +
+    '<p><strong>1. Muistakaa (3 min):</strong> käyttäkää sitä muistikonstia, joka toimi parhaiten.<br><strong>2. Selittäkää:</strong> jokainen on vuorollaan selittäjä, ja muut arvaavat.</p></div>' +
+    '<div class="ohjelaatikko"><span class="merkki">TEHTÄVÄ</span><p>Valitkaa, mistä käsitteistä peli tehdään.</p><div class="valinnat" role="radiogroup" aria-label="Käsitepaketti">';
+  Object.keys(ML.paketit).forEach(function (k, i) {
+    var p = ML.paketit[k];
+    h += '<label><input type="radio" name="paketti" value="' + k + '"' + (i === 0 ? ' checked' : '') + ' /> ' + p.emoji + ' ' + esc(p.nimi) + '</label>';
+  });
+  h += '<label><input type="radio" name="paketti" value="oma" /> ✏️ Oma lista (esimerkiksi tulevan kokeen käsitteet)</label></div>' +
+    '<div id="omaLista" style="display:none;"><label for="omaTeksti">Oma lista (vähintään 6 riviä)</label>' +
+    '<textarea id="omaTeksti" rows="7" placeholder="käsite: selitys&#10;fotosynteesi: kasvi tekee ravintoa valolla&#10;inflaatio: hinnat nousevat"></textarea>' +
+    '<p class="pieni">Kirjoita yksi käsite per rivi. Selityksen voi erottaa kaksoispisteellä tai ajatusviivalla. Selityksen voi myös jättää pois.</p></div></div>' +
+    '<button class="nappi iso" onclick="aloitaKierros3()">▶ Aloita käsitteiden opettelu</button></div>' + infoIkkuna();
+  renderoi(h);
+  document.querySelectorAll('input[name=paketti]').forEach(function (r) {
+    r.addEventListener('change', function () { var o = document.getElementById('omaLista'); if (o) o.style.display = (r.value === 'oma' && r.checked) ? 'block' : 'none'; });
+  });
+}
+function jasennaOma(teksti) {
+  return String(teksti || '').split(/\n+/).map(function (r) { return r.trim(); }).filter(Boolean).map(function (r) {
+    var m = r.match(/^(.+?)\s*(?::|;|\s[-–—]\s)\s*(.+)$/);
+    return m ? [m[1].trim(), m[2].trim()] : [r, ''];
+  });
+}
+function aloitaKierros3() {
+  var r = document.querySelector('input[name=paketti]:checked'), v = r ? r.value : 'biologia', kortit, nimi, ohje;
+  if (v === 'oma') {
+    var oma = jasennaOma((document.getElementById('omaTeksti') || {}).value);
+    if (oma.length < 6) { alert('Kirjoita vähintään 6 käsitettä, yksi per rivi.'); return; }
+    kortit = oma.slice(0, 40); nimi = 'Oma lista'; ohje = 'Selitä käsite omin sanoin. Älä sano käsitettä itse.';
+  } else {
+    var p = ML.paketit[v]; kortit = p.kortit; nimi = p.nimi; ohje = p.ohje;
+  }
+  S.k3 = { paketti: v, nimi: nimi, ohje: ohje, kortit: poimi(kortit, 12), arvattu: [], ohitettu: [], jono: [], vuoro: 0 };
+  S.k3.jono = S.k3.kortit.slice();
+  var h = '<div class="kortti">' + hero('Kierros 3 · Muistakaa') + askeleet(4) + '<h2>🧠 Muistakaa käsitteet</h2>' + aikaPalkki() +
+    '<div class="laatikko"><p>Teillä on <strong>3 minuuttia</strong>. Opetelkaa <strong>käsitteet ja mitä ne tarkoittavat</strong>. Käyttäkää tarinaketjua, muistipalatsia tai lyhennettä.</p></div>' +
+    '<div class="kortit">' + S.k3.kortit.map(function (c) { return '<div class="k-kortti"><b>' + esc(c[0]) + '</b>' + (c[1] ? '<span>' + esc(c[1]) + '</span>' : '') + '</div>'; }).join('') + '</div>' +
+    '<button class="nappi iso" onclick="aloitaSelitys()">✅ Olemme valmiita, aloitetaan selitys</button></div>';
+  renderoi(h);
+  aloitaAjastin(180, aloitaSelitys);
+}
+function aloitaSelitys() {
+  if (!S.k3 || S.k3.selitysAlkoi) return;
+  S.k3.selitysAlkoi = true; S.k3.vuoro = 0;
+  vuoroValmis();
+}
+function vuoroValmis() {
+  var k3 = S.k3;
+  if (k3.vuoro >= S.jasenet.length || !k3.jono.length) { naytaLoppu(); return; }
+  var nimi = nimiVuorolla(k3.vuoro);
+  var h = '<div class="kortti">' + hero('Kierros 3 · Selitys') + askeleet(4) + '<div class="vuoro-iso"><p class="pieni">Vuoro ' + (k3.vuoro + 1) + ' / ' + S.jasenet.length + '</p><div class="nimi">' + esc(nimi) + '</div>' +
+    '<p>Selitä käsitteet muille <strong>60 sekunnin</strong> ajan.</p>' +
+    '<div class="laatikko"><p>' + esc(k3.ohje) + '</p><p><strong>Anna laite selittäjälle.</strong> Hän katsoo korttia, mutta muut eivät katso näyttöä.</p></div>' +
+    '<button class="nappi iso" onclick="aloitaVuoro()">▶ Aloita ' + esc(nimi) + ' vuoro</button></div></div>';
+  renderoi(h);
+}
+var nykyKortti = null, nykyTapa = null;
+function seuraavaKortti() {
+  var k3 = S.k3;
+  nykyKortti = k3.jono.shift() || null;
+  nykyTapa = SELITYSTAVAT[Math.floor(Math.random() * SELITYSTAVAT.length)];
+  if (!nykyKortti) { lopetaVuoro(); return; }
+  var a = document.getElementById('korttiAlue');
+  if (a) a.innerHTML = '<div class="kasite-kortti"><div class="sana">' + esc(nykyKortti[0]) + '</div>' + (nykyKortti[1] ? '<div class="vihje">' + esc(nykyKortti[1]) + '</div>' : '') +
+    '<div class="tapa">' + nykyTapa[0] + ' ' + nykyTapa[1] + '</div></div>';
+  var c = document.getElementById('laskuri'); if (c) c.textContent = 'Arvattu tässä vuorossa: ' + (S._vuoroArvattu || 0) + ' · Kortteja jäljellä: ' + (k3.jono.length);
+}
+function aloitaVuoro() {
+  S._vuoroArvattu = 0;
+  var h = '<div class="kortti">' + hero('Selittäjä: ' + esc(nimiVuorolla(S.k3.vuoro))) + aikaPalkki() +
+    '<div id="korttiAlue"></div><p class="pieni" id="laskuri"></p>' +
+    '<div class="rivi"><button class="nappi" onclick="arvattu()">✅ Arvattiin</button><button class="nappi toissija" onclick="ohita()">⏭️ Ohita</button></div>' +
+    '<button class="nappi vaara iso" onclick="lopetaVuoro()">Lopeta vuoro</button></div>';
+  renderoi(h);
+  seuraavaKortti();
+  aloitaAjastin(60, lopetaVuoro);
+}
+function arvattu() { if (!nykyKortti) return; S.k3.arvattu.push(nykyKortti); S._vuoroArvattu++; seuraavaKortti(); }
+function ohita() { if (!nykyKortti) return; S.k3.jono.push(nykyKortti); S.k3.ohitettu.push(nykyKortti[0]); seuraavaKortti(); }
+function lopetaVuoro() {
+  var k3 = S.k3;
+  lopetaAjastin();
+  if (nykyKortti) { k3.jono.unshift(nykyKortti); nykyKortti = null; }
+  var nimi = nimiVuorolla(k3.vuoro), n = S._vuoroArvattu || 0;
+  k3.vuoro++;
+  var viimeinen = (k3.vuoro >= S.jasenet.length) || !k3.jono.length;
+  var h = '<div class="kortti">' + hero('Vuoro päättyi') + '<div class="vuoro-iso"><div class="nimi">' + esc(nimi) + '</div><div class="tulos-iso">' + n + '<small>käsitettä arvattu</small></div>' +
+    '<button class="nappi iso" onclick="vuoroValmis()">' + (viimeinen ? 'Katso tulokset →' : 'Seuraava vuoro →') + '</button></div></div>';
+  S._vuoroArvattu = 0;
+  renderoi(h);
+}
+
+/* ---- Loppu ---- */
+function naytaLoppu() {
+  var k3 = S.k3, kaikki = 20 + 20 + k3.kortit.length;
+  var yht = S.k1.pisteet + S.k2.pisteet + k3.arvattu.length;
+  var suhde = yht / kaikki;
+  var titteli = suhde >= .7 ? '🏆 Muistimestarit' : (suhde >= .45 ? '💪 Muistijoukkue' : '🌟 Nousevat tähdet');
+  var arvatutNimet = k3.arvattu.map(function (c) { return c[0]; });
+  var kertaus = k3.kortit.filter(function (c) { return arvatutNimet.indexOf(c[0]) === -1; });
+  S.kertaus = kertaus;
+  var h = '<div class="kortti">' + hero((S.ryhma ? esc(S.ryhma) + ' · ' : '') + 'Tulokset') + askeleet(5) + '<div class="titteli">' + titteli + '</div>' +
+    '<div class="pisteet"><div><b>' + S.k1.pisteet + '/20</b>Tavallinen</div><div><b>' + S.k2.pisteet + '/20</b>Tarinaketju</div><div><b>' + k3.arvattu.length + '/' + k3.kortit.length + '</b>Käsite-ottelu</div></div>';
+  h += '<h3>Kertauskortit</h3>';
+  if (kertaus.length) {
+    h += '<p>Nämä käsitteet jäivät vielä epävarmoiksi. Kertaa ne vielä:</p><div class="kortit">' +
+      kertaus.map(function (c) { return '<div class="k-kortti"><b>' + esc(c[0]) + '</b>' + (c[1] ? '<span>' + esc(c[1]) + '</span>' : '') + '</div>'; }).join('') + '</div>';
+  } else h += '<div class="laatikko"><p>Kaikki käsitteet tuli arvattua. Hienoa työtä!</p></div>';
+  h += '<div class="ohjelaatikko"><span class="merkki">TEHTÄVÄ</span><p><strong>Mikä toimi parhaiten?</strong></p><div class="valinnat" role="radiogroup" aria-label="Mikä toimi parhaiten">' +
+    ['Tavallinen opettelu', 'Tarinaketju', 'Muistipalatsi', 'Lyhenne', 'Selittäminen muille'].map(function (t) {
+      return '<label><input type="radio" name="toimi" value="' + t + '"' + (S.valittuTekniikka === t ? ' checked' : '') + ' /> ' + t + '</label>'; }).join('') + '</div>' +
+    '<label for="aine">Missä aineessa kokeilet tätä seuraavaksi?</label><input type="text" id="aine" maxlength="60" value="' + esc(S.kokeiluAine) + '" placeholder="Esim. englannin sanakoe" /></div>' +
+    '<div class="rivi"><button class="nappi" onclick="lataaPdf()">💾 Lataa PDF</button><button class="nappi toissija" onclick="paivitaValinnat();window.print()">🖨️ Tulosta</button></div>' +
+    '<div id="vahvistus" class="laatikko" style="display:none;"><p>✅ PDF ladattu! Siinä on tulokset, muistikonstit ja kertauskortit.</p></div>' +
+    '<button class="nappi toissija iso" onclick="uusiPeli()">🔄 Pelaa uudestaan</button></div>' + infoIkkuna();
+  renderoi(h);
+}
+function paivitaValinnat() {
+  var r = document.querySelector('input[name=toimi]:checked'); S.valittuTekniikka = r ? r.value : S.valittuTekniikka;
+  var a = document.getElementById('aine'); S.kokeiluAine = a ? a.value.trim() : S.kokeiluAine;
+}
+function uusiPeli() { S.k1 = S.k2 = S.k3 = null; renderoi(sivuAlku()); }
+
+/* ---- PDF (jsPDF ladataan vasta tarvittaessa) ---- */
+function lataaJsPdf() {
+  if (window.jspdf) return Promise.resolve();
+  return new Promise(function (res, rej) { var sc = document.createElement('script'); sc.src = '/vendor/jspdf/jspdf.umd.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+}
+function pdfTeksti(t) {
+  return String(t == null ? '' : t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E -ÿ–—‘’“”…€]/g, '?').replace(/[ \t]+/g, ' ').trim();
+}
+function lataaPdf() {
+  paivitaValinnat();
+  lataaJsPdf().then(function () {
+    var d = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' }), X = 20, W = 170, y = 46;
+    function need(h) { if (y + h > 278) { d.addPage(); y = 20; } }
+    function otsikko(t) { need(14); d.setFont('helvetica', 'bold'); d.setFontSize(14); d.setTextColor(91, 44, 111); d.text(pdfTeksti(t), X, y); y += 8; }
+    function teksti(t, lihava) {
+      d.setFont('helvetica', lihava ? 'bold' : 'normal'); d.setFontSize(11.5); d.setTextColor(31, 35, 64);
+      d.splitTextToSize(pdfTeksti(t), W).forEach(function (l) { need(6); d.text(l, X, y); y += 5.6; });
+    }
+    d.setFillColor(91, 44, 111); d.rect(0, 0, 210, 34, 'F');
+    d.setTextColor(255, 255, 255); d.setFont('helvetica', 'bold'); d.setFontSize(22); d.text('Muistiliiga', X, 16);
+    d.setFont('helvetica', 'normal'); d.setFontSize(11);
+    d.text(pdfTeksti((S.ryhma ? S.ryhma + ' · ' : '') + S.jasenet.join(', ') + ' · ' + new Date().toLocaleDateString('fi-FI')), X, 26);
+    otsikko('Tulokset');
+    teksti('Kierros 1, tavallinen opettelu: ' + S.k1.pisteet + ' / 20');
+    teksti('Kierros 2, tarinaketju: ' + S.k2.pisteet + ' / 20');
+    teksti('Kierros 3, käsite-ottelu (' + S.k3.nimi + '): ' + S.k3.arvattu.length + ' / ' + S.k3.kortit.length);
+    y += 4;
+    otsikko('Muistikonstikortti');
+    TEKNIIKAT.forEach(function (t) { teksti(t[1] + ': ' + t[2]); y += 1; });
+    if (S.valittuTekniikka) teksti('Meidän ryhmälle toimi parhaiten: ' + S.valittuTekniikka, true);
+    if (S.kokeiluAine) teksti('Kokeilen seuraavaksi: ' + S.kokeiluAine, true);
+    y += 4;
+    otsikko('Kertauskortit');
+    if (S.kertaus && S.kertaus.length) S.kertaus.forEach(function (c) { teksti(c[0] + (c[1] ? ' - ' + c[1] : '')); y += 1; });
+    else teksti('Kaikki käsitteet tuli arvattua.');
+    var n = d.getNumberOfPages();
+    for (var i = 1; i <= n; i++) { d.setPage(i); d.setFont('helvetica', 'normal'); d.setFontSize(9); d.setTextColor(91, 96, 130); d.text('DigiOpo · Muistiliiga', X, 287); d.text(i + ' / ' + n, 190, 287, { align: 'right' }); }
+    d.save('muistiliiga.pdf');
+    var v = document.getElementById('vahvistus'); if (v) v.style.display = 'block';
+  }).catch(function () { alert('PDF-tiedoston tekeminen ei onnistunut. Kokeile Tulosta-nappia.'); });
+}
+
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') suljeInfo(); });
+renderoi(sivuAlku());
+</script>
+<script src="/js/tekijanoikeus.js" defer></script>
+</body>
+</html>
