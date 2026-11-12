@@ -364,9 +364,7 @@
     'button[onclick*="avaaVahvuusmatka"]',
     'button[aria-controls="fake-insta-wrapper"]',
     'button[aria-controls="pyora-wrapper"]',
-    'iframe[src*="oppimisklinikka"]',
-    'button[aria-controls="muistiliiga-wrapper"]',
-    'iframe[src*="muistiliiga"]'
+    'iframe[src*="oppimisklinikka"]'
   ];
 
   function poistaVaroitukset() {

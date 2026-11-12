@@ -1248,36 +1248,6 @@
               loading="lazy"
             ></iframe>
           </div>
-          <!-- Väliotsikko + ryhmätehtävä: Muistiliiga -->
-          <div class="osio-valiotsikko">
-            <h3>Nyt yhdessä: opitaan muistamaan</h3>
-            <p>Klinikalla valitsit omat keinosi. Nyt kokeilette muistikonsteja ryhmässä ja näette, mikä toimii.</p>
-          </div>
-          <div style="margin: 0 0 20px;">
-            <div class="hero-kortti hero-kortti--kompakti">
-              <div class="hero-kortti__tausta" aria-hidden="true"></div>
-              <div class="hero-kortti__sisalto">
-                <div class="hero-badge" data-tapa="ryhma" data-tyyppi="peli" data-teoria="muistiliiga">
-                  <i class="fa-solid fa-brain" aria-hidden="true"></i>
-                  Ryhmäpeli
-                </div>
-                <h3 class="hero-kortti__otsikko">
-                  Muistiliiga – muistatteko yhdessä enemmän?
-                </h3>
-                <p class="hero-kortti__teksti">
-                  Opetelkaa 20 sanaa kahdella tavalla ja selittäkää koulun käsitteitä toisillenne. Kolme kierrosta, ei arvosanaa.
-                </p>
-                <button type="button" class="btn-hero hero-kortti__nappi" onclick="toggleMuistiliiga(this)" aria-expanded="false" aria-controls="muistiliiga-wrapper">Pelaa Muistiliigaa!</button>
-              </div>
-            </div>
-            <div id="muistiliiga-wrapper" style="display:none;">
-              <iframe class="is8-011"
-                src="../tehtavat/muistiliiga.html"
-                title="Muistiliiga – ryhmäpeli"
-                loading="lazy"
-              ></iframe>
-            </div>
-          </div><!-- /Muistiliiga -->
           <!-- LÄHDEIKKUNA: Oppimaan oppimisen klinikka -->
           <div id="lahteetModal" role="dialog" aria-modal="true" aria-labelledby="lahteetModalTitle" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(15,23,42,0.6); padding:20px; align-items:center; justify-content:center;" onclick="if(event.target===this)suljeLahteet()">
             <div style="background:#fff; color:#1f2937; max-width:560px; width:100%; max-height:85vh; overflow:auto; border-radius:16px; padding:22px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.35);">
@@ -2125,15 +2095,6 @@
         if (b) b.setAttribute('aria-expanded', String(!auki));
       }
       /* ── Oppimaan oppimisen klinikka: avaa/sulje (tehtävä-ikkuna) ── */
-      /* ── Muistiliiga (ryhmäpeli): avaa/sulje ── */
-      function toggleMuistiliiga(btn) {
-        var w = document.getElementById('muistiliiga-wrapper');
-        if (!w) return;
-        var auki = w.style.display !== 'none';
-        w.style.display = auki ? 'none' : 'block';
-        var b = btn || document.querySelector('[aria-controls="muistiliiga-wrapper"]');
-        if (b) b.setAttribute('aria-expanded', String(!auki));
-      }
       function toggleKlinikka(btn) {
         var w = document.getElementById('klinikka-wrapper');
         if (!w) return;
