@@ -149,6 +149,69 @@ textarea.vastauskentta:focus { outline: none; border-color: var(--violet); box-s
   .choices, .napit-rivi, .palautus-ohje, .jatkuu-nuoli, .info-nappi, .lataus-vahvistus { display: none !important; }
   .story-section { box-shadow: none; }
 }
+
+/* ===== Klinikka-teema (vastaanotto) ===== */
+body { background: linear-gradient(180deg,#e4f6ec 0%,#dff3e6 60%,#eaf0f7 100%); }
+.k-hero { position: relative; overflow: hidden; border-radius: 1rem; color: #fff; padding: 1.1rem 1.2rem 1.05rem; margin: 0 0 .7rem;
+  background: radial-gradient(circle at 10% 0%, rgba(255,255,255,.22), transparent 45%), linear-gradient(135deg,#34c98a 0%,#4b7f8f 50%,#5B2C6F 100%);
+  box-shadow: 0 8px 22px rgba(91,44,111,.25); }
+.k-hero::before { content:""; position:absolute; inset:0; opacity:.08; background-image: radial-gradient(circle,#fff 1.5px,transparent 1.5px); background-size: 22px 22px; pointer-events:none; }
+.k-hero-risti { position:absolute; right:-10px; bottom:-22px; font-size:110px; line-height:1; opacity:.13; transform:rotate(-12deg); pointer-events:none; user-select:none; }
+.k-hero-sisalto { position: relative; z-index: 1; padding-right: 2.4rem; }
+.k-hero h1 { color:#fff; text-align:left; font-size: clamp(1.3rem,4.6vw,1.75rem); font-weight:900; letter-spacing:-.4px; margin:0 0 .15rem; text-shadow:0 2px 8px rgba(0,0,0,.25); }
+.k-hero p { margin:0; font-size:1rem; opacity:.96; }
+.k-hero .info-nappi { position:absolute; top:.6rem; right:.6rem; z-index:2; width:2rem; height:2rem; border-radius:50%; background:rgba(255,255,255,.2); border:1.5px solid rgba(255,255,255,.6); font-size:1rem; display:flex; align-items:center; justify-content:center; }
+.k-hero .info-nappi:hover { background: rgba(255,255,255,.35); }
+.k-hero .info-nappi:focus-visible, .k-aihe:focus-visible, .k-keino:focus-visible, .k-vastaus:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+
+.k-polku { list-style:none; display:flex; align-items:center; margin:.1rem 0 .8rem; padding:0; counter-reset:k; }
+.k-polku li { flex:1; display:flex; flex-direction:column; align-items:center; gap:.2rem; position:relative; font-size:.78rem; font-weight:700; color:#6b6479; text-align:center; }
+.k-polku li::before { counter-increment:k; content: counter(k); display:grid; place-items:center; width:1.7rem; height:1.7rem; border-radius:50%; background:#fff; border:2px solid #c9bfd6; color:#6b6479; font-size:.85rem; font-weight:800; position:relative; z-index:1; }
+.k-polku li::after { content:""; position:absolute; top:.85rem; left:calc(50% + .85rem); width:calc(100% - 1.7rem); height:3px; background:#c9bfd6; border-radius:2px; }
+.k-polku li:last-child::after { display:none; }
+.k-polku li.valmis { color:#1f7a52; }
+.k-polku li.valmis::before { content:"✓"; background:var(--mint); border-color:var(--mint); color:#14452f; }
+.k-polku li.valmis::after { background:var(--mint); }
+.k-polku li.nyt { color:var(--violet); }
+.k-polku li.nyt::before { background:var(--violet); border-color:var(--violet); color:#fff; box-shadow:0 0 0 4px rgba(91,44,111,.15); }
+
+.k-aiheet { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-top:.7rem; }
+.k-aihe { --c:#5B2C6F; position:relative; text-align:left; font-family:inherit; cursor:pointer; border:2px solid color-mix(in srgb,var(--c) 28%,#fff); border-top:6px solid var(--c); background:#fff; border-radius:.9rem; padding:.7rem .8rem .8rem; display:flex; flex-direction:column; gap:.15rem; box-shadow:0 5px 14px rgba(91,44,111,.10); transition:transform .15s, box-shadow .15s; color:#2a2233; }
+.k-aihe:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(91,44,111,.18); }
+.k-aihe-emoji { font-size:1.9rem; line-height:1.1; }
+.k-aihe-nimi { font-size:1rem; font-weight:800; color:var(--c); }
+.k-aihe-oire { font-size:.88rem; font-style:italic; color:#4b4357; line-height:1.35; }
+.k-aihe-tehty { position:absolute; top:.45rem; right:.5rem; font-size:.7rem; font-weight:800; background:var(--mint); color:#14452f; border-radius:999px; padding:.1rem .5rem; }
+
+.k-potilas { --c:#5B2C6F; border-radius:.9rem; overflow:hidden; border:2px solid color-mix(in srgb,var(--c) 30%,#fff); margin:.3rem 0 .6rem; background:#fff; }
+.k-potilas-otsikko { display:flex; align-items:center; gap:.7rem; background:var(--c); color:#fff; padding:.6rem .9rem; }
+.k-potilas-otsikko .e { font-size:2rem; line-height:1; }
+.k-potilas-otsikko small { display:block; font-size:.7rem; font-weight:800; letter-spacing:.12em; opacity:.85; }
+.k-potilas-otsikko h2 { color:#fff; text-align:left; margin:0; font-size:1.2rem; }
+.k-potilas-runko { padding:.7rem .95rem .85rem; }
+.k-potilas-runko p { margin:.3rem 0; font-size:1.03rem; }
+.k-kupla { position:relative; margin:.8rem 0 .2rem 2.6rem; background:color-mix(in srgb,var(--c) 10%,#fff); border:2px solid color-mix(in srgb,var(--c) 35%,#fff); border-radius:1rem; padding:.6rem .9rem; font-style:italic; color:var(--c); font-weight:600; }
+.k-kupla::before { content:"🧑‍🎓"; position:absolute; left:-2.5rem; top:.1rem; font-size:1.7rem; font-style:normal; }
+.k-kupla::after { content:""; position:absolute; left:-.55rem; top:1rem; width:.9rem; height:.9rem; background:inherit; border-left:2px solid color-mix(in srgb,var(--c) 35%,#fff); border-bottom:2px solid color-mix(in srgb,var(--c) 35%,#fff); transform:rotate(45deg); }
+
+.k-vastaukset, .k-keinot { display:flex; flex-direction:column; gap:.5rem; margin-top:.7rem; }
+.k-vastaus { font-family:inherit; font-size:1rem; font-weight:700; text-align:center; cursor:pointer; background:#fff; color:#2a2233; border:2px solid var(--mint); border-radius:.8rem; padding:.65rem 1rem; box-shadow:0 4px 12px rgba(91,44,111,.10); transition:background .15s, transform .12s; }
+.k-vastaus:hover { background:var(--mint); transform:translateY(-2px); }
+.k-keino { --c:#5B2C6F; display:flex; align-items:center; gap:.8rem; text-align:left; font-family:inherit; cursor:pointer; background:#fff; color:#2a2233; border:2px solid color-mix(in srgb,var(--c) 28%,#fff); border-left:7px solid var(--c); border-radius:.8rem; padding:.6rem .9rem; box-shadow:0 4px 12px rgba(91,44,111,.10); transition:transform .15s, box-shadow .15s, background .15s; }
+.k-keino:hover { transform:translateX(3px); background:color-mix(in srgb,var(--c) 7%,#fff); box-shadow:0 8px 18px rgba(91,44,111,.16); }
+.k-keino-e { font-size:1.7rem; flex-shrink:0; width:2.2rem; text-align:center; }
+.k-keino-nimi { display:block; font-weight:800; color:var(--c); font-size:1.02rem; }
+.k-keino-kuvaus { display:block; font-size:.92rem; color:#4b4357; line-height:1.4; }
+
+.k-resepti { --c:#5B2C6F; background:#fffdf6; border:2px dashed color-mix(in srgb,var(--c) 45%,#fff); border-left:7px solid var(--c); border-radius:.8rem; padding:.7rem .95rem .9rem; margin:.6rem 0; }
+.k-resepti-otsikko { display:flex; align-items:center; gap:.5rem; font-weight:800; color:var(--c); font-size:1.1rem; margin-bottom:.3rem; }
+.k-resepti-otsikko .rx { font-family:Georgia,serif; font-style:italic; font-size:1.6rem; line-height:1; }
+.k-resepti textarea.vastauskentta { background:repeating-linear-gradient(transparent 0 1.55rem, rgba(91,44,111,.09) 1.55rem 1.6rem); border-color:color-mix(in srgb,var(--c) 40%,#fff); line-height:1.6; }
+.k-resepti p { margin:.3rem 0; }
+.yhteenveto-kortti { border-left-color: var(--c, var(--mint)); }
+.k-paranemis { text-align:center; font-weight:800; color:var(--violet); margin:.4rem 0 .2rem; }
+@media (max-width:520px) { .k-aiheet { grid-template-columns:1fr; } .k-kupla { margin-left:2.4rem; } .k-polku li { font-size:.72rem; } }
+@media (prefers-reduced-motion: reduce) { .k-aihe, .k-keino, .k-vastaus { transition:none; } }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -280,9 +343,32 @@ var AIHEET = {
 };
 
 /* ---- Sivujen rakentaminen ---- */
+var AIHE_TEEMA = {
+  kertaus:  { vari: '#7c3aed', oire: '“Luin kyllä, mutta en muista mitään.”' },
+  koe:      { vari: '#0d9f7a', oire: '“En tiedä, mistä aloittaisin.”' },
+  jannitys: { vari: '#d6336c', oire: '“Mieli menee tyhjäksi kokeessa.”' },
+  tekoaly:  { vari: '#2f6fe0', oire: '“Kone tekee, mutta en opi itse.”' }
+};
+function aiheVari(avain) { return (AIHE_TEEMA[avain] || {}).vari || '#5B2C6F'; }
+
+/* Etenemispolku: n = nykyinen vaihe 1–4, 5 = kaikki valmiina */
+function askeleet(n) {
+  var nimet = ['Oire', 'Tilanne', 'Keino', 'Avain'];
+  var h = '<ol class="k-polku" aria-label="Etenemisesi">';
+  nimet.forEach(function(nimi, i) {
+    var luokka = (i + 1 < n) ? 'valmis' : ((i + 1 === n) ? 'nyt' : '');
+    h += '<li class="' + luokka + '"' + (luokka === 'nyt' ? ' aria-current="step"' : '') + '>' + nimi + '</li>';
+  });
+  return h + '</ol>';
+}
+
 function sivuAlku() {
   var h = '<div class="story-section">' +
-    '<h1>Oppimaan oppimisen klinikka <button class="info-nappi" onclick="document.getElementById(\'teoria-info\').style.display=\'flex\'" title="Tehtävän teoriapohja" aria-label="Tietoa tehtävän teoriapohjasta">ℹ️</button></h1>' +
+    '<div class="k-hero"><span class="k-hero-risti" aria-hidden="true">✚</span>' +
+    '<button class="info-nappi" onclick="document.getElementById(\'teoria-info\').style.display=\'flex\'" title="Tehtävän teoriapohja" aria-label="Tietoa tehtävän teoriapohjasta">ℹ️</button>' +
+    '<div class="k-hero-sisalto"><h1>Oppimaan oppimisen klinikka</h1>' +
+    '<p>Vastaanotto on auki. Kerro, mikä opiskelussa tyssää.</p></div></div>' +
+    askeleet(1) +
     '<div class="tapahtumabox">' +
     '<p>Tervetuloa klinikalle! Täällä ei hoideta flunssaa vaan <strong>opiskelun pulmia</strong>.</p>' +
     '<p>Jokaisella on joskus vaikeuksia muistamisessa, kokeisiin valmistautumisessa, jännityksessä tai tekoälyn käytössä. Niihin kaikkiin on olemassa tutkittuja keinoja.</p>' +
@@ -293,10 +379,15 @@ function sivuAlku() {
     '<p><strong>Mikä opiskelussa tyssää?</strong></p>' +
     '<p class="tehtava-vinkki">💡 Vinkki: Voit käydä läpi useamman kuin yhden aiheen. Opit enemmän!</p>' +
     '</div>' +
-    '<div class="choices" data-ei-sivutusta="1">';
+    '<div class="k-aiheet">';
   for (var avain in AIHEET) {
     var a = AIHEET[avain];
-    h += '<a onclick="valitseAihe(\'' + avain + '\')">' + a.emoji + ' ' + a.nimi + '</a>';
+    var v = vastaukset[avain] || {};
+    var tehty = (v.keino || v.teko) ? '<span class="k-aihe-tehty">✓ Tehty</span>' : '';
+    h += '<button type="button" class="k-aihe" style="--c:' + aiheVari(avain) + '" onclick="valitseAihe(\'' + avain + '\')">' + tehty +
+      '<span class="k-aihe-emoji" aria-hidden="true">' + a.emoji + '</span>' +
+      '<span class="k-aihe-nimi">' + a.nimi + '</span>' +
+      '<span class="k-aihe-oire">' + ((AIHE_TEEMA[avain] || {}).oire || '') + '</span></button>';
   }
   h += '</div></div>';
   return h;
@@ -304,34 +395,40 @@ function sivuAlku() {
 
 function sivuTilanne(avain) {
   var a = AIHEET[avain];
-  var h = '<div class="story-section"><h2>' + a.emoji + ' ' + a.nimi + '</h2>' +
-    '<div class="tapahtumabox"><div class="tilanne-otsikko">📖 Tilanne</div>';
+  var h = '<div class="story-section">' + askeleet(2) +
+    '<div class="k-potilas" style="--c:' + aiheVari(avain) + '">' +
+    '<div class="k-potilas-otsikko"><span class="e" aria-hidden="true">' + a.emoji + '</span><div><small>POTILASKORTTI</small><h2>' + a.nimi + '</h2></div></div>' +
+    '<div class="k-potilas-runko"><div class="tilanne-otsikko">📖 Tilanne</div>';
   a.tilanne.forEach(function(p) { h += '<p>' + p + '</p>'; });
-  h += '<blockquote>' + a.sitaatti + '</blockquote></div>' +
+  h += '<div class="k-kupla">' + a.sitaatti + '</div></div></div>' +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">Miten toimit?</div>' +
     '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse se, joka kuvaa sinua parhaiten.</p>' +
     '<p><strong>' + a.kysymys + '</strong></p></div>' +
-    '<div class="choices" data-ei-sivutusta="1">' +
-    '<a onclick="tallennaTunnistus(\'' + avain + '\', \'👍 Joo, usein\')">👍 Joo, usein</a>' +
-    '<a onclick="tallennaTunnistus(\'' + avain + '\', \'🤔 Joskus\')">🤔 Joskus</a>' +
-    '<a onclick="tallennaTunnistus(\'' + avain + '\', \'😎 Ei oikeastaan — mutta haluan oppia keinot\')">😎 Ei oikeastaan — mutta haluan oppia keinot</a>' +
+    '<div class="k-vastaukset">' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTunnistus(\'' + avain + '\', \'👍 Joo, usein\')">👍 Joo, usein</button>' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTunnistus(\'' + avain + '\', \'🤔 Joskus\')">🤔 Joskus</button>' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTunnistus(\'' + avain + '\', \'😎 Ei oikeastaan — mutta haluan oppia keinot\')">😎 Ei oikeastaan — mutta haluan oppia keinot</button>' +
     '</div></div>';
   return h;
 }
 
 function sivuKeinot(avain) {
   var a = AIHEET[avain];
-  var h = '<div class="story-section"><h2>' + a.emoji + ' Klinikan keinot</h2>' +
+  var h = '<div class="story-section">' + askeleet(3) + '<h2>' + a.emoji + ' Klinikan keinot</h2>' +
     '<div class="tapahtumabox"><p>Klinikalla on viisi tutkittua keinoa tähän pulmaan. Kaikki toimivat — valitse se, jota haluat kokeilla ensin.</p></div>' +
     '<div class="kysymysbox">' +
     '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
     '<p class="tehtava-ohje">Lue kaikki vaihtoehdot. Valitse yksi klikkaamalla.</p>' +
     '<p><strong>Mitä kokeilet ensin?</strong></p></div>' +
-    '<div class="choices">';
+    '<div class="k-keinot" style="--c:' + aiheVari(avain) + '">';
   a.keinot.forEach(function(k) {
     var teksti = (k[0] + ' ' + k[1]).replace(/'/g, "\\'");
-    h += '<a onclick="tallennaKeino(\'' + avain + '\', \'' + teksti + '\')">' + k[0] + ' ' + k[1] + '</a>';
+    var osat = k[1].split(' — ');
+    var nimi = osat[0], kuvaus = osat.slice(1).join(' — ');
+    h += '<button type="button" class="k-keino" style="--c:' + aiheVari(avain) + '" onclick="tallennaKeino(\'' + avain + '\', \'' + teksti + '\')">' +
+      '<span class="k-keino-e" aria-hidden="true">' + k[0] + '</span>' +
+      '<span><span class="k-keino-nimi">' + nimi + '</span>' + (kuvaus ? '<span class="k-keino-kuvaus">' + kuvaus + '</span>' : '') + '</span></button>';
   });
   h += '</div></div>';
   return h;
@@ -343,11 +440,10 @@ function sivuAvain(avain) {
   var keinoOtsikko = keino
     ? '<div class="valittu-keino-label">Valitsemasi keino</div><h2 class="valittu-keino">' + escT(keino) + '</h2>'
     : '<h2>' + a.emoji + ' Kokeillaan!</h2>';
-  return '<div class="story-section">' + keinoOtsikko +
+  return '<div class="story-section">' + askeleet(4) + keinoOtsikko +
     '<div class="tapahtumabox"><p>' + a.palaute + '</p></div>' +
-    '<div class="kysymysbox">' +
-    '<div class="tehtava-otsikko">TEHTÄVÄ</div>' +
-    '<p><strong>🔑 Oppimisen avain</strong></p>' +
+    '<div class="k-resepti" style="--c:' + aiheVari(avain) + '">' +
+    '<div class="k-resepti-otsikko"><span class="rx" aria-hidden="true">Rx</span><span>🔑 Oppimisen avain</span></div>' +
     '<p>' + a.avainOhje + '</p>' +
     '<textarea class="vastauskentta" id="kentta-teko" rows="3" placeholder="' + a.placeholder + '" oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).teko) + '</textarea>' +
     '</div>' +
@@ -356,15 +452,15 @@ function sivuAvain(avain) {
     '<p>Mitä opit tästä aiheesta? Auttaisiko valitsemasi keino sinua oikeasti?</p>' +
     '<textarea class="vastauskentta" id="kentta-reflektio" rows="3" placeholder="Kirjoita ajatuksesi tähän..." oninput="autoTallenna(\'' + avain + '\')">' + escT((vastaukset[avain] || {}).reflektio) + '</textarea>' +
     '</div>' +
-    '<div class="choices" data-ei-sivutusta="1">' +
-    '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'loppu\')">✅ Valmis – katso vastauksesi</a>' +
-    '<a onclick="tallennaTekstit(\'' + avain + '\'); renderoi(sivuKeinot(\'' + avain + '\'))">🔄 Vaihda keino</a>' +
-    '<a onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'alku\')">🔀 Kokeile toista aihetta</a>' +
+    '<div class="k-vastaukset">' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'loppu\')">✅ Valmis – katso vastauksesi</button>' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTekstit(\'' + avain + '\'); renderoi(sivuKeinot(\'' + avain + '\'))">🔄 Vaihda keino</button>' +
+    '<button type="button" class="k-vastaus" onclick="tallennaTekstit(\'' + avain + '\'); naytaSivu(\'alku\')">🔀 Kokeile toista aihetta</button>' +
     '</div></div>';
 }
 
 function sivuLoppu() {
-  var h = '<div class="story-section"><h1>🎉 Hienoa työtä!</h1>' +
+  var h = '<div class="story-section">' + askeleet(5) + '<h1>🎉 Hienoa työtä!</h1><p class="k-paranemis">Hyvää paranemista! 🩺</p>' +
     '<div class="tapahtumabox"><p>Kävit oppimaan oppimisen klinikalla. Alla näet omat vastauksesi — tarkista ne ja lataa sitten oppimisreseptisi opettajalle.</p></div>';
   var loytyi = false;
   for (var avain in AIHEET) {
@@ -372,7 +468,7 @@ function sivuLoppu() {
     if (!v || (!v.keino && !v.teko && !v.reflektio)) continue;
     loytyi = true;
     var a = AIHEET[avain];
-    h += '<div class="yhteenveto-kortti"><div class="yhteenveto-otsikko">' + a.emoji + ' ' + a.nimi + ' — ' + a.taito + '</div>';
+    h += '<div class="yhteenveto-kortti" style="--c:' + aiheVari(avain) + '"><div class="yhteenveto-otsikko">' + a.emoji + ' ' + a.nimi + ' — ' + a.taito + '</div>';
     if (v.tunnistus) h += '<div class="yhteenveto-rivi"><span class="yhteenveto-label">Tunnistus:</span><span class="yhteenveto-teksti">' + v.tunnistus + '</span></div>';
     if (v.keino) h += '<div class="yhteenveto-rivi"><span class="yhteenveto-label">Valittu keino:</span><span class="yhteenveto-teksti">' + v.keino + '</span></div>';
     if (v.teko) h += '<div class="yhteenveto-rivi"><span class="yhteenveto-label">🔑 Oppimisen avain:</span><span class="yhteenveto-teksti">' + v.teko + '</span></div>';
@@ -388,8 +484,8 @@ function sivuLoppu() {
     '<button class="btn-lataa" onclick="lataaResepti()">💾 Lataa oppimisresepti</button>' +
     '<button class="btn-lataa" onclick="window.print()">🖨️ Tulosta</button></div>' +
     '<div id="lataus-vahvistus" class="lataus-vahvistus" style="display:none;">✅ Tiedosto ladattu! Muista palauttaa se Classroomiin.</div>' +
-    '<div class="choices" data-ei-sivutusta="1" style="margin-top:1rem;">' +
-    '<a onclick="naytaSivu(\'alku\')">🔄 Palaa alkuun</a></div></div>';
+    '<div class="k-vastaukset">' +
+    '<button type="button" class="k-vastaus" onclick="naytaSivu(\'alku\')">🔄 Palaa alkuun</button></div></div>';
   return h;
 }
 
@@ -432,21 +528,7 @@ function renderoi(html) {
   sivutaValinnat(peli);
 }
 
-function lisaaNuolet(peli) {
-  peli.querySelectorAll('.story-section').forEach(function(sec) {
-    var lapset = Array.prototype.filter.call(sec.children, function(el) {
-      return (el.tagName === 'DIV' || el.tagName === 'H1' || el.tagName === 'H2')
-        && !el.classList.contains('teoria-overlay');
-    });
-    for (var i = 0; i < lapset.length - 1; i++) {
-      if (lapset[i].classList.contains('yhteenveto-kortti') || lapset[i + 1].classList.contains('yhteenveto-kortti')) continue;
-      var n = document.createElement('div');
-      n.className = 'jatkuu-nuoli';
-      n.textContent = '⬇️';
-      sec.insertBefore(n, lapset[i + 1]);
-    }
-  });
-}
+function lisaaNuolet(peli) { /* nuolet korvattu etenemispolulla (askeleet) */ }
 
 function sivutaValinnat(peli) {
   peli.querySelectorAll('.choices').forEach(function(box) {
