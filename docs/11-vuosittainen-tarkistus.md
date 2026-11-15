@@ -39,7 +39,7 @@ PVM" -merkintä, ja osiot käydään läpi **joka elokuu** ennen lukuvuoden alku
 
 Muut sivut, joissa on samoja tietoja ja jotka kannattaa vilkaista samalla:
 `tehtavat/hakustrategia.html`, `tehtavat/varasuunnitelma_9lk.html`, `sivut/valinnat.html`,
-`pelit/lukio_vs_amis.html`, `sivut/duuniin-tet.html`, `ohjeet/*_ope.html` sekä opettajan pikaohje-PDF.
+`sivut/duuniin-tet.html`, `ohjeet/*_ope.html` sekä opettajan pikaohje-PDF.
 
 ## Tunnetut avoimet kohdat (25.10.2026)
 
