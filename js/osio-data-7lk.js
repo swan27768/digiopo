@@ -54,7 +54,9 @@ window.OSIO_DATA = {
     "mina-oppijana": {
       rakenne: [
         "Aloitus: milloin viimeksi innostuit jostain?",
+        "Noppatehtävä: Mikä sinua motivoi?",
         "Peli: Kadonnut motivaatio",
+        "Toiminnallinen tehtävä: Motivaatiotori",
         "Keskustelu: mistä motivaatio syntyy ja mihin se katoaa?"
       ],
       tavoitteet: [
