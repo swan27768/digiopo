@@ -50,8 +50,8 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään?",
         "TET-polku: kuusi vaihetta TET-sopimuksesta arviointilomakkeeseen",
-        "Kirjoitustehtävä: Ota yhteyttä työnantajaan",
-        "Keskustelutehtävä: Mikä tekee työstä hyvän työn?"
+        "Keskustelutehtävä: Mikä tekee työstä hyvän työn?",
+        "Kirjoitustehtävä: Ota yhteyttä työnantajaan"
       ],
       tavoitteet: [
         "Tiedät TET-jakson vaiheet ja osaat hankkia itsellesi TET-paikan",
