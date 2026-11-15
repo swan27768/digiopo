@@ -70,7 +70,7 @@ window.OSIO_DATA = {
       yhteenveto: [
         "Osaat kertoa, mitä opit TET-jaksolla itsestäsi ja työelämästä",
         "Tiedät, vahvistiko vai heikensikö kokemus kiinnostustasi alaan",
-        "Sinulla on työtodistus ja sanat kuvata osaamistasi",
+        "Sinulla on TET-arviointilomake ja sanat kuvata osaamistasi",
         "Sinulla on ensimmäinen oma CV — ja tiedät, miten sitä päivitetään"
       ]
     },

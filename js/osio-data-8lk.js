@@ -49,7 +49,7 @@ window.OSIO_DATA = {
     "tet": {
       rakenne: [
         "Aloitus: mitä TET tarkoittaa ja miksi se tehdään?",
-        "TET-polku: kuusi vaihetta lomakkeesta työtodistukseen",
+        "TET-polku: kuusi vaihetta TET-sopimuksesta arviointilomakkeeseen",
         "Kirjoitustehtävä: Ota yhteyttä työnantajaan",
         "Keskustelutehtävä: Mikä tekee työstä hyvän työn?"
       ],
@@ -60,7 +60,7 @@ window.OSIO_DATA = {
       ],
       miksi: "TET on useimmille ensimmäinen oma kosketus työelämään. Moni ei hae paikkaa, koska ei tiedä miten — harjoittelemalla madaltuu kynnys oikeaan yhteydenottoon. Työterveyslaitoksen tutkimuksen mukaan merkityksellinen työ on yksi tärkeimmistä hyvinvoinnin lähteistä, joten on hyvä pysähtyä miettimään, mitä hyvältä työltä oikeastaan odottaa.",
       yhteenveto: [
-        "Tiedät TET-prosessin alusta loppuun: lomake, paikan haku, viikko, työtodistus",
+        "Tiedät TET-prosessin alusta loppuun: TET-sopimus, paikan haku, viikko, arviointilomake",
         "Sinulla on harjoiteltu viesti, jonka voit lähettää oikealle työnantajalle",
         "Tiedät oman vastauksesi: onko hyvässä työssä tärkeintä palkka, kiinnostus vai kaverit"
       ]
