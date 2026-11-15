@@ -79,9 +79,11 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: miten yhteishaku toimii Opintopolussa?",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet",
+        "Hakuajan jälkeen: pääsykokeet, tulokset, paikan vastaanotto ja jatkuva haku",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
       tavoitteet: [
+        "Tiedät, mitä oppivelvollisuus tarkoittaa ja miksi jokainen hakee jatkopaikkaa",
         "Tiedät, miten yhteishaku tehdään ja mitä hakutoivejärjestys tarkoittaa",
         "Rakennat itsellesi hakustrategian: varma, realistinen ja unelmakohde",
         "Osaat etsiä hakukohteiden pisterajat ja valintaperusteet"
@@ -90,7 +92,7 @@ window.OSIO_DATA = {
       yhteenveto: [
         "Sinulla on hakutoivelista, jossa on varma, realistinen ja unelmakohde",
         "Tiedät kohteidesi pisterajat ja omat mahdollisuutesi",
-        "Tiedät, mitä teet hakuajan jälkeen: pääsykokeet, tulokset, paikan vastaanotto"
+        "Tiedät, mitä teet hakuajan jälkeen: pääsykokeet, tulokset, paikan vastaanotto ja jatkuva haku"
       ]
     },
 
