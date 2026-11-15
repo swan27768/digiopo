@@ -6562,6 +6562,71 @@ body .theory-card > .theory-text:only-child { grid-column: 1 / -1; }
     padding-bottom: 20px;
   }
 }
+
+/* ── 9. lk Mitä jos suunnitelma ei toimi: vaiheet värikkäinä kortteina ruudukossa ──
+   Huom: korteille ei transform/filter/z-index-sääntöjä, koska tehtäväikkuna (tehtava-ikkuna.js)
+   avaa kortin sisällön position:fixed-ikkunaksi. */
+#epavarmuus > .ep-polku {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 28px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #ecfeff 0%, #f0fdfa 30%, #fffbeb 68%, #fff1f2 100%);
+  border: 1px solid #e7f5ef;
+}
+#epavarmuus .ep-kortti {
+  --ep: #0f766e; --ep-dk: #134e4a; --ep-bg: #ccfbf1; --ep-bd: #99f6e4;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 22px 22px 20px;
+  border-radius: 18px;
+  border: 1.5px solid var(--ep-bd);
+  border-top: 6px solid var(--ep);
+  background:
+    radial-gradient(circle at 100% 0%, var(--ep-bg) 0, var(--ep-bg) 86px, transparent 87px),
+    #ffffff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+#epavarmuus .ep-kortti:hover { box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12); border-color: var(--ep); }
+#epavarmuus .ep-kortti--2 { --ep: #0369a1; --ep-dk: #0c4a6e; --ep-bg: #e0f2fe; --ep-bd: #bae6fd; }
+#epavarmuus .ep-kortti--3 { --ep: #b45309; --ep-dk: #78350f; --ep-bg: #fef3c7; --ep-bd: #fde68a; }
+#epavarmuus .ep-kortti--4 { --ep: #be185d; --ep-dk: #831843; --ep-bg: #fce7f3; --ep-bd: #fbcfe8; }
+/* Avattu kortti koko leveydelle (jos sisältö aukeaa sivulle eikä tehtäväikkunaan) */
+#epavarmuus .ep-kortti:has(> button[aria-expanded="true"]) { grid-column: 1 / -1; }
+
+#epavarmuus .ep-kortti > .is9-034 { align-items: flex-start; margin-bottom: 14px; min-height: 64px; }
+#epavarmuus .ep-kortti .is9-051 { background: var(--ep); width: 40px; height: 40px; font-size: 1.1rem; box-shadow: 0 0 0 4px var(--ep-bg); }
+#epavarmuus .ep-kortti .is9-039 { color: var(--ep); }
+#epavarmuus .ep-kortti .is9-016 { color: var(--ep-dk); font-size: 1.2rem; line-height: 1.25; }
+#epavarmuus .ep-kortti .ep-ikoni {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  color: var(--ep);
+}
+#epavarmuus .ep-kortti > .is9-006 { margin: 0 0 12px; line-height: 1.6; }
+#epavarmuus .ep-kortti > .is9-040 {
+  margin-top: auto;
+  background: var(--ep);
+  border-radius: 999px;
+  padding: 12px 22px;
+}
+#epavarmuus .ep-kortti > .is9-040:hover { background: var(--ep-dk); }
+#epavarmuus .ep-kortti > .is9-006 + .is9-040 { margin-top: auto; }
+@media (max-width: 820px) {
+  #epavarmuus > .ep-polku { grid-template-columns: minmax(0, 1fr); margin: 18px 16px 0; padding: 12px; }
+  #epavarmuus .ep-kortti > .is9-034 { min-height: 0; }
+}
+@media print {
+  #epavarmuus > .ep-polku { display: block; background: none; border: 0; padding: 0; }
+  #epavarmuus .ep-kortti { margin-top: 12px; break-inside: avoid; }
+}
 }
 
 /* inline-9lk.css */
