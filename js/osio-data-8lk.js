@@ -8,6 +8,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: koulutusjärjestelmä-kaavio ja koulutusalakaruselli",
         "Valitse polku: Amispolku tai Lukiopolku — tutki tutkintoja tai linjoja ja tee tehtävä",
+        "Amispolussa: Arvaa ja tarkista — kuka opiskelee mitä?",
         "AmmattiSet: korttipeli koulutusaloista",
         "Ryhmätehtävä: Maailma tarvitsee sinua"
       ],
