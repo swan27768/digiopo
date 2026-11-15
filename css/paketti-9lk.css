@@ -6553,7 +6553,8 @@ body .aihe-osio > .theory-card {
   padding-bottom: 24px;
 }
 /* Kuvaton laatikko: teksti saa koko leveyden (ei tyhjää 160 px:n kuvasaraketta oikealla) */
-body .theory-card > .theory-text:only-child { grid-column: 1 / -1; }
+/* Ei :only-child: korttimerkit.js lisää korttiin "Lue"-merkin, jolloin teksti ei ole ainoa lapsi */
+body .theory-card:not(:has(> .theory-image, > .teoria-kuva)) > .theory-text { grid-column: 1 / -1; }
 @media (max-width: 768px) {
   body .theory-card,
   body .aihe-osio > .theory-card {
