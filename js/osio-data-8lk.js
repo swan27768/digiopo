@@ -19,7 +19,7 @@ window.OSIO_DATA = {
       ],
       miksi: "Yhdeksännellä luokalla teet yhteishaun — ja hyvä valinta vaatii, että tiedät mistä valitset. Tutkimusten mukaan kiinnostus alaa kohtaan ennustaa opinnoissa pysymistä ja viihtymistä paremmin kuin pelkät arvosanat. Tämä tunti antaa sinulle vuoden etumatkan: ehdit tutkia, vertailla ja kysyä ennen kuin valinta on ajankohtainen.",
       yhteenveto: [
-        "Tiedät, mikä ero on ammattikoulukoulutuksella ja lukiokoulutuksella — ja kumpi voisi sopia sinulle paremmin",
+        "Tiedät, mikä ero on ammatillisella koulutuksella ja lukiokoulutuksella — ja kumpi voisi sopia sinulle paremmin",
         "Sinulla on vähintään 2–3 tutkintoa tai lukiolinjaa, jotka kiinnostavat sinua",
         "Tiedät, että ammatteja tarvitaan maailman ongelmien ratkaisemiseen — myös sinun panostasi"
       ]
@@ -100,7 +100,7 @@ window.OSIO_DATA = {
         "Suunnittelet ryhmässä tulevaisuuden työpaikan ja puolustat ideaasi",
         "Huomaat, että yllättävästäkin ammattialasta voi löytyä kiinnostavia puolia"
       ],
-      miksi: "Iso osa tulevaisuuden töistä ei ole vielä olemassa. Tulevaisuudentutkimuksessa puhutaan tulevaisuuslukutaidosta: kyvystä kuvitella useita mahdollisia tulevaisuuksia sen sijaan, että odottaisi yhtä valmista. Tämä taito auttaa sinua tekemään valintoja, jotka kestävät, vaikka maailma muuttuu.",
+      miksi: "Moni tulevaisuuden työ ei ole vielä olemassa. Tulevaisuudentutkimuksessa puhutaan tulevaisuuslukutaidosta: kyvystä kuvitella useita mahdollisia tulevaisuuksia sen sijaan, että odottaisi yhtä valmista. Tämä taito auttaa sinua tekemään valintoja, jotka kestävät, vaikka maailma muuttuu.",
       yhteenveto: [
         "Olet harjoitellut kuvittelemaan tulevaisuutta avoimin mielin — myös sellaisia ammatteja, joita et olisi itse valinnut",
         "Olet rakentanut ryhmässä vision tulevaisuuden työpaikasta ja osannut perustella sen",
