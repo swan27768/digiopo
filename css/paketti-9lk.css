@@ -6647,6 +6647,60 @@ body .theory-card:not(:has(> .theory-image, > .teoria-kuva)) > .theory-text { gr
 #epavarmuus .ep-kysymys { flex: 1; min-width: 0; }
 #epavarmuus .ep-kysymys > p { margin-bottom: 8px; }
 #epavarmuus .ep-vastaus { display: block; width: 100%; min-height: 70px; border: 1.5px solid #99f6e4; border-radius: 8px; padding: 10px 12px; font: inherit; font-size: 0.9rem; color: #1e293b; resize: vertical; box-sizing: border-box; background: #f0fdfa; }
+
+/* ── 9. lk Yhteishaku: hakukohteen kolme tasoa (kuvake + oma väri) ── */
+#yhteishaku .hk-taso__ikoni {
+  width: 56px; height: 56px; margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #fff;
+  background: var(--c);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 16%, #fff);
+}
+
+/* ── 9. lk Yhteishaku: Hakuajan jälkeen -askelpolku ── */
+#yhteishaku .hk-askeleet {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+#yhteishaku .hk-askel {
+  margin: 0;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1.5px solid #99f6e4;
+  border-left: 6px solid #0d9488;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+#yhteishaku .hk-askel:nth-child(2) { border-color: #bae6fd; border-left-color: #0369a1; }
+#yhteishaku .hk-askel:nth-child(3) { border-color: #bbf7d0; border-left-color: #15803d; }
+#yhteishaku .hk-askel:nth-child(4) { border-color: #fde68a; border-left-color: #b45309; }
+#yhteishaku .hk-askel__paa { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+#yhteishaku .hk-askel__nro {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: #0d9488; color: #fff;
+  font-weight: 800; font-size: 0.95rem;
+}
+#yhteishaku .hk-askel:nth-child(2) .hk-askel__nro { background: #0369a1; }
+#yhteishaku .hk-askel:nth-child(3) .hk-askel__nro { background: #15803d; }
+#yhteishaku .hk-askel:nth-child(4) .hk-askel__nro { background: #b45309; }
+#yhteishaku .hk-askel__otsikko { margin: 0; font-size: 1.02rem; font-weight: 700; line-height: 1.3; color: #134e4a; }
+#yhteishaku .hk-askel__ikoni { margin-left: auto; font-size: 1.25rem; color: #0d9488; opacity: 0.85; }
+#yhteishaku .hk-askel:nth-child(2) .hk-askel__ikoni { color: #0369a1; }
+#yhteishaku .hk-askel:nth-child(3) .hk-askel__ikoni { color: #15803d; }
+#yhteishaku .hk-askel:nth-child(4) .hk-askel__ikoni { color: #b45309; }
+#yhteishaku .hk-askel p { margin: 0; font-size: 0.93rem; line-height: 1.55; color: #374151; }
+@media (max-width: 700px) {
+  #yhteishaku .hk-askeleet { grid-template-columns: minmax(0, 1fr); }
+}
 }
 
 /* inline-9lk.css */
