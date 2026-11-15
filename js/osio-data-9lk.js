@@ -80,6 +80,7 @@ window.OSIO_DATA = {
         "Aloitus: miten yhteishaku toimii Opintopolussa?",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet",
         "Hakuajan jälkeen: pääsykokeet, tulokset, paikan vastaanotto ja jatkuva haku",
+        "Varasuunnitelma: mitä teet, jos ykköstoive ei toteudu?",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
       tavoitteet: [
