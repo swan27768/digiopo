@@ -76,6 +76,33 @@
     setTxt('.aihelista a[href="#tet"]', g(g9, 'sidebar.link_tet'));
     setTxt('.aihelista a[href="#paatoksenteko"]', g(g9, 'sidebar.link_paatoksenteko'));
     setTxt('.aihelista a[href="#yhteishaku"]', g(g9, 'sidebar.link_yhteishaku'));
+
+    /* Yhteishaku: vihkon sivunimet ja painikkeet sekä aikataulun tilamerkit.
+       Itse tekstit käännetään data-i18n-attribuuteilla (g9.yhteishaku.*). */
+    (function () {
+      var yh = g(g9, 'yhteishaku');
+      if (!yh || !yh.ui) return;
+      var ui = yh.ui, vk = yh.vihko || {};
+      var vihko = document.getElementById('yhteishaku-vihkonen');
+      if (vihko) {
+        var luvut = { '1': vk.t4, '2': vk.t8, '3': vk.t32 };
+        var nimet = [ui.kansi, vk.t4, vk.t9, vk.t17, vk.t29, vk.t31, vk.t33, vk.t34, vk.t44, vk.t36];
+        var sivut = vihko.querySelectorAll('.vihkonen__sivu');
+        for (var i = 0; i < sivut.length; i++) {
+          var l = sivut[i].getAttribute('data-luku');
+          if (l && luvut[l]) sivut[i].setAttribute('data-luku-nimi', l + ' · ' + luvut[l]);
+          else if (!l && ui.sisalto) sivut[i].setAttribute('data-luku-nimi', ui.sisalto);
+          if (nimet[i]) sivut[i].setAttribute('data-sivu-nimi', nimet[i]);
+        }
+        if (ui.otsikko) vihko.setAttribute('data-otsikko', ui.otsikko);
+        vihko.vihkonenTekstit = ui;
+        vihko.dispatchEvent(new CustomEvent('vihkonen:tekstit'));
+      }
+      [['mennyt', ui.mennyt], ['nyt', ui.kaynnissa], ['seuraava', ui.seuraavaksi]].forEach(function (p) {
+        if (!p[1]) return;
+        document.querySelectorAll('#yhteishaku-aikataulu .yh-kortti--' + p[0] + ' .yh-kortti__tila').forEach(function (el) { el.textContent = p[1]; });
+      });
+    })();
     setTxt('.aihelista a[href="#epavarmuus"]', g(g9, 'sidebar.link_epavarmuus'));
     setTxt('.aihelista a[href="#testi"]', g(g9, 'sidebar.link_testi'));
     setTxt('.aihelista a[href="#valinnat"]', g(g9, 'sidebar.link_valinnat'));
@@ -1073,6 +1100,7 @@
     'button.btn-duunimina',
     'button[onclick*="avaaReppu"]',
     'button[onclick*="avaaHakustrategia"]',
+    'button[onclick*="toggleEntajos"]',
     'button[onclick*="avaaElamapeli"]',
     'button[onclick*="avaaAiLaboratorio"]',
     'button.next-step-btn[data-peli="lukiosanasto"]',

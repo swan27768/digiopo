@@ -33,6 +33,8 @@
     juuri.setAttribute("data-vihkonen-valmis", "1");
 
     var nimi = juuri.getAttribute("data-otsikko") || "Vihkonen";
+    /* Käännettävät painiketekstit: sivun kääntäjä asettaa juuri.vihkonenTekstit ja lähettää vihkonen:tekstit-tapahtuman. */
+    function tx(k, oletus) { var t = juuri.vihkonenTekstit; return (t && t[k]) || oletus; }
     var nyt = 0;
     var iso = false;
     var paikka = null;
@@ -61,7 +63,7 @@
 
     /* ── Alapalkki ── */
     var ala = luo("div", "vihkonen__ala");
-    var edell = luo("button", "vihkonen__nuoli", ikoni("fa-chevron-left") + "<span>Edellinen</span>");
+    var edell = luo("button", "vihkonen__nuoli", ikoni("fa-chevron-left") + "<span>" + tx("edellinen", "Edellinen") + "</span>");
     edell.type = "button";
     edell.setAttribute("aria-label", "Edellinen sivu");
     var keski = luo("div", "vihkonen__keski");
@@ -108,19 +110,32 @@
       laskuri.textContent = (n + 1) + " / " + sivut.length;
       edell.disabled = n === 0;
       if (n === sivut.length - 1) {
-        seur.innerHTML = "<span>Alkuun</span>" + ikoni("fa-arrows-rotate");
+        seur.innerHTML = "<span>" + tx("alkuun", "Alkuun") + "</span>" + ikoni("fa-arrows-rotate");
         seur.setAttribute("aria-label", "Takaisin alkuun");
       } else {
-        seur.innerHTML = "<span>Seuraava</span>" + ikoni("fa-chevron-right");
+        seur.innerHTML = "<span>" + tx("seuraava", "Seuraava") + "</span>" + ikoni("fa-chevron-right");
         seur.setAttribute("aria-label", "Seuraava sivu");
       }
       s.scrollTop = 0;
       if (ilmoita !== false && n !== nyt) {
-        tila.textContent = "Sivu " + (n + 1) + " / " + sivut.length + ": " + (s.getAttribute("data-sivu-nimi") || "");
+        tila.textContent = tx("sivu", "Sivu") + " " + (n + 1) + " / " + sivut.length + ": " + (s.getAttribute("data-sivu-nimi") || "");
       }
       nyt = n;
     }
 
+    juuri.addEventListener("vihkonen:tekstit", function () {
+      nimi = juuri.getAttribute("data-otsikko") || nimi;
+      juuri.setAttribute("aria-label", nimi);
+      var es = edell.querySelector("span");
+      if (es) es.textContent = tx("edellinen", "Edellinen");
+      sivut.forEach(function (s, i) {
+        var sn = s.getAttribute("data-sivu-nimi") || "";
+        s.setAttribute("aria-label", (i + 1) + " / " + sivut.length + ": " + sn);
+        pistenapit[i].setAttribute("aria-label", tx("sivu", "Sivu") + " " + (i + 1) + ": " + sn);
+      });
+      mene(nyt, false);
+      paivitaIsoNappi();
+    });
     edell.addEventListener("click", function () { mene(nyt - 1); });
     seur.addEventListener("click", function () { mene(nyt === sivut.length - 1 ? 0 : nyt + 1); });
     juuri.addEventListener("click", function (e) {
@@ -171,8 +186,8 @@
     }
     function paivitaIsoNappi() {
       isoNappi.innerHTML = iso
-        ? ikoni("fa-xmark") + "<span>Sulje suurennus</span>"
-        : ikoni("fa-expand") + "<span>Suurenna</span>";
+        ? ikoni("fa-xmark") + "<span>" + tx("sulje", "Sulje suurennus") + "</span>"
+        : ikoni("fa-expand") + "<span>" + tx("suurenna", "Suurenna") + "</span>";
       isoNappi.setAttribute("aria-label", iso ? "Sulje suurennus" : "Suurenna vihkonen koko näytölle");
     }
     function isoNappain(e) {
