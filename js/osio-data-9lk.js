@@ -77,9 +77,8 @@ window.OSIO_DATA = {
 
     "yhteishaku": {
       rakenne: [
-        "Aloitus: miten yhteishaku toimii Opintopolussa?",
+        "Aloitus: Yhteishaku-vihkonen (oppivelvollisuus, hakeminen Opintopolussa, hakuajan jälkeen) – selataan yhdessä Suurenna-napilla",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet",
-        "Hakuajan jälkeen: pääsykokeet, tulokset, paikan vastaanotto ja jatkuva haku",
         "Varasuunnitelma: mitä teet, jos ykköstoive ei toteudu?",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
