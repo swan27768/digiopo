@@ -1762,6 +1762,70 @@
             <p>Hakusuunnitelma, tehtävät ja varautuminen</p>
           </div>
 
+          <!-- Yhteishaun aikataulutaulu.
+               VUOSIPÄIVITYS (DigiOpon ylläpitäjä): päivitä vuosiluku otsikkoon, jokaisen kortin
+               teksti sekä data-alku / data-loppu (muoto VVVV-KK-PP) ja <time datetime>.
+               Lähde: opintopolku.fi → "Tärkeitä päivämääriä perusopetuksen jälkeisen koulutuksen yhteishaussa". -->
+          <section class="yh-taulu" id="yhteishaku-aikataulu" data-fi-only aria-labelledby="yh-taulu-otsikko">
+            <header class="yh-taulu__yla">
+              <span class="yh-taulu__nasta" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
+              <div>
+                <p class="yh-taulu__kicker">Ilmoitustaulu</p>
+                <h3 id="yh-taulu-otsikko">Yhteishaun aikataulu 2027</h3>
+              </div>
+            </header>
+            <ol class="yh-taulu__lista">
+              <li class="yh-kortti" data-alku="2027-02-16" data-loppu="2027-03-16">
+                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-pen"></i></span>
+                <p class="yh-kortti__pvm"><time datetime="2027-02-16">16.2.</time> – <time datetime="2027-03-16">16.3.2027</time></p>
+                <p class="yh-kortti__nimi">Yhteishaku</p>
+                <p class="yh-kortti__teksti">Tee hakemus Opintopolussa. Hakutoiveita voit muuttaa hakuajan loppuun asti.</p>
+              </li>
+              <li class="yh-kortti" data-alku="2027-06-17" data-loppu="2027-06-17">
+                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+                <p class="yh-kortti__pvm"><time datetime="2027-06-17">17.6.2027</time></p>
+                <p class="yh-kortti__nimi">Valintatulokset</p>
+                <p class="yh-kortti__teksti">Saat tuloksen aikaisintaan tänä päivänä.</p>
+              </li>
+              <li class="yh-kortti" data-alku="2027-07-01" data-loppu="2027-07-01">
+                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+                <p class="yh-kortti__pvm"><time datetime="2027-07-01">1.7.2027</time></p>
+                <p class="yh-kortti__nimi">Ota paikka vastaan</p>
+                <p class="yh-kortti__teksti">Ota opiskelupaikkasi vastaan viimeistään tähän mennessä.</p>
+              </li>
+              <li class="yh-kortti" data-alku="2027-08-13" data-loppu="2027-08-13">
+                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-clock"></i></span>
+                <p class="yh-kortti__pvm"><time datetime="2027-08-13">13.8.2027</time></p>
+                <p class="yh-kortti__nimi">Varasijat</p>
+                <p class="yh-kortti__teksti">Jos olet varasijalla, voit saada paikan vielä tähän päivään asti.</p>
+              </li>
+            </ol>
+            <p class="yh-taulu__lahde">Lähde: <a href="https://opintopolku.fi/konfo/fi/sivu/tarkeita-paivamaaria-perusopetuksen-jalkeisen-koulutuksen-yhteishaussa" target="_blank" rel="noopener">Opintopolku.fi – tärkeitä päivämääriä yhteishaussa</a>. Tarkista aina ajantasaiset päivät Opintopolusta.</p>
+          </section>
+          <script>
+            (function () {
+              var kortit = document.querySelectorAll("#yhteishaku-aikataulu .yh-kortti");
+              var nyt = new Date(); nyt.setHours(0, 0, 0, 0);
+              var seuraava = null;
+              for (var i = 0; i < kortit.length; i++) {
+                var k = kortit[i];
+                var a = new Date(k.getAttribute("data-alku") + "T00:00:00");
+                var l = new Date((k.getAttribute("data-loppu") || k.getAttribute("data-alku")) + "T00:00:00");
+                if (isNaN(a) || isNaN(l)) continue;
+                var tila = null, nimi = "";
+                if (nyt > l) { tila = "mennyt"; nimi = "Mennyt"; }
+                else if (nyt >= a) { tila = "nyt"; nimi = "Käynnissä"; }
+                else if (!seuraava) { seuraava = k; tila = "seuraava"; nimi = "Seuraavaksi"; }
+                if (tila) {
+                  k.classList.add("yh-kortti--" + tila);
+                  var m = document.createElement("span");
+                  m.className = "yh-kortti__tila"; m.textContent = nimi;
+                  k.insertBefore(m, k.firstChild);
+                }
+              }
+            })();
+          </script>
+
           <!-- ═══ Yhteishaku-vihkonen: selattava teoriavihko (js/vihkonen.js, css/vihkonen.css) ═══ -->
           <div class="vihkonen" id="yhteishaku-vihkonen" data-vihkonen data-fi-only data-korttityyppi="teoria" data-otsikko="Yhteishaku – mitä kannattaa tietää">
             <div class="vihkonen__ikkuna">
@@ -1943,70 +2007,6 @@
             </div>
           </div>
 
-
-          <!-- Yhteishaun aikataulutaulu.
-               VUOSIPÄIVITYS (DigiOpon ylläpitäjä): päivitä vuosiluku otsikkoon, jokaisen kortin
-               teksti sekä data-alku / data-loppu (muoto VVVV-KK-PP) ja <time datetime>.
-               Lähde: opintopolku.fi → "Tärkeitä päivämääriä perusopetuksen jälkeisen koulutuksen yhteishaussa". -->
-          <section class="yh-taulu" id="yhteishaku-aikataulu" data-fi-only aria-labelledby="yh-taulu-otsikko">
-            <header class="yh-taulu__yla">
-              <span class="yh-taulu__nasta" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
-              <div>
-                <p class="yh-taulu__kicker">Ilmoitustaulu</p>
-                <h3 id="yh-taulu-otsikko">Yhteishaun aikataulu 2027</h3>
-              </div>
-            </header>
-            <ol class="yh-taulu__lista">
-              <li class="yh-kortti" data-alku="2027-02-16" data-loppu="2027-03-16">
-                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-pen"></i></span>
-                <p class="yh-kortti__pvm"><time datetime="2027-02-16">16.2.</time> – <time datetime="2027-03-16">16.3.2027</time></p>
-                <p class="yh-kortti__nimi">Yhteishaku</p>
-                <p class="yh-kortti__teksti">Tee hakemus Opintopolussa. Hakutoiveita voit muuttaa hakuajan loppuun asti.</p>
-              </li>
-              <li class="yh-kortti" data-alku="2027-06-17" data-loppu="2027-06-17">
-                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
-                <p class="yh-kortti__pvm"><time datetime="2027-06-17">17.6.2027</time></p>
-                <p class="yh-kortti__nimi">Valintatulokset</p>
-                <p class="yh-kortti__teksti">Saat tuloksen aikaisintaan tänä päivänä.</p>
-              </li>
-              <li class="yh-kortti" data-alku="2027-07-01" data-loppu="2027-07-01">
-                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
-                <p class="yh-kortti__pvm"><time datetime="2027-07-01">1.7.2027</time></p>
-                <p class="yh-kortti__nimi">Ota paikka vastaan</p>
-                <p class="yh-kortti__teksti">Ota opiskelupaikkasi vastaan viimeistään tähän mennessä.</p>
-              </li>
-              <li class="yh-kortti" data-alku="2027-08-13" data-loppu="2027-08-13">
-                <span class="yh-kortti__ikoni" aria-hidden="true"><i class="fa-solid fa-clock"></i></span>
-                <p class="yh-kortti__pvm"><time datetime="2027-08-13">13.8.2027</time></p>
-                <p class="yh-kortti__nimi">Varasijat</p>
-                <p class="yh-kortti__teksti">Jos olet varasijalla, voit saada paikan vielä tähän päivään asti.</p>
-              </li>
-            </ol>
-            <p class="yh-taulu__lahde">Lähde: <a href="https://opintopolku.fi/konfo/fi/sivu/tarkeita-paivamaaria-perusopetuksen-jalkeisen-koulutuksen-yhteishaussa" target="_blank" rel="noopener">Opintopolku.fi – tärkeitä päivämääriä yhteishaussa</a>. Tarkista aina ajantasaiset päivät Opintopolusta.</p>
-          </section>
-          <script>
-            (function () {
-              var kortit = document.querySelectorAll("#yhteishaku-aikataulu .yh-kortti");
-              var nyt = new Date(); nyt.setHours(0, 0, 0, 0);
-              var seuraava = null;
-              for (var i = 0; i < kortit.length; i++) {
-                var k = kortit[i];
-                var a = new Date(k.getAttribute("data-alku") + "T00:00:00");
-                var l = new Date((k.getAttribute("data-loppu") || k.getAttribute("data-alku")) + "T00:00:00");
-                if (isNaN(a) || isNaN(l)) continue;
-                var tila = null, nimi = "";
-                if (nyt > l) { tila = "mennyt"; nimi = "Mennyt"; }
-                else if (nyt >= a) { tila = "nyt"; nimi = "Käynnissä"; }
-                else if (!seuraava) { seuraava = k; tila = "seuraava"; nimi = "Seuraavaksi"; }
-                if (tila) {
-                  k.classList.add("yh-kortti--" + tila);
-                  var m = document.createElement("span");
-                  m.className = "yh-kortti__tila"; m.textContent = nimi;
-                  k.insertBefore(m, k.firstChild);
-                }
-              }
-            })();
-          </script>
 
           <!-- Tehtävä 1: Hakustrategia -->
           <div style="margin-top:28px;">
