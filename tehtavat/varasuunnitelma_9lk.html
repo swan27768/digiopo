@@ -10,150 +10,189 @@
   *{box-sizing:border-box;}
   body{margin:0;padding:16px;font-family:'Lato',system-ui,sans-serif;color:#1e293b;background:transparent;line-height:1.5;}
   .sivu{max-width:760px;margin:0 auto;}
-  button,input,textarea{font-family:inherit;}
+  button,input,textarea,select{font-family:inherit;}
+  h2{margin:0 0 4px;color:#1e3a8a;font-size:1.25rem;}
+  .kicker{margin:0 0 14px;color:#2563eb;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;}
+  .johdanto{color:#44403c;margin:0 0 16px;line-height:1.7;}
+  .tilanne{background:#fff;border:1.5px solid #93c5fd;border-radius:14px;padding:20px;margin-bottom:14px;}
+  .tilanne__yla{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+  .tilanne__nro{background:#dbeafe;color:#1e3a8a;border-radius:50%;min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;margin-top:2px;}
+  .tilanne h3{margin:0;color:#1e293b;font-size:1rem;line-height:1.5;}
+  .tieto{background:#eff6ff;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:10px 14px;margin:0 0 12px;font-size:.9rem;color:#1e3a8a;line-height:1.6;}
+  .tieto ul{margin:6px 0 0;padding-left:18px;}
+  label{display:block;color:#1e293b;font-size:.92rem;font-weight:600;line-height:1.5;margin:10px 0 4px;}
+  .ohje{display:block;color:#4b5563;font-size:.86rem;font-weight:400;line-height:1.5;margin:0 0 6px;}
+  textarea,input[type="text"],select{width:100%;border:1.5px solid #93c5fd;border-radius:8px;padding:10px 12px;font-size:.92rem;color:#1e293b;background:#eff6ff;}
+  textarea{min-height:80px;resize:vertical;}
+  textarea:focus,input:focus,select:focus,button:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px;}
+  #ilmoitus{min-height:1px;border-radius:8px;font-size:.85rem;color:#166534;margin-bottom:12px;}
+  #ilmoitus.nakyy{background:#dcfce7;border:1px solid #86efac;padding:10px 14px;}
+  .toiminnot{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:50px;padding:10px 18px;font-size:.92rem;font-weight:700;cursor:pointer;min-height:44px;}
+  .btn--paa{background:#1d4ed8;color:#fff;border:2px solid #1d4ed8;}
+  .btn--toinen{background:#fff;color:#1e3a8a;border:2px solid #93c5fd;}
+  .muista{background:#eff6ff;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:12px 14px;font-size:.87rem;color:#1e3a8a;line-height:1.6;}
+  @media print{
+    body{padding:0;color:#111;}
+    .toiminnot,#ilmoitus,.palautus-ohje{display:none !important;}
+    .tilanne{break-inside:avoid;border-color:#555;}
+    textarea,input,select{background:#fff !important;border:1px solid #555 !important;color:#111 !important;resize:none;}
+    textarea{overflow:visible !important;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
 </style>
 </head>
 <body>
 <main class="sivu">
-<h2 style="margin:0 0 4px;color:#1e3a8a;font-size:1.25rem;">Varasuunnitelma</h2>
-<p style="margin:0 0 14px;color:#2563eb;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:.08em;">Yksilötehtävä</p>
-<p style="color:#44403c;margin:0 0 16px;line-height:1.7;">Hyvä suunnitelma sisältää myös varasuunnitelman. Ketään ei haittaa miettiä etukäteen, mitä tehdä, jos asiat eivät mene kuten toivoit.</p>
+  <h2>Varasuunnitelma</h2>
+  <p class="kicker">Yksilötehtävä</p>
+  <p class="johdanto">Varasuunnitelma tarkoittaa, että tiedät jo etukäteen, mitä teet, jos haku ei mene niin kuin toivoit. Tee jos–niin-suunnitelma kolmeen tilanteeseen. Apuna on Yhteishaku-vihkon tieto.</p>
 
-              <!-- Kysymys 1 -->
-              <div style="background:white; border:1.5px solid #93c5fd; border-radius:14px; padding:20px; margin-bottom:14px;">
-                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:10px;">
-                  <span aria-hidden="true" style="
-                    background:#dbeafe; color:#1e3a8a;
-                    border-radius:50%; min-width:28px; height:28px;
-                    display:flex; align-items:center; justify-content:center;
-                    font-size:0.85rem; font-weight:700; margin-top:2px;
-                  ">1</span>
-                  <div>
-                    <label for="entajos1" style="display:block; color:#1e293b; font-size:0.95rem; font-weight:600; line-height:1.6; margin:0;">
-                      Mitä teet, jos et pääse ensimmäiseen hakukohteeseesi?
-                    </label>
-                    <p style="margin:6px 0 0 0; color:#4b5563; font-size:0.87rem; line-height:1.6;">
-                      Onko sinulla jo varasuunnitelma? Kirjoita ainakin yksi
-                      vaihtoehto — mitä voisit tehdä sen sijaan?
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="entajos1"
-                  aria-required="false"
-                  oninput="tallennaEntajos()"
-                  style="width:100%; min-height:90px; border:1.5px solid #93c5fd; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#eff6ff;"
-                ></textarea>
-              </div>
+  <label for="vs_nimi" style="margin-top:0;">Nimesi</label>
+  <input id="vs_nimi" type="text" data-save autocomplete="off" style="max-width:420px;margin-bottom:16px;" />
 
-              <!-- Kysymys 2 -->
-              <div style="background:white; border:1.5px solid #93c5fd; border-radius:14px; padding:20px; margin-bottom:14px;">
-                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:10px;">
-                  <span aria-hidden="true" style="
-                    background:#dbeafe; color:#1e3a8a;
-                    border-radius:50%; min-width:28px; height:28px;
-                    display:flex; align-items:center; justify-content:center;
-                    font-size:0.85rem; font-weight:700; margin-top:2px;
-                  ">2</span>
-                  <div>
-                    <label for="entajos2" style="display:block; color:#1e293b; font-size:0.95rem; font-weight:600; line-height:1.6; margin:0;">
-                      Mikä hakuprosessissa jännittää sinua eniten?
-                    </label>
-                    <p style="margin:6px 0 0 0; color:#4b5563; font-size:0.87rem; line-height:1.6;">
-                      Se voi olla jokin käytännön asia tai tunne.
-                      Onko jotain, mitä voit tehdä sen jännityksen kanssa?
-                      Keneltä voisit pyytää apua?
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="entajos2"
-                  aria-required="false"
-                  oninput="tallennaEntajos()"
-                  style="width:100%; min-height:90px; border:1.5px solid #93c5fd; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#eff6ff;"
-                ></textarea>
-              </div>
+  <!-- Tilanne 1: varasija -->
+  <section class="tilanne" aria-labelledby="t1">
+    <div class="tilanne__yla">
+      <span class="tilanne__nro" aria-hidden="true">1</span>
+      <h3 id="t1">Jos jään varasijalle paikkaan, jonka haluan eniten</h3>
+    </div>
+    <div class="tieto">
+      <strong>Hyvä tietää:</strong>
+      <ul>
+        <li>Varasija on jono. Paikka voi vapautua vielä kesän aikana.</li>
+        <li>Jos sait jonkin toisen paikan, ota se vastaan ajoissa. Pysyt silti jonossa ylempään toiveeseesi.</li>
+        <li>Jos sinulla on pelkkä varasija, hae samalla paikkaa jatkuvassa haussa.</li>
+      </ul>
+    </div>
+    <label for="vs_varasija">Jos jään varasijalle, niin minä…</label>
+    <span class="ohje" id="o1">Mitä teet odottaessasi? Minkä paikan otat vastaan sillä välin?</span>
+    <textarea id="vs_varasija" data-save aria-describedby="o1"></textarea>
+  </section>
 
-              <!-- Kysymys 3 -->
-              <div style="background:white; border:1.5px solid #93c5fd; border-radius:14px; padding:20px; margin-bottom:14px;">
-                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:10px;">
-                  <span aria-hidden="true" style="
-                    background:#dbeafe; color:#1e3a8a;
-                    border-radius:50%; min-width:28px; height:28px;
-                    display:flex; align-items:center; justify-content:center;
-                    font-size:0.85rem; font-weight:700; margin-top:2px;
-                  ">3</span>
-                  <div>
-                    <label for="entajos3" style="display:block; color:#1e293b; font-size:0.95rem; font-weight:600; line-height:1.6; margin:0;">
-                      Yksi asia, jota et vielä tiedä tulevaisuudestasi — ja se on ok.
-                    </label>
-                    <p style="margin:6px 0 0 0; color:#4b5563; font-size:0.87rem; line-height:1.6;">
-                      Kirjoita yksi asia, joka on vielä auki. Kukaan ei tiedä
-                      kaikkea etukäteen — eikä tarvitsekaan.
-                    </p>
-                  </div>
-                </div>
-                <textarea
-                  id="entajos3"
-                  aria-required="false"
-                  oninput="tallennaEntajos()"
-                  style="width:100%; min-height:80px; border:1.5px solid #93c5fd; border-radius:8px; padding:12px; font-size:0.9rem; font-family:inherit; color:#1e293b; resize:vertical; box-sizing:border-box; background:#eff6ff;"
-                ></textarea>
-              </div>
+  <!-- Tilanne 2: ei paikkaa -->
+  <section class="tilanne" aria-labelledby="t2">
+    <div class="tilanne__yla">
+      <span class="tilanne__nro" aria-hidden="true">2</span>
+      <h3 id="t2">Jos en saa paikkaa yhteishaussa</h3>
+    </div>
+    <div class="tieto">
+      <strong>Hyvä tietää:</strong> et jää yksin. Sinulla on ainakin nämä vaihtoehdot:
+      <ul>
+        <li><strong>Jatkuva haku:</strong> haet paikkaa, joka jäi vapaaksi yhteishaun jälkeen.</li>
+        <li><strong>TUVA:</strong> valmentava vuosi, jonka aikana voit korottaa arvosanoja ja miettiä suuntaa.</li>
+        <li><strong>Kansanopisto:</strong> oppivelvollisille tarkoitettu opistovuosi.</li>
+      </ul>
+      Opo auttaa sinua hakemisessa. Viime kädessä kotikuntasi osoittaa sinulle opiskelupaikan.
+    </div>
+    <label for="vs_eka">Minkä vaihtoehdon selvitän ensin?</label>
+    <select id="vs_eka" data-save>
+      <option value="">Valitse</option>
+      <option>Jatkuva haku: sama ala, toinen koulu</option>
+      <option>Jatkuva haku: toinen ala</option>
+      <option>TUVA</option>
+      <option>Kansanopisto</option>
+      <option>En tiedä vielä – kysyn opolta</option>
+    </select>
+    <label for="vs_eipaikkaa">Jos en saa paikkaa, niin minä…</label>
+    <span class="ohje" id="o2">Kirjoita ensimmäinen asia, jonka teet. Esimerkiksi: otan yhteyttä opoon tai katson vapaat paikat Opintopolusta.</span>
+    <textarea id="vs_eipaikkaa" data-save aria-describedby="o2"></textarea>
+  </section>
 
-              <!-- Tallennusilmoitus (aria-live) -->
-              <div
-                id="entajosIlmoitus"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-                style="min-height:1px; border-radius:8px; padding:0; font-size:0.85rem; color:#166534; margin-bottom:12px; transition:all 0.2s;"
-              ></div>
+  <!-- Tilanne 3: paikka ei tunnu omalta -->
+  <section class="tilanne" aria-labelledby="t3">
+    <div class="tilanne__yla">
+      <span class="tilanne__nro" aria-hidden="true">3</span>
+      <h3 id="t3">Jos saan paikan, mutta se ei tunnukaan omalta</h3>
+    </div>
+    <div class="tieto">
+      <strong>Hyvä tietää:</strong> valinta ei ole lopullinen. Voit hakea uutta paikkaa jatkuvassa haussa tai seuraavassa yhteishaussa. Puhu ensin opon tai uuden koulusi opinto-ohjaajan kanssa.
+    </div>
+    <label for="vs_mieli">Jos mieleni muuttuu, niin minä…</label>
+    <span class="ohje" id="o3">Mistä huomaisit, että paikka ei sovi sinulle? Kenelle kertoisit siitä ensin?</span>
+    <textarea id="vs_mieli" data-save aria-describedby="o3"></textarea>
+  </section>
 
-              <!-- Loppuhuomio -->
-              <div style="
-                background:#eff6ff;
-                border-left:3px solid #2563eb;
-                border-radius:0 8px 8px 0;
-                padding:12px 14px;
-                font-size:0.87rem; color:#1e3a8a; line-height:1.6;
-              ">
-                <i class="fa-solid fa-lightbulb" aria-hidden="true" style="margin-right:5px;"></i>
-                <strong>Muista:</strong> Varasuunnitelma ei tarkoita,
-                että epäilet itseäsi. Se tarkoittaa, että olet valmistautunut
-                — ja se on viisasta.
-              </div>
+  <!-- Tukihenkilö -->
+  <section class="tilanne" aria-labelledby="t4">
+    <div class="tilanne__yla">
+      <span class="tilanne__nro" aria-hidden="true"><i class="fa-solid fa-handshake"></i></span>
+      <h3 id="t4">Kuka auttaa minua?</h3>
+    </div>
+    <label for="vs_tuki" style="margin-top:0;">Aikuinen, jolle kerron tuloksesta ja jolta pyydän apua</label>
+    <span class="ohje" id="o4">Esimerkiksi opo, huoltaja tai joku muu tuttu aikuinen. Tulokset tulevat kesällä, kun koulu on jo loppunut.</span>
+    <input id="vs_tuki" type="text" data-save aria-describedby="o4" />
+  </section>
 
-            
+  <div id="ilmoitus" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="toiminnot">
+    <button type="button" class="btn btn--paa" onclick="tulosta()"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>Tallenna PDF-tiedostoksi</button>
+    <button type="button" class="btn btn--toinen" onclick="tyhjenna()"><i class="fa-solid fa-eraser" aria-hidden="true"></i>Tyhjennä vastaukset</button>
+  </div>
+  <p class="ohje palautus-ohje">Valitse tulostusikkunassa "Tallenna PDF:ksi" ja palauta tiedosto opolle. Jos käytät yhteistä konetta, tyhjennä vastaukset lopuksi.</p>
+
+  <div class="muista">
+    <i class="fa-solid fa-lightbulb" aria-hidden="true" style="margin-right:5px;"></i>
+    <strong>Muista:</strong> Varasuunnitelma ei tarkoita, että epäilet itseäsi. Se tarkoittaa, että olet valmistautunut – ja se on viisasta.
+  </div>
 </main>
 <script>
-    // Tallenna vastaukset
-    function tallennaEntajos() {
-      ['1','2','3'].forEach(function(n) {
-        var el = document.getElementById('entajos' + n);
-        if (el) localStorage.setItem('entajos' + n, el.value);
-      });
-      var ilm = document.getElementById('entajosIlmoitus');
-      if (ilm) {
-        ilm.textContent = '✓ Vastauksesi on tallennettu tähän selaimeen.';
-        ilm.style.background = '#dcfce7';
-        ilm.style.border     = '1px solid #86efac';
-        ilm.style.padding    = '10px 14px';
-        clearTimeout(window._entajosTimer);
-        window._entajosTimer = setTimeout(function() {
-          ilm.textContent    = '';
-          ilm.style.background = 'transparent';
-          ilm.style.border   = 'none';
-          ilm.style.padding  = '0';
-        }, 3000);
-      }
+  var AVAIN = 'digiopo_varasuunnitelma_v2';
+  var ajastin;
+  function kentat() { return Array.prototype.slice.call(document.querySelectorAll('[data-save]')); }
+  function ilmoita(teksti) {
+    var ilm = document.getElementById('ilmoitus');
+    ilm.textContent = teksti;
+    ilm.classList.add('nakyy');
+    clearTimeout(ajastin);
+    ajastin = setTimeout(function () { ilm.textContent = ''; ilm.classList.remove('nakyy'); }, 3000);
+  }
+  function tallenna() {
+    var d = {};
+    kentat().forEach(function (k) { d[k.id] = k.value; });
+    try {
+      localStorage.setItem(AVAIN, JSON.stringify(d));
+      ilmoita('✓ Vastauksesi on tallennettu tähän selaimeen.');
+    } catch (e) {
+      ilmoita('Tallennus ei onnistunut tässä selaimessa. Tallenna vastauksesi PDF-tiedostoksi.');
     }
-
-    (function () {
-      ['1','2','3'].forEach(function (n) {
-        try { var v = localStorage.getItem('entajos' + n); var el = document.getElementById('entajos' + n); if (v && el) el.value = v; } catch (e) {}
-      });
-    })();
+  }
+  function lataa() {
+    try {
+      var d = JSON.parse(localStorage.getItem(AVAIN) || '{}');
+      kentat().forEach(function (k) { if (d[k.id] !== undefined) k.value = d[k.id]; });
+    } catch (e) {}
+  }
+  function tyhjenna() {
+    if (!confirm('Haluatko varmasti tyhjentää vastaukset? Tätä ei voi peruuttaa.')) return;
+    kentat().forEach(function (k) { k.value = ''; });
+    try {
+      localStorage.removeItem(AVAIN);
+      ['1', '2', '3'].forEach(function (n) { localStorage.removeItem('entajos' + n); });
+    } catch (e) {}
+    ilmoita('Vastaukset on tyhjennetty.');
+  }
+  var alkuOtsikko = document.title;
+  window.addEventListener('beforeprint', function () {
+    document.querySelectorAll('textarea').forEach(function (t) {
+      t.dataset.alku = t.style.height || '';
+      t.style.height = 'auto';
+      t.style.height = (t.scrollHeight + 4) + 'px';
+    });
+    var n = document.getElementById('vs_nimi').value.trim();
+    document.title = 'Varasuunnitelma' + (n ? ' – ' + n : '');
+  });
+  window.addEventListener('afterprint', function () {
+    document.querySelectorAll('textarea').forEach(function (t) { t.style.height = t.dataset.alku || ''; });
+    document.title = alkuOtsikko;
+  });
+  function tulosta() { window.print(); }
+  lataa();
+  kentat().forEach(function (k) {
+    k.addEventListener('input', tallenna);
+    k.addEventListener('change', tallenna);
+  });
 </script>
 <script src="/js/tekijanoikeus.js" defer></script>
 </body>

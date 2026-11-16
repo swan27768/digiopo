@@ -32,7 +32,7 @@ PVM" -merkintä, ja osiot käydään läpi **joka elokuu** ennen lukuvuoden alku
 | `8luokka.html#koulutus` | Koulutusjärjestelmä, ammatillinen/lukio/kaksoistutkinto, YTO-opinnot, oppisopimus, erityisammattioppilaitokset (nimet, paikkakunnat, linkit) | Opintopolku, OPH |
 | `8luokka.html#tet` ja `9luokka.html#tet` | TET-prosessin vaiheet, lomakkeet, ikärajat ja vakuutusasiat | OPH, koulun/kunnan ohje |
 | `9luokka.html#jatko` | Jatko-opintopolut (lukio, amis, TUVA, TELMA, kansanopisto), arvosanojen vaikutus (lukuaineiden keskiarvo / valintapisteet), Opintopolun pistelaskuri | Opintopolku, OPH |
-| `9luokka.html#yhteishaku` | Hakuajan ajankohta (nyt 2027: 16.2.–16.3.2027), hakutoiveiden enimmäismäärä, hakutoiveiden muuttaminen, haettavat koulutukset, tulosten julkistus | **Opintopolku (opintopolku.fi)** – yhteishakuasiat tarkistetaan aina sieltä |
+| `9luokka.html#yhteishaku` | Hakuajan ajankohta (nyt 2027: 16.2.–16.3.2027), klo 15.00 -päättymisaika ilmoitustaulussa, demolomakkeen viimeinen päivä vihkossa (nyt 12.2.2027 klo 15), harkintaan perustuvan valinnan 30 %:n raja ja perusteet, hakutoiveiden enimmäismäärä, hakutoiveiden muuttaminen, haettavat koulutukset, tulosten julkistus | **Opintopolku (opintopolku.fi)** – yhteishakuasiat tarkistetaan aina sieltä |
 | `9luokka.html#testi` | Lukio vs. amis -pelin luvut: lukion laajuus (opintopisteet), ammatillisen tutkinnon laajuus (osaamispisteet), YTO-laajuus | OPH, Opintopolku |
 | `9luokka.html#valinnat` | Valinta- ja hakuun liittyvät väitteet | Opintopolku |
 | `tehtavat/yo_tutkinto_9lk.html` | Kokeiden määrä ja rakenne, taito- ja taideaineiden yo-koe (voimaantulo, ensimmäinen koe, opintopistevaatimukset, koemuoto) | Ylioppilastutkintolautakunta, OPH |
@@ -50,6 +50,10 @@ Muut sivut, joissa on samoja tietoja ja jotka kannattaa vilkaista samalla:
 - **Ammatilliset YTO:t:** perusteet uudistuvat 1.8.2026 (viestintä, matemaattis-luonnontieteellinen,
   yhteiskunta- ja työelämäosaaminen; mm. talous-, tekoäly- ja tietoturvaosaaminen lisätty). YTO:iden
   laajuus on edelleen 35 osp ja tutkinnon 180 osp. Tarkista, vastaako pelin teksti uusia perusteita.
-- **Ajankohtainen yhteishaku on 2027:** hakuaika 16.2.–16.3.2027 (omistajan ilmoittama; vahvista opintopolku.fi-sivustolta). Vuoden 2026 haku (17.2.–17.3.2026) on mennyt. Sivuilla ei ole kovakoodattuja hakupäiviä, joten korjattavaa ei ole, mutta pidä päivät tässä ajan tasalla ja käytä niitä opettajan ohjeissa ja kalenterissa (`sivut/lukuvuosi.html`).
+- **Ajankohtainen yhteishaku on 2027:** hakuaika 16.2.–16.3.2027 (vahvistettu opintopolku.fi-sivustolta 16.11.2026). Vuoden 2026 haku (17.2.–17.3.2026) on mennyt. Pidä päivät tässä ajan tasalla ja käytä niitä opettajan ohjeissa ja kalenterissa (`sivut/lukuvuosi.html`).
+- **Kovakoodatut hakupäivät (päivitä joka syksy):**
+  - `sivut/9luokka.html`, ilmoitustaulu `#yhteishaku-aikataulu`: otsikon vuosiluku sekä neljän kortin teksti, `data-alku` / `data-loppu` ja `<time datetime>`. Nyt: haku 16.2.–16.3.2027 klo 15.00, tulokset aikaisintaan 17.6.2027, paikan vastaanotto viimeistään 1.7.2027, varasijat 13.8.2027 asti.
+  - `sivut/9luokka.html`, Yhteishaku-vihko, sivu "Ennen kuin haet": demolomakkeen viimeinen päivä (nyt 12.2.2027 klo 15; lähde lukioon.fi, vahvista Opintopolusta).
+  - Kun ilmoitustaulun kaikki päivät ovat menneet, jokainen kortti näyttää tilan "Mennyt", kunnes päivät päivitetään.
 - **Hakutoiveet:** yhteishaussa voi valita 1–7 hakutoivetta (2026 tieto; tarkista 2027). Hakustrategia-tehtävässä on kolme
   kenttää (varma, realistinen, unelma) – tämä on pedagoginen valinta, ei väite enimmäismäärästä.

@@ -79,7 +79,7 @@ window.OSIO_DATA = {
       rakenne: [
         "Aloitus: Yhteishaku-vihkonen (oppivelvollisuus, hakeminen Opintopolussa, hakuajan jälkeen) – selataan yhdessä Suurenna-napilla",
         "Hakustrategia osa 1: varma, realistinen ja unelma -kohteet",
-        "Varasuunnitelma: mitä teet, jos ykköstoive ei toteudu?",
+        "Varasuunnitelma: jos–niin-suunnitelma kolmeen tilanteeseen (varasija, ei paikkaa, mieli muuttuu)",
         "Hakustrategia osa 2: täydennä tutustumiskäyntien jälkeen (myöhemmin)"
       ],
       tavoitteet: [
@@ -88,7 +88,7 @@ window.OSIO_DATA = {
         "Rakennat itsellesi hakustrategian: varma, realistinen ja unelmakohde",
         "Osaat etsiä hakukohteiden pisterajat ja valintaperusteet"
       ],
-      miksi: "Uravalintatutkimuksen mukaan hyvä päätös syntyy vaiheittain: ensin kartoitetaan vaihtoehdot laajasti, sitten vertaillaan ja vasta lopuksi valitaan. Varma–realistinen–unelma-strategia on tämän tutkimuksen käytännön sovellus: se maksimoi mahdollisuutesi ja minimoi riskin jäädä ilman paikkaa.",
+      miksi: "Hyvä päätös syntyy vaiheittain: ensin kartoitat vaihtoehdot, sitten vertailet ja vasta lopuksi valitset. Kun kirjaat ja perustelet hakukohteesi itse, valinnasta tulee oma ja siihen on helpompi sitoutua. Varma–realistinen–unelma on opojen käyttämä nyrkkisääntö: se pitää unelman mukana ja pienentää riskiä jäädä ilman paikkaa.",
       yhteenveto: [
         "Sinulla on hakutoivelista, jossa on varma, realistinen ja unelmakohde",
         "Tiedät kohteidesi pisterajat ja omat mahdollisuutesi",

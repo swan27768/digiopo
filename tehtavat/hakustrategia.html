@@ -383,6 +383,7 @@
       .matriisi-taulukko select { width: 64px; padding: 4px 6px; text-align: center; }
       .pisteet-rivi { background: #ccfbf1 !important; font-weight: 700; }
       .pisteet-rivi td { color: #134e4a; }
+      .matriisi-nimi { width: 100%; min-width: 130px; font-weight: 700; }
 
       /* Vaihe-erottaja */
       .vaihe-erottaja {
@@ -798,22 +799,31 @@
           <div class="theory-card" style="margin-bottom:16px;">
             <div class="theory-text">
               <h3>Hakustrategia: unelma, realistinen, varma</h3>
-              <p>Hyvä strategia on hakea kolmeen paikkaan: yksi unelmahakukohde, yksi realistinen ja yksi varma vaihtoehto. Näin sinulla on mahdollisuus, mutta myös turvaverkko.</p>
+              <p>Yhteishaussa voit hakea enintään 7 paikkaan. Hyvä strategia on hakea ainakin kolmeen: yksi unelmahakukohde, yksi realistinen ja yksi varma vaihtoehto. Näin sinulla on mahdollisuus, mutta myös turvaverkko.</p>
               <p>Hakutoiveiden järjestys on tärkeä: <strong>1. toive on se, jonne haluat eniten.</strong> Kirjoita jokaiselle perustelu, miksi se on juuri sillä sijalla. Perustelu auttaa myös myöhemmin, kun teet lopullisen päätöksen.</p>
             </div>
           </div>
 
           <div class="kentta-rivi" style="max-width:420px;">
-            <label for="oma_keskiarvo">Oma keskiarvoni tällä hetkellä</label>
-            <span class="ohje" id="ohje-oma-ka">Katso viimeisimmästä todistuksesta tai kysy opolta. Arvio riittää, esim. 7,5.</span>
+            <label for="oma_keskiarvo">Lukuaineiden keskiarvoni (lukioon)</label>
+            <span class="ohje" id="ohje-oma-ka">Lukioon haetaan lukuaineiden keskiarvolla. Laske se pistelaskurilla tai kysy opolta. Arvio riittää, esim. 7,5.</span>
             <input id="oma_keskiarvo" type="text" inputmode="decimal" data-save aria-describedby="ohje-oma-ka" placeholder="esim. 7,5" />
           </div>
+
+          <div class="kentta-rivi" style="max-width:420px;">
+            <label for="oma_valintapisteet">Valintapisteeni (ammatilliseen)</label>
+            <span class="ohje" id="ohje-oma-vp">Ammatilliseen koulutukseen haetaan valintapisteillä. Saat ne samasta laskurista. Jätä tyhjäksi, jos et hae ammatilliseen.</span>
+            <input id="oma_valintapisteet" type="text" inputmode="decimal" data-save aria-describedby="ohje-oma-vp" placeholder="esim. 22" />
+          </div>
+
+          <div class="kentta-rivi"><span class="ohje"><a href="https://opintopolku.fi/konfo/fi/sivu/yhteishaun-valintapistelaskuri" target="_blank" rel="noopener noreferrer">Laske omat lukusi Opintopolun valintapistelaskurilla</a> (aukeaa uuteen välilehteen). Sama laskuri on Ysiluokka edessä -osiossa.</span></div>
 
           <div class="theory-card" style="margin-bottom:16px;">
             <div class="theory-text">
               <h3>Mistä löydän pisterajan?</h3>
-              <p>Hae hakukohde <strong>Opintopolusta</strong> (opintopolku.fi). Hakukohteen sivulta löytyy yleensä <strong>edellisen vuoden alin pistemäärä tai keskiarvo</strong>, jolla viimeinen opiskelija pääsi sisään. Joihinkin kohteisiin on myös pääsy- tai soveltuvuuskoe. Rajat vaihtelevat vuosittain, joten pidä niitä suuntaa antavina. Jos tietoa ei löydy, kirjoita "ei löytynyt" ja kysy opolta.</p>
-              <p><strong>Unelma:</strong> raja on selvästi omaa keskiarvoa korkeampi, mutta kokeilla kannattaa. <strong>Realistinen:</strong> oma keskiarvo on lähellä rajaa tai sen yli. <strong>Varma:</strong> pääset todennäköisesti sisään.</p>
+              <p>Hae hakukohde <strong>Opintopolusta</strong> (opintopolku.fi). Hakukohteen sivulta löytyy yleensä <strong>edellisen vuoden alin raja</strong>, jolla viimeinen opiskelija pääsi sisään. Lukiossa raja on lukuaineiden keskiarvo. Ammatillisessa koulutuksessa raja on valintapisteitä. Joihinkin kohteisiin on myös pääsy- tai soveltuvuuskoe. Rajat vaihtelevat vuosittain, joten pidä niitä suuntaa antavina. Jos tietoa ei löydy, kirjoita "ei löytynyt" ja kysy opolta.</p>
+              <p><strong>Vertaa oikeaa lukua.</strong> Lukion rajaa verrataan lukuaineiden keskiarvoosi. Ammatillisen rajaa verrataan valintapisteisiisi.</p>
+              <p><strong>Unelma:</strong> raja on selvästi omaa lukuasi korkeampi, mutta kokeilla kannattaa. <strong>Realistinen:</strong> oma lukusi on lähellä rajaa tai vähän sen yli. <strong>Varma:</strong> oma lukusi on selvästi rajan yli, joten pääset todennäköisesti sisään.</p>
             </div>
           </div>
 
@@ -833,7 +843,7 @@
                     <div class="hakutoive-otsikko">1. hakutoive</div>
                     <input id="hakukohde1" type="text" data-save aria-label="1. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
                     <input id="hakukohde1_paikka" type="text" data-save aria-label="1. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde1_raja" type="text" data-save aria-label="1. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <input id="hakukohde1_raja" type="text" data-save aria-label="1. hakutoive: viime vuoden alin raja (keskiarvo tai valintapisteet)" placeholder="Viime vuoden raja" style="margin-top:6px;" />
                     <select id="hakukohde1_tyyppi" data-save class="hakukohde-tyyppi" aria-label="1. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
                       <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
@@ -842,14 +852,14 @@
                     </select>
                   </td>
                   <td><textarea id="hakukohde1_plus" data-save aria-label="1. hakutoive: miksi haet tänne" placeholder="Miksi tämä on ensimmäinen toiveesi? Mikä tässä koulussa tai linjassa sopii juuri sinulle?"></textarea></td>
-                  <td><textarea id="hakukohde1_miinus" data-save aria-label="1. hakutoive: mitä pitää vielä selvittää" placeholder="Esim. pääsenkö sinne keskiarvollani? Millainen arki siellä on?"></textarea></td>
+                  <td><textarea id="hakukohde1_miinus" data-save aria-label="1. hakutoive: mitä pitää vielä selvittää" placeholder="Esim. pääsenkö sinne keskiarvollani tai pisteilläni? Millainen arki siellä on?"></textarea></td>
                 </tr>
                 <tr>
                   <td>
                     <div class="hakutoive-otsikko">2. hakutoive</div>
                     <input id="hakukohde2" type="text" data-save aria-label="2. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
                     <input id="hakukohde2_paikka" type="text" data-save aria-label="2. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde2_raja" type="text" data-save aria-label="2. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <input id="hakukohde2_raja" type="text" data-save aria-label="2. hakutoive: viime vuoden alin raja (keskiarvo tai valintapisteet)" placeholder="Viime vuoden raja" style="margin-top:6px;" />
                     <select id="hakukohde2_tyyppi" data-save class="hakukohde-tyyppi" aria-label="2. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
                       <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
@@ -865,7 +875,7 @@
                     <div class="hakutoive-otsikko">3. hakutoive</div>
                     <input id="hakukohde3" type="text" data-save aria-label="3. hakutoive: koulu ja linja" placeholder="Koulu ja linja" />
                     <input id="hakukohde3_paikka" type="text" data-save aria-label="3. hakutoive: paikkakunta" placeholder="Paikkakunta" style="margin-top:6px;" />
-                    <input id="hakukohde3_raja" type="text" data-save aria-label="3. hakutoive: viime vuoden alin pisteraja tai keskiarvo" placeholder="Viime vuoden raja" style="margin-top:6px;" />
+                    <input id="hakukohde3_raja" type="text" data-save aria-label="3. hakutoive: viime vuoden alin raja (keskiarvo tai valintapisteet)" placeholder="Viime vuoden raja" style="margin-top:6px;" />
                     <select id="hakukohde3_tyyppi" data-save class="hakukohde-tyyppi" aria-label="3. hakutoive: unelma, realistinen vai varma" style="margin-top:6px;width:100%;">
                       <option value="">Valitse tyyppi</option>
                       <option>Unelma</option>
@@ -1089,67 +1099,61 @@
               <strong>Tavoite:</strong> Sinulla on selkeä suunnitelma, mitä haet ja missä järjestyksessä.
             </div>
 
-            <h3>Pisteytä vaihtoehdot</h3>
-            <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">Anna jokaiselle vaihtoehdolle pisteet 1–5 jokaisesta kohdasta. Pisteet lasketaan automaattisesti.</p>
+            <h3>Pisteytä hakukohteesi</h3>
+            <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">Vertaile niitä paikkoja, joihin aiot hakea. Hakukohteet tulevat tähän Osasta 1. Voit vaihtaa nimen, jos suunnitelmasi on muuttunut. Anna jokaiselle pisteet 1–5 jokaisesta kohdasta. Pisteet lasketaan automaattisesti.</p>
 
             <div class="kentta-rivi" style="overflow-x:auto;">
-              <table class="matriisi-taulukko" aria-label="Päätösmatriisi">
-                <caption class="sr-only">Anna jokaiselle koulutukselle pisteet 1–5.</caption>
+              <table class="matriisi-taulukko" aria-label="Hakukohteiden vertailu">
+                <caption class="sr-only">Anna jokaiselle hakukohteelle pisteet 1–5.</caption>
                 <thead>
                   <tr>
                     <th scope="col">Kriteeri</th>
-                    <th scope="col">🎓 Lukio</th>
-                    <th scope="col">🔧 Ammatillinen</th>
-                    <th scope="col">🌱 TUVA</th>
-                    <th scope="col">🏡 Kansanopisto</th>
+                    <th scope="col"><input id="mk_nimi1" type="text" data-save class="matriisi-nimi" aria-label="Hakukohde 1: koulu ja linja" placeholder="Hakukohde 1" /></th>
+                    <th scope="col"><input id="mk_nimi2" type="text" data-save class="matriisi-nimi" aria-label="Hakukohde 2: koulu ja linja" placeholder="Hakukohde 2" /></th>
+                    <th scope="col"><input id="mk_nimi3" type="text" data-save class="matriisi-nimi" aria-label="Hakukohde 3: koulu ja linja" placeholder="Hakukohde 3" /></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>Kiinnostaa minua</td>
-                    <td><select id="m_lukio_1" data-save aria-label="Lukio kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_amis_1" data-save aria-label="Ammatillinen kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_tuva_1" data-save aria-label="TUVA kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_kansa_1" data-save aria-label="Kansanopisto kiinnostaa"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h1_1" data-save aria-label="Hakukohde 1: kiinnostaa minua"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h2_1" data-save aria-label="Hakukohde 2: kiinnostaa minua"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h3_1" data-save aria-label="Hakukohde 3: kiinnostaa minua"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
                   </tr>
                   <tr>
                     <td>Sopii vahvuuksiini</td>
-                    <td><select id="m_lukio_2" data-save aria-label="Lukio sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_amis_2" data-save aria-label="Ammatillinen sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_tuva_2" data-save aria-label="TUVA sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_kansa_2" data-save aria-label="Kansanopisto sopii vahvuuksiin"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h1_2" data-save aria-label="Hakukohde 1: sopii vahvuuksiini"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h2_2" data-save aria-label="Hakukohde 2: sopii vahvuuksiini"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h3_2" data-save aria-label="Hakukohde 3: sopii vahvuuksiini"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
                   </tr>
                   <tr>
                     <td>Tukee tulevaisuuttani</td>
-                    <td><select id="m_lukio_3" data-save aria-label="Lukio tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_amis_3" data-save aria-label="Ammatillinen tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_tuva_3" data-save aria-label="TUVA tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_kansa_3" data-save aria-label="Kansanopisto tukee tulevaisuutta"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h1_3" data-save aria-label="Hakukohde 1: tukee tulevaisuuttani"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h2_3" data-save aria-label="Hakukohde 2: tukee tulevaisuuttani"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h3_3" data-save aria-label="Hakukohde 3: tukee tulevaisuuttani"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
                   </tr>
                   <tr>
                     <td>Arki toimii</td>
-                    <td><select id="m_lukio_4" data-save aria-label="Lukion arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_amis_4" data-save aria-label="Ammatillisen arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_tuva_4" data-save aria-label="TUVA:n arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_kansa_4" data-save aria-label="Kansanopiston arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h1_4" data-save aria-label="Hakukohde 1: arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h2_4" data-save aria-label="Hakukohde 2: arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h3_4" data-save aria-label="Hakukohde 3: arki toimii"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
                   </tr>
                   <tr>
                     <td>Saan tarvitsemaani tukea</td>
-                    <td><select id="m_lukio_5" data-save aria-label="Lukiossa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_amis_5" data-save aria-label="Ammatillisessa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_tuva_5" data-save aria-label="TUVA:ssa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
-                    <td><select id="m_kansa_5" data-save aria-label="Kansanopistossa saa tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h1_5" data-save aria-label="Hakukohde 1: saan tarvitsemaani tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h2_5" data-save aria-label="Hakukohde 2: saan tarvitsemaani tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
+                    <td><select id="m_h3_5" data-save aria-label="Hakukohde 3: saan tarvitsemaani tukea"><option value="">-</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></td>
                   </tr>
                   <tr class="pisteet-rivi">
                     <td>Yhteispisteet</td>
-                    <td id="pisteet-lukio" aria-live="polite">–</td>
-                    <td id="pisteet-amis" aria-live="polite">–</td>
-                    <td id="pisteet-tuva" aria-live="polite">–</td>
-                    <td id="pisteet-kansa" aria-live="polite">–</td>
+                    <td id="pisteet-h1" aria-live="polite">–</td>
+                    <td id="pisteet-h2" aria-live="polite">–</td>
+                    <td id="pisteet-h3" aria-live="polite">–</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <p style="font-size:0.9rem;color:#6b7280;margin:-4px 0 18px;">Pisteet auttavat vertailemaan, mutta sinä päätät järjestyksen. Jos pisteet ja fiilis ovat eri mieltä, mieti miksi.</p>
 
             <h3>Hakutoivejärjestys</h3>
             <p style="font-size:0.9rem;color:#6b7280;margin-bottom:10px;">Yhteishaussa voit hakea enintään <strong>7 hakutoiveeseen</strong>. Laita ne järjestykseen: 1. hakutoive on se, jonne haluat eniten. Täytä ne hakutoiveet, joihin aiot hakea.</p>
@@ -1191,8 +1195,8 @@
 
             <div class="kentta-rivi">
               <label for="paatoskirje">Kirje itsellesi</label>
-              <span class="ohje" id="ohje-kirje">Kirjoita kuin puhuisit kaverillesi. Kerro, miksi valitsit tämän – ja mitä teet, jos et pääse ensimmäiseen vaihtoehtoon.</span>
-              <textarea id="paatoskirje" data-save aria-describedby="ohje-kirje" style="min-height:130px;" placeholder="Valitsin ensisijaisesti... koska... Jos en pääse sinne, suunnitelmani on..."></textarea>
+              <span class="ohje" id="ohje-kirje">Kirjoita kuin puhuisit kaverillesi. Kerro, miksi valitsit tämän ja mikä siinä innostaa sinua.</span>
+              <textarea id="paatoskirje" data-save aria-describedby="ohje-kirje" style="min-height:130px;" placeholder="Valitsin ensisijaisesti... koska... Odotan eniten..."></textarea>
             </div>
 
             <div class="palautus-laatikko" style="background:#f0fdfa;border:1.5px solid var(--lk9-teal-bd);border-radius:14px;padding:16px 18px;margin-top:18px;">
@@ -1290,6 +1294,7 @@
         if (nappi) nappi.setAttribute('aria-expanded', 'true');
         viesti.innerHTML = '<p style="color:#134e4a;font-weight:700;"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Osa 2 on auki. Kirjaa kokemuksesi alla.</p>';
         if (!hiljainen) {
+          taytaMatriisiNimet();
           tallenna();
           sisalto.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1321,7 +1326,15 @@
       }
 
       // ── Pisteet ──────────────────────────────────────────────────
-      const VAIHTOEHDOT = ['lukio','amis','tuva','kansa'];
+      const VAIHTOEHDOT = ['h1','h2','h3'];
+
+      // Tuo hakukohteiden nimet Osasta 1 vertailutaulukon tyhjiin otsikoihin
+      function taytaMatriisiNimet() {
+        [1,2,3].forEach(n => {
+          const el = document.getElementById('mk_nimi' + n);
+          if (el && !el.value.trim()) el.value = arvo('hakukohde' + n);
+        });
+      }
 
       function paivitaPisteet() {
         const pisteet = {};
@@ -1436,6 +1449,7 @@
       // ── Init ───────────────────────────────────────────────────────
       document.addEventListener('DOMContentLoaded', () => {
         lataaData();
+        taytaMatriisiNimet();
         // Kuuntelijat kaikille kentille
         haeKentat().forEach(f => {
           f.addEventListener('input', tallenna);
