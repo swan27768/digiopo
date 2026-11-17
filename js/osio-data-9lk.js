@@ -160,7 +160,7 @@ window.OSIO_DATA = {
       teoria: "valinnat-peli",
       rakenne: [
         "Aloitus: millaisia valintoja teet joka päivä?",
-        "Elämänvalintapeli: Mitä sitten?",
+        "Mitä sitten? – elämänvalintapeli",
         "Lisähaaste: analysoi kolme merkittävintä valintaasi"
       ],
       tavoitteet: [
