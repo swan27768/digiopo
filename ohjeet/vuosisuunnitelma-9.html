@@ -16,8 +16,6 @@
   .vs-taulu td.t{font-weight:600;color:var(--ink)}
   .vs-taulu td.tyhja{font-weight:400;color:var(--ink-faint);font-style:italic}
   .vs-taulu tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
-  .vs-taulu a{text-decoration:none}
-  .vs-taulu a:hover{text-decoration:underline}
   @media print{ .vs-luokka{break-inside:avoid} }
 </style>
 </head>
@@ -74,9 +72,8 @@
     hr.appendChild(h1); hr.appendChild(h2); th.appendChild(hr); t.appendChild(th);
     var tb = el("tbody"), min = 0, max = 0, kaikki = true;
     lk.osiot.forEach(function (o) {
-      var r = el("tr"), c1 = el("td"), a = el("a", null, o.nimi);
-      a.href = lk.sivu + "#" + o.id;
-      c1.appendChild(a); r.appendChild(c1);
+      var r = el("tr");
+      r.appendChild(el("td", null, o.nimi));
       var v = vali(o.tunnit);
       if (v) { min += v[0]; max += v[1]; r.appendChild(el("td", "t", o.tunnit)); }
       else { kaikki = false; r.appendChild(el("td", "t tyhja", "täydentyy")); }
