@@ -1,6 +1,7 @@
 /* VUOSISUUNNITELMA — osioiden suositellut tuntimäärät (opettajan näkymä).
-   Tämä on ainoa paikka, jossa tuntimäärät ovat. Sivu ohjeet/vuosisuunnitelma.html
-   rakentaa taulukon tästä.
+   Tämä on ainoa paikka, jossa tuntimäärät ovat. Luokkakohtaiset sivut
+   ohjeet/vuosisuunnitelma-7.html, -8.html ja -9.html sekä koontisivu
+   ohjeet/vuosisuunnitelma.html rakentavat taulukkonsa tästä.
 
    Muokkaus: kirjoita tunnit-kenttään oppituntien määrä (45 min), esim. "2" tai "2–3".
    Tyhjä "" = näkyy taulukossa "täydentyy". */

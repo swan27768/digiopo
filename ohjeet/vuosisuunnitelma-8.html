@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8. luokan vuosisuunnitelma — osiot ja tuntimäärät | DigiOpo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="ope-ohje.css">
+<style>
+  .vs-taulu{width:100%;border-collapse:collapse;font-size:.95rem;margin:.4rem 0 0}
+  .vs-taulu th,.vs-taulu td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--line)}
+  .vs-taulu thead th{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-bottom:2px solid var(--line)}
+  .vs-taulu td.t,.vs-taulu th.t{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .vs-taulu td.t{font-weight:600;color:var(--ink)}
+  .vs-taulu td.tyhja{font-weight:400;color:var(--ink-faint);font-style:italic}
+  .vs-taulu tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
+  .vs-taulu a{text-decoration:none}
+  .vs-taulu a:hover{text-decoration:underline}
+  @media print{ .vs-luokka{break-inside:avoid} }
+</style>
+</head>
+<body>
+<main class="sheet">
+
+  <div class="doc-top">
+    <span class="badge osio">Vuosisuunnitelma · 8. luokka</span>
+    <h1 class="doc-h">8. luokan vuosisuunnitelma</h1>
+    <p class="doc-sub">Yhdellä silmäyksellä: mitkä osiot 8. luokalla on ja montako oppituntia kukin vie.</p>
+    <div class="chips">
+      <span class="chip">8. luokka</span>
+      <span class="chip">1 oppitunti = 45 min</span>
+      <button class="print" onclick="window.print()">Tulosta</button>
+    </div>
+  </div>
+
+  <section class="blk">
+    <p class="lab">Lue ensin</p>
+    <h2>Näin luet tuntimääriä</h2>
+    <ul class="clean">
+      <li><strong>Tuntimäärät ovat suosituksia.</strong> Yksi oppitunti on 45 minuuttia, eli esimerkiksi "2" tarkoittaa 2 × 45 min.</li>
+      <li><strong>Aika riippuu tunnin muusta sisällöstä.</strong> Jos tunnilla käsitellään muitakin asioita, osio vie useamman tunnin.</li>
+      <li><strong>Tuntimäärä voi vaihdella ryhmän mukaan.</strong> Sama osio voi viedä yhdeltä ryhmältä kaksi ja toiselta kolme tuntia.</li>
+    </ul>
+  </section>
+
+  <div id="vs-sisalto"></div>
+  <noscript><p>Taulukon näyttäminen vaatii JavaScriptin.</p></noscript>
+
+  <footer>DigiOpo · 8. luokan vuosisuunnitelma · Osiot ja tuntimäärät</footer>
+</main>
+<script src="/js/vuosisuunnitelma-data.js"></script>
+<script>
+(function () {
+  var LUOKKA = 8;
+  var data = (window.VUOSISUUNNITELMA || []).filter(function (lk) { return lk.luokka === LUOKKA; });
+  var juuri = document.getElementById("vs-sisalto");
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  // "2–3" -> [2,3], "2" -> [2,2], "" -> null
+  function vali(s) {
+    var m = String(s || "").match(/\d+/g);
+    if (!m) return null;
+    return [Number(m[0]), Number(m[m.length - 1])];
+  }
+  data.forEach(function (lk) {
+    var sec = el("section", "blk vs-luokka");
+    sec.appendChild(el("p", "lab", "Osiot"));
+    sec.appendChild(el("h2", null, lk.luokka + ". luokan osiot ja tuntimäärät"));
+    var t = el("table", "vs-taulu");
+    var th = el("thead"), hr = el("tr");
+    var h1 = el("th", null, "Osio"); h1.scope = "col";
+    var h2 = el("th", "t", "Oppitunteja (45 min)"); h2.scope = "col";
+    hr.appendChild(h1); hr.appendChild(h2); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody"), min = 0, max = 0, kaikki = true;
+    lk.osiot.forEach(function (o) {
+      var r = el("tr"), c1 = el("td"), a = el("a", null, o.nimi);
+      a.href = lk.sivu + "#" + o.id;
+      c1.appendChild(a); r.appendChild(c1);
+      var v = vali(o.tunnit);
+      if (v) { min += v[0]; max += v[1]; r.appendChild(el("td", "t", o.tunnit)); }
+      else { kaikki = false; r.appendChild(el("td", "t tyhja", "täydentyy")); }
+      tb.appendChild(r);
+    });
+    t.appendChild(tb);
+    if (kaikki && lk.osiot.length) {
+      var tf = el("tfoot"), fr = el("tr");
+      fr.appendChild(el("td", null, "Yhteensä"));
+      fr.appendChild(el("td", "t", min === max ? String(min) : min + "–" + max));
+      tf.appendChild(fr); t.appendChild(tf);
+    }
+    sec.appendChild(t);
+    juuri.appendChild(sec);
+  });
+})();
+</script>
+<script src="/js/tekijanoikeus.js" defer></script>
+</body>
+</html>
