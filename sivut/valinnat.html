@@ -392,6 +392,14 @@ function buildQ(){
       if(ni<normalCards.length) q.push({...normalCards[ni++],type:"normal",rec:false});
     }
   }
+  // Sekoita vaihtoehtojen näyttöjärjestys kortille kerran (pysyy samana kaikille pelaajille).
+  // Pisteytys käyttää edelleen alkuperäistä indeksiä (0 = rakentavin, 2 = haastavin).
+  q.forEach(c=>{
+    if(!c.choices)return;
+    const o=c.choices.map((_,i)=>i);
+    for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+    c.order=o;
+  });
   return q;
 }
 
@@ -406,7 +414,7 @@ function renderIntro(){
         <div class="mini-card" style="background:#EEEDFE;border-color:#7F77DD">💬</div>
       </div>
       <div class="intro-title">Mitä sitten?</div>
-      <div class="intro-hook">Teemme kaikki erilaisia valintoja — oikeita ja vääriä, ne kuuluvat elämään. Tässä pelissä harjoittelet valintojen tekemistä.</div>
+      <div class="intro-hook">Teemme joka päivä valintoja, isoja ja pieniä. Usein ei ole yhtä oikeaa vastausta, ja joskus valinta menee pieleen — se kuuluu elämään. Tässä pelissä harjoittelet valintojen tekemistä ja näet, mihin ne voivat johtaa.</div>
       <hr class="intro-divider">
       <div class="intro-section">
         <div class="intro-section-title">Miten peli toimii</div>
@@ -503,8 +511,9 @@ function renderGame(){
   } else if(c.type!=="surprise"){
     const tc=TAG_COLORS[c.tag]||"#26215C";
     const hardBadge=c.hard?`<span class="hard-badge">Vaikea tilanne</span>`:"";
-    const chs=c.choices.map((ch,i)=>
-      `<button class="chbtn" data-i="${i}">${ch}</button>`
+    const ord=c.order||c.choices.map((_,i)=>i);
+    const chs=ord.map((oi,pos)=>
+      `<button class="chbtn" data-i="${oi}" data-pos="${pos}">${c.choices[oi]}</button>`
     ).join("");
 function getCardSVG(tag,title){
   // Tietyt kortit saavat oman kuvan otsikon perusteella
@@ -1512,7 +1521,7 @@ function svgByTag(tag){
       }
     }
   });
-  document.querySelectorAll(".chbtn").forEach(b=>b.addEventListener("click",()=>pick(curP,parseInt(b.dataset.i))));
+  document.querySelectorAll(".chbtn").forEach(b=>b.addEventListener("click",()=>pick(curP,parseInt(b.dataset.i),parseInt(b.dataset.pos))));
   document.getElementById("nxt")?.addEventListener("click",applyAndNext);
   document.getElementById("nxt-round")?.addEventListener("click",applyAndShowRoundStats);
   if(c.type==="surprise"&&!surpriseOk)document.getElementById("scard")?.addEventListener("click",doSurprise);
@@ -1521,7 +1530,7 @@ function svgByTag(tag){
   }
 }
 
-function pick(pi,cho){
+function pick(pi,cho,pos){
   if(rChoices[pi]!==undefined)return;
 
   // Varoitus jos valittu alle 5 sekunnissa
@@ -1542,7 +1551,8 @@ function pick(pi,cho){
   }
 
   rChoices[pi]=cho;
-  if(cho===0)apCounts[pi]++;else apCounts[pi]=0;
+  // Autopilotti = valitsee ruudulla ylimmän vaihtoehdon peräkkäin (paikka, ei sisältö)
+  if(pos===0)apCounts[pi]++;else apCounts[pi]=0;
   const bon=recBonus(pi,cho);
   const base={...queue[ci].d[cho]};
   if(bon>0){const mk=Object.keys(base)[0];if(mk)base[mk]=(base[mk]||0)+bon;}
@@ -1731,7 +1741,7 @@ function buildStrengths(p){
   const weakItems=weak.map(s=>`<div class="strength-item"><div class="strength-dot" style="background:${s.color}"></div>${s.label} <span style="color:${s.color};margin-left:auto">${p.stats[s.key]}</span></div>`).join("");
   return`<div class="strength-grid">
     <div class="strength-box pos"><span class="strength-label">💪 Vahvuutesi</span>${strongItems}</div>
-    <div class="strength-box neg"><span class="strength-label">🌱 Kehitysalueesi</span>${weakItems}</div>
+    <div class="strength-box neg"><span class="strength-label">🌱 Näihin voisit kiinnittää huomiota</span>${weakItems}</div>
   </div>`;
 }
 
@@ -1809,13 +1819,12 @@ function renderReflect(){
 
 function renderEnd(){
   const solo=players.length===1;
-  const sorted=[...players].sort((a,b)=>Object.values(b.stats).reduce((x,y)=>x+y,0)-Object.values(a.stats).reduce((x,y)=>x+y,0));
+  const sorted=[...players]; // ei paremmuusjärjestystä — peli ei ole kilpailu
   document.getElementById("ui").innerHTML=`
     <div class="end-screen">
       <div class="end-title">Mihin suuntaan olet menossa?</div>
       <div class="end-sub">Katso miten valintasi kehittyivät kierros kierrokselta.</div>
       ${sorted.map((p,rank)=>{
-        const total=Object.values(p.stats).reduce((a,b)=>a+b,0);
         const trends={};STATS.forEach(s=>{const d=p.stats[s.key]-START;trends[s.key]=d>=3?"up":d<=-3?"down":"flat";});
         const rH=p.hist.filter(h=>h.rec);
         const rOk=rH.length>=2&&rH.every(h=>h.cho===0);
@@ -1826,7 +1835,7 @@ function renderEnd(){
         if(rOk)story+="Teit saman valinnan kolme kertaa — se on jo tapa. ";
         if(rBad)story+="Toistuva tilanne tuli kolmesti, mutta valintasi ei pysynyt johdonmukaisena. ";
         if(ups.length)story+=`${ups.join(", ")} kasvoi — olet menossa eteenpäin näillä alueilla. `;
-        if(downs.length)story+=`${downs.join(", ")} laski — nämä kaipaavat huomiota. `;
+        if(downs.length)story+=`${downs.join(", ")} laski tässä pelissä — mieti, mistä se johtui. `;
         if(!story)story="Pisteet pysyivät melko tasaisina. Suuri muutos syntyy johdonmukaisista pienistä teoista.";
         const pills=STATS.map(s=>`<span class="tpill ${trends[s.key]==="up"?"tup":trends[s.key]==="down"?"tdown":"tflat"}">${trends[s.key]==="up"?"↑":trends[s.key]==="down"?"↓":"→"} ${s.label}</span>`).join("");
         const sgrid=STATS.map(s=>`
@@ -1835,8 +1844,8 @@ function renderEnd(){
             <div class="prs-val" style="color:${s.color}">${p.stats[s.key]}</div>
             <div class="prs-bar-bg"><div class="prs-fill" style="width:${Math.round(p.stats[s.key]/MAX*100)}%;background:${s.color}"></div></div>
           </div>`).join("");
-        return`<div class="pres" style="${!solo&&rank===0?`border-color:${p.color};border-width:3px`:""}">
-          <div class="pre-hdr"><span class="pre-name" style="color:${p.color}">${!solo&&rank===0?"🏆 ":""}${p.name}</span><span class="pre-total">${total} pistettä</span></div>
+        return`<div class="pres" style="${!solo?`border-color:${p.color}`:""}">
+          <div class="pre-hdr"><span class="pre-name" style="color:${p.color}">${p.name}</span></div>
           <div class="pre-sgrid">${sgrid}</div>
           ${buildStrengths(p)}
           ${buildMoment(p)}

@@ -1152,8 +1152,7 @@
   // Kartta: href-tunniste → g9.tasks-avain
   var TASK_MAP = {
     'keskustelu-tet9':              'tet9',
-    'keskustelu-harrastus-ammatti': 'harrastus_ammatti',
-    'reflektio-valinnat9':          'valinnat9'
+    'keskustelu-harrastus-ammatti': 'harrastus_ammatti'
   };
 
   function kaannaTehtavaKortit(t) {
@@ -1214,7 +1213,7 @@
 
   function kaynnistaMutationObserver() {
     if (_observers.length) return;
-    var containers = ['tasks-tet-tyokaveri', 'tasks-tet', 'tasks-valinnat'];
+    var containers = ['tasks-tet-tyokaveri', 'tasks-tet'];
     containers.forEach(function (cid) {
       var el = document.getElementById(cid);
       if (!el) return;
