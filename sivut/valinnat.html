@@ -235,6 +235,27 @@ html,body{background:#fff;color:#1a1a2e;font-family:'Nunito',sans-serif;min-heig
 .reflect-textarea:focus{outline:3px solid #3C3489;border-color:#3C3489;}
 .reflect-answer-box{background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:10px;padding:.75rem 1rem;margin-top:8px;}
 .reflect-answer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#3C3489;margin-bottom:.3rem;display:block;}
+.profile-box{border-radius:14px;padding:1rem 1.1rem;margin-bottom:.7rem;background:linear-gradient(135deg,#EEEDFE,#E6F1FB);border:2px solid #7F77DD;display:flex;gap:14px;align-items:center;}
+.profile-icon{font-size:44px;line-height:1;flex-shrink:0;}
+.profile-kicker{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#3C3489;margin-bottom:2px;}
+.profile-name{font-size:22px;font-family:'Fredoka One',sans-serif;color:#26215C;line-height:1.15;margin-bottom:4px;}
+.profile-text{font-size:13.5px;color:#26215C;line-height:1.55;}
+.profile-text b{font-weight:800;}
+.moment-persp{margin-top:.55rem;padding:.5rem .7rem;background:rgba(255,255,255,.65);border-radius:8px;font-size:12.5px;color:#412402;line-height:1.5;font-style:italic;}
+.moment-persp-who{font-style:normal;font-weight:800;}
+.habit-box{border-radius:10px;padding:.75rem .9rem;background:#E1F5EE;border:1.5px solid #1D9E75;margin-bottom:.6rem;}
+.habit-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#085041;margin-bottom:.4rem;display:block;}
+.habit-title{font-size:14px;font-weight:800;color:#04342A;margin-bottom:.45rem;}
+.habit-dots{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.5rem;}
+.habit-dot{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px;}
+.habit-dot.good{background:#1D9E75;color:#fff;}
+.habit-dot.mid{background:#EF9F27;color:#3a2203;}
+.habit-dot.bad{background:#888780;color:#fff;}
+.habit-text{font-size:13px;color:#04342A;line-height:1.6;}
+.all-stats{margin:.2rem 0 .6rem;border:1px solid #e8e8e8;border-radius:10px;background:#f9f9f9;}
+.all-stats summary{cursor:pointer;padding:.7rem 1rem;font-size:13px;font-weight:800;color:#3C3489;list-style-position:inside;}
+.all-stats summary:focus{outline:3px solid #3C3489;outline-offset:2px;border-radius:10px;}
+.all-stats-inner{padding:0 1rem .9rem;}
 .reflect-answer-text{font-size:13px;color:#26215C;font-weight:700;line-height:1.55;font-style:italic;}
 
 </style>
@@ -284,16 +305,19 @@ const RECURRING=[
     {tag:"terveys",icon:"🌙",title:"Puhelin myöhään yöllä",desc:"Kello 23:00, koulu klo 8. Olet puhelimella — 'vielä vain hetki'.",choices:["Laitan puhelimen pois ja nukun","Vielä puoli tuntia","Jatkan kunnes nukahdan"],d:[{terveys:2,sinnikkyys:1,organisointi:1},{terveys:-1},{terveys:-2,sinnikkyys:-1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
     {tag:"terveys",icon:"🌙",title:"Sama tilanne, viikko myöhemmin",desc:"Kello 23:00 taas. Tuleeko sama rutiini uudelleen?",choices:["Puhelin pois — päätin tämän jo viimeksi","Tänään on poikkeus","En edes yritä"],d:[{terveys:2,sinnikkyys:2,organisointi:2},{terveys:-1,sinnikkyys:-1},{terveys:-2,sinnikkyys:-2}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
     {tag:"terveys",icon:"🌙",title:"Puhelin yöllä — kolmas viikko peräkkäin",desc:"Sama tilanne kuin viimeiset kaksi viikkoa. Kello 23:00, koulu klo 8. Oletko muuttanut tapojasi vai toistuuko sama kaava?",choices:["Puhelin pois — tämä on jo rutiinini","Tänään en jaksa","Mitä väliä — en usko muutokseen"],d:[{terveys:3,sinnikkyys:3,organisointi:2},{terveys:-1,sinnikkyys:-2},{terveys:-2,sinnikkyys:-3,rohkeus:-1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
+    {tag:"terveys",icon:"🌙",title:"Puhelin yöllä — neljäs viikko, chatti käy kuumana",desc:"Kello 23:00 ja huomenna koe klo 8. Ryhmächatissa on menossa kova keskustelu. Nyt tapasi joutuu koetukselle.",choices:["Kirjoitan 'jatketaan huomenna' ja laitan puhelimen pois","Luen vielä vähän, sitten nukkumaan","Jään chattiin — en halua jäädä paitsi"],d:[{terveys:3,sinnikkyys:3,itseilmaisu:1},{terveys:-1,sinnikkyys:-1},{terveys:-2,sinnikkyys:-2,sosiaaliset:1}],perspective:{who:"Huomisen sinä",quote:"Kiitos tai ei kiitos — sen näet aamulla."}},
   ]},
   {theme:"liikunta",cards:[
     {tag:"terveys",icon:"⚽",title:"Harjoitukset vai sohva?",desc:"Olet väsynyt. Joukkue odottaa harjoituksissa tänään.",choices:["Menen — lupaukset on pidettävä","Jään lepäämään, tarvitsen sen","Jään pelaamaan koko illan"],d:[{terveys:2,sinnikkyys:1,sosiaaliset:1},{terveys:1,sosiaaliset:-1},{terveys:-2,sinnikkyys:-1}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
     {tag:"terveys",icon:"⚽",title:"Harjoitukset taas — väsyttää enemmän",desc:"Rankka viikko. Viimeksi teit jo päätöksen — mitä nyt?",choices:["Menen — juuri väsyneenä tämä on tärkeintä","Pidän kertatauon","En mene — yksi kerta ei merkitse"],d:[{terveys:2,sinnikkyys:2,sosiaaliset:1},{sinnikkyys:-1},{terveys:-1,sinnikkyys:-2}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
     {tag:"terveys",icon:"⚽",title:"Kolmas kerta — onko liikunta osa elämääsi?",desc:"Harjoitukset odottavat. Kolme viikkoa — tapa juurtuu tai häipyy.",choices:["Menen — olen päättänyt että tämä kuuluu elämääni","Jään kotiin — en halua pakottaa itseäni","Lopetan harrastuksen kokonaan — ei sovi minulle"],d:[{terveys:3,sinnikkyys:3,sosiaaliset:2},{terveys:-1,sinnikkyys:-1},{terveys:-2,sinnikkyys:-3,sosiaaliset:-2}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
+    {tag:"terveys",icon:"⚽",title:"Harjoitukset vai sohva — neljäs viikko",desc:"Kaveri pyytää leffaan juuri harjoitusten aikaan. Kolmen viikon jälkeen tapasi joutuu koetukselle.",choices:["Menen harjoituksiin ja ehdotan leffaa viikonloppuna","Menen tällä kertaa leffaan — harkitusti","Lopetan harjoitukset — leffa on kivempi"],d:[{terveys:3,sinnikkyys:3,sosiaaliset:1,organisointi:1},{sosiaaliset:2,sinnikkyys:-1},{terveys:-2,sinnikkyys:-3,sosiaaliset:1}],perspective:{who:"Joukkuekaveri",quote:"Mietimme, missä olet."}},
   ]},
   {theme:"raha",cards:[
     {tag:"raha",icon:"☕",title:"Kahvi ruokatauolla",desc:"Kaikki käyvät kahvilassa. ~5 €. Sinulla on tiukka kuukausi.",choices:["Otan veden — säästän pienestä","Ostan normaalisti","Ostan kaikille"],d:[{raha:1,organisointi:1,sinnikkyys:1},{raha:-1},{raha:-3,sosiaaliset:2}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
     {tag:"raha",icon:"☕",title:"Sama kahvila, toinen viikko",desc:"Sama hetki. Viimeksi teit päätöksen. Pysytkö siinä?",choices:["Vesi taas — tottumukset kertyvät","Tänään on poikkeus","Pienillä asioilla ei ole väliä"],d:[{raha:2,organisointi:2,sinnikkyys:2},{raha:-1,sinnikkyys:-1},{raha:-2,sinnikkyys:-2,organisointi:-1}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
     {tag:"raha",icon:"☕",title:"Kolmas viikko — oletko säästäjä?",desc:"Sama tilanne. Kolme viikkoa pienistä valinnoista — ne kerääntyvät.",choices:["Vesi — tämä on nyt tapa","Ostan — ansaitsin tänään","Rahankäyttö ei kiinnosta minua"],d:[{raha:3,organisointi:2,sinnikkyys:3},{raha:-1},{raha:-3,organisointi:-2,sinnikkyys:-2}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
+    {tag:"raha",icon:"☕",title:"Sama kahvila, neljäs viikko",desc:"Kaverit lähtevät taas kahvilaan ja kysyvät, tuletko mukaan. Neljä viikkoa pieniä valintoja — mitä nyt?",choices:["Tulen mukaan ja otan veden — seura on tärkeintä","Ostan kahvin, säästän ensi viikolla","Ostan kahvin ja pullan — rahasta ei kannata stressata"],d:[{raha:3,sinnikkyys:2,sosiaaliset:1},{raha:-1},{raha:-3,organisointi:-1}],perspective:{who:"Tulevaisuuden sinä",quote:"Katso taaksepäin vuoden päästä — mitä ajattelet?"}},
   ]},
 ];
 
@@ -374,8 +398,9 @@ function buildQ(){
   const q=[];
   let ni=0,hi=0;
   for(let r=0;r<ROUNDS;r++){
-    // Toistuvat kierros r:lle (0,1,2) — kierros 3 käyttää taas 0:ta jos loppuu
-    const recCard={...th.cards[Math.min(r,2)],type:"normal",rec:true,recR:Math.min(r,2)+1};
+    // Toistuva kortti: jokaisella kierroksella teeman oma versio (4 versiota / teema)
+    const ri=Math.min(r,th.cards.length-1);
+    const recCard={...th.cards[ri],type:"normal",rec:true,recR:ri+1,theme:th.theme};
     q.push(recCard);
     // Muut 4 paikkaa
     for(let s=0;s<PER-1;s++){
@@ -464,7 +489,7 @@ function renderSetup(){
 }
 
 function startGame(names){
-  players=names.map((nm,i)=>({name:nm,stats:mkS(),color:PCOLORS[i],bg:PBGS[i],hist:[],snapshots:[mkS()],motives:[]}));
+  players=names.map((nm,i)=>({name:nm,stats:mkS(),color:PCOLORS[i],bg:PBGS[i],hist:[],snapshots:[mkS()],motives:[],raw:mkS()}));
   queue=buildQ();
   ci=0;round=1;rChoices={};curP=0;pDeltas={};
   apCounts=players.map(()=>0);
@@ -1455,7 +1480,7 @@ function svgByTag(tag){
       ${getCardSVG(c.tag,c.title)}
       <div style="padding:.85rem 1rem">
         <div style="margin-bottom:4px">
-          <span class="ctag" style="color:${tc}">${TAG_LABELS[c.tag]||c.tag}${c.rec?` · kierros ${c.recR}/3`:""}</span>
+          <span class="ctag" style="color:${tc}">${TAG_LABELS[c.tag]||c.tag}${c.rec?` · viikko ${c.recR}/${ROUNDS}`:""}</span>
           ${hardBadge}
         </div>
         <div class="ctitle">${c.title}</div>
@@ -1551,6 +1576,7 @@ function pick(pi,cho,pos){
   }
 
   rChoices[pi]=cho;
+  players[pi]._apPrev=apCounts[pi];
   // Autopilotti = valitsee ruudulla ylimmän vaihtoehdon peräkkäin (paikka, ei sisältö)
   if(pos===0)apCounts[pi]++;else apCounts[pi]=0;
   const bon=recBonus(pi,cho);
@@ -1574,6 +1600,10 @@ function activPoker(){
   // Peru pending round deltat
   Object.entries(oldBase).forEach(([k,v])=>{pendingRoundDeltas[curP][k]=(pendingRoundDeltas[curP][k]||0)-v;});
   delete rChoices[curP];delete pDeltas[curP];players[curP]._bon=0;
+  // Poista peruttu valinta historiasta, ettei sama kortti laskeudu kahdesti
+  const ph=players[curP].hist;
+  if(ph.length&&ph[ph.length-1].ci===ci)ph.pop();
+  if(players[curP]._apPrev!==undefined)apCounts[curP]=players[curP]._apPrev;
   renderGame();
 }
 
@@ -1665,7 +1695,7 @@ function showReveal(){
 
 function applyAndNext(){
   players.forEach((p,i)=>{
-    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));});
+    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));p.raw[k]=(p.raw[k]||START)+v;});
     p.snapshots.push({...p.stats});
   });
   pDeltas={};ci++;
@@ -1677,7 +1707,7 @@ function applyAndNext(){
 
 function applyAndShowRoundStats(){
   players.forEach((p,i)=>{
-    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));});
+    Object.entries(pDeltas[i]||{}).forEach(([k,v])=>{p.stats[k]=Math.max(0,Math.min(MAX,p.stats[k]+v));p.raw[k]=(p.raw[k]||START)+v;});
     p.snapshots.push({...p.stats});
   });
   pDeltas={};
@@ -1722,7 +1752,10 @@ function buildChart(p){
   const snaps=p.snapshots;const n=snaps.length;
   const W=300,H=100,PL=28,PR=8,PT=12,PB=8;const gW=W-PL-PR,gH=H-PT-PB;
   const variances=STATS.map(s=>{const vals=snaps.map(sn=>sn[s.key]);return{s,range:Math.max(...vals)-Math.min(...vals)};}).sort((a,b)=>b.range-a.range);
-  const shown=variances.slice(0,4).map(v=>v.s);
+  // Käyrällä oma paletti: neljä selvästi eri väriä (sininen, keltainen, punainen, vihreä),
+  // koska osa ominaisuuksien omista väreistä on lähes samaa punaista.
+  const CHART_COLORS=["#2563EB","#E0A800","#DC2626","#16A34A"];
+  const shown=variances.slice(0,4).map((v,i)=>({...v.s,color:CHART_COLORS[i]}));
   const allVals=shown.flatMap(s=>snaps.map(sn=>sn[s.key]));
   const minY=Math.min(...allVals),maxY=Math.max(...allVals),rangeY=Math.max(maxY-minY,2);
   function px(i){return PL+Math.round(i/(n-1)*gW);}
@@ -1734,7 +1767,8 @@ function buildChart(p){
 }
 
 function buildStrengths(p){
-  const sorted=[...STATS].sort((a,b)=>p.stats[b.key]-p.stats[a.key]);
+  // Sama järjestys kuin valitsijaprofiilissa: lopputulos, tasapelissä kerätty kokonaismäärä
+  const sorted=[...STATS].sort((a,b)=>(p.stats[b.key]-p.stats[a.key])||((p.raw[b.key]||0)-(p.raw[a.key]||0)));
   const strong=sorted.slice(0,3);
   const weak=sorted.slice(-3).reverse();
   const strongItems=strong.map(s=>`<div class="strength-item"><div class="strength-dot" style="background:${s.color}"></div>${s.label} <span style="color:${s.color};margin-left:auto">${p.stats[s.key]}</span></div>`).join("");
@@ -1746,29 +1780,109 @@ function buildStrengths(p){
 }
 
 function buildMoment(p){
-  // Löydä kortti jossa pisteet muuttuivat eniten yhden kierroksen aikana
+  // Etsi kortti, jonka kohdalla pisteet muuttuivat eniten.
+  // snapshots[i+1] on tilanne kortin queue[i] jälkeen (myös yllätyskortin), joten
+  // kortti haetaan jonosta suoraan indeksillä — ei historiasta, jossa yllätyskorttia ei ole.
   if(p.snapshots.length<2) return"";
-  let maxChange=0,maxIdx=0;
+  let maxChange=0,maxCi=-1;
   for(let i=1;i<p.snapshots.length;i++){
+    const qc=queue[i-1];
+    if(!qc||!qc.choices) continue; // yllätyskortti ei ole oma valinta
     const change=STATS.reduce((sum,s)=>sum+Math.abs(p.snapshots[i][s.key]-p.snapshots[i-1][s.key]),0);
-    if(change>maxChange){maxChange=change;maxIdx=i;}
+    if(change>maxChange){maxChange=change;maxCi=i-1;}
   }
-  if(maxChange===0) return"";
-  // Kortti on indeksissä maxIdx-1 (snapshot i vastaa korttia i-1)
-  const cardIdx=maxIdx-1;
-  const card=p.hist[cardIdx];
-  if(!card) return"";
-  const queueCard=queue[card.ci];
-  if(!queueCard||!queueCard.choices) return"";
-  const chosen=queueCard.choices[card.cho];
-  const before=p.snapshots[maxIdx-1];const after=p.snapshots[maxIdx];
+  if(maxCi<0) return"";
+  const h=[...p.hist].reverse().find(x=>x.ci===maxCi);
+  if(!h) return"";
+  const qc=queue[maxCi];
+  const chosen=qc.choices[h.cho];
+  const before=p.snapshots[maxCi];const after=p.snapshots[maxCi+1];
   const deltas=STATS.map(s=>({s,d:after[s.key]-before[s.key]})).filter(x=>x.d!==0);
   const deltaHTML=deltas.map(x=>`<span class="${x.d>0?"pos":"neg"}">${x.s.label} ${x.d>0?"+":""}${x.d}</span>`).join("");
+  const persp=qc.perspective?`<div class="moment-persp"><span class="moment-persp-who">${qc.perspective.who}:</span> "${qc.perspective.quote}"</div>`:"";
   return`<div class="moment-box">
     <span class="moment-label">⚡ Tämä valinta vaikutti eniten</span>
-    <div class="moment-card">${queueCard.title}</div>
+    <div class="moment-card">${qc.icon?qc.icon+" ":""}${qc.title}</div>
     <div class="moment-choice">Valitsit: "${chosen}"</div>
     <div class="moment-delta">${deltaHTML}</div>
+    ${persp}
+  </div>`;
+}
+
+/* ── VALITSIJAPROFIILI ── */
+const PROFILES={
+  terveys:     {icon:"🌿",name:"Jaksaja",            text:"Pidät huolta unesta, liikunnasta ja jaksamisesta. Se kantaa kaikessa muussakin."},
+  raha:        {icon:"💰",name:"Fiksu säästäjä",     text:"Mietit, mihin rahasi menevät. Pienistä summista kasvaa iso ero."},
+  sosiaaliset: {icon:"🤝",name:"Porukan liima",      text:"Kaverit ovat sinulle tärkeitä, ja pidät porukan koossa."},
+  empatia:     {icon:"💗",name:"Toisten huomaaja",   text:"Huomaat, miltä muista tuntuu, ja otat sen huomioon valinnoissasi."},
+  itseilmaisu: {icon:"🎤",name:"Oman äänen käyttäjä",text:"Sanot mielipiteesi ja näytät, kuka olet — myös silloin, kun se jännittää."},
+  sinnikkyys:  {icon:"🔥",name:"Sinnikäs tekijä",    text:"Et luovuta helposti. Pidät kiinni siitä, minkä päätit."},
+  rohkeus:     {icon:"🦁",name:"Rohkea puolustaja",  text:"Uskallat toimia, vaikka muut olisivat hiljaa."},
+  rakkaus:     {icon:"❤️",name:"Läheisten tukija",   text:"Välität läheisistäsi ja näytät sen teoilla."},
+  organisointi:{icon:"🗂️",name:"Suunnitelmallinen",  text:"Pidät langat käsissä: aikataulut, tehtävät ja arjen järjestys."},
+};
+const PHRASES={
+  terveys:"huolenpitoa omasta jaksamisesta", raha:"taitoa käyttää rahaa harkiten",
+  sosiaaliset:"kykyä pitää porukka koossa", empatia:"taitoa asettua toisen asemaan",
+  itseilmaisu:"rohkeutta näyttää oma itsesi", sinnikkyys:"sitkeyttä",
+  rohkeus:"rohkeutta toimia", rakkaus:"välittämistä läheisistä", organisointi:"taitoa järjestää asiat",
+};
+function buildProfile(p){
+  // Järjestä ominaisuudet lopputuloksen mukaan; tasapelissä ratkaisee kerätty kokonaismäärä (ilman 20 pisteen kattoa)
+  const ranked=[...STATS].sort((a,b)=>(p.stats[b.key]-p.stats[a.key])||((p.raw[b.key]||0)-(p.raw[a.key]||0)));
+  const top=ranked[0],second=ranked[1];
+  if(p.stats[top.key]<=START+1){
+    return`<div class="profile-box">
+      <div class="profile-icon" aria-hidden="true">🧭</div>
+      <div><div class="profile-kicker">Valitsijaprofiilisi</div>
+      <div class="profile-name">Etsijä</div>
+      <div class="profile-text">Valintasi vaihtelivat, eikä yksikään suunta noussut esiin. Se on ihan ok — peli on harjoitus. Mitä tekisit seuraavalla kerralla toisin?</div></div>
+    </div>`;
+  }
+  const pr=PROFILES[top.key];
+  return`<div class="profile-box">
+    <div class="profile-icon" aria-hidden="true">${pr.icon}</div>
+    <div><div class="profile-kicker">Valitsijaprofiilisi</div>
+    <div class="profile-name">${pr.name}</div>
+    <div class="profile-text">${pr.text} Valinnoissasi näkyy myös <b>${PHRASES[second.key]}</b>.</div></div>
+  </div>`;
+}
+
+/* ── TAPAKORTTI: toistuva tilanne ── */
+const HABITS={
+  uni:{title:"🌙 Ilta puhelimen kanssa",
+    all:n=>`Laitoit puhelimen pois joka kerta (${n}/${n}). Jos nukut joka ilta puoli tuntia pidempään, viikossa kertyy yli 3 tuntia lisää unta. Se näkyy jaksamisena ja keskittymisenä.`,
+    some:(k,n)=>`Laitoit puhelimen pois ${k}/${n} kertaa. Tapa on alkamassa — jokainen ilta, jonka teet samoin, vahvistaa sitä.`,
+    none:n=>`Puhelin voitti joka kerta (0/${n}). Puoli tuntia vähemmän unta joka ilta on viikossa yli 3 tuntia. Mikä yksi asia auttaisi laittamaan puhelimen pois?`},
+  liikunta:{title:"⚽ Harjoitukset",
+    all:n=>`Lähdit harjoituksiin joka kerta (${n}/${n}). Kun menet myös väsyneenä, liikunnasta tulee tapa — ja joukkue voi luottaa sinuun.`,
+    some:(k,n)=>`Lähdit harjoituksiin ${k}/${n} kertaa. Lepokin on joskus oikea valinta, kunhan pois jääminen ei muutu tavaksi.`,
+    none:n=>`Jäit pois joka kerta (0/${n}). Yksi väliin jäänyt kerta ei haittaa, mutta toistuessaan siitä tulee tapa. Mikä saisi sinut lähtemään?`},
+  raha:{title:"☕ Kahvi ruokatauolla",
+    all:n=>`Valitsit veden joka kerta (${n}/${n}). Jos säästät 5 € viikossa, vuodessa kertyy noin 260 €.`,
+    some:(k,n)=>`Valitsit veden ${k}/${n} kertaa. Jo 5 € viikossa on vuodessa noin 260 € — pienet summat kasvavat.`,
+    none:n=>`Ostit joka kerta (0/${n}). 5 € viikossa on vuodessa noin 260 €. Mihin muuhun sen rahan voisi käyttää?`},
+};
+function buildHabit(p){
+  // Viimeisin valinta kustakin toistuvasta kortista, pelijärjestyksessä
+  const byCi={};p.hist.filter(h=>h.rec).forEach(h=>{byCi[h.ci]=h;});
+  const rH=Object.keys(byCi).map(Number).sort((a,b)=>a-b).map(c=>byCi[c]);
+  if(rH.length<2) return"";
+  const theme=queue[rH[0].ci].theme;const hb=HABITS[theme];
+  if(!hb) return"";
+  const n=rH.length,k=rH.filter(h=>h.cho===0).length;
+  const text=k===n?hb.all(n):k===0?hb.none(n):hb.some(k,n);
+  const dots=rH.map((h,i)=>{
+    const cls=h.cho===0?"good":h.cho===1?"mid":"bad";
+    const sym=h.cho===0?"✓":h.cho===1?"~":"✗";
+    const txt=queue[h.ci].choices[h.cho];
+    return`<span class="habit-dot ${cls}" title="${txt}">Viikko ${i+1} ${sym}<span class="sr-only">: ${txt}</span></span>`;
+  }).join("");
+  return`<div class="habit-box">
+    <span class="habit-label">🔄 Sama tilanne, ${n} kertaa</span>
+    <div class="habit-title">${hb.title}</div>
+    <div class="habit-dots">${dots}</div>
+    <div class="habit-text">${text}</div>
   </div>`;
 }
 
@@ -1819,21 +1933,15 @@ function renderReflect(){
 
 function renderEnd(){
   const solo=players.length===1;
-  const sorted=[...players]; // ei paremmuusjärjestystä — peli ei ole kilpailu
   document.getElementById("ui").innerHTML=`
     <div class="end-screen">
-      <div class="end-title">Mihin suuntaan olet menossa?</div>
-      <div class="end-sub">Katso miten valintasi kehittyivät kierros kierrokselta.</div>
-      ${sorted.map((p,rank)=>{
+      <div class="end-title">${solo?"Millainen valitsija olet?":"Millaisia valitsijoita olette?"}</div>
+      <div class="end-sub">Tässä on, mitä valintasi kertovat sinusta. Ei oikeaa tai väärää — vain sinun suuntasi.</div>
+      ${players.map(p=>{
         const trends={};STATS.forEach(s=>{const d=p.stats[s.key]-START;trends[s.key]=d>=3?"up":d<=-3?"down":"flat";});
-        const rH=p.hist.filter(h=>h.rec);
-        const rOk=rH.length>=2&&rH.every(h=>h.cho===0);
-        const rBad=rH.length>=2&&rH.every(h=>h.cho>=1);
         const ups=STATS.filter(s=>trends[s.key]==="up").map(s=>s.label);
         const downs=STATS.filter(s=>trends[s.key]==="down").map(s=>s.label);
         let story="";
-        if(rOk)story+="Teit saman valinnan kolme kertaa — se on jo tapa. ";
-        if(rBad)story+="Toistuva tilanne tuli kolmesti, mutta valintasi ei pysynyt johdonmukaisena. ";
         if(ups.length)story+=`${ups.join(", ")} kasvoi — olet menossa eteenpäin näillä alueilla. `;
         if(downs.length)story+=`${downs.join(", ")} laski tässä pelissä — mieti, mistä se johtui. `;
         if(!story)story="Pisteet pysyivät melko tasaisina. Suuri muutos syntyy johdonmukaisista pienistä teoista.";
@@ -1845,21 +1953,29 @@ function renderEnd(){
             <div class="prs-bar-bg"><div class="prs-fill" style="width:${Math.round(p.stats[s.key]/MAX*100)}%;background:${s.color}"></div></div>
           </div>`).join("");
         return`<div class="pres" style="${!solo?`border-color:${p.color}`:""}">
-          <div class="pre-hdr"><span class="pre-name" style="color:${p.color}">${p.name}</span></div>
-          <div class="pre-sgrid">${sgrid}</div>
+          ${!solo?`<div class="pre-hdr"><span class="pre-name" style="color:${p.color}">${p.name}</span></div>`:""}
+          ${buildProfile(p)}
           ${buildStrengths(p)}
           ${buildMoment(p)}
-          <div class="story-box" style="margin-top:10px"><div class="story-label">Sinun suuntasi</div><div class="trend-row">${pills}</div><div class="story-text">${story}</div></div>
-          ${p.motives&&p.motives.length>0?`<div class="story-box" style="margin-top:8px;background:#EEEDFE;border-color:#AFA9EC;">
+          ${buildHabit(p)}
+          ${p.motives&&p.motives.length>0?`<div class="story-box" style="margin-bottom:.6rem;background:#EEEDFE;border-color:#AFA9EC;">
             <div class="story-label" style="color:#3C3489">🃏 Pokerikortti — miksi vaihdoit?</div>
             ${p.motives.map(m=>`<div style="font-size:13px;color:#26215C;margin-bottom:4px;line-height:1.5">
               <span style="font-weight:800">${m.card}:</span> ${m.motive}
             </div>`).join("")}
           </div>`:""}
-          ${p.reflectAnswer?`<div class="reflect-answer-box" style="margin-top:8px;">
+          ${p.reflectAnswer?`<div class="reflect-answer-box" style="margin:0 0 .6rem;">
             <span class="reflect-answer-label">💭 Vaikein valinta — sinun vastauksesi</span>
             <div class="reflect-answer-text">"${p.reflectAnswer}"</div>
           </div>`:""}
+          <details class="all-stats">
+            <summary>Näytä kaikki pisteet</summary>
+            <div class="all-stats-inner">
+              <div class="pre-sgrid">${sgrid}</div>
+              <div class="trend-row">${pills}</div>
+              <div class="story-text">${story}</div>
+            </div>
+          </details>
           ${buildChart(p)}
         </div>`;
       }).join("")}

@@ -345,6 +345,54 @@
           </div>
           <!-- /Syvennysosio -->
 
+          <!-- Palautus: Lataa PDF -->
+          <div id="arvoPalautus" style="
+            background: white;
+            border: 1.5px solid #fde68a;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-top: 16px;
+          ">
+            <h3 style="margin:0 0 8px 0; color:#78350f; font-size:1.05rem;">
+              <i class="fa-solid fa-file-pdf" aria-hidden="true" style="margin-right:6px; color:#d97706;"></i>Palauta vastauksesi opolle
+            </h3>
+            <ol style="margin:0 0 14px 0; padding-left:20px; color:#475569; font-size:0.88rem; line-height:1.7;">
+              <li>Kirjoita nimesi ja paina <strong>Lataa PDF</strong>.</li>
+              <li>PDF tallentuu koneellesi. Siinä ovat arvosi, dilemman pohdinta ja lisätehtävän vastaukset.</li>
+              <li>Palauta tiedosto <strong>Classroomin kautta opolle</strong>.</li>
+            </ol>
+            <label for="arvoNimi" style="display:block; font-size:0.85rem; font-weight:600; color:#78350f; margin-bottom:6px;">Nimesi</label>
+            <input id="arvoNimi" type="text" autocomplete="name" placeholder="Etunimi Sukunimi" style="
+              width: 100%;
+              max-width: 360px;
+              border: 1.5px solid #fde68a;
+              border-radius: 8px;
+              padding: 10px 12px;
+              font-size: 0.95rem;
+              font-family: inherit;
+              color: #1e293b;
+              background: #fefce8;
+              box-sizing: border-box;
+              margin-bottom: 12px;
+              display: block;
+            ">
+            <button type="button" id="arvoPdfBtn" onclick="arvoLataaPdf()" style="
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              background: #d97706;
+              color: white;
+              border: none;
+              border-radius: 10px;
+              padding: 12px 20px;
+              font-size: 0.95rem;
+              font-weight: 600;
+              cursor: pointer;
+              outline-offset: 3px;
+            "><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Lataa PDF</button>
+            <p id="arvoPdfTila" role="status" aria-live="polite" style="margin:10px 0 0 0; font-size:0.85rem; color:#166534; min-height:1px;"></p>
+          </div>
+
              </div>
             </div>
           </div>
@@ -477,6 +525,112 @@
           ilmoitus.style.padding  = '0';
         }, 3000);
       }
+    }
+
+    /* ── PDF-lataus (jsPDF ladataan vasta tarvittaessa) ── */
+    function arvoLataaJsPdf() {
+      if (window.jspdf) return Promise.resolve();
+      return new Promise(function (res, rej) {
+        var sc = document.createElement('script');
+        sc.src = '/vendor/jspdf/jspdf.umd.min.js';
+        sc.onload = res; sc.onerror = rej;
+        document.head.appendChild(sc);
+      });
+    }
+    // Helvetica tukee vain Latin-1-merkkejä: poistetaan emojit, korvataan muut tuntemattomat
+    function arvoPdfTeksti(t) {
+      return String(t == null ? '' : t)
+        .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '')
+        .replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018\u2019\u201C\u201D\u2026\u20AC]/g, '?')
+        .replace(/[ \t]+/g, ' ').trim();
+    }
+    function arvoLataaPdf() {
+      var btn  = document.getElementById('arvoPdfBtn');
+      var tila = document.getElementById('arvoPdfTila');
+      var nimi = (document.getElementById('arvoNimi').value || '').trim();
+      // Arvot siinä järjestyksessä kuin oppilas ne järjesti
+      var lista = document.getElementById('arvoJarjestysLista');
+      var arvot = lista && lista.children.length
+        ? Array.prototype.map.call(lista.children, function (li) { return li.getAttribute('data-arvo'); })
+        : valitutArvot.slice();
+      var pohdinta = (document.getElementById('arvoPohdintateksti').value || '').trim();
+      var refl = ['1', '2', '3'].map(function (n) {
+        var el = document.getElementById('arvoReflektio' + n);
+        var v = el && el.value ? el.value : '';
+        if (!v) { try { v = localStorage.getItem('arvoReflektio' + n) || ''; } catch (e) {} }
+        return v.trim();
+      });
+      var kysymykset = [
+        'Kuka tai mikä on vaikuttanut siihen, mitä pidät tärkeänä?',
+        'Onko jokin arvo, jota haluaisit noudattaa enemmän – mutta se tuntuu vaikealta?',
+        'Miten arvosi näkyvät arjessa?'
+      ];
+      var dilemma = 'Paras kaverisi pyytää sinua valehtelemaan opettajalle hänen puolestaan – ettei hän joutuisi kuriin. Hän ei ollut paikalla, kun jotain tapahtui. Jos et valehtele, kaveri voi saada vakavan merkinnän. Jos valehtelet ja se paljastuu, molemmat saatte seuraukset. Mitä teet?';
+
+      btn.disabled = true;
+      tila.textContent = 'Tehdään PDF:ää…';
+      arvoLataaJsPdf().then(function () {
+        var d = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+        var X = 20, W = 170, y = 48;
+        function need(h) { if (y + h > 278) { d.addPage(); y = 20; } }
+        function otsikko(s) {
+          need(18); y += 5;
+          d.setFont('helvetica', 'bold'); d.setFontSize(14); d.setTextColor(146, 64, 14);
+          d.text(arvoPdfTeksti(s), X, y); y += 8;
+        }
+        function teksti(s, opt) {
+          opt = opt || {};
+          d.setFont('helvetica', opt.lihava ? 'bold' : (opt.kursiivi ? 'italic' : 'normal'));
+          d.setFontSize(opt.pieni ? 10.5 : 11.5);
+          d.setTextColor(opt.harmaa ? 90 : 31, opt.harmaa ? 90 : 35, opt.harmaa ? 90 : 64);
+          String(s).split('\n').forEach(function (kpl) {
+            var rivit = d.splitTextToSize(arvoPdfTeksti(kpl) || ' ', W);
+            rivit.forEach(function (r) { need(6); d.text(r, X, y); y += 5.6; });
+          });
+        }
+
+        // Yläpalkki
+        d.setFillColor(217, 119, 6); d.rect(0, 0, 210, 34, 'F');
+        d.setTextColor(255, 255, 255); d.setFont('helvetica', 'bold'); d.setFontSize(22);
+        d.text('Arvopohjainen valinta', X, 16);
+        d.setFont('helvetica', 'normal'); d.setFontSize(11);
+        d.text(arvoPdfTeksti((nimi ? nimi + ' · ' : '') + '9. luokka · ' + new Date().toLocaleDateString('fi-FI')), X, 26);
+
+        otsikko('Viisi tärkeintä arvoani');
+        if (arvot.length) {
+          arvot.forEach(function (a, i) { teksti((i + 1) + '. ' + a, { lihava: i === 0 }); });
+        } else {
+          teksti('Arvoja ei valittu.', { kursiivi: true, harmaa: true });
+        }
+
+        otsikko('Dilemma');
+        teksti(dilemma, { kursiivi: true, pieni: true, harmaa: true });
+        y += 3;
+        teksti('Pohdintani:', { lihava: true });
+        teksti(pohdinta || '–');
+
+        if (refl.some(function (v) { return v; })) {
+          otsikko('Lisätehtävä: Mistä arvoni tulevat?');
+          kysymykset.forEach(function (k, i) {
+            teksti((i + 1) + '. ' + k, { lihava: true });
+            teksti(refl[i] || '–');
+            y += 3;
+          });
+        }
+
+        var n = d.getNumberOfPages();
+        for (var i = 1; i <= n; i++) {
+          d.setPage(i);
+          d.setFont('helvetica', 'normal'); d.setFontSize(9); d.setTextColor(91, 96, 130);
+          d.text('DigiOpo · Valinnat ratkaisee · Palauta tämä PDF Classroomiin opolle.', X, 287);
+          d.text(i + ' / ' + n, 190, 287, { align: 'right' });
+        }
+        var tiedosto = arvoPdfTeksti(nimi).replace(/[^\p{L}\p{N}]+/gu, '_').replace(/^_|_$/g, '');
+        d.save('arvopohjainen_valinta' + (tiedosto ? '_' + tiedosto : '') + '.pdf');
+        tila.textContent = '✓ PDF ladattu. Muista palauttaa se Classroomiin opolle.';
+      }).catch(function () {
+        tila.textContent = 'PDF:n tekeminen ei onnistunut. Yritä uudelleen.';
+      }).then(function () { btn.disabled = false; });
     }
 arvoBuildGrid();
 </script>
