@@ -38,7 +38,8 @@ html body #passages .passage .cover-link.cover-3d {
 }"""
 
 KANSI = dict(pieni="Terveys- ja hyvinvointiala · tarina", otsikko="Sote-ala",
-             alaotsikko="Hälytys 112 · Seuraa yhtä iltaa hätäpuhelusta sairaalaan.")
+             alaotsikko="Hälytys 112 · Seuraa yhtä iltaa hätäpuhelusta sairaalaan.",
+             nappi="Aloita tästä", ikoni="syke")
 
 ALKU = dict(tag="Tarina · noin 15 min",
             teksti="Olet TET-harjoittelijana iltavuorossa. Seuraat, miten apu kulkee hätäpuhelusta ambulanssiin ja sairaalaan. Miten sinä toimisit?",
@@ -91,6 +92,8 @@ KOHTAUKSET = [
             palaute="<p><strong>Aino kalpenee lisää.</strong></p><p>Onneksi Aleksi huomaa sen itse. Ensihoidossa pienikin muutos kerrotaan heti, koska tilanne voi muuttua nopeasti.</p><p>Aleksi mittaa verenpaineen. Se on matala. Hän nostaa Ainon jalat ylös ja antaa nestettä suoneen.</p>"),
       ]),
  dict(nimi="Päivystys", tausta="paivystys", otsikko="Päivystys", avain="sairaanhoitaja",
+      kuva=dict(src="../../images/koulutusalat/sote-paivystys.webp", leveys=447, korkeus=272,
+                alt="Hoitajat työntävät potilasta paarisängyllä kiireesti sairaalan päivystyksen käytävällä."),
       kysymys="Miltä sairaanhoitajan työ näytti?",
       johdanto="""<p>Sairaalan päivystyksessä Aino pääsee röntgeniin. Aulaan tulee samaan aikaan kolme uutta potilasta.</p>
 <p class="puhe"><strong>Petra, sairaanhoitaja:</strong> ”Minun pitää päättää, kuka pääsee hoitoon ensin. Kenet sinä ottaisit ensimmäisenä?”</p>""",
@@ -103,6 +106,8 @@ KOHTAUKSET = [
             palaute="<p><strong>Lapsen kuume huolettaa, mutta leikkivä ja juova lapsi voi odottaa hetken.</strong></p><p>Petra ottaa ensin 60-vuotiaan miehen, jolla on puristavaa kipua rinnassa. Rintakipu voi olla sydänkohtaus, ja silloin jokainen minuutti on tärkeä.</p>"),
       ]),
  dict(nimi="Synnytysosasto", tausta="synnytys", otsikko="Synnytysosasto", avain="katilo",
+      kuva=dict(src="../../images/koulutusalat/sote-osasto.webp", leveys=720, korkeus=457,
+                alt="Valoisa sairaalaosaston käytävä, jossa on avoimet lasiovet ja potilashuoneiden ovia."),
       kysymys="Miltä kätilön työ näytti?",
       johdanto="""<p>Ainon ranne on kipsattu. Sinut lähetetään viemään papereita synnytysosastolle. Siellä on juuri syntynyt vauva.</p>
 <p>Vauvan isä katsoo vauvaa huolestuneena ja kysyy sinulta: ”Miksi vauvan kädet ja jalat ovat sinertävät? Onko jotain vialla?”</p>""",
@@ -115,6 +120,8 @@ KOHTAUKSET = [
             palaute="<p><strong>Netistä löytyy kymmeniä pelottavia vastauksia.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
       ]),
  dict(nimi="Rauhallinen huone", tausta="nuoret", otsikko="Päivystyksen rauhallinen huone", avain="mielenterveys",
+      kuva=dict(src="../../images/koulutusalat/sote-osasto.webp", leveys=720, korkeus=457,
+                alt="Valoisa sairaalaosaston käytävä, jossa on avoimet lasiovet ja potilashuoneiden ovia."),
       kysymys="Miltä mielenterveystyön lähihoitajan työ näytti?",
       johdanto="""<p>Ilta on jo pitkällä. Päivystykseen tulee 15-vuotias Sara äitinsä kanssa. Saran sydän hakkaa, kädet tärisevät ja hengitys kulkee nopeasti.</p>
 <p>Lääkäri on tutkinut Saran: kyse on paniikkikohtauksesta. Se on pelottava, mutta ei vaarallinen.</p>

@@ -29,6 +29,12 @@ def attr(a, nimi):
     m = re.search(nimi + r'="([^"]*)"', a)
     return m.group(1) if m else ""
 
+# Kannen napin kuvakkeet (SVG-polut, 24x24)
+IKONIT = {
+    "virta": '<path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
+    "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+}
+
 # --------------------------------------------------------------------------
 def valinta(v, avain, seuraava, kysymys, siirtyma_teksti):
     sets = f"<<set $aika += {v['aika']}>>"
@@ -40,12 +46,19 @@ def valinta(v, avain, seuraava, kysymys, siirtyma_teksti):
             f'<div class="palaute">{v["palaute"]}<p class="aika-kului">{kului}</p></div>'
             f'<<kiinnostus "{avain}" "{seuraava}" "{kysymys}">><</replace>><</link>>')
 
+def kuva_html(k):
+    """Valinnainen kohtauskuva: k["kuva"] = dict(src, alt, leveys, korkeus). Polku sivun kansiosta."""
+    kv = k.get("kuva")
+    if not kv: return ""
+    return (f'<figure class="kohtaus-kuva"><img src="{kv["src"]}" alt="{kv["alt"]}" '
+            f'width="{kv["leveys"]}" height="{kv["korkeus"]}" loading="lazy" decoding="async"></figure>\n')
+
 def kohtaus_passage(k, nro, yht, seuraava, A):
     vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], A.get("siirtymaTeksti", "")) for v in k["valinnat"])
     return f"""<<include "HUD">>
 <p class="kohtaus-nro">Kohtaus {nro}/{yht}</p>
 <h2>{k['otsikko']}</h2>
-{k['johdanto']}
+{kuva_html(k)}{k['johdanto']}
 <p class="valitse-ohje">Mitä teet?</p>
 <div id="valinnat" class="answer-group valinnat">
 {vv}
@@ -105,7 +118,7 @@ $('body').addClass('hide-navbar');
     <p class="cover-pieni">{K['pieni']}</p>
     <h1 class="cover-title">{K['otsikko']}</h1>
     <p class="cover-subtitle">{K['alaotsikko']}</p>
-    <button type="button" class="cover-kaynnista" onclick="kaynnistaTarina(this)"><svg class="cover-virta" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span>Käynnistä</span></button>
+    <button type="button" class="cover-kaynnista" onclick="kaynnistaTarina(this)"><svg class="cover-virta" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{IKONIT[K.get('ikoni', 'virta')]}</svg><span>{K.get('nappi', 'Käynnistä')}</span></button>
   </div>
 </div>""", tags="scene-kansi")
 
