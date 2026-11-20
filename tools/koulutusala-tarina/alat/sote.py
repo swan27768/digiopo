@@ -92,8 +92,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Aino kalpenee lisää.</strong></p><p>Onneksi Aleksi huomaa sen itse. Ensihoidossa pienikin muutos kerrotaan heti, koska tilanne voi muuttua nopeasti.</p><p>Aleksi mittaa verenpaineen. Se on matala. Hän nostaa Ainon jalat ylös ja antaa nestettä suoneen.</p>"),
       ]),
  dict(nimi="Päivystys", tausta="paivystys", otsikko="Päivystys", avain="sairaanhoitaja",
-      kuva=dict(src="../../images/koulutusalat/sote-paivystys.webp", leveys=447, korkeus=272,
-                alt="Hoitajat työntävät potilasta paarisängyllä kiireesti sairaalan päivystyksen käytävällä."),
+      taustakuva="../../images/koulutusalat/sote-paivystys-tausta.webp",
       kysymys="Miltä sairaanhoitajan työ näytti?",
       johdanto="""<p>Sairaalan päivystyksessä Aino pääsee röntgeniin. Aulaan tulee samaan aikaan kolme uutta potilasta.</p>
 <p class="puhe"><strong>Petra, sairaanhoitaja:</strong> ”Minun pitää päättää, kuka pääsee hoitoon ensin. Kenet sinä ottaisit ensimmäisenä?”</p>""",
@@ -106,8 +105,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Lapsen kuume huolettaa, mutta leikkivä ja juova lapsi voi odottaa hetken.</strong></p><p>Petra ottaa ensin 60-vuotiaan miehen, jolla on puristavaa kipua rinnassa. Rintakipu voi olla sydänkohtaus, ja silloin jokainen minuutti on tärkeä.</p>"),
       ]),
  dict(nimi="Synnytysosasto", tausta="synnytys", otsikko="Synnytysosasto", avain="katilo",
-      kuva=dict(src="../../images/koulutusalat/sote-osasto.webp", leveys=720, korkeus=457,
-                alt="Valoisa sairaalaosaston käytävä, jossa on avoimet lasiovet ja potilashuoneiden ovia."),
+      taustakuva="../../images/koulutusalat/sote-osasto-tausta.webp",
       kysymys="Miltä kätilön työ näytti?",
       johdanto="""<p>Ainon ranne on kipsattu. Sinut lähetetään viemään papereita synnytysosastolle. Siellä on juuri syntynyt vauva.</p>
 <p>Vauvan isä katsoo vauvaa huolestuneena ja kysyy sinulta: ”Miksi vauvan kädet ja jalat ovat sinertävät? Onko jotain vialla?”</p>""",
@@ -120,8 +118,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Netistä löytyy kymmeniä pelottavia vastauksia.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
       ]),
  dict(nimi="Rauhallinen huone", tausta="nuoret", otsikko="Päivystyksen rauhallinen huone", avain="mielenterveys",
-      kuva=dict(src="../../images/koulutusalat/sote-osasto.webp", leveys=720, korkeus=457,
-                alt="Valoisa sairaalaosaston käytävä, jossa on avoimet lasiovet ja potilashuoneiden ovia."),
+      taustakuva="../../images/koulutusalat/sote-osasto-tausta.webp",
       kysymys="Miltä mielenterveystyön lähihoitajan työ näytti?",
       johdanto="""<p>Ilta on jo pitkällä. Päivystykseen tulee 15-vuotias Sara äitinsä kanssa. Saran sydän hakkaa, kädet tärisevät ja hengitys kulkee nopeasti.</p>
 <p>Lääkäri on tutkinut Saran: kyse on paniikkikohtauksesta. Se on pelottava, mutta ei vaarallinen.</p>
@@ -176,16 +173,16 @@ AMMATIT = {
 LAHI = "Sosiaali- ja terveysalan perustutkinto (lähihoitaja)"
 AMK = "Ammattikorkeakoulu (AMK)"
 
-KUTSU_JOHDANTO = "Tarinassa tapasit kuusi sote-alan ammattilaista. Alalla on kuitenkin paljon muitakin ammatteja: kotona, terveyskeskuksessa, laboratoriossa ja sairaalan kulissien takana."
+KUTSU_JOHDANTO = "Tarinassa tapasit kuusi sote-alan ammattilaista. Alalla on kuitenkin paljon muitakin ammatteja: koulussa, terveyskeskuksessa, laboratoriossa ja sairaalan kulissien takana."
 
 KUTSU_KORTIT = [
- {"tilanne": "Isoäiti tarvitsee joka aamu apua pukeutumisessa ja lääkkeiden ottamisessa. Hän haluaa asua kotona.",
-  "oikea": "Lähihoitaja", "tutkinto": LAHI,
+ {"tilanne": "Kahdeksannella luokalla on vuorossa koulun terveystarkastus. Siinä tarkistetaan kasvu ja voit kysyä omasta terveydestäsi.",
+  "oikea": "Kouluterveydenhoitaja", "tutkinto": "Terveydenhoitaja (AMK), ammattikorkeakoulu",
   "vaihtoehdot": {
-   "Lähihoitaja": "Kotihoidon lähihoitaja käy asiakkaan luona, auttaa arjessa ja huolehtii lääkkeistä. Näin moni ikäihminen voi asua kotona pidempään.",
-   "Fysioterapeutti": "Fysioterapeutti auttaa liikkumisessa ja kuntoutuksessa. Päivittäinen apu kotona kuuluu kotihoidon lähihoitajalle.",
-   "Lääkäri": "Lääkäri määrää lääkkeet, mutta ei käy auttamassa joka aamu. Sen tekee lähihoitaja.",
-   "Sosionomi": "Sosionomi auttaa esimerkiksi palvelujen ja tukien hakemisessa. Arjen hoitotyön tekee lähihoitaja."}},
+   "Kouluterveydenhoitaja": "Kouluterveydenhoitaja tekee koulun terveystarkastukset ja rokotukset. Hänen kanssaan voi jutella myös jaksamisesta ja omasta terveydestä.",
+   "Lähihoitaja": "Lähihoitaja auttaa hoitotyössä esimerkiksi sairaalassa tai kotihoidossa. Koulun terveystarkastukset tekee terveydenhoitaja.",
+   "Kuraattori": "Kuraattori auttaa kaverisuhteiden ja koulunkäynnin pulmissa. Terveystarkastukset kuuluvat terveydenhoitajalle.",
+   "Fysioterapeutti": "Fysioterapeutti auttaa liikkumisessa ja kuntoutuksessa. Terveystarkastukset tekee terveydenhoitaja."}},
  {"tilanne": "Treeneissä nilkka nyrjähti. Lääkärin mukaan mikään ei murtunut, mutta nilkka pitää kuntouttaa.",
   "oikea": "Fysioterapeutti", "tutkinto": "Fysioterapeutti (AMK), ammattikorkeakoulu",
   "vaihtoehdot": {
@@ -228,13 +225,13 @@ KUTSU_KORTIT = [
    "Hätäkeskuspäivystäjä": "Hätäkeskuspäivystäjä vastaa numeroon 112, kysyy tärkeät asiat ja lähettää avun paikalle.",
    "Lääkäri": "Lääkäri hoitaa potilasta sairaalassa. Hätäpuheluun vastaa hätäkeskuspäivystäjä.",
    "Sairaanhoitaja": "Sairaanhoitaja työskentelee esimerkiksi sairaalassa. Hätäpuheluun vastaa hätäkeskuspäivystäjä."}},
- {"tilanne": "Perhe on juuri muuttanut uuteen kaupunkiin. He tarvitsevat apua asunnon, tukien ja palvelujen löytämisessä.",
-  "oikea": "Sosionomi", "tutkinto": "Sosionomi (AMK), ammattikorkeakoulu",
+ {"tilanne": "Kaverisuhteet ovat menneet solmuun, ja kouluun lähteminen tuntuu raskaalta. Kenen koulun ammattilaisen kanssa voit jutella asiasta?",
+  "oikea": "Kuraattori", "tutkinto": "Sosionomi (AMK) tai muu soveltuva korkeakoulututkinto",
   "vaihtoehdot": {
-   "Lähihoitaja": "Lähihoitaja hoitaa ja auttaa arjessa, mutta palveluohjaus ja tukien hakeminen kuuluvat sosionomille.",
-   "Sairaanhoitaja": "Sairaanhoitaja hoitaa terveyttä. Asumisen ja tukien asiat hoitaa sosionomi.",
-   "Fysioterapeutti": "Fysioterapeutti auttaa liikkumisessa. Asunto- ja tukiasiat kuuluvat sosionomille.",
-   "Sosionomi": "Sosionomi ohjaa ja tukee ihmisiä arjen asioissa, esimerkiksi tukien ja palvelujen hakemisessa."}},
+   "Kuraattori": "Kuraattori on koulun sosiaalialan ammattilainen. Hän auttaa, kun kaverisuhteet, koulunkäynti tai kotiasiat painavat mieltä.",
+   "Kouluterveydenhoitaja": "Melkein! Myös terveydenhoitajalle voi kertoa, jos mieltä painaa. Kaverisuhteiden ja koulunkäynnin pulmissa koulun oma asiantuntija on kuraattori.",
+   "Fysioterapeutti": "Fysioterapeutti auttaa liikkumisessa ja kuntoutuksessa. Kaverisuhteiden pulmissa auttaa kuraattori.",
+   "Lähihoitaja": "Lähihoitaja työskentelee esimerkiksi sairaalassa tai kotihoidossa. Koulussa kaverisuhteiden pulmissa auttaa kuraattori."}},
 ]
 
 LOPPU_TEKSTI = "Seurasit yhtä iltaa hätäpuhelusta sairaalaan ja ratkaisit kahdeksan tilannetta. Samalla tutustuit yli kymmeneen sote-alan ammattiin."

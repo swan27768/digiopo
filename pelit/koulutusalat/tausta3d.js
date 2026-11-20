@@ -683,9 +683,10 @@ const MAAILMAT = {
       const palikat = g.children.filter((o) => o !== valo);
       new THREE.TextureLoader().load(new URL("../../images/koulutusalat/ambulanssi.webp", import.meta.url).href, (tx) => {
         tx.colorSpace = THREE.SRGBColorSpace;
-        const kuva = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, alphaTest: 0.4 }));
-        kuva.scale.set(6.2, 3.9, 1);
-        kuva.position.set(0.2, 1.95, 0);
+        const kuva = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, alphaTest: 0.5 }));
+        kuva.center.set(0.5, 0.02);          // pyörien alareuna tien pintaan
+        kuva.scale.set(5.8, 5.8 * 693 / 1024, 1);
+        kuva.position.set(0, 0.02, 0);
         g.add(kuva);
         palikat.forEach((o) => { o.visible = false; });
         if (piirraUudelleen) piirraUudelleen();
@@ -878,11 +879,11 @@ const MAAILMAT = {
     }
 
     const kohtaukset = {
-      kansi:      { kamera: [-11, 4.5, 16],  kohde: [4, 3.5, -6],     tila: { vilkut: true, ajaa: false } },
-      ilta:       { kamera: [-2, 7, 20],     kohde: [4, 3, -6],       tila: { vilkut: true } },
+      kansi:      { kamera: [-7, 3.6, 7.5],  kohde: [11, 2.8, -3],    tila: { vilkut: true, ajaa: false } },
+      ilta:       { kamera: [-7, 4.5, 8],    kohde: [12, 2.4, -2],    tila: { vilkut: true } },
       hatakeskus: { kamera: [-36.5, 2.8, 2.5], kohde: [-40, 3, -9],    tila: {} },
       koti:       { kamera: [-20.5, 3.2, 39.5], kohde: [-25, 1.2, 32], tila: { vilkut: true } },
-      ambulanssi: { kamera: [16.5, 3.4, 9.5], kohde: [9.5, 1.5, 3],   tila: { vilkut: true, ajaa: true } },
+      ambulanssi: { kamera: [2.5, 2.2, 5.2], kohde: [11, 1.6, 2.6],   tila: { vilkut: true, ajaa: true } },
       paivystys:  { kamera: [40.6, 2.1, -26.6], kohde: [39.6, 1.3, -44],   tila: {} },
       synnytys:   { kamera: [59.5, 2.6, -26.5], kohde: [55.5, 1.1, -33], tila: {} },
       nuoret:     { kamera: [73, 2.4, -27.5], kohde: [70, 1.2, -33],  tila: {} },

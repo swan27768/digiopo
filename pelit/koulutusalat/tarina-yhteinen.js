@@ -33,6 +33,8 @@
     var ALKU = (D.kello && D.kello.alku) || 0;
     var RAJA = (D.kello && typeof D.kello.raja === "number") ? D.kello.raja : null;
     var KUTSU_KEY = D.ala + "_kutsu_v1";
+    /* Tallennus on sidottu korttisarjaan: jos kortit vaihtuvat, vanhat vastaukset hylätään */
+    var KORTTI_SIG = KORTIT.map(function (k) { return k.oikea; }).join("|");
     var $ = window.jQuery;
 
     /* --- 3D-tausta: kohtaus passagen tagista (scene-*) --- */
@@ -74,6 +76,28 @@
         var b = document.getElementById("nayta-tehdas");
         if (b) { b.setAttribute("aria-pressed", "false"); b.textContent = KATSO; }
       }
+    });
+
+    /* --- Kohtauksen taustakuva (koko ruutu, 3D-taustan päällä) --- */
+    function taustaElementti() {
+      var el = document.getElementById("kohtaus-taustakuva");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "kohtaus-taustakuva"; el.setAttribute("aria-hidden", "true");
+        var canvas = document.getElementById("tausta3d");
+        if (canvas && canvas.parentNode) canvas.parentNode.insertBefore(el, canvas.nextSibling);
+        else document.body.insertBefore(el, document.body.firstChild);
+      }
+      return el;
+    }
+    setup.taustakuva = function (src) {
+      var el = taustaElementti();
+      el.style.backgroundImage = 'url("' + src + '")';
+      el.classList.add("nakyy");
+    };
+    $(document).on(":passagestart", function () {
+      var el = document.getElementById("kohtaus-taustakuva");
+      if (el) el.classList.remove("nakyy");
     });
 
     /* --- Kannen Käynnistä-painike --- */
@@ -212,7 +236,7 @@
       if (!v.kutsu || !Array.isArray(v.kutsu.vastaukset)) {
         var tallessa = null;
         try { tallessa = JSON.parse(localStorage.getItem(KUTSU_KEY) || "null"); } catch (e) {}
-        v.kutsu = (tallessa && Array.isArray(tallessa.vastaukset)) ? tallessa : { vastaukset: [] };
+        v.kutsu = (tallessa && Array.isArray(tallessa.vastaukset) && tallessa.sig === KORTTI_SIG) ? tallessa : { vastaukset: [], sig: KORTTI_SIG };
       }
       return v.kutsu;
     }
@@ -348,7 +372,7 @@
     window.tyhjennaKaikki = function (nappi) {
       try { localStorage.removeItem(KUTSU_KEY); } catch (e) {}
       var v = V();
-      v.kutsu = { vastaukset: [] };
+      v.kutsu = { vastaukset: [], sig: KORTTI_SIG };
       v.korttiNimi = ""; v.korttiTop = []; v.aika = 0;
       v.piirre = {}; Object.keys(PIIRTEET).forEach(function (a) { v.piirre[a] = 0; });
       v.kiinn = {}; Object.keys(AMMATIT).forEach(function (a) { v.kiinn[a] = 0; });

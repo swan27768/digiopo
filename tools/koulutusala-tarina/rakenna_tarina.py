@@ -55,7 +55,8 @@ def kuva_html(k):
 
 def kohtaus_passage(k, nro, yht, seuraava, A):
     vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], A.get("siirtymaTeksti", "")) for v in k["valinnat"])
-    return f"""<<include "HUD">>
+    tk = f'<<run setup.taustakuva("{k["taustakuva"]}")>>' if k.get("taustakuva") else ""
+    return f"""{tk}<<include "HUD">>
 <p class="kohtaus-nro">Kohtaus {nro}/{yht}</p>
 <h2>{k['otsikko']}</h2>
 {kuva_html(k)}{k['johdanto']}
