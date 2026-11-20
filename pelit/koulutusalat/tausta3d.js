@@ -852,7 +852,7 @@ const MAAILMAT = {
     function asetaTila(t) {
       tila.vilkut = !!t.vilkut; tila.ajaa = !!t.ajaa; tila.loppu = !!t.loppu;
       if (tila.ajaa) amb.g.position.set(10, 0, 3);
-      else if (tila.loppu) amb.g.position.set(1, 0, -3.8);
+      else if (tila.loppu) amb.g.position.set(8.5, 0, -1.2);   // katoksen viereen, ei sen alle
       else amb.g.position.set(10, 0, 3);
       amb.g.rotation.y = tila.loppu ? Math.PI / 2 : 0;
     }
