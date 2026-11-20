@@ -238,7 +238,14 @@ $('body').addClass('hide-navbar');
             if k not in nimet: puuttuu.add((unesc(attr(a, "name")), k))
     assert not puuttuu, puuttuu
 
-    # --- head
+    # --- head: tarina alkaa aina kannesta (SugarCuben istuntotila tyhjennetään ennen käynnistystä)
+    tarina = unesc(re.search(r'<tw-storydata[^>]*name="([^"]*)"', s).group(1))
+    slug = re.sub(r'[^\w]+', '-', tarina.lower()).strip('-')
+    nollaus = ('<script id="sc-aloita-alusta">try{sessionStorage.removeItem("' + slug + '.state");}catch(e){}</script>\n')
+    if 'id="sc-aloita-alusta"' not in s:
+        s = s.replace('<script id="sc-clear-saves">', nollaus + '<script id="sc-clear-saves">', 1)
+        assert 'id="sc-aloita-alusta"' in s
+
     s = re.sub(r'<html[^>]*>', f'<html data-init="no-js" data-tausta-maailma="{A["maailma"]}" data-tausta="kansi">', s, count=1)
     s = re.sub(r'<title>.*?</title>', f'<title>{A["alaNimi"]} – {A["tarinaNimi"]}</title>', s, count=1)
     linkki = '<link rel="stylesheet" href="koulutusalat-yhteinen.css">'
