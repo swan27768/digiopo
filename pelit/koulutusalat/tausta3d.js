@@ -879,11 +879,11 @@ const MAAILMAT = {
     }
 
     const kohtaukset = {
-      kansi:      { kamera: [-7, 3.6, 7.5],  kohde: [11, 2.8, -3],    tila: { vilkut: true, ajaa: false } },
-      ilta:       { kamera: [-7, 4.5, 8],    kohde: [12, 2.4, -2],    tila: { vilkut: true } },
+      kansi:      { kamera: [-6, 4, 14],     kohde: [4, 3.2, -8],    tila: { vilkut: true, ajaa: false } },
+      ilta:       { kamera: [-4, 5, 15],     kohde: [10, 2, 1],    tila: { vilkut: true } },
       hatakeskus: { kamera: [-36.5, 2.8, 2.5], kohde: [-40, 3, -9],    tila: {} },
       koti:       { kamera: [-20.5, 3.2, 39.5], kohde: [-25, 1.2, 32], tila: { vilkut: true } },
-      ambulanssi: { kamera: [2.5, 2.2, 5.2], kohde: [11, 1.6, 2.6],   tila: { vilkut: true, ajaa: true } },
+      ambulanssi: { kamera: [4, 2.2, 8],     kohde: [12, 1.4, 2.5],   tila: { vilkut: true, ajaa: true } },
       paivystys:  { kamera: [40.6, 2.1, -26.6], kohde: [39.6, 1.3, -44],   tila: {} },
       synnytys:   { kamera: [59.5, 2.6, -26.5], kohde: [55.5, 1.1, -33], tila: {} },
       nuoret:     { kamera: [73, 2.4, -27.5], kohde: [70, 1.2, -33],  tila: {} },
