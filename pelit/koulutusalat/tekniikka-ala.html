@@ -36,6 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
 <script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
@@ -59,1622 +61,194 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Tekniikan alat" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="5183f3c9-5758-4f41-af5b-64833748d02a" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================================
-   TEKNIIKAN ALAN PÄÄTEEMA
-   ============================================================ */
-
+	<tw-storydata name="Tekniikan alat" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="5183f3c9-5758-4f41-af5b-64833748d02a" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
 :root {
-  --theme-main: #6fffe9;
-  --theme-secondary: #4ea8de;
-  --theme-accent: #72efdd;
-
-  --bg-body: #0b132b;
-  --bg-soft: #1c2541;
-  --bg-panel: #111a33;
-
-  --text-main: #ffffff;
-  --text-soft: #c7d2fe;
-  --text-muted: #9ca3af;
-
-  --btn-bg: linear-gradient(135deg, #4ea8de, #6fffe9);
-  --btn-text: #051b1f;
-
-  --link-text: #6fffe9;
-
-  --card-bg: #111a33;
-  --card-border: #2dd4bf;
-
-  --nav-bg: #0b132b;
-  --nav-border: #6fffe9;
-
-  --danger-bg: linear-gradient(#ff6b6b, #c92a2a);
-
-  --accent-1: #6fffe9;
-  --accent-2: #4ea8de;
-  --accent-3: #72efdd;
-
-  --highlight-color: #ffe066;
-}
-
-/* ============================================================ */
-/* RUNGON VÄRIT */
-body {
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-/* ============================================================ */
-/* PASSAGE */
-#passages .passage {
-  color: var(--text-main);
-}
-
-/* ============================================================ */
-/* LINKIT */
-#passages .passage a:not(.btn):not(.macro-link):not(.external-link) {
-  color: var(--link-text) !important;
-}
-
-/* ============================================================ */
-/* NAPIT */
-.intro-nappi a,
-.answer-group a,
-.navbar-fixed button {
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-  border: 2px solid #6fffe9;
-  border-radius: 999px;
-  box-shadow: 0 4px 0 rgba(111,255,233,.35);
-}
-
-.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: #ff6b6b !important;
-}
-
-/* ============================================================ */
-/* NAVBAR */
-.navbar-fixed {
-  background: linear-gradient(90deg,#0b132b,#111a33);
-  border-bottom: 1px solid var(--nav-border);
-}
-
-/* ============================================================ */
-/* KORTIT */
-.school-card,
-.media-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 10px 35px rgba(111,255,233,.25);
-}
-
-/* ============================================================ */
-/* KANSI */
-.cover-link {
-  background:
-    linear-gradient(rgba(11,19,43,.85), rgba(11,19,43,.85)),
-    url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=80");
-}
-
-.cover-title {
-  color: #6fffe9 !important;
-}
-
-/* ============================================================ */
-/* LOMAKKEET */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input {
-  border: 2px solid #6fffe9 !important;
-}
-
-/* ============================================================ */
-/* INFO-KORTIT */
-#passages .info-text {
-  background: #111a33;
-  border: 1px solid #6fffe9;
-}
-#passages .info-text p {
-  color: #e6fbff;
-}
-
-/* ============================================================ */
-/* PÄÄNAPPI */
-.btn-primary {
-  background: linear-gradient(#4ea8de, #6fffe9) !important;
-}
-
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   1. POISTA SUGARCUBEN OLETUS-UI
-   ============================================================ */
-
-#sidebar,
-#ui-bar,
-#ui-bar-toggle,
-#toolbar {
-  display: none !important;
-}
-
-/* ============================================================
-   2. PERUSRUNK0
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  padding-top: 3rem; /* tilaa navbarille */
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-/* ============================================================
-   3. PASSAGE-ALUE
-   ============================================================ */
-
-#story {
-  margin-left: 0 !important;
-}
-
-#passages {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-#passages .passage {
-  margin: 2rem auto;
-  padding: 2.2rem 3rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* Tiiviimpi otsikon ja tekstin väli Tekniikan alaan */
-
-#passages .passage h1 {
-  margin-bottom: 0.9rem !important;
-}
-
-#passages .passage p {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.85rem !important;
-  line-height: 1.6;
-}
-
-/* ============================================================
-   4. TYPOGRAFIA
-   ============================================================ */
-
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  hyphens: auto;
-}
-
-#passages .passage ul,
-#passages .passage ol {
-  padding-left: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-#passages .passage li {
-  margin-bottom: 0.35rem;
-}
-
-/* Otsikot */
-
-#passages .passage h1,
-#passages .passage h2,
-#passages .passage h3 {
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 0.6rem auto 1.2rem;
-}
-
-/* H1 */
-#passages .passage h1 {
-  font-size: 2.2rem;
-  color: var(--accent-1);
-  border: 2px solid var(--accent-1);
-  border-radius: 12px;
-  padding: 0.5rem 1.6rem;
-}
-
-/* H2 */
-#passages .passage h2 {
-  font-size: 1.6rem;
-  color: var(--accent-2);
-}
-
-/* H3 */
-#passages .passage h3 {
-  font-size: 1.25rem;
-  color: var(--accent-3);
-}
-
-/* Linkit */
-/* Linkit vain leipätekstissä – EI napeille */
-#passages .passage a:not(.btn):not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* ============================================================
-   NAPIT – VARMA SUGARCUBE (EI RIIPPUVUUTTA .btn-LUOKASTA)
-   Toimii sekä [[wikilink]] että <<link>> ja <<button>>
-   ============================================================ */
-
-/* 1) Wrapperit: napit keskelle ja pinoon */
-.intro-nappi,
-.answer-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ============================================================
-   YHTEINEN NAPPI – MAISTUVA AMMATTI
-   ============================================================ */
-
-.intro-nappi a.link-internal,
-.intro-nappi a.macro-link,
-.answer-group a.link-internal,
-.answer-group a.macro-link,
-.navbar-fixed button,
-.navbar-fixed a {
-  appearance: none;
-  display: inline-block;
-  width: min(520px, 100%);
-  box-sizing: border-box;
-
-  padding: 0.75rem 1.6rem;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-
-  border: 2px solid rgba(0,0,0,0.15);
-  border-radius: 999px;
-
-  text-decoration: none !important;
-  cursor: pointer;
-
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-.intro-nappi a:hover,
-.answer-group a:hover,
-.navbar-fixed button:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
-.intro-nappi a:active,
-.answer-group a:active,
-.navbar-fixed button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-}
-
-.answer-group {
-  display: flex;
-  flex-direction: row;      /* NAPIT VIEREKKÄIN */
-  justify-content: center;
-  align-items: stretch;
-  gap: 0.75rem;
-  flex-wrap: wrap;          /* sallii rivittymisen pienellä näytöllä */
-}
-.answer-group a {
-  width: auto;
-  min-width: 140px;
-}
-
-/* ============================================================
-   6. NAVBAR
-   ============================================================ */
-
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-
-  padding: 0.35rem 0.75rem;
-  min-height: 42px;
-
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.55);
-}
-
-/* Piilotus kansisivulla */
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   7. KORTIT (KOULUT, VIDEOT)
-   ============================================================ */
-
-.media-card,
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-}
-/* ============================================================
-   8. KANSISIVU – TEKNIIKAN ALAN JULISTE
-   ============================================================ */
-
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-
-  background: linear-gradient(135deg, #0b132b, #1c2541, #0b132b) !important;
-  text-decoration: none !important;
-  cursor: pointer;
-  z-index: 10000;
-}
-
-/* Julistekontti */
-#passages .passage .cover-inner {
-  text-align: center;
-  max-width: 920px;
-  padding: 3.2rem 3.6rem;
-  border-radius: 30px;
-  background: rgba(17, 26, 51, 0.95);
-  border: 2px solid #6fffe9;
-  box-shadow: 0 0 140px rgba(111,255,233,0.45);
-}
-
-/* Pääotsikko */
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.22em !important;
-  line-height: 1.1 !important;
-
-  font-size: clamp(2.8rem, 6vw, 4.2rem) !important;
-  color: #6fffe9 !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-
-  text-transform: uppercase;
-}
-
-/* Valinnainen alaotsikko */
-#passages .passage .cover-subtitle {
-  margin-top: 1.3rem;
-  font-size: 1.05rem;
-  letter-spacing: 0.32em;
-  color: #c7d2fe;
-  opacity: .9;
-}
-
-a.macro-link.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: #4A1414 !important;
-  color: #ffffff !important;
-}
-p.highlight {
-  color: var(--highlight-color) !important;
-  font-weight: 700;
-}
-a.macro-link.btn--danger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.lomake-ryhma textarea {
-  width: 100%;
-  min-height: 8rem;
-  padding: 1rem 1.1rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  border-radius: 16px;
-  border: 2px solid var(--card-border);
-  box-sizing: border-box;
-}
-/* Ammattitutkimus – suuret ja korkeat tekstikentät (varma yliajo) */
-#passages .lomake-ryhma textarea {
-  width: 100% !important;
-  min-height: 10rem !important;
-  height: 10rem !important;
-  padding: 1rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-
-  border-radius: 16px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-  resize: vertical;
-}
-
-/* Jos jokin kenttä on vielä textbox (input), tee siitäkin selvästi korkeampi */
-#passages .lomake-ryhma input[type="text"] {
-  width: 100% !important;
-  min-height: 3.2rem !important;
-  padding: 0.9rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-
-  border-radius: 14px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-}
-
-tarea,
-#passages .lomake-ryhma input[type="text"] {
-  color: #000000 !important;
-}
-#passages .passage .cover-link {
-  text-decoration: none !important;
-}
-.answer-group a {
-  background: #7EDC9A !important;     /* sammalenvihreä */
-  color: #103820 !important;
-  border-color: #4F8A62 !important;
-}
-
-/* ============================================================
-   8. KANSISIVU – JULISTE (KORJATTU)
-   ============================================================ */
-/* KANSI: koko näkymä keskitetty */
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;                /* top/right/bottom/left = 0 */
-  display: flex !important;
-
-  justify-content: center !important; /* vaaka */
-  align-items: center !important;     /* pysty */
-
-  background:
-    linear-gradient(rgba(240,245,240,0.88), rgba(240,245,240,0.88)),
-    url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover !important;
-  background-position: center center !important;
-
-  text-decoration: none !important;
-  cursor: pointer;
-  z-index: 10000;                     /* varmasti muiden yläpuolella */
-}
-
-/* ==============================
-   NAPPIKORJAUS – GOOGLE SITES SAFE
-   ============================== */
-
-.intro-nappi,
-.answer-group {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex-wrap: wrap !important;
-}
-
-.intro-nappi a,
-.answer-group a {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-
-  width: auto !important;
-  min-width: 140px !important;
-  max-width: none !important;
-
-  white-space: nowrap !important;
-}
-/* ESITELMÄPOHJA – kirjoitusteksti mustaksi */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input,
-#passages .lomake-ryhma select {
-  color: #000000 !important;
-}
-
-/* ============================
-   INFO-TEXT – OPETUSKORTTI
-   ============================ */
-
-#passages .info-text {
-  background: #ffffff;
-  border: 1px solid #BFD3C4;
-  border-radius: 14px;
-  padding: 0.9rem 1.1rem;
-  margin: 1.2rem auto;
-  max-width: 720px;
-  text-align: center;
-}
-
-#passages .info-text p {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: #1E2A1E;
-}
-/* TOIMINTORIVI ESITELMÄPOHJAAN */
-.action-row {
-  justify-content: center !important;
-  gap: 1rem !important;
-}
-
-.action-row a {
-  min-width: 200px !important;
-}
-
-/* INTRO-NAPIN TEKSTI PAKOTETUSTI MUSTAKSI – YLIAJAA KAIKEN */
-#passages .intro-nappi a,
-#passages .intro-nappi a *,
-#passages .intro-nappi a:link,
-#passages .intro-nappi a:visited,
-#passages .intro-nappi a:hover,
-#passages .intro-nappi a:active {
-  color: #000000 !important;
-  text-shadow: none !important;
-  filter: none !important;
-}
-
-.quiz-popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
-}
-
-.quiz-popup .box {
-  background: #111a33;
-  border: 2px solid #6fffe9;
-  border-radius: 22px;
-  padding: 1.6rem 2rem;
-  max-width: 520px;
-  text-align: center;
-  box-shadow: 0 0 80px rgba(111,255,233,.4);
-}
-.quiz-popup h3 { color:#6fffe9; margin-top:0; }
-.quiz-popup p { color:#e6fbff; }
-/* ============================
-   SAAVUTETTAVUUS – LUETTAVUUS
-   ============================ */
-
-/* Perusteksti */
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 18px !important;
-  line-height: 1.75 !important;
-}
-
-/* Otsikot */
-#passages .passage h1 {
-  font-size: 2.6rem !important;
-}
-
-#passages .passage h2 {
-  font-size: 1.9rem !important;
-}
-
-#passages .passage h3 {
-  font-size: 1.4rem !important;
-}
-
-/* Nappitekstit */
-#passages .passage a,
-#passages .passage button {
-  font-size: 1.05rem !important;
-}
-
-/* Lomakekentät */
-#passages textarea,
-#passages input,
-#passages select {
-  font-size: 1.05rem !important;
-}
-
-/* ============================================================
-   MOBIILIVERSIO – parannettu responsiivisuus
-   ============================================================ */
-
-/* Perusasettelu mobiilissa */
-@media screen and (max-width: 768px) {
-
-  /* Poista SugarCuben sivupalkki kokonaan mobiilissa */
-  #ui-bar {
-    display: none !important;
+  --a1: #6fffe9; --a1-rgb: 111,255,233;
+  --a2: #4ea8de; --a2-rgb: 78,168,222;
+  --a3: #72efdd;
+  --korostus: #ffe066; --korostus-rgb: 255,224,102;
+  --tausta: #0b132b; --tausta-rgb: 11,19,43;
+  --tausta-2: #1c2541; --tausta-2-rgb: 28,37,65;
+  --paneeli: #111a33; --paneeli-rgb: 17,26,51;
+  --paneeli-2: #13224a;
+  --tumma: #06101f; --tumma-rgb: 6,16,31;
+  --reuna: #2dd4bf;
+  --teksti-pehmea: #c7d2fe; --teksti-pehmea-rgb: 199,210,254;
+  --teksti-vaalea: #e6fbff;
+  --nappi-teksti: #051b1f;
+}
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Linja seis! – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "tekniikka",
+ "alaNimi": "Tekniikan ala",
+ "tarinaNimi": "Linja seis!",
+ "kello": {
+  "alku": 720,
+  "raja": 180
+ },
+ "katsoTeksti": "Katso tehdasta",
+ "aikaRivi": "Rekka lähti kello",
+ "kutsuTilanneOtsikko": "Vikatilanne",
+ "piirteet": {
+  "vianetsija": {
+   "nimi": "Ongelmanratkaisija",
+   "kuvaus": "Etsit syyn ennen kuin korjaat."
+  },
+  "tarkka": {
+   "nimi": "Tarkka ja turvallinen",
+   "kuvaus": "Mittaat, tarkistat ja huolehdit, ettei kukaan satu."
+  },
+  "tekija": {
+   "nimi": "Käsillä tekijä",
+   "kuvaus": "Tartut työkaluihin ja haluat nähdä, miten asiat toimivat."
+  },
+  "tiimi": {
+   "nimi": "Tiimipelaaja",
+   "kuvaus": "Kysyt, sovit asioista ja saat muut mukaan."
   }
-
-  /* Koko sivu leveäksi ilman sivupalkkia */
-  #story {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 0 !important;
+ },
+ "ammatit": {
+  "automaatio": {
+   "nimi": "Automaatioasentaja",
+   "kuvaus": "Asentaa ja korjaa robotteja ja koneita, jotka toimivat itsestään.",
+   "tutkinto": "Sähkö- ja automaatioalan perustutkinto",
+   "piirteet": [
+    "vianetsija"
+   ]
+  },
+  "sahko": {
+   "nimi": "Sähköasentaja",
+   "kuvaus": "Asentaa ja korjaa sähköjä taloissa ja tehtaissa.",
+   "tutkinto": "Sähkö- ja automaatioalan perustutkinto",
+   "piirteet": [
+    "tarkka"
+   ]
+  },
+  "cnc": {
+   "nimi": "CNC-koneistaja",
+   "kuvaus": "Tekee koneella metallista tarkkoja osia.",
+   "tutkinto": "Kone- ja tuotantotekniikan perustutkinto",
+   "piirteet": [
+    "tarkka",
+    "tekija"
+   ]
+  },
+  "kylma": {
+   "nimi": "Kylmäasentaja",
+   "kuvaus": "Pitää jäähdytyksen, kylmälaitteet ja ilmastoinnin kunnossa.",
+   "tutkinto": "Talotekniikan perustutkinto",
+   "piirteet": [
+    "tekija",
+    "vianetsija"
+   ]
+  },
+  "raskas": {
+   "nimi": "Hyötyajoneuvomekaanikko",
+   "kuvaus": "Korjaa kuorma-autoja, busseja ja työkoneita.",
+   "tutkinto": "Ajoneuvoalan perustutkinto",
+   "piirteet": [
+    "tekija",
+    "tiimi"
+   ]
   }
-
-  /* Passages-alue täyttää koko leveyden */
-  #passages {
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0.5rem !important;
+ },
+ "kutsuKortit": [
+  {
+   "tilanne": "On kova pakkanen. Mummolan ilmalämpöpumppu puhaltaa vain kylmää, ja sen ulkoyksikkö on paksussa jäässä.",
+   "oikea": "Kylmäasentaja",
+   "tutkinto": "Talotekniikan perustutkinto",
+   "vaihtoehdot": {
+    "Sähköasentaja": "Sähköasentaja tekee laitteelle sähköliitännän, mutta itse lämpöpumpun vian korjaa kylmäasentaja.",
+    "Kylmäasentaja": "Lämpöpumppu toimii samalla tavalla kuin jääkaappi. Kylmäasentaja asentaa ja huoltaa lämpöpumppuja ja kylmälaitteita.",
+    "Putkiasentaja": "Putkiasentaja hoitaa vesijohtoja, viemäreitä ja lämmitysputkia. Lämpöpumpun vika kuuluu kylmäasentajalle.",
+    "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja huoltaa talon ilmakanavia ja ilmanvaihtokoneita, ei lämpöpumppuja."
+   }
+  },
+  {
+   "tilanne": "Keittiön tiskipöydän alta tippuu vettä. Kaapin pohja on jo märkä.",
+   "oikea": "Putkiasentaja",
+   "tutkinto": "Talotekniikan perustutkinto",
+   "vaihtoehdot": {
+    "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja hoitaa ilmakanavia ja ilmanvaihtokoneita, ei vesiputkia.",
+    "Putkiasentaja": "Putkiasentaja asentaa ja korjaa vesijohtoja ja viemäreitä. Vuoto kannattaa korjata heti, ettei rakenteisiin tule kosteusvaurio.",
+    "Kylmäasentaja": "Kylmäasentaja huoltaa kylmälaitteita ja lämpöpumppuja. Vesivuoto kuuluu putkiasentajalle.",
+    "Sähköasentaja": "Sähköasentaja hoitaa sähköt. Vesi ja sähkö ovat vaarallinen yhdistelmä, mutta vuodon korjaa putkiasentaja."
+   }
+  },
+  {
+   "tilanne": "Kerrostalon asunnoissa on tunkkainen ilma. Kylpyhuoneen peili pysyy huurussa pitkään suihkun jälkeen.",
+   "oikea": "Ilmanvaihtoasentaja",
+   "tutkinto": "Talotekniikan perustutkinto",
+   "vaihtoehdot": {
+    "Putkiasentaja": "Putkiasentaja hoitaa vesi- ja viemäriputkia. Tunkkainen ilma on ilmanvaihdon ongelma.",
+    "Kylmäasentaja": "Kylmäasentaja huoltaa jäähdytystä ja lämpöpumppuja. Talon ilmanvaihtokanavat kuuluvat ilmanvaihtoasentajalle.",
+    "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja asentaa ja huoltaa ilmakanavia ja ilmanvaihtokoneita. Usein syy on likainen suodatin tai tukkeutunut kanava.",
+    "Automaatioasentaja": "Automaatioasentaja työskentelee yleensä tehtaissa koneiden ja robottien parissa. Tunkkaisen ilman korjaa ilmanvaihtoasentaja."
+   }
+  },
+  {
+   "tilanne": "Perhe rakentaa uuden autotallin. Sinne tarvitaan valot, pistorasiat ja sähköauton latauspiste.",
+   "oikea": "Sähköasentaja",
+   "tutkinto": "Sähkö- ja automaatioalan perustutkinto",
+   "vaihtoehdot": {
+    "Automaatioasentaja": "Automaatioasentaja työskentelee yleensä tehtaissa koneiden ja robottien parissa. Talon sähköt asentaa sähköasentaja.",
+    "Automekaanikko": "Automekaanikko korjaa autoja, mutta latauspisteen asentaminen on sähkötyötä.",
+    "Sähköasentaja": "Sähköasentaja asentaa taloihin valot, pistorasiat ja latauspisteet. Sähkötöitä saa tehdä vain koulutettu ammattilainen.",
+    "Putkiasentaja": "Putkiasentaja hoitaa vesijohtoja ja viemäreitä. Sähköt kuuluvat sähköasentajalle."
+   }
+  },
+  {
+   "tilanne": "Auton kojelautaan syttyy moottorin vikavalo, ja auto nykii kiihdyttäessä.",
+   "oikea": "Automekaanikko",
+   "tutkinto": "Ajoneuvoalan perustutkinto",
+   "vaihtoehdot": {
+    "Autokorimekaanikko": "Autokorimekaanikko korjaa kolarivaurioita, kuten lommoja. Moottorin vika kuuluu automekaanikolle.",
+    "Automekaanikko": "Automekaanikko lukee auton vikakoodit tietokoneella ja korjaa moottorin, jarrut ja muut tekniset osat.",
+    "Automaalari": "Automaalari maalaa autoja korjauksen jälkeen. Hän ei korjaa moottoria.",
+    "Hyötyajoneuvomekaanikko": "Hyötyajoneuvomekaanikko korjaa kuorma-autoja ja busseja. Henkilöauton korjaa automekaanikko."
+   }
+  },
+  {
+   "tilanne": "Parkkipaikalla sattui pikkukolari. Auton ovessa on iso lommo ja puskuri on haljennut.",
+   "oikea": "Autokorimekaanikko",
+   "tutkinto": "Ajoneuvoalan perustutkinto",
+   "vaihtoehdot": {
+    "Automekaanikko": "Automekaanikko korjaa moottoria ja muita teknisiä osia. Kolarivauriot korjaa autokorimekaanikko.",
+    "Automaalari": "Melkein! Automaalaria tarvitaan myös, mutta vasta kun lommo on korjattu. Ensin töihin pääsee autokorimekaanikko.",
+    "Autokorimekaanikko": "Autokorimekaanikko oikaisee lommot ja vaihtaa rikkoutuneet osat. Lopuksi automaalari maalaa korjatun kohdan.",
+    "Levyseppähitsaaja": "Levyseppähitsaaja tekee metallirakenteita, mutta autojen korjaaminen on oma ammattinsa."
+   }
+  },
+  {
+   "tilanne": "Tehtaaseen tarvitaan teräksinen suojakaide uuden koneen ympärille, ettei kukaan kävele liian lähelle.",
+   "oikea": "Levyseppähitsaaja",
+   "tutkinto": "Kone- ja tuotantotekniikan perustutkinto",
+   "vaihtoehdot": {
+    "CNC-koneistaja": "CNC-koneistaja tekee koneella pieniä ja tarkkoja metalliosia. Isot hitsatut rakenteet tekee levyseppähitsaaja.",
+    "Automaatioasentaja": "Automaatioasentaja voi asentaa koneeseen turva-anturit, mutta itse kaiteen tekee levyseppähitsaaja.",
+    "Levyseppähitsaaja": "Levyseppähitsaaja leikkaa, taivuttaa ja hitsaa metallista rakenteita, kuten kaiteita ja telineitä.",
+    "Sähköasentaja": "Sähköasentaja hoitaa sähköt. Teräksisen kaiteen valmistaa levyseppähitsaaja."
+   }
+  },
+  {
+   "tilanne": "Koulubussin jarrut vinkuvat. Bussi pitää tarkastaa ennen huomista luokkaretkeä.",
+   "oikea": "Hyötyajoneuvomekaanikko",
+   "tutkinto": "Ajoneuvoalan perustutkinto",
+   "vaihtoehdot": {
+    "Automekaanikko": "Automekaanikko korjaa henkilöautoja. Bussit ja kuorma-autot korjaa hyötyajoneuvomekaanikko.",
+    "Hyötyajoneuvomekaanikko": "Hyötyajoneuvomekaanikko huoltaa ja korjaa busseja, kuorma-autoja ja työkoneita. Jarrut tarkastetaan huolella, koska kyydissä on paljon ihmisiä.",
+    "Levyseppähitsaaja": "Levyseppähitsaaja tekee metallirakenteita. Jarrut kuuluvat mekaanikolle.",
+    "Sähköasentaja": "Sähköasentaja tekee talojen sähkötöitä. Ajoneuvon jarrut kuuluvat mekaanikolle."
+   }
   }
-
-  /* Passage-sisältö leveäksi, väljää täytettä */
-  .passage {
-    padding: 1rem 1rem 2rem 1rem !important;
-    max-width: 100% !important;
-  }
-
-  /* Otsikot pienemmiksi mobiilissa */
-  #passages .passage h1 {
-    font-size: 1.8rem !important;
-    line-height: 1.2 !important;
-  }
-
-  #passages .passage h2 {
-    font-size: 1.35rem !important;
-    line-height: 1.3 !important;
-  }
-
-  #passages .passage h3 {
-    font-size: 1.15rem !important;
-  }
-
-  /* Perusteksti luettavaksi */
-  #passages .passage p,
-  #passages .passage li,
-  #passages .passage div,
-  #passages .passage span {
-    font-size: 1rem !important;
-    line-height: 1.65 !important;
-  }
-
-  /* Napit: yksi per rivi, täysi leveys */
-  .intro-nappi,
-  .answer-group {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.6rem !important;
-    padding: 0 !important;
-  }
-
-  .intro-nappi a,
-  .answer-group a {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    font-size: 1rem !important;
-    padding: 0.85rem 1rem !important;
-    text-align: center !important;
-  }
-
-  /* Toimintorivi (Lataa / Tyhjennä / Valmis) */
-  .action-row {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.6rem !important;
-  }
-
-  .action-row a {
-    width: 100% !important;
-    min-width: unset !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Lomakekentät täyteen leveyteen */
-  #passages textarea,
-  #passages input[type="text"],
-  #passages select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    font-size: 1rem !important;
-    min-height: 90px !important;
-  }
-
-  /* Info-tekstikortti mobiilissa */
-  #passages .info-text {
-    margin: 1rem 0 !important;
-    padding: 0.75rem 0.9rem !important;
-    border-radius: 10px !important;
-  }
-
-  /* Kortit (oppilaitokset, mediat) */
-  .school-card,
-  .media-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Kansi-sivu – kuva skaalautuu */
-  .cover-link img,
-  .cover-link {
-    width: 100% !important;
-    height: auto !important;
-    min-height: unset !important;
-  }
-
-  /* Quiz-popup leveäksi */
-  .quiz-popup .box {
-    max-width: 95vw !important;
-    padding: 1.2rem 1rem !important;
-  }
-
-  /* Tulokset-sivu */
-  .tulos-box {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 1rem !important;
-  }
-}
-
-/* Pienimmät näytöt (alle 420px) */
-@media screen and (max-width: 420px) {
-  #passages .passage h1 {
-    font-size: 1.5rem !important;
-  }
-
-  #passages .passage h2 {
-    font-size: 1.2rem !important;
-  }
-
-  .intro-nappi a,
-  .answer-group a {
-    font-size: 0.95rem !important;
-    padding: 0.75rem 0.8rem !important;
-  }
-
-  /* Viewport meta varmistus – scrollaus oikein */
-  .passage {
-    padding: 0.75rem 0.75rem 2rem 0.75rem !important;
-  }
-}
-
-/* ============================================================
-   LINJA SEIS! – 3D-TAUSTA, TARINA JA AMMATTIKORTTI
-   ============================================================ */
-html, body { background: var(--bg-body); }
-#passages .passage {
-  background: rgba(11, 19, 43, 0.82) !important;
-  border: 1px solid rgba(111, 255, 233, 0.28) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55) !important;
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-}
-@media (max-width: 640px) {
-  #passages { margin: 0.5rem auto; padding: 0 0.5rem; }
-  #passages .passage { padding: 1.3rem 1.1rem !important; margin: 0.8rem auto; }
-  #passages .passage h1 { font-size: 1.6rem; letter-spacing: 0.04em; }
-  #passages .passage h2 { font-size: 1.3rem; }
-}
-/* Kansi: 3D-tehdas näkyy taustalla */
-#passages .passage .cover-link { background: linear-gradient(135deg, rgba(11,19,43,.55), rgba(28,37,65,.35), rgba(11,19,43,.55)) !important; }
-#passages .passage:has(.cover-link), body.hide-navbar #passages .passage { background: transparent !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-
-/* Ylätunniste: kello */
-.hud { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.2rem; margin: -0.6rem auto 1.2rem;
-  padding: 0.5rem 1rem; border-radius: 999px; background: rgba(6, 16, 31, 0.9); border: 1px solid rgba(111,255,233,.35);
-  font-size: 0.9rem !important; font-weight: 700; letter-spacing: 0.03em; width: fit-content; max-width: 100%; }
-.hud span { font-size: 0.9rem !important; margin: 0 !important; }
-.hud-kello { color: #6fffe9; }
-.hud-rekka { color: #c7d2fe; }
-.hud-jaljella { color: #ffe066; }
-
-.kohtaus-nro { text-align: center; color: #9ca3af; font-size: 0.85rem !important; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 !important; }
-.puhe { background: rgba(78, 168, 222, 0.14); border-left: 4px solid #4ea8de; border-radius: 0 14px 14px 0; padding: 0.8rem 1rem; }
-.valitse-ohje { text-align: center; font-weight: 700; color: #ffe066; margin-top: 1.2rem !important; }
-
-/* Valinnat allekkain, pitkä teksti mahtuu */
-.answer-group.valinnat { flex-direction: column; align-items: center; }
-.answer-group.valinnat > a.macro-link { width: min(600px, 100%); text-align: left; border-radius: 16px; line-height: 1.4; padding: 0.85rem 1.2rem; white-space: normal; }
-.palaute { background: rgba(17, 26, 51, 0.95); border: 1px solid #6fffe9; border-radius: 16px; padding: 1rem 1.2rem; width: min(640px, 100%); box-sizing: border-box; animation: palauteSisaan .35s ease-out; }
-.palaute p { margin-bottom: 0.6rem !important; }
-.aika-kului { color: #ffe066; font-size: 0.9rem !important; font-weight: 700; margin: 0 !important; }
-.kiinnostus { width: min(640px, 100%); margin-top: 1rem; text-align: center; }
-.kiinnostus-kysymys { font-weight: 700; color: #6fffe9; }
-.kiinnostus-napit a.macro-link { min-width: 130px; }
-@keyframes palauteSisaan { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .palaute { animation: none; } }
-
-/* Aloitussivun tarinakortti */
-.tarina-esittely { margin: 1.4rem auto; padding: 1.2rem 1.4rem; border-radius: 18px; border: 2px solid #ffe066;
-  background: linear-gradient(135deg, rgba(255,224,102,.12), rgba(111,255,233,.08)); }
-.tarina-otsikko { font-size: 1.6rem !important; font-weight: 800; letter-spacing: 0.06em; color: #ffe066; margin: 0 0 0.4rem !important; text-transform: uppercase; }
-.tarina-meta { color: #c7d2fe; font-size: 0.9rem !important; margin: 0 !important; }
-.ammattilista li { margin-bottom: 0.4rem; }
-.pieni { font-size: 0.9rem !important; color: #c7d2fe; }
-.vinkki { background: rgba(255, 224, 102, 0.12); border: 1px solid rgba(255,224,102,.5); border-radius: 12px; padding: 0.7rem 1rem; }
-#passages .lomake-ryhma textarea { color: #111827 !important; }
-#passages .lomake-ryhma textarea.lyhyt { min-height: 5.5rem !important; height: 5.5rem !important; }
-
-/* Ammattikortti */
-.kortti-nimi-rivi { display: flex; flex-direction: column; gap: 0.35rem; width: min(420px, 100%); margin: 0 auto 1rem; }
-.kortti-nimi-rivi label { font-weight: 700; font-size: 0.95rem; }
-#kortti-nimi { padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid #6fffe9; font-size: 1rem; background: #fff; color: #111827; }
-.ammattikortti { margin: 0 auto 1.2rem; width: min(560px, 100%); box-sizing: border-box; border-radius: 22px; padding: 1.4rem 1.5rem;
-  background: linear-gradient(160deg, #13224a 0%, #0b132b 60%); border: 2px solid #6fffe9; box-shadow: 0 0 50px rgba(111,255,233,.25); }
-.ammattikortti .ak-yla { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(111,255,233,.3); padding-bottom: 0.6rem; margin-bottom: 0.9rem; }
-.ammattikortti .ak-otsikko { font-weight: 800; letter-spacing: 0.16em; color: #6fffe9; font-size: 0.85rem !important; margin: 0 !important; }
-.ammattikortti .ak-nimi { font-weight: 800; font-size: 1.2rem !important; color: #fff; margin: 0 !important; }
-.ammattikortti .ak-osio { color: #ffe066; font-weight: 700; font-size: 0.8rem !important; letter-spacing: 0.14em; text-transform: uppercase; margin: 0.6rem 0 0.4rem !important; }
-.ammattikortti .ak-piirteet { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
-.ammattikortti .ak-piirre { background: rgba(111,255,233,.14); border: 1px solid rgba(111,255,233,.55); border-radius: 12px; padding: 0.45rem 0.75rem; flex: 1 1 200px; }
-.ammattikortti .ak-piirre strong { color: #6fffe9; display: block; }
-.ammattikortti .ak-piirre span { font-size: 0.88rem !important; color: #e6fbff; margin: 0 !important; }
-.ammattikortti ol { margin: 0; padding-left: 1.3rem; }
-.ammattikortti li { margin-bottom: 0.55rem; }
-.ammattikortti li strong { color: #fff; }
-.ammattikortti .ak-tutkinto { display: block; font-size: 0.82rem !important; color: #9ca3af; margin: 0 !important; }
-.ammattikortti .ak-viesti { color: #e6fbff; }
-
-
-/* Kansi: koko ruutu 3D-tehdasta, otsikko alareunassa */
-html body #passages .passage .cover-link.cover-3d {
-  background: linear-gradient(to top, rgba(11,19,43,.92) 0%, rgba(11,19,43,.55) 28%, rgba(11,19,43,0) 55%) !important;
-  align-items: flex-end !important; justify-content: center !important; }
-html body #passages .passage .cover-3d .cover-inner {
-  background: none !important; border: none !important; box-shadow: none !important;
-  padding: 0 1.5rem clamp(2rem, 8vh, 5rem) !important; max-width: 1000px; }
-html body #passages .passage .cover-3d .cover-pieni { color: #ffe066 !important; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; font-size: clamp(0.75rem, 1.6vw, 0.95rem) !important; margin: 0 0 0.6rem !important; }
-html body #passages .passage .cover-3d .cover-title { font-size: clamp(2.2rem, 7vw, 5rem) !important; text-shadow: 0 0 30px rgba(111,255,233,.55), 0 4px 18px rgba(0,0,0,.8); }
-html body #passages .passage .cover-3d .cover-subtitle { letter-spacing: 0.04em !important; font-size: clamp(0.95rem, 2vw, 1.2rem) !important; color: #e6fbff !important; text-shadow: 0 2px 10px rgba(0,0,0,.9); margin: 0.9rem 0 1.4rem !important; }
-html body #passages .passage .cover-link.cover-3d { cursor: default; }
-html body #passages .passage .cover-3d h1.cover-title { border: none !important; }
-html body #passages .passage .cover-3d .cover-kaynnista {
-  display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.95rem 2.6rem 0.95rem 2rem; border-radius: 999px; cursor: pointer;
-  font: 800 1.15rem "Segoe UI", Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #052e16;
-  background: radial-gradient(circle at 30% 25%, #b2f2bb, #51cf66 55%, #2b8a3e);
-  border: 3px solid #d3f9d8; box-shadow: 0 6px 0 #1b5e2b, 0 0 36px rgba(81,207,102,.65);
-  transition: transform .12s ease, box-shadow .12s ease, filter .15s ease; animation: kaynnistaSyke 2.2s ease-in-out infinite; }
-html body #passages .passage .cover-3d .cover-kaynnista:hover { filter: brightness(1.08); transform: translateY(-2px); }
-html body #passages .passage .cover-3d .cover-kaynnista:active,
-html body #passages .passage .cover-3d .cover-kaynnista.painettu { transform: translateY(5px); box-shadow: 0 1px 0 #1b5e2b, 0 0 50px rgba(81,207,102,.9); animation: none; }
-html body #passages .passage .cover-3d .cover-kaynnista:focus-visible { outline: 3px solid #ffe066; outline-offset: 5px; }
-html body #passages .passage .cover-3d .cover-kaynnista span { margin: 0 !important; line-height: 1 !important; font-size: inherit !important; }
-.cover-virta { width: 1.5rem; height: 1.5rem; flex: none; }
-@keyframes kaynnistaSyke { 0%, 100% { box-shadow: 0 6px 0 #1b5e2b, 0 0 26px rgba(81,207,102,.45); } 50% { box-shadow: 0 6px 0 #1b5e2b, 0 0 48px rgba(81,207,102,.85); } }
-@media (prefers-reduced-motion: reduce) { html body #passages .passage .cover-3d .cover-kaynnista { animation: none; transition: none; } }
-
-/* Aloitussivu: mahtuu yhteen näkymään */
-[data-tags~="alku-sivu"] body, body[data-tags~="alku-sivu"] { padding-top: 0 !important; }
-body[data-tags~="alku-sivu"] #passages { min-height: 100vh; margin: 0 auto; display: flex; align-items: center; justify-content: center; padding-bottom: 0; box-sizing: border-box; }
-body[data-tags~="alku-sivu"] #passages .passage { width: min(600px, 100%); margin: 0 auto !important; padding: 1.6rem 1.8rem !important; }
-.alku-kortti { text-align: center; margin: 0 !important; }
-body[data-tags~="alku-sivu"] #story { margin: 0 !important; }
-body[data-tags~="alku-sivu"] #passages .passage > br { display: none; }
-@media (max-width: 640px) {
-  #passages .passage ul.alku-faktat { flex-wrap: nowrap !important; gap: 0.4rem !important; }
-  #passages .passage ul.alku-faktat li { min-width: 0 !important; padding: 0.45rem 0.2rem !important; }
-  .alku-faktat strong { font-size: 1.15rem !important; }
-  #passages .passage .alku-faktat span { font-size: 0.72rem !important; }
-  body[data-tags~="alku-sivu"] #passages .passage { padding: 1.2rem 1rem !important; }
-  #passages .passage .alku-teksti { font-size: 0.95rem !important; }
-}
-#passages .passage .alku-tag { margin: 0 0 0.3rem !important; color: #ffe066; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.75rem !important; line-height: 1.4 !important; }
-#passages .passage h2.alku-otsikko { margin: 0 0 0.6rem !important; font-size: clamp(1.9rem, 5vw, 2.6rem) !important; color: #6fffe9 !important; letter-spacing: 0.06em; text-shadow: 0 0 24px rgba(111,255,233,.45); }
-#passages .passage .alku-teksti { margin: 0 auto 1rem !important; max-width: 30em; font-size: 1.02rem !important; line-height: 1.55 !important; }
-#passages .passage ul.alku-faktat { list-style: none; display: flex; justify-content: center; gap: 0.6rem; padding: 0 !important; margin: 0 0 1.2rem !important; flex-wrap: wrap; }
-#passages .passage ul.alku-faktat li { margin: 0 !important; flex: 1 1 0; min-width: 7.5rem; padding: 0.55rem 0.4rem; border-radius: 14px; background: rgba(111,255,233,.08); border: 1px solid rgba(111,255,233,.35); line-height: 1.2 !important; }
-.alku-faktat strong { display: block; font-size: 1.35rem; color: #6fffe9; }
-#passages .passage .alku-faktat span { font-size: 0.82rem !important; color: #c7d2fe; margin: 0 !important; line-height: 1.2 !important; }
-.alku-kortti .intro-nappi { margin: 0 !important; }
-.alku-kortti .intro-nappi a.macro-link { width: min(320px, 100%); font-size: 1.05rem; padding: 0.85rem 1.6rem; }
-#passages .passage .alku-ohitus { margin: 0.7rem 0 0 !important; line-height: 1.3 !important; }
-#passages .passage .alku-ohitus a.macro-link { color: #c7d2fe !important; font-size: 0.88rem; text-decoration: underline; background: none; border: none; box-shadow: none; padding: 0.3rem; }
-
-/* Kenet kutsut paikalle? */
-.kutsu-ohje { text-align: center; }
-#passages .passage ol.kutsu-askeleet { text-align: left; width: fit-content; margin: 0 auto 1rem !important; }
-.kutsu-kortti { border: 2px solid #ffe066; border-radius: 18px; padding: 1rem 1.2rem; background: linear-gradient(135deg, rgba(255,224,102,.12), rgba(17,26,51,.9)); margin-bottom: 1rem; }
-#passages .passage .kutsu-tilanne { margin: 0 0 0.3rem !important; color: #ffe066; font-weight: 800; letter-spacing: 0.18em; font-size: 0.78rem !important; text-transform: uppercase; }
-#passages .passage .kutsu-teksti { margin: 0 !important; font-size: 1.12rem !important; line-height: 1.5 !important; }
-.kutsu-kysymys { text-align: center; font-weight: 800; color: #6fffe9; margin: 0.4rem 0 0.6rem !important; }
-.kutsu-vaihtoehdot { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin-bottom: 1rem; }
-.kutsu-vaihtoehto { font: 700 0.98rem "Segoe UI", Arial, sans-serif; padding: 0.8rem 0.9rem; border-radius: 14px; cursor: pointer; text-align: center;
-  background: rgba(111,255,233,.08); color: #e6fbff; border: 2px solid rgba(111,255,233,.45); transition: background .12s, border-color .12s, transform .08s; }
-.kutsu-vaihtoehto:hover:not(:disabled) { background: rgba(111,255,233,.18); }
-.kutsu-vaihtoehto[aria-checked="true"] { border-color: #ffe066; background: rgba(255,224,102,.2); color: #fff; }
-.kutsu-vaihtoehto:focus-visible, .kutsu-tarkista:focus-visible, .kutsu-seuraava:focus-visible { outline: 3px solid #ffe066; outline-offset: 3px; }
-.kutsu-vaihtoehto:disabled { cursor: default; opacity: .55; }
-.kutsu-vaihtoehto.oikea { opacity: 1; border-color: #51cf66; background: rgba(81,207,102,.22); }
-.kutsu-vaihtoehto.vaara { opacity: 1; border-color: #ff6b6b; background: rgba(255,107,107,.18); }
-.kutsu-miksi-label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
-#kutsu-miksi { width: 100%; box-sizing: border-box; min-height: 4.6rem; padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid #6fffe9; font: 1rem/1.5 "Segoe UI", Arial, sans-serif; color: #111827; background: #fff; resize: vertical; }
-#kutsu-miksi:disabled { background: #e5e7eb; }
-html body #passages .passage #kutsu-miksi { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
-.kutsu-vihje { font-size: 0.85rem !important; color: #c7d2fe; margin: 0.3rem 0 0.8rem !important; min-height: 1.2em; }
-.kutsu-napit { display: flex; justify-content: center; }
-.kutsu-tarkista, .kutsu-seuraava { font: 800 1rem "Segoe UI", Arial, sans-serif; letter-spacing: 0.03em; padding: 0.8rem 2rem; border-radius: 999px; border: 2px solid rgba(0,0,0,.15); cursor: pointer;
-  background: linear-gradient(135deg, #4ea8de, #6fffe9); color: #051b1f; box-shadow: 0 4px 0 rgba(0,0,0,.25); min-width: 220px; }
-.kutsu-tarkista:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
-.kutsu-palaute { margin-top: 1rem; }
-.kutsu-palaute .palaute { width: 100%; }
-.kutsu-palaute .kutsu-tulos-otsikko { font-size: 1.1rem !important; }
-.kutsu-palaute .ok { color: #8ce99a; } .kutsu-palaute .ei { color: #ffa8a8; }
-.kutsu-tutkinto { color: #9ca3af; font-size: 0.88rem !important; }
-.kutsu-edistyminen { display: flex; justify-content: center; gap: 0.35rem; margin: 0 0 0.9rem; }
-.kutsu-edistyminen span { width: 1.6rem; height: 0.45rem; border-radius: 999px; background: rgba(199,210,254,.25); margin: 0 !important; }
-.kutsu-edistyminen span.tehty { background: #6fffe9; } .kutsu-edistyminen span.nyt { background: #ffe066; }
-.kutsu-pisteet { text-align: center; font-size: 1.15rem !important; }
-.kutsu-pisteet strong { color: #6fffe9; font-size: 1.6rem; }
-.kutsu-lista { list-style: none; padding: 0 !important; margin: 0 0 1rem !important; }
-.kutsu-lista li { border: 1px solid rgba(111,255,233,.3); border-radius: 12px; padding: 0.6rem 0.9rem; margin-bottom: 0.5rem !important; background: rgba(17,26,51,.7); }
-.kutsu-lista .ok { color: #8ce99a; font-weight: 800; } .kutsu-lista .ei { color: #ffa8a8; font-weight: 800; }
-.kutsu-lista .kl-perustelu { display: block; color: #c7d2fe; font-size: 0.9rem !important; margin: 0.2rem 0 0 !important; font-style: italic; }
-@media (max-width: 520px) { .kutsu-vaihtoehdot { grid-template-columns: 1fr; } }
-/* Katso tehdasta -nappi */
-#nayta-tehdas { position: fixed; right: 16px; bottom: 16px; z-index: 20; padding: 0.6rem 1rem; border-radius: 999px;
-  border: 2px solid #6fffe9; background: rgba(6,16,31,.92); color: #6fffe9; font: 700 0.9rem "Segoe UI", Arial, sans-serif; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.5); }
-#nayta-tehdas:hover { background: #11203f; }
-#nayta-tehdas:focus-visible { outline: 3px solid #ffe066; outline-offset: 3px; }
-body.hide-navbar #nayta-tehdas, html:not(.tausta3d-ok) #nayta-tehdas { display: none; }
-#story { transition: opacity .35s ease; }
-html.katso-3d #story { opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { #story { transition: none; } }
-#passages { padding-bottom: 4.5rem; }
-html body #passages .passage .lomake-ryhma textarea { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
-html body #passages .passage .info-text { background: #111a33 !important; border: 1px solid #6fffe9 !important; border-radius: 14px; padding: 0.8rem 1rem !important; }
-html body #passages .passage .info-text p { color: #e6fbff !important; }
-html[data-tausta="tehdas"] #nayta-tehdas { display: none; }
-@media (max-width: 640px) { #nayta-tehdas { right: 10px; bottom: 10px; padding: 0.45rem 0.8rem; font-size: 0.8rem; } }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= NAVBAR ========= */
-$(document).on(":passagestart", function (event) {
-
-  if (!event || !event.passage) return;
-  const tags = event.passage.tags || [];
-
-  if (tags.includes("cover")) document.body.classList.add("hide-navbar");
-  else document.body.classList.remove("hide-navbar");
-
-  /* navbar-fixed poistettu käytöstä */
+ ]
 });
-
-(function () {
-  "use strict";
-
-  const AUTOSAVE_KEY = "luonto_ammatti_autosave_v1";
-
-  /* ========= LATAA TXT ========= */
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const text =
-`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
-
-1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN:
-${v.tyotehtavat || ""}
-
-2. MISSÄ TÖITÄ TEHDÄÄN:
-${v.tyopaikat || ""}
-
-3. MILLAISTA TYÖAIKA ON:
-${v.tyoajat || ""}
-
-4. MISSÄ TÄTÄ AMMATTIA VOI OPISKELLA:
-${v.opiskelupaikat || ""}
-
-5. MIKSI TÄMÄ AMMATTI KIINNOSTAA MINUA:
-${v.omaPerustelu || ""}
-
-------------------------------
-Luonto-, ympäristö- ja metsäalan ammattitehtävä.`;
-
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (v.ammatti || "luontoala") + "_esitelma.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  /* ========= AUTOSAVE ========= */
-  window.initAmmattiAutosave = function () {
-    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
-
-    fields.forEach((f,i) => f.value = saved[i] || "");
-
-    fields.forEach((field,i)=>{
-      field.addEventListener("input", ()=>{
-        const data = Array.from(fields).map(f=>f.value);
-        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
-        ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu"]
-          .forEach((k,j)=> State.variables[k] = data[j] || "");
-      });
-    });
-  };
-
-  /* ========= TYHJENNÄ ========= */
-  window.resetAmmattitutkimus = function () {
-    document.querySelectorAll("#passages textarea").forEach(t=>t.value="");
-    ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu","ammatti"]
-      .forEach(k=>State.variables[k]="");
-    localStorage.removeItem(AUTOSAVE_KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "tekniikka_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "tekniikka_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
-  
-/* Poistu-painike (sulje välilehti) */
-
-window.confirmExitStory = function () {
-  const ok = window.confirm("Haluatko varmasti sulkea esityksen?");
-  if (ok) {
-    window.close();
-  }
-};
-$(document).on('click', 'a.macro-link.btn--danger', function () {
-  SugarCube.Engine.play('Kansi');
-});
-
-
-/* ============================================================
-   LINJA SEIS! – apufunktiot
-   ============================================================ */
-(function () {
-  "use strict";
-
-  /* --- 3D-tausta: kohtaus passagen tagista (scene-*) --- */
-  function asetaTausta(nimi) {
-    if (!nimi) return;
-    document.documentElement.setAttribute("data-tausta", nimi);
-    try { window.dispatchEvent(new CustomEvent("tausta3d:kohtaus", { detail: nimi })); } catch (e) {}
-  }
-  setup.tausta = asetaTausta;
-  $(document).on(":passagestart", function (ev) {
-    var tags = (ev && ev.passage && ev.passage.tags) || [];
-    for (var i = 0; i < tags.length; i++) {
-      if (tags[i].indexOf("scene-") === 0) { asetaTausta(tags[i].slice(6)); return; }
-    }
-    asetaTausta("tehdas");
-  });
-
-
-  /* --- Katso tehdasta: piilottaa tarinapaneelin hetkeksi --- */
-  function luoNappi() {
-    if (document.getElementById("nayta-tehdas")) return;
-    var b = document.createElement("button");
-    b.type = "button"; b.id = "nayta-tehdas"; b.setAttribute("aria-pressed", "false");
-    b.textContent = "Katso tehdasta";
-    b.addEventListener("click", function () {
-      var auki = document.documentElement.classList.toggle("katso-3d");
-      b.setAttribute("aria-pressed", auki ? "true" : "false");
-      b.textContent = auki ? "Takaisin tarinaan" : "Katso tehdasta";
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && document.documentElement.classList.contains("katso-3d")) b.click();
-    });
-    document.body.appendChild(b);
-  }
-  $(document).one(":passagerender", luoNappi);
-  $(document).on(":passagestart", function () {
-    if (document.documentElement.classList.contains("katso-3d")) {
-      document.documentElement.classList.remove("katso-3d");
-      var b = document.getElementById("nayta-tehdas");
-      if (b) { b.setAttribute("aria-pressed", "false"); b.textContent = "Katso tehdasta"; }
-    }
-  });
-
-  /* --- Kannen Käynnistä-painike --- */
-  window.kaynnistaTarina = function (nappi) {
-    if (nappi) { nappi.classList.add("painettu"); nappi.disabled = true; }
-    var hidas = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setTimeout(function () { Engine.play("start"); }, hidas ? 0 : 220);
-  };
-
-  /* --- Kello --- */
-  var ALKU = 12 * 60, RAJA = 180;
-  setup.kello = function (m) {
-    var t = ALKU + (Number(m) || 0);
-    var h = Math.floor(t / 60), min = t % 60;
-    return h + "." + (min < 10 ? "0" : "") + min;
-  };
-  setup.jaljella = function (m) {
-    var j = RAJA - (Number(m) || 0);
-    if (j < 0) return "Myöhässä " + (-j) + " min";
-    var h = Math.floor(j / 60), min = j % 60;
-    return "Aikaa " + (h ? h + " h" : "") + (h && min ? " " : "") + (min || !h ? min + " min" : "");
-  };
-
-  /* --- Ammattikortti --- */
-  var PIIRTEET = {
-    vianetsija: { nimi: "Ongelmanratkaisija", kuvaus: "Etsit syyn ennen kuin korjaat." },
-    tarkka:     { nimi: "Tarkka ja turvallinen", kuvaus: "Mittaat, tarkistat ja huolehdit, ettei kukaan satu." },
-    tekija:     { nimi: "Käsillä tekijä", kuvaus: "Tartut työkaluihin ja haluat nähdä, miten asiat toimivat." },
-    tiimi:      { nimi: "Tiimipelaaja", kuvaus: "Kysyt, sovit asioista ja saat muut mukaan." }
-  };
-  var AMMATIT = {
-    automaatio: { nimi: "Automaatioasentaja", kuvaus: "Asentaa ja korjaa robotteja ja koneita, jotka toimivat itsestään.", tutkinto: "Sähkö- ja automaatioalan perustutkinto", piirteet: ["vianetsija"] },
-    sahko:      { nimi: "Sähköasentaja", kuvaus: "Asentaa ja korjaa sähköjä taloissa ja tehtaissa.", tutkinto: "Sähkö- ja automaatioalan perustutkinto", piirteet: ["tarkka"] },
-    cnc:        { nimi: "CNC-koneistaja", kuvaus: "Tekee koneella metallista tarkkoja osia.", tutkinto: "Kone- ja tuotantotekniikan perustutkinto", piirteet: ["tarkka", "tekija"] },
-    kylma:      { nimi: "Kylmäasentaja", kuvaus: "Pitää jäähdytyksen, kylmälaitteet ja ilmastoinnin kunnossa.", tutkinto: "Talotekniikan perustutkinto", piirteet: ["tekija", "vianetsija"] },
-    raskas:     { nimi: "Hyötyajoneuvomekaanikko", kuvaus: "Korjaa kuorma-autoja, busseja ja työkoneita.", tutkinto: "Ajoneuvoalan perustutkinto", piirteet: ["tekija", "tiimi"] }
-  };
-
-  function laske() {
-    var v = State.variables;
-    var p = v.piirre || {}, k = v.kiinn || {};
-    var piirteet = Object.keys(PIIRTEET)
-      .map(function (a) { return { avain: a, arvo: p[a] || 0 }; })
-      .filter(function (x) { return x.arvo > 0; })
-      .sort(function (a, b) { return b.arvo - a.arvo; })
-      .slice(0, 2);
-    var lista = Object.keys(AMMATIT).map(function (a) {
-      var am = AMMATIT[a];
-      var bonus = am.piirteet.reduce(function (s, x) { return s + (p[x] || 0); }, 0);
-      return { avain: a, nimi: am.nimi, kiinn: k[a] || 0, pisteet: (k[a] || 0) * 3 + bonus * 0.5 };
-    }).sort(function (a, b) { return b.pisteet - a.pisteet; });
-    var kiinnostavat = lista.filter(function (x) { return x.kiinn > 0; }).slice(0, 3);
-    return { piirteet: piirteet, top: kiinnostavat.length ? kiinnostavat : lista.slice(0, 3), eiKiinnostusta: !kiinnostavat.length };
-  }
-
-  setup.tallennaKortti = function () {
-    var k = laske();
-    State.variables.korttiTop = k.top.map(function (x) { return x.nimi; });
-  };
-
-  setup.piirreTeksti = function () {
-    var k = laske();
-    if (!k.piirteet.length) return "";
-    return k.piirteet.map(function (x) { return PIIRTEET[x.avain].nimi.toLowerCase(); }).join(" ja ");
-  };
-
-  function suojaa(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-
-  setup.korttiHTML = function () {
-    var k = laske();
-    var nimi = State.variables.korttiNimi || "";
-    var h = '<div class="ammattikortti" role="group" aria-label="Ammattikortti">';
-    h += '<div class="ak-yla"><p class="ak-otsikko">AMMATTIKORTTI · TEKNIIKAN ALA</p><p class="ak-nimi" id="ak-nimi">' + suojaa(nimi) + '</p></div>';
-    h += '<p class="ak-osio">Vahvuutesi tarinassa</p>';
-    if (k.piirteet.length) {
-      h += '<div class="ak-piirteet">' + k.piirteet.map(function (x) {
-        return '<div class="ak-piirre"><strong>' + PIIRTEET[x.avain].nimi + '</strong><span>' + PIIRTEET[x.avain].kuvaus + '</span></div>';
-      }).join("") + '</div>';
-    } else {
-      h += '<p class="ak-viesti">Kokeilit rohkeasti eri vaihtoehtoja. Pelaa uudelleen, niin löydät vahvuutesi!</p>';
-    }
-    h += '<p class="ak-osio">' + (k.eiKiinnostusta ? "Voisit silti kurkata" : "Tutki näitä ammatteja") + '</p>';
-    if (k.eiKiinnostusta) h += '<p class="ak-viesti">Mikään näistä ei vielä tuntunut omalta, ja se on ihan ok. Vahvuuksistasi on hyötyä monessa muussakin työssä.</p>';
-    h += '<ol>' + k.top.map(function (x) {
-      var am = AMMATIT[x.avain];
-      return '<li><strong>' + am.nimi + '</strong> – ' + am.kuvaus + '<span class="ak-tutkinto">' + am.tutkinto + '</span></li>';
-    }).join("") + '</ol></div>';
-    return h;
-  };
-
-  window.paivitaKorttiNimi = function (arvo) {
-    State.variables.korttiNimi = String(arvo || "").slice(0, 40);
-    var el = document.getElementById("ak-nimi");
-    if (el) el.textContent = State.variables.korttiNimi;
-  };
-
-  /* Kortti PNG-kuvaksi (canvas, ei kirjastoja) */
-  function rivita(g, teksti, maxW) {
-    var sanat = String(teksti).split(" "), rivit = [], r = "";
-    sanat.forEach(function (s) {
-      var koe = r ? r + " " + s : s;
-      if (g.measureText(koe).width > maxW && r) { rivit.push(r); r = s; } else r = koe;
-    });
-    if (r) rivit.push(r);
-    return rivit;
-  }
-  window.lataaAmmattikortti = function () {
-    var k = laske();
-    var W = 1080, H = 1350, P = 80;
-    var c = document.createElement("canvas"); c.width = W; c.height = H;
-    var g = c.getContext("2d");
-    var gr = g.createLinearGradient(0, 0, W, H); gr.addColorStop(0, "#13224a"); gr.addColorStop(1, "#0b132b");
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    g.strokeStyle = "#6fffe9"; g.lineWidth = 6; g.strokeRect(30, 30, W - 60, H - 60);
-    var y = 130;
-    g.fillStyle = "#6fffe9"; g.font = "bold 34px 'Segoe UI', Arial, sans-serif"; g.fillText("AMMATTIKORTTI · TEKNIIKAN ALA", P, y);
-    y += 80;
-    g.fillStyle = "#ffffff"; g.font = "800 64px 'Segoe UI', Arial, sans-serif";
-    g.fillText(State.variables.korttiNimi || "Linja seis!", P, y);
-    y += 90;
-    g.fillStyle = "#ffe066"; g.font = "bold 30px 'Segoe UI', Arial, sans-serif"; g.fillText("VAHVUUTESI TARINASSA", P, y);
-    y += 60;
-    (k.piirteet.length ? k.piirteet : [{ avain: null }]).forEach(function (x) {
-      g.fillStyle = "#6fffe9"; g.font = "bold 40px 'Segoe UI', Arial, sans-serif";
-      g.fillText(x.avain ? PIIRTEET[x.avain].nimi : "Rohkea kokeilija", P, y); y += 50;
-      g.fillStyle = "#e6fbff"; g.font = "32px 'Segoe UI', Arial, sans-serif";
-      rivita(g, x.avain ? PIIRTEET[x.avain].kuvaus : "Kokeilit eri vaihtoehtoja.", W - 2 * P).forEach(function (r) { g.fillText(r, P, y); y += 42; });
-      y += 24;
-    });
-    y += 20;
-    g.fillStyle = "#ffe066"; g.font = "bold 30px 'Segoe UI', Arial, sans-serif";
-    g.fillText(k.eiKiinnostusta ? "VOISIT SILTI KURKATA" : "TUTKI NÄITÄ AMMATTEJA", P, y);
-    y += 60;
-    k.top.forEach(function (x, i) {
-      var am = AMMATIT[x.avain];
-      g.fillStyle = "#ffffff"; g.font = "bold 42px 'Segoe UI', Arial, sans-serif"; g.fillText((i + 1) + ". " + am.nimi, P, y); y += 48;
-      g.fillStyle = "#e6fbff"; g.font = "32px 'Segoe UI', Arial, sans-serif";
-      rivita(g, am.kuvaus, W - 2 * P - 40).forEach(function (r) { g.fillText(r, P + 40, y); y += 40; });
-      g.fillStyle = "#9ca3af"; g.font = "28px 'Segoe UI', Arial, sans-serif"; g.fillText(am.tutkinto, P + 40, y); y += 64;
-    });
-    g.fillStyle = "#9ca3af"; g.font = "26px 'Segoe UI', Arial, sans-serif"; g.fillText("DigiOpo · Linja seis! -tarina", P, H - 70);
-    var a = document.createElement("a");
-    a.download = "ammattikortti_tekniikka.png";
-    a.href = c.toDataURL("image/png");
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  };
-
-  /* --- Esittelylomake: lauseenalut + tallennus --- */
-  var LT_KEY = "tekniikka_ala_lt_v2";
-  function kentat() { return document.querySelectorAll("#passages .lomake-ryhma textarea"); }
-  window.initLopputehtavaAutosave = function () {
-    var f = kentat(); if (!f.length) return;
-    var saved = [];
-    try { saved = JSON.parse(localStorage.getItem(LT_KEY) || "[]"); } catch (e) {}
-    f.forEach(function (el, i) {
-      el.value = saved[i] ? saved[i] : (el.getAttribute("data-alku") || "");
-      el.addEventListener("input", function () {
-        try { localStorage.setItem(LT_KEY, JSON.stringify(Array.from(kentat()).map(function (x) { return x.value; }))); } catch (e) {}
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    kentat().forEach(function (el) { el.value = el.getAttribute("data-alku") || ""; });
-    try { localStorage.removeItem(LT_KEY); } catch (e) {}
-  };
-  window.downloadLopputehtava = function () {
-    var v = State.variables, ammatti = v.ammatti || "";
-    var g = function (id) { var el = document.getElementById(id); return el ? el.value : ""; };
-    var k = laske();
-    var text = "AMMATTI: " + ammatti + "\n" + (v.korttiNimi ? "NIMI: " + v.korttiNimi + "\n" : "") + "\n" +
-      "1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ TYÖSSÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN TYÖHÖN?\n" + g("lt_q3") + "\n\n" +
-      "4. MIKÄ YLLÄTTI?\n" + g("lt_q4") + "\n";
-    if (v.korttiTop && v.korttiTop.length) {
-      text += "\n------------------------------\nAMMATTIKORTTI (Linja seis!)\n";
-      if (k.piirteet.length) text += "Vahvuudet: " + k.piirteet.map(function (x) { return PIIRTEET[x.avain].nimi; }).join(", ") + "\n";
-      text += "Ehdotetut ammatit: " + v.korttiTop.join(", ") + "\n";
-    }
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + (ammatti || "tekniikka").replace(/\s+/g, "_") + ".txt";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-  };
-
-  /* ============================================================
-     KENET KUTSUT PAIKALLE? – 8 vikatilannetta
-     ============================================================ */
-  var TT = { talo: "Talotekniikan perustutkinto", sahko: "Sähkö- ja automaatioalan perustutkinto", ajo: "Ajoneuvoalan perustutkinto", kone: "Kone- ja tuotantotekniikan perustutkinto" };
-  var KUTSU_KORTIT = [
-    { tilanne: "On kova pakkanen. Mummolan ilmalämpöpumppu puhaltaa vain kylmää, ja sen ulkoyksikkö on paksussa jäässä.",
-      oikea: "Kylmäasentaja", tutkinto: TT.talo,
-      vaihtoehdot: {
-        "Sähköasentaja": "Sähköasentaja tekee laitteelle sähköliitännän, mutta itse lämpöpumpun vian korjaa kylmäasentaja.",
-        "Kylmäasentaja": "Lämpöpumppu toimii samalla tavalla kuin jääkaappi. Kylmäasentaja asentaa ja huoltaa lämpöpumppuja ja kylmälaitteita.",
-        "Putkiasentaja": "Putkiasentaja hoitaa vesijohtoja, viemäreitä ja lämmitysputkia. Lämpöpumpun vika kuuluu kylmäasentajalle.",
-        "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja huoltaa talon ilmakanavia ja ilmanvaihtokoneita, ei lämpöpumppuja." } },
-    { tilanne: "Keittiön tiskipöydän alta tippuu vettä. Kaapin pohja on jo märkä.",
-      oikea: "Putkiasentaja", tutkinto: TT.talo,
-      vaihtoehdot: {
-        "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja hoitaa ilmakanavia ja ilmanvaihtokoneita, ei vesiputkia.",
-        "Putkiasentaja": "Putkiasentaja asentaa ja korjaa vesijohtoja ja viemäreitä. Vuoto kannattaa korjata heti, ettei rakenteisiin tule kosteusvaurio.",
-        "Kylmäasentaja": "Kylmäasentaja huoltaa kylmälaitteita ja lämpöpumppuja. Vesivuoto kuuluu putkiasentajalle.",
-        "Sähköasentaja": "Sähköasentaja hoitaa sähköt. Vesi ja sähkö ovat vaarallinen yhdistelmä, mutta vuodon korjaa putkiasentaja." } },
-    { tilanne: "Kerrostalon asunnoissa on tunkkainen ilma. Kylpyhuoneen peili pysyy huurussa pitkään suihkun jälkeen.",
-      oikea: "Ilmanvaihtoasentaja", tutkinto: TT.talo,
-      vaihtoehdot: {
-        "Putkiasentaja": "Putkiasentaja hoitaa vesi- ja viemäriputkia. Tunkkainen ilma on ilmanvaihdon ongelma.",
-        "Kylmäasentaja": "Kylmäasentaja huoltaa jäähdytystä ja lämpöpumppuja. Talon ilmanvaihtokanavat kuuluvat ilmanvaihtoasentajalle.",
-        "Ilmanvaihtoasentaja": "Ilmanvaihtoasentaja asentaa ja huoltaa ilmakanavia ja ilmanvaihtokoneita. Usein syy on likainen suodatin tai tukkeutunut kanava.",
-        "Automaatioasentaja": "Automaatioasentaja työskentelee yleensä tehtaissa koneiden ja robottien parissa. Tunkkaisen ilman korjaa ilmanvaihtoasentaja." } },
-    { tilanne: "Perhe rakentaa uuden autotallin. Sinne tarvitaan valot, pistorasiat ja sähköauton latauspiste.",
-      oikea: "Sähköasentaja", tutkinto: TT.sahko,
-      vaihtoehdot: {
-        "Automaatioasentaja": "Automaatioasentaja työskentelee yleensä tehtaissa koneiden ja robottien parissa. Talon sähköt asentaa sähköasentaja.",
-        "Automekaanikko": "Automekaanikko korjaa autoja, mutta latauspisteen asentaminen on sähkötyötä.",
-        "Sähköasentaja": "Sähköasentaja asentaa taloihin valot, pistorasiat ja latauspisteet. Sähkötöitä saa tehdä vain koulutettu ammattilainen.",
-        "Putkiasentaja": "Putkiasentaja hoitaa vesijohtoja ja viemäreitä. Sähköt kuuluvat sähköasentajalle." } },
-    { tilanne: "Auton kojelautaan syttyy moottorin vikavalo, ja auto nykii kiihdyttäessä.",
-      oikea: "Automekaanikko", tutkinto: TT.ajo,
-      vaihtoehdot: {
-        "Autokorimekaanikko": "Autokorimekaanikko korjaa kolarivaurioita, kuten lommoja. Moottorin vika kuuluu automekaanikolle.",
-        "Automekaanikko": "Automekaanikko lukee auton vikakoodit tietokoneella ja korjaa moottorin, jarrut ja muut tekniset osat.",
-        "Automaalari": "Automaalari maalaa autoja korjauksen jälkeen. Hän ei korjaa moottoria.",
-        "Hyötyajoneuvomekaanikko": "Hyötyajoneuvomekaanikko korjaa kuorma-autoja ja busseja. Henkilöauton korjaa automekaanikko." } },
-    { tilanne: "Parkkipaikalla sattui pikkukolari. Auton ovessa on iso lommo ja puskuri on haljennut.",
-      oikea: "Autokorimekaanikko", tutkinto: TT.ajo,
-      vaihtoehdot: {
-        "Automekaanikko": "Automekaanikko korjaa moottoria ja muita teknisiä osia. Kolarivauriot korjaa autokorimekaanikko.",
-        "Automaalari": "Melkein! Automaalaria tarvitaan myös, mutta vasta kun lommo on korjattu. Ensin töihin pääsee autokorimekaanikko.",
-        "Autokorimekaanikko": "Autokorimekaanikko oikaisee lommot ja vaihtaa rikkoutuneet osat. Lopuksi automaalari maalaa korjatun kohdan.",
-        "Levyseppähitsaaja": "Levyseppähitsaaja tekee metallirakenteita, mutta autojen korjaaminen on oma ammattinsa." } },
-    { tilanne: "Tehtaaseen tarvitaan teräksinen suojakaide uuden koneen ympärille, ettei kukaan kävele liian lähelle.",
-      oikea: "Levyseppähitsaaja", tutkinto: TT.kone,
-      vaihtoehdot: {
-        "CNC-koneistaja": "CNC-koneistaja tekee koneella pieniä ja tarkkoja metalliosia. Isot hitsatut rakenteet tekee levyseppähitsaaja.",
-        "Automaatioasentaja": "Automaatioasentaja voi asentaa koneeseen turva-anturit, mutta itse kaiteen tekee levyseppähitsaaja.",
-        "Levyseppähitsaaja": "Levyseppähitsaaja leikkaa, taivuttaa ja hitsaa metallista rakenteita, kuten kaiteita ja telineitä.",
-        "Sähköasentaja": "Sähköasentaja hoitaa sähköt. Teräksisen kaiteen valmistaa levyseppähitsaaja." } },
-    { tilanne: "Koulubussin jarrut vinkuvat. Bussi pitää tarkastaa ennen huomista luokkaretkeä.",
-      oikea: "Hyötyajoneuvomekaanikko", tutkinto: TT.ajo,
-      vaihtoehdot: {
-        "Automekaanikko": "Automekaanikko korjaa henkilöautoja. Bussit ja kuorma-autot korjaa hyötyajoneuvomekaanikko.",
-        "Hyötyajoneuvomekaanikko": "Hyötyajoneuvomekaanikko huoltaa ja korjaa busseja, kuorma-autoja ja työkoneita. Jarrut tarkastetaan huolella, koska kyydissä on paljon ihmisiä.",
-        "Levyseppähitsaaja": "Levyseppähitsaaja tekee metallirakenteita. Jarrut kuuluvat mekaanikolle.",
-        "Sähköasentaja": "Sähköasentaja tekee talojen sähkötöitä. Ajoneuvon jarrut kuuluvat mekaanikolle." } }
-  ];
-  var KUTSU_KEY = "tekniikka_kutsu_v1";
-
-  function kutsuTila() {
-    var v = State.variables;
-    if (!v.kutsu || !Array.isArray(v.kutsu.vastaukset)) {
-      var tallessa = null;
-      try { tallessa = JSON.parse(localStorage.getItem(KUTSU_KEY) || "null"); } catch (e) {}
-      v.kutsu = (tallessa && Array.isArray(tallessa.vastaukset)) ? tallessa : { vastaukset: [] };
-    }
-    return v.kutsu;
-  }
-  function kutsuTallenna() { try { localStorage.setItem(KUTSU_KEY, JSON.stringify(State.variables.kutsu)); } catch (e) {} }
-
-  window.kutsuPiirra = function () {
-    var alue = document.getElementById("kutsu-alue");
-    if (!alue) return;
-    var tila = kutsuTila();
-    var i = tila.vastaukset.length;
-    if (i >= KUTSU_KORTIT.length) { Engine.play("Kutsu: tulos"); return; }
-    var k = KUTSU_KORTIT[i];
-    var nimet = Object.keys(k.vaihtoehdot);
-    for (var r = nimet.length - 1; r > 0; r--) { var q = Math.floor(Math.random() * (r + 1)); var tmp = nimet[r]; nimet[r] = nimet[q]; nimet[q] = tmp; }
-    var pallot = KUTSU_KORTIT.map(function (_, j) { return '<span class="' + (j < i ? "tehty" : j === i ? "nyt" : "") + '"></span>'; }).join("");
-    alue.innerHTML =
-      '<p class="kohtaus-nro">Kortti ' + (i + 1) + '/' + KUTSU_KORTIT.length + '</p>' +
-      '<div class="kutsu-edistyminen" aria-hidden="true">' + pallot + '</div>' +
-      '<div class="kutsu-kortti"><p class="kutsu-tilanne">Vikatilanne</p><p class="kutsu-teksti">' + suojaa(k.tilanne) + '</p></div>' +
-      '<p class="kutsu-kysymys" id="kutsu-kysymys">Kenet kutsut paikalle?</p>' +
-      '<div class="kutsu-vaihtoehdot" role="radiogroup" aria-labelledby="kutsu-kysymys">' +
-        nimet.map(function (n, j) { return '<button type="button" class="kutsu-vaihtoehto" role="radio" aria-checked="false" tabindex="' + (j === 0 ? 0 : -1) + '" data-nimi="' + suojaa(n) + '">' + suojaa(n) + '</button>'; }).join("") +
-      '</div>' +
-      '<label class="kutsu-miksi-label" for="kutsu-miksi">Miksi juuri hän? Kirjoita yksi lause.</label>' +
-      '<textarea id="kutsu-miksi" maxlength="300" placeholder="Valitsin hänet, koska…"></textarea>' +
-      '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite">Valitse ammattilainen ja kirjoita perustelu.</p>' +
-      '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista" disabled>Tarkista</button></div>' +
-      '<div class="kutsu-palaute" aria-live="polite"></div>';
-
-    var valinta = null;
-    var napit = Array.prototype.slice.call(alue.querySelectorAll(".kutsu-vaihtoehto"));
-    var miksi = alue.querySelector("#kutsu-miksi");
-    var tarkista = alue.querySelector(".kutsu-tarkista");
-    var vihje = alue.querySelector("#kutsu-vihje");
-
-    function paivita() {
-      var pituus = miksi.value.trim().length;
-      tarkista.disabled = !(valinta && pituus >= 10);
-      vihje.textContent = !valinta ? "Valitse ammattilainen." : (pituus < 10 ? "Kirjoita vielä lyhyt perustelu." : "Hyvä! Paina Tarkista.");
-    }
-    function valitse(nappi) {
-      valinta = nappi.getAttribute("data-nimi");
-      napit.forEach(function (b) { var on = b === nappi; b.setAttribute("aria-checked", on ? "true" : "false"); b.tabIndex = on ? 0 : -1; });
-      paivita();
-    }
-    napit.forEach(function (b, j) {
-      b.addEventListener("click", function () { valitse(b); });
-      b.addEventListener("keydown", function (e) {
-        var siirto = (e.key === "ArrowRight" || e.key === "ArrowDown") ? 1 : (e.key === "ArrowLeft" || e.key === "ArrowUp") ? -1 : 0;
-        if (!siirto) return;
-        e.preventDefault();
-        var seur = napit[(j + siirto + napit.length) % napit.length];
-        seur.focus(); valitse(seur);
-      });
-    });
-    miksi.addEventListener("input", paivita);
-
-    tarkista.addEventListener("click", function () {
-      if (tarkista.disabled) return;
-      var oikein = valinta === k.oikea;
-      tila.vastaukset.push({ valinta: valinta, perustelu: miksi.value.trim(), oikein: oikein });
-      kutsuTallenna();
-      napit.forEach(function (b) {
-        b.disabled = true;
-        var n = b.getAttribute("data-nimi");
-        if (n === k.oikea) b.classList.add("oikea");
-        else if (n === valinta) b.classList.add("vaara");
-      });
-      miksi.disabled = true; tarkista.parentNode.style.display = "none"; vihje.textContent = "";
-      var viimeinen = tila.vastaukset.length >= KUTSU_KORTIT.length;
-      var h = '<div class="palaute">';
-      if (oikein) {
-        h += '<p class="kutsu-tulos-otsikko"><strong class="ok">Oikein!</strong></p><p>' + suojaa(k.vaihtoehdot[k.oikea]) + '</p>';
-      } else {
-        h += '<p class="kutsu-tulos-otsikko"><strong class="ei">Ei aivan.</strong> Oikea vastaus on <strong>' + suojaa(k.oikea.toLowerCase()) + '</strong>.</p>' +
-             '<p>' + suojaa(k.vaihtoehdot[valinta]) + '</p><p>' + suojaa(k.vaihtoehdot[k.oikea]) + '</p>';
-      }
-      h += '<p class="kutsu-tutkinto">Koulutus: ' + suojaa(k.tutkinto) + '</p></div>' +
-           '<div class="kutsu-napit" style="margin-top:1rem"><button type="button" class="kutsu-seuraava">' + (viimeinen ? "Katso tulokset" : "Seuraava kortti") + '</button></div>';
-      var pal = alue.querySelector(".kutsu-palaute");
-      pal.innerHTML = h;
-      var seuraava = pal.querySelector(".kutsu-seuraava");
-      seuraava.addEventListener("click", function () {
-        if (viimeinen) Engine.play("Kutsu: tulos");
-        else { kutsuPiirra(); var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView(); var e1 = document.querySelector(".kutsu-vaihtoehto"); if (e1) e1.focus({ preventScroll: true }); }
-      });
-      seuraava.focus({ preventScroll: true });
-      pal.scrollIntoView && pal.scrollIntoView({ block: "nearest" });
-    });
-    paivita();
-  };
-
-  setup.kutsuYhteenveto = function () {
-    var tila = kutsuTila();
-    var oikeat = tila.vastaukset.filter(function (x) { return x.oikein; }).length;
-    var h = '<p class="kutsu-pisteet">Osuit oikeaan <strong>' + oikeat + '/' + KUTSU_KORTIT.length + '</strong> kertaa.</p>';
-    h += '<p style="text-align:center">' + (oikeat >= 7 ? "Huippua! Tunnet tekniikan alan ammatit hyvin." : oikeat >= 4 ? "Hyvä! Moni ammatti tuli jo tutuksi." : "Nyt tiedät paljon enemmän kuin äsken. Juuri sitä varten tehtävä on.") + '</p>';
-    h += '<ol class="kutsu-lista">' + KUTSU_KORTIT.map(function (k, j) {
-      var v = tila.vastaukset[j];
-      if (!v) return "";
-      return '<li><span class="' + (v.oikein ? "ok" : "ei") + '">' + (v.oikein ? "✓" : "✗") + '</span> ' + suojaa(k.tilanne) +
-        '<br><strong>' + suojaa(k.oikea) + '</strong>' + (v.oikein ? "" : ' (valitsit: ' + suojaa(v.valinta) + ')') +
-        '<span class="kl-perustelu">Perustelusi: ' + suojaa(v.perustelu) + '</span></li>';
-    }).join("") + '</ol>';
-    return h;
-  };
-
-  window.lataaVastaukset = function () {
-    var v = State.variables, tila = kutsuTila(), k = laske();
-    var oikeat = tila.vastaukset.filter(function (x) { return x.oikein; }).length;
-    var t = "TEKNIIKAN ALA – LINJA SEIS!\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";
-    t += "AMMATTIKORTTI\n";
-    if (k.piirteet.length) t += "Vahvuudet: " + k.piirteet.map(function (x) { return PIIRTEET[x.avain].nimi; }).join(", ") + "\n";
-    if (v.korttiTop && v.korttiTop.length) t += "Ehdotetut ammatit: " + v.korttiTop.join(", ") + "\n";
-    if (typeof v.aika === "number" && v.aika > 0) t += "Rekka lähti kello " + setup.kello(v.aika) + "\n";
-    t += "\nKENET KUTSUT PAIKALLE? – oikein " + oikeat + "/" + KUTSU_KORTIT.length + "\n\n";
-    KUTSU_KORTIT.forEach(function (kk, j) {
-      var x = tila.vastaukset[j]; if (!x) return;
-      t += (j + 1) + ". " + kk.tilanne + "\n   Valintani: " + x.valinta + (x.oikein ? " (oikein)" : " (oikea: " + kk.oikea + ")") + "\n   Perusteluni: " + x.perustelu + "\n\n";
-    });
-    var blob = new Blob([t], { type: "text/plain;charset=utf-8" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "tekniikan_ala_" + (v.korttiNimi ? v.korttiNimi.replace(/\s+/g, "_") : "vastaukset") + ".txt";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-  };
-
-  window.tyhjennaKaikki = function (nappi) {
-    try { localStorage.removeItem(LT_KEY); localStorage.removeItem(KUTSU_KEY); } catch (e) {}
-    var v = State.variables;
-    v.kutsu = { vastaukset: [] };
-    v.ammatti = ""; v.korttiNimi = ""; v.korttiTop = []; v.aika = 0;
-    v.piirre = { vianetsija: 0, tarkka: 0, tekija: 0, tiimi: 0 };
-    v.kiinn = { automaatio: 0, sahko: 0, cnc: 0, kylma: 0, raskas: 0 };
-    if (nappi) { nappi.textContent = "Tyhjennetty ✓"; }
-  };
-})();
 </script><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-State.variables.pisteet = 0;
-Engine.play(&quot;start&quot;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;set $tekniikka = 0&gt;&gt;
-&lt;&lt;set $quiz = 0&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-
-/* Linja seis! -tarina */
-&lt;&lt;set $aika to 0&gt;&gt;
-&lt;&lt;set $piirre to {vianetsija: 0, tarkka: 0, tekija: 0, tiimi: 0}&gt;&gt;
-&lt;&lt;set $kiinn to {automaatio: 0, sahko: 0, cnc: 0, kylma: 0, raskas: 0}&gt;&gt;
-&lt;&lt;set $korttiTop to []&gt;&gt;
+/* Linja seis! – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {vianetsija: 0, tarkka: 0, tekija: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {automaatio: 0, sahko: 0, cnc: 0, kylma: 0, raskas: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
 &lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
-</tw-passagedata><tw-passagedata pid="3" name="start" tags="scene-tehdas alku-sivu" position="600,125" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;div class=&quot;alku-kortti&quot;&gt;
-&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
-&lt;h2 class=&quot;alku-otsikko&quot;&gt;Linja seis!&lt;/h2&gt;
-&lt;p class=&quot;alku-teksti&quot;&gt;Olet harjoittelijana sähköpyörätehtaalla. Kesken päivän tuotantolinja pysähtyy, ja rekka tulee hakemaan pyörät kello 15. Ehditkö selvittää vian?&lt;/p&gt;
-&lt;ul class=&quot;alku-faktat&quot;&gt;
-&lt;li&gt;&lt;strong&gt;5&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;3 h&lt;/strong&gt;&lt;span&gt;aikaa&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;oma ammattikortti&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Linja seis&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
 </tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
@@ -1686,22 +260,7 @@ $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
     &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M12 3v9&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.6&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;path d=&quot;M6.3 6.8a8 8 0 1 0 11.4 0&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.6&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Käynnistä&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Loppu" tags="scene-loppu" position="1000,700" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;h2&gt;Valmis!&lt;/h2&gt;
-&lt;p&gt;Selvitit tehtaan vian ja ratkaisit kahdeksan vikatilannetta. Samalla tutustuit yli kymmeneen tekniikan alan ammattiin.&lt;/p&gt;
-&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;
-&lt;&lt;link &quot;Missä tekniikan alaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
-  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
-    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;
-</tw-passagedata><tw-passagedata pid="20" name="Oppilaitokset" tags="scene-tehdas" position="850,300" size="100,100">&lt;h2&gt;Tekniikan alan koulutukset&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="20" name="Oppilaitokset" tags="" position="850,300" size="100,100">&lt;h2&gt;Tekniikan alan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
 Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä sivulla esitellyt koulutukset ja oppilaitokset ovat esimerkkejä. Koulutustarjonta ja hakukohteet voivat muuttua, joten varmista aina ajantasaiset tiedot omalta opinto-ohjaajaltasi sekä oppilaitosten omilta verkkosivuilta.
@@ -1758,9 +317,22 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Takaisin&quot;&gt;&gt;
   &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="21" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Rekka tulee klo 15.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Widgetit" tags="widget" position="1325,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
-</tw-passagedata><tw-passagedata pid="23" name="Linja seis" tags="scene-halytys" position="1200,250" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {vianetsija: 0, tarkka: 0, tekija: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {automaatio: 0, sahko: 0, cnc: 0, kylma: 0, raskas: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="28" name="start" tags="scene-tehdas alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Linja seis!&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet harjoittelijana sähköpyörätehtaalla. Kesken päivän tuotantolinja pysähtyy, ja rekka tulee hakemaan pyörät kello 15. Ehditkö selvittää vian?&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;5&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;3 h&lt;/strong&gt;&lt;span&gt;aikaa&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;oma ammattikortti&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Linja seis&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="29" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Rekka tulee klo 15.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="30" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="31" name="Linja seis" tags="scene-halytys" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {vianetsija: 0, tarkka: 0, tekija: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {automaatio: 0, sahko: 0, cnc: 0, kylma: 0, raskas: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
 &lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;h1&gt;Linja seis!&lt;/h1&gt;
 &lt;p&gt;Kello on 12.00. Olet ensimmäistä päivää harjoittelussa Volttipyörä Oy:n tehtaalla. Tehdas kokoaa sähköpyöriä.&lt;/p&gt;
@@ -1768,7 +340,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;p&gt;Yhtäkkiä kuuluu kova piippaus. Punaiset valot alkavat vilkkua. Hihna pysähtyy.&lt;/p&gt;
 &lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Sanna:&lt;/strong&gt; ”Linja seis! Rekka tulee hakemaan 120 pyörää kello 15. Tule, mennään ohjaamoon.”&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Juokse ohjaamoon&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Ohjaamo&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Ohjaamo" tags="scene-ohjaamo" position="1200,375" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="32" name="Ohjaamo" tags="scene-ohjaamo" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/5&lt;/p&gt;
 &lt;h2&gt;Ohjaamo&lt;/h2&gt;
 &lt;p&gt;Ohjaamossa on kuusi näyttöä. Yhdellä vilkkuu punainen teksti: &lt;strong&gt;VIKA E-47 · ROBOTTI 3 · YLIVIRTA&lt;/strong&gt;.&lt;/p&gt;
@@ -1779,7 +351,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Avaan hälytyslokin ja katson, mitä tapahtui ennen vikaa.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.vianetsija += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä veto!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lokista näkyy järjestys: ensin robotin 3 moottori kuumeni, sitten sähkökeskuksessa laukesi sulake. Nyt tiedätte, mistä aloittaa.&lt;/p&gt;&lt;p&gt;Automaatioasentaja tekee juuri näin: lukee koneen viestejä kuin vihjeitä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;automaatio&quot; &quot;Sähkökeskus&quot; &quot;Miltä automaatioasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Kysyn Sannalta, mistä hän itse aloittaisi.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tiimi += 2&gt;&gt;&lt;&lt;set $piirre.vianetsija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Fiksu kysymys.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sanna avaa hälytyslokin. Siitä näkyy, että robotin 3 moottori kuumeni ja sähkökeskuksessa laukesi sulake.&lt;/p&gt;&lt;p&gt;Uudessa työpaikassa kysyminen ei ole heikkoutta. Se säästää aikaa ja estää virheitä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;automaatio&quot; &quot;Sähkökeskus&quot; &quot;Miltä automaatioasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="Sähkökeskus" tags="scene-sahko" position="1200,500" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="33" name="Sähkökeskus" tags="scene-sahko" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/5&lt;/p&gt;
 &lt;h2&gt;Sähkökeskus&lt;/h2&gt;
 &lt;p&gt;Sähkökeskuksessa on kymmeniä sulakkeita. Yksi on lauennut, ja sen merkkivalo vilkkuu punaisena.&lt;/p&gt;
@@ -1790,7 +362,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Pyydän Mikkoa mittaamaan johdon ensin.&quot;&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri niin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Mikko mittaa johdon yleismittarilla. Johto on kunnossa, joten vika on itse robotissa.&lt;/p&gt;&lt;p&gt;Sähköasentajan tärkein sääntö: ensin mitataan, sitten korjataan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 25 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;sahko&quot; &quot;Koneistamo&quot; &quot;Miltä sähköasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Laitan keskukseen varoituskyltin, ettei kukaan kytke sähköä vahingossa.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Näin ammattilaiset toimivat.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun laitetta korjataan, sähköt lukitaan pois päältä ja paikalle laitetaan kyltti. Se suojaa korjaajaa.&lt;/p&gt;&lt;p&gt;Sitten Mikko mittaa johdon. Se on kunnossa, joten vika on robotissa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;sahko&quot; &quot;Koneistamo&quot; &quot;Miltä sähköasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Koneistamo" tags="scene-koneistamo" position="1200,625" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="34" name="Koneistamo" tags="scene-koneistamo" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/5&lt;/p&gt;
 &lt;h2&gt;Koneistamo&lt;/h2&gt;
 &lt;p&gt;Robotti 3 avataan. Moottorin kiinnike on kulunut. Siksi moottori tärisi, kuumeni ja otti liikaa sähköä.&lt;/p&gt;
@@ -1802,7 +374,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Ei kelpaa. Korjataan koneen ohjelmaa ja tehdään uusi.&quot;&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.tekija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Oikein laskettu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;48,20 − 48,00 = 0,20 mm. Se on enemmän kuin sallittu 0,05 mm.&lt;/p&gt;&lt;p&gt;Aino näyttää, miten ohjelmaan syötetään korjaus. Uusi osa on 48,01 mm. Täydellinen!&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 25 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;cnc&quot; &quot;Konehalli&quot; &quot;Miltä CNC-koneistajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Mitataan vielä kerran, ettei mittauksessa tullut virhettä.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;set $piirre.vianetsija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä ajatus, sillä mittauksessakin voi tulla virhe.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Toinen mittaus näyttää taas 48,20 mm. Se on enemmän kuin sallittu 0,05 mm, joten osa ei kelpaa.&lt;/p&gt;&lt;p&gt;Aino korjaa ohjelman, ja uusi osa on 48,01 mm.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;cnc&quot; &quot;Konehalli&quot; &quot;Miltä CNC-koneistajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="Konehalli" tags="scene-halli" position="1200,750" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="35" name="Konehalli" tags="scene-halli" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/5&lt;/p&gt;
 &lt;h2&gt;Konehalli&lt;/h2&gt;
 &lt;p&gt;Uusi osa on paikallaan. Mutta miksi moottori kuumeni niin paljon? Hallissa on tukalan kuuma.&lt;/p&gt;
@@ -1813,7 +385,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Avataan laite ja tarkistetaan suodatin ja puhallin.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $piirre.tekija += 2&gt;&gt;&lt;&lt;set $piirre.vianetsija += 1&gt;&gt;&lt;&lt;run setup.tausta(&quot;halliOk&quot;)&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Jari ojentaa sinulle hanskat ja ruuvinvääntimen.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun kansi aukeaa, syy näkyy heti: ilmansuodatin on harmaa ja täynnä pölyä. Vaihdatte uuden. Tuuletin alkaa puhaltaa täysillä!&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kylma&quot; &quot;Lastauslaituri&quot; &quot;Miltä kylmäasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Katsotaan huoltokirjasta, milloin laite on viimeksi huollettu.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;set $piirre.vianetsija += 1&gt;&gt;&lt;&lt;run setup.tausta(&quot;halliOk&quot;)&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Huoltokirjasta löytyy vihje.&lt;/strong&gt; Laite on huollettu viimeksi kaksi vuotta sitten!&lt;/p&gt;&lt;p&gt;Jari avaa laitteen, ja ilmansuodatin on tosiaan tukossa. Uusi suodatin paikalle, ja tuuletin puhaltaa taas täysillä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kylma&quot; &quot;Lastauslaituri&quot; &quot;Miltä kylmäasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="28" name="Lastauslaituri" tags="scene-laituri" position="1200,875" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="36" name="Lastauslaituri" tags="scene-laituri" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/5&lt;/p&gt;
 &lt;h2&gt;Lastauslaituri&lt;/h2&gt;
 &lt;p&gt;Sanna painaa Käynnistä-nappia. Hihna lähtee liikkeelle ja robotit heräävät. Linja käy taas!&lt;/p&gt;
@@ -1825,7 +397,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;&lt;link &quot;Pyydän trukkikuskia lastaamaan lavat toisesta ovesta.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tiimi += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä idea!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Trukilla lavat saadaan kyytiin ilman nostinta. Sillä välin Noora korjaa letkun rauhassa.&lt;/p&gt;&lt;p&gt;Tiimityö toimii, kun jokainen tekee sitä, missä on paras.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;raskas&quot; &quot;Rekka lähtee&quot; &quot;Miltä hyötyajoneuvomekaanikon työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Tarkistan, että pyörät ovat kunnolla kiinni lavoissa.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Tärkeä juttu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jos kuorma liikkuu matkalla, pyörät voivat hajota. Löydät yhden löysän kiristysliinan ja kiristät sen.&lt;/p&gt;&lt;p&gt;Sillä välin Noora on vaihtanut vuotavan letkun, ja nostin toimii.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavalle asemalle kävelet 10 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;raskas&quot; &quot;Rekka lähtee&quot; &quot;Miltä hyötyajoneuvomekaanikon työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Rekka lähtee" tags="scene-loppu" position="1200,1000" size="100,100">&lt;h1&gt;Rekka lähtee!&lt;/h1&gt;
+</tw-passagedata><tw-passagedata pid="37" name="Rekka lähtee" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Rekka lähtee!&lt;/h1&gt;
 &lt;&lt;if $aika lte 180&gt;&gt;&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Rekka lähtee ajoissa, ja 120 sähköpyörää on matkalla kauppoihin!&lt;/p&gt;
 &lt;&lt;else&gt;&gt;&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Rekka lähtee &lt;&lt;print $aika - 180&gt;&gt; minuuttia myöhässä, mutta 120 sähköpyörää on matkalla kauppoihin.&lt;/p&gt;
 &lt;p&gt;Oikeissakaan töissä ei aina ehdi. Silloin tärkeintä on, että työ tehtiin turvallisesti ja hyvin.&lt;/p&gt;&lt;&lt;/if&gt;&gt;
@@ -1839,7 +411,7 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;/ul&gt;
 &lt;p&gt;Kaikkiin näihin ammatteihin voi opiskella ammattikoulussa.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="30" name="Ammattikortti" tags="scene-loppu" position="1200,1125" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+</tw-passagedata><tw-passagedata pid="38" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
 &lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
 &lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
 &lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
@@ -1849,28 +421,43 @@ Tekniikan alan ammatteihin voi opiskella monissa eri oppilaitoksissa. Tällä si
 &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
 &lt;&lt;link &quot;Seuraava tehtävä: Kenet kutsut paikalle?&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="31" name="Kutsu: ohje" tags="scene-tehdas" position="1350,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Kutsu: ohje" tags="scene-tehdas" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;kutsu-ohje&quot;&gt;
 &lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
 &lt;h2 class=&quot;alku-otsikko&quot;&gt;Kenet kutsut paikalle?&lt;/h2&gt;
 &lt;p&gt;Tehtaalla tarvittiin viisi eri ammattilaista. Tekniikan alan osaajia tarvitaan kuitenkin kaikkialla: kotona, autokorjaamolla, työmaalla ja tehtaissa.&lt;/p&gt;
-&lt;p&gt;Saat &lt;strong&gt;8 vikatilannetta&lt;/strong&gt;. Jokaisessa teet kaksi asiaa:&lt;/p&gt;
-&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Valitse ammattilainen, joka korjaa vian.&lt;/li&gt;&lt;li&gt;Kirjoita yhdellä lauseella, miksi valitsit hänet.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Saat &lt;strong&gt;8 tilannetta&lt;/strong&gt;. Jokaisessa teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Valitse ammattilainen, joka auttaa tilanteessa.&lt;/li&gt;&lt;li&gt;Kirjoita yhdellä lauseella, miksi valitsit hänet.&lt;/li&gt;&lt;/ol&gt;
 &lt;p&gt;Sitten näet, osuitko oikeaan. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;
-</tw-passagedata><tw-passagedata pid="32" name="Kutsu" tags="scene-tehdas" position="1500,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Kutsu" tags="scene-tehdas" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
 &lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
-</tw-passagedata><tw-passagedata pid="33" name="Kutsu: tulos" tags="scene-loppu" position="1650,1125" size="100,100">&lt;&lt;nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Kenet kutsut paikalle? – tulokset&lt;/h2&gt;
 &lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
 &lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi action-row&quot;&gt;
 &lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
 &lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="42" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Selvitit tehtaan vian ja ratkaisit kahdeksan vikatilannetta. Samalla tutustuit yli kymmeneen tekniikan alan ammattiin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;&lt;link &quot;Missä tekniikan alaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>

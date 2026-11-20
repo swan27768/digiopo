@@ -1,0 +1,1030 @@
+/* ==========================================================================
+   DigiOpo – koulutusalojen tarinapelien yhteiset tyylit (tarina-yhteinen.css)
+   Käytössä: pelit/koulutusalat/*-ala.html (Linja seis!, Hälytys 112, ...)
+   Värit tulevat CSS-muuttujista: kunkin tarinan oma teema (Twine-tyylitiedosto)
+   asettaa --a1, --a2, --korostus, --tausta jne.
+   ========================================================================== */
+:root {
+  /* Oletusteema (tekniikka). Jokainen tarina korvaa nämä omassa teemassaan. */
+  --a1: #6fffe9; --a1-rgb: 111,255,233;
+  --a2: #4ea8de; --a2-rgb: 78,168,222;
+  --a3: #72efdd;
+  --korostus: #ffe066; --korostus-rgb: 255,224,102;
+  --tausta: #0b132b; --tausta-rgb: 11,19,43;
+  --tausta-2: #1c2541; --tausta-2-rgb: 28,37,65;
+  --paneeli: #111a33; --paneeli-rgb: 17,26,51;
+  --paneeli-2: #13224a;
+  --tumma: #06101f; --tumma-rgb: 6,16,31;
+  --reuna: #2dd4bf;
+  --teksti-pehmea: #c7d2fe; --teksti-pehmea-rgb: 199,210,254;
+  --teksti-vaalea: #e6fbff;
+  --nappi-teksti: #051b1f;
+}
+/* ============================================================
+   TEKNIIKAN ALAN PÄÄTEEMA
+   ============================================================ */
+
+:root {
+  --theme-main: var(--a1);
+  --theme-secondary: var(--a2);
+  --theme-accent: var(--a3);
+
+  --bg-body: var(--tausta);
+  --bg-soft: var(--tausta-2);
+  --bg-panel: var(--paneeli);
+
+  --text-main: #ffffff;
+  --text-soft: var(--teksti-pehmea);
+  --text-muted: #9ca3af;
+
+  --btn-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --btn-text: var(--nappi-teksti);
+
+  --link-text: var(--a1);
+
+  --card-bg: var(--paneeli);
+  --card-border: var(--reuna);
+
+  --nav-bg: var(--tausta);
+  --nav-border: var(--a1);
+
+  --danger-bg: linear-gradient(#ff6b6b, #c92a2a);
+
+  --accent-1: var(--a1);
+  --accent-2: var(--a2);
+  --accent-3: var(--a3);
+
+  --highlight-color: var(--korostus);
+}
+
+/* ============================================================ */
+/* RUNGON VÄRIT */
+body {
+  background: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* ============================================================ */
+/* PASSAGE */
+#passages .passage {
+  color: var(--text-main);
+}
+
+/* ============================================================ */
+/* LINKIT */
+#passages .passage a:not(.btn):not(.macro-link):not(.external-link) {
+  color: var(--link-text) !important;
+}
+
+/* ============================================================ */
+/* NAPIT */
+.intro-nappi a,
+.answer-group a,
+.navbar-fixed button {
+  background: var(--btn-bg);
+  color: var(--btn-text) !important;
+  border: 2px solid var(--a1);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 rgba(var(--a1-rgb),.35);
+}
+
+.btn--danger {
+  background: var(--danger-bg) !important;
+  border-color: #ff6b6b !important;
+}
+
+/* ============================================================ */
+/* NAVBAR */
+.navbar-fixed {
+  background: linear-gradient(90deg,var(--tausta),var(--paneeli));
+  border-bottom: 1px solid var(--nav-border);
+}
+
+/* ============================================================ */
+/* KORTIT */
+.school-card,
+.media-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 10px 35px rgba(var(--a1-rgb),.25);
+}
+
+/* ============================================================ */
+/* KANSI */
+.cover-link {
+  background:
+    linear-gradient(rgba(var(--tausta-rgb),.85), rgba(var(--tausta-rgb),.85)),
+    none;
+}
+
+.cover-title {
+  color: var(--a1) !important;
+}
+
+/* ============================================================ */
+/* LOMAKKEET */
+#passages .lomake-ryhma textarea,
+#passages .lomake-ryhma input {
+  border: 2px solid var(--a1) !important;
+}
+
+/* ============================================================ */
+/* INFO-KORTIT */
+#passages .info-text {
+  background: var(--paneeli);
+  border: 1px solid var(--a1);
+}
+#passages .info-text p {
+  color: var(--teksti-vaalea);
+}
+
+/* ============================================================ */
+/* PÄÄNAPPI */
+.btn-primary {
+  background: linear-gradient(var(--a2), var(--a1)) !important;
+}
+
+body.hide-navbar .navbar-fixed {
+  display: none !important;
+}
+
+/* ============================================================
+   1. POISTA SUGARCUBEN OLETUS-UI
+   ============================================================ */
+
+#sidebar,
+#ui-bar,
+#ui-bar-toggle,
+#toolbar {
+  display: none !important;
+}
+
+/* ============================================================
+   2. PERUSRUNK0
+   ============================================================ */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding-top: 3rem; /* tilaa navbarille */
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* ============================================================
+   3. PASSAGE-ALUE
+   ============================================================ */
+
+#story {
+  margin-left: 0 !important;
+}
+
+#passages {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#passages .passage {
+  margin: 2rem auto;
+  padding: 2.2rem 3rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Tiiviimpi otsikon ja tekstin väli Tekniikan alaan */
+
+#passages .passage h1 {
+  margin-bottom: 0.9rem !important;
+}
+
+#passages .passage p {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.85rem !important;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   4. TYPOGRAFIA
+   ============================================================ */
+
+#passages .passage p,
+#passages .passage li,
+#passages .passage div,
+#passages .passage span,
+#passages .passage section {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  hyphens: auto;
+}
+
+#passages .passage ul,
+#passages .passage ol {
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+#passages .passage li {
+  margin-bottom: 0.35rem;
+}
+
+/* Otsikot */
+
+#passages .passage h1,
+#passages .passage h2,
+#passages .passage h3 {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0.6rem auto 1.2rem;
+}
+
+/* H1 */
+#passages .passage h1 {
+  font-size: 2.2rem;
+  color: var(--accent-1);
+  border: 2px solid var(--accent-1);
+  border-radius: 12px;
+  padding: 0.5rem 1.6rem;
+}
+
+/* H2 */
+#passages .passage h2 {
+  font-size: 1.6rem;
+  color: var(--accent-2);
+}
+
+/* H3 */
+#passages .passage h3 {
+  font-size: 1.25rem;
+  color: var(--accent-3);
+}
+
+/* Linkit */
+/* Linkit vain leipätekstissä – EI napeille */
+#passages .passage a:not(.btn):not(.external-link):not(.link-internal):not(.macro-link) {
+  color: var(--link-text) !important;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   NAPIT – VARMA SUGARCUBE (EI RIIPPUVUUTTA .btn-LUOKASTA)
+   Toimii sekä [[wikilink]] että <<link>> ja <<button>>
+   ============================================================ */
+
+/* 1) Wrapperit: napit keskelle ja pinoon */
+.intro-nappi,
+.answer-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   YHTEINEN NAPPI – MAISTUVA AMMATTI
+   ============================================================ */
+
+.intro-nappi a.link-internal,
+.intro-nappi a.macro-link,
+.answer-group a.link-internal,
+.answer-group a.macro-link,
+.navbar-fixed button,
+.navbar-fixed a {
+  appearance: none;
+  display: inline-block;
+  width: min(520px, 100%);
+  box-sizing: border-box;
+
+  padding: 0.75rem 1.6rem;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+
+  background: var(--btn-bg);
+  color: var(--btn-text) !important;
+
+  border: 2px solid rgba(0,0,0,0.15);
+  border-radius: 999px;
+
+  text-decoration: none !important;
+  cursor: pointer;
+
+  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
+}
+
+.intro-nappi a:hover,
+.answer-group a:hover,
+.navbar-fixed button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.intro-nappi a:active,
+.answer-group a:active,
+.navbar-fixed button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+}
+
+.answer-group {
+  display: flex;
+  flex-direction: row;      /* NAPIT VIEREKKÄIN */
+  justify-content: center;
+  align-items: stretch;
+  gap: 0.75rem;
+  flex-wrap: wrap;          /* sallii rivittymisen pienellä näytöllä */
+}
+.answer-group a {
+  width: auto;
+  min-width: 140px;
+}
+
+/* ============================================================
+   6. NAVBAR
+   ============================================================ */
+
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.35rem 0.75rem;
+  min-height: 42px;
+
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.55);
+}
+
+/* Piilotus kansisivulla */
+body.hide-navbar .navbar-fixed {
+  display: none !important;
+}
+
+/* ============================================================
+   7. KORTIT (KOULUT, VIDEOT)
+   ============================================================ */
+
+.media-card,
+.school-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.4rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+}
+/* ============================================================
+   8. KANSISIVU – TEKNIIKAN ALAN JULISTE
+   ============================================================ */
+
+#passages .passage .cover-link {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  background: linear-gradient(135deg, var(--tausta), var(--tausta-2), var(--tausta)) !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+/* Julistekontti */
+#passages .passage .cover-inner {
+  text-align: center;
+  max-width: 920px;
+  padding: 3.2rem 3.6rem;
+  border-radius: 30px;
+  background: rgba(var(--paneeli-rgb), 0.95);
+  border: 2px solid var(--a1);
+  box-shadow: 0 0 140px rgba(var(--a1-rgb),0.45);
+}
+
+/* Pääotsikko */
+#passages .passage .cover-title {
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.22em !important;
+  line-height: 1.1 !important;
+
+  font-size: clamp(2.8rem, 6vw, 4.2rem) !important;
+  color: var(--a1) !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  text-transform: uppercase;
+}
+
+/* Valinnainen alaotsikko */
+#passages .passage .cover-subtitle {
+  margin-top: 1.3rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.32em;
+  color: var(--teksti-pehmea);
+  opacity: .9;
+}
+
+a.macro-link.btn--danger {
+  background: var(--danger-bg) !important;
+  border-color: #4A1414 !important;
+  color: #ffffff !important;
+}
+p.highlight {
+  color: var(--highlight-color) !important;
+  font-weight: 700;
+}
+a.macro-link.btn--danger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lomake-ryhma textarea {
+  width: 100%;
+  min-height: 8rem;
+  padding: 1rem 1.1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  border-radius: 16px;
+  border: 2px solid var(--card-border);
+  box-sizing: border-box;
+}
+/* Ammattitutkimus – suuret ja korkeat tekstikentät (varma yliajo) */
+#passages .lomake-ryhma textarea {
+  width: 100% !important;
+  min-height: 10rem !important;
+  height: 10rem !important;
+  padding: 1rem 1.1rem !important;
+
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+
+  border-radius: 16px !important;
+  border: 2px solid var(--card-border) !important;
+  background: #ffffff !important;
+
+  box-sizing: border-box !important;
+  resize: vertical;
+}
+
+/* Jos jokin kenttä on vielä textbox (input), tee siitäkin selvästi korkeampi */
+#passages .lomake-ryhma input[type="text"] {
+  width: 100% !important;
+  min-height: 3.2rem !important;
+  padding: 0.9rem 1.1rem !important;
+
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+
+  border-radius: 14px !important;
+  border: 2px solid var(--card-border) !important;
+  background: #ffffff !important;
+
+  box-sizing: border-box !important;
+}
+
+tarea,
+#passages .lomake-ryhma input[type="text"] {
+  color: #000000 !important;
+}
+#passages .passage .cover-link {
+  text-decoration: none !important;
+}
+.answer-group a {
+  background: #7EDC9A !important;     /* sammalenvihreä */
+  color: #103820 !important;
+  border-color: #4F8A62 !important;
+}
+
+/* ============================================================
+   8. KANSISIVU – JULISTE (KORJATTU)
+   ============================================================ */
+/* KANSI: koko näkymä keskitetty */
+#passages .passage .cover-link {
+  position: fixed !important;
+  inset: 0 !important;                /* top/right/bottom/left = 0 */
+  display: flex !important;
+
+  justify-content: center !important; /* vaaka */
+  align-items: center !important;     /* pysty */
+
+  background:
+    linear-gradient(rgba(240,245,240,0.88), rgba(240,245,240,0.88)),
+    url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80");
+  background-size: cover !important;
+  background-position: center center !important;
+
+  text-decoration: none !important;
+  cursor: pointer;
+  z-index: 10000;                     /* varmasti muiden yläpuolella */
+}
+
+/* ==============================
+   NAPPIKORJAUS – GOOGLE SITES SAFE
+   ============================== */
+
+.intro-nappi,
+.answer-group {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  flex-wrap: wrap !important;
+}
+
+.intro-nappi a,
+.answer-group a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+
+  width: auto !important;
+  min-width: 140px !important;
+  max-width: none !important;
+
+  white-space: nowrap !important;
+}
+/* ESITELMÄPOHJA – kirjoitusteksti mustaksi */
+#passages .lomake-ryhma textarea,
+#passages .lomake-ryhma input,
+#passages .lomake-ryhma select {
+  color: #000000 !important;
+}
+
+/* ============================
+   INFO-TEXT – OPETUSKORTTI
+   ============================ */
+
+#passages .info-text {
+  background: #ffffff;
+  border: 1px solid #BFD3C4;
+  border-radius: 14px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem auto;
+  max-width: 720px;
+  text-align: center;
+}
+
+#passages .info-text p {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  color: #1E2A1E;
+}
+/* TOIMINTORIVI ESITELMÄPOHJAAN */
+.action-row {
+  justify-content: center !important;
+  gap: 1rem !important;
+}
+
+.action-row a {
+  min-width: 200px !important;
+}
+
+/* INTRO-NAPIN TEKSTI PAKOTETUSTI MUSTAKSI – YLIAJAA KAIKEN */
+#passages .intro-nappi a,
+#passages .intro-nappi a *,
+#passages .intro-nappi a:link,
+#passages .intro-nappi a:visited,
+#passages .intro-nappi a:hover,
+#passages .intro-nappi a:active {
+  color: #000000 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+.quiz-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.quiz-popup .box {
+  background: var(--paneeli);
+  border: 2px solid var(--a1);
+  border-radius: 22px;
+  padding: 1.6rem 2rem;
+  max-width: 520px;
+  text-align: center;
+  box-shadow: 0 0 80px rgba(var(--a1-rgb),.4);
+}
+.quiz-popup h3 { color:var(--a1); margin-top:0; }
+.quiz-popup p { color:var(--teksti-vaalea); }
+/* ============================
+   SAAVUTETTAVUUS – LUETTAVUUS
+   ============================ */
+
+/* Perusteksti */
+#passages .passage p,
+#passages .passage li,
+#passages .passage div,
+#passages .passage span,
+#passages .passage section {
+  font-size: 18px !important;
+  line-height: 1.75 !important;
+}
+
+/* Otsikot */
+#passages .passage h1 {
+  font-size: 2.6rem !important;
+}
+
+#passages .passage h2 {
+  font-size: 1.9rem !important;
+}
+
+#passages .passage h3 {
+  font-size: 1.4rem !important;
+}
+
+/* Nappitekstit */
+#passages .passage a,
+#passages .passage button {
+  font-size: 1.05rem !important;
+}
+
+/* Lomakekentät */
+#passages textarea,
+#passages input,
+#passages select {
+  font-size: 1.05rem !important;
+}
+
+/* ============================================================
+   MOBIILIVERSIO – parannettu responsiivisuus
+   ============================================================ */
+
+/* Perusasettelu mobiilissa */
+@media screen and (max-width: 768px) {
+
+  /* Poista SugarCuben sivupalkki kokonaan mobiilissa */
+  #ui-bar {
+    display: none !important;
+  }
+
+  /* Koko sivu leveäksi ilman sivupalkkia */
+  #story {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Passages-alue täyttää koko leveyden */
+  #passages {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5rem !important;
+  }
+
+  /* Passage-sisältö leveäksi, väljää täytettä */
+  .passage {
+    padding: 1rem 1rem 2rem 1rem !important;
+    max-width: 100% !important;
+  }
+
+  /* Otsikot pienemmiksi mobiilissa */
+  #passages .passage h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  #passages .passage h2 {
+    font-size: 1.35rem !important;
+    line-height: 1.3 !important;
+  }
+
+  #passages .passage h3 {
+    font-size: 1.15rem !important;
+  }
+
+  /* Perusteksti luettavaksi */
+  #passages .passage p,
+  #passages .passage li,
+  #passages .passage div,
+  #passages .passage span {
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Napit: yksi per rivi, täysi leveys */
+  .intro-nappi,
+  .answer-group {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.6rem !important;
+    padding: 0 !important;
+  }
+
+  .intro-nappi a,
+  .answer-group a {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 1rem !important;
+    padding: 0.85rem 1rem !important;
+    text-align: center !important;
+  }
+
+  /* Toimintorivi (Lataa / Tyhjennä / Valmis) */
+  .action-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.6rem !important;
+  }
+
+  .action-row a {
+    width: 100% !important;
+    min-width: unset !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Lomakekentät täyteen leveyteen */
+  #passages textarea,
+  #passages input[type="text"],
+  #passages select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 1rem !important;
+    min-height: 90px !important;
+  }
+
+  /* Info-tekstikortti mobiilissa */
+  #passages .info-text {
+    margin: 1rem 0 !important;
+    padding: 0.75rem 0.9rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Kortit (oppilaitokset, mediat) */
+  .school-card,
+  .media-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Kansi-sivu – kuva skaalautuu */
+  .cover-link img,
+  .cover-link {
+    width: 100% !important;
+    height: auto !important;
+    min-height: unset !important;
+  }
+
+  /* Quiz-popup leveäksi */
+  .quiz-popup .box {
+    max-width: 95vw !important;
+    padding: 1.2rem 1rem !important;
+  }
+
+  /* Tulokset-sivu */
+  .tulos-box {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 1rem !important;
+  }
+}
+
+/* Pienimmät näytöt (alle 420px) */
+@media screen and (max-width: 420px) {
+  #passages .passage h1 {
+    font-size: 1.5rem !important;
+  }
+
+  #passages .passage h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .intro-nappi a,
+  .answer-group a {
+    font-size: 0.95rem !important;
+    padding: 0.75rem 0.8rem !important;
+  }
+
+  /* Viewport meta varmistus – scrollaus oikein */
+  .passage {
+    padding: 0.75rem 0.75rem 2rem 0.75rem !important;
+  }
+}
+
+/* ============================================================
+   LINJA SEIS! – 3D-TAUSTA, TARINA JA AMMATTIKORTTI
+   ============================================================ */
+html, body { background: var(--bg-body); }
+#passages .passage {
+  background: rgba(var(--tausta-rgb), 0.82) !important;
+  border: 1px solid rgba(var(--a1-rgb), 0.28) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55) !important;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+@media (max-width: 640px) {
+  #passages { margin: 0.5rem auto; padding: 0 0.5rem; }
+  #passages .passage { padding: 1.3rem 1.1rem !important; margin: 0.8rem auto; }
+  #passages .passage h1 { font-size: 1.6rem; letter-spacing: 0.04em; }
+  #passages .passage h2 { font-size: 1.3rem; }
+}
+/* Kansi: 3D-tehdas näkyy taustalla */
+#passages .passage .cover-link { background: linear-gradient(135deg, rgba(var(--tausta-rgb),.55), rgba(var(--tausta-2-rgb),.35), rgba(var(--tausta-rgb),.55)) !important; }
+#passages .passage:has(.cover-link), body.hide-navbar #passages .passage { background: transparent !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+
+/* Ylätunniste: kello */
+.hud { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.2rem; margin: -0.6rem auto 1.2rem;
+  padding: 0.5rem 1rem; border-radius: 999px; background: rgba(var(--tumma-rgb), 0.9); border: 1px solid rgba(var(--a1-rgb),.35);
+  font-size: 0.9rem !important; font-weight: 700; letter-spacing: 0.03em; width: fit-content; max-width: 100%; }
+.hud span { font-size: 0.9rem !important; margin: 0 !important; }
+.hud-kello { color: var(--a1); }
+.hud-rekka { color: var(--teksti-pehmea); }
+.hud-jaljella { color: var(--korostus); }
+
+.kohtaus-nro { text-align: center; color: #9ca3af; font-size: 0.85rem !important; letter-spacing: 0.18em; text-transform: uppercase; margin: 0 !important; }
+.puhe { background: rgba(var(--a2-rgb), 0.14); border-left: 4px solid var(--a2); border-radius: 0 14px 14px 0; padding: 0.8rem 1rem; }
+.valitse-ohje { text-align: center; font-weight: 700; color: var(--korostus); margin-top: 1.2rem !important; }
+
+/* Valinnat allekkain, pitkä teksti mahtuu */
+.answer-group.valinnat { flex-direction: column; align-items: center; }
+.answer-group.valinnat > a.macro-link { width: min(600px, 100%); text-align: left; border-radius: 16px; line-height: 1.4; padding: 0.85rem 1.2rem; white-space: normal; }
+.palaute { background: rgba(var(--paneeli-rgb), 0.95); border: 1px solid var(--a1); border-radius: 16px; padding: 1rem 1.2rem; width: min(640px, 100%); box-sizing: border-box; animation: palauteSisaan .35s ease-out; }
+.palaute p { margin-bottom: 0.6rem !important; }
+.aika-kului { color: var(--korostus); font-size: 0.9rem !important; font-weight: 700; margin: 0 !important; }
+.kiinnostus { width: min(640px, 100%); margin-top: 1rem; text-align: center; }
+.kiinnostus-kysymys { font-weight: 700; color: var(--a1); }
+.kiinnostus-napit a.macro-link { min-width: 130px; }
+@keyframes palauteSisaan { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .palaute { animation: none; } }
+
+/* Aloitussivun tarinakortti */
+.tarina-esittely { margin: 1.4rem auto; padding: 1.2rem 1.4rem; border-radius: 18px; border: 2px solid var(--korostus);
+  background: linear-gradient(135deg, rgba(var(--korostus-rgb),.12), rgba(var(--a1-rgb),.08)); }
+.tarina-otsikko { font-size: 1.6rem !important; font-weight: 800; letter-spacing: 0.06em; color: var(--korostus); margin: 0 0 0.4rem !important; text-transform: uppercase; }
+.tarina-meta { color: var(--teksti-pehmea); font-size: 0.9rem !important; margin: 0 !important; }
+.ammattilista li { margin-bottom: 0.4rem; }
+.pieni { font-size: 0.9rem !important; color: var(--teksti-pehmea); }
+.vinkki { background: rgba(var(--korostus-rgb), 0.12); border: 1px solid rgba(var(--korostus-rgb),.5); border-radius: 12px; padding: 0.7rem 1rem; }
+#passages .lomake-ryhma textarea { color: #111827 !important; }
+#passages .lomake-ryhma textarea.lyhyt { min-height: 5.5rem !important; height: 5.5rem !important; }
+
+/* Ammattikortti */
+.kortti-nimi-rivi { display: flex; flex-direction: column; gap: 0.35rem; width: min(420px, 100%); margin: 0 auto 1rem; }
+.kortti-nimi-rivi label { font-weight: 700; font-size: 0.95rem; }
+#kortti-nimi { padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid var(--a1); font-size: 1rem; background: #fff; color: #111827; }
+.ammattikortti { margin: 0 auto 1.2rem; width: min(560px, 100%); box-sizing: border-box; border-radius: 22px; padding: 1.4rem 1.5rem;
+  background: linear-gradient(160deg, var(--paneeli-2) 0%, var(--tausta) 60%); border: 2px solid var(--a1); box-shadow: 0 0 50px rgba(var(--a1-rgb),.25); }
+.ammattikortti .ak-yla { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; border-bottom: 1px solid rgba(var(--a1-rgb),.3); padding-bottom: 0.6rem; margin-bottom: 0.9rem; }
+.ammattikortti .ak-otsikko { font-weight: 800; letter-spacing: 0.16em; color: var(--a1); font-size: 0.85rem !important; margin: 0 !important; }
+.ammattikortti .ak-nimi { font-weight: 800; font-size: 1.2rem !important; color: #fff; margin: 0 !important; }
+.ammattikortti .ak-osio { color: var(--korostus); font-weight: 700; font-size: 0.8rem !important; letter-spacing: 0.14em; text-transform: uppercase; margin: 0.6rem 0 0.4rem !important; }
+.ammattikortti .ak-piirteet { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
+.ammattikortti .ak-piirre { background: rgba(var(--a1-rgb),.14); border: 1px solid rgba(var(--a1-rgb),.55); border-radius: 12px; padding: 0.45rem 0.75rem; flex: 1 1 200px; }
+.ammattikortti .ak-piirre strong { color: var(--a1); display: block; }
+.ammattikortti .ak-piirre span { font-size: 0.88rem !important; color: var(--teksti-vaalea); margin: 0 !important; }
+.ammattikortti ol { margin: 0; padding-left: 1.3rem; }
+.ammattikortti li { margin-bottom: 0.55rem; }
+.ammattikortti li strong { color: #fff; }
+.ammattikortti .ak-tutkinto { display: block; font-size: 0.82rem !important; color: #9ca3af; margin: 0 !important; }
+.ammattikortti .ak-viesti { color: var(--teksti-vaalea); }
+
+
+/* Kansi: koko ruutu 3D-tehdasta, otsikko alareunassa */
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.55) 28%, rgba(var(--tausta-rgb),0) 55%) !important;
+  align-items: flex-end !important; justify-content: center !important; }
+html body #passages .passage .cover-3d .cover-inner {
+  background: none !important; border: none !important; box-shadow: none !important;
+  padding: 0 1.5rem clamp(2rem, 8vh, 5rem) !important; max-width: 1000px; }
+html body #passages .passage .cover-3d .cover-pieni { color: var(--korostus) !important; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; font-size: clamp(0.75rem, 1.6vw, 0.95rem) !important; margin: 0 0 0.6rem !important; }
+html body #passages .passage .cover-3d .cover-title { font-size: clamp(2.2rem, 7vw, 5rem) !important; text-shadow: 0 0 30px rgba(var(--a1-rgb),.55), 0 4px 18px rgba(0,0,0,.8); }
+html body #passages .passage .cover-3d .cover-subtitle { letter-spacing: 0.04em !important; font-size: clamp(0.95rem, 2vw, 1.2rem) !important; color: var(--teksti-vaalea) !important; text-shadow: 0 2px 10px rgba(0,0,0,.9); margin: 0.9rem 0 1.4rem !important; }
+html body #passages .passage .cover-link.cover-3d { cursor: default; }
+html body #passages .passage .cover-3d h1.cover-title { border: none !important; }
+html body #passages .passage .cover-3d .cover-kaynnista {
+  display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.95rem 2.6rem 0.95rem 2rem; border-radius: 999px; cursor: pointer;
+  font: 800 1.15rem "Segoe UI", Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #052e16;
+  background: radial-gradient(circle at 30% 25%, #b2f2bb, #51cf66 55%, #2b8a3e);
+  border: 3px solid #d3f9d8; box-shadow: 0 6px 0 #1b5e2b, 0 0 36px rgba(81,207,102,.65);
+  transition: transform .12s ease, box-shadow .12s ease, filter .15s ease; animation: kaynnistaSyke 2.2s ease-in-out infinite; }
+html body #passages .passage .cover-3d .cover-kaynnista:hover { filter: brightness(1.08); transform: translateY(-2px); }
+html body #passages .passage .cover-3d .cover-kaynnista:active,
+html body #passages .passage .cover-3d .cover-kaynnista.painettu { transform: translateY(5px); box-shadow: 0 1px 0 #1b5e2b, 0 0 50px rgba(81,207,102,.9); animation: none; }
+html body #passages .passage .cover-3d .cover-kaynnista:focus-visible { outline: 3px solid var(--korostus); outline-offset: 5px; }
+html body #passages .passage .cover-3d .cover-kaynnista span { margin: 0 !important; line-height: 1 !important; font-size: inherit !important; }
+.cover-virta { width: 1.5rem; height: 1.5rem; flex: none; }
+@keyframes kaynnistaSyke { 0%, 100% { box-shadow: 0 6px 0 #1b5e2b, 0 0 26px rgba(81,207,102,.45); } 50% { box-shadow: 0 6px 0 #1b5e2b, 0 0 48px rgba(81,207,102,.85); } }
+@media (prefers-reduced-motion: reduce) { html body #passages .passage .cover-3d .cover-kaynnista { animation: none; transition: none; } }
+
+/* Aloitussivu: mahtuu yhteen näkymään */
+[data-tags~="alku-sivu"] body, body[data-tags~="alku-sivu"] { padding-top: 0 !important; }
+body[data-tags~="alku-sivu"] #passages { min-height: 100vh; margin: 0 auto; display: flex; align-items: center; justify-content: center; padding-bottom: 0; box-sizing: border-box; }
+body[data-tags~="alku-sivu"] #passages .passage { width: min(600px, 100%); margin: 0 auto !important; padding: 1.6rem 1.8rem !important; }
+.alku-kortti { text-align: center; margin: 0 !important; }
+body[data-tags~="alku-sivu"] #story { margin: 0 !important; }
+body[data-tags~="alku-sivu"] #passages .passage > br { display: none; }
+@media (max-width: 640px) {
+  #passages .passage ul.alku-faktat { flex-wrap: nowrap !important; gap: 0.4rem !important; }
+  #passages .passage ul.alku-faktat li { min-width: 0 !important; padding: 0.45rem 0.2rem !important; }
+  .alku-faktat strong { font-size: 1.15rem !important; }
+  #passages .passage .alku-faktat span { font-size: 0.72rem !important; }
+  body[data-tags~="alku-sivu"] #passages .passage { padding: 1.2rem 1rem !important; }
+  #passages .passage .alku-teksti { font-size: 0.95rem !important; }
+}
+#passages .passage .alku-tag { margin: 0 0 0.3rem !important; color: var(--korostus); font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.75rem !important; line-height: 1.4 !important; }
+#passages .passage h2.alku-otsikko { margin: 0 0 0.6rem !important; font-size: clamp(1.9rem, 5vw, 2.6rem) !important; color: var(--a1) !important; letter-spacing: 0.06em; text-shadow: 0 0 24px rgba(var(--a1-rgb),.45); }
+#passages .passage .alku-teksti { margin: 0 auto 1rem !important; max-width: 30em; font-size: 1.02rem !important; line-height: 1.55 !important; }
+#passages .passage ul.alku-faktat { list-style: none; display: flex; justify-content: center; gap: 0.6rem; padding: 0 !important; margin: 0 0 1.2rem !important; flex-wrap: wrap; }
+#passages .passage ul.alku-faktat li { margin: 0 !important; flex: 1 1 0; min-width: 7.5rem; padding: 0.55rem 0.4rem; border-radius: 14px; background: rgba(var(--a1-rgb),.08); border: 1px solid rgba(var(--a1-rgb),.35); line-height: 1.2 !important; }
+.alku-faktat strong { display: block; font-size: 1.35rem; color: var(--a1); }
+#passages .passage .alku-faktat span { font-size: 0.82rem !important; color: var(--teksti-pehmea); margin: 0 !important; line-height: 1.2 !important; }
+.alku-kortti .intro-nappi { margin: 0 !important; }
+.alku-kortti .intro-nappi a.macro-link { width: min(320px, 100%); font-size: 1.05rem; padding: 0.85rem 1.6rem; }
+#passages .passage .alku-ohitus { margin: 0.7rem 0 0 !important; line-height: 1.3 !important; }
+#passages .passage .alku-ohitus a.macro-link { color: var(--teksti-pehmea) !important; font-size: 0.88rem; text-decoration: underline; background: none; border: none; box-shadow: none; padding: 0.3rem; }
+
+/* Kenet kutsut paikalle? */
+.kutsu-ohje { text-align: center; }
+#passages .passage ol.kutsu-askeleet { text-align: left; width: fit-content; margin: 0 auto 1rem !important; }
+.kutsu-kortti { border: 2px solid var(--korostus); border-radius: 18px; padding: 1rem 1.2rem; background: linear-gradient(135deg, rgba(var(--korostus-rgb),.12), rgba(var(--paneeli-rgb),.9)); margin-bottom: 1rem; }
+#passages .passage .kutsu-tilanne { margin: 0 0 0.3rem !important; color: var(--korostus); font-weight: 800; letter-spacing: 0.18em; font-size: 0.78rem !important; text-transform: uppercase; }
+#passages .passage .kutsu-teksti { margin: 0 !important; font-size: 1.12rem !important; line-height: 1.5 !important; }
+.kutsu-kysymys { text-align: center; font-weight: 800; color: var(--a1); margin: 0.4rem 0 0.6rem !important; }
+.kutsu-vaihtoehdot { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin-bottom: 1rem; }
+.kutsu-vaihtoehto { font: 700 0.98rem "Segoe UI", Arial, sans-serif; padding: 0.8rem 0.9rem; border-radius: 14px; cursor: pointer; text-align: center;
+  background: rgba(var(--a1-rgb),.08); color: var(--teksti-vaalea); border: 2px solid rgba(var(--a1-rgb),.45); transition: background .12s, border-color .12s, transform .08s; }
+.kutsu-vaihtoehto:hover:not(:disabled) { background: rgba(var(--a1-rgb),.18); }
+.kutsu-vaihtoehto[aria-checked="true"] { border-color: var(--korostus); background: rgba(var(--korostus-rgb),.2); color: #fff; }
+.kutsu-vaihtoehto:focus-visible, .kutsu-tarkista:focus-visible, .kutsu-seuraava:focus-visible { outline: 3px solid var(--korostus); outline-offset: 3px; }
+.kutsu-vaihtoehto:disabled { cursor: default; opacity: .55; }
+.kutsu-vaihtoehto.oikea { opacity: 1; border-color: #51cf66; background: rgba(81,207,102,.22); }
+.kutsu-vaihtoehto.vaara { opacity: 1; border-color: #ff6b6b; background: rgba(255,107,107,.18); }
+.kutsu-miksi-label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+#kutsu-miksi { width: 100%; box-sizing: border-box; min-height: 4.6rem; padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid var(--a1); font: 1rem/1.5 "Segoe UI", Arial, sans-serif; color: #111827; background: #fff; resize: vertical; }
+#kutsu-miksi:disabled { background: #e5e7eb; }
+html body #passages .passage #kutsu-miksi { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+.kutsu-vihje { font-size: 0.85rem !important; color: var(--teksti-pehmea); margin: 0.3rem 0 0.8rem !important; min-height: 1.2em; }
+.kutsu-napit { display: flex; justify-content: center; }
+.kutsu-tarkista, .kutsu-seuraava { font: 800 1rem "Segoe UI", Arial, sans-serif; letter-spacing: 0.03em; padding: 0.8rem 2rem; border-radius: 999px; border: 2px solid rgba(0,0,0,.15); cursor: pointer;
+  background: linear-gradient(135deg, var(--a2), var(--a1)); color: var(--nappi-teksti); box-shadow: 0 4px 0 rgba(0,0,0,.25); min-width: 220px; }
+.kutsu-tarkista:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.kutsu-palaute { margin-top: 1rem; }
+.kutsu-palaute .palaute { width: 100%; }
+.kutsu-palaute .kutsu-tulos-otsikko { font-size: 1.1rem !important; }
+.kutsu-palaute .ok { color: #8ce99a; } .kutsu-palaute .ei { color: #ffa8a8; }
+.kutsu-tutkinto { color: #9ca3af; font-size: 0.88rem !important; }
+.kutsu-edistyminen { display: flex; justify-content: center; gap: 0.35rem; margin: 0 0 0.9rem; }
+.kutsu-edistyminen span { width: 1.6rem; height: 0.45rem; border-radius: 999px; background: rgba(var(--teksti-pehmea-rgb),.25); margin: 0 !important; }
+.kutsu-edistyminen span.tehty { background: var(--a1); } .kutsu-edistyminen span.nyt { background: var(--korostus); }
+.kutsu-pisteet { text-align: center; font-size: 1.15rem !important; }
+.kutsu-pisteet strong { color: var(--a1); font-size: 1.6rem; }
+.kutsu-lista { list-style: none; padding: 0 !important; margin: 0 0 1rem !important; }
+.kutsu-lista li { border: 1px solid rgba(var(--a1-rgb),.3); border-radius: 12px; padding: 0.6rem 0.9rem; margin-bottom: 0.5rem !important; background: rgba(var(--paneeli-rgb),.7); }
+.kutsu-lista .ok { color: #8ce99a; font-weight: 800; } .kutsu-lista .ei { color: #ffa8a8; font-weight: 800; }
+.kutsu-lista .kl-perustelu { display: block; color: var(--teksti-pehmea); font-size: 0.9rem !important; margin: 0.2rem 0 0 !important; font-style: italic; }
+@media (max-width: 520px) { .kutsu-vaihtoehdot { grid-template-columns: 1fr; } }
+/* Katso tehdasta -nappi */
+#nayta-tehdas { position: fixed; right: 16px; bottom: 16px; z-index: 20; padding: 0.6rem 1rem; border-radius: 999px;
+  border: 2px solid var(--a1); background: rgba(var(--tumma-rgb),.92); color: var(--a1); font: 700 0.9rem "Segoe UI", Arial, sans-serif; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.5); }
+#nayta-tehdas:hover { background: var(--paneeli-2); }
+#nayta-tehdas:focus-visible { outline: 3px solid var(--korostus); outline-offset: 3px; }
+body.hide-navbar #nayta-tehdas, html:not(.tausta3d-ok) #nayta-tehdas { display: none; }
+#story { transition: opacity .35s ease; }
+html.katso-3d #story { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { #story { transition: none; } }
+#passages { padding-bottom: 4.5rem; }
+html body #passages .passage .lomake-ryhma textarea { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+html body #passages .passage .info-text { background: var(--paneeli) !important; border: 1px solid var(--a1) !important; border-radius: 14px; padding: 0.8rem 1rem !important; }
+html body #passages .passage .info-text p { color: var(--teksti-vaalea) !important; }
+html[data-tausta="tehdas"] #nayta-tehdas { display: none; }
+@media (max-width: 640px) {
+  #nayta-tehdas { right: 10px; bottom: 10px; width: 44px; height: 44px; padding: 0; font-size: 0; border-radius: 50%;
+    background: rgba(var(--tumma-rgb),.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center / 22px no-repeat; }
+  html.katso-3d #nayta-tehdas { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E"); }
+}
