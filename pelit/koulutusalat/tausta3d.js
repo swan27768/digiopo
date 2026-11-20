@@ -586,6 +586,7 @@ const MAAILMAT = {
 
     /* Kamerapisteet: [kamera], [katsekohde], tila */
     const kohtaukset = {
+      kansi:      { kamera: [-9, 4.2, 9],   kohde: [4, 2.4, -5],   tila: { linjaKay: true } },
       tehdas:     { kamera: [0, 9, 17],     kohde: [0, 1.5, -2],   tila: { linjaKay: true } },
       halytys:    { kamera: [8, 6.5, 13],   kohde: [2, 1.5, -2],     tila: { halytys: true } },
       ohjaamo:    { kamera: [-16.5, 3.4, 4.5], kohde: [-24, 2.9, 0], tila: { halytys: true } },

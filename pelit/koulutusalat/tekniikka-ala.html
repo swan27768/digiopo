@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-init="no-js" data-tausta-maailma="tekniikka" data-tausta="tehdas">
+<html data-init="no-js" data-tausta-maailma="tekniikka" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
 <title>Tekniikan ala – Linja seis!</title>
@@ -895,7 +895,7 @@ html, body { background: var(--bg-body); }
 }
 /* Kansi: 3D-tehdas näkyy taustalla */
 #passages .passage .cover-link { background: linear-gradient(135deg, rgba(11,19,43,.55), rgba(28,37,65,.35), rgba(11,19,43,.55)) !important; }
-#passages .passage:has(.cover-link) { background: transparent !important; border: none !important; box-shadow: none !important; }
+#passages .passage:has(.cover-link), body.hide-navbar #passages .passage { background: transparent !important; border: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 
 /* Ylätunniste: kello */
 .hud { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.2rem; margin: -0.6rem auto 1.2rem;
@@ -953,6 +953,33 @@ html, body { background: var(--bg-body); }
 .ammattikortti .ak-tutkinto { display: block; font-size: 0.82rem !important; color: #9ca3af; margin: 0 !important; }
 .ammattikortti .ak-viesti { color: #e6fbff; }
 
+
+/* Kansi: koko ruutu 3D-tehdasta, otsikko alareunassa */
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(11,19,43,.92) 0%, rgba(11,19,43,.55) 28%, rgba(11,19,43,0) 55%) !important;
+  align-items: flex-end !important; justify-content: center !important; }
+html body #passages .passage .cover-3d .cover-inner {
+  background: none !important; border: none !important; box-shadow: none !important;
+  padding: 0 1.5rem clamp(2rem, 8vh, 5rem) !important; max-width: 1000px; }
+html body #passages .passage .cover-3d .cover-pieni { color: #ffe066 !important; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; font-size: clamp(0.75rem, 1.6vw, 0.95rem) !important; margin: 0 0 0.6rem !important; }
+html body #passages .passage .cover-3d .cover-title { font-size: clamp(2.2rem, 7vw, 5rem) !important; text-shadow: 0 0 30px rgba(111,255,233,.55), 0 4px 18px rgba(0,0,0,.8); }
+html body #passages .passage .cover-3d .cover-subtitle { letter-spacing: 0.04em !important; font-size: clamp(0.95rem, 2vw, 1.2rem) !important; color: #e6fbff !important; text-shadow: 0 2px 10px rgba(0,0,0,.9); margin: 0.9rem 0 1.4rem !important; }
+html body #passages .passage .cover-link.cover-3d { cursor: default; }
+html body #passages .passage .cover-3d h1.cover-title { border: none !important; }
+html body #passages .passage .cover-3d .cover-kaynnista {
+  display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.95rem 2.6rem 0.95rem 2rem; border-radius: 999px; cursor: pointer;
+  font: 800 1.15rem "Segoe UI", Arial, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #052e16;
+  background: radial-gradient(circle at 30% 25%, #b2f2bb, #51cf66 55%, #2b8a3e);
+  border: 3px solid #d3f9d8; box-shadow: 0 6px 0 #1b5e2b, 0 0 36px rgba(81,207,102,.65);
+  transition: transform .12s ease, box-shadow .12s ease, filter .15s ease; animation: kaynnistaSyke 2.2s ease-in-out infinite; }
+html body #passages .passage .cover-3d .cover-kaynnista:hover { filter: brightness(1.08); transform: translateY(-2px); }
+html body #passages .passage .cover-3d .cover-kaynnista:active,
+html body #passages .passage .cover-3d .cover-kaynnista.painettu { transform: translateY(5px); box-shadow: 0 1px 0 #1b5e2b, 0 0 50px rgba(81,207,102,.9); animation: none; }
+html body #passages .passage .cover-3d .cover-kaynnista:focus-visible { outline: 3px solid #ffe066; outline-offset: 5px; }
+html body #passages .passage .cover-3d .cover-kaynnista span { margin: 0 !important; line-height: 1 !important; font-size: inherit !important; }
+.cover-virta { width: 1.5rem; height: 1.5rem; flex: none; }
+@keyframes kaynnistaSyke { 0%, 100% { box-shadow: 0 6px 0 #1b5e2b, 0 0 26px rgba(81,207,102,.45); } 50% { box-shadow: 0 6px 0 #1b5e2b, 0 0 48px rgba(81,207,102,.85); } }
+@media (prefers-reduced-motion: reduce) { html body #passages .passage .cover-3d .cover-kaynnista { animation: none; transition: none; } }
 /* Katso tehdasta -nappi */
 #nayta-tehdas { position: fixed; right: 16px; bottom: 16px; z-index: 20; padding: 0.6rem 1rem; border-radius: 999px;
   border: 2px solid #6fffe9; background: rgba(6,16,31,.92); color: #6fffe9; font: 700 0.9rem "Segoe UI", Arial, sans-serif; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.5); }
@@ -1145,6 +1172,13 @@ $(document).on('click', 'a.macro-link.btn--danger', function () {
       if (b) { b.setAttribute("aria-pressed", "false"); b.textContent = "Katso tehdasta"; }
     }
   });
+
+  /* --- Kannen Käynnistä-painike --- */
+  window.kaynnistaTarina = function (nappi) {
+    if (nappi) { nappi.classList.add("painettu"); nappi.disabled = true; }
+    var hidas = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(function () { Engine.play("start"); }, hidas ? 0 : 220);
+  };
 
   /* --- Kello --- */
   var ALKU = 12 * 60, RAJA = 180;
@@ -1372,22 +1406,17 @@ Engine.play(&quot;start&quot;);
 &lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Linja seis&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Siirry suoraan ammatin valintaan&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="scene-tehdas" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
+</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;a class=&quot;cover-link&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;SugarCube.Engine.play(&#39;start&#39;)&quot;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
   &lt;div class=&quot;cover-inner&quot;&gt;
-    &lt;div class=&quot;cover-title&quot;&gt;
-    Tekniikan ala
-    &lt;/div&gt;
-
-      &lt;/div&gt;
-&lt;/a&gt;
+    &lt;p class=&quot;cover-pieni&quot;&gt;Tarina tekniikan alalta&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Tekniikan ala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Linja seis! · Ehditkö korjata tehtaan ennen kuin rekka tulee?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M12 3v9&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.6&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;path d=&quot;M6.3 6.8a8 8 0 1 0 11.4 0&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.6&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Käynnistä&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="18" name="Ammattitehtävä" tags="scene-tehdas" position="850,475" size="100,100">&lt;h1&gt;Valitse ammatti&lt;/h1&gt;
 &lt;p style=&quot;text-align:center&quot;&gt;Valitse yksi ammatti, jonka esittelet.&lt;/p&gt;
 &lt;&lt;if $korttiTop and $korttiTop.length&gt;&gt;
