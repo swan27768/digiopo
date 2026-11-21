@@ -37,6 +37,7 @@ IKONIT = {
     "kassi": '<path d="M5 8h14l-1.2 12H6.2z" fill="currentColor"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
     "lehti": '<path d="M5 19C5 10 11 5 20 4c0 9-5 15-14 15z" fill="currentColor"/><path d="M5 19l8-8" fill="none" stroke="#2a1405" stroke-width="1.6" stroke-linecap="round"/>',
     "kone": '<path d="M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z" fill="currentColor"/>',
+    "pokaali": '<path d="M7 4h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.8 3.5M17 6h2.5a2.5 2.5 0 0 1-2.8 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 13v4M8.5 20h7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 
@@ -230,6 +231,10 @@ $('body').addClass('hide-navbar');
 </div>
 <</nobr>>""", "scene-loppu")
 
+    # Alan omat lisäpassaget (esim. uuden alan oppilaitossivu, jota alkuperäisessä ei ole)
+    for lp in A.get("LISAPASSAGET", []):
+        lisaa(lp["nimi"], tk("oppilaitokset") + lp["teksti"], lp.get("tags", ""))
+
     i = s.index("</tw-storydata>")
     s = s[:i] + "".join(uudet) + s[i:]
 
@@ -261,6 +266,19 @@ $('body').addClass('hide-navbar');
         for k in re.findall(r'<<goto "([^"]*)">>', t) + re.findall(r'\[\[[^\]]*?->([^\]]*?)\]\]', t) + re.findall(r'<<kiinnostus "[^"]*" "([^"]*)"', t):
             if k not in nimet: puuttuu.add((unesc(attr(a, "name")), k))
     assert not puuttuu, puuttuu
+
+    # Uusi ala, jonka pohjana on toisen alan tiedosto: oma tarinan nimi ja IFID
+    if A.get("TARINA_TUNNISTE"):
+        T2 = A["TARINA_TUNNISTE"]
+        vanha_nimi = unesc(re.search(r'<tw-storydata[^>]*name="([^"]*)"', s).group(1))
+        vanha_ifid = re.search(r'<tw-storydata[^>]*ifid="([^"]*)"', s).group(1)
+        s = s.replace(vanha_ifid, T2["ifid"]).replace(vanha_ifid.upper(), T2["ifid"])
+        assert s.count(f'generateName("{vanha_nimi}")') == 1
+        s = s.replace(f'generateName("{vanha_nimi}")', f'generateName("{T2["nimi"]}")')
+        def sd(mm):
+            t = re.sub(r' name="[^"]*"', f' name="{esc(T2["nimi"])}"', mm.group(0), count=1)
+            return re.sub(r' ifid="[^"]*"', f' ifid="{T2["ifid"]}"', t, count=1)
+        s = re.sub(r'<tw-storydata[^>]*>', sd, s, count=1)
 
     # --- head: tarina alkaa aina kannesta (SugarCuben istuntotila tyhjennetään ennen käynnistystä)
     tarina = unesc(re.search(r'<tw-storydata[^>]*name="([^"]*)"', s).group(1))
