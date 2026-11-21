@@ -42,12 +42,12 @@ KANSI = dict(pieni="Terveys- ja hyvinvointiala · tarina", otsikko="Sote-ala",
              nappi="Aloita tästä", ikoni="syke")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana iltavuorossa. Seuraat, miten apu kulkee hätäpuhelusta ambulanssiin ja sairaalaan. Miten sinä toimisit?",
+            teksti="Olet ensihoidon kenttäjohtaja iltavuorossa. Sinä johdat alueen ambulansseja ja autat, kun tilanne on vaikea. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("1", "ilta"), ("1", "oma ammattikortti")])
 
 TARINA_ALKU = dict(nimi="Hälytys 112", tausta="ilta", teksti="""<<include "HUD">>
 <h1>Hälytys 112</h1>
-<p>Kello on 17.00. Olet TET-harjoittelijana hyvinvointialueella. Tänä iltana näet, miten apu kulkee hätäpuhelusta sairaalaan.</p>
+<p>Kello on 17.00. Olet ensihoidon kenttäjohtaja. Sinä johdat alueen ambulansseja ja pidät huolen, että apu kulkee hätäpuhelusta sairaalaan asti.</p>
 <p>Ensimmäinen paikka on hätäkeskus. Istut päivystäjä Lauran vieressä, ja saat omat kuulokkeet.</p>
 <p>Yhtäkkiä kuulokkeissa piippaa. Joku soittaa hätänumeroon.</p>
 <p class="puhe"><strong>Laura:</strong> ”Kuuntele tarkkaan. Nyt tarvitaan rauhallista mieltä.”</p>
@@ -111,7 +111,7 @@ KOHTAUKSET = [
 <p>Vauvan isä katsoo vauvaa huolestuneena ja kysyy sinulta: ”Miksi vauvan kädet ja jalat ovat sinertävät? Onko jotain vialla?”</p>""",
       valinnat=[
        dict(teksti="Sanon, että varmasti kaikki on hyvin.", aika=10, piirteet={"kuuntelija": 1},
-            palaute="<p><strong>Tarkoitit hyvää, mutta harjoittelija ei voi arvioida vauvan vointia.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
+            palaute="<p><strong>Tarkoitit hyvää, mutta vastasyntyneen voinnin arvioi kätilö.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
        dict(teksti="Pyydän kätilö Hennan paikalle vastaamaan.", aika=10, piirteet={"tiimi": 2, "tarkka": 1},
             palaute="<p><strong>Hyvin toimittu!</strong></p><p>Henna selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p><p>Kun et tiedä vastausta, ohjaa kysymys oikealle ammattilaiselle.</p>"),
        dict(teksti="Etsin vastauksen netistä puhelimella.", aika=15, piirteet={},

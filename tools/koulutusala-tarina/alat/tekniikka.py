@@ -37,10 +37,10 @@ KANSI = dict(pieni="Tarina tekniikan alalta", otsikko="Tekniikan ala",
              alaotsikko="Linja seis! · Ehditkö korjata tehtaan ennen kuin rekka tulee?")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet harjoittelijana sähköpyörätehtaalla. Kesken päivän tuotantolinja pysähtyy, ja rekka tulee hakemaan pyörät kello 15. Ehditkö selvittää vian?",
+            teksti="Olet sähköpyörätehtaan vuoromestari. Sinä vastaat siitä, että päivän pyörät valmistuvat. Kesken päivän tuotantolinja pysähtyy, ja rekka tulee hakemaan pyörät kello 15. Ehditkö selvittää vian?",
             faktat=[("5", "ammattilaista"), ("3 h", "aikaa"), ("1", "oma ammattikortti")])
 
-TARINA_ALKU = dict(nimi="Linja seis", tausta="halytys", teksti="<<include \"HUD\">>\n<h1>Linja seis!</h1>\n<p>Kello on 12.00. Olet ensimmäistä päivää harjoittelussa Volttipyörä Oy:n tehtaalla. Tehdas kokoaa sähköpyöriä.</p>\n<p>Ohjaajasi Sanna esittelee tuotantolinjaa. Robotit hitsaavat runkoja, ja hihna kuljettaa pyöriä eteenpäin.</p>\n<p>Yhtäkkiä kuuluu kova piippaus. Punaiset valot alkavat vilkkua. Hihna pysähtyy.</p>\n<p class=\"puhe\"><strong>Sanna:</strong> ”Linja seis! Rekka tulee hakemaan 120 pyörää kello 15. Tule, mennään ohjaamoon.”</p>\n<div class=\"intro-nappi\"><<link \"Juokse ohjaamoon\">><<set $aika += 5>><<goto \"{{ENSIMMAINEN}}\">><</link>></div>")
+TARINA_ALKU = dict(nimi="Linja seis", tausta="halytys", teksti="<<include \"HUD\">>\n<h1>Linja seis!</h1>\n<p>Kello on 12.00. Olet Volttipyörä Oy:n vuoromestari. Tehdas kokoaa sähköpyöriä, ja sinä johdat tämän päivän vuoroa.</p>\n<p>Kierrät automaatioasentaja Sannan kanssa tuotantolinjaa. Robotit hitsaavat runkoja, ja hihna kuljettaa pyöriä eteenpäin.</p>\n<p>Yhtäkkiä kuuluu kova piippaus. Punaiset valot alkavat vilkkua. Hihna pysähtyy.</p>\n<p class=\"puhe\"><strong>Sanna:</strong> ”Linja seis! Rekka tulee hakemaan 120 pyörää kello 15. Tule, mennään ohjaamoon.”</p>\n<div class=\"intro-nappi\"><<link \"Juokse ohjaamoon\">><<set $aika += 5>><<goto \"{{ENSIMMAINEN}}\">><</link>></div>")
 
 KOHTAUKSET = [
  {

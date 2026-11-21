@@ -53,7 +53,7 @@ KANSI = dict(pieni="Palvelualat: kuljetus ja matkailu · tarina", otsikko="Palve
              nappi="Astu terminaaliin", ikoni="kone")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana lentoasemalla. Illalla iskee lumimyrsky, ja lennot perutaan. Kentälle jää satoja matkustajia. Miten sinä auttaisit?",
+            teksti="Olet lentoaseman häiriötilannekoordinaattori. Illalla iskee lumimyrsky, ja lennot perutaan. Kentälle jää satoja matkustajia. Miten sinä auttaisit?",
             faktat=[("6", "ammattilaista"), ("8", "matkustajaa"), ("1", "lumimyrsky")])
 
 KUVA = "../../images/koulutusalat/"
@@ -63,7 +63,7 @@ TAUSTAKUVAT = {"kansi": KUVA + "palvelu-torni-tausta.webp",
 
 TARINA_ALKU = dict(nimi="Myrsky lentokentällä", tausta="kentta", teksti="""<<include "HUD">>
 <h1>Myrsky lentokentällä</h1>
-<p>Kello on 16.00. Olet TET-harjoittelijana lentoasemalla. Aamupäivä oli rauhallinen, mutta nyt taivas on muuttunut harmaaksi.</p>
+<p>Kello on 16.00. Olet lentoaseman häiriötilannekoordinaattori. Kun jokin menee pieleen, sinä autat eri ammattilaisia toimimaan yhdessä. Aamupäivä oli rauhallinen, mutta nyt taivas on muuttunut harmaaksi.</p>
 <p>Sääennuste varoittaa: illalla tulee kova lumimyrsky. Lumen lisäksi tuuli puhaltaa kovaa.</p>
 <p class="puhe"><strong>Vuoropäällikkö Riikka:</strong> ”Tästä tulee pitkä ilta. Lähdetään ensin lennonjohtotorniin katsomaan, miltä tilanne näyttää.”</p>
 <div class="intro-nappi"><<link "Nouse torniin">><<set $aika += 5>><<goto "{{ENSIMMAINEN}}">><</link>></div>""")

@@ -55,14 +55,14 @@ KANSI = dict(pieni="Elintarvikeala · tarina", otsikko="Elintarvikeala",
              nappi="Aloita maistelu", ikoni="sydan")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana elintarviketehtaalla. Tänään tehdään ensimmäinen erä uutta välipalaa, Marjapalaa. Kello 13 koululaiset maistavat sitä. Miten sinä toimisit?",
+            teksti="Olet elintarviketehtaan laatuvastaava. Tänään tehdään ensimmäinen erä uutta välipalaa, Marjapalaa, ja sinä varmistat, että se on turvallista. Kello 13 koululaiset maistavat sitä. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("5", "tuntia aikaa"), ("1", "oma välipala")])
 
 TARINA_ALKU = dict(nimi="Uusi välipala", tausta="yleis", teksti="""<<run setup.taustakuva("../../images/koulutusalat/elintarvike-tehdas-tausta.webp")>><<include "HUD">>
 <h1>Uusi välipala</h1>
-<p>Kello on 8.00. Olet TET-harjoittelijana Makupaja Oy:n elintarviketehtaalla. Tehtaassa tuoksuu paahdettu kaura ja mansikka.</p>
+<p>Kello on 8.00. Olet Makupaja Oy:n laatuvastaava. Sinä varmistat, että tehtaan ruoka on turvallista ja hyvää. Tehtaassa tuoksuu paahdettu kaura ja mansikka.</p>
 <p>Tänään valmistetaan ensimmäinen erä uutta välipalaa. Se on Marjapala: kaurapatukka, jossa on mansikkaa ja jogurttikuorrute.</p>
-<p class="puhe"><strong>Tuotantopäällikkö Leena:</strong> ”Kello 13 viemme Marjapaloja koululle maistettavaksi. Ennen kuin pääset tuotantoon, käydään hygieniasulussa.”</p>
+<p class="puhe"><strong>Tuotantopäällikkö Leena:</strong> ”Kello 13 viemme Marjapaloja koululle maistettavaksi. Kierrä tuotanto ja varmista, että kaikki on kunnossa. Aloita hygieniasulusta.”</p>
 <div class="intro-nappi"><<link "Mene hygieniasulkuun">><<set $aika += 5>><<goto "{{ENSIMMAINEN}}">><</link>></div>""")
 
 KOHTAUKSET = [
@@ -75,8 +75,8 @@ KOHTAUKSET = [
             palaute="<p><strong>Juuri oikein!</strong></p><p>Korut ja omat vaatteet voivat tuoda bakteereja ruokaan. Pieni osa voi myös pudota tuotteeseen. Siksi kaikki tekevät samoin, myös tehtaan johtaja.</p>"),
        dict(teksti="Laitan hanskat sormuksen päälle, niin se ei haittaa.", aika=15, piirteet={},
             palaute="<p><strong>Sami pyytää riisumaan sormuksen.</strong></p><p>Hanska voi revetä, ja sormuksen alle jää bakteereja. Korut riisutaan aina.</p><p>Pesette kädet ja puette työvaatteet ja hiussuojan.</p>"),
-       dict(teksti="Menen suoraan sisään. Olen vain katsomassa.", aika=15, piirteet={},
-            palaute="<p><strong>Sami pysäyttää sinut ovella.</strong></p><p>Säännöt koskevat kaikkia, myös vierailijoita. Yksikin hius tai bakteeri voi pilata koko erän.</p><p>Riisut korut, peset kädet ja puet työvaatteet.</p>"),
+       dict(teksti="Menen suoraan sisään. Käyn vain nopeasti.", aika=15, piirteet={},
+            palaute="<p><strong>Sami pysäyttää sinut ovella.</strong></p><p>Säännöt koskevat kaikkia, myös laatuvastaavaa ja tehtaan johtajaa. Yksikin hius tai bakteeri voi pilata koko erän.</p><p>Riisut korut, peset kädet ja puet työvaatteet.</p>"),
       ]),
  dict(nimi="Leipomo", tausta="leipomo", otsikko="Leipomo", avain="leipuri",
       kysymys="Miltä leipuri-kondiittorin työ näytti?",

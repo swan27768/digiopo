@@ -55,13 +55,13 @@ KANSI = dict(pieni="Kaupan ala · tarina", otsikko="Kaupan ala",
              nappi="Astu messuille", ikoni="kassi")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana nuorten vaatekaupassa. Tänään lähdet sisäänostajan mukaan muotimessuille valitsemaan kevään vaatteita. Miten sinä toimisit?",
+            teksti="Olet nuorten vaatekaupan apulaissisäänostaja. Tänään lähdet sisäänostaja Sofian kanssa muotimessuille valitsemaan kevään vaatteita. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("2 000 €", "budjetti"), ("1", "oma ammattikortti")])
 
 TARINA_ALKU = dict(nimi="Ostajana muotimessuilla", tausta="halli", teksti="""<<run setup.taustakuva("../../images/koulutusalat/kauppa-messut-tausta.webp")>><<include "HUD">>
 <h1>Ostajana muotimessuilla</h1>
-<p>Kello on 9.00. Olet TET-harjoittelijana Kolibri-vaatekaupassa. Kauppa myy vaatteita nuorille.</p>
-<p>Tänään olet sisäänostaja Sofian mukana muotimessuilla. Messuhallissa on satoja osastoja: vaatteita, kenkiä, laukkuja ja koruja.</p>
+<p>Kello on 9.00. Olet Kolibri-vaatekaupan apulaissisäänostaja. Kauppa myy vaatteita nuorille.</p>
+<p>Tänään olet sisäänostaja Sofian työparina muotimessuilla. Messuhallissa on satoja osastoja: vaatteita, kenkiä, laukkuja ja koruja.</p>
 <p class="puhe"><strong>Sofia, sisäänostaja:</strong> ”Kevään tilaukset pitää lähettää kello 15. Ennen kuin ostamme mitään, mietitään, mitä asiakkaamme oikeasti haluavat.”</p>
 <div class="intro-nappi"><<link "Aloita messukierros">><<set $aika += 5>><<goto "{{ENSIMMAINEN}}">><</link>></div>""")
 

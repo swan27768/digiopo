@@ -43,14 +43,14 @@ KANSI = dict(pieni="Tieto- ja viestintätekniikka · tarina", otsikko="IT-ala",
              nappi="Aloita peli", ikoni="play")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana pelistudiossa. Studion uusi mobiilipeli julkaistaan tänään kello 12. Aamulla kaikki ei kuitenkaan mene putkeen. Miten sinä toimisit?",
+            teksti="Olet pelistudion tuottaja. Sinä vastaat siitä, että studion uusi mobiilipeli julkaistaan tänään kello 12. Aamulla kaikki ei kuitenkaan mene putkeen. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("4", "tuntia aikaa"), ("1", "oma ammattikortti")])
 
 TARINA_ALKU = dict(nimi="Julkaisupäivä", tausta="studio", teksti="""<<include "HUD">>
 <h1>Julkaisupäivä</h1>
-<p>Kello on 8.00. Olet TET-harjoittelijana Pikselipaja-pelistudiossa. Seinän isolla näytöllä lukee: <strong>Kettu kiertoradalla – julkaisu klo 12.00</strong>.</p>
+<p>Kello on 8.00. Olet Pikselipaja-pelistudion tuottaja. Sinä pidät langat käsissäsi julkaisupäivänä. Seinän isolla näytöllä lukee: <strong>Kettu kiertoradalla – julkaisu klo 12.00</strong>.</p>
 <p>Peliä on tehty puolitoista vuotta. Tänään se tulee sovelluskauppoihin, ja tuhannet pelaajat odottavat.</p>
-<p class="puhe"><strong>Tiimin vetäjä Iida:</strong> ”Tervetuloa! Tänään et pääse helpolla. Aloitetaan testaajan pöydältä. Siellä on jokin ongelma.”</p>
+<p class="puhe"><strong>Studion johtaja Iida:</strong> ”Huomenta, tuottaja! Tänään et pääse helpolla. Testaajan pöydältä kuuluu huolestunutta puhetta. Mene katsomaan.”</p>
 <div class="intro-nappi"><<link "Mene testaajan luo">><<set $aika += 5>><<goto "{{ENSIMMAINEN}}">><</link>></div>""")
 
 KOHTAUKSET = [

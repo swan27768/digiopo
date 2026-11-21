@@ -53,7 +53,7 @@ KANSI = dict(pieni="Luonto- ja ympäristöala · tarina", otsikko="Luontoala",
              nappi="Lähde maastoon", ikoni="lehti")
 
 ALKU = dict(tag="Tarina · noin 15 min",
-            teksti="Olet TET-harjoittelijana Lapissa. Joesta on löytynyt kuolleita kaloja, ja vesi on samentunut. Selvitä luonnon ammattilaisten kanssa, mistä ongelma johtuu.",
+            teksti="Olet ympäristötarkastaja Lapissa. Joesta on löytynyt kuolleita kaloja, ja vesi on samentunut. Selvitä luonnon ammattilaisten kanssa, mistä ongelma johtuu.",
             faktat=[("6", "ammattilaista"), ("8", "näytepistettä"), ("1", "mysteeri")])
 
 KUVA = "../../images/koulutusalat/"
@@ -68,9 +68,9 @@ TAUSTAKUVAT = {"kansi": KUVA + "luonto-ruska-tausta.webp",
 
 TARINA_ALKU = dict(nimi="Mysteeri joella", tausta="laakso", teksti=f"""<<run setup.taustakuva("{KUVA}luonto-laakso-tausta.webp")>><<include "HUD">>
 <h1>Mysteeri joella</h1>
-<p>Kello on 8.00. On syyskuu, ja Lapin tunturit hehkuvat ruskan väreissä. Olet TET-harjoittelijana luonto- ja ympäristöalan työpaikalla.</p>
+<p>Kello on 8.00. On syyskuu, ja Lapin tunturit hehkuvat ruskan väreissä. Olet kunnan ympäristötarkastaja. Sinun työsi on valvoa, että luontoa ei pilata.</p>
 <p>Aamulla tuli outo ilmoitus: Kuukkelijoesta on löytynyt kuolleita harjuksia, ja joen vesi on samentunut.</p>
-<p class="puhe"><strong>Ohjaajasi Aatu:</strong> ”Tämä on mysteeri, joka pitää ratkaista ennen kuin pimeä tulee. Lähdetään joen rantaan.”</p>
+<p class="puhe"><strong>Kalavesienhoitaja Aatu soittaa:</strong> ”Tämä on mysteeri, joka pitää ratkaista ennen kuin pimeä tulee. Tule joen rantaan.”</p>
 <div class="intro-nappi"><<link "Lähde joelle">><<set $aika += 5>><<goto "{{{{ENSIMMAINEN}}}}">><</link>></div>""")
 
 KOHTAUKSET = [
