@@ -9,7 +9,7 @@ Tällä työkalulla tehdään Amispolun alatehtävät (8. lk, Oma reitti → Vai
 |---|---|
 | `pelit/koulutusalat/tarina-yhteinen.js` | Yhteinen moottori: kello, ammattikortti, kortin lataus kuvana, Kenet kutsut paikalle?, palautustiedosto, tyhjennys, "Katso ympärille" -nappi |
 | `pelit/koulutusalat/tarina-yhteinen.css` | Yhteiset tyylit. Värit tulevat CSS-muuttujista (--a1, --a2, --korostus, --tausta …) |
-| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`) |
+| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`, `elintarvike`) |
 | `vendor/three/three.module.min.js` | three.js r187 |
 | `tools/koulutusala-tarina/rakenna_tarina.py` | Rakentaja |
 | `tools/koulutusala-tarina/alat/*.py` | Alan sisältö: tekstit, kohtaukset, ammatit, kortit, teema |
@@ -22,8 +22,15 @@ tekstit ja mekaniikan `TEHTAVA`-sanakirjalla. Esimerkki: `alat/it.py` = Tietotur
 askeleet, lopuksi, kysymys, korttiSana, seuraava, miksiLabel, placeholder, vihjeValitse, vihjeAlku,
 sekoita, etiketit, palaute, ammattilainenTeksti`. Jos `TEHTAVA` puuttuu, kaikki toimii kuten ennen.
 
+Tyyppi `kehitys` (`TEHTAVA["tyyppi"] = "kehitys"`, esimerkki `alat/elintarvike.py`): oppilas rakentaa oman
+tuotteen vaihe vaiheelta. `KUTSU_KORTIT` = vaiheet (`otsikko, kysymys, miksi, ammattilainen, ammattikuvaus, tutkinto,
+vaihtoehdot[nimi, kuvaus, hinta, allergeenit, tagit, palaute]`). Ensimmäinen vaihe on kohderyhmä (`tarve`,
+`kielletty`). Peli laskee hinnan, kerää allergeenit, varoittaa sopimattomista valinnoista ja lopuksi tuote nimetään.
+
 Valmiit tehtävätyypit: tekniikka = Kenet kutsut paikalle? (vikatilanne), sote = Kenet kutsut paikalle?,
-it = Tietoturvatarkastus. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
+it = Tietoturvatarkastus, elintarvike = Kehitä oma välipala. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
+
+Huom: 3D-kohtauksen nimi `tehdas` piilottaa Katso-napin (tekniikan aloitussivu). Käytä muilla aloilla muuta nimeä.
 
 ## Uuden alan tekeminen
 

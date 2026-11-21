@@ -33,6 +33,7 @@ def attr(a, nimi):
 IKONIT = {
     "virta": '<path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
     "play": '<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>',
+    "sydan": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="currentColor"/>',
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 
@@ -105,7 +106,8 @@ def rakenna(A, src, dst):
     TH = dict(nimi="Kenet kutsut paikalle?", tag="Tehtävä · noin 25 min",
               maara=f"<strong>{len(A['KUTSU_KORTIT'])} tilannetta</strong>",
               askeleet=["Valitse ammattilainen, joka auttaa tilanteessa.", "Kirjoita yhdellä lauseella, miksi valitsit hänet."],
-              lopuksi="Sitten näet, osuitko oikeaan. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.")
+              lopuksi="Sitten näet, osuitko oikeaan. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+              tulosOtsikko=None, ohjeAskelLause="Jokaisessa teet kaksi asiaa:")
     TH.update({k: v for k, v in A.get("TEHTAVA", {}).items() if k in TH})
     pset = ", ".join(f"{k}: 0" for k in PIIRTEET)
     kset = ", ".join(f"{k}: 0" for k in AMMATIT)
@@ -117,8 +119,11 @@ def rakenna(A, src, dst):
 <<set $korttiNimi to "">>
 <<set $ammatti to "">>""")
 
+    TK = A.get("TAUSTAKUVAT", {})
+    def tk(avain):
+        return f'<<run setup.taustakuva("{TK[avain]}")>>' if TK.get(avain) else ""
     K = A["KANSI"]
-    korvaa(kansi_nimi, f"""<<script>>
+    korvaa(kansi_nimi, f"""{tk('kansi')}<<script>>
 $('body').addClass('hide-navbar');
 <</script>>
 <div class="cover-link cover-3d">
@@ -132,7 +137,7 @@ $('body').addClass('hide-navbar');
 
     S = A["ALKU"]
     faktat = "\n".join(f"<li><strong>{a}</strong><span>{b}</span></li>" for a, b in S["faktat"])
-    lisaa("start", f"""<<nobr>>
+    lisaa("start", f"""<<nobr>>{tk('alku')}
 <div class="alku-kortti">
 <p class="alku-tag">{S['tag']}</p>
 <h2 class="alku-otsikko">{A['tarinaNimi']}</h2>
@@ -169,25 +174,25 @@ $('body').addClass('hide-navbar');
 <<link "Seuraava tehtävä: {TH['nimi']}">><<goto "Kutsu: ohje">><</link>>
 </div>""", "scene-loppu")
 
-    lisaa("Kutsu: ohje", f"""<<nobr>>
+    lisaa("Kutsu: ohje", f"""<<nobr>>{tk('tehtava')}
 <div class="kutsu-ohje">
 <p class="alku-tag">{TH['tag']}</p>
 <h2 class="alku-otsikko">{TH['nimi']}</h2>
 <p>{A['KUTSU_JOHDANTO']}</p>
-<p>Saat {TH['maara']}. Jokaisessa teet kaksi asiaa:</p>
+<p>Saat {TH['maara']}. {TH['ohjeAskelLause']}</p>
 <ol class="kutsu-askeleet">{''.join(f'<li>{x}</li>' for x in TH['askeleet'])}</ol>
 <p>{TH['lopuksi']}</p>
 <div class="intro-nappi"><<link "Aloita">><<goto "Kutsu">><</link>></div>
 </div>
 <</nobr>>""", f"scene-{A['yleisKohtaus']}")
 
-    lisaa("Kutsu", """<<nobr>>
+    lisaa("Kutsu", f"""<<nobr>>{tk('tehtava')}
 <div id="kutsu-alue" class="kutsu-alue"></div>
-<<script>>setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);<</script>>
+<<script>>setTimeout(function () {{ if (window.kutsuPiirra) kutsuPiirra(); }}, 0);<</script>>
 <</nobr>>""", f"scene-{A['yleisKohtaus']}")
 
-    lisaa("Kutsu: tulos", f"""<<nobr>>
-<h2>{TH['nimi']} – tulokset</h2>
+    lisaa("Kutsu: tulos", f"""<<nobr>>{tk('tehtava')}
+<h2>{TH['tulosOtsikko'] or TH['nimi'] + ' – tulokset'}</h2>
 <div id="kutsu-yhteenveto"><<print setup.kutsuYhteenveto()>></div>
 <p class="pieni" style="text-align:center">Lataa vastauksesi ja palauta tiedosto Classroomiin.</p>
 <div class="intro-nappi action-row">
