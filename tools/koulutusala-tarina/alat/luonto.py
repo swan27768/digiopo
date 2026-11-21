@@ -57,9 +57,14 @@ ALKU = dict(tag="Tarina · noin 15 min",
             faktat=[("6", "ammattilaista"), ("8", "näytepistettä"), ("1", "mysteeri")])
 
 KUVA = "../../images/koulutusalat/"
+# Lapin luontokuvat: sivuilla, joilla ei ole omaa kuvaa, arvotaan yksi näistä
+LAPPI = [KUVA + n for n in ["luonto-ruska-tausta.webp", "luonto-laakso-tausta.webp", "luonto-puro-tausta.webp",
+                            "luonto-tunturi-tausta.webp", "luonto-pitkospuut-tausta.webp", "luonto-kyla-tausta.webp",
+                            "luonto-talvi-tausta.webp", "luonto-metsa-tausta.webp"]]
 TAUSTAKUVAT = {"kansi": KUVA + "luonto-ruska-tausta.webp",
                "alku": KUVA + "luonto-ruska-tausta.webp",
-               "tehtava": KUVA + "luonto-metsa-tausta.webp"}
+               "tehtava": KUVA + "luonto-metsa-tausta.webp",
+               "kortti": LAPPI, "loppu": LAPPI, "oppilaitokset": LAPPI}
 
 TARINA_ALKU = dict(nimi="Mysteeri joella", tausta="laakso", teksti=f"""<<run setup.taustakuva("{KUVA}luonto-laakso-tausta.webp")>><<include "HUD">>
 <h1>Mysteeri joella</h1>
@@ -131,7 +136,8 @@ KOHTAUKSET = [
        dict(teksti="En sano mitään. Se ei kuulu minulle.", aika=10, piirteet={},
             palaute="<p><strong>Luonnon puolesta saa puhua.</strong></p><p>Aatu kertoo havainnoista. Jussi soittaa metsäyhtiöön, ja allas tehdään vielä tällä viikolla.</p>"),
       ]),
- dict(nimi="Laboratorio", tausta="kyla", otsikko="Kylän laboratorio", avain="laborantti",
+ dict(nimi="Laboratorio", taustakuva=KUVA + "luonto-kyla-tausta.webp",
+      kuva=dict(src=KUVA + "luonto-labranaytteet.webp", alt="Vesinäytteitä koeputkissa telineessä. Nesteet ovat keltaisia, vihreitä ja sinisiä.", leveys=1000, korkeus=661), tausta="kyla", otsikko="Kylän laboratorio", avain="laborantti",
       kysymys="Miltä laborantin työ näytti?",
       johdanto="""<p>Kylän laboratoriossa laborantti Noora tutkii Saanan näytteet. Tulokset ovat valmiina.</p>
 <p class="puhe"><strong>Noora, laborantti:</strong> ”Näytteitä on kahdeksasta kohdasta. Miten saamme selville, mistä ongelma alkaa?”</p>""",

@@ -127,7 +127,12 @@ def rakenna(A, src, dst):
 
     TK = A.get("TAUSTAKUVAT", {})
     def tk(avain):
-        return f'<<run setup.taustakuva("{TK[avain]}")>>' if TK.get(avain) else ""
+        """Taustakuva passagelle. Lista = arvotaan yksi kuva joka kerta (SugarCuben either)."""
+        v = TK.get(avain)
+        if not v: return ""
+        if isinstance(v, list):
+            return '<<run setup.taustakuva(either(' + ", ".join(f'"{x}"' for x in v) + '))>>'
+        return f'<<run setup.taustakuva("{v}")>>' 
     K = A["KANSI"]
     korvaa(kansi_nimi, f"""{tk('kansi')}<<script>>
 $('body').addClass('hide-navbar');
@@ -169,7 +174,7 @@ $('body').addClass('hide-navbar');
     L = A["TARINA_LOPPU"]
     lisaa(L["nimi"], L["teksti"] + '\n<div class="intro-nappi"><<link "Katso ammattikorttisi">><<goto "Ammattikortti">><</link>></div>', "scene-loppu")
 
-    lisaa("Ammattikortti", f"""<<run setup.tallennaKortti()>>
+    lisaa("Ammattikortti", f"""{tk('kortti')}<<run setup.tallennaKortti()>>
 <h1>Ammattikorttisi</h1>
 <p>Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.</p>
 <div class="kortti-nimi-rivi"><label for="kortti-nimi">Nimesi korttiin (vapaaehtoinen)</label>
@@ -208,7 +213,7 @@ $('body').addClass('hide-navbar');
 <</nobr>>""", "scene-loppu")
 
     opl_teksti, opl_kohde = A["OPPILAITOKSET"]
-    lisaa("Loppu", f"""<<nobr>>
+    lisaa("Loppu", f"""<<nobr>>{tk('loppu')}
 <h2>Valmis!</h2>
 <p>{A['LOPPU_TEKSTI']}</p>
 <p>Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, <<link "palaa tuloksiin">><<goto "Kutsu: tulos">><</link>>.</p>
@@ -244,7 +249,7 @@ $('body').addClass('hide-navbar');
             return m2.group(0) if m2.group(1) in nimet else '<<goto "Loppu">>'
         t = re.sub(r'<<goto "([^"]*)">>', gt, t)
         t = re.sub(r'<<link "([^"]*)">>(\s*)<<goto "Loppu">>', r'<<link "Takaisin">>\2<<goto "Loppu">>', t)
-        return f'<tw-passagedata{a}>' + esc(t) + '</tw-passagedata>'
+        return f'<tw-passagedata{a}>' + esc(tk('oppilaitokset') + t) + '</tw-passagedata>'
     s = PASSAGE_RE.sub(korjaa_linkit, s)
 
     # tarkistus: kaikki linkit osuvat
