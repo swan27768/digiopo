@@ -58,7 +58,7 @@ ALKU = dict(tag="Tarina · noin 15 min",
             teksti="Olet TET-harjoittelijana nuorten vaatekaupassa. Tänään lähdet sisäänostajan mukaan muotimessuille valitsemaan kevään vaatteita. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("2 000 €", "budjetti"), ("1", "oma ammattikortti")])
 
-TARINA_ALKU = dict(nimi="Ostajana muotimessuilla", tausta="halli", teksti="""<<include "HUD">>
+TARINA_ALKU = dict(nimi="Ostajana muotimessuilla", tausta="halli", teksti="""<<run setup.taustakuva("../../images/koulutusalat/kauppa-messut-tausta.webp")>><<include "HUD">>
 <h1>Ostajana muotimessuilla</h1>
 <p>Kello on 9.00. Olet TET-harjoittelijana Kolibri-vaatekaupassa. Kauppa myy vaatteita nuorille.</p>
 <p>Tänään olet sisäänostaja Sofian mukana muotimessuilla. Messuhallissa on satoja osastoja: vaatteita, kenkiä, laukkuja ja koruja.</p>
@@ -235,6 +235,11 @@ KUTSU_KORTIT = [
 ]
 
 LOPPU_TEKSTI = "Kävit muotimessuilla ja ostit kaupalle oman kevään valikoiman. Samalla tutustuit kahdeksaan kaupan alan ammattiin."
+
+# Taustakuvat: etusivu (kansi + aloitussivu) ja tehtävän sivut
+TAUSTAKUVAT = {"kansi": "../../images/koulutusalat/kauppa-messut-tausta.webp",
+               "alku": "../../images/koulutusalat/kauppa-messut-tausta.webp",
+               "tehtava": "../../images/koulutusalat/kauppa-myymala-tausta.webp"}
 
 OPPILAITOKSET = ("Missä kaupan alaa voi opiskella?", "Toinen aste")
 SAILYTA = ["Toinen aste", "Korkeakoulut"]
