@@ -62,11 +62,12 @@ ALKU = dict(tag="Tarina · noin 15 min",
             faktat=[("6", "ammattilaista"), ("48", "tuntia"), ("6000", "kävijää")])
 
 KUVA = "../../images/koulutusalat/"
-TAUSTAKUVAT = {"kansi": KUVA + "taide-jarvi-tausta.webp",
+TAUSTAKUVAT = {"kansi": KUVA + "taide-tanssi-tausta.webp",
                "alku": KUVA + "taide-markkinat-tausta.webp",
+               "tehtava": KUVA + "taide-lava-tausta.webp",
                "kortti": KUVA + "taide-jarvi-tausta.webp",
-               "loppu": [KUVA + "taide-jarvi-tausta.webp", KUVA + "taide-markkinat-tausta.webp", KUVA + "taide-pelit-tausta.webp"],
-               "oppilaitokset": [KUVA + "taide-markkinat-tausta.webp", KUVA + "taide-jarvi-tausta.webp"]}
+               "loppu": [KUVA + "taide-jarvi-tausta.webp", KUVA + "taide-markkinat-tausta.webp", KUVA + "taide-pelit-tausta.webp", KUVA + "taide-pyro-tausta.webp", KUVA + "taide-lava-tausta.webp"],
+               "oppilaitokset": [KUVA + "taide-markkinat-tausta.webp", KUVA + "taide-jarvi-tausta.webp", KUVA + "taide-pyro-tausta.webp"]}
 
 TARINA_ALKU = dict(nimi="Festarit 48 tunnissa", tausta="puisto", teksti="""<<include "HUD">>
 <h1>Festarit 48 tunnissa</h1>
@@ -90,6 +91,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Huolellista, mutta hidasta ja kallista.</strong></p><p>Uudet kartat eivät ehtisi ajoissa. Sini tekee korjaustarran, joka korjaa virheen heti.</p>"),
       ]),
  dict(nimi="Rantalava", tausta="lava", otsikko="Avajaiskonsertti", avain="musiikkiteknologi",
+      taustakuva=KUVA + "taide-pyro-tausta.webp",
       kysymys="Miltä musiikkiteknologin työ näytti?", lisaaika=900, siirtymaTeksti="Yö kuluu. Seuraava tilanne on lauantaiaamuna.",
       johdanto="""<p>Avajaiskonsertti alkaa, ja yleisö tanssii. Puhelimesi soi.</p>
 <p>Lähitalon asukas valittaa: musiikki kuuluu hänen olohuoneeseensa asti, ja hänen vauvansa ei saa unta.</p>
@@ -219,7 +221,9 @@ TEHTAVA = dict(
              "Hyvä alku! Katso tarkistuslistan selitykset: niistä näet, mitä julisteeseen vielä tarvitaan."],
     kuvat=[{"avain": "jarvi", "nimi": "Rantakonsertti", "src": KUVA + "taide-jarvi.webp"},
            {"avain": "markkinat", "nimi": "Markkinailta", "src": KUVA + "taide-markkinat.webp"},
-           {"avain": "pelit", "nimi": "Pelitelta", "src": KUVA + "taide-pelit.webp"}],
+           {"avain": "pelit", "nimi": "Pelitelta", "src": KUVA + "taide-pelit.webp"},
+           {"avain": "lava", "nimi": "Päälava", "src": KUVA + "taide-lava.webp"},
+           {"avain": "pyro", "nimi": "Tulishow", "src": KUVA + "taide-pyro.webp"}],
     varit=[{"avain": "kesayo", "nimi": "Kesäyö", "tausta": "#1d1a45", "teksti": "#ffd98a", "korostus": "#ff7ab8"},
            {"avain": "auringonlasku", "nimi": "Auringonlasku", "tausta": "#ff9a6b", "teksti": "#ffffff", "korostus": "#1d1a45"},
            {"avain": "metsa", "nimi": "Metsä", "tausta": "#123a2c", "teksti": "#eafff4", "korostus": "#ffd98a"},
