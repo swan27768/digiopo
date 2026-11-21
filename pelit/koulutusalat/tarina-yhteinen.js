@@ -13,7 +13,12 @@
      katsoTeksti    "Katso tehdasta"      3D-näkymän napin teksti
      piirteet       { avain: { nimi, kuvaus } }
      ammatit        { avain: { nimi, kuvaus, tutkinto, piirteet: [...] } }
-     kutsuKortit    [ { tilanne, oikea, tutkinto, vaihtoehdot: { nimi: selitys } } ]
+     kutsuKortit    [ { tilanne, oikea, tutkinto, vaihtoehdot: { nimi: selitys },
+                        nakyma?: HTML (esim. viestin kuva), ammattilainen?: "Tietoturva-asiantuntija" } ]
+     tehtava        (valinnainen) loppuosan tehtävän tekstit, oletuksena "Kenet kutsut paikalle?":
+                    { nimi, kysymys, korttiSana, seuraava, miksiLabel, placeholder, vihjeValitse,
+                      vihjeAlku, sekoita, etiketit: { nimi: näkyvä teksti }, palaute: [hyvä, keski, alku],
+                      ammattilainenTeksti }
 
    Sivulle tarjottavat funktiot: setup.tausta, setup.kello, setup.jaljella,
    setup.tallennaKortti, setup.piirreTeksti, setup.korttiHTML, setup.kutsuYhteenveto,
@@ -35,6 +40,14 @@
     var KUTSU_KEY = D.ala + "_kutsu_v1";
     /* Tallennus on sidottu korttisarjaan: jos kortit vaihtuvat, vanhat vastaukset hylätään */
     var KORTTI_SIG = KORTIT.map(function (k) { return k.oikea; }).join("|");
+    var TH = Object.assign({
+      nimi: "Kenet kutsut paikalle?", kysymys: "Kenet kutsut paikalle?", korttiSana: "Kortti",
+      seuraava: "Seuraava kortti", miksiLabel: "Miksi juuri hän? Kirjoita yksi lause.",
+      placeholder: "Valitsin hänet, koska…", vihjeValitse: "Valitse ammattilainen.",
+      vihjeAlku: "Valitse ammattilainen ja kirjoita perustelu.", sekoita: true, etiketit: {},
+      palaute: ["Huippua! Tunnet alan ammatit hyvin.", "Hyvä! Moni ammatti tuli jo tutuksi.", "Nyt tiedät paljon enemmän kuin äsken. Juuri sitä varten tehtävä on."],
+      ammattilainenTeksti: "Työssä tätä hoitaa"
+    }, D.tehtava || {});
     var $ = window.jQuery;
 
     /* --- 3D-tausta: kohtaus passagen tagista (scene-*) --- */
@@ -250,19 +263,19 @@
       if (i >= KORTIT.length) { play("Kutsu: tulos"); return; }
       var k = KORTIT[i];
       var nimet = Object.keys(k.vaihtoehdot);
-      for (var r = nimet.length - 1; r > 0; r--) { var q = Math.floor(Math.random() * (r + 1)); var tmp = nimet[r]; nimet[r] = nimet[q]; nimet[q] = tmp; }
+      if (TH.sekoita) for (var r = nimet.length - 1; r > 0; r--) { var q = Math.floor(Math.random() * (r + 1)); var tmp = nimet[r]; nimet[r] = nimet[q]; nimet[q] = tmp; }
       var pallot = KORTIT.map(function (_, j) { return '<span class="' + (j < i ? "tehty" : j === i ? "nyt" : "") + '"></span>'; }).join("");
       alue.innerHTML =
-        '<p class="kohtaus-nro">Kortti ' + (i + 1) + '/' + KORTIT.length + '</p>' +
+        '<p class="kohtaus-nro">' + suojaa(TH.korttiSana) + ' ' + (i + 1) + '/' + KORTIT.length + '</p>' +
         '<div class="kutsu-edistyminen" aria-hidden="true">' + pallot + '</div>' +
-        '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(D.kutsuTilanneOtsikko || "Tilanne") + '</p><p class="kutsu-teksti">' + suojaa(k.tilanne) + '</p></div>' +
-        '<p class="kutsu-kysymys" id="kutsu-kysymys">Kenet kutsut paikalle?</p>' +
+        '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(D.kutsuTilanneOtsikko || "Tilanne") + '</p><p class="kutsu-teksti">' + suojaa(k.tilanne) + '</p>' + (k.nakyma ? '<div class="kutsu-nakyma">' + k.nakyma + '</div>' : '') + '</div>' +
+        '<p class="kutsu-kysymys" id="kutsu-kysymys">' + suojaa(TH.kysymys) + '</p>' +
         '<div class="kutsu-vaihtoehdot" role="radiogroup" aria-labelledby="kutsu-kysymys">' +
-          nimet.map(function (n, j) { return '<button type="button" class="kutsu-vaihtoehto" role="radio" aria-checked="false" tabindex="' + (j === 0 ? 0 : -1) + '" data-nimi="' + suojaa(n) + '">' + suojaa(n) + '</button>'; }).join("") +
+          nimet.map(function (n, j) { return '<button type="button" class="kutsu-vaihtoehto" role="radio" aria-checked="false" tabindex="' + (j === 0 ? 0 : -1) + '" data-nimi="' + suojaa(n) + '">' + suojaa(TH.etiketit[n] || n) + '</button>'; }).join("") +
         '</div>' +
-        '<label class="kutsu-miksi-label" for="kutsu-miksi">Miksi juuri hän? Kirjoita yksi lause.</label>' +
-        '<textarea id="kutsu-miksi" maxlength="300" placeholder="Valitsin hänet, koska…"></textarea>' +
-        '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite">Valitse ammattilainen ja kirjoita perustelu.</p>' +
+        '<label class="kutsu-miksi-label" for="kutsu-miksi">' + suojaa(TH.miksiLabel) + '</label>' +
+        '<textarea id="kutsu-miksi" maxlength="300" placeholder="' + suojaa(TH.placeholder) + '"></textarea>' +
+        '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite">' + suojaa(TH.vihjeAlku) + '</p>' +
         '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista" disabled>Tarkista</button></div>' +
         '<div class="kutsu-palaute" aria-live="polite"></div>';
 
@@ -275,7 +288,7 @@
       function paivita() {
         var pituus = miksi.value.trim().length;
         tarkista.disabled = !(valinta && pituus >= 10);
-        vihje.textContent = !valinta ? "Valitse ammattilainen." : (pituus < 10 ? "Kirjoita vielä lyhyt perustelu." : "Hyvä! Paina Tarkista.");
+        vihje.textContent = !valinta ? TH.vihjeValitse : (pituus < 10 ? "Kirjoita vielä lyhyt perustelu." : "Hyvä! Paina Tarkista.");
       }
       function valitse(nappi) {
         valinta = nappi.getAttribute("data-nimi");
@@ -314,8 +327,9 @@
           h += '<p class="kutsu-tulos-otsikko"><strong class="ei">Ei aivan.</strong> Oikea vastaus on <strong>' + suojaa(k.oikea.toLowerCase()) + '</strong>.</p>' +
                '<p>' + suojaa(k.vaihtoehdot[valinta]) + '</p><p>' + suojaa(k.vaihtoehdot[k.oikea]) + '</p>';
         }
+        if (k.ammattilainen) h += '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p>';
         h += '<p class="kutsu-tutkinto">Koulutus: ' + suojaa(k.tutkinto) + '</p></div>' +
-             '<div class="kutsu-napit" style="margin-top:1rem"><button type="button" class="kutsu-seuraava">' + (viimeinen ? "Katso tulokset" : "Seuraava kortti") + '</button></div>';
+             '<div class="kutsu-napit" style="margin-top:1rem"><button type="button" class="kutsu-seuraava">' + (viimeinen ? "Katso tulokset" : suojaa(TH.seuraava)) + '</button></div>';
         var pal = alue.querySelector(".kutsu-palaute");
         pal.innerHTML = h;
         var seuraava = pal.querySelector(".kutsu-seuraava");
@@ -337,12 +351,13 @@
       var tila = kutsuTila();
       var oikeat = tila.vastaukset.filter(function (x) { return x.oikein; }).length;
       var h = '<p class="kutsu-pisteet">Osuit oikeaan <strong>' + oikeat + '/' + KORTIT.length + '</strong> kertaa.</p>';
-      h += '<p style="text-align:center">' + (oikeat >= 7 ? "Huippua! Tunnet alan ammatit hyvin." : oikeat >= 4 ? "Hyvä! Moni ammatti tuli jo tutuksi." : "Nyt tiedät paljon enemmän kuin äsken. Juuri sitä varten tehtävä on.") + '</p>';
+      h += '<p style="text-align:center">' + suojaa(oikeat >= 7 ? TH.palaute[0] : oikeat >= 4 ? TH.palaute[1] : TH.palaute[2]) + '</p>';
       h += '<ol class="kutsu-lista">' + KORTIT.map(function (k, j) {
         var v = tila.vastaukset[j];
         if (!v) return "";
         return '<li><span class="' + (v.oikein ? "ok" : "ei") + '">' + (v.oikein ? "✓" : "✗") + '</span> ' + suojaa(k.tilanne) +
-          '<br><strong>' + suojaa(k.oikea) + '</strong>' + (v.oikein ? "" : ' (valitsit: ' + suojaa(v.valinta) + ')') +
+          '<br><strong>' + suojaa(TH.etiketit[k.oikea] || k.oikea) + '</strong>' + (v.oikein ? "" : ' (valitsit: ' + suojaa(TH.etiketit[v.valinta] || v.valinta) + ')') +
+          (k.ammattilainen ? '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + '</span>' : '') +
           '<span class="kl-perustelu">Perustelusi: ' + suojaa(v.perustelu) + '</span></li>';
       }).join("") + '</ol>';
       return h;
@@ -356,10 +371,10 @@
       if (k.piirteet.length) t += "Vahvuudet: " + k.piirteet.map(function (x) { return PIIRTEET[x.avain].nimi; }).join(", ") + "\n";
       if (v.korttiTop && v.korttiTop.length) t += "Ehdotetut ammatit: " + v.korttiTop.join(", ") + "\n";
       if (D.aikaRivi && typeof v.aika === "number" && v.aika > 0) t += D.aikaRivi + " " + setup.kello(v.aika) + "\n";
-      t += "\nKENET KUTSUT PAIKALLE? – oikein " + oikeat + "/" + KORTIT.length + "\n\n";
+      t += "\n" + TH.nimi.toUpperCase() + " – oikein " + oikeat + "/" + KORTIT.length + "\n\n";
       KORTIT.forEach(function (kk, j) {
         var x = tila.vastaukset[j]; if (!x) return;
-        t += (j + 1) + ". " + kk.tilanne + "\n   Valintani: " + x.valinta + (x.oikein ? " (oikein)" : " (oikea: " + kk.oikea + ")") + "\n   Perusteluni: " + x.perustelu + "\n\n";
+        t += (j + 1) + ". " + kk.tilanne + "\n   Valintani: " + x.valinta + (x.oikein ? " (oikein)" : " (oikea: " + kk.oikea + ")") + "\n   Perusteluni: " + x.perustelu + "\n" + (kk.ammattilainen ? "   " + TH.ammattilainenTeksti + ": " + kk.ammattilainen + "\n" : "") + "\n";
       });
       var blob = new Blob([t], { type: "text/plain;charset=utf-8" });
       var a = document.createElement("a");

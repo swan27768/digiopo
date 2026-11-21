@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-init="no-js">
+<html data-init="no-js" data-tausta-maailma="it" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
-<title>IT-ala</title>
+<title>IT-ala – Julkaisupäivä</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
@@ -36,12 +36,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <script src="../../js/lisenssiportti.js"></script>
     <script src="../../js/seuranta.js" defer></script>
 
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("it-ala.state");}catch(e){}</script>
 <script id="sc-clear-saves">
 (function(){
   var prefix = "sc-192a4f8a-17de-4d05-8696-9d84df4cfc9f-";
@@ -58,1045 +62,234 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="IT-ala" startnode="36" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="192a4f8a-17de-4d05-8696-9d84df4cfc9f" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================================
-   IT / CODE -TEEMA (NEON / TERMINAL)
-   ============================================================ */
-
-/* =====================
-   0. MUUTTUJAT
-   ===================== */
+	<tw-storydata name="IT-ala" startnode="36" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="192a4f8a-17de-4d05-8696-9d84df4cfc9f" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
 :root {
-  --bg-body: #0a0812;
-  --text-main: #e6e1ff;
-
-  --accent-1: #b794f4;
-  --accent-2: #7c3aed;
-  --accent-3: #5eead4;
-
-  --btn-bg: #7c3aed;
-  --btn-text: #030014;
-
-  --card-bg: rgba(12, 10, 22, 0.8);
-  --card-border: rgba(183, 148, 244, 0.35);
-
-  --link-text: #b794f4;
-
-  --nav-bg: rgba(8, 6, 18, 0.95);
-  --nav-border: rgba(124, 58, 237, 0.45);
-
-  --score-color: #facc15;
-  --danger-bg: #fb7185;
+  --a1: #c4b1ff; --a1-rgb: 196,177,255;
+  --a2: #8f6bff; --a2-rgb: 143,107,255;
+  --a3: #d6c9ff;
+  --korostus: #ff9bd2; --korostus-rgb: 255,155,210;
+  --tausta: #110c22; --tausta-rgb: 17,12,34;
+  --tausta-2: #1d1638; --tausta-2-rgb: 29,22,56;
+  --paneeli: #17112e; --paneeli-rgb: 23,17,46;
+  --paneeli-2: #221a44;
+  --tumma: #0a0716; --tumma-rgb: 10,7,22;
+  --reuna: #9b7bff;
+  --teksti-pehmea: #d9d0ff; --teksti-pehmea-rgb: 217,208,255;
+  --teksti-vaalea: #f3efff;
+  --nappi-teksti: #160a33;
 }
-
-/* =====================
-   1. SUGARCUBE UI
-   ===================== */
-#sidebar,
-#ui-bar,
-#ui-bar-toggle,
-#toolbar {
-  display: none !important;
-}
-
-/* =========================================================
-   NAVBAR – KEVYT JA HUOMAAMATON
-   ========================================================= */
-
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-
-  display: flex;
-  justify-content: center;
-  gap: 0.6rem;
-
-  padding: 0.4rem 0.6rem;
-  background: var(--bg-body);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-}
-
-.nav-btn {
-  background: transparent;
-  border: 1px solid rgba(0,0,0,0.35);
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-main);
-  cursor: pointer;
-}
-
-.nav-exit {
-  color: #b91c1c;
-  border-color: #b91c1c;
-}
-
-body { padding-top: 2.4rem; }
-body.hide-navbar .navbar-fixed { display: none !important; }
-
-/* =========================================
-   PIILOTA NAVBAR KANSISIVULLA (VARMA)
-   ========================================= */
-
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   POISTU-NAPPI – YKSI KEHYS, SELKEÄ VAROITUSVÄRI
-   ============================================================ */
-
-.btn--danger {
-  color: #1a0202 !important;
-
-  background: linear-gradient(
-    180deg,
-    #f87171,
-    #ef4444
-  );
-
-  border: 2px solid #ef4444;
-  border-radius: 999px;
-
-  box-shadow:
-    0 6px 0 rgba(0,0,0,0.5),
-    0 0 20px rgba(239,68,68,0.55);
-}
-
-.btn--danger:hover {
-  filter: brightness(1.05);
-}
-
-.btn--danger:active {
-  transform: translateY(2px);
-  box-shadow:
-    0 3px 0 rgba(0,0,0,0.7);
-}
-/* Poistu-nappi käyttää vain vaarateemaa – poista .btn:n kehys */
-.btn--danger {
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.answer-group .btn--danger,
-.intro-nappi .btn--danger {
-  background: linear-gradient(180deg, #e53935, #c62828);
-  color: #ffffff !important;
-
-  border: 2px solid #c62828;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.35);
-}
-
-/* =====================
-   3. PASSAGE-ALUE
-   ===================== */
-#story {
-  margin-left: 0 !important;
-}
-
-#passages {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-#passages .passage {
-  margin: 2rem auto;
-  padding: 2.2rem 3rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* =====================
-   4. TEKSTI & TYPOGRAFIA
-   ===================== */
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  hyphens: auto;
-  overflow-wrap: break-word;
-}
-
-#passages .passage ul,
-#passages .passage ol {
-  padding-left: 1.4rem;
-  margin: 0.3rem 0 1rem 0;
-}
-
-/* =====================
-   5. OTSIKOT (MONOSPACE)
-   ===================== */
-#passages .passage h1,
-#passages .passage h2,
-#passages .passage h3 {
-  font-family: "JetBrains Mono","Fira Code","Source Code Pro","Consolas",monospace;
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 0.5rem auto 1.2rem;
-}
-
-/* =====================
-   6. LINKIT & KOROSTUS
-   ===================== */
-#passages .passage p a,
-#passages .passage li a {
-  color: var(--link-text);
-  text-decoration: underline;
-}
-
-.highlight,
-.score {
-  font-weight: 700;
-  color: var(--score-color);
-}
-
-/* =====================
-   7. LOMAKE
-   ===================== */
-.lomake-ryhma {
-  margin-bottom: 1.1rem;
-}
-
-.lomake-label {
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.lomake-ohje {
-  margin: 0 0 0.4rem 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  opacity: 0.9;
-}
-
-.lomake-ryhma textarea,
-.lomake-ryhma input[type="text"] {
-  width: 100%;
-  min-height: 6rem;
-  padding: 0.8rem 1rem;
-
-  background: rgba(10,8,18,0.95);
-  color: var(--text-main);
-
-  border: 2px solid var(--card-border);
-  border-radius: 10px;
-  box-sizing: border-box;
-}
-
-.lomake-ryhma textarea {
-  min-height: 12rem;
-}
-
-/* =====================
-   8. CHECKBOXIT
-   ===================== */
-.checkbox-rivi {
-  margin: 0.25rem 0;
-}
-
-/* =====================
-   9. NAPIT (UUSI JÄRJESTELMÄ)
-   ===================== */
-.answer-group,
-.intro-nappi {
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0 1.2rem 0;
-}
-
-.btn {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 320px;
-  padding: 1.05rem 2.4rem;
-
-  font-family: "JetBrains Mono","Fira Code",Consolas,monospace;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-
-  color: var(--accent-1);
-  background: linear-gradient(
-    180deg,
-    rgba(20,16,35,0.95),
-    rgba(10,8,18,0.95)
-  );
-
-  /* ⬇️ EI KEHYSTÄ TÄSSÄ */
-  border: none;
-  box-shadow: none;
-
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-/* ============================================================
-   BUTTON WRAPPER (.btn) + LINKKI SEN SISÄLLÄ
-   ============================================================ */
-
-.btn {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 320px;
-  padding: 1.05rem 2.4rem;
-
-  font-family: "JetBrains Mono","Fira Code",Consolas,monospace;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-
-  color: var(--accent-1);
-  background: linear-gradient(180deg, rgba(20,16,35,.95), rgba(10,8,18,.95));
-
-  border: 2px solid var(--accent-1);
-  border-radius: 999px;
-
-  box-shadow: 0 6px 0 rgba(0,0,0,.6), 0 0 18px rgba(183,148,244,.35);
-
-  cursor: pointer;
-  text-decoration: none;
-}
-
-/* Linkki “sulautuu” nappiin */
-.btn > a {
-  color: inherit !important;
-  text-decoration: none !important;
-}
-
-/* Hover/active wrapperille */
-.btn:hover { filter: brightness(1.08); transform: translateY(-2px); }
-.btn:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(0,0,0,0.8); }
-
-/* Fokus: jos linkki saa fokuksen, näytä se wrapperissa */
-.btn > a:focus-visible {
-  outline: 3px solid var(--accent-3);
-  outline-offset: 4px;
-}
-
-/* ============================================================
-   NAPPIEN RESPONSIVIIVINEN ASETTELU
-   ============================================================ */
-
-.answer-group,
-.intro-nappi {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;              /* väli nappien väliin */
-  flex-wrap: wrap;       /* sallii siirtymisen allekkain */
-}
-
-/* Painike */
-.btn {
-  flex: 0 1 auto;
-}
-
-/* =====================
-   MOBIILI
-   ===================== */
-@media (max-width: 640px) {
-  .answer-group,
-  .intro-nappi {
-    flex-direction: column;   /* aina allekkain */
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Julkaisupäivä – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "it",
+ "alaNimi": "IT-ala",
+ "tarinaNimi": "Julkaisupäivä",
+ "kello": {
+  "alku": 480,
+  "raja": 240
+ },
+ "katsoTeksti": "Katso studiota",
+ "aikaRivi": "Peli oli valmis julkaisuun kello",
+ "kutsuTilanneOtsikko": "Tarkastettava",
+ "piirteet": {
+  "ongelma": {
+   "nimi": "Ongelmanratkaisija",
+   "kuvaus": "Etsit vian syyn askel kerrallaan."
+  },
+  "tarkka": {
+   "nimi": "Tarkka",
+   "kuvaus": "Huomaat pienetkin asiat ja tarkistat ennen kuin toimit."
+  },
+  "kayttaja": {
+   "nimi": "Käyttäjän puolella",
+   "kuvaus": "Mietit, miten muut ihmiset käyttävät tekemääsi."
+  },
+  "tiimi": {
+   "nimi": "Tiimipelaaja",
+   "kuvaus": "Kerrot havainnoistasi ja pyydät apua oikealta ihmiseltä."
   }
-
-  .btn {
-    width: 100%;              /* koko leveys */
-    max-width: 420px;
+ },
+ "ammatit": {
+  "testaaja": {
+   "nimi": "Ohjelmistotestaaja",
+   "kuvaus": "Etsii peleistä ja sovelluksista virheet ennen kuin käyttäjät löytävät ne.",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (ohjelmistokehittäjä). Jatkossa esimerkiksi tradenomi tai insinööri (AMK)",
+   "piirteet": [
+    "tarkka",
+    "ongelma"
+   ]
+  },
+  "koodari": {
+   "nimi": "Ohjelmistokehittäjä",
+   "kuvaus": "Kirjoittaa koodia, josta pelit, sovellukset ja nettisivut syntyvät.",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (ohjelmistokehittäjä). Jatkossa esimerkiksi insinööri (AMK)",
+   "piirteet": [
+    "ongelma",
+    "tarkka"
+   ]
+  },
+  "ux": {
+   "nimi": "UX-suunnittelija",
+   "kuvaus": "Suunnittelee, miten peliä tai sovellusta käytetään, ja tekee siitä helppoa.",
+   "tutkinto": "Esimerkiksi medianomi, tradenomi tai insinööri (AMK)",
+   "piirteet": [
+    "kayttaja",
+    "tiimi"
+   ]
+  },
+  "verkko": {
+   "nimi": "Tietoverkkoasentaja",
+   "kuvaus": "Rakentaa ja korjaa verkkoja, joiden kautta netti kulkee.",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (tietoverkkoasentaja)",
+   "piirteet": [
+    "ongelma",
+    "tarkka"
+   ]
+  },
+  "tietoturva": {
+   "nimi": "Tietoturva-asiantuntija",
+   "kuvaus": "Suojaa laitteita, tietoja ja ihmisiä huijauksilta ja hyökkäyksiltä.",
+   "tutkinto": "Esimerkiksi insinööri tai tradenomi (AMK). Pohjaksi sopii amiksen IT-tutkinto",
+   "piirteet": [
+    "tarkka",
+    "tiimi"
+   ]
+  },
+  "tuki": {
+   "nimi": "IT-tukihenkilö",
+   "kuvaus": "Auttaa ihmisiä, kun laite tai ohjelma ei toimi.",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (IT-tukihenkilö)",
+   "piirteet": [
+    "kayttaja",
+    "ongelma"
+   ]
   }
-}
-
-/* =====================
-   10. MOBIILI
-   ===================== */
-@media (max-width: 768px) {
-  #passages .passage h1 { font-size: 1.8rem; }
-  #passages .passage h2 { font-size: 1.4rem; }
-  #passages .passage h3 { font-size: 1.15rem; }
-  #passages .passage { padding: 1.8rem 1.4rem; }
-}
-
-/* ============================================================
-   SUGARCUBE-LINKIT → NAPPIJÄRJESTELMÄ
-   ============================================================ */
-
-a.link-internal,
-a.macro-link {
-  /* perii .btn-tyylin ilman että HTML:ää tarvitsee muuttaa */
-  appearance: none;
-  display: inline-block;
-  min-width: 320px;
-  padding: 1.05rem 2.4rem;
-
-  font-family: "JetBrains Mono","Fira Code",Consolas,monospace;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-
-  color: var(--accent-1) !important;
-  background: linear-gradient(
-    180deg,
-    rgba(20,16,35,.95),
-    rgba(10,8,18,.95)
-  );
-
-  border: 2px solid var(--accent-1);
-  border-radius: 999px;
-
-  box-shadow:
-    0 6px 0 rgba(0,0,0,.6),
-    0 0 18px rgba(183,148,244,.35);
-
-  text-decoration: none !important;
-  text-align: center;
-  cursor: pointer;
-}
-
-/* ============================================================
-   KANSISIVU – KOKO SIVU KLIKATTAVA JULISTE
-   ============================================================ */
-
-/* Koko sivun peittävä klikattava alue */
-.cover-page {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-
-  padding-top: 18vh; /* otsikko ylemmäs = julistefiilis */
-
-  cursor: pointer;
-  text-align: center;
-
-  /* Taustaväri (käyttää tarinan pääväriä) */
-  background: var(--bg-body);
-}
-
-/* Iso otsikko */
-.cover-title {
-  font-family: "JetBrains Mono","Fira Code",Consolas,monospace;
-  font-size: clamp(6rem, 8vw, 5.5rem);
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-
-  color: var(--accent-1);
-  text-shadow: 0 0 22px rgba(0,0,0,0.6);
-}
-
-/* Hover-vihje */
-.cover-page:hover {
-  filter: brightness(1.06);
-}
-
-/* ============================================================
-   NAVBAR PIILOON KANSISIVULLA
-   ============================================================ */
-
-/* Loppusivun toimintorivi – pakota samaan riviin */
-.intro-nappi.action-row {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 1rem !important;
-}
-
-/* SugarCube tekee wikilinkistä block → korjataan */
-.intro-nappi.action-row a,
-.intro-nappi.action-row .link-internal,
-.intro-nappi.action-row .macro-link {
-  display: inline-flex !important;
-  width: auto !important;
-  min-width: 200px;
-}
-
-/* ============================================================
-   SAAVUTETTAVUUS – SELKEÄMPI TYPOGRAFIA
-   ============================================================ */
-
-/* Perusteksti */
-#passages .passage p,
-#passages .passage li,
-#passages .passage span,
-#passages .passage section,
-#passages .passage div {
-  font-size: 18px !important;     /* oli 16px */
-  line-height: 1.8 !important;    /* parempi lukeminen */
-}
-
-/* Lomakkeiden tekstit */
-.lomake-label {
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.lomake-ohje {
-  font-size: 16px;
-}
-
-/* Tekstikentät */
-.lomake-ryhma textarea,
-.lomake-ryhma input[type="text"] {
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-/* Napit */
-a.link-internal,
-a.macro-link,
-.btn,
-.nav-btn {
-  font-size: 18px !important;
-  min-height: 52px;
-}
-
-/* Otsikot */
-#passages .passage h1 { font-size: 2.4rem !important; }
-#passages .passage h2 { font-size: 1.9rem !important; }
-#passages .passage h3 { font-size: 1.4rem !important; }
-/* ============================================================
-   SCHOOL-GRID – KOULUTUSKORTIT
-   ============================================================ */
-.school-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin: 1.2rem 0;
-}
-
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 1.2rem 1.4rem;
-}
-
-.school-card h3 {
-  font-family: "JetBrains Mono","Fira Code",Consolas,monospace;
-  color: var(--accent-1);
-  margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
-}
-
-.school-card p {
-  margin: 0 0 0.8rem 0;
-  font-size: 15px !important;
-  line-height: 1.6 !important;
-}
-
-.external-link {
-  display: inline-block;
-  color: var(--accent-3);
-  text-decoration: underline;
-  font-size: 0.9rem;
-}
-
-/* ============================================================
-   MOBIILI – KOSKETUSYSTÄVÄLLINEN & LUETTAVA
-   ============================================================ */
-@media (max-width: 640px) {
-
-  /* Sivun marginaalit – tiukemmat */
-  #passages {
-    padding: 0 0.6rem;
+ },
+ "kutsuKortit": [
+  {
+   "tilanne": "Pelistudion sähköpostiin tulee viesti, joka pyytää vahvistamaan salasanan linkin kautta.",
+   "nakyma": "<div class=\"tk-viesti\"><p class=\"tk-lahettaja\">Lähettäjä: tuki@sovelluskauppa-varmistus.net<\/p><p class=\"tk-aihe\">KIIREELLINEN: Tilisi suljetaan!<\/p><p>Tilisi suljetaan 24 tunnin kuluttua. Vahvista salasanasi heti:<\/p><p class=\"tk-linkki\">sovelluskauppa-varmistus.net/kirjaudu<\/p><\/div>",
+   "oikea": "Riski",
+   "ammattilainen": "Tietoturva-asiantuntija",
+   "tutkinto": "Esimerkiksi insinööri tai tradenomi (AMK)",
+   "vaihtoehdot": {
+    "Turvallinen": "Viesti näyttää viralliselta, mutta se on huijaus.",
+    "Riski": "Tämä on huijausviesti. Lähettäjän osoite on outo, viesti kiirehtii ja pyytää salasanaa. Oikea palvelu ei kysy salasanaa sähköpostilla."
+   }
+  },
+  {
+   "tilanne": "Kirjaudut peliin. Salasanan jälkeen peli pyytää vielä koodin, joka tuli juuri puhelimeesi.",
+   "nakyma": "<div class=\"tk-puhelin\"><p class=\"tk-ilmo\">Tekstiviesti · Pikselipaja<\/p><p>Kirjautumiskoodisi on <strong>482 913<\/strong>. Älä kerro koodia kenellekään.<\/p><\/div>",
+   "oikea": "Turvallinen",
+   "ammattilainen": "IT-tukihenkilö",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (IT-tukihenkilö)",
+   "vaihtoehdot": {
+    "Turvallinen": "Tämä on kaksivaiheinen tunnistautuminen. Vaikka joku saisi salasanasi, hän ei pääse tilillesi ilman puhelintasi. Jos koodi tulee, vaikka et itse kirjaudu, se on varoitusmerkki.",
+    "Riski": "Varovaisuus on hyvä, mutta tämä on turvallista: pyysit koodin itse juuri nyt."
+   }
+  },
+  {
+   "tilanne": "Asennat uuden taskulamppusovelluksen. Se pyytää luvan sijaintiin, yhteystietoihin ja mikrofoniin.",
+   "nakyma": "<ul class=\"tk-luvat\"><li>📍 Sijainti, aina<\/li><li>📇 Yhteystiedot<\/li><li>🎙️ Mikrofoni<\/li><li>🔦 Taskulamppu<\/li><\/ul>",
+   "oikea": "Riski",
+   "ammattilainen": "Tietosuoja-asiantuntija",
+   "tutkinto": "Esimerkiksi tradenomi (AMK) tai yliopisto",
+   "vaihtoehdot": {
+    "Turvallinen": "Sovellus näyttää harmittomalta, mutta se pyytää paljon enemmän kuin tarvitsee.",
+    "Riski": "Taskulamppu tarvitsee vain luvan valoon. Sijaintia, yhteystietoja ja mikrofonia se ei tarvitse. Sovellus voi kerätä tietojasi ja myydä niitä eteenpäin."
+   }
+  },
+  {
+   "tilanne": "Teet uuden pelitilin. Keksit salasanaksi kettu2026.",
+   "nakyma": "<div class=\"tk-salasana\"><span class=\"tk-kentta\">kettu2026<\/span><\/div>",
+   "oikea": "Riski",
+   "ammattilainen": "Ohjelmistokehittäjä",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (ohjelmistokehittäjä)",
+   "vaihtoehdot": {
+    "Turvallinen": "Salasana on helppo muistaa, mutta myös helppo arvata.",
+    "Riski": "Salasana on lyhyt, ja siinä on vain sana ja vuosiluku. Pitkä lause on parempi, esimerkiksi Kolme-kettua-hyppii-kuussa! Koodari voi tehdä palveluun säännön, joka estää liian heikot salasanat."
+   }
+  },
+  {
+   "tilanne": "Puhelimen sovelluskauppa ilmoittaa päivityksestä.",
+   "nakyma": "<div class=\"tk-puhelin\"><p class=\"tk-ilmo\">Sovelluskauppa · Päivitykset<\/p><p><strong>Kettu kiertoradalla<\/strong> · Pikselipaja<br>Versio 1.0.1: korjattu virhe, jossa peli kaatui tauolla.<\/p><\/div>",
+   "oikea": "Turvallinen",
+   "ammattilainen": "Ohjelmistotestaaja",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (ohjelmistokehittäjä)",
+   "vaihtoehdot": {
+    "Turvallinen": "Päivitys tulee virallisesta sovelluskaupasta ja oikealta tekijältä. Päivitykset korjaavat vikoja ja tietoturva-aukkoja, joten ne kannattaa asentaa. Testaaja on tarkistanut päivityksen ennen julkaisua.",
+    "Riski": "Varovaisuus on hyvä, mutta tämä päivitys tulee virallisesta sovelluskaupasta ja oikealta tekijältä."
+   }
+  },
+  {
+   "tilanne": "Olet kahvilassa ja haluat ostaa pelin lisäosan pankkikortilla. Puhelin löytää avoimen wifin, jossa ei ole salasanaa.",
+   "nakyma": "<div class=\"tk-puhelin\"><p class=\"tk-ilmo\">Wi-Fi-verkot<\/p><p>📶 <strong>Kahvila_ILMAINEN_wifi<\/strong><br>Avoin verkko, ei salasanaa<\/p><\/div>",
+   "oikea": "Riski",
+   "ammattilainen": "Tietoverkkoasentaja",
+   "tutkinto": "Tieto- ja viestintätekniikan perustutkinto (tietoverkkoasentaja)",
+   "vaihtoehdot": {
+    "Turvallinen": "Ilmainen netti on kätevä, mutta maksaminen avoimessa verkossa on riski.",
+    "Riski": "Avoimessa verkossa joku voi seurata liikennettä tai tehdä samannimisen huijausverkon. Maksut kannattaa tehdä omalla mobiilidatalla."
+   }
+  },
+  {
+   "tilanne": "Pelin chatissa tuntematon pelaaja pyytää tunnuksiasi. Hän lupaa nostaa tasoasi ilmaiseksi.",
+   "nakyma": "<div class=\"tk-chat\"><p class=\"tk-nimi\">ProGamer_99<\/p><p class=\"tk-kupla\">moi! anna tunnukset ni nostan sun tason 50:een ilmaseks 😎<\/p><\/div>",
+   "oikea": "Riski",
+   "ammattilainen": "Moderaattori eli sisällönvalvoja",
+   "tutkinto": "Ei omaa tutkintoa. Moni tulee alalle esimerkiksi IT-tuen tai asiakaspalvelun kautta",
+   "vaihtoehdot": {
+    "Turvallinen": "Tarjous kuulostaa hyvältä, mutta se on yleinen huijaus.",
+    "Riski": "Tunnuksia ei anneta kenellekään. Tilin voi menettää, ja sillä voidaan huijata kavereitasi. Ilmoita viestistä pelin moderaattorille."
+   }
+  },
+  {
+   "tilanne": "Pelistudiossa kaikki tiedostot kopioidaan joka yö kahteen paikkaan.",
+   "nakyma": "<div class=\"tk-puhelin\"><p class=\"tk-ilmo\">Varmuuskopio<\/p><p>✅ Valmis klo 03.00<br>Kopio 1: pilvipalvelu · Kopio 2: erillinen levy<\/p><\/div>",
+   "oikea": "Turvallinen",
+   "ammattilainen": "Järjestelmäasiantuntija",
+   "tutkinto": "Esimerkiksi insinööri (AMK). Alkuun pääsee amiksen IT-tutkinnolla",
+   "vaihtoehdot": {
+    "Turvallinen": "Kun tiedostoista on kopio kahdessa paikassa, mitään ei menetetä, vaikka kone hajoaisi tai joutuisi hyökkäyksen kohteeksi.",
+    "Riski": "Tämä on itse asiassa hyvä tapa suojata tiedostot."
+   }
   }
-
-  #passages .passage {
-    padding: 1rem 0.9rem;
-    margin: 0.8rem auto;
-  }
-
-  /* Leipäteksti */
-  #passages .passage p,
-  #passages .passage li,
-  #passages .passage span,
-  #passages .passage div,
-  #passages .passage section {
-    font-size: 16px !important;
-    line-height: 1.75 !important;
-  }
-
-  /* Otsikot */
-  #passages .passage h1 { font-size: 1.65rem !important; letter-spacing: 0.05em !important; }
-  #passages .passage h2 { font-size: 1.35rem !important; }
-  #passages .passage h3 { font-size: 1.15rem !important; }
-
-  /* Lomake-labelit */
-  .lomake-label {
-    font-size: 15px;
-  }
-
-  .lomake-ohje {
-    font-size: 14px;
-  }
-
-  /* Lomakekentät – parempi mobiilikokemus */
-  .lomake-ryhma textarea,
-  .lomake-ryhma input[type="text"] {
-    font-size: 16px; /* estää iOS-zoomin */
-    min-height: 5rem;
-    padding: 0.75rem 0.85rem;
-    border-radius: 8px;
-  }
-
-  .lomake-ryhma textarea {
-    min-height: 8rem;
-  }
-
-  /* Napit – täysi leveys, hyvä koskutusalue */
-  a.link-internal,
-  a.macro-link,
-  .btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    min-height: 52px;
-    font-size: 16px !important;
-    padding: 0.9rem 1.2rem !important;
-    border-radius: 12px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Navbar-napit – kosketusystävällisemmät */
-  .nav-btn {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    border-radius: 8px;
-  }
-
-  /* Navbar – tiukempi mobiililla */
-  .navbar-fixed {
-    padding: 0.3rem 0.5rem;
-    gap: 0.4rem;
-  }
-
-  /* body padding tasapainossa navbar-korkeuteen */
-  body { padding-top: 3rem; }
-
-  /* Painikerivit aina pinoon */
-  .answer-group,
-  .intro-nappi,
-  .intro-nappi.action-row {
-    flex-direction: column !important;
-    gap: 0.6rem !important;
-    margin: 1.2rem 0 0.8rem 0;
-  }
-
-  /* Koulutuskortit pinoon */
-  .school-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .school-card {
-    padding: 1rem 1.1rem;
-  }
-
-  /* Kansisivu – otsikko sopii pienelle ruudulle */
-  .cover-title {
-    font-size: clamp(2.8rem, 14vw, 5rem) !important;
-    letter-spacing: 0.1em !important;
-  }
-
-  .cover-page {
-    padding-top: 22vh;
-  }
-
-  /* Loppusivu action-row pystysuuntaan mobiililla */
-  .intro-nappi.action-row {
-    flex-direction: column !important;
-  }
-}
-
-/* Tabletti – pienet parannukset */
-@media (max-width: 768px) and (min-width: 641px) {
-
-  #passages {
-    padding: 0 0.8rem;
-  }
-
-  #passages .passage {
-    padding: 1.4rem 1.2rem;
-    margin: 1.2rem auto;
-  }
-
-  #passages .passage h1 { font-size: 1.9rem !important; }
-  #passages .passage h2 { font-size: 1.55rem !important; }
-  #passages .passage h3 { font-size: 1.25rem !important; }
-
-  .lomake-ryhma textarea,
-  .lomake-ryhma input[type="text"] {
-    font-size: 16px;
-    min-height: 6rem;
-    padding: 0.9rem;
-  }
-
-  a.link-internal,
-  a.macro-link,
-  .btn,
-  .nav-btn {
-    min-height: 48px;
-  }
-
-  .navbar-fixed {
-    padding: 0.35rem;
-    gap: 0.4rem;
-  }
-
-  .school-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">(function () {
-
-  function buildNavbar() {
-    if (document.querySelector(".navbar-fixed")) return;
-
-    const nav = document.createElement("div");
-    nav.className = "navbar-fixed";
-
-    const back = document.createElement("button");
-    back.className = "nav-btn";
-    back.textContent = "← Edellinen";
-    back.onclick = () => { if (State.length > 0) Engine.backward(); };
-
-    const exit = document.createElement("button");
-    exit.className = "nav-btn nav-exit";
-    exit.textContent = "Poistu";
-    exit.onclick = () => {
-    State.reset();              // tyhjentää historian ja muuttujat
-    Engine.play("Kansi");       // menee oikeasti kansisivulle
-  };
-
-    nav.append(back, exit);
-    document.body.appendChild(nav);
-  }
-
-  function updateNavbar() {
-    const passage = State.passage;
-
-    if (passage === "Kansi" || passage === "Alku") {
-      document.body.classList.add("hide-navbar");
-      return;
-    }
-
-    document.body.classList.remove("hide-navbar");
-    buildNavbar();
-  }
-
-  // SugarCube-varma hook
-  $(document).on(":storyready :passagestart", updateNavbar);
-
-})();
-
-(function () {
-  "use strict";
-
-  const KEY = "ict_esitelma_autosave_v2";
-
-  const FIELDS = [
-    "koulutusPolku",
-    "tyotehtavat",
-    "tyopaikat",
-    "vahvuudet",
-    "hyvatPuolet",
-    "haasteet",
-    "palkkaus",
-    "yhteenvetoOmaNakyma"
-  ];
-
-  function load() {
-    let data = {};
-    try { data = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){}
-
-    FIELDS.forEach(id=>{
-      const el = document.querySelector(`[name="${id}"]`);
-      if (el && data[id]) {
-        el.value = data[id];
-        State.variables[id] = data[id];
-      }
-    });
-  }
-
-  function save() {
-    const data = {};
-    FIELDS.forEach(id=>{
-      const el = document.querySelector(`[name="${id}"]`);
-      if (el) {
-        data[id] = el.value;
-        State.variables[id] = el.value;
-      }
-    });
-    localStorage.setItem(KEY, JSON.stringify(data));
-  }
-
-  window.initAmmattiAutosave = function () {
-    load();
-    FIELDS.forEach(id=>{
-      const el = document.querySelector(`[name="${id}"]`);
-      if (el) el.addEventListener("input", save);
-    });
-  };
-
-  window.resetAmmattitutkimus = function () {
-    FIELDS.forEach(id=>{
-      const el = document.querySelector(`[name="${id}"]`);
-      if (el) el.value = "";
-      State.variables[id] = "";
-    });
-    localStorage.removeItem(KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const txt =
-`ESITELMÄ ICT-AMMATISTA: ${v.ammatti || ""}
-
-1. Koulutuspolku:
-${v.koulutusPolku || ""}
-
-2. Työtehtävät:
-${v.tyotehtavat || ""}
-
-3. Työpaikat:
-${v.tyopaikat || ""}
-
-4. Vahvuudet:
-${v.vahvuudet || ""}
-
-5. Hyvät puolet:
-${v.hyvatPuolet || ""}
-
-6. Haasteet:
-${v.haasteet || ""}
-
-7. Palkkaus:
-${v.palkkaus || ""}
-
-8. Oma pohdinta:
-${v.yhteenvetoOmaNakyma || ""}`;
-
-    const blob = new Blob([txt], {type:"text/plain;charset=utf-8"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = (v.ammatti || "ICT_esitelma") + ".txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "it_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "it_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
+ ],
+ "tehtava": {
+  "nimi": "Tietoturvatarkastus",
+  "tag": "Tehtävä · noin 25 min",
+  "maara": "<strong>8 tarkastettavaa asiaa<\/strong>",
+  "askeleet": [
+   "Päätä, onko asia turvallinen vai riski.",
+   "Kirjoita yhdellä lauseella, miksi ajattelet niin."
+  ],
+  "lopuksi": "Sitten näet, osuitko oikeaan ja kuka IT-alan ammattilainen hoitaa tällaisia asioita työkseen. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+  "kysymys": "Onko tämä turvallinen vai riski?",
+  "korttiSana": "Tarkastus",
+  "seuraava": "Seuraava tarkastus",
+  "miksiLabel": "Miksi? Kirjoita yksi lause.",
+  "placeholder": "Mielestäni tämä on …, koska…",
+  "vihjeValitse": "Valitse: turvallinen vai riski.",
+  "vihjeAlku": "Valitse vaihtoehto ja kirjoita perustelu.",
+  "sekoita": false,
+  "etiketit": {
+   "Turvallinen": "✓ Turvallinen",
+   "Riski": "⚠ Riski"
+  },
+  "palaute": [
+   "Huippua! Sinulla on tarkka silmä tietoturvalle.",
+   "Hyvä! Huomasit jo monta riskiä.",
+   "Nyt tunnistat huijauksia paljon paremmin kuin äsken. Juuri sitä varten tehtävä on."
+  ],
+  "ammattilainenTeksti": "Työssä tätä hoitaa"
+ }
+});
 </script><tw-tag name="Cover" color="green"></tw-tag><tw-passagedata pid="1" name="StoryInit" tags="" position="750,100" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-Engine.play(&quot;Kansi&quot;)
-&lt;&lt;/script&gt;&gt;
-
-/* Pisteet / testi */
-&lt;&lt;set $pisteet = 0&gt;&gt;
-&lt;&lt;set $maxKysymykset = 10&gt;&gt;
-
-/* Esimerkkiflagit kysymyksille (voit lisätä) */
-&lt;&lt;set $q1Done = false&gt;&gt;
-&lt;&lt;set $q2Done = false&gt;&gt;
-&lt;&lt;set $q3Done = false&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-:: StoryInit
-&lt;&lt;set $kiinnostaa_ongelmanratkaisu = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_oppiminen = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_ihmistyo = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_tietokone = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_kasilla = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_joustavuus = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_vaihtelevuus = 0&gt;&gt;
-&lt;&lt;set $kiinnostaa_vaikutus = 0&gt;&gt;
-
-</tw-passagedata><tw-passagedata pid="2" name="K1" tags="" position="400,375" size="100,100">&lt;h2&gt;Kysymys 1 / 10&lt;/h2&gt;
-
-&lt;p&gt;Kun käytät tietokonetta tai puhelinta, sinä…&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;käytän vain perusasioita&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;kokeilen välillä uusia asioita&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tykkään tutkia ja säätää itse&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="3" name="Loppusivu" tags="" position="875,500" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-
-&lt;h1&gt;Hienoa!&lt;/h1&gt;
-&lt;hr&gt;
-
-&lt;p&gt;
-Olet nyt tutustunut ICT-alaan ja siihen liittyviin opintoihin ja ammatteihin. ICT-ala on laaja ja  monipuolinen, ja siihen mahtuu monenlaisia osaajia. ICT-alalla tarvitaan esimerkiksi ongelmanratkaisua, yhteistyötaitoja, kiinnostusta tekniikkaan sekä halua oppia uutta. Kaiken ei tarvitse olla valmista heti – osaaminen kasvaa opiskelun ja kokemuksen myötä.
-&lt;/p&gt;
-
-&lt;p&gt;
-Muista: kiinnostuksen kohteet ja suunnitelmat voivat muuttua. Tärkeintä on olla utelias ja rohkea kokeilemaan.
-&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Muista tyhjentää tehtäväsivu ennen poistumista.&lt;/strong&gt;&lt;/p&gt;
-
-      &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-
-        &lt;a class=&quot;macro-link btn&quot;
-           href=&quot;javascript:void(0)&quot;
-           onclick=&quot;resetAmmattitutkimus()&quot;&gt;
-           Tyhjennä
-        &lt;/a&gt;
-
-        &lt;a class=&quot;macro-link btn btn--danger&quot;&gt;
-          &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-            &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
-          &lt;&lt;/link&gt;&gt;
-        &lt;/a&gt;
-      &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Start" tags="" position="550,100" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-  &lt;h1&gt;ICT - ala &lt;/h1&gt;
-  &lt;hr&gt;
-
-  &lt;p&gt;
-ICT-ala tarkoittaa tieto- ja viestintätekniikkaa. Alalla tehdään digitaalisia palveluja, ohjelmia, laitteita ja tietoverkkoja. ICT-työtä tehdään monissa paikoissa, kuten yrityksissä, kouluissa, sairaaloissa, virastoissa ja teollisuudessa.
-
-Alalla tarvitaan teknistä osaamista, kuten laitteiden ja ohjelmien käyttöä, sekä hyviä ongelmanratkaisutaitoja. Tärkeää on myös halu oppia uutta ja kyky tehdä töitä muiden kanssa.
-
-ICT-ala on tärkeä tulevaisuudessa, koska yhteiskunta toimii yhä enemmän digitaalisesti. Ilman ICT-osaajia ei ole toimivia digipalveluja, turvallisia järjestelmiä eikä uutta teknologiaa.
-  &lt;/p&gt;
-  &lt;p&gt;
-    Ammattitestissä pääset pohtimaan, millaiset tehtävät ja vahvuudet liittyvät alaan ja voisiko se sopia juuri sinulle.
-  &lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-    [[Sopiiko tämä ala sinulle - Testaa!-&gt;Ammattitesti: alku]]
-    [[Siirry suoraan tehtävään -&gt;ICT: ammatinvalinta]]
-  &lt;/div&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="Esitelmäpohja" tags="" position="875,375" size="100,100">&lt;&lt;script&gt;&gt;
-setTimeout(initLopputehtavaAutosave, 100);
-&lt;&lt;/script&gt;&gt;
-
-&lt;h2&gt;✨ Kerro valitsemastasi ammatista&lt;/h2&gt;
-
-&lt;p&gt;Olet valinnut ammatin: &lt;strong&gt;&lt;&lt;print $ammatti&gt;&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Hae tarvittaessa tietoa ammatista ja vastaa sitten kysymyksiin omin sanoin.&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;📚 Hae tietoa:
-  &lt;a href=&quot;https://tyomarkkinatori.fi/henkiloasiakkaat/ammattitieto&quot; target=&quot;_blank&quot;&gt;Työmarkkinatori&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
-  &lt;a href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Opintopolku.fi&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Kirjoita omin sanoin: mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q1&quot; aria-label=&quot;Mitä tässä ammatissa tehdään?&quot; placeholder=&quot;Kerro omin sanoin, mitä työhön kuuluu...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Mitä pitää osata?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q2&quot; aria-label=&quot;Mitä pitää osata?&quot; placeholder=&quot;Taidot, tiedot ja ominaisuudet, joita ammatissa tarvitaan...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Miksi sinä sopisit tähän ammattiin? (motivaatio + omat vahvuudet)&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q3&quot; aria-label=&quot;Miksi sinä sopisit tähän ammattiin?&quot; placeholder=&quot;Miksi ammatti kiinnostaa sinua ja mitkä omat vahvuutesi sopivat siihen...&quot;&gt;&lt;/textarea&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;intro-nappi action-row&quot;&gt;
-&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;downloadLopputehtava()&quot;&gt;Lataa vastaukset&lt;/a&gt;
-&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaLopputehtava()&quot;&gt;Tyhjennä&lt;/a&gt;
-&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;&lt;&lt;goto &quot;Loppusivu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="Ammattitesti: alku" tags="" position="400,250" size="100,100">
-&lt;h1&gt;ICT-alan ammattitesti&lt;/h1&gt;
-
-&lt;p&gt;
-Tämä testi auttaa sinua pohtimaan, millaisia taitoja ja kiinnostuksen kohteita sinulla on ICT-alan suuntaan. Testissä ei ole oikeita tai vääriä vastauksia. Vastaa sen mukaan, mikä tuntuu sinusta sopivalta.
-&lt;/p&gt;
-
-&lt;&lt;set $score = 0&gt;&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Aloita testi&quot;&gt;&gt;
-  &lt;&lt;goto &quot;K1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="7" name="Koulutus" tags="" position="825,250" size="100,100">&lt;h1&gt;ICT-alan koulutus Uudellamaalla&lt;/h1&gt;
+/* Julkaisupäivä – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {ongelma: 0, tarkka: 0, kayttaja: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {testaaja: 0, koodari: 0, ux: 0, verkko: 0, tietoturva: 0, tuki: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="7" name="Koulutus" tags="" position="825,250" size="100,100">&lt;h1&gt;ICT-alan koulutus Uudellamaalla&lt;/h1&gt;
 &lt;p&gt;
 Alla on oppilaitoksia, joissa voi opiskella ICT-alan perustutkintoa toisella asteella.
 &lt;/p&gt;
@@ -1156,564 +349,13 @@ Jos et ole vielä varma, mikä oppilaitos sopii sinulle, se on täysin normaalia
 &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
   &lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Tehtävään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;ICT: ammatinvalinta&quot;&gt;&gt;
+&lt;&lt;link &quot;Takaisin&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;hr&gt;
 
-</tw-passagedata><tw-passagedata pid="8" name="K2" tags="" position="400,450" size="100,100">&lt;h2&gt;Kysymys 2 / 10&lt;/h2&gt;
-
-&lt;p&gt;Jos jokin sovellus tai laite ei toimi heti, sinä…&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;pyydän heti apua&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;yritän hetken itse&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;yritän selvittää rauhassa, mikä on vikana&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="9" name="K3" tags="" position="400,525" size="100,100">
-&lt;h2&gt;Kysymys 3 / 10&lt;/h2&gt;
-
-&lt;p&gt;Millaisista koulutehtävistä pidät eniten?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;selkeistä ja lyhyistä tehtävistä&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tehtävistä, joissa saa miettiä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tehtävistä, joissa ratkaistaan ongelmia&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="10" name="K5" tags="" position="400,625" size="100,100">:
-&lt;h2&gt;Kysymys 5 / 10&lt;/h2&gt;
-
-&lt;p&gt;Millaisessa työssä viihdyt parhaiten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;työssä, jossa joku kertoo tarkasti mitä tehdään&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;työssä, jossa saa vähän miettiä itse&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;työssä, jossa saa etsiä ratkaisuja&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="K6" tags="" position="400,700" size="100,100">&lt;h2&gt;Kysymys 6 / 10&lt;/h2&gt;
-
-&lt;p&gt;Kun opiskelet uutta asiaa, sinä…&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;tarvitset paljon ohjausta&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;opit, kun saat harjoitella&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;opit hyvin kokeilemalla itse&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="12" name="K7" tags="" position="400,750" size="100,100">
-&lt;h2&gt;Kysymys 7 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pystytkö keskittymään tehtävään pidemmän aikaa?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;se on minulle vaikeaa&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;joskus onnistuu&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;onnistuu melko hyvin&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="13" name="K8" tags="" position="400,800" size="100,100">
-&lt;h2&gt;Kysymys 8 / 10&lt;/h2&gt;
-
-&lt;p&gt;Miten suhtaudut uusiin teknologioihin, kuten peleihin, sovelluksiin tai tekoälyyn?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ne eivät kiinnosta minua paljon&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ne kiinnostavat jonkin verran&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ne kiinnostavat minua paljon&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="K9" tags="" position="400,875" size="100,100">
-&lt;h2&gt;Kysymys 9 / 10&lt;/h2&gt;
-
-&lt;p&gt;Millainen työskentely sopii sinulle parhaiten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;selkeästi ohjattu työ&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;työ yksin tai pienessä ryhmässä&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;työ, jossa saa tehdä omia ratkaisuja&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="15" name="K10" tags="" position="400,950" size="100,100">
-&lt;h2&gt;Kysymys 10 / 10&lt;/h2&gt;
-
-&lt;p&gt;Voisitko kuvitella tekeväsi työtä, jossa käytetään paljon tietokonetta?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ehkä en&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ehkä joskus&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;kyllä, se voisi sopia minulle&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="16" name="Tulos" tags="" position="400,1000" size="100,100">
-&lt;&lt;if $score &lt;= 16&gt;&gt;
-  &lt;&lt;goto &quot;Palaute A&quot;&gt;&gt;
-&lt;&lt;elseif $score &lt;= 23&gt;&gt;
-  &lt;&lt;goto &quot;Palaute B&quot;&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  &lt;&lt;goto &quot;Palaute C&quot;&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-</tw-passagedata><tw-passagedata pid="17" name="Palaute A" tags="" position="325,1075" size="100,100">
-&lt;h1&gt;ICT-ala tutuksi&lt;/h1&gt;
-
-&lt;p&gt;
-ICT-ala ei ehkä ole sinulle vielä kovin tuttu. Se on täysin ok.
-&lt;/p&gt;
-&lt;p&gt;
-Teknologia on mukana monissa ammateissa, ja ICT-taitoja voi oppia vähitellen. Kiinnostus voi kasvaa kokeilemalla.
-&lt;/p&gt;
-&lt;h3&gt;Pohdittavaa&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Missä käytät teknologiaa jo nyt?&lt;/li&gt;
-  &lt;li&gt;Minkä digitaidon haluaisit oppia paremmin?&lt;/li&gt;
-  &lt;li&gt;Voisiko ICT olla hyödyllinen taito jonkin muun alan rinnalla?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Seuraava: ICT-koulutusvalintatesti &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ohjaustesti&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="18" name="Palaute B" tags="" position="400,1075" size="100,100">
-&lt;h1&gt;Hyvät valmiudet ICT-alalle&lt;/h1&gt;
-
-&lt;p&gt;
-Sinulla on monia taitoja, joista on hyötyä ICT-alalla. Pidät uuden oppimisesta ja osaat yrittää, vaikka kaikki ei onnistu heti. ICT-ala on laaja ja tarjoaa monia erilaisia mahdollisuuksia.
-&lt;/p&gt;
-
-&lt;h3&gt;Pohdittavaa&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Kiinnostaako sinua enemmän laitteet vai ohjelmat?&lt;/li&gt;
-  &lt;li&gt;Pidätkö enemmän selkeistä vai haastavista tehtävistä?&lt;/li&gt;
-  &lt;li&gt;Haluaisitko auttaa muita digiasioissa?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Seuraava: ICT-koulutusvalintatesti &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ohjaustesti&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="Palaute C" tags="" position="450,1075" size="100,100">
-&lt;h1&gt;ICT-ala voisi sopia sinulle hyvin&lt;/h1&gt;
-
-&lt;p&gt;
-Olet kiinnostunut teknologiasta ja jaksat ratkaista ongelmia. Nämä ovat tärkeitä taitoja ICT-alalla. Kannattaa tutustua eri ICT-ammatteihin ja kokeilla rohkeasti.
-&lt;/p&gt;
-
-&lt;h3&gt;Pohdittavaa&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Kiinnostaako sinua ohjelmointi, pelit, tietoturva tai laitteet?&lt;/li&gt;
-  &lt;li&gt;Pidätkö enemmän keskittymistä vaativasta vai vaihtelevasta työstä?&lt;/li&gt;
-  &lt;li&gt;Haluaisitko opiskella alaa lisää tulevaisuudessa?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Seuraava: ICT-koulutusvalintatesti &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ohjaustesti&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="20" name="K4" tags="" position="400,575" size="100,100">
-&lt;h2&gt;Kysymys 4 / 10&lt;/h2&gt;
-
-&lt;p&gt;Uuden ohjelman tai laitteen opettelu tuntuu sinusta…&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;vaikealta&quot;&gt;&gt;
-  &lt;&lt;set $score += 1&gt;&gt;
-  &lt;&lt;goto &quot;K5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;aluksi hankalalta, mutta mahdolliselta&quot;&gt;&gt;
-  &lt;&lt;set $score += 2&gt;&gt;
-  &lt;&lt;goto &quot;K5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;kiinnostavalta&quot;&gt;&gt;
-  &lt;&lt;set $score += 3&gt;&gt;
-  &lt;&lt;goto &quot;K5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="21" name="Ohjaustesti" tags="" position="575,250" size="100,100">
-&lt;h1&gt;ICT-alan koulutusvalintatesti&lt;/h1&gt;
-&lt;p&gt;
-Tämä testi auttaa pohtimaan, mikä ICT-alan koulutus voisi sopia sinulle. Valitse aina se vaihtoehto, joka tuntuu sinulle luontevimmalta.
-&lt;/p&gt;
-&lt;&lt;set $tuki = 0&gt;&gt;
-&lt;&lt;set $ohjelma = 0&gt;&gt;
-&lt;&lt;set $verkko = 0&gt;&gt;
-&lt;&lt;set $elektro = 0&gt;&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Aloita testi&quot;&gt;&gt;
-  &lt;&lt;goto &quot;OT1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-</tw-passagedata><tw-passagedata pid="22" name="OT1" tags="" position="575,350" size="100,100">
-&lt;h2&gt;Kysymys 1 / 8&lt;/h2&gt;
-
-&lt;p&gt;Kun jokin laite tai ohjelma ei toimi, sinä mieluummin…&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;autan käyttäjää ja korjaan ongelman&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;mietin, miten ongelma ratkeaisi koodilla&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tarkistan verkon ja yhteydet&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tutkin laitetta ja sen osia&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="OT2" tags="" position="575,450" size="100,100">
-&lt;h2&gt;Kysymys 2 / 8&lt;/h2&gt;
-
-&lt;p&gt;Millainen tekeminen kiinnostaa sinua eniten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ihmisten auttaminen digiasioissa&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ohjelmien tai nettisivujen tekeminen&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;kaapeleiden ja verkkolaitteiden kanssa työskentely&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;laitteiden kokoaminen ja mittaaminen&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="OT3" tags="" position="575,550" size="100,100">
-&lt;h2&gt;Kysymys 3 / 8&lt;/h2&gt;
-
-&lt;p&gt;Missä ympäristössä viihdyt parhaiten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;asiakaspalvelussa tai tukitilanteessa&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tietokoneella keskittyen&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;eri paikoissa, esimerkiksi yrityksissä&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;työpajassa tai teknisessä tilassa&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="OT4" tags="" position="575,650" size="100,100">
-&lt;h2&gt;Kysymys 4 / 8&lt;/h2&gt;
-
-&lt;p&gt;Kumpi tuntuu sinusta luontevammalta?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ohjelmien asennus ja käyttäjien opastus&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;koodin kirjoittaminen ja testaaminen&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;reitittimien ja verkkojen asentaminen&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;laitteiden korjaaminen ja asentaminen&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="OT5" tags="" position="575,750" size="100,100">
-&lt;h2&gt;Kysymys 5 / 8&lt;/h2&gt;
-
-&lt;p&gt;Millaisista tehtävistä pidät eniten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;selkeistä ja käytännön tehtävistä&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ajattelua vaativista ongelmista&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;liikkuvasta ja fyysisestä työstä&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;laitteiden toiminnan tutkimisesta&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="OT6" tags="" position="575,850" size="100,100">
-&lt;h2&gt;Kysymys 6 / 8&lt;/h2&gt;
-
-&lt;p&gt;Mitä haluaisit oppia lisää?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;tietokoneiden ja ohjelmien käyttöä&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;ohjelmointia ja sovelluskehitystä&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tietoverkkoja ja yhteyksiä&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;elektroniikkaa tai hyvinvointiteknologiaa&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="28" name="OT7" tags="" position="575,925" size="100,100">
-&lt;h2&gt;Kysymys 7 / 8&lt;/h2&gt;
-
-&lt;p&gt;Millainen työskentely sopii sinulle parhaiten?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ihmisten kanssa työskentely&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;keskittyminen ja itsenäinen työ&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;käytännön tekeminen eri paikoissa&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tarkka tekninen työ&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;OT8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="OT8" tags="" position="575,1000" size="100,100">
-&lt;h2&gt;Kysymys 8 / 8&lt;/h2&gt;
-
-&lt;p&gt;Kun opit uutta, pidät enemmän…&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;ohjeista ja harjoittelusta&quot;&gt;&gt;
-  &lt;&lt;set $tuki += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos_Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;kokeilusta ja virheiden korjaamisesta&quot;&gt;&gt;
-  &lt;&lt;set $ohjelma += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos_Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tekemisestä paikan päällä&quot;&gt;&gt;
-  &lt;&lt;set $verkko += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos_Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;tutkimisesta ja mittaamisesta&quot;&gt;&gt;
-  &lt;&lt;set $elektro += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos_Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="30" name="Tulos_Koulutus" tags="" position="575,1100" size="100,100">
-&lt;&lt;set _max = Math.max($tuki, $ohjelma, $verkko, $elektro)&gt;&gt;
-
-&lt;&lt;if _max == $tuki&gt;&gt;
-  &lt;&lt;goto &quot;IT-tuki&quot;&gt;&gt;
-&lt;&lt;elseif _max == $ohjelma&gt;&gt;
-  &lt;&lt;goto &quot;Ohjelmistokehitys&quot;&gt;&gt;
-&lt;&lt;elseif _max == $verkko&gt;&gt;
-  &lt;&lt;goto &quot;Tietoverkot&quot;&gt;&gt;
-&lt;&lt;else&gt;&gt;
-  &lt;&lt;goto &quot;Elektroniikka&quot;&gt;&gt;
-&lt;&lt;/if&gt;&gt;
-</tw-passagedata><tw-passagedata pid="31" name="IT-tuki" tags="" position="525,1175" size="100,100">
-&lt;h1&gt;IT-tukihenkilö&lt;/h1&gt;
-
-&lt;p&gt;
-Pidät ihmisten auttamisesta ja käytännön digitehtävistä. IT-tukihenkilön koulutus sopii sinulle, jos haluat asentaa laitteita ja ohjelmia sekä auttaa käyttäjiä arjessa. Monet ICT-urat alkavat IT-tuesta.
-&lt;/p&gt;
-&lt;h2&gt;Seuraava askel:&lt;/h2&gt;
-&lt;p&gt;
-Alla olevasta osiosta löydät oppilaitoksia, joissa voit opiskella ICT-alan perustutkintoa.
-&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Katso koulutusvaihtoehdot &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="32" name="Ohjelmistokehitys" tags="" position="625,1175" size="100,100">
-&lt;h1&gt;Ohjelmistokehittäjä&lt;/h1&gt;
-
-&lt;p&gt;
-Pidät ajattelusta, ongelmanratkaisusta ja tietokoneella työskentelystä. Ohjelmistokehityksen koulutus sopii sinulle, jos haluat oppia ohjelmointia ja sovellusten tekemistä. Ohjelmointia voi oppia monella eri tasolla.
-&lt;/p&gt;
-&lt;h2&gt;Seuraava askel:&lt;/h2&gt;
-&lt;p&gt;
-Alla olevasta osiosta löydät oppilaitoksia, joissa voit opiskella ICT-alan perustutkintoa.
-&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Katso koulutusvaihtoehdot &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="33" name="Tietoverkot" tags="" position="725,1175" size="100,100">
-&lt;h1&gt;Tietoverkkoasentaja&lt;/h1&gt;
-
-&lt;p&gt;
-Pidät käytännön työstä ja vaihtelevista työympäristöistä. Tietoverkkoalan koulutus sopii sinulle, jos haluat asentaa ja ylläpitää verkkoja ja verkkolaitteita.
-&lt;/p&gt;
-&lt;h2&gt;Seuraava askel:&lt;/h2&gt;
-&lt;p&gt;
-Alla olevasta osiosta löydät oppilaitoksia, joissa voit opiskella ICT-alan perustutkintoa.
-&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Katso koulutusvaihtoehdot &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="34" name="Elektroniikka" tags="" position="825,1175" size="100,100">
-&lt;h1&gt;Elektroniikka- tai hyvinvointiteknologia-asentaja&lt;/h1&gt;
-
-&lt;p&gt;
-Pidät laitteista, tekniikasta ja käsillä tekemisestä. Tämä koulutus sopii sinulle, jos haluat työskennellä teknisten tai hyvinvointiin liittyvien laitteiden parissa.
-&lt;/p&gt;
-&lt;h2&gt;Seuraava askel:&lt;/h2&gt;
-&lt;p&gt;
-Alla olevasta osiosta löydät oppilaitoksia, joissa voit opiskella ICT-alan perustutkintoa.
-&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Katso koulutusvaihtoehdot &quot;&gt;&gt;
-  &lt;&lt;goto &quot;Koulutus&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="35" name="Korkeakoulut" tags="" position="950,250" size="100,100">&lt;hr&gt;
+</tw-passagedata><tw-passagedata pid="35" name="Korkeakoulut" tags="" position="950,250" size="100,100">&lt;hr&gt;
 &lt;p class=&quot;highlight&quot;&gt;
 Voit edetä ICT-alalla monia eri polkuja pitkin. Ammatillinen koulutus, AMK ja yliopisto eivät ole vastakohtia, vaan ne voivat täydentää toisiaan.
 &lt;/p&gt;
@@ -1791,58 +433,177 @@ Yliopisto-opinnoissa keskitytään teoreettiseen osaamiseen ajatteluun ja tutkim
 &lt;/div&gt;
 
 &lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Tehtävään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;ICT: ammatinvalinta&quot;&gt;&gt;
-&lt;&lt;/link&gt;
+&lt;&lt;link &quot;Takaisin&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
+&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 &lt;hr&gt;
 
-</tw-passagedata><tw-passagedata pid="36" name="Kansi" tags="" position="425,50" size="100,100">&lt;&lt;script&gt;&gt;
-State.reset();
+</tw-passagedata><tw-passagedata pid="36" name="Kansi" tags="scene-kansi" position="425,50" size="100,100">&lt;&lt;script&gt;&gt;
+$(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;div class=&quot;cover-page&quot; role=&quot;button&quot; tabindex=&quot;0&quot;&gt;
-  &lt;h1 class=&quot;cover-title&quot;&gt;ICT-ala&lt;/h1&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
+  &lt;div class=&quot;cover-inner&quot;&gt;
+    &lt;p class=&quot;cover-pieni&quot;&gt;Tieto- ja viestintätekniikka · tarina&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;IT-ala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Julkaisupäivä · Saadaanko uusi peli julkaistua kello 12?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M8 5.5v13l10.5-6.5z&quot; fill=&quot;currentColor&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Aloita peli&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-
-&lt;&lt;script&gt;&gt;
-$(document).one(&quot;click keypress&quot;, function () {
-  Engine.play(&quot;Start&quot;);
-});
-&lt;&lt;/script&gt;&gt;
-</tw-passagedata><tw-passagedata pid="37" name="ICT: ammatinvalinta" tags="" position="750,375" size="100,100">&lt;h1&gt;Valitse ICT-ammatti&lt;/h1&gt;
-
-&lt;h2&gt;Ohjelmistokehitys ja koodaus&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Ohjelmistokehittäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Ohjelmistokehittäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Peliohjelmoija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Peliohjelmoija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Web-kehittäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Web-kehittäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Sovelluskehittäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Sovelluskehittäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+</tw-passagedata><tw-passagedata pid="38" name="start" tags="scene-studio alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Julkaisupäivä&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet TET-harjoittelijana pelistudiossa. Studion uusi mobiilipeli julkaistaan tänään kello 12. Aamulla kaikki ei kuitenkaan mene putkeen. Miten sinä toimisit?&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;4&lt;/strong&gt;&lt;span&gt;tuntia aikaa&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;oma ammattikortti&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Julkaisupäivä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-
-&lt;h2&gt;IT-tuki ja ylläpito&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;IT-tukihenkilö&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;IT-tukihenkilö&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Järjestelmäasiantuntija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Järjestelmäasiantuntija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Verkkoasentaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Verkkoasentaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Palvelinasiantuntija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Palvelinasiantuntija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="39" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Julkaisu klo 12.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Julkaisupäivä" tags="scene-studio" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {ongelma: 0, tarkka: 0, kayttaja: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {testaaja: 0, koodari: 0, ux: 0, verkko: 0, tietoturva: 0, tuki: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Julkaisupäivä&lt;/h1&gt;
+&lt;p&gt;Kello on 8.00. Olet TET-harjoittelijana Pikselipaja-pelistudiossa. Seinän isolla näytöllä lukee: &lt;strong&gt;Kettu kiertoradalla – julkaisu klo 12.00&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Peliä on tehty puolitoista vuotta. Tänään se tulee sovelluskauppoihin, ja tuhannet pelaajat odottavat.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Tiimin vetäjä Iida:&lt;/strong&gt; ”Tervetuloa! Tänään et pääse helpolla. Aloitetaan testaajan pöydältä. Siellä on jokin ongelma.”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Mene testaajan luo&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Testaus&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="42" name="Testaus" tags="scene-testaus" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Testaus&lt;/h2&gt;
+&lt;p&gt;Testaaja Emma on pelannut peliä kymmenellä eri puhelimella. Yhdellä vanhalla puhelimella peli kaatuu, kun painaa taukonappia.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Emma, ohjelmistotestaaja:&lt;/strong&gt; ”Tämä pitää kertoa koodarille. Miten kertoisit bugista?”&lt;/p&gt;
+&lt;p class=&quot;pieni&quot;&gt;Bugi = virhe ohjelmassa.&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kirjoitan tarkasti: mikä puhelin, mitä painoin ja mitä tapahtui.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Tätä kutsutaan bugiraportiksi. Kun koodari tietää tarkalleen, miten virhe syntyy, hän löytää sen nopeasti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;testaaja&quot; &quot;Koodi&quot; &quot;Miltä ohjelmistotestaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Huudan koodarille, että peli ei toimi.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Koodari ei tiedä, mistä aloittaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Peli toimii hänen koneellaan. Kestää kauan ennen kuin virhe löytyy.&lt;/p&gt;&lt;p&gt;Emma kirjoittaa bugiraportin: mikä puhelin, mitä painettiin ja mitä tapahtui. Sitten vika löytyy.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;testaaja&quot; &quot;Koodi&quot; &quot;Miltä ohjelmistotestaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Jätän asian. Vanhoja puhelimia on vähän.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Moni pelaaja käyttää vanhaa puhelinta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jos peli kaatuu heti julkaisupäivänä, pelaajat antavat huonoja arvosteluja.&lt;/p&gt;&lt;p&gt;Emma kirjoittaa bugiraportin ja vie sen koodarille.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;testaaja&quot; &quot;Koodi&quot; &quot;Miltä ohjelmistotestaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
-&lt;h2&gt;Kyberturva ja tietosuoja&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyberturva-asiantuntija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kyberturva-asiantuntija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Tietoturva-asiantuntija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Tietoturva-asiantuntija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Tietosuojavastaava&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Tietosuojavastaava&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;SOC-analyytikko&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;SOC-analyytikko&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+</tw-passagedata><tw-passagedata pid="43" name="Koodi" tags="scene-koodi" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Koodarin pöytä&lt;/h2&gt;
+&lt;p&gt;Koodari Onni lukee Emman raportin ja löytää virheen koodista. Hän kirjoittaa korjauksen.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Onni, ohjelmistokehittäjä:&lt;/strong&gt; ”Korjaus on valmis. Aikaa on vähän. Laitetaanko se suoraan peliin?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Laitetaan heti. Aikaa on vähän.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hups! Korjaus rikkoi pelin äänet.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Uusi koodi voi vaikuttaa muihin kohtiin. Onni joutuu perumaan muutoksen ja korjaamaan sen uudelleen.&lt;/p&gt;&lt;p&gt;Siksi korjaus testataan aina ennen kuin se lisätään peliin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;koodari&quot; &quot;Pelitestaus&quot; &quot;Miltä ohjelmistokehittäjän työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Testataan korjaus ensin.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.ongelma += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä veto!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Testissä huomataan, että korjaus rikkoi pelin äänet. Onni korjaa senkin. Nyt kaikki toimii.&lt;/p&gt;&lt;p&gt;Hyvä koodari tarkistaa työnsä, vaikka olisi kiire.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;koodari&quot; &quot;Pelitestaus&quot; &quot;Miltä ohjelmistokehittäjän työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Pyydetään toista koodaria katsomaan koodi.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tiimi += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Fiksua!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Toinen koodari huomaa, että korjaus rikkoisi pelin äänet. Onni korjaa senkin.&lt;/p&gt;&lt;p&gt;Tätä kutsutaan koodikatselmoinniksi. Kaksi silmäparia huomaa enemmän kuin yksi.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;koodari&quot; &quot;Pelitestaus&quot; &quot;Miltä ohjelmistokehittäjän työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
-&lt;h2&gt;Media, muotoilu ja peliala&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Pelisuunnittelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Pelisuunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;3D-mallintaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;3D-mallintaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Digitaalinen muotoilija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Digitaalinen muotoilija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;UI/UX-suunnittelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;UI/UX-suunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+</tw-passagedata><tw-passagedata pid="44" name="Pelitestaus" tags="scene-ux" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Pelitestaus&lt;/h2&gt;
+&lt;p&gt;Studion sohvalla istuu viisi seitsemäsluokkalaista. He testaavat peliä. Kukaan ei löydä nappia, josta peli alkaa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Aada, UX-suunnittelija:&lt;/strong&gt; ”Minä suunnittelen, miten peliä käytetään. Mitä tehdään, kun pelaajat eivät löydä nappia?”&lt;/p&gt;
+&lt;p class=&quot;pieni&quot;&gt;UX = käyttäjäkokemus. Se tarkoittaa, miltä jonkin käyttäminen tuntuu.&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kirjoitetaan ruudulle pitkä ohje.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Kukaan ei lue pitkää ohjetta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Testaajat ohittavat tekstin heti. Hyvä peli on niin selkeä, ettei ohjetta tarvita.&lt;/p&gt;&lt;p&gt;Aada tekee napista isomman ja siirtää sen keskelle ruutua.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ux&quot; &quot;Konesali&quot; &quot;Miltä UX-suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tehdään napista isompi ja selkeämpi.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.kayttaja += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Toimii!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Aada tekee napista isomman ja kirkkaamman. Nyt kaikki viisi löytävät sen heti.&lt;/p&gt;&lt;p&gt;Kun ajattelee pelaajan puolelta, peliä on helppo käyttää.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ux&quot; &quot;Konesali&quot; &quot;Miltä UX-suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kysytään pelaajilta, mistä he etsivät nappia.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.kayttaja += 2&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Loistava idea!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pelaajat näyttävät, että he etsivät nappia ruudun alareunasta. Aada siirtää napin sinne. Nyt kaikki löytävät sen heti.&lt;/p&gt;&lt;p&gt;Paras tieto tulee käyttäjiltä itseltään.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ux&quot; &quot;Konesali&quot; &quot;Miltä UX-suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="45" name="Konesali" tags="scene-verkko" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Konesali&lt;/h2&gt;
+&lt;p&gt;Peli pitäisi lähettää sovelluskauppaan, mutta studion netti pätkii. Konesalin kaapissa vilkkuu oranssi valo.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Mikael, tietoverkkoasentaja:&lt;/strong&gt; ”Jossain on vika. Miten lähtisit etsimään sitä?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Käynnistetään kaikki laitteet uudelleen yhtä aikaa.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Kaikkien työt katkeavat.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Netti toimii hetken, mutta vika palaa. Syy ei löytynyt.&lt;/p&gt;&lt;p&gt;Mikael tarkistaa laitteet yksi kerrallaan. Kytkimestä löytyy löysä kaapeli.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkko&quot; &quot;Epäilyttävä viesti&quot; &quot;Miltä tietoverkkoasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tarkistetaan järjestyksessä: kaapelit, laitteet ja valot.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.ongelma += 2&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri oikein!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kytkimestä löytyy löysä kaapeli. Mikael vaihtaa sen, ja valo muuttuu vihreäksi.&lt;/p&gt;&lt;p&gt;Kun vikaa etsii askel kerrallaan, syy löytyy nopeasti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkko&quot; &quot;Epäilyttävä viesti&quot; &quot;Miltä tietoverkkoasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ostetaan uusi reititin.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Kallis ratkaisu, eikä vika ollut reitittimessä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Mikael tarkistaa laitteet yksi kerrallaan. Kytkimestä löytyy löysä kaapeli. Uutta laitetta ei tarvittu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkko&quot; &quot;Epäilyttävä viesti&quot; &quot;Miltä tietoverkkoasentajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="46" name="Epäilyttävä viesti" tags="scene-tietoturva" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Epäilyttävä viesti&lt;/h2&gt;
+&lt;p&gt;Onnin sähköpostiin tulee viesti: ”Sovelluskauppa: julkaisunne on pysäytetty. Kirjaudu heti tästä linkistä, tai peliä ei julkaista tänään.”&lt;/p&gt;
+&lt;p&gt;Onni on jo klikkaamassa. Kiire on kova.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Leila, tietoturva-asiantuntija:&lt;/strong&gt; ”Odota hetki! Mitä tekisit tälle viestille?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Klikataan linkkiä. Julkaisu ei saa myöhästyä.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Linkki vie huijaussivulle.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Onni ehtii kirjoittaa salasanansa. Leila vaihtaa salasanan heti ja tarkistaa, ettei kukaan päässyt tilille.&lt;/p&gt;&lt;p&gt;Huijarit käyttävät kiirettä hyväkseen. Siksi kiireessä kannattaa pysähtyä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tietoturva&quot; &quot;Asiakastuki&quot; &quot;Miltä tietoturva-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Näytän viestin Leilalle ennen kuin kukaan klikkaa.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hienosti toimittu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Leila tarkistaa lähettäjän osoitteen. Se on väärä. Viesti on huijaus.&lt;/p&gt;&lt;p&gt;Leila varoittaa myös muita, ettei kukaan klikkaa linkkiä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tietoturva&quot; &quot;Asiakastuki&quot; &quot;Miltä tietoturva-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Poistan viestin heti.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä, ettet klikannut!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sama viesti tuli kuitenkin muillekin. Leila pyytää, että epäilyttävät viestit näytetään hänelle. Silloin hän voi varoittaa koko tiimiä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tietoturva&quot; &quot;Asiakastuki&quot; &quot;Miltä tietoturva-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="47" name="Asiakastuki" tags="scene-tuki" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Asiakastuki&lt;/h2&gt;
+&lt;p&gt;Peli on jo ladattavissa ennakkoon. Tukipuhelimeen soittaa 68-vuotias Veikko. Hän haluaa pelata peliä lapsenlapsensa kanssa, mutta peli ei asennu hänen tablettiinsa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Juho, IT-tukihenkilö:&lt;/strong&gt; ”Haluatko auttaa Veikkoa? Miten neuvoisit?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Lähetän Veikolle linkin pitkään ohjesivuun.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Veikko eksyy ohjesivulle.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Hän soittaa uudelleen. Juho neuvoo häntä puhelimessa askel kerrallaan.&lt;/p&gt;&lt;p&gt;Syy löytyy: tabletin muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tuki&quot; &quot;Peli julkaistu&quot; &quot;Miltä IT-tukihenkilön työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Neuvon askel kerrallaan ja kysyn, mitä Veikko näkee ruudulla.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.kayttaja += 2&gt;&gt;&lt;&lt;set $piirre.ongelma += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvää palvelua!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Veikko kertoo, mitä ruudulla lukee. Syy löytyy: tabletin muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.&lt;/p&gt;&lt;p&gt;Veikko kiittää. Hän pääsee pelaamaan lapsenlapsensa kanssa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tuki&quot; &quot;Peli julkaistu&quot; &quot;Miltä IT-tukihenkilön työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Sanon, että tabletti on varmasti liian vanha.&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Arvaus meni pieleen.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Juho tarkistaa asian. Tabletti on tarpeeksi uusi, mutta sen muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.&lt;/p&gt;&lt;p&gt;Ennen kuin vastaa, kannattaa selvittää syy.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 5 min. Seuraavaan tehtävään siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tuki&quot; &quot;Peli julkaistu&quot; &quot;Miltä IT-tukihenkilön työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="48" name="Peli julkaistu" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Peli julkaistu!&lt;/h1&gt;
+&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Kettu kiertoradalla on valmis. Kello 12.00 Iida painaa julkaisunappia, ja peli ilmestyy sovelluskauppoihin!&lt;/p&gt;
+&lt;p&gt;Ensimmäisen tunnin aikana peli ladataan 10 000 kertaa.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Yhden pelin julkaisuun tarvittiin kuusi eri ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Emma, ohjelmistotestaaja&lt;/strong&gt; – löysi bugin ja kuvasi sen tarkasti&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Onni, ohjelmistokehittäjä&lt;/strong&gt; – korjasi koodin&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Aada, UX-suunnittelija&lt;/strong&gt; – teki pelistä helpon käyttää&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mikael, tietoverkkoasentaja&lt;/strong&gt; – sai netin toimimaan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Leila, tietoturva-asiantuntija&lt;/strong&gt; – pysäytti huijauksen&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Juho, IT-tukihenkilö&lt;/strong&gt; – auttoi pelaajaa&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ohjelmistokehittäjäksi, tietoverkkoasentajaksi ja IT-tukihenkilöksi voi opiskella ammattikoulussa. Moni jatkaa sen jälkeen ammattikorkeakouluun.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="49" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Tietoturvatarkastus&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="50" name="Kutsu: ohje" tags="scene-studio" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Tietoturvatarkastus&lt;/h2&gt;
+&lt;p&gt;Tarinassa Leila pysäytti huijausviestin ennen kuin kukaan klikkasi. Nyt on sinun vuorosi. Tarkasta asioita, joita voit kohdata myös omassa puhelimessasi.&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;8 tarkastettavaa asiaa&lt;/strong&gt;. Jokaisessa teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Päätä, onko asia turvallinen vai riski.&lt;/li&gt;&lt;li&gt;Kirjoita yhdellä lauseella, miksi ajattelet niin.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Sitten näet, osuitko oikeaan ja kuka IT-alan ammattilainen hoitaa tällaisia asioita työkseen. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="51" name="Kutsu" tags="scene-studio" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="52" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Tietoturvatarkastus – tulokset&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="53" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Autoit pelistudiota julkaisemaan pelin ja tarkastit kahdeksan tietoturva-asiaa. Samalla tutustuit kymmeneen IT-alan ammattiin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;&lt;link &quot;Missä IT-alaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Koulutus&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */

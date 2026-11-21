@@ -9,10 +9,21 @@ Tällä työkalulla tehdään Amispolun alatehtävät (8. lk, Oma reitti → Vai
 |---|---|
 | `pelit/koulutusalat/tarina-yhteinen.js` | Yhteinen moottori: kello, ammattikortti, kortin lataus kuvana, Kenet kutsut paikalle?, palautustiedosto, tyhjennys, "Katso ympärille" -nappi |
 | `pelit/koulutusalat/tarina-yhteinen.css` | Yhteiset tyylit. Värit tulevat CSS-muuttujista (--a1, --a2, --korostus, --tausta …) |
-| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`) |
+| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`) |
 | `vendor/three/three.module.min.js` | three.js r187 |
 | `tools/koulutusala-tarina/rakenna_tarina.py` | Rakentaja |
 | `tools/koulutusala-tarina/alat/*.py` | Alan sisältö: tekstit, kohtaukset, ammatit, kortit, teema |
+
+## Loppuosan tehtävä
+
+Oletuksena loppuosa on "Kenet kutsut paikalle?" (valitse ammattilainen + perustelu). Ala voi vaihtaa tehtävän
+tekstit ja mekaniikan `TEHTAVA`-sanakirjalla. Esimerkki: `alat/it.py` = Tietoturvatarkastus
+(Turvallinen / Riski + perustelu, kortissa `nakyma`-HTML ja `ammattilainen`). Kenttiä: `nimi, tag, maara,
+askeleet, lopuksi, kysymys, korttiSana, seuraava, miksiLabel, placeholder, vihjeValitse, vihjeAlku,
+sekoita, etiketit, palaute, ammattilainenTeksti`. Jos `TEHTAVA` puuttuu, kaikki toimii kuten ennen.
+
+Valmiit tehtävätyypit: tekniikka = Kenet kutsut paikalle? (vikatilanne), sote = Kenet kutsut paikalle?,
+it = Tietoturvatarkastus. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
 
 ## Uuden alan tekeminen
 

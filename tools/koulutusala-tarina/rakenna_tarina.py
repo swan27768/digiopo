@@ -32,6 +32,7 @@ def attr(a, nimi):
 # Kannen napin kuvakkeet (SVG-polut, 24x24)
 IKONIT = {
     "virta": '<path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
+    "play": '<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>',
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 
@@ -100,6 +101,12 @@ def rakenna(A, src, dst):
                      + esc(teksti.strip() + "\n") + "</tw-passagedata>")
 
     PIIRTEET, AMMATIT = A["PIIRTEET"], A["AMMATIT"]
+    # Loppuosan tehtävä: oletuksena "Kenet kutsut paikalle?". Ala voi muuttaa tekstit TEHTAVA-sanakirjalla.
+    TH = dict(nimi="Kenet kutsut paikalle?", tag="Tehtävä · noin 25 min",
+              maara=f"<strong>{len(A['KUTSU_KORTIT'])} tilannetta</strong>",
+              askeleet=["Valitse ammattilainen, joka auttaa tilanteessa.", "Kirjoita yhdellä lauseella, miksi valitsit hänet."],
+              lopuksi="Sitten näet, osuitko oikeaan. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.")
+    TH.update({k: v for k, v in A.get("TEHTAVA", {}).items() if k in TH})
     pset = ", ".join(f"{k}: 0" for k in PIIRTEET)
     kset = ", ".join(f"{k}: 0" for k in AMMATIT)
     alustus = f'<<set $aika to 0>><<set $piirre to {{{pset}}}>><<set $kiinn to {{{kset}}}>><<set $korttiTop to []>>'
@@ -151,7 +158,7 @@ $('body').addClass('hide-navbar');
     L = A["TARINA_LOPPU"]
     lisaa(L["nimi"], L["teksti"] + '\n<div class="intro-nappi"><<link "Katso ammattikorttisi">><<goto "Ammattikortti">><</link>></div>', "scene-loppu")
 
-    lisaa("Ammattikortti", """<<run setup.tallennaKortti()>>
+    lisaa("Ammattikortti", f"""<<run setup.tallennaKortti()>>
 <h1>Ammattikorttisi</h1>
 <p>Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.</p>
 <div class="kortti-nimi-rivi"><label for="kortti-nimi">Nimesi korttiin (vapaaehtoinen)</label>
@@ -159,17 +166,17 @@ $('body').addClass('hide-navbar');
 <div id="ammattikortti"><<print setup.korttiHTML()>></div>
 <div class="intro-nappi action-row">
 <a class="macro-link btn-secondary" href="javascript:void(0)" onclick="lataaAmmattikortti()">Lataa kortti kuvana</a>
-<<link "Seuraava tehtävä: Kenet kutsut paikalle?">><<goto "Kutsu: ohje">><</link>>
+<<link "Seuraava tehtävä: {TH['nimi']}">><<goto "Kutsu: ohje">><</link>>
 </div>""", "scene-loppu")
 
     lisaa("Kutsu: ohje", f"""<<nobr>>
 <div class="kutsu-ohje">
-<p class="alku-tag">Tehtävä · noin 25 min</p>
-<h2 class="alku-otsikko">Kenet kutsut paikalle?</h2>
+<p class="alku-tag">{TH['tag']}</p>
+<h2 class="alku-otsikko">{TH['nimi']}</h2>
 <p>{A['KUTSU_JOHDANTO']}</p>
-<p>Saat <strong>{len(A['KUTSU_KORTIT'])} tilannetta</strong>. Jokaisessa teet kaksi asiaa:</p>
-<ol class="kutsu-askeleet"><li>Valitse ammattilainen, joka auttaa tilanteessa.</li><li>Kirjoita yhdellä lauseella, miksi valitsit hänet.</li></ol>
-<p>Sitten näet, osuitko oikeaan. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.</p>
+<p>Saat {TH['maara']}. Jokaisessa teet kaksi asiaa:</p>
+<ol class="kutsu-askeleet">{''.join(f'<li>{x}</li>' for x in TH['askeleet'])}</ol>
+<p>{TH['lopuksi']}</p>
 <div class="intro-nappi"><<link "Aloita">><<goto "Kutsu">><</link>></div>
 </div>
 <</nobr>>""", f"scene-{A['yleisKohtaus']}")
@@ -179,8 +186,8 @@ $('body').addClass('hide-navbar');
 <<script>>setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);<</script>>
 <</nobr>>""", f"scene-{A['yleisKohtaus']}")
 
-    lisaa("Kutsu: tulos", """<<nobr>>
-<h2>Kenet kutsut paikalle? – tulokset</h2>
+    lisaa("Kutsu: tulos", f"""<<nobr>>
+<h2>{TH['nimi']} – tulokset</h2>
 <div id="kutsu-yhteenveto"><<print setup.kutsuYhteenveto()>></div>
 <p class="pieni" style="text-align:center">Lataa vastauksesi ja palauta tiedosto Classroomiin.</p>
 <div class="intro-nappi action-row">
@@ -263,6 +270,7 @@ $('body').addClass('hide-navbar');
         "kutsuTilanneOtsikko": A.get("kutsuTilanneOtsikko", "Tilanne"),
         "piirteet": PIIRTEET, "ammatit": AMMATIT, "kutsuKortit": A["KUTSU_KORTIT"],
     }
+    if "TEHTAVA" in A: DATA["tehtava"] = A["TEHTAVA"]
     js = ("\n/* " + A["tarinaNimi"] + " – alan sisältö. Moottori: tarina-yhteinen.js */\n"
           "TarinaYhteinen.alusta(setup, " + json.dumps(DATA, ensure_ascii=False, indent=1) + ");\n")
     js = js.replace("</", "<\\/")
