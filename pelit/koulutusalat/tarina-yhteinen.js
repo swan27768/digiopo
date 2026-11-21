@@ -38,6 +38,8 @@
     var ALKU = (D.kello && D.kello.alku) || 0;
     var RAJA = (D.kello && typeof D.kello.raja === "number") ? D.kello.raja : null;
     var KUTSU_KEY = D.ala + "_kutsu_v1";
+    /* Peli alkaa aina alusta, kun sivu avataan uudelleen: myös tehtävän vastaukset nollataan. */
+    try { localStorage.removeItem(KUTSU_KEY); } catch (e) {}
     /* Tallennus on sidottu korttisarjaan: jos kortit vaihtuvat, vanhat vastaukset hylätään */
     var KORTTI_SIG = KORTIT.map(function (k) { return k.oikea || k.otsikko || k.nimi; }).join("|");
     var TH = Object.assign({
