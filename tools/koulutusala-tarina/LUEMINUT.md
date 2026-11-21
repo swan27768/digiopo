@@ -9,7 +9,7 @@ Tällä työkalulla tehdään Amispolun alatehtävät (8. lk, Oma reitti → Vai
 |---|---|
 | `pelit/koulutusalat/tarina-yhteinen.js` | Yhteinen moottori: kello, ammattikortti, kortin lataus kuvana, Kenet kutsut paikalle?, palautustiedosto, tyhjennys, "Katso ympärille" -nappi |
 | `pelit/koulutusalat/tarina-yhteinen.css` | Yhteiset tyylit. Värit tulevat CSS-muuttujista (--a1, --a2, --korostus, --tausta …) |
-| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`, `elintarvike`, `kauppa`, `luonto`) |
+| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`, `elintarvike`, `kauppa`, `luonto`, `lentokentta`) |
 | `vendor/three/three.module.min.js` | three.js r187 |
 | `tools/koulutusala-tarina/rakenna_tarina.py` | Rakentaja |
 | `tools/koulutusala-tarina/alat/*.py` | Alan sisältö: tekstit, kohtaukset, ammatit, kortit, teema |
@@ -35,11 +35,15 @@ Tyyppi `kartta` (esimerkki `alat/luonto.py`): SVG-kartta, jolla on näytepisteit
 kuvaus, arvot, havainto`). Oppilas ottaa rajallisen määrän näytteitä (`naytteet`), valitsee lähteen (`oikea`,
 `lahella`) ja korjauksen (`korjaukset`). Kartta: `joki`, `sivuvedet`, `alueet`, `kohteet`, `mittarit`.
 
+Tyyppi `sijoitus` (esimerkki `alat/palvelu.py`): ihmiset (`KUTSU_KORTIT`: `nimi, ikoni, kuvaus, sopivuus`) sijoitetaan
+vaihtoehtoihin (`TEHTAVA["vaihtoehdot"]`: `avain, nimi, ikoni, tieto, paikat`). `sopivuus = {avain: [0–2, selitys]}`.
+
 Taustakuvat: `TAUSTAKUVAT = {"kansi": ..., "alku": ..., "tehtava": ...}` ja kohtauksessa `taustakuva`.
+Taustakuvalista (`[...]`) arpoo kuvan joka kerta. Avaimet myös `kortti`, `loppu`, `oppilaitokset`. Kohtauksen `kuva` voi olla lista (kuvat rinnakkain, `teksti` = kuvateksti).
 Kannen napin värit: CSS-muuttujat `--kansi-nappi-bg, -teksti, -reuna, -varjo, -hehku` teemassa.
 
 Valmiit tehtävätyypit: tekniikka = Kenet kutsut paikalle? (vikatilanne), sote = Kenet kutsut paikalle?,
-it = Tietoturvatarkastus, elintarvike = Kehitä oma välipala, kauppa = Sisäänostajan budjetti, luonto = Jäljitä lähde kartalla. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
+it = Tietoturvatarkastus, elintarvike = Kehitä oma välipala, kauppa = Sisäänostajan budjetti, luonto = Jäljitä lähde kartalla, palvelu = Järjestä jumiin jääneet. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
 
 Huom: 3D-kohtauksen nimi `tehdas` piilottaa Katso-napin (tekniikan aloitussivu). Käytä muilla aloilla muuta nimeä.
 

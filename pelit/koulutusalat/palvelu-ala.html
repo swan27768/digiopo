@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-init="no-js">
+<html data-init="no-js" data-tausta-maailma="lentokentta" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
-<title>Palveluala</title>
+<title>Palvelualat: kuljetus ja matkailu – Myrsky lentokentällä</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
@@ -36,12 +36,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <script src="../../js/lisenssiportti.js"></script>
     <script src="../../js/seuranta.js" defer></script>
 
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("palveluala.state");}catch(e){}</script>
 <script id="sc-clear-saves">
 (function(){
   var prefix = "sc-de02a0b9-2e3d-4080-bbec-132d24f878f8-";
@@ -58,1394 +62,467 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Palveluala" startnode="6" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="de02a0b9-2e3d-4080-bbec-132d24f878f8" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">:root {
-  /* YLEINEN TAUSTA JA TEKSTIT */
-  --bg-body: #EEF3F7;
-  --text-main: #1F2A33;
-
-  /* PÄÄTEEMAVÄRIT (ammatillinen sinivihreä) */
-  --accent-1: #2F6F95;   /* otsikot */
-  --accent-2: #3A8F7A;   /* alaotsikot */
-  --accent-3: #F2B705;   /* korostukset */
-
-  /* NAPIT */
-  --btn-bg: #2F6F95;
-  --btn-text: #FFFFFF;
-
-  /* KORTIT / LAATIKOT */
-  --card-bg: #FFFFFF;
-  --card-border: #C7D3DD;
-
-  /* LINKIT */
-  --link-text: #3A8F7A;
-
-  /* YLÄPALKKI */
-  --nav-bg: rgba(255,255,255,0.95);
-  --nav-border: rgba(160,190,210,0.55);
-
-  /* PISTEET / HIGHLIGHT */
-  --score-color: #F2B705;
-
-  /* VAARA / VIRHE */
-  --danger-bg: #A0313A;
-  --highlight-color: #A0313A;
+	<tw-storydata name="Palveluala" startnode="6" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="de02a0b9-2e3d-4080-bbec-132d24f878f8" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+:root {
+  --a1: #ffc15e; --a1-rgb: 255,193,94;
+  --a2: #f59f2a; --a2-rgb: 245,159,42;
+  --a3: #ffdca0;
+  --korostus: #7cc7ff; --korostus-rgb: 124,199,255;
+  --tausta: #0c1628; --tausta-rgb: 12,22,40;
+  --tausta-2: #15233b; --tausta-2-rgb: 21,35,59;
+  --paneeli: #111e34; --paneeli-rgb: 17,30,52;
+  --paneeli-2: #1a2a46;
+  --tumma: #070e1a; --tumma-rgb: 7,14,26;
+  --reuna: #ffc15e;
+  --teksti-pehmea: #d5e1f2; --teksti-pehmea-rgb: 213,225,242;
+  --teksti-vaalea: #f2f6fc;
+  --nappi-teksti: #2a1800;
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #ffe8bf;
+  --kansi-nappi-varjo: #8a5a10;
+  --kansi-nappi-hehku: 255,193,94;
 }
-
-  
- /* BODY JA PASSAGE */
-body {
-  background: var(--bg-body);
-  color: var(--text-main);
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.7) 38%, rgba(var(--tausta-rgb),.25) 62%, rgba(var(--tausta-rgb),0) 82%) !important;
 }
-
-#passages .passage {
-  color: var(--text-main);
-}
-
-/* TEKSTIT JA LINKIT */
-#passages .passage a:not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* NAPIT YHTEISESTI */
-#passages .passage a.btn,
-#passages .passage button.btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-  border: 2px solid #C77A4F;   /* KIINTEÄ SÄVY → TOIMII VARMASTI */
-  border-radius: 999px;
-
-  padding: 0.75rem 1.6rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-
-  box-shadow: 0 5px 0 rgba(0,0,0,0.28);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-#passages .passage a.btn:hover,
-#passages .passage button.btn:hover {
-  filter: brightness(1.07);
-  transform: translateY(-1px);
-}
-
-#passages .passage a.btn:active,
-#passages .passage button.btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.30);
-}
-
-.btn--danger {
-  background: var(--danger-bg);
-  color: #fff !important;
-  border-color: #4A1414;
-}
-/* ============================================================
-   1. POISTA SUGARCUBEN OLETUS-UI
-   ============================================================ */
-
-#sidebar,
-#ui-bar,
-#ui-bar-toggle,
-#toolbar {
-  display: none !important;
-}
-
-/* ============================================================
-   2. PERUSRUNK0
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  padding-top: 0;
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-/* ============================================================
-   3. PASSAGE-ALUE
-   ============================================================ */
-
-#story {
-  margin-left: 0 !important;
-}
-
-#passages {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-#passages .passage {
-  margin: 2rem auto;
-  padding: 2.2rem 3rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* ============================================================
-   4. TYPOGRAFIA
-   ============================================================ */
-
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  hyphens: auto;
-}
-
-#passages .passage ul,
-#passages .passage ol {
-  padding-left: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-#passages .passage li {
-  margin-bottom: 0.35rem;
-}
-
-/* Otsikot */
-
-#passages .passage h1,
-#passages .passage h2,
-#passages .passage h3 {
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 0.6rem auto 1.2rem;
-}
-
-/* H1 */
-#passages .passage h1 {
-  font-size: 2.2rem;
-  color: var(--accent-1);
-  border: 2px solid var(--accent-1);
-  border-radius: 12px;
-  padding: 0.5rem 1.6rem;
-}
-
-/* H2 */
-#passages .passage h2 {
-  font-size: 1.6rem;
-  color: var(--accent-2);
-}
-
-/* H3 */
-#passages .passage h3 {
-  font-size: 1.25rem;
-  color: var(--accent-3);
-}
-
-/* Linkit */
-/* Linkit vain leipätekstissä – EI napeille */
-#passages .passage a:not(.btn):not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* ============================================================
-   NAPIT – VARMA SUGARCUBE (EI RIIPPUVUUTTA .btn-LUOKASTA)
-   Toimii sekä [[wikilink]] että <<link>> ja <<button>>
-   ============================================================ */
-
-/* 1) Wrapperit: napit keskelle ja pinoon */
-.intro-nappi,
-.answer-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ============================================================
-   YHTEINEN NAPPI – MAISTUVA AMMATTI
-   ============================================================ */
-
-.intro-nappi a.link-internal,
-.intro-nappi a.macro-link,
-.answer-group a.link-internal,
-.answer-group a.macro-link {
-  appearance: none;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: min(520px, 100%);
-  box-sizing: border-box;
-
-  padding: 0.75rem 1.6rem;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-
-  border: 2px solid rgba(0,0,0,0.15);
-  border-radius: 999px;
-
-  text-decoration: none !important;
-  cursor: pointer;
-
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-.intro-nappi a:hover,
-.answer-group a:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
-.intro-nappi a:active,
-.answer-group a:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-}
-
-.answer-group {
-  display: flex;
-  flex-direction: row;      /* NAPIT VIEREKKÄIN */
-  justify-content: center;
-  align-items: stretch;
-  gap: 0.75rem;
-  flex-wrap: wrap;          /* sallii rivittymisen pienellä näytöllä */
-}
-.answer-group a {
-  width: auto;
-  min-width: 140px;
-}
-
-/* ============================================================
-   6. NAVBAR – POISTETTU
-   ============================================================ */
-
-/* ============================================================
-   7. KORTIT (KOULUT, VIDEOT)
-   ============================================================ */
-
-.media-card,
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-}
-
-/* ============================================================
-   8. KANSISIVU – JULISTE (PALVELUALA)
-   ============================================================ */
-
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;
-  display: flex !important;
-
-  justify-content: center !important;
-  align-items: center !important;
-
-  background:
-    linear-gradient(rgba(238,243,247,0.90), rgba(238,243,247,0.90)),
-    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2400&q=80");
-
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-
-  text-decoration: none !important;
-  cursor: pointer !important;
-  z-index: 10000 !important;
-}
-
-a.macro-link.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: #4A1414 !important;
-  color: #ffffff !important;
-}
-p.highlight {
-  color: var(--highlight-color) !important;
-  font-weight: 700;
-}
-a.macro-link.btn--danger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.lomake-ryhma textarea {
-  width: 100%;
-  min-height: 8rem;
-  padding: 1rem 1.1rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  border-radius: 16px;
-  border: 2px solid var(--card-border);
-  box-sizing: border-box;
-}
-/* Ammattitutkimus – suuret ja korkeat tekstikentät (varma yliajo) */
-#passages .lomake-ryhma textarea {
-  width: 100% !important;
-  min-height: 10rem !important;
-  height: 10rem !important;
-  padding: 1rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-
-  border-radius: 16px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-  resize: vertical;
-}
-
-/* Jos jokin kenttä on vielä textbox (input), tee siitäkin selvästi korkeampi */
-#passages .lomake-ryhma input[type="text"] {
-  width: 100% !important;
-  min-height: 3.2rem !important;
-  padding: 0.9rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-
-  border-radius: 14px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-}
-/* Ammattitutkimuksen lomakkeen kirjoitustekstin väri */
-#passages .lomake-ryhma tex/* KANSISIVU – julistemainen, varma yliajo */
-#passages .passage .cover-link {
-  display: flex !important;
-  min-height: 100vh !important;
-  width: 100% !important;
-
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-
-  background: var(--bg-body) !important;
-  color: var(--text-main) !important;
-
-  text-decoration: none !important;
-  cursor: pointer !important;
-  box-sizing: border-box !important;
-  padding: 2.5rem 1.5rem !important;
-}
-
-#passages .passage .cover-inner {
-  max-width: 900px !important;
-}
-
-#passages .passage .cover-title {
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.08em !important;
-  line-height: 0.95 !important;
-
-  font-size: 3rem !important;
-  color: var(--accent-1) !important;
-  margin: 0 !important;
-}
-
-#passages .passage .cover-subtitle {
-  font-size: clamp(1.1rem, 2.8vw, 1.6rem) !important;
-  margin-top: 1.6rem !important;
-}
-
-#passages .passage .cover-hint {
-  margin-top: 2.6rem !important;
-  opacity: 0.75 !important;
-}
-tarea,
-#passages .lomake-ryhma input[type="text"] {
-  color: #000000 !important;
-}
-#passages .passage .cover-link {
-  text-decoration: none !important;
-}
-
-/* ===== GOOGLE SITES FULL SANDBOX FIX ===== */
-iframe {
-  all: initial !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* pakota oma layout takaisin iframeen */
-iframe * {
-  all: revert !important;
-}
-
-/* nappien täydellinen uudelleenmäärittely iframe-tilassa */
-iframe #passages .intro-nappi,
-iframe #passages .answer-group {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  width: auto !important;
-}
-
-iframe #passages a {
-  display: inline-flex !important;
-  width: auto !important;
-  min-width: 140px !important;
-  max-width: max-content !important;
-  padding: 0.75rem 1.6rem !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  border-radius: 999px !important;
-}
-/* ========= KIRJOITUSKENTTIEN TEKSTI MUSTAKSI ========= */
-
-#passages textarea,
-#passages input[type="text"] {
-  color: #000000 !important;
-  caret-color: #000000 !important;
-}
-.action-row {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex-wrap: nowrap !important;
-}
-/* ============================
-   INFO-TEXT – OPETUSKORTTI
-   ============================ */
-
-#passages .info-text {
-  background: #ffffff;
-  border: 1px solid #C7D3DD;          /* sama sävy kuin card-border */
-  border-radius: 14px;
-  padding: 0.9rem 1.1rem;
-  margin: 1.2rem auto;
-  max-width: 720px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-#passages .info-text p {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: #1F2A33;                     /* sama kuin text-main */
-}
-/* ===== TESTI – NAPIT YHDELLE RIVILLE & PIENEMMÄT ===== */
-
-iframe #passages .answer-group {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  flex-wrap: nowrap !important;
-  width: auto !important;
-}
-
-/* estä koko rivin levyiset napit */
-iframe #passages .answer-group a {
-  display: inline-flex !important;
-  width: auto !important;
-  min-width: 110px !important;
-  max-width: max-content !important;
-  padding: 0.55rem 1.1rem !important;
-  font-size: 0.9rem !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  border-radius: 999px !important;
-}
-/* ========== SAAVUTETTAVUUS: FONTIT & LUETTAVUUS ========== */
-
-/* Perusteksti */
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 18px !important;
-  line-height: 1.75 !important;
-  letter-spacing: 0.01em;
-}
-
-/* Kysymystekstit */
-#passages .passage h2 {
-  font-size: 1.9rem !important;
-  line-height: 1.3 !important;
-}
-
-/* Pääotsikot */
-#passages .passage h1 {
-  font-size: 2.6rem !important;
-}
-
-/* Lomakekenttien teksti */
-#passages textarea,
-#passages input[type="text"] {
-  font-size: 17px !important;
-}
-
-/* Painiken teksti */
-#passages a,
-#passages button {
-  font-size: 1rem !important;
-}
-/* ============================================================
-   MOBIILI – PARANNETTU VERSIO
-   ============================================================ */
-
-/* ---- Yleinen layout ---- */
-@media (max-width: 768px) {
-
-  body {
-    padding-top: 0 !important;
-  }
-
-  #passages {
-    padding: 0 !important;
-    margin: 0.5rem auto !important;
-  }
-
-  #passages .passage {
-    padding: 1.2rem 1rem !important;
-    margin: 0.5rem auto !important;
-    max-width: 100% !important;
-  }
-
-  /* Otsikot skaalautuvat */
-  #passages .passage h1 {
-    font-size: clamp(1.5rem, 5.5vw, 2.2rem) !important;
-    padding: 0.4rem 0.9rem !important;
-    letter-spacing: 0.04em !important;
-  }
-
-  #passages .passage h2 {
-    font-size: clamp(1.2rem, 4.5vw, 1.7rem) !important;
-    line-height: 1.25 !important;
-  }
-
-  #passages .passage h3 {
-    font-size: 1.1rem !important;
-  }
-
-  /* Perusteksti */
-  #passages .passage p,
-  #passages .passage li,
-  #passages .passage div,
-  #passages .passage span,
-  #passages .passage section {
-    font-size: 16px !important;
-    line-height: 1.65 !important;
-  }
-
-  /* ---- Napit ---- */
-  /* Kaikki napit pinoiksi mobiilissa */
-  .intro-nappi,
-  .answer-group {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.6rem !important;
-    width: 100% !important;
-  }
-
-  .intro-nappi a.link-internal,
-  .intro-nappi a.macro-link,
-  .answer-group a.link-internal,
-  .answer-group a.macro-link {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: unset !important;
-    min-height: 52px !important;
-    font-size: 1rem !important;
-    padding: 0.85rem 1rem !important;
-    text-align: center !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-
-  /* Action-rivi pinoiksi */
-  .action-row {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.6rem !important;
-  }
-
-  .action-row a,
-  .action-row button {
-    width: 100% !important;
-    min-width: unset !important;
-  }
-
-  /* ---- Kortit ---- */
-  .school-card,
-  .media-card {
-    padding: 1rem 0.9rem !important;
-    border-radius: 12px !important;
-  }
-
-  /* Koululista yksisarakkeiseksi */
-  .school-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.75rem !important;
-  }
-
-  /* ---- Lomakekentät ---- */
-  #passages .lomake-ryhma textarea {
-    min-height: 7rem !important;
-    height: 7rem !important;
-    font-size: 16px !important;   /* estää iOS-zoom */
-  }
-
-  #passages .lomake-ryhma input[type="text"] {
-    font-size: 16px !important;   /* estää iOS-zoom */
-  }
-
-  /* ---- Info-teksti ---- */
-  #passages .info-text {
-    padding: 0.8rem 0.9rem !important;
-    margin: 0.8rem 0 1rem 0 !important;
-    border-radius: 10px !important;
-  }
-
-  /* ---- Kansisivu ---- */
-  .cover-title {
-    font-size: clamp(2rem, 8vw, 3rem) !important;
-  }
-
-  .cover-subtitle {
-    font-size: 1rem !important;
-  }
-}
-
-/* ---- Erittäin pienet puhelimet (max 400px) ---- */
-@media (max-width: 400px) {
-  #passages .passage {
-    padding: 1rem 0.75rem !important;
-  }
-
-  #passages .passage h1 {
-    font-size: clamp(1.3rem, 6vw, 1.8rem) !important;
-  }
-
-  #passages .passage p,
-  #passages .passage li {
-    font-size: 15px !important;
-  }
-}
-
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= PALVELUALA NAVBAR (GOOGLE SITES SAFE) ========= */
-
-$(document).on(":passagestart", function (event) {
-
-  if (!event || !event.passage) return;
-  const tags = event.passage.tags || [];
-
-  // Piilota navbar kansisivulla
-  if (tags.includes("cover")) document.body.classList.add("hide-navbar");
-  else document.body.classList.remove("hide-navbar");
-
-});
-
-(function () {
-  "use strict";
-
-  const AUTOSAVE_KEY = "palveluala_ammatti_autosave_v1";
-
-  /* ========= LATAA TXT ========= */
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const text =
-`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
-
-1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN:
-${v.tyotehtavat || ""}
-
-2. MISSÄ TÖITÄ TEHDÄÄN:
-${v.tyopaikat || ""}
-
-3. MILLAISTA TYÖAIKA ON:
-${v.tyoajat || ""}
-
-4. MISSÄ TÄTÄ AMMATTIA VOI OPISKELLA:
-${v.opiskelupaikat || ""}
-
-5. MIKSI TÄMÄ AMMATTI KIINNOSTAA MINUA:
-${v.omaPerustelu || ""}
-
-------------------------------
-Palvelualan ammattitehtävä.`;
-
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (v.ammatti || "palveluala") + "_esitelma.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  /* ========= AUTOSAVE ========= */
-  window.initAmmattiAutosave = function () {
-    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
-
-    fields.forEach((f,i) => f.value = saved[i] || "");
-
-    fields.forEach((field,i)=>{
-      field.addEventListener("input", ()=>{
-        const data = Array.from(fields).map(f=>f.value);
-        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
-        ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu"]
-          .forEach((k,j)=> State.variables[k] = data[j] || "");
-      });
-    });
-  };
-
-  /* ========= TYHJENNÄ ========= */
-  window.resetAmmattitutkimus = function () {
-    document.querySelectorAll("#passages textarea").forEach(t=>t.value="");
-    ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu","ammatti"]
-      .forEach(k=>State.variables[k]="");
-    localStorage.removeItem(AUTOSAVE_KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "palvelu_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "palvelu_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
-/* Poistu-painike (sulje välilehti) */
-
-window.confirmExitStory = function () {
-  const ok = window.confirm("Haluatko varmasti sulkea esityksen?");
-  if (ok) {
-    window.close();
-  }
-};
-/* ========= SITES-SAFE SCORE ENGINE ========= */
-
-window.getScore = function () {
-  return parseInt(localStorage.getItem("palvelu_score") || "0", 10);
-};
-
-window.setScore = function (n) {
-  localStorage.setItem("palvelu_score", n);
-};
-
-window.addScore = function (n) {
-  setScore(getScore() + n);
-};
-
-window.resetScore = function () {
-  setScore(0);
-};
-</script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-Engine.play(&quot;Kansi&quot;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;set $score = 0&gt;&gt;
-
-&lt;&lt;set $hideNavbar = true&gt;&gt;
-&lt;&lt;set $hideNavbar = false&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-/* Videolinkit – TÄYTÄ ALAN MUKAAN (Google Drive /preview-linkit tms.) */
-&lt;&lt;set $videos to {
-  osa1: {
-    intro: &quot;ANNA_INTROVIDEON_LINKKI_TAHAN&quot;
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Myrsky lentokentällä – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "palvelu",
+ "alaNimi": "Palvelualat: kuljetus ja matkailu",
+ "tarinaNimi": "Myrsky lentokentällä",
+ "kello": {
+  "alku": 960,
+  "raja": 360
+ },
+ "katsoTeksti": "Katso kenttää",
+ "aikaRivi": "Kaikki matkustajat olivat turvassa kello",
+ "kutsuTilanneOtsikko": "Tehtävä",
+ "piirteet": {
+  "rauhallinen": {
+   "nimi": "Rauhallinen",
+   "kuvaus": "Pysyt rauhallisena, vaikka ympärillä on kiire."
   },
-  osa2: {},
-  osa3: {}
-}&gt;&gt;
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">&lt;h2&gt;Kysymys 1 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pidänkö ihmisten auttamisesta ja palvelemisesta?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="600,100" size="100,100">&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-&lt;div class=&quot;quiz-page&quot;&gt;
-  &lt;h1&gt;PALVELUALA&lt;/h1&gt;
-  &lt;hr&gt;
-  &lt;p&gt;
-Palveluala on laaja ammattiala, jossa työtehtävät liittyvät erilaisten palveluiden tuottamiseen ihmisille ja yrityksille. Työpaikkoja ovat esimerkiksi matkailuyritykset, ruokalat, hotellit, ravintolat, pitopalvelu- ja siivousyritykset, kiinteistöhuoltoyritykset sekä kuljetus- ja logistiikka-alan yritykset.  Alalla korostuvat palveluhenkisyys, joustavuus, luotettavuus ja kyky toimia erilaisten ihmisten kanssa. Kielitaito on eduksi, samoin hyvä fyysinen kunto.
-  &lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-    [[Sopiiko palveluala sinulle? – Testaa tästä-&gt;Ammattitesti: alku]]
-    [[Siirry suoraan tehtävään-&gt;Ammattivalinta]]
-  &lt;/div&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Ammattitesti: alku" tags="" position="400,325" size="100,100">&lt;&lt;script&gt;&gt;resetScore();&lt;&lt;/script&gt;&gt;
-
-&lt;h1&gt;Elintarvikeala – sopiiko se minulle?&lt;/h1&gt;
-
-&lt;p&gt;
-Tässä testissä vastaat kysymyksiin, jotka liittyvät elintarvikealaan ja siellä tarvittaviin taitoihin. Jokaisesta oikeasta vastauksesta saat pisteen. Testin lopuksi näet yhteenvedon siitä, kuinka hyvin kiinnostuksesi ja vahvuutesi voivat sopia tälle alalle. Tässä ei ole oikeita tai vääriä vastauksia. Kysymykset auttavat sinua pohtimaan, voisiko elintarvikeala sopia sinulle.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-&lt;&lt;link &quot;Testiin!&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="StoryHeader" tags="" position="850,50" size="100,100">
-</tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
-State.reset();
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
+  "turva": {
+   "nimi": "Turvallisuus ensin",
+   "kuvaus": "Et ota riskejä, kun kyse on ihmisten turvallisuudesta."
+  },
+  "asiakas": {
+   "nimi": "Asiakkaan auttaja",
+   "kuvaus": "Huomaat, mitä toinen tarvitsee, ja autat häntä."
+  },
+  "tiimi": {
+   "nimi": "Tiimipelaaja",
+   "kuvaus": "Teet yhteistyötä ja etsit ratkaisuja yhdessä."
+  }
+ },
+ "ammatit": {
+  "lennonjohtaja": {
+   "nimi": "Lennonjohtaja",
+   "kuvaus": "Johtaa lentoliikennettä ja pitää koneet turvassa.",
+   "tutkinto": "Lennonjohdon koulutus Avia Collegessa (noin 1,5 vuotta)",
+   "piirteet": [
+    "rauhallinen",
+    "turva"
+   ]
+  },
+  "kenttahuolto": {
+   "nimi": "Lentoasemahuoltaja",
+   "kuvaus": "Pitää kiitotiet ja kentän kunnossa, myös talvella.",
+   "tutkinto": "Logistiikan perustutkinto (lentoasemapalvelut)",
+   "piirteet": [
+    "turva",
+    "tiimi"
+   ]
+  },
+  "virkailija": {
+   "nimi": "Lentoasemavirkailija",
+   "kuvaus": "Auttaa matkustajia lähtöselvityksessä ja portilla.",
+   "tutkinto": "Esimerkiksi matkailualan tai liiketoiminnan perustutkinto",
+   "piirteet": [
+    "asiakas",
+    "rauhallinen"
+   ]
+  },
+  "kokki": {
+   "nimi": "Kokki",
+   "kuvaus": "Valmistaa ruokaa ravintolassa tai suurkeittiössä.",
+   "tutkinto": "Ravintola- ja catering-alan perustutkinto (kokki)",
+   "piirteet": [
+    "tiimi",
+    "asiakas"
+   ]
+  },
+  "kuljettaja": {
+   "nimi": "Linja-autonkuljettaja",
+   "kuvaus": "Kuljettaa ihmisiä turvallisesti paikasta toiseen.",
+   "tutkinto": "Logistiikan perustutkinto (linja-autonkuljettaja)",
+   "piirteet": [
+    "turva",
+    "asiakas"
+   ]
+  },
+  "matkailu": {
+   "nimi": "Matkailun asiakaspalvelija",
+   "kuvaus": "Palvelee asiakkaita hotellissa tai matkailukeskuksessa.",
+   "tutkinto": "Matkailualan perustutkinto (matkailun asiakaspalvelija)",
+   "piirteet": [
+    "asiakas",
+    "rauhallinen"
+   ]
+  }
+ },
+ "kutsuKortit": [
+  {
+   "nimi": "Kalle, 72",
+   "ikoni": "👨‍🦽",
+   "kuvaus": "Liikkuu pyörätuolilla. Menossa Ouluun, ei kiirettä.",
+   "sopivuus": {
+    "lento": [
+     1,
+     "Lento käy, mutta yö pitää ensin odottaa kentällä."
+    ],
+    "juna": [
+     1,
+     "Junassa on esteetön vaunu, mutta makuupaikalle siirtyminen on hankalaa."
+    ],
+    "bussi": [
+     0,
+     "Bussiin on portaat, eikä pyörätuoli mahdu kunnolla."
+    ],
+    "hotelli": [
+     2,
+     "Esteetön huone ja kunnon yöuni. Aamulla hän jatkaa rauhassa."
+    ],
+    "lounge": [
+     0,
+     "Yö nojatuolissa on raskas, kun ei pääse helposti liikkumaan."
+    ]
+   }
+  },
+  {
+   "nimi": "Sanna ja 2-vuotias Eeli",
+   "ikoni": "👩‍👧",
+   "kuvaus": "Menossa Ouluun. Lapsi on väsynyt ja itkuinen.",
+   "sopivuus": {
+    "lento": [
+     1,
+     "Lento on nopea, mutta yö kentällä on raskas pikkulapselle."
+    ],
+    "juna": [
+     2,
+     "Makuuvaunussa lapsi saa nukkua, ja aamulla ollaan perillä."
+    ],
+    "bussi": [
+     0,
+     "Yö istuen bussissa on liian raskas väsyneelle lapselle."
+    ],
+    "hotelli": [
+     2,
+     "Lapsi saa nukkua sängyssä. Aamulla perhe jatkaa matkaa."
+    ],
+    "lounge": [
+     0,
+     "Meluisa lounge ei sovi väsyneelle lapselle."
+    ]
+   }
+  },
+  {
+   "nimi": "Jonne, 24",
+   "ikoni": "🧑‍💼",
+   "kuvaus": "Työhaastattelu Rovaniemellä huomenna klo 10.",
+   "sopivuus": {
+    "lento": [
+     2,
+     "Kone on perillä 8.30. Hän ehtii haastatteluun."
+    ],
+    "juna": [
+     2,
+     "Juna on perillä 8.40. Hän ehtii haastatteluun."
+    ],
+    "bussi": [
+     0,
+     "Bussi on perillä vasta iltapäivällä. Haastattelu menisi ohi."
+    ],
+    "hotelli": [
+     0,
+     "Hotellista hän ei ehdi Rovaniemelle ajoissa."
+    ],
+    "lounge": [
+     0,
+     "Loungessa odottaminen ei vie häntä perille ajoissa."
+    ]
+   }
+  },
+  {
+   "nimi": "Yuki, 30",
+   "ikoni": "🧳",
+   "kuvaus": "Turisti Japanista, ei puhu suomea. Revontulimatka Rovaniemelle alkaa huomenna.",
+   "sopivuus": {
+    "lento": [
+     2,
+     "Suora lento on hänelle helpoin, eikä tarvitse vaihtaa."
+    ],
+    "juna": [
+     1,
+     "Juna käy, mutta junaan nouseminen ja vaunun löytäminen on vaikeaa ilman kieltä."
+    ],
+    "bussi": [
+     0,
+     "Pitkä bussimatka ja vaihdot ovat vaikeita ilman kieltä."
+    ],
+    "hotelli": [
+     1,
+     "Hän saa levätä, mutta jatkomatka pitää järjestää aamulla uudelleen."
+    ],
+    "lounge": [
+     1,
+     "Hän pääsee aamulla jatkamaan, mutta yö on pitkä."
+    ]
+   }
+  },
+  {
+   "nimi": "Helmi, 88",
+   "ikoni": "👵",
+   "kuvaus": "Lääkkeet ovat laukussa, joka on jo koneen ruumassa.",
+   "sopivuus": {
+    "lento": [
+     1,
+     "Hän pääsee perille aamulla, mutta yöllä tarvitaan lääkkeet ja lepoa."
+    ],
+    "juna": [
+     0,
+     "Laukku ja lääkkeet jäisivät kentälle."
+    ],
+    "bussi": [
+     0,
+     "Pitkä yömatka on raskas, ja lääkkeet jäisivät kentälle."
+    ],
+    "hotelli": [
+     2,
+     "Hän saa levätä. Henkilökunta hakee laukun ja lääkkeet hotelliin."
+    ],
+    "lounge": [
+     0,
+     "Yö nojatuolissa on liian raskas, ja lääkkeet pitää hakea."
+    ]
+   }
+  },
+  {
+   "nimi": "Mikko ja opaskoira Nelli",
+   "ikoni": "🦮",
+   "kuvaus": "Mikko on sokea. Menossa Ouluun.",
+   "sopivuus": {
+    "lento": [
+     1,
+     "Lento käy, mutta yö pitää ensin odottaa kentällä."
+    ],
+    "juna": [
+     2,
+     "Junassa on tilaa koiralle, ja konduktööri avustaa."
+    ],
+    "bussi": [
+     1,
+     "Bussi käy, mutta koiralle on ahdasta koko yön."
+    ],
+    "hotelli": [
+     2,
+     "Rauhallinen huone sopii Mikolle ja Nellille."
+    ],
+    "lounge": [
+     0,
+     "Vilkas ja meluisa lounge on vaikea opaskoiralle."
+    ]
+   }
+  },
+  {
+   "nimi": "Liisa, 35",
+   "ikoni": "🩺",
+   "kuvaus": "Sairaanhoitaja, aamuvuoro Oulun sairaalassa klo 7.",
+   "sopivuus": {
+    "lento": [
+     0,
+     "Kone on Oulussa vasta 8.10. Hän myöhästyisi vuorosta."
+    ],
+    "juna": [
+     1,
+     "Juna on perillä 6.50. Ehtiminen on tosi tiukkaa."
+    ],
+    "bussi": [
+     2,
+     "Bussi on Oulussa jo 5.00. Hän ehtii vuoroonsa."
+    ],
+    "hotelli": [
+     0,
+     "Hotellista hän ei ehdi aamuvuoroon."
+    ],
+    "lounge": [
+     0,
+     "Loungessa odottaminen ei vie häntä töihin ajoissa."
+    ]
+   }
+  },
+  {
+   "nimi": "Eetu, 19",
+   "ikoni": "🎒",
+   "kuvaus": "Opiskelija, haluaa kotiin Ouluun. Ei kiirettä eikä erityisiä tarpeita.",
+   "sopivuus": {
+    "lento": [
+     1,
+     "Käy, mutta vie paikan joltakulta, jolla on kiire."
+    ],
+    "juna": [
+     1,
+     "Käy, mutta vie makuupaikan joltakulta, joka tarvitsee sitä enemmän."
+    ],
+    "bussi": [
+     2,
+     "Bussi vie hänet kotiin, eikä hän vie paikkaa keneltäkään."
+    ],
+    "hotelli": [
+     0,
+     "Hän ei tarvitse huonetta yhtä paljon kuin muut."
+    ],
+    "lounge": [
+     2,
+     "Nuori ja terve matkustaja pärjää hyvin yön loungessa."
+    ]
+   }
+  }
+ ],
+ "tehtava": {
+  "tyyppi": "sijoitus",
+  "nimi": "Järjestä jumiin jääneet",
+  "tag": "Tehtävä · noin 25 min",
+  "maara": "<strong>8 matkustajaa<\/strong> ja viisi vaihtoehtoa, joissa on rajallisesti paikkoja",
+  "ohjeAskelLause": "Teet kaksi asiaa:",
+  "askeleet": [
+   "Sijoita jokainen matkustaja. Mieti, mitä kukin tarvitsee.",
+   "Perustele kaksi asiaa omin sanoin."
+  ],
+  "lopuksi": "Peli kertoo, kuinka hyvin sijoitukset sopivat matkustajille. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+  "tulosOtsikko": "Raporttisi",
+  "ohje": "Lennot on peruttu. Valitse jokaiselle matkustajalle paikka. Yläreunasta näet, montako paikkaa on vielä vapaana. Kun kaikki on sijoitettu, tarkista tulos.",
+  "tilanneOtsikko": "Olet palvelutiskillä",
+  "osa1": "Osa 1/2 · Sijoitus",
+  "osa2": "Osa 2/2 · Perustelut",
+  "tarkistaNappi": "Tarkista sijoitukset",
+  "jatkaNappi": "Jatka perusteluihin",
+  "takaisinNappi": "Muuta sijoituksia",
+  "valmisNappi": "Katso raportti",
+  "perusteluOtsikko": "Hyvää työtä!",
+  "perusteluOhje": "Vastaa vielä kahteen kysymykseen. Kirjoita kumpaankin yksi tai kaksi lausetta.",
+  "ammattilainenTeksti": "Tätä työtä tekee",
+  "korttiYla": "RAPORTTI · MYRSKYYÖ",
+  "palaute": [
+   "Upeaa! Kaikki saivat juuri sen, mitä tarvitsivat.",
+   "Hyvä! Moni matkustaja sai sopivan paikan.",
+   "Tämä oli vaikea tehtävä. Katso selitykset: ne kertovat, mitä kukin tarvitsi."
+  ],
+  "vaihtoehdot": [
+   {
+    "avain": "lento",
+    "nimi": "Aamulento",
+    "lyhyt": "Aamulento",
+    "ikoni": "✈️",
+    "tieto": "lähtee klo 7.10",
+    "paikat": 2
+   },
+   {
+    "avain": "juna",
+    "nimi": "Yöjuna",
+    "lyhyt": "Yöjuna",
+    "ikoni": "🚆",
+    "tieto": "makuuvaunu, klo 22.30",
+    "paikat": 2
+   },
+   {
+    "avain": "bussi",
+    "nimi": "Yöbussi",
+    "lyhyt": "Bussi",
+    "ikoni": "🚌",
+    "tieto": "lähtee klo 21.00",
+    "paikat": 3
+   },
+   {
+    "avain": "hotelli",
+    "nimi": "Hotelli",
+    "lyhyt": "Hotelli",
+    "ikoni": "🏨",
+    "tieto": "huone kentän vieressä",
+    "paikat": 3
+   },
+   {
+    "avain": "lounge",
+    "nimi": "Lounge",
+    "lyhyt": "Lounge",
+    "ikoni": "🛋️",
+    "tieto": "nojatuoli, peitto, aamupala",
+    "paikat": 4
+   }
+  ],
+  "kysymykset": [
+   {
+    "kysymys": "Kenen matkustajan sijoittaminen oli vaikeinta? Miksi?",
+    "ammattilainen": "Lentoasemavirkailija",
+    "tutkinto": "Esimerkiksi matkailualan tai liiketoiminnan perustutkinto",
+    "placeholder": "Vaikeinta oli…, koska…"
+   },
+   {
+    "kysymys": "Mitä sanoisit matkustajalle, joka ei saanut haluamaansa paikkaa?",
+    "ammattilainen": "Matkailun asiakaspalvelija",
+    "tutkinto": "Matkailualan perustutkinto",
+    "placeholder": "Sanoisin hänelle…"
+   }
+  ],
+  "ammattilaisetOtsikko": "Näissä töissä autetaan matkustajia",
+  "ammattilaiset": [
+   {
+    "nimi": "Lentoasemavirkailija",
+    "tehtava": "etsii matkustajille uudet lennot",
+    "tutkinto": "Esimerkiksi matkailualan tai liiketoiminnan perustutkinto"
+   },
+   {
+    "nimi": "Matkailun asiakaspalvelija",
+    "tehtava": "järjestää majoituksen hotelliin",
+    "tutkinto": "Matkailualan perustutkinto"
+   },
+   {
+    "nimi": "Linja-autonkuljettaja",
+    "tehtava": "ajaa yöbussia",
+    "tutkinto": "Logistiikan perustutkinto"
+   },
+   {
+    "nimi": "Konduktööri",
+    "tehtava": "palvelee junassa ja auttaa avustusta tarvitsevia",
+    "tutkinto": "Esimerkiksi logistiikan tai matkailualan perustutkinto ja junayhtiön koulutus"
+   },
+   {
+    "nimi": "Lentoemäntä tai stuertti",
+    "tehtava": "huolehtii matkustajista koneessa",
+    "tutkinto": "Lentoyhtiön oma koulutus. Pohjaksi sopii esimerkiksi matkailualan perustutkinto"
+   }
+  ]
+ }
+});
+</script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
+/* Myrsky lentokentällä – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {rauhallinen: 0, turva: 0, asiakas: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {lennonjohtaja: 0, kenttahuolto: 0, virkailija: 0, kokki: 0, kuljettaja: 0, matkailu: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-torni-tausta.webp&quot;)&gt;&gt;&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;a class=&quot;cover-link&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;SugarCube.Engine.play(&#39;start&#39;)&quot;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
   &lt;div class=&quot;cover-inner&quot;&gt;
-    &lt;div class=&quot;cover-title&quot;&gt;
-      PALVELUALA
-    &lt;/div&gt;
-
-      &lt;/div&gt;
-&lt;/a&gt;
-</tw-passagedata><tw-passagedata pid="7" name="Kysymys 2" tags="" position="400,575" size="100,100">&lt;h2&gt;Kysymys 2 / 10&lt;/h2&gt;
-
-&lt;p&gt;Tuleeko minun yleensä toimeen erilaisten ihmisten kanssa?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
+    &lt;p class=&quot;cover-pieni&quot;&gt;Palvelualat: kuljetus ja matkailu · tarina&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Palveluala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Myrsky lentokentällä · Kuka auttaa satoja jumiin jääneitä matkustajia?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z&quot; fill=&quot;currentColor&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Astu terminaaliin&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="8" name="Kysymys 3" tags="" position="400,700" size="100,100">&lt;h2&gt;Kysymys 3 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pystynkö olemaan ystävällinen myös silloin, kun toinen on kiireinen tai ärsyyntynyt?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="9" name="Kysymys 4" tags="" position="400,825" size="100,100">
-&lt;h2&gt;Kysymys 4 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pidänkö työstä, jossa liikutaan ja tehdään käsillä?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="10" name="Kysymys 5" tags="" position="400,950" size="100,100">
-&lt;h2&gt;Kysymys 5 / 10&lt;/h2&gt;
-
-&lt;p&gt;Onko minulle tärkeää tehdä työ huolellisesti ja noudattaa ohjeita?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="11" name="Kysymys 6" tags="" position="400,1075" size="100,100">
-&lt;h2&gt;Kysymys 6 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pystynkö tulemaan ajoissa ja pitämään kiinni sovituista asioista?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="12" name="Kysymys 7" tags="" position="400,1200" size="100,100">
-&lt;h2&gt;Kysymys 7 / 10&lt;/h2&gt;
-
-&lt;p&gt;Voisinko tehdä työtä myös iltaisin tai viikonloppuisin?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="13" name="Kysymys 8" tags="" position="400,1325" size="100,100">
-&lt;h2&gt;Kysymys 8 / 10&lt;/h2&gt;
-
-&lt;p&gt;Olenko valmis opettelemaan uusia asioita?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="14" name="Kysymys 9" tags="" position="400,1450" size="100,100">
-&lt;h2&gt;Kysymys 9 / 10&lt;/h2&gt;
-
-&lt;p&gt;Pystynkö tekemään fyysisesti raskasta työtä?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="15" name="Kysymys 10" tags="" position="400,1575" size="100,100">
-&lt;h2&gt;Kysymys 10 / 10&lt;/h2&gt;
-
-&lt;p&gt;Tuntuuko minusta, että palveluala voisi sopia minulle?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(2);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Joskus / ehkä&quot;&gt;&gt;
-  &lt;&lt;script&gt;&gt;addScore(1);&lt;&lt;/script&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="Tulos" tags="" position="400,1700" size="100,100">&lt;&lt;script&gt;&gt;State.variables.score = getScore();&lt;&lt;/script&gt;&gt;
-
-&lt;h1&gt;Tuloksesi&lt;/h1&gt;
-
-&lt;p&gt;Sait &lt;strong&gt;$score / 20 pistettä&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;&lt;if $score &gt;= 15&gt;&gt;
-&lt;p&gt;
-Palveluala voi sopia sinulle hyvin. Pidät todennäköisesti ihmisten auttamisesta ja käytännön työstä.
-&lt;/p&gt;
-
-&lt;&lt;elseif $score &gt;= 9&gt;&gt;
-&lt;p&gt;
-Palveluala voi sopia sinulle osittain. Alaa kannattaa kokeilla ja tutkia lisää.
-&lt;/p&gt;
-
-&lt;&lt;else&gt;&gt;
-&lt;p&gt;
-Palveluala ei ehkä ole sinulle nyt paras vaihtoehto. Se ei ole huono asia – muitakin hyviä aloja on.
-&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Tutustu palvelualan eri ammatteihin&quot;&gt;&gt;
-  &lt;&lt;set $score = 0&gt;&gt;
-  &lt;&lt;goto &quot;Palvelualat: ammatinvalinta&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-  &lt;&lt;addclass $event.target &quot;btn--danger&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="17" name="Palvelualat: ammatinvalinta" tags="" position="625,250" size="100,100">
-&lt;h2&gt;Tutustu palvelualan ammatteihin&lt;/h2&gt;
-
-&lt;p&gt;
-Seuraavaksi pääset tutustumaan palvelualan eri ammatteihin pienen tietokilpailun avulla. Valitse aina se ammatti, joka mielestäsi sopii parhaiten kuvaukseen.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Aloita-&gt;Ammatti 1]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="18" name="Ammatti 1" tags="" position="625,375" size="100,100">
-&lt;h2&gt;Mikä ammattilainen hoitaa viheralueita puistoissa ja talojen ympärillä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Kiinteistönhoitaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Tarjoilija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vastaanottovirkailija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Ammatti 1 oikein" tags="" position="575,475" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;
-Oikein!
-&lt;/p&gt;
-
-&lt;p&gt;
-Kiinteistönhoitaja huolehtii pihoista, viheralueista ja rakennusten kunnosta.
-Työ on käytännönläheistä ja tapahtuu usein ulkona.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Seuraava ammatti-&gt;Ammatti 2]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="20" name="Ammatti 2" tags="" position="575,600" size="100,100">&lt;h2&gt;Kuka ottaa ravintolassa vastaan tilauksia ja tuo ruoan asiakkaalle?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Tarjoilija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kiinteistönhoitaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Ammatti 1 väärin" tags="" position="675,475" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;
-Ei aivan.
-&lt;/p&gt;
-
-&lt;p&gt;
-Oikea vastaus on kiinteistönhoitaja.
-Hän hoitaa pihoja, viheralueita ja rakennusten ympäristöä.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Seuraava ammatti-&gt;Ammatti 2]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Ammatti 2 oikein" tags="" position="550,700" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;Oikein!&lt;/p&gt;
-
-&lt;p&gt;
-Tarjoilija palvelee asiakkaita, ottaa tilauksia ja huolehtii, että asiakas viihtyy.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Seuraava ammatti-&gt;Ammatti 3]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="Ammatti 3" tags="" position="550,825" size="100,100">
-&lt;h2&gt;Kuka ottaa hotellissa vastaan asiakkaat ja antaa huoneen avaimet?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Vastaanottovirkailija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Linja-autonkuljettaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kodinhuoltaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Ammatti 2 väärin" tags="" position="650,700" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;Ei aivan.&lt;/p&gt;
-
-&lt;p&gt;
-Oikea vastaus on tarjoilija.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Seuraava ammatti-&gt;Ammatti 3]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="Ammatti 3 oikein" tags="" position="550,925" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;Oikein!&lt;/p&gt;
-
-&lt;p&gt;
-Vastaanottovirkailija ottaa asiakkaat vastaan ja auttaa heitä majoituksen aikana.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Siirry eteenpäin-&gt;Ammattiesittelyt loppu]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Ammatti 3 väärin" tags="" position="650,925" size="100,100">
-&lt;p class=&quot;highlight&quot;&gt;Ei aivan.&lt;/p&gt;
-
-&lt;p&gt;
-Oikea vastaus on vastaanottovirkailija.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Siirry eteenpäin-&gt;Ammattiesittelyt loppu]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="Ammattiesittelyt loppu" tags="" position="600,1050" size="100,100">
-&lt;h2&gt;Valitse itseäsi kiinnostava ammatti&lt;/h2&gt;
-
-&lt;p&gt;
-Seuraavaksi pääset valitsemaan yhden palvelualan ammatin, joka kiinnostaa sinua eniten.
-Valitse yksi ja tee siitä pieni esittely.
-&lt;/p&gt;
-
-&lt;p&gt;
-Voit käyttää apuna koulun materiaaleja, nettiä tai kysyä opettajalta.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Aloita-&gt;Ammattivalinta]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="28" name="Ammattivalinta" tags="" position="600,1175" size="100,100">&lt;h2&gt;Valitse yksi ammatti&lt;/h2&gt;
-
-&lt;p&gt;Valitse yksi ammatti ja jatka.&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Parturi-kampaaja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Parturi-kampaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Linja-autonkuljettaja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Linja-autonkuljettaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Maapalvelutyöntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Maapalvelutyöntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Vastaanottovirkailija&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Vastaanottovirkailija&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kiinteistönhoitaja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Kiinteistönhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Kokki&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Tarjoilija&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Tarjoilija&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Liikuntaneuvoja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Liikuntaneuvoja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kodinhuoltaja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Kodinhuoltaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Logistiikkatyöntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Logistiikkatyöntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kuljetusalan työntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Kuljetusalan työntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Merikapteeni&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Merikapteeni&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Laivasähköasentaja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Laivasähköasentaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Vahtikonemestari&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Vahtikonemestari&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Turvallisuusvalvoja&quot;&gt;&gt;&lt;&lt;set $ammatti = &quot;Turvallisuusvalvoja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;&lt;script&gt;&gt;
-setTimeout(initLopputehtavaAutosave, 100);
-&lt;&lt;/script&gt;&gt;
-
-&lt;h2&gt;✨ Kerro valitsemastasi ammatista&lt;/h2&gt;
-
-&lt;p&gt;Olet valinnut ammatin: &lt;strong&gt;&lt;&lt;print $ammatti&gt;&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Hae tarvittaessa tietoa ammatista ja vastaa sitten kysymyksiin omin sanoin.&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;📚 Hae tietoa:
-  &lt;a href=&quot;https://tyomarkkinatori.fi/henkiloasiakkaat/ammattitieto&quot; target=&quot;_blank&quot;&gt;Työmarkkinatori&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
-  &lt;a href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Opintopolku.fi&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Kirjoita omin sanoin: mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q1&quot; aria-label=&quot;Mitä tässä ammatissa tehdään?&quot; placeholder=&quot;Kerro omin sanoin, mitä työhön kuuluu...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Mitä pitää osata?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q2&quot; aria-label=&quot;Mitä pitää osata?&quot; placeholder=&quot;Taidot, tiedot ja ominaisuudet, joita ammatissa tarvitaan...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Miksi sinä sopisit tähän ammattiin? (motivaatio + omat vahvuudet)&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q3&quot; aria-label=&quot;Miksi sinä sopisit tähän ammattiin?&quot; placeholder=&quot;Miksi ammatti kiinnostaa sinua ja mitkä omat vahvuutesi sopivat siihen...&quot;&gt;&lt;/textarea&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;intro-nappi action-row&quot;&gt;
-&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;downloadLopputehtava()&quot;&gt;Lataa vastaukset&lt;/a&gt;
-&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaLopputehtava()&quot;&gt;Tyhjennä&lt;/a&gt;
-&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="30" name="Loppu" tags="" position="850,600" size="100,100">
-&lt;h2&gt;Hyvä!&lt;/h2&gt;
-
-&lt;p&gt;
-Olet pohtinut omaa kiinnostustasi palvelualan ammatteihin. Voit näyttää vastauksesi opettajalle tai jatkaa keskustelua opinto-ohjaajan kanssa. 
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="31" name="Oppilaitokset" tags="" position="850,325" size="100,100">
+</tw-passagedata><tw-passagedata pid="31" name="Oppilaitokset" tags="" position="850,325" size="100,100">
 &lt;h2&gt;Palvelualan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
@@ -1489,10 +566,163 @@ Palvelualan ammatteihin voi opiskella monissa oppilaitoksissa. Tällä sivulla l
 &lt;/div&gt;
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
-    &lt;&lt;link &quot;Tehtävään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammattitehtävä&quot;&gt;&gt;
+    &lt;&lt;link &quot;Takaisin&quot;&gt;&gt;
+  &lt;&lt;goto &quot;Loppu&quot;&gt;&gt;
 &lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="32" name="start" tags="scene-kentta alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-torni-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Myrsky lentokentällä&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet TET-harjoittelijana lentoasemalla. Illalla iskee lumimyrsky, ja lennot perutaan. Kentälle jää satoja matkustajia. Miten sinä auttaisit?&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;8&lt;/strong&gt;&lt;span&gt;matkustajaa&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;lumimyrsky&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Myrsky lentokentällä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="33" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Viimeinen bussi klo 22.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="34" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="35" name="Myrsky lentokentällä" tags="scene-kentta" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {rauhallinen: 0, turva: 0, asiakas: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {lennonjohtaja: 0, kenttahuolto: 0, virkailija: 0, kokki: 0, kuljettaja: 0, matkailu: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Myrsky lentokentällä&lt;/h1&gt;
+&lt;p&gt;Kello on 16.00. Olet TET-harjoittelijana lentoasemalla. Aamupäivä oli rauhallinen, mutta nyt taivas on muuttunut harmaaksi.&lt;/p&gt;
+&lt;p&gt;Sääennuste varoittaa: illalla tulee kova lumimyrsky. Lumen lisäksi tuuli puhaltaa kovaa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Vuoropäällikkö Riikka:&lt;/strong&gt; ”Tästä tulee pitkä ilta. Lähdetään ensin lennonjohtotorniin katsomaan, miltä tilanne näyttää.”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Nouse torniin&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Lennonjohtotorni&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="36" name="Lennonjohtotorni" tags="scene-torni" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-torni-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Lennonjohtotorni&lt;/h2&gt;
+&lt;p&gt;Tornissa on hiljaista, mutta tunnelma on jännittynyt. Ulkona lumi tuiskuaa niin, että kiitotie tuskin näkyy.&lt;/p&gt;
+&lt;p&gt;Radiosta kuuluu lentäjän ääni: ”Pyydämme laskeutumislupaa. Polttoainetta on vielä tunnin lentoon.”&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Anni, lennonjohtaja:&lt;/strong&gt; ”Näkyvyys on liian huono. Mitä tekisit?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kone lentää odotuskierrosta, kunnes kiitotie on aurattu, tai menee toiselle kentälle.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.rauhallinen += 2&gt;&gt;&lt;&lt;set $piirre.turva += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Turvallisuus ensin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Polttoainetta on tarpeeksi, joten kone voi odottaa. Anni ohjaa koneen odottamaan ja kertoo lentäjälle selkeästi, mitä tapahtuu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;lennonjohtaja&quot; &quot;Kiitotie&quot; &quot;Miltä lennonjohtajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Annetaan laskeutua heti. Matkustajat haluavat kotiin.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian vaarallista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lumisella kiitotiellä kone voi liukua. Anni ohjaa koneen odottamaan, kunnes kiitotie on aurattu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;lennonjohtaja&quot; &quot;Kiitotie&quot; &quot;Miltä lennonjohtajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kysytään lentäjältä, mitä hän haluaa tehdä.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Yhteistyö on tärkeää, mutta päätös on lennonjohdon.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lennonjohtaja näkee kokonaisuuden: kaikki koneet ja kiitotien kunnon. Anni ohjaa koneen odottamaan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;lennonjohtaja&quot; &quot;Kiitotie&quot; &quot;Miltä lennonjohtajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="37" name="Kiitotie" tags="scene-kiitotie" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-kiitotie-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Kiitotie&lt;/h2&gt;
+&lt;p&gt;Lumiaurojen keltaiset valot vilkkuvat. Kiitotiellä on jo kymmenen senttiä lunta.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Tero, lentoasemahuoltaja:&lt;/strong&gt; ”Aurataan kiitotie. Milloin se voidaan avata koneille?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kun kiitotie on aurattu ja sen liukkaus mitattu.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.turva += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri niin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Tero mittaa kitkan erikoisautolla. Lennonjohto saa tiedon, ja odottava kone laskeutuu turvallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kenttahuolto&quot; &quot;Lähtöaula&quot; &quot;Miltä lentoasemahuoltajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Heti kun aurat ovat ajaneet kerran yli.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liukkaus pitää tarkistaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lumen alla voi olla jäätä. Tero mittaa kitkan, ja kiitotietä hiekoitetaan vielä kerran.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kenttahuolto&quot; &quot;Lähtöaula&quot; &quot;Miltä lentoasemahuoltajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Vasta kun myrsky on ohi.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.turva += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Varovaista, mutta myrsky voi kestää koko yön.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun kiitotie aurataan ja mitataan, kentän voi avata turvallisesti jo aiemmin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kenttahuolto&quot; &quot;Lähtöaula&quot; &quot;Miltä lentoasemahuoltajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="38" name="Lähtöaula" tags="scene-aula" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Lähtöaula&lt;/h2&gt;
+&lt;p&gt;Taululle syttyy punainen teksti: PERUTTU. Illan viimeiset lennot perutaan. Palvelutiskille syntyy pitkä jono.&lt;/p&gt;
+&lt;p&gt;Ensimmäinen matkustaja huutaa: ”Tämä on ihan järjetöntä! Minun piti olla huomenna töissä!”&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Mira, lentoasemavirkailija:&lt;/strong&gt; ”Miten vastaisit hänelle?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kuuntelen rauhassa, pahoittelen tilannetta ja kerron vaihtoehdot.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.rauhallinen += 2&gt;&gt;&lt;&lt;set $piirre.asiakas += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ammattilaisen tapa!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Matkustaja rauhoittuu, kun häntä kuunnellaan. Mira löytää hänelle paikan aamun ensimmäiseltä lennolta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;virkailija&quot; &quot;Ravintola&quot; &quot;Miltä lentoasemavirkailijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Sanon, ettei myrsky ole minun vikani.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Totta, mutta se ei auta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Matkustaja suuttuu vielä enemmän. Mira pahoittelee tilannetta ja etsii hänelle paikan aamun lennolta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;virkailija&quot; &quot;Ravintola&quot; &quot;Miltä lentoasemavirkailijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Pyydän häntä menemään jonon perälle odottamaan.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hän on jo jonossa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Mira kuuntelee häntä ja kertoo vaihtoehdot. Aamun lennolta löytyy paikka.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;virkailija&quot; &quot;Ravintola&quot; &quot;Miltä lentoasemavirkailijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Ravintola" tags="scene-ravintola" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Kentän ravintola&lt;/h2&gt;
+&lt;p&gt;Kentän ravintolaan tulee 300 nälkäistä matkustajaa. Lentoyhtiö jakaa heille ruokakuponkeja.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Jasmin, kokki:&lt;/strong&gt; ”Ruoka loppuu, jos jatkamme tavallista listaa. Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tehdään isoja kattilallisia keittoa ja merkitään allergeenit selvästi.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;set $piirre.asiakas += 1&gt;&gt;&lt;&lt;set $piirre.turva += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Fiksu ratkaisu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Keiton saa valmiiksi nopeasti, ja sitä riittää kaikille. Allergeenimerkinnät auttavat, kun syöjiä on paljon.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kokki&quot; &quot;Bussipysäkki&quot; &quot;Miltä kokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Suljetaan ravintola. Liikaa ihmisiä.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Nälkäiset matkustajat jäisivät ilman ruokaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jasmin keittää ison kattilallisen keittoa ja merkitsee allergeenit.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kokki&quot; &quot;Bussipysäkki&quot; &quot;Miltä kokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tehdään kaikille oma annos tavallisesta listasta.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.asiakas += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ystävällistä, mutta liian hidasta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jono kasvaa, ja raaka-aineet loppuvat. Jasmin vaihtaa keittoon, jota riittää kaikille.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kokki&quot; &quot;Bussipysäkki&quot; &quot;Miltä kokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Bussipysäkki" tags="scene-bussi" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Bussipysäkki&lt;/h2&gt;
+&lt;p&gt;Lentoyhtiö tilaa bussin, joka vie matkustajia hotelliin kaupunkiin. Tie on liukas, ja lunta tulee yhä.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Kari, linja-autonkuljettaja:&lt;/strong&gt; ”Matkustajat haluavat lähteä heti. Mitä teen ennen kuin lähden?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tarkistan reitin ja kelin. Kerron matkustajille, että ajetaan rauhallisesti.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.turva += 2&gt;&gt;&lt;&lt;set $piirre.asiakas += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Turvallinen ja palveleva kuljettaja!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kari kertoo matkan kestävän tavallista kauemmin. Matkustajat tietävät, mitä odottaa, ja kaikki pääsevät perille turvallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kuljettaja&quot; &quot;Hotelli&quot; &quot;Miltä linja-autonkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Lähden heti ja ajan tavallista nopeutta.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liukkaalla tiellä tämä on vaarallista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kari tarkistaa reitin ja ajaa rauhallisesti. Kaikki pääsevät perille turvallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kuljettaja&quot; &quot;Hotelli&quot; &quot;Miltä linja-autonkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Odotan, kunnes tie on aurattu.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.turva += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Varovaista, mutta matkustajat jäisivät kentälle.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Karin bussissa on talvirenkaat. Hän tarkistaa reitin ja ajaa rauhallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kuljettaja&quot; &quot;Hotelli&quot; &quot;Miltä linja-autonkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Hotelli" tags="scene-hotelli" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-lounge-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Lentokenttähotelli&lt;/h2&gt;
+&lt;p&gt;Kentän hotelliin tulee kymmenen matkustajaa. Vapaita huoneita on vain kolme.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Laura, matkailun asiakaspalvelija:&lt;/strong&gt; ”Kenelle annetaan huoneet?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Niille, jotka tarvitsevat lepoa eniten, kuten perheelle ja iäkkäälle matkustajalle. Muille lounge, tyynyt ja peitot.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.asiakas += 2&gt;&gt;&lt;&lt;set $piirre.rauhallinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Reilua ja välittävää!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Laura antaa huoneet niille, jotka niitä eniten tarvitsevat. Muut saavat loungesta mukavat paikat, tyynyt, peitot ja aamupalan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;matkailu&quot; &quot;Myrsky laantuu&quot; &quot;Miltä matkailun asiakaspalvelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ne, jotka tulivat ensin, saavat huoneet.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Nopeasti päätetty, mutta ei aina reilua.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pikkulapsen perhe ja iäkäs matkustaja tulivat viimeisinä. Laura järjestää heille huoneet ja muille paikat loungesta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;matkailu&quot; &quot;Myrsky laantuu&quot; &quot;Miltä matkailun asiakaspalvelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Huutokaupataan huoneet. Eniten maksavat saavat ne.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hotelli ei toimi näin hätätilanteessa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Laura antaa huoneet niille, jotka tarvitsevat niitä eniten. Muut pääsevät loungeen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kentällä siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;matkailu&quot; &quot;Myrsky laantuu&quot; &quot;Miltä matkailun asiakaspalvelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="42" name="Myrsky laantuu" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Myrsky laantuu&lt;/h1&gt;
+&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Kaikilla matkustajilla on paikka, jossa olla yön yli.&lt;/p&gt;
+&lt;p&gt;Aamulla myrsky on ohi. Aurinko nousee, ja ensimmäinen kone nousee ilmaan kello 7.10.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Myrskyn aikana tarvittiin kuusi eri ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Anni, lennonjohtaja&lt;/strong&gt; – piti koneet turvassa&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tero, lentoasemahuoltaja&lt;/strong&gt; – aurasi ja tarkisti kiitotien&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mira, lentoasemavirkailija&lt;/strong&gt; – palveli jonossa olevia matkustajia&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jasmin, kokki&lt;/strong&gt; – ruokki satoja ihmisiä&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Kari, linja-autonkuljettaja&lt;/strong&gt; – kuljetti matkustajat turvallisesti&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Laura, matkailun asiakaspalvelija&lt;/strong&gt; – järjesti majoituksen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Moneen näistä ammateista voi opiskella ammattikoulussa: logistiikan, matkailualan tai ravintola-alan perustutkinnossa.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="43" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Järjestä jumiin jääneet&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="44" name="Kutsu: ohje" tags="scene-kentta" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-lounge-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Järjestä jumiin jääneet&lt;/h2&gt;
+&lt;p&gt;Tarinassa ammattilaiset auttoivat satoja matkustajia. Nyt olet itse palvelutiskillä! Kahdeksan matkustajaa tarvitsee paikan yöksi tai jatkomatkan, mutta paikkoja on vähän.&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;8 matkustajaa&lt;/strong&gt; ja viisi vaihtoehtoa, joissa on rajallisesti paikkoja. Teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Sijoita jokainen matkustaja. Mieti, mitä kukin tarvitsee.&lt;/li&gt;&lt;li&gt;Perustele kaksi asiaa omin sanoin.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Peli kertoo, kuinka hyvin sijoitukset sopivat matkustajille. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="45" name="Kutsu" tags="scene-kentta" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-lounge-tausta.webp&quot;)&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="46" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/palvelu-lounge-tausta.webp&quot;)&gt;&gt;
+&lt;h2&gt;Raporttisi&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="47" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Autoit lentoasemaa lumimyrskyn keskellä ja järjestit kahdeksalle matkustajalle paikan. Samalla tutustuit kymmeneen kuljetus- ja matkailualan ammattiin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;&lt;link &quot;Missä palvelualaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */

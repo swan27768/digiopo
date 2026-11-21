@@ -925,6 +925,149 @@
       };
     }
 
+    /* --- Tehtävätyyppi "sijoitus": oppilas sijoittaa ihmiset vaihtoehtoihin, joissa on rajallisesti paikkoja ---
+       kutsuKortit = ihmiset: { nimi, ikoni, kuvaus, sopivuus: { avain: [taso 0–2, selitys] } }
+       TH.vaihtoehdot [ { avain, nimi, ikoni, tieto, paikat } ], TH.kysymykset [ { kysymys, ammattilainen, tutkinto, placeholder } ],
+       TH.ammattilaiset [ { nimi, tehtava, tutkinto } ], TH.palaute [hyvä, keski, alku] */
+    if (TH.tyyppi === "sijoitus") {
+      var VT = TH.vaihtoehdot || [];
+      var vt = function (avain) { return VT.filter(function (v) { return v.avain === avain; })[0]; };
+      var sij = function (tila) { if (!tila.sijoitukset) tila.sijoitukset = {}; return tila.sijoitukset; };
+      var kaytetty = function (tila, avain) { var s = sij(tila), n = 0; Object.keys(s).forEach(function (k) { if (s[k] === avain) n++; }); return n; };
+      var tasoMerkki = ["✗", "✓", "✓✓"], tasoLuokka = ["ei", "ok", "hyva"];
+      var pisteet = function (tila) {
+        var s = sij(tila), p = 0;
+        KORTIT.forEach(function (h) { var a = s[h.nimi]; if (a && h.sopivuus[a]) p += h.sopivuus[a][0]; });
+        return p;
+      };
+      var maxP = KORTIT.length * 2;
+      var paikkaPalkki = function (tila) {
+        return '<div class="sj-paikat">' + VT.map(function (v) {
+          var vapaa = v.paikat - kaytetty(tila, v.avain);
+          return '<div class="sj-paikka' + (vapaa <= 0 ? " taynna" : "") + '"><span class="sj-ikoni" aria-hidden="true">' + suojaa(v.ikoni) + '</span>' +
+            '<span class="sj-pnimi">' + suojaa(v.nimi) + '</span><span class="sj-tieto">' + suojaa(v.tieto || "") + '</span>' +
+            '<span class="sj-vapaa"><strong>' + vapaa + '</strong>/' + v.paikat + ' vapaana</span></div>';
+        }).join("") + '</div>';
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutS(alue, tila);
+        var s = sij(tila);
+        function piirra() {
+          var kaikki = KORTIT.every(function (h) { return s[h.nimi]; });
+          var p = pisteet(tila);
+          alue.innerHTML =
+            '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/2 · Sijoitus") + '</p>' +
+            '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ohje) + '</p></div>' +
+            '<div class="sj-yla" aria-live="polite">' + paikkaPalkki(tila) + '</div>' +
+            '<div class="sj-ihmiset">' + KORTIT.map(function (h, j) {
+              var valittu = s[h.nimi], tulos = tila.tarkistettu && valittu ? h.sopivuus[valittu] : null;
+              return '<div class="sj-ihminen' + (valittu ? " sijoitettu" : "") + (tulos ? " " + tasoLuokka[tulos[0]] : "") + '" data-i="' + j + '">' +
+                '<div class="bj-yla"><span class="bj-ikoni" aria-hidden="true">' + suojaa(h.ikoni || "") + '</span><div><p class="bj-nimi">' + (j + 1) + '. ' + suojaa(h.nimi) + '</p>' +
+                '<p class="bj-kuvaus">' + suojaa(h.kuvaus) + '</p></div></div>' +
+                '<div class="sj-valinnat" role="radiogroup" aria-label="Minne ' + suojaa(h.nimi) + '?">' + VT.map(function (v) {
+                  var on = valittu === v.avain, taynna = !on && kaytetty(tila, v.avain) >= v.paikat;
+                  return '<button type="button" class="sj-nappi" role="radio" aria-checked="' + on + '" data-a="' + suojaa(v.avain) + '"' + (taynna ? " disabled" : "") +
+                    ' title="' + suojaa(v.nimi + (taynna ? " (täynnä)" : "")) + '"><span aria-hidden="true">' + suojaa(v.ikoni) + '</span> ' + suojaa(v.lyhyt || v.nimi) + '</button>';
+                }).join("") + '</div>' +
+                (tulos ? '<p class="sj-tulos ' + tasoLuokka[tulos[0]] + '"><strong>' + tasoMerkki[tulos[0]] + '</strong> ' + suojaa(tulos[1]) + '</p>' : '') + '</div>';
+            }).join("") + '</div>' +
+            (tila.tarkistettu ? '<p class="sj-pisteet">Pisteet: <strong>' + p + '/' + maxP + '</strong> – ' + suojaa(p >= maxP - 2 ? TH.palaute[0] : p >= maxP / 2 ? TH.palaute[1] : TH.palaute[2]) + '</p>' : '') +
+            '<p class="kutsu-vihje" aria-live="polite">' + (kaikki ? (tila.tarkistettu ? "Voit vielä muuttaa sijoituksia ja tarkistaa uudelleen, tai jatkaa." : "Kaikki on sijoitettu. Tarkista, miten onnistuit.") : "Sijoita vielä " + KORTIT.filter(function (h) { return !s[h.nimi]; }).length + " matkustajaa.") + '</p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-tarkista sj-tarkista"' + (kaikki ? "" : " disabled") + '>' + suojaa(TH.tarkistaNappi || "Tarkista sijoitukset") + '</button>' +
+            (tila.tarkistettu ? '<button type="button" class="kutsu-seuraava sj-jatka">' + suojaa(TH.jatkaNappi || "Jatka perusteluihin") + '</button>' : '') + '</div>';
+          Array.prototype.forEach.call(alue.querySelectorAll(".sj-ihminen"), function (el) {
+            var h = KORTIT[+el.getAttribute("data-i")];
+            Array.prototype.forEach.call(el.querySelectorAll(".sj-nappi"), function (b) {
+              b.addEventListener("click", function () {
+                if (b.disabled) return;
+                var a = b.getAttribute("data-a");
+                if (s[h.nimi] === a) delete s[h.nimi]; else s[h.nimi] = a;
+                tila.tarkistettu = false; kutsuTallenna(); piirra();
+                var uusi = alue.querySelector('.sj-ihminen[data-i="' + el.getAttribute("data-i") + '"] .sj-nappi[data-a="' + a + '"]'); if (uusi) uusi.focus({ preventScroll: true });
+              });
+            });
+          });
+          var tark = alue.querySelector(".sj-tarkista");
+          tark.addEventListener("click", function () {
+            if (tark.disabled) return;
+            tila.tarkistettu = true; kutsuTallenna(); piirra();
+            var pp = alue.querySelector(".sj-pisteet"); if (pp && pp.scrollIntoView) pp.scrollIntoView({ block: "center" });
+          });
+          var jatka = alue.querySelector(".sj-jatka");
+          if (jatka) jatka.addEventListener("click", function () {
+            tila.vaihe = "perustelu"; kutsuTallenna(); window.kutsuPiirra();
+            var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView();
+          });
+        }
+        piirra();
+      };
+
+      var piirraPerustelutS = function (alue, tila) {
+        var kys = TH.kysymykset || [];
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/2 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Sijoitusten pisteet: <strong>' + pisteet(tila) + '/' + maxP + '</strong></p>' +
+          kys.map(function (k, j) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="sj-p' + j + '">' + (j + 1) + '. ' + suojaa(k.kysymys) + '</label>' +
+              '<textarea id="sj-p' + j + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[j] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sj-takaisin">' + suojaa(TH.takaisinNappi || "Muuta sijoituksia") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function p() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", p); });
+        alue.querySelector(".sj-takaisin").addEventListener("click", function () { tila.vaihe = "sijoitus"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        p();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), s = sij(tila), p = pisteet(tila);
+        var h = '<div class="tuotekortti sj-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "RAPORTTI") + '</p>' +
+          '<p class="tk-tuotenimi">' + p + '/' + maxP + ' pistettä</p>' +
+          '<p class="tk-lause">' + suojaa(p >= maxP - 2 ? TH.palaute[0] : p >= maxP / 2 ? TH.palaute[1] : TH.palaute[2]) + '</p>' +
+          '<table class="bj-taulu"><thead><tr><th>Matkustaja</th><th>Sijoitus</th><th></th></tr></thead><tbody>' + KORTIT.map(function (hh) {
+            var a = s[hh.nimi], t = a ? hh.sopivuus[a] : [0, "-"], v = vt(a) || {};
+            return '<tr><td>' + suojaa((hh.ikoni ? hh.ikoni + " " : "") + hh.nimi) + '</td><td>' + suojaa((v.ikoni || "") + " " + (v.nimi || "-")) + '</td><td class="' + tasoLuokka[t[0]] + '">' + tasoMerkki[t[0]] + '</td></tr>' +
+              '<tr class="sj-selitysrivi"><td colspan="3">' + suojaa(t[1]) + '</td></tr>';
+          }).join("") + '</tbody></table></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, j) {
+          return '<li><strong>' + suojaa(k.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[j] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var s = sij(tila);
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + pisteet(tila) + "/" + maxP + " pistettä\n\nSIJOITUKSET\n";
+        KORTIT.forEach(function (hh, j) {
+          var a = s[hh.nimi], tt = a ? hh.sopivuus[a] : [0, "-"], v = vt(a) || {};
+          t += (j + 1) + ". " + hh.nimi + " → " + (v.nimi || "-") + " (" + tasoMerkki[tt[0]] + ")\n   " + tt[1] + "\n";
+        });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, j) { t += (j + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[j] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";

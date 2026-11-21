@@ -1192,3 +1192,53 @@ html body #passages .passage textarea.kt-teksti { width: 100% !important; max-wi
 #passages .passage .kohtaus-kuvat figure.kohtaus-kuva { width: 100%; margin: 0; }
 #passages .passage .kohtaus-kuvat figcaption { margin-top: 0.35rem; text-align: center; font-size: 0.82rem; color: var(--teksti-pehmea); }
 @media (max-width: 520px) { #passages .passage .kohtaus-kuvat { grid-template-columns: 1fr; } }
+
+/* Tehtävätyyppi "sijoitus" (esim. palveluala: Järjestä jumiin jääneet) */
+.sj-yla { position: sticky; top: 0.4rem; z-index: 3; margin: 0 0 1rem; }
+.sj-paikat { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; padding: 0.55rem; border-radius: 16px;
+  border: 2px solid rgba(var(--a1-rgb),.55); background: rgba(var(--tumma-rgb),.92); backdrop-filter: blur(6px); }
+@media (max-width: 700px) { .sj-paikat { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.sj-paikka { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.05rem; padding: 0.3rem 0.2rem; border-radius: 10px; background: rgba(var(--a1-rgb),.1); }
+.sj-paikka.taynna { opacity: .55; }
+.sj-paikka .sj-ikoni { font-size: 1.3rem; line-height: 1.1; }
+#passages .passage .sj-paikka span { margin: 0 !important; }
+.sj-paikka .sj-pnimi { font-weight: 800; font-size: 0.8rem; line-height: 1.2; }
+.sj-paikka .sj-tieto { font-size: 0.7rem; color: var(--teksti-pehmea); line-height: 1.2; }
+.sj-paikka .sj-vapaa { font-size: 0.75rem; color: var(--teksti-pehmea); }
+.sj-paikka .sj-vapaa strong { color: var(--a1); font-size: 0.95rem; }
+.sj-ihmiset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; margin-bottom: 0.8rem; }
+@media (max-width: 700px) { .sj-ihmiset { grid-template-columns: 1fr; } }
+.sj-ihminen { border: 2px solid rgba(var(--a1-rgb),.25); border-radius: 14px; padding: 0.7rem 0.8rem; background: rgba(var(--paneeli-rgb),.88); display: flex; flex-direction: column; gap: 0.45rem; }
+.sj-ihminen.sijoitettu { border-color: rgba(var(--a1-rgb),.6); }
+.sj-ihminen.hyva { border-color: #51cf66; } .sj-ihminen.ok { border-color: #fcc419; } .sj-ihminen.ei { border-color: #ff8787; }
+#passages .passage .sj-ihminen p { margin: 0 !important; }
+.sj-valinnat { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.sj-nappi { border: 2px solid rgba(var(--a1-rgb),.45); background: rgba(var(--a1-rgb),.08); color: var(--teksti-vaalea); border-radius: 999px; padding: 0.3rem 0.6rem; font: 700 0.8rem/1.2 "Segoe UI", Arial, sans-serif; cursor: pointer; }
+.sj-nappi:hover:not(:disabled) { background: rgba(var(--a1-rgb),.25); }
+.sj-nappi[aria-checked="true"] { background: var(--a1); color: var(--nappi-teksti); border-color: var(--a1); }
+.sj-nappi:disabled { opacity: .35; cursor: not-allowed; }
+.sj-nappi:focus-visible { outline: 3px solid var(--korostus); outline-offset: 2px; }
+#passages .passage .sj-tulos { font-size: 0.86rem !important; line-height: 1.4; padding: 0.4rem 0.6rem; border-radius: 10px; }
+.sj-tulos.hyva { background: rgba(81,207,102,.15); color: #b2f2bb; } .sj-tulos.ok { background: rgba(252,196,25,.15); color: #ffe08a; } .sj-tulos.ei { background: rgba(255,135,135,.15); color: #ffc9c9; }
+#passages .passage .sj-pisteet { text-align: center; font-size: 1.05rem !important; }
+.sj-pisteet strong { color: var(--a1); font-size: 1.3rem; }
+.tuotekortti.sj-raportti { background: linear-gradient(160deg, #f4f7fb 0%, #e3ecf7 100%); border-color: var(--a1); }
+#passages .passage .tuotekortti.sj-raportti .tk-yla { color: #1f4e8c !important; }
+.sj-raportti .bj-taulu td.hyva { color: #2b8a3e; font-weight: 800; } .sj-raportti .bj-taulu td.ok { color: #b07d00; font-weight: 800; } .sj-raportti .bj-taulu td.ei { color: #c92a2a; font-weight: 800; }
+.sj-raportti .sj-selitysrivi td { font-size: 0.8rem; color: #4a5568 !important; padding-bottom: 0.5rem; }
+/* Tarinan valintanapit: pitkä teksti saa rivittyä (muuten se leikkautui kapealla näytöllä) */
+#passages .answer-group.valinnat > a.macro-link { white-space: normal !important; text-align: left !important; justify-content: flex-start !important; }
+/* Sijoitustehtävän paikkapalkki tiiviimmäksi puhelimessa */
+@media (max-width: 700px) {
+  .sj-paikat { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.2rem; padding: 0.35rem; }
+  .sj-paikka { padding: 0.2rem 0.1rem; }
+  .sj-paikka .sj-tieto { display: none; }
+  .sj-paikka .sj-pnimi { font-size: 0.66rem; }
+  .sj-paikka .sj-vapaa { font-size: 0.66rem; }
+  .sj-paikka .sj-ikoni { font-size: 1.05rem; }
+}
+@media (max-width: 700px) {
+  #passages .passage .sj-paikka .sj-pnimi { font-size: 0.62rem !important; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #passages .passage .sj-paikka .sj-vapaa { font-size: 0.62rem !important; line-height: 1.2; }
+  #passages .passage .sj-paikka .sj-vapaa strong { font-size: 0.85rem !important; }
+}
