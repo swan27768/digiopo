@@ -253,7 +253,8 @@ $('body').addClass('hide-navbar');
 
     # --- head: tarina alkaa aina kannesta (SugarCuben istuntotila tyhjennetään ennen käynnistystä)
     tarina = unesc(re.search(r'<tw-storydata[^>]*name="([^"]*)"', s).group(1))
-    slug = re.sub(r'[^\w]+', '-', tarina.lower()).strip('-')
+    # Sama muoto kuin SugarCuben Util.slugify: alaviivat ja välilyönnit -> '-'
+    slug = re.sub(r'[_\s\u2013\u2014-]+', '-', re.sub(r'[^\w\s\u2013\u2014-]+', '', tarina.strip())).lower()
     nollaus = ('<script id="sc-aloita-alusta">try{sessionStorage.removeItem("' + slug + '.state");}catch(e){}</script>\n')
     if 'id="sc-aloita-alusta"' not in s:
         s = s.replace('<script id="sc-clear-saves">', nollaus + '<script id="sc-clear-saves">', 1)
