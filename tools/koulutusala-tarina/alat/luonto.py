@@ -61,7 +61,7 @@ TAUSTAKUVAT = {"kansi": KUVA + "luonto-ruska-tausta.webp",
                "alku": KUVA + "luonto-ruska-tausta.webp",
                "tehtava": KUVA + "luonto-metsa-tausta.webp"}
 
-TARINA_ALKU = dict(nimi="Mysteeri joella", tausta="laakso", teksti=f"""<<run setup.taustakuva("{KUVA}luonto-ruska-tausta.webp")>><<include "HUD">>
+TARINA_ALKU = dict(nimi="Mysteeri joella", tausta="laakso", teksti=f"""<<run setup.taustakuva("{KUVA}luonto-laakso-tausta.webp")>><<include "HUD">>
 <h1>Mysteeri joella</h1>
 <p>Kello on 8.00. On syyskuu, ja Lapin tunturit hehkuvat ruskan väreissä. Olet TET-harjoittelijana luonto- ja ympäristöalan työpaikalla.</p>
 <p>Aamulla tuli outo ilmoitus: Kuukkelijoesta on löytynyt kuolleita harjuksia, ja joen vesi on samentunut.</p>
@@ -69,7 +69,7 @@ TARINA_ALKU = dict(nimi="Mysteeri joella", tausta="laakso", teksti=f"""<<run set
 <div class="intro-nappi"><<link "Lähde joelle">><<set $aika += 5>><<goto "{{{{ENSIMMAINEN}}}}">><</link>></div>""")
 
 KOHTAUKSET = [
- dict(nimi="Kuolleet kalat", tausta="ranta", otsikko="Joen ranta", avain="kalavesi",
+ dict(nimi="Kuolleet kalat", taustakuva=KUVA + "luonto-puro-tausta.webp", tausta="ranta", otsikko="Joen ranta", avain="kalavesi",
       kysymys="Miltä kalavesienhoitajan työ näytti?",
       johdanto="""<p>Rannalla on kolme kuollutta harjusta. Joen vesi on ruskean sameaa.</p>
 <p class="puhe"><strong>Aatu, kalavesienhoitaja:</strong> ”Ensin pitää kerätä todisteet. Mitä teet?”</p>""",
@@ -81,7 +81,7 @@ KOHTAUKSET = [
        dict(teksti="Kirjoitan someen, että joki on myrkytetty.", aika=10, piirteet={},
             palaute="<p><strong>Liian aikaista.</strong></p><p>Kukaan ei vielä tiedä, mitä tapahtui. Väärä tieto voi pelottaa ihmisiä turhaan. Aatu kuvaa kalat ja kirjaa paikan.</p>"),
       ]),
- dict(nimi="Näytteenotto", tausta="naytteet", otsikko="Näytteenotto", avain="ymparisto",
+ dict(nimi="Näytteenotto", taustakuva=KUVA + "luonto-pitkospuut-tausta.webp", tausta="naytteet", otsikko="Näytteenotto", avain="ymparisto",
       kysymys="Miltä ympäristönhoitajan työ näytti?",
       johdanto="""<p>Ympäristönhoitaja Saana tulee paikalle näytepulloineen.</p>
 <p class="puhe"><strong>Saana, ympäristönhoitaja:</strong> ”Näytteistä näkee, onko vedessä tarpeeksi happea ja kuinka sameaa se on. Mistä näytteet kannattaa ottaa?”</p>""",
@@ -93,7 +93,7 @@ KOHTAUKSET = [
        dict(teksti="Ei tarvita näytteitä. Vedestä näkee, että se on sameaa.", aika=10, piirteet={},
             palaute="<p><strong>Silmä ei näe kaikkea.</strong></p><p>Esimerkiksi hapen määrää ei voi nähdä. Saana ottaa näytteitä monesta kohdasta.</p>"),
       ]),
- dict(nimi="Laavulla", tausta="laavu", otsikko="Laavulla", avain="ohjaaja",
+ dict(nimi="Laavulla", taustakuva=KUVA + "luonto-metsa-tausta.webp", tausta="laavu", otsikko="Laavulla", avain="ohjaaja",
       kysymys="Miltä luonto-ohjaajan työ näytti?",
       johdanto="""<p>Joen varrella on laavu. Luonto-ohjaaja Mikko on siellä retkiryhmän kanssa. Yksi retkeläisistä haluaa täyttää juomapullonsa joesta.</p>
 <p class="puhe"><strong>Mikko, luonto-ohjaaja:</strong> ”Mitä sanoisit hänelle?”</p>""",
@@ -105,7 +105,7 @@ KOHTAUKSET = [
        dict(teksti="Sanon, että joki on myrkyllinen, eikä sinne saa mennä.", aika=10, piirteet={},
             palaute="<p><strong>Retkeläiset säikähtävät.</strong></p><p>Kukaan ei vielä tiedä, onko joki myrkyllinen. Mikko rauhoittaa ryhmän. Hän kertoo, että he näkivät eilen mutaista vettä hakkuuaukean kohdalla.</p>"),
       ]),
- dict(nimi="Poroaidalla", tausta="porot", otsikko="Poroaidalla", avain="poro",
+ dict(nimi="Poroaidalla", taustakuva=KUVA + "luonto-tunturi-tausta.webp", tausta="porot", otsikko="Poroaidalla", avain="poro",
       kysymys="Miltä poronhoitajan työ näytti?",
       johdanto="""<p>Ylempänä joen varrella on poroaita. Poronhoitaja Elle on tuomassa poroja syyslaitumelle.</p>
 <p class="puhe"><strong>Elle, poronhoitaja:</strong> ”Kuljen täällä joka päivä. Kesällä tuolla metsässä kaivettiin uusi oja.”</p>""",
