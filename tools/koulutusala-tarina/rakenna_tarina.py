@@ -54,6 +54,10 @@ def kuva_html(k):
     """Valinnainen kohtauskuva: k["kuva"] = dict(src, alt, leveys, korkeus). Polku sivun kansiosta."""
     kv = k.get("kuva")
     if not kv: return ""
+    if isinstance(kv, list):   # useampi kuva rinnakkain, kuvateksteineen
+        return ('<div class="kohtaus-kuvat">' + "".join(
+            f'<figure class="kohtaus-kuva"><img src="{x["src"]}" alt="{x["alt"]}" width="{x["leveys"]}" height="{x["korkeus"]}" loading="lazy" decoding="async">'
+            + (f'<figcaption>{x["teksti"]}</figcaption>' if x.get("teksti") else "") + '</figure>' for x in kv) + '</div>\n')
     return (f'<figure class="kohtaus-kuva"><img src="{kv["src"]}" alt="{kv["alt"]}" '
             f'width="{kv["leveys"]}" height="{kv["korkeus"]}" loading="lazy" decoding="async"></figure>\n')
 

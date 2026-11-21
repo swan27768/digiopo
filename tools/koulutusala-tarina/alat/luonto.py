@@ -117,7 +117,9 @@ KOHTAUKSET = [
        dict(teksti="Kysyn, ovatko porot sotkeneet joen.", aika=10, piirteet={"tutkija": 1},
             palaute="<p><strong>Hyvä, että kysyt, mutta porot eivät ole syy.</strong></p><p>Porot ovat kulkeneet täällä satoja vuosia. Elle näyttää kartalta, missä uusi oja on.</p>"),
       ]),
- dict(nimi="Hakkuuaukea", tausta="hakkuu", otsikko="Hakkuuaukea", avain="metsa",
+ dict(nimi="Hakkuuaukea", taustakuva=KUVA + "luonto-hakkuu-tausta.webp",
+      kuva=[dict(src=KUVA + "luonto-vanhametsa.webp", alt="Vanha kuusimetsä, jossa maa on sammaleen peitossa.", leveys=1200, korkeus=782, teksti="Ennen: vanha metsä joen varrella"),
+            dict(src=KUVA + "luonto-metsakone.webp", alt="Keltainen metsäkone kaataa puita lumisessa metsässä.", leveys=1200, korkeus=769, teksti="Hakkuu: metsäkone työssä")], tausta="hakkuu", otsikko="Hakkuuaukea", avain="metsa",
       kysymys="Miltä metsäkoneenkuljettajan työ näytti?",
       johdanto="""<p>Hakkuuaukealla seisoo metsäkone. Uudesta ojasta valuu ruskeaa mutaa kohti jokea.</p>
 <p class="puhe"><strong>Jussi, metsäkoneenkuljettaja:</strong> ”Ojan päähän piti tehdä laskeutusallas, mutta se jäi kesken. Mitä tehdään?”</p>""",
