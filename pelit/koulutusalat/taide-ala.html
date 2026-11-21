@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-init="no-js">
+<html data-init="no-js" data-tausta-maailma="festari" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
-<title>Taideala</title>
+<title>Taide ja humanistinen ala – Festarit 48 tunnissa</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
@@ -36,12 +36,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <script src="../../js/lisenssiportti.js"></script>
     <script src="../../js/seuranta.js" defer></script>
 
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("taideala.state");}catch(e){}</script>
 <script id="sc-clear-saves">
 (function(){
   var prefix = "sc-e9994b4d-999d-4913-9847-6ea39d639121-";
@@ -58,1102 +62,323 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Taideala" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="e9994b4d-999d-4913-9847-6ea39d639121" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ==============================
-   TAIDEALA – VÄRIMAAILMA (CSS-muuttujat)
-   Korvaa nykyinen :root-blokki tällä.
-   ============================== */
-
+	<tw-storydata name="Taideala" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="e9994b4d-999d-4913-9847-6ea39d639121" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
 :root {
-  /* YLEINEN TAUSTA JA TEKSTIT */
-  --bg-body: #FAF7FF;          /* erittäin vaalea laventeli (galleriamainen) */
-  --text-main: #20162B;        /* syvä muste (hyvä kontrasti vaalealla) */
-
-  /* PÄÄTEEMAVÄRIT */
-  --accent-1: #5B2A86;         /* syvä violetti – isot otsikot */
-  --accent-2: #D63C8A;         /* fuksia – alaotsikot / rytmi */
-  --accent-3: #C7A54A;         /* lämmin kulta – korostus */
-
-  /* NAPIT */
-  --btn-bg: #5B2A86;           /* päätoiminto */
-  --btn-text: #FFFFFF;
-
-  /* KORTIT / LAATIKOT */
-  --card-bg: #FFFFFF;          /* “canvas” */
-  --card-border: #E6D9F2;      /* kevyt laventelireunus */
-
-  /* LINKIT */
-  --link-text: #2A7F7A;        /* petrooli/teal – erottuu violetista */
-
-  /* YLÄPALKKI */
-  --nav-bg: rgba(250, 247, 255, 0.96);
-  --nav-border: rgba(91, 42, 134, 0.22);
-
-  /* PISTEET / HIGHLIGHT */
-  --score-color: #C7A54A;
-
-  /* VAARA / VIRHE */
-  --danger-bg: #B3261E;        /* selkeä “danger”-punainen */
-  --highlight-color: #B3261E;
-}
-
-/* ==============================
-   TAIDEALA – PIENET VÄRIKORJAUKSET
-   (poistaa Luontoala-kovakoodauksia)
-   Lisää nämä nykyisen CSS:n loppuun, jos haluat.
-   ============================== */
-
-/* Nappien reunus: vaihda ruskea -> teeman korostus */
-#passages .passage a.btn,
-#passages .passage button.btn,
-.navbar-fixed button.btn {
-  border-color: color-mix(in srgb, var(--accent-3) 55%, rgba(0,0,0,0.12)) !important;
-}
-
-/* Kansisivun otsikon kovakoodattu vihreä -> teeman accent-1 */
-#passages .passage .cover-title {
-  color: var(--accent-1) !important;
-}
-
-/* Kansisivun taustan vihertävä overlay -> taidealan “galleria” */
-#passages .passage .cover-link {
-  background:
-    linear-gradient(rgba(250,247,255,0.90), rgba(250,247,255,0.90)),
-    url("https://images.unsplash.com/photo-1458530970867-aaa3700f1ff2?auto=format&fit=crop&w=2400&q=80") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-}
-
-/* Päätoimintonappi (btn-primary) vihreästä -> violetti gradient */
-.btn-primary {
-  background: linear-gradient(
-    color-mix(in srgb, var(--accent-1) 85%, #FFFFFF),
-    var(--accent-1)
-  ) !important;
-}
-
-/* Answer group -nappien kovakoodattu vihreä -> taidealan fuksia */
-.answer-group a {
-  background: color-mix(in srgb, var(--accent-2) 22%, #FFFFFF) !important;
-  color: var(--text-main) !important;
-  border-color: color-mix(in srgb, var(--accent-2) 45%, rgba(0,0,0,0.12)) !important;
-}
-
-  
- /* BODY JA PASSAGE */
-body {
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-#passages .passage {
-  color: var(--text-main);
-}
-
-/* TEKSTIT JA LINKIT */
-#passages .passage a:not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* NAPIT YHTEISESTI */
-#passages .passage a.btn,
-#passages .passage button.btn,
-.navbar-fixed button.btn {
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-  border: 2px solid #8A5A2B;   /* puunkuoren ruskea */
-  border-radius: 999px;
-
-  padding: 0.75rem 1.6rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-
-  box-shadow: 0 5px 0 rgba(0,0,0,0.28);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-#passages .passage a.btn:hover,
-#passages .passage button.btn:hover,
-.navbar-fixed button.btn:hover {
-  filter: brightness(1.07);
-  transform: translateY(-1px);
-}
-
-#passages .passage a.btn:active,
-#passages .passage button.btn:active,
-.navbar-fixed button.btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.30);
-}
-
-.btn--danger {
-  background: var(--danger-bg);
-  color: #fff !important;
-  border-color: #4A1414;
-}
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   1. POISTA SUGARCUBEN OLETUS-UI
-   ============================================================ */
-
-#sidebar,
-#ui-bar,
-#ui-bar-toggle,
-#toolbar {
-  display: none !important;
-}
-
-/* ============================================================
-   2. PERUSRUNK0
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  padding-top: 0; /* navbar poistettu */
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-/* ============================================================
-   3. PASSAGE-ALUE
-   ============================================================ */
-
-#story {
-  margin-left: 0 !important;
-}
-
-#passages {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-#passages .passage {
-  margin: 2rem auto;
-  padding: 2.2rem 3rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* ============================================================
-   4. TYPOGRAFIA
-   ============================================================ */
-
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  hyphens: auto;
-}
-
-#passages .passage ul,
-#passages .passage ol {
-  padding-left: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-#passages .passage li {
-  margin-bottom: 0.35rem;
-}
-
-/* Otsikot */
-
-#passages .passage h1,
-#passages .passage h2,
-#passages .passage h3 {
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 0.6rem auto 1.2rem;
-}
-
-/* H1 */
-#passages .passage h1 {
-  font-size: 2.2rem;
-  color: var(--accent-1);
-  border: 2px solid var(--accent-1);
-  border-radius: 12px;
-  padding: 0.5rem 1.6rem;
-}
-
-/* H2 */
-#passages .passage h2 {
-  font-size: 1.6rem;
-  color: var(--accent-2);
-}
-
-/* H3 */
-#passages .passage h3 {
-  font-size: 1.25rem;
-  color: var(--accent-3);
-}
-
-/* Linkit */
-/* Linkit vain leipätekstissä – EI napeille */
-#passages .passage a:not(.btn):not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* ============================================================
-   NAPIT – VARMA SUGARCUBE (EI RIIPPUVUUTTA .btn-LUOKASTA)
-   Toimii sekä [[wikilink]] että <<link>> ja <<button>>
-   ============================================================ */
-
-/* 1) Wrapperit: napit keskelle ja pinoon */
-.intro-nappi,
-.answer-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ============================================================
-   YHTEINEN NAPPI – MAISTUVA AMMATTI
-   ============================================================ */
-
-.intro-nappi a.link-internal,
-.intro-nappi a.macro-link,
-.answer-group a.link-internal,
-.answer-group a.macro-link,
-.navbar-fixed button,
-.navbar-fixed a {
-  appearance: none;
-  display: inline-block;
-  width: min(520px, 100%);
-  box-sizing: border-box;
-
-  padding: 0.75rem 1.6rem;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-
-  border: 2px solid rgba(0,0,0,0.15);
-  border-radius: 999px;
-
-  text-decoration: none !important;
-  cursor: pointer;
-
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-.intro-nappi a:hover,
-.answer-group a:hover,
-.navbar-fixed button:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
-.intro-nappi a:active,
-.answer-group a:active,
-.navbar-fixed button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-}
-
-.answer-group {
-  display: flex;
-  flex-direction: row;      /* NAPIT VIEREKKÄIN */
-  justify-content: center;
-  align-items: stretch;
-  gap: 0.75rem;
-  flex-wrap: wrap;          /* sallii rivittymisen pienellä näytöllä */
-}
-.answer-group a {
-  width: auto;
-  min-width: 140px;
-}
-
-/* ============================================================
-   6. NAVBAR
-   ============================================================ */
-
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-
-  padding: 0.35rem 0.75rem;
-  min-height: 42px;
-
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.55);
-}
-
-/* Piilotus kansisivulla */
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   7. KORTIT (KOULUT, VIDEOT)
-   ============================================================ */
-
-.media-card,
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-}
-
-/* ============================================================
-   8. KANSISIVU – JULISTE (KORJATTU)
-   ============================================================ */
-/* KANSI: koko näkymä keskitetty */
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;                /* top/right/bottom/left = 0 */
-  display: flex !important;
-
-  justify-content: center !important; /* vaaka */
-  align-items: center !important;     /* pysty */
-
-  background:
-    linear-gradient(rgba(240,245,240,0.88), rgba(240,245,240,0.88)),
-    url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover !important;
-  background-position: center center !important;
-
-  text-decoration: none !important;
-  cursor: pointer;
-  z-index: 10000;                     /* varmasti muiden yläpuolella */
-}
-
-/* Otsikkokontti */
-#passages .passage .cover-inner {
-  text-align: center;
-  max-width: 900px;
-  padding: 2rem 2.2rem;
-}
-
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1;
-
-  font-size: clamp(0.28rem, 0.65vw, 0.5rem);  /* erittäin pieni */
-  color: #2F5D3A;
-
-  margin: 0;
-  padding: 0;
-
-  background: none;
-  border: none;
-  box-shadow: none;
-
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-a.macro-link.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: #4A1414 !important;
-  color: #ffffff !important;
-}
-p.highlight {
-  color: var(--highlight-color) !important;
-  font-weight: 700;
-}
-a.macro-link.btn--danger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.lomake-ryhma textarea {
-  width: 100%;
-  min-height: 8rem;
-  padding: 1rem 1.1rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  border-radius: 16px;
-  border: 2px solid var(--card-border);
-  box-sizing: border-box;
-}
-/* Ammattitutkimus – suuret ja korkeat tekstikentät (varma yliajo) */
-#passages .lomake-ryhma textarea {
-  width: 100% !important;
-  min-height: 10rem !important;
-  height: 10rem !important;
-  padding: 1rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-
-  border-radius: 16px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-  resize: vertical;
-}
-
-/* Jos jokin kenttä on vielä textbox (input), tee siitäkin selvästi korkeampi */
-#passages .lomake-ryhma input[type="text"] {
-  width: 100% !important;
-  min-height: 3.2rem !important;
-  padding: 0.9rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-
-  border-radius: 14px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-}
-
-tarea,
-#passages .lomake-ryhma input[type="text"] {
-  color: #000000 !important;
-}
-
-#passages .passage .cover-link {
-  text-decoration: none !important;
-}
-.answer-group a {
-  background: #7EDC9A !important;     /* sammalenvihreä */
-  color: #103820 !important;
-  border-color: #4F8A62 !important;
-}
-
-/* KANSISIVUN OTSIKKO – LOPULLINEN KOKO */
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
-  line-height: 1.05 !important;
-
-  font-size: clamp(1.8rem, 3.8vw, 3rem) !important;  /* SELKEÄ ja maltillinen */
-  color: #2F5D3A !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* ==============================
-   NAPPIKORJAUS – GOOGLE SITES SAFE
-   ============================== */
-
-.intro-nappi,
-.answer-group {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex-wrap: wrap !important;
-}
-
-.intro-nappi a,
-.answer-group a {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-
-  width: auto !important;
-  min-width: 140px !important;
-  max-width: none !important;
-
-  white-space: nowrap !important;
-}
-/* ESITELMÄPOHJA – kirjoitusteksti mustaksi */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input,
-#passages .lomake-ryhma select {
-  color: #000000 !important;
-}
-
-/* ============================
-   INFO-TEXT – OPETUSKORTTI
-   ============================ */
-
-#passages .info-text {
-  background: #ffffff;
-  border: 1px solid #BFD3C4;
-  border-radius: 14px;
-  padding: 0.9rem 1.1rem;
-  margin: 1.2rem auto;
-  max-width: 720px;
-  text-align: center;
-}
-
-#passages .info-text p {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: #1E2A1E;
-}
-/* TOIMINTORIVI ESITELMÄPOHJAAN */
-.action-row {
-  justify-content: center !important;
-  gap: 1rem !important;
-}
-
-.action-row a {
-  min-width: 200px !important;
-}
-
-/* PÄÄTOIMINTONAPPI */
-.btn-primary {
-  background: linear-gradient(#3F7E59, #2F5D3A) !important;
-}
-/* ==========================================================
-   TAIDEALA – KAIKKI LUONTOALAN JÄÄMÄT POIS (LOPULLINEN YLIAJO)
-   ========================================================== */
-
-/* KANSISIVUN TAUSTA – vihreä metsägalleria -> taidegalleria */
-#passages .passage .cover-link {
-  background:
-    linear-gradient(rgba(250,247,255,0.92), rgba(250,247,255,0.92)),
-    url("https://images.unsplash.com/photo-1458530970867-aaa3700f1ff2?auto=format&fit=crop&w=2400&q=80") !important;
-}
-
-/* KANSISIVUN OTSIKKO – vihreä -> violetti */
-#passages .passage .cover-title {
-  color: var(--accent-1) !important;
-}
-
-/* ANSWER-GROUP NAPIT – sammalenvihreä -> taidefuksia */
-.answer-group a {
-  background: color-mix(in srgb, var(--accent-2) 22%, #FFFFFF) !important;
-  color: var(--text-main) !important;
-  border-color: color-mix(in srgb, var(--accent-2) 45%, rgba(0,0,0,0.12)) !important;
-}
-
-/* PÄÄTOIMINTONAPPI – vihreä -> violetti */
-.btn-primary {
-  background: linear-gradient(
-    color-mix(in srgb, var(--accent-1) 85%, #FFFFFF),
-    var(--accent-1)
-  ) !important;
-}
-
-/* INFO-TEXT KORTTI – vihreä -> laventeli */
-#passages .info-text {
-  background: #FFFFFF !important;
-  border: 1px solid var(--card-border) !important;
-}
-#passages .info-text p {
-  color: var(--text-main) !important;
-}
-
-/* DANGER-NAPPI – ruskea reunus -> viininpunainen */
-a.macro-link.btn--danger {
-  border-color: color-mix(in srgb, var(--danger-bg) 65%, #000000) !important;
-}
-
-/* VANHA RUSKEA NAPPIRAJA POIS */
-#passages .passage a.btn,
-#passages .passage button.btn,
-.navbar-fixed button.btn {
-  border-color: color-mix(in srgb, var(--accent-3) 55%, rgba(0,0,0,0.15)) !important;
-}
-
-/* Vihreät tekstivärit pois kaikkialta */
-#passages .passage [style*="#2F5D3A"],
-#passages .passage [style*="#3F7E59"],
-#passages .passage [style*="#7EDC9A"],
-#passages .passage [style*="#103820"],
-#passages .passage [style*="#4F8A62"] {
-  color: var(--text-main) !important;
-}
-/* ==========================================================
-   SAAVUTETTAVUUS – SUUREMPI, SELKEÄMPI TYPOGRAFIA
-   ========================================================== */
-
-/* Peruskirjasinkoko */
-html {
-  font-size: 18px; /* aiempi ~16px */
-}
-
-/* Kaikki perusleipätekstit */
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 1rem;        /* = 18px */
-  line-height: 1.85;     /* enemmän ilmaa riveille */
-}
-
-/* Otsikot */
-#passages .passage h1 {
-  font-size: 2.4rem;
-}
-#passages .passage h2 {
-  font-size: 1.9rem;
-}
-#passages .passage h3 {
-  font-size: 1.4rem;
-}
-
-/* Napit – isompi teksti ja parempi kosketettavuus */
-.intro-nappi a,
-.answer-group a,
-.navbar-fixed button,
-.navbar-fixed a {
-  font-size: 1rem;      /* 18px */
-  min-height: 52px;    /* WCAG kosketuskorkeus */
-}
-
-/* Tekstikentät */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input,
-#passages .lomake-ryhma select {
-  font-size: 1rem;     /* 18px */
-  line-height: 1.7;
-}
-
-/* Linkit */
-#passages .passage a:not(.btn):not(.macro-link) {
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.18em;
-}
-/* ============================================================
-   MOBIILIVERSIO – parannettu
-   ============================================================ */
-
-@media (max-width: 600px) {
-  #passages {
-    margin: 0.75rem auto;
-    padding: 0 0.5rem;
+  --a1: #ffb27a; --a1-rgb: 255,178,122;
+  --a2: #ff7a8a; --a2-rgb: 255,122,138;
+  --a3: #ffd9b8;
+  --korostus: #ff7ab8; --korostus-rgb: 255,122,184;
+  --tausta: #1d1a45; --tausta-rgb: 29,26,69;
+  --tausta-2: #2a2458; --tausta-2-rgb: 42,36,88;
+  --paneeli: #221e4f; --paneeli-rgb: 34,30,79;
+  --paneeli-2: #2e2862;
+  --tumma: #120f2e; --tumma-rgb: 18,15,46;
+  --reuna: #ffb27a;
+  --teksti-pehmea: #e2daf2; --teksti-pehmea-rgb: 226,218,242;
+  --teksti-vaalea: #fbf8ff;
+  --nappi-teksti: #2a0f14;
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #ffe1c8;
+  --kansi-nappi-varjo: #8a3a4a;
+  --kansi-nappi-hehku: 255,150,140;
+}
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.94) 0%, rgba(var(--tausta-rgb),.78) 40%, rgba(var(--tausta-rgb),.35) 64%, rgba(var(--tausta-rgb),0) 84%) !important;
+}
+html body #passages .passage .cover-pieni, html body #passages .passage .cover-subtitle { text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.7); }
+html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Festarit 48 tunnissa – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "taide",
+ "alaNimi": "Taide ja humanistinen ala",
+ "tarinaNimi": "Festarit 48 tunnissa",
+ "kello": {
+  "alku": 960,
+  "raja": 3000
+ },
+ "katsoTeksti": "Katso festareita",
+ "aikaRivi": "",
+ "kutsuTilanneOtsikko": "Tehtävä",
+ "piirteet": {
+  "luova": {
+   "nimi": "Luova ratkaisija",
+   "kuvaus": "Keksit uuden tavan, kun suunnitelma ei toimi."
+  },
+  "tarkka": {
+   "nimi": "Tarkka",
+   "kuvaus": "Huomaat virheet ja korjaat ne ajoissa."
+  },
+  "kohtaaja": {
+   "nimi": "Ihmisten kohtaaja",
+   "kuvaus": "Huomaat, mitä toinen tarvitsee, ja autat häntä."
+  },
+  "vastuullinen": {
+   "nimi": "Vastuullinen",
+   "kuvaus": "Mietit, miten päätöksesi vaikuttavat muihin."
   }
-
-  #passages .passage {
-    padding: 1.2rem 1rem;
-    margin: 0.75rem auto;
+ },
+ "ammatit": {
+  "graafinen": {
+   "nimi": "Graafinen suunnittelija",
+   "kuvaus": "Suunnittelee julisteita, kuvituksia, logoja ja opasteita.",
+   "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto (kuvallisen ilmaisun toteuttaja)",
+   "piirteet": [
+    "luova",
+    "tarkka"
+   ]
+  },
+  "musiikkiteknologi": {
+   "nimi": "Musiikkiteknologi",
+   "kuvaus": "Hoitaa konserttien ja tapahtumien äänentoistoa ja äänityksiä.",
+   "tutkinto": "Musiikkialan perustutkinto (musiikkiteknologi)",
+   "piirteet": [
+    "tarkka",
+    "vastuullinen"
+   ]
+  },
+  "tulkki": {
+   "nimi": "Viittomakielen tulkki",
+   "kuvaus": "Tulkkaa puhetta viittomakielelle ja viittomakieltä puheeksi.",
+   "tutkinto": "Viittomakielen tulkki (AMK), esimerkiksi Humak tai Diak",
+   "piirteet": [
+    "kohtaaja",
+    "tarkka"
+   ]
+  },
+  "media": {
+   "nimi": "Mediapalvelujen toteuttaja",
+   "kuvaus": "Kuvaa, editoi ja tekee videoita ja suoria lähetyksiä.",
+   "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto (mediapalvelujen toteuttaja)",
+   "piirteet": [
+    "vastuullinen",
+    "luova"
+   ]
+  },
+  "artesaani": {
+   "nimi": "Artesaani",
+   "kuvaus": "Valmistaa käsityötuotteita ja ohjaa käsityöpajoja.",
+   "tutkinto": "Taideteollisuusalan perustutkinto (artesaani)",
+   "piirteet": [
+    "luova",
+    "kohtaaja"
+   ]
+  },
+  "muusikko": {
+   "nimi": "Muusikko",
+   "kuvaus": "Soittaa tai laulaa konserteissa, bändeissä ja orkestereissa.",
+   "tutkinto": "Musiikkialan perustutkinto (muusikko)",
+   "piirteet": [
+    "luova",
+    "vastuullinen"
+   ]
   }
-
-  #passages .passage h1 {
-    font-size: 1.7rem !important;
-    padding: 0.35rem 0.8rem;
-    letter-spacing: 0.03em !important;
-  }
-  #passages .passage h2 { font-size: 1.3rem !important; }
-  #passages .passage h3 { font-size: 1.1rem !important; }
-
-  #passages .passage p,
-  #passages .passage li,
-  #passages .passage span,
-  #passages .passage div {
-    font-size: 15px !important;
-    line-height: 1.65 !important;
-  }
-
-  /* 16px estää iOS:n automaattisen zoomauksen */
-  #passages textarea,
-  #passages input,
-  #passages select {
-    font-size: 16px !important;
-  }
-
-  /* Napit koko leveyteen, pinotaan allekkain */
-  .intro-nappi,
-  .answer-group,
-  .intro-nappi-row,
-  .action-row {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-  }
-
-  .intro-nappi a,
-  .answer-group a,
-  .intro-nappi-row a,
-  .action-row a,
-  .intro-nappi a.link-internal,
-  .intro-nappi a.macro-link,
-  .answer-group a.link-internal,
-  .answer-group a.macro-link,
-  .action-row a.btn-primary,
-  .action-row a.btn-secondary {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    white-space: normal !important;
-    font-size: 0.95rem !important;
-    padding: 0.75rem 1rem !important;
-  }
-
-  .school-card {
-    padding: 0.9rem 1rem;
-    border-radius: 12px;
-    margin-bottom: 0.75rem;
-  }
-
-  .info-text {
-    padding: 0.8rem 1rem;
-  }
-}
-
-@media (max-width: 400px) {
-  #passages .passage {
-    padding: 0.8rem 0.6rem;
-  }
-  #passages .passage h1 { font-size: 1.35rem !important; }
-}
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= NAVBAR POISTETTU ========= */
-
-(function () {
-  "use strict";
-
-  const AUTOSAVE_KEY = "luonto_ammatti_autosave_v1";
-
-  /* ========= LATAA TXT ========= */
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const text =
-`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
-
-1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN:
-${v.tyotehtavat || ""}
-
-2. MISSÄ TÖITÄ TEHDÄÄN:
-${v.tyopaikat || ""}
-
-3. MILLAISTA TYÖAIKA ON:
-${v.tyoajat || ""}
-
-4. MISSÄ TÄTÄ AMMATTIA VOI OPISKELLA:
-${v.opiskelupaikat || ""}
-
-5. MIKSI TÄMÄ AMMATTI KIINNOSTAA MINUA:
-${v.omaPerustelu || ""}
-
-------------------------------
-Luonto-, ympäristö- ja metsäalan ammattitehtävä.`;
-
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (v.ammatti || "luontoala") + "_esitelma.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  /* ========= AUTOSAVE ========= */
-  window.initAmmattiAutosave = function () {
-    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
-
-    fields.forEach((f,i) => f.value = saved[i] || "");
-
-    fields.forEach((field,i)=>{
-      field.addEventListener("input", ()=>{
-        const data = Array.from(fields).map(f=>f.value);
-        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
-        ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu"]
-          .forEach((k,j)=> State.variables[k] = data[j] || "");
-      });
-    });
-  };
-
-  /* ========= TYHJENNÄ ========= */
-  window.resetAmmattitutkimus = function () {
-    document.querySelectorAll("#passages textarea").forEach(t=>t.value="");
-    ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu","ammatti"]
-      .forEach(k=>State.variables[k]="");
-    localStorage.removeItem(AUTOSAVE_KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "taide_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "taide_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
-  
-/* Poistu-painike (sulje välilehti) */
-
-window.confirmExitStory = function () {
-  const ok = window.confirm("Haluatko varmasti sulkea esityksen?");
-  if (ok) {
-    window.close();
-  }
-};
-$(document).on('click', 'a.macro-link.btn--danger', function () {
-  SugarCube.Engine.play('Kansi');
+ },
+ "kutsuKortit": [],
+ "tehtava": {
+  "tyyppi": "juliste",
+  "nimi": "Festarijuliste",
+  "tag": "Tehtävä · noin 25 min",
+  "maara": "<strong>yhden julisteen<\/strong> ensi kesän festareille",
+  "ohjeAskelLause": "Teet kolme asiaa:",
+  "askeleet": [
+   "Kirjoita julisteeseen tapahtuman tiedot.",
+   "Valitse kuva, värit, fontti ja tekstien paikka. Juliste muuttuu heti.",
+   "Perustele kaksi asiaa omin sanoin."
+  ],
+  "lopuksi": "Tarkistuslista kertoo, mitä julisteesta vielä puuttuu. Voit ladata julisteen kuvana. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+  "tulosOtsikko": "Julisteesi",
+  "osa1": "Osa 1/2 · Juliste",
+  "osa2": "Osa 2/2 · Perustelut",
+  "tilanneOtsikko": "Tilaus festareilta",
+  "ohje": "Ensi kesän festarit tarvitsevat julisteen. Kirjoita siihen alla olevat tiedot ja valitse kuva, värit ja fontti. Juliste päivittyy heti.",
+  "faktat": [
+   [
+    "Tapahtuma",
+    "Kesäyön festarit"
+   ],
+   [
+    "Milloin",
+    "11.–13.6.2027"
+   ],
+   [
+    "Missä",
+    "Rantapuisto"
+   ],
+   [
+    "Hinta",
+    "Vapaa pääsy"
+   ]
+  ],
+  "saannotOtsikko": "Graafikon tarkistuslista",
+  "tarkistaNappi": "Tarkista juliste",
+  "jatkaNappi": "Jatka perusteluihin",
+  "takaisinNappi": "Muokkaa julistetta",
+  "valmisNappi": "Katso tulos",
+  "lataaNappi": "Lataa juliste kuvana",
+  "perusteluOtsikko": "Upea juliste!",
+  "perusteluOhje": "Vastaa vielä kahteen kysymykseen. Kirjoita kumpaankin yksi tai kaksi lausetta.",
+  "ammattilainenTeksti": "Tätä työtä tekee",
+  "korttiYla": "JULISTE · KESÄYÖN FESTARIT",
+  "palaute": [
+   "Huippujuliste! Kaikki tärkeä on mukana, ja teksti erottuu hyvin.",
+   "Hyvä juliste! Pari asiaa vielä, niin se olisi valmis painoon.",
+   "Hyvä alku! Katso tarkistuslistan selitykset: niistä näet, mitä julisteeseen vielä tarvitaan."
+  ],
+  "kuvat": [
+   {
+    "avain": "jarvi",
+    "nimi": "Rantakonsertti",
+    "src": "../../images/koulutusalat/taide-jarvi.webp"
+   },
+   {
+    "avain": "markkinat",
+    "nimi": "Markkinailta",
+    "src": "../../images/koulutusalat/taide-markkinat.webp"
+   },
+   {
+    "avain": "pelit",
+    "nimi": "Pelitelta",
+    "src": "../../images/koulutusalat/taide-pelit.webp"
+   }
+  ],
+  "varit": [
+   {
+    "avain": "kesayo",
+    "nimi": "Kesäyö",
+    "tausta": "#1d1a45",
+    "teksti": "#ffd98a",
+    "korostus": "#ff7ab8"
+   },
+   {
+    "avain": "auringonlasku",
+    "nimi": "Auringonlasku",
+    "tausta": "#ff9a6b",
+    "teksti": "#ffffff",
+    "korostus": "#1d1a45"
+   },
+   {
+    "avain": "metsa",
+    "nimi": "Metsä",
+    "tausta": "#123a2c",
+    "teksti": "#eafff4",
+    "korostus": "#ffd98a"
+   },
+   {
+    "avain": "pastelli",
+    "nimi": "Pastelli",
+    "tausta": "#f6d7e8",
+    "teksti": "#fff3a0",
+    "korostus": "#8b5cf6"
+   },
+   {
+    "avain": "neon",
+    "nimi": "Neon",
+    "tausta": "#0b0b12",
+    "teksti": "#39ff88",
+    "korostus": "#ff5fa2"
+   }
+  ],
+  "fontit": [
+   {
+    "avain": "selkea",
+    "nimi": "Selkeä",
+    "css": "'Segoe UI', Arial, sans-serif",
+    "paino": 900,
+    "isot": true
+   },
+   {
+    "avain": "juhla",
+    "nimi": "Juhlava",
+    "css": "Georgia, 'Times New Roman', serif",
+    "paino": 700,
+    "tyyli": "italic"
+   },
+   {
+    "avain": "kasi",
+    "nimi": "Käsiala",
+    "css": "'Brush Script MT', 'Segoe Script', 'Comic Sans MS', cursive",
+    "paino": 400
+   },
+   {
+    "avain": "leveä",
+    "nimi": "Iso ja leveä",
+    "css": "Impact, 'Arial Black', sans-serif",
+    "paino": 400,
+    "isot": true
+   }
+  ],
+  "asettelut": [
+   {
+    "avain": "yla",
+    "nimi": "Ylhäällä"
+   },
+   {
+    "avain": "keski",
+    "nimi": "Keskellä"
+   },
+   {
+    "avain": "ala",
+    "nimi": "Alhaalla"
+   }
+  ],
+  "kysymykset": [
+   {
+    "kysymys": "Miksi valitsit juuri tämän kuvan ja nämä värit?",
+    "ammattilainen": "Graafinen suunnittelija",
+    "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto (kuvallisen ilmaisun toteuttaja)",
+    "placeholder": "Valitsin tämän kuvan, koska…"
+   },
+   {
+    "kysymys": "Kenelle juliste on suunnattu? Miten se näkyy julisteessa?",
+    "ammattilainen": "Kulttuurituottaja",
+    "tutkinto": "Kulttuurituottaja (AMK)",
+    "placeholder": "Juliste on suunnattu…"
+   }
+  ],
+  "ammattilaisetOtsikko": "Näissä töissä tehdään festareita ja julisteita",
+  "ammattilaiset": [
+   {
+    "nimi": "Graafinen suunnittelija",
+    "tehtava": "suunnittelee julisteet, logot ja opasteet",
+    "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto, jatkossa esimerkiksi muotoilija (AMK)"
+   },
+   {
+    "nimi": "Kulttuurituottaja",
+    "tehtava": "suunnittelee ja johtaa tapahtumia ja festareita",
+    "tutkinto": "Kulttuurituottaja (AMK), esimerkiksi Humak tai Metropolia"
+   },
+   {
+    "nimi": "Mediapalvelujen toteuttaja",
+    "tehtava": "tekee festareiden videot ja somepäivitykset",
+    "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto"
+   },
+   {
+    "nimi": "Valokuvaaja",
+    "tehtava": "ottaa kuvat julisteisiin ja nettiin",
+    "tutkinto": "Media-alan ja kuvallisen ilmaisun perustutkinto"
+   }
+  ]
+ }
 });
 </script><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-State.variables.pisteet = 0;
-Engine.play(&quot;start&quot;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;set $hideNavbar = true&gt;&gt;
-&lt;&lt;set $hideNavbar = false&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">&lt;h2&gt;Kysymys 1 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö lukemisesta, kirjoittamisesta tai tarinoiden kertomisesta?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="625,50" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-  &lt;p&gt;
-&lt;strong&gt;Humanistinen ala&lt;/strong&gt; keskittyy ihmisiin, kulttuureihin, kieliin ja yhteiskuntaan. Alalla opitaan ymmärtämään, miten ihmiset ajattelevat, toimivat ja viestivät keskenään. Humanistisella alalla voi työskennellä esimerkiksi opetus-, viestintä-, kirjasto-, museo- ja kulttuuritehtävissä sekä erilaisissa järjestöissä ja palveluammateissa.
-  &lt;/p&gt;
-  &lt;p&gt;
-&lt;strong&gt;Taideala&lt;/strong&gt; liittyy luovuuteen, ilmaisemiseen ja taiteen tekemiseen. Alalla kehitetään omia taitoja esimerkiksi kuvataiteessa, musiikissa, tanssissa, teatterissa, elokuvassa ja muotoilussa. Taidealan ammattilaiset voivat työskennellä esimerkiksi taiteilijoina, esiintyjinä, suunnittelijoina, ohjaajina ja kulttuurialan tehtävissä.
-  &lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-    [[Sopiiko humanistinen tai taideala sinulle? – Testaa tästä-&gt;Ammattitesti: alku]]
-      [[Suoraan tehtävään-&gt;Ammattitehtävä]]
-  &lt;/div&gt;
-  
-&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-</tw-passagedata><tw-passagedata pid="4" name="Ammattitesti: alku" tags="" position="400,325" size="100,100">&lt;h1&gt;Humanistinen ja taideala – sopiiko se minulle?&lt;/h1&gt;
-&lt;p&gt;
-Tässä testissä vastaat kysymyksiin, jotka liittyvät humanistiseen ja taidealaan sekä niissä tarvittaviin taitoihin. Testin lopuksi näet yhteenvedon siitä, kuinka hyvin kiinnostuksesi ja vahvuutesi voivat sopia näille aloille.
-&lt;/p&gt;
-&lt;p&gt;
-Testissä ei ole oikeita tai vääriä vastauksia. Vastaa sen mukaan, mikä tuntuu sinusta luontevimmalta.
-&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;
-&lt;&lt;link &quot;Aloita testi&quot;&gt;&gt;
-  &lt;&lt;set $pisteet = 0&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="" position="475,50" size="100,100">&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
+/* Festarit 48 tunnissa – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {luova: 0, tarkka: 0, kohtaaja: 0, vastuullinen: 0}&gt;&gt;&lt;&lt;set $kiinn to {graafinen: 0, musiikkiteknologi: 0, tulkki: 0, media: 0, artesaani: 0, muusikko: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="scene-kansi" position="475,50" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-jarvi-tausta.webp&quot;)&gt;&gt;&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;a class=&quot;cover-link&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;SugarCube.Engine.play(&#39;start&#39;)&quot;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
   &lt;div class=&quot;cover-inner&quot;&gt;
-    &lt;div class=&quot;cover-title&quot;&gt;
-     HUMANISTINEN JA TAIDEALA
-    &lt;/div&gt;
-
-      &lt;/div&gt;
-&lt;/a&gt;
-</tw-passagedata><tw-passagedata pid="6" name="Kysymys 2" tags="" position="400,575" size="100,100">&lt;h2&gt;Kysymys 2 / 10&lt;/h2&gt;
-&lt;p&gt;Kiinnostaako sinua eri kulttuurit, kielet tai historia?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="7" name="Kysymys 3" tags="" position="400,700" size="100,100">&lt;h2&gt;Kysymys 3 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö piirtämisestä, musiikista, tanssista tai muusta luovasta tekemisestä?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="8" name="Kysymys 4" tags="" position="400,825" size="100,100">&lt;h2&gt;Kysymys 4 / 10&lt;/h2&gt;
-&lt;p&gt;Haluaisitko tehdä työtä, jossa saat ilmaista itseäsi?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="9" name="Kysymys 5" tags="" position="400,950" size="100,100">&lt;h2&gt;Kysymys 5 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö työstä, jossa tapaat ihmisiä ja kuuntelet heidän tarinoitaan?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="10" name="Kysymys 6" tags="" position="400,1075" size="100,100">&lt;h2&gt;Kysymys 6 / 10&lt;/h2&gt;
-&lt;p&gt;Oletko kiinnostunut kulttuurista, tapahtumista tai esityksistä?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="11" name="Kysymys 7" tags="" position="400,1200" size="100,100">&lt;h2&gt;Kysymys 7 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö siitä, että saat käyttää mielikuvitustasi työssä?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="12" name="Kysymys 8" tags="" position="400,1325" size="100,100">&lt;h2&gt;Kysymys 8 / 10&lt;/h2&gt;
-&lt;p&gt;Haluaisitko vaikuttaa ihmisten ajatuksiin tai tunteisiin esimerkiksi tekstin, kuvan tai musiikin avulla?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="13" name="Kysymys 9" tags="" position="400,1450" size="100,100">&lt;h2&gt;Kysymys 9 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö rauhallisesta työstä, jossa saat keskittyä?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="14" name="Kysymys 10" tags="" position="400,1575" size="100,100">&lt;h2&gt;Kysymys 10 / 10&lt;/h2&gt;
-&lt;p&gt;Tuntuuko luova tai ihmisläheinen työ sinusta omalta?&lt;/p&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kyllä&quot;&gt;&gt;&lt;&lt;set $pisteet++&gt;&gt;&lt;&lt;goto &quot;Tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ei&quot;&gt;&gt;&lt;&lt;goto &quot;Tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="15" name="Tulos" tags="" position="400,1700" size="100,100">&lt;h1&gt;Tuloksesi&lt;/h1&gt;
-&lt;p&gt;Keräsit &lt;strong&gt;&lt;&lt;print $pisteet&gt;&gt;&lt;/strong&gt; / 10 pistettä.&lt;/p&gt;
-&lt;&lt;if $pisteet &gt;= 8&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Humanistinen ja taideala sopivat sinulle todennäköisesti erittäin hyvin.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;&lt;if $pisteet &gt;= 5 and $pisteet &lt;= 7&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Humanistinen ja taideala voivat sopia sinulle melko hyvin.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;&lt;if $pisteet &lt;= 4&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Nämä alat eivät ehkä ole ensisijaisesti sinulle, mutta yksittäisiä kiinnostavia suuntia voi silti löytyä.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Tiesitkö, että ...-&gt;Intro: tietovisa]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="Ammatti 1" tags="" position="625,300" size="100,100">&lt;h2&gt;Kuka suunnittelee kirjojen, lehtien ja mainosten ulkoasun?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Putkiasentaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Graafinen suunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 1 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Sähköasentaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="17" name="Ammatti 2" tags="" position="625,450" size="100,100">&lt;h2&gt;Kuka ohjaa teatteriesityksiä ja työskentelee näyttelijöiden kanssa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kuljettaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kirjastonhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Teatteriohjaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 2 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="18" name="Ammatti 3" tags="" position="625,675" size="100,100">&lt;h2&gt;Kuka työskentelee museoissa ja huolehtii näyttelyistä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Museotyöntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 3 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Myyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;h1&gt;Valitse ammatti&lt;/h1&gt;
-
-&lt;h2&gt;Humanistisen alan ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kirjastonhoitaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kirjastonhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Toimittaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Toimittaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kulttuurituottaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kulttuurituottaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Museotyöntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Museotyöntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-&lt;h2&gt;Taidealan ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Graafinen suunnittelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Graafinen suunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Muotisuunnittelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Muotisuunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Teatteriohjaaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Teatteriohjaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Pelisuunnittelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Pelisuunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Tapahtumatuottaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Tapahtumatuottaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Elokuvaohjaaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Elokuvaohjaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Laulaja-lauluntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Laulaja-lauluntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="20" name="Loppu" tags="" position="1000,700" size="100,100">&lt;h2&gt;Hyvä homma!&lt;/h2&gt;
-
-&lt;p&gt;
-Olet pohtinut omaa kiinnostustasi humanistisen ja taidealan ammatteihin.  
-Voit näyttää vastauksesi opettajalle tai jatkaa keskustelua opinto-ohjaajan kanssa.
-&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Muista tyhjentää tehtäväsivu ennen kuin poistut.&lt;/strong&gt;&lt;/p&gt;
-  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-
-    &lt;a class=&quot;macro-link btn-secondary&quot;
-       href=&quot;javascript:void(0)&quot;
-       onclick=&quot;resetAmmattitutkimus()&quot;&gt;
-       Tyhjennä
-    &lt;/a&gt;
-
-    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-      &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
-
+    &lt;p class=&quot;cover-pieni&quot;&gt;Taide ja humanistinen ala · tarina&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Taideala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Festarit 48 tunnissa · Ketä kaikkia tarvitaan, kun kaupunki juhlii koko viikonlopun?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M8 5.5v13l10.5-6.5z&quot; fill=&quot;currentColor&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Avaa portit&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Oppilaitokset" tags="" position="850,300" size="100,100">&lt;h2&gt;Humanistisen ja taidealan koulutukset&lt;/h2&gt;
+</tw-passagedata><tw-passagedata pid="21" name="Oppilaitokset" tags="" position="850,300" size="100,100">&lt;&lt;run setup.taustakuva(either(&quot;../../images/koulutusalat/taide-markkinat-tausta.webp&quot;, &quot;../../images/koulutusalat/taide-jarvi-tausta.webp&quot;))&gt;&gt;&lt;h2&gt;Humanistisen ja taidealan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
 Humanistisen ja taidealan ammatteihin voi opiskella monissa oppilaitoksissa eri puolilla Suomea.
@@ -1205,141 +430,164 @@ verkkosivuilta.
 &lt;/div&gt;
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
-   [[Palaa esitelmäpohjaan-&gt;Esitelmäpohja]]
+   [[Takaisin-&gt;Loppu]]
   
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Esitelmäpohja" tags="" position="925,575" size="100,100">&lt;&lt;script&gt;&gt;
-setTimeout(initLopputehtavaAutosave, 100);
-&lt;&lt;/script&gt;&gt;
-
-&lt;h2&gt;✨ Kerro valitsemastasi ammatista&lt;/h2&gt;
-
-&lt;p&gt;Olet valinnut ammatin: &lt;strong&gt;&lt;&lt;print $ammatti&gt;&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Hae tarvittaessa tietoa ammatista ja vastaa sitten kysymyksiin omin sanoin.&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;📚 Hae tietoa:
-  &lt;a href=&quot;https://tyomarkkinatori.fi/henkiloasiakkaat/ammattitieto&quot; target=&quot;_blank&quot;&gt;Työmarkkinatori&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
-  &lt;a href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Opintopolku.fi&lt;/a&gt;&lt;/p&gt;
+</tw-passagedata><tw-passagedata pid="43" name="start" tags="scene-puisto alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-markkinat-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Festarit 48 tunnissa&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet Kesäyön festareiden tapahtumakoordinaattori. Festarit kestävät 48 tuntia: on konsertteja, markkinat, pelitelta ja esityksiä. Miten sinä hoitaisit yllättävät tilanteet?&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;48&lt;/strong&gt;&lt;span&gt;tuntia&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;6000&lt;/strong&gt;&lt;span&gt;kävijää&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Festarit 48 tunnissa&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Kirjoita omin sanoin: mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q1&quot; aria-label=&quot;Mitä tässä ammatissa tehdään?&quot; placeholder=&quot;Kerro omin sanoin, mitä työhön kuuluu...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Mitä pitää osata?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q2&quot; aria-label=&quot;Mitä pitää osata?&quot; placeholder=&quot;Taidot, tiedot ja ominaisuudet, joita ammatissa tarvitaan...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Miksi sinä sopisit tähän ammattiin? (motivaatio + omat vahvuudet)&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q3&quot; aria-label=&quot;Miksi sinä sopisit tähän ammattiin?&quot; placeholder=&quot;Miksi ammatti kiinnostaa sinua ja mitkä omat vahvuutesi sopivat siihen...&quot;&gt;&lt;/textarea&gt;
-
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="44" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Festarit päättyvät su klo 18.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="45" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="46" name="Festarit 48 tunnissa" tags="scene-puisto" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {luova: 0, tarkka: 0, kohtaaja: 0, vastuullinen: 0}&gt;&gt;&lt;&lt;set $kiinn to {graafinen: 0, musiikkiteknologi: 0, tulkki: 0, media: 0, artesaani: 0, muusikko: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Festarit 48 tunnissa&lt;/h1&gt;
+&lt;p&gt;On perjantai, ja kello on 16.00. Olet Kesäyön festareiden tapahtumakoordinaattori. Sinä pidät huolen, että kaikki tietävät, mitä tehdä, ja ratkaiset yllättäviä tilanteita.&lt;/p&gt;
+&lt;p&gt;Rantapuistoon tulee viikonlopun aikana tuhansia ihmisiä. Ohjelmassa on konsertteja, markkinat, pelitelta, teatteria ja rantakonsertti.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Kaisa, festivaalituottaja:&lt;/strong&gt; ”Portit aukeavat kahden tunnin päästä. Mennään katsomaan, että kaikki on valmista!”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Mene portille&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto &quot;Portti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="47" name="Portti" tags="scene-portti" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Opasteet portilla&lt;/h2&gt;
+&lt;p&gt;Portilla on jo jono. Graafinen suunnittelija Sini katsoo festarikarttaa ja kalpenee.&lt;/p&gt;
+&lt;p&gt;Kartassa pelitelta on merkitty rantaan, vaikka se on puiston toisella laidalla. Kartat on jo painettu.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Sini, graafinen suunnittelija:&lt;/strong&gt; ”Tuhat karttaa ja kaikissa sama virhe. Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tehdään korjaustarra ja liimataan se karttoihin ennen kuin portit aukeavat.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.luova += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Nopea ja fiksu korjaus!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sini suunnittelee tarran, jossa on oikea paikka. Vapaaehtoiset liimaavat tarrat, ja kävijät löytävät pelitelttaan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Portit aukeavat kello 18.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;graafinen&quot; &quot;Rantalava&quot; &quot;Miltä graafisen suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ei haittaa. Ihmiset kyllä löytävät perille.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Väärä kartta hämmentää kävijöitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Moni etsisi pelitelttaa rannasta. Sini tekee korjaustarran, ja vapaaehtoiset liimaavat sen karttoihin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Portit aukeavat kello 18.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;graafinen&quot; &quot;Rantalava&quot; &quot;Miltä graafisen suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Painetaan kaikki kartat uudelleen.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Huolellista, mutta hidasta ja kallista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Uudet kartat eivät ehtisi ajoissa. Sini tekee korjaustarran, joka korjaa virheen heti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min. Portit aukeavat kello 18.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;graafinen&quot; &quot;Rantalava&quot; &quot;Miltä graafisen suunnittelijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
+</tw-passagedata><tw-passagedata pid="48" name="Rantalava" tags="scene-lava" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Avajaiskonsertti&lt;/h2&gt;
+&lt;p&gt;Avajaiskonsertti alkaa, ja yleisö tanssii. Puhelimesi soi.&lt;/p&gt;
+&lt;p&gt;Lähitalon asukas valittaa: musiikki kuuluu hänen olohuoneeseensa asti, ja hänen vauvansa ei saa unta.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Joonas, musiikkiteknologi:&lt;/strong&gt; ”Minä hoidan äänentoiston. Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tarkistetaan, että äänenvoimakkuus pysyy luvassa sovitussa rajassa. Käännetään kaiuttimet järvelle päin.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $aika += 900&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 2&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hienoa yhteistyötä!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Joonas mittaa äänen ja säätää kaiuttimia. Konsertti kuulostaa yhä hyvältä, ja lähitalossa on hiljaisempaa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min. Yö kuluu. Seuraava tilanne on lauantaiaamuna.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;musiikkiteknologi&quot; &quot;Infopiste&quot; &quot;Miltä musiikkiteknologin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Soitetaan vielä kovempaa. Festarit ovat vain kerran vuodessa.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $aika += 900&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei käy.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Festareilla on lupa, jossa on rajat äänenvoimakkuudelle. Joonas mittaa äänen ja kääntää kaiuttimet järvelle päin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min. Yö kuluu. Seuraava tilanne on lauantaiaamuna.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;musiikkiteknologi&quot; &quot;Infopiste&quot; &quot;Miltä musiikkiteknologin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Lopetetaan konsertti.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 900&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian jyrkkää.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Yleisö pettyisi, ja ongelman voi ratkaista muuten. Joonas säätää ääntä ja kaiuttimien suuntaa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Yö kuluu. Seuraava tilanne on lauantaiaamuna.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;musiikkiteknologi&quot; &quot;Infopiste&quot; &quot;Miltä musiikkiteknologin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="49" name="Infopiste" tags="scene-info" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Infopiste&lt;/h2&gt;
+&lt;p&gt;Lauantaiaamuna infopisteeseen tulee perhe. Isä viittoo: hän on kuuro ja haluaisi nähdä iltapäivän teatteriesityksen.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Laura, viittomakielen tulkki:&lt;/strong&gt; ”Olen festareilla töissä koko päivän. Mitä ehdotat?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Laura tulkkaa esityksen. Varataan perheelle paikat edestä, mistä tulkin näkee hyvin.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 195&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 2&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun tulkki seisoo lavan vieressä ja paikat ovat edessä, perhe voi seurata esitystä kuten muutkin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on iltapäivällä.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tulkki&quot; &quot;Pelitelta&quot; &quot;Miltä viittomakielen tulkin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Annetaan perheelle käsiohjelma, jossa on näytelmän juoni.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 195&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä lisä, mutta ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Juonen voi lukea, mutta repliikit jäisivät kuulematta. Laura tulkkaa esityksen, ja perhe saa paikat edestä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraava tilanne on iltapäivällä.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tulkki&quot; &quot;Pelitelta&quot; &quot;Miltä viittomakielen tulkin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Esitys on puhetta, joten ehdotetaan jotain muuta ohjelmaa.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 195&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Kaikilla on oikeus kulttuuriin.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Juuri siksi festareilla on tulkki. Laura tulkkaa esityksen, ja perhe saa paikat edestä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraava tilanne on iltapäivällä.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;tulkki&quot; &quot;Pelitelta&quot; &quot;Miltä viittomakielen tulkin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="50" name="Pelitelta" tags="scene-pelit" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-pelit-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Pelitelta&lt;/h2&gt;
+&lt;p&gt;Pelitelttaan on tullut kymmeniä nuoria pelaamaan. Festarit näyttävät turnauksen suorana lähetyksenä netissä.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Aaro, mediapalvelujen toteuttaja:&lt;/strong&gt; ”Haluaisin kuvata pelaajia lähikuvina lähetykseen. Saako kaikkien kasvot näyttää?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Vain niiden, jotka ovat antaneet luvan. Alaikäisten kohdalla kysytään myös huoltajalta.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $aika += 240&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 2&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Vastuullinen valinta!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Aaro kerää luvat ennen turnausta. Ne, jotka eivät halua näkyä, kuvataan selän takaa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min. Seuraava tilanne on lauantai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;media&quot; &quot;Markkinat&quot; &quot;Miltä mediapalvelujen toteuttajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kaikkia saa kuvata, koska teltta on julkinen paikka.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 240&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei ihan.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lähikuviin, jotka julkaistaan netissä, pitää kysyä lupa. Varsinkin lasten ja nuorten kohdalla. Aaro kerää luvat ensin.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on lauantai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;media&quot; &quot;Markkinat&quot; &quot;Miltä mediapalvelujen toteuttajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kuvataan vain näyttöjä ja käsiä, ei kasvoja.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 240&gt;&gt;&lt;&lt;set $piirre.luova += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Luova ratkaisu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Lähetys näyttää yhä hienolta. Kun joku antaa luvan, Aaro voi kuvata myös hänen kasvonsa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on lauantai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;media&quot; &quot;Markkinat&quot; &quot;Miltä mediapalvelujen toteuttajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="51" name="Markkinat" tags="scene-markkinat" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-markkinat-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Markkinailta&lt;/h2&gt;
+&lt;p&gt;Lauantai-iltana markkinoilla on tungosta, ja valot syttyvät puihin.&lt;/p&gt;
+&lt;p&gt;Artesaani Pirjo pitää lasten savipajaa. Savi loppuu kesken, ja jonossa on vielä 20 lasta.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Pirjo, artesaani:&lt;/strong&gt; ”Mitä nyt keksitään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tehdään koruja ja pikkuveistoksia kierrätysmateriaaleista, joita kojuilla on.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $aika += 1260&gt;&gt;&lt;&lt;set $piirre.luova += 2&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Luovaa!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pirjo kerää kojuilta pahvia, kangassuikaleita ja nappeja. Lapset tekevät hienoja koruja, ja jono liikkuu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min. Ilta ja yö kuluvat. Seuraava tilanne on sunnuntai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;artesaani&quot; &quot;Rantakonsertti&quot; &quot;Miltä artesaanin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Suljetaan paja. Ei voi mitään.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 1260&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Lapset pettyisivät.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pirjo keksii uuden työn kierrätysmateriaaleista, ja paja jatkuu.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Ilta ja yö kuluvat. Seuraava tilanne on sunnuntai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;artesaani&quot; &quot;Rantakonsertti&quot; &quot;Miltä artesaanin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Annetaan jokaiselle lapselle vain pieni nokare savea.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 1260&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Reilua, mutta…&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;…pienestä nokareesta ei saa paljon tehtyä. Pirjo keksii lisäksi korutyön kierrätysmateriaaleista.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Ilta ja yö kuluvat. Seuraava tilanne on sunnuntai-iltana.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;artesaani&quot; &quot;Rantakonsertti&quot; &quot;Miltä artesaanin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="52" name="Rantakonsertti" tags="scene-jarvi" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-jarvi-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Rantakonsertti&lt;/h2&gt;
+&lt;p&gt;Festarit päättyvät rantakonserttiin. Sellisti Helmi ja viulisti Ville valmistautuvat soittamaan järven rannalla.&lt;/p&gt;
+&lt;p&gt;Taivaalle kertyy tummia pilviä, ja sääennuste lupaa sadekuuroa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Helmi, muusikko:&lt;/strong&gt; ”Soittimet ovat puuta ja tosi arvokkaita. Jos ne kastuvat, ne voivat mennä rikki. Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Siirretään konsertti laiturin katoksen alle ja kerrotaan siitä yleisölle.&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;set $piirre.luova += 1&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Täydellinen ratkaisu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Katoksen alla soittimet pysyvät kuivina. Yleisö seuraa konserttia rannalta sateenvarjojen alta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;muusikko&quot; &quot;Festarit päättyvät&quot; &quot;Miltä muusikon työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Soitetaan vaikka sateessa. Show must go on!&quot;&gt;&gt;&lt;&lt;set $aika += 60&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian riskialtista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kastuessaan soitin voi haljeta. Konsertti siirretään laiturin katoksen alle.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 60 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;muusikko&quot; &quot;Festarit päättyvät&quot; &quot;Miltä muusikon työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Perutaan konsertti heti.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian aikaisin.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Ehkä ei sada ollenkaan. Ja vaikka satoi, konsertti onnistuu laiturin katoksen alla.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;muusikko&quot; &quot;Festarit päättyvät&quot; &quot;Miltä muusikon työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="53" name="Festarit päättyvät" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Festarit päättyvät&lt;/h1&gt;
+&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt; sunnuntaina. Viimeinen sävel soi järven yllä, ja yleisö taputtaa.&lt;/p&gt;
+&lt;p&gt;48 tunnissa festareilla kävi yli 6000 ihmistä. Kaikki sujui, koska moni ammattilainen teki työnsä hyvin.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Festareilla tarvittiin monta taiteen ja humanistisen alan ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Sini, graafinen suunnittelija&lt;/strong&gt; – korjasi festarikartan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Joonas, musiikkiteknologi&lt;/strong&gt; – hoiti äänentoiston&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Laura, viittomakielen tulkki&lt;/strong&gt; – tulkkasi teatteriesityksen&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Aaro, mediapalvelujen toteuttaja&lt;/strong&gt; – kuvasi turnauksen&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pirjo, artesaani&lt;/strong&gt; – piti lasten pajaa&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Helmi, muusikko&lt;/strong&gt; – soitti päätöskonsertin&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Sinä olit tapahtumakoordinaattori. Moneen näistä töistä voi opiskella ammattikoulussa: media-alan, musiikkialan tai taideteollisuusalan perustutkinnossa. Tulkiksi ja kulttuurituottajaksi opiskellaan ammattikorkeakoulussa.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="54" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/taide-jarvi-tausta.webp&quot;)&gt;&gt;&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
 &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;downloadLopputehtava()&quot;&gt;Lataa vastaukset&lt;/a&gt;
-&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaLopputehtava()&quot;&gt;Tyhjennä&lt;/a&gt;
-&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="23" name="Ammatti 4" tags="" position="625,925" size="100,100">&lt;h2&gt;Kuka kirjoittaa uutisia ja juttuja lehtiin ja verkkosivuille?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Toimittaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 4 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Varastonhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 4 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Siivooja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 4 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Festarijuliste&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Ammatti 5" tags="" position="625,1125" size="100,100">&lt;h2&gt;Kuka suunnittelee vaatteita ja asusteita?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Muotisuunnittelija&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 5 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Metsuri&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 5 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Automekaanikko&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 5 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+</tw-passagedata><tw-passagedata pid="55" name="Kutsu: ohje" tags="scene-puisto" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Festarijuliste&lt;/h2&gt;
+&lt;p&gt;Festarit onnistuivat! Nyt suunnitellaan jo ensi kesää. Sinä teet festareille julisteen kuten graafinen suunnittelija.&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;yhden julisteen&lt;/strong&gt; ensi kesän festareille. Teet kolme asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Kirjoita julisteeseen tapahtuman tiedot.&lt;/li&gt;&lt;li&gt;Valitse kuva, värit, fontti ja tekstien paikka. Juliste muuttuu heti.&lt;/li&gt;&lt;li&gt;Perustele kaksi asiaa omin sanoin.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Tarkistuslista kertoo, mitä julisteesta vielä puuttuu. Voit ladata julisteen kuvana. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="Palaute" tags="" position="625,1775" size="100,100">&lt;h1&gt;Hienoa, tietokilpailu on valmis!&lt;/h1&gt;
-
-&lt;p&gt;
-Humanistisella ja taidealalla työskentelevät ihmiset tekevät tärkeää työtä kulttuurin, viestinnän ja
-luovan ilmaisun parissa. Alan ammattilaiset vaikuttavat siihen, miten ihmiset ymmärtävät toisiaan,
-oppivat uutta ja kokevat taidetta ja kulttuuria.
-&lt;/p&gt;
-
-&lt;p&gt;
-Jos sinua kiinnostavat ihmiset, luovuus, kielet, kirjoittaminen, esiintyminen tai kulttuuri,
-humanistinen ja taideala voivat olla sinulle erittäin hyvä vaihtoehto.
-&lt;/p&gt;
-
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="56" name="Kutsu" tags="scene-puisto" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="57" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Julisteesi&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="58" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(either(&quot;../../images/koulutusalat/taide-jarvi-tausta.webp&quot;, &quot;../../images/koulutusalat/taide-markkinat-tausta.webp&quot;, &quot;../../images/koulutusalat/taide-pelit-tausta.webp&quot;))&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Hoidit festareiden yllättävät tilanteet 48 tunnissa ja teit julisteen ensi kesän festareille. Samalla tutustuit taiteen ja humanistisen alan ammatteihin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;
-[[Ammatinvalintatehtävä-&gt;Ammattitehtävä]]
+&lt;&lt;link &quot;Missä taidealaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Ammatti 6" tags="" position="625,1325" size="100,100">&lt;h2&gt;Kuka suunnittelee ja toteuttaa elokuvia ja videoita?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Elokuvaohjaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 6 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kirvesmies&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 6 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kampaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 6 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="Ammatti 7" tags="" position="625,1525" size="100,100">&lt;h2&gt;Kuka ohjaa ihmisiä kirjastoissa ja auttaa tiedon etsimisessä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kirjastonhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 7 oikein&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 7 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Myyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Ammatti 7 väärin&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="28" name="Ammatti 1 oikein" tags="" position="575,375" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Graafinen suunnittelija&lt;/strong&gt; suunnittelee kirjojen, lehtien, verkkosivujen ja mainosten ulkoasua. Hän tekee esimerkiksi logoja, julisteita ja kuvia.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 2]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Ammatti 1 väärin" tags="" position="675,375" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;graafinen suunnittelija&lt;/strong&gt;. Hän suunnittelee esimerkiksi mainoksia, logoja ja kirjojen ulkoasua.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 2]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="30" name="Ammatti 2 oikein" tags="" position="575,550" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Teatteriohjaaja&lt;/strong&gt; ohjaa näytelmiä ja työskentelee näyttelijöiden kanssa. Hän suunnittelee, miten esitys etenee ja miltä se näyttää.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 3]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="31" name="Ammatti 2 väärin" tags="" position="675,550" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;teatteriohjaaja&lt;/strong&gt;. Hän ohjaa näytelmiä ja esiintyjiä.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 3]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="32" name="Ammatti 3 oikein" tags="" position="575,775" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Museotyöntekijä&lt;/strong&gt; huolehtii näyttelyistä, kokoelmista ja opastaa kävijöitä museoissa.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 4]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="33" name="Ammatti 3 väärin" tags="" position="675,775" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;museotyöntekijä&lt;/strong&gt;. Hän työskentelee museoissa ja näyttelyissä.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 4]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="34" name="Ammatti 4 oikein" tags="" position="575,1025" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Toimittaja&lt;/strong&gt; kirjoittaa uutisia ja juttuja lehtiin, radioon, televisioon ja verkkosivuille.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 5]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="35" name="Ammatti 4 väärin" tags="" position="675,1025" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;toimittaja&lt;/strong&gt;. Hän kirjoittaa uutisia ja juttuja.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 5]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="36" name="Ammatti 5 oikein" tags="" position="575,1225" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Muotisuunnittelija&lt;/strong&gt; suunnittelee vaatteita ja asusteita.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 6]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="37" name="Ammatti 5 väärin" tags="" position="675,1225" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;muotisuunnittelija&lt;/strong&gt;. Hän suunnittelee vaatteita.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 6]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="38" name="Ammatti 6 oikein" tags="" position="550,1425" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Elokuvaohjaaja&lt;/strong&gt; suunnittelee ja ohjaa elokuvia ja videoita.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 7]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="39" name="Ammatti 6 väärin" tags="" position="675,1425" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;elokuvaohjaaja&lt;/strong&gt;. Hän ohjaa elokuvia ja videoita.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Ammatti 7]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="40" name="Ammatti 7 oikein" tags="" position="550,1625" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Kirjastonhoitaja&lt;/strong&gt; auttaa asiakkaita löytämään kirjoja ja tietoa kirjastoissa.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Palaute]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="41" name="Ammatti 7 väärin" tags="" position="675,1625" size="100,100">&lt;h2&gt;Ei ihan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;kirjastonhoitaja&lt;/strong&gt;. Hän auttaa tiedon etsimisessä.&lt;/p&gt;
-&lt;div class=&quot;intro-nappi&quot;&gt;[[Seuraava kysymys-&gt;Palaute]]&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="42" name="Intro: tietovisa" tags="" position="625,200" size="100,100">&lt;h1&gt;Tiesitkö että…?&lt;/h1&gt;
-
-&lt;p&gt;
-Oletko koskaan miettinyt, millaisia töitä eri ammateissa oikeasti tehdään?  Tässä tietovisassa pääset tutustumaan kiinnostaviin ammatteihin humanistisella ja taidealalla.
-Vastaa kysymyksiin, testaa tietosi ja opi samalla uutta tulevaisuuden työmahdollisuuksista.  
-Saatat löytää ammatin, jota et ole aiemmin edes ajatellut!
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-&lt;&lt;link &quot;Aloita tietovisa&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */

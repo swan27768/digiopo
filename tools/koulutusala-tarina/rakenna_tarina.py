@@ -42,8 +42,8 @@ IKONIT = {
 }
 
 # --------------------------------------------------------------------------
-def valinta(v, avain, seuraava, kysymys, siirtyma_teksti):
-    sets = f"<<set $aika += {v['aika']}>>"
+def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0):
+    sets = f"<<set $aika += {v['aika']}>>" + (f"<<set $aika += {lisa}>>" if lisa else "")
     for k, n in v.get("piirteet", {}).items():
         sets += f"<<set $piirre.{k} += {n}>>"
     run = f'<<run setup.tausta("{v["tausta"]}")>>' if v.get("tausta") else ""
@@ -64,7 +64,8 @@ def kuva_html(k):
             f'width="{kv["leveys"]}" height="{kv["korkeus"]}" loading="lazy" decoding="async"></figure>\n')
 
 def kohtaus_passage(k, nro, yht, seuraava, A):
-    vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], A.get("siirtymaTeksti", "")) for v in k["valinnat"])
+    # Kohtauskohtainen lisäaika (esim. yö kuluu) ja siirtymäteksti ohittavat alan oletukset
+    vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], k.get("siirtymaTeksti", A.get("siirtymaTeksti", "")), k.get("lisaaika", 0)) for v in k["valinnat"])
     tk = f'<<run setup.taustakuva("{k["taustakuva"]}")>>' if k.get("taustakuva") else ""
     return f"""{tk}<<include "HUD">>
 <p class="kohtaus-nro">Kohtaus {nro}/{yht}</p>

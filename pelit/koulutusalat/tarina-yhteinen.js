@@ -1305,6 +1305,215 @@
       };
     }
 
+    /* --- Tehtävätyyppi "juliste": oppilas suunnittelee festarijulisteen ---
+       Valinnat (kuva, värit, otsikkofontti, asettelu) ja tekstikentät päivittävät
+       esikatselun heti. Tarkistuslista: mitä, milloin, missä, lisätieto, lyhyt otsikko
+       ja tekstin kontrasti (WCAG). Juliste ladataan kuvana. Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "juliste") {
+      var JK_ = TH.kuvat || [], JV = TH.varit || [], JF = TH.fontit || [], JA = TH.asettelut || [];
+      var hae = function (lista, a) { return lista.filter(function (x) { return x.avain === a; })[0] || lista[0]; };
+      var jt = function (tila) {
+        if (!tila.juliste) tila.juliste = { kuva: JK_[0] && JK_[0].avain, vari: JV[0] && JV[0].avain, fontti: JF[0] && JF[0].avain, asettelu: "ala", nimi: "", aika: "", paikka: "", lisa: "" };
+        return tila.juliste;
+      };
+      var rgb = function (hex) { var h = hex.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };
+      var luminanssi = function (hex) {
+        var c = rgb(hex).map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+      };
+      var kontrasti = function (a, b) { var x = luminanssi(a), y = luminanssi(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+      var sanat = function (t) { return String(t || "").trim().split(/\s+/).filter(Boolean).length; };
+      var saannotJ = function (j) {
+        var v = hae(JV, j.vari), k = kontrasti(v.teksti, v.tausta);
+        return [
+          { nimi: "Mitä: tapahtuman nimi", ok: String(j.nimi).trim().length >= 3, selitys: "Nimi kertoo heti, mistä on kyse. Se on julisteen isoin teksti." },
+          { nimi: "Milloin: päivämäärä", ok: /\d/.test(j.aika), selitys: "Ilman päivämäärää kukaan ei tiedä, milloin tulla paikalle." },
+          { nimi: "Missä: paikka", ok: String(j.paikka).trim().length >= 3, selitys: "Paikka auttaa lukijaa löytämään perille." },
+          { nimi: "Lisätieto, esim. hinta tai ikäraja", ok: String(j.lisa).trim().length >= 3, selitys: "Esimerkiksi ”Vapaa pääsy” tai ”Kaikenikäisille” houkuttelee tulemaan." },
+          { nimi: "Lyhyt otsikko (enintään 4 sanaa)", ok: sanat(j.nimi) >= 1 && sanat(j.nimi) <= 4, selitys: "Julistetta katsotaan ohi kulkiessa vain pari sekuntia. Lyhyt otsikko ehditään lukea." },
+          { nimi: "Teksti erottuu taustasta", ok: k >= 4.5, selitys: "Tekstin ja taustan värien kontrastin pitää olla tarpeeksi suuri. Valitsemasi värien kontrasti on " + k.toFixed(1).replace(".", ",") + " (vähintään 4,5)." }
+        ];
+      };
+      var pisteetJ = function (j) { return saannotJ(j).filter(function (r) { return r.ok; }).length; };
+      var palauteJ = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 2 ? TH.palaute[1] : TH.palaute[2]; };
+      var paikat = { yla: "flex-start", keski: "center", ala: "flex-end" };
+      var liukuma = function (v, as) {
+        var c = rgb(v.tausta).join(",");
+        if (as === "yla") return "linear-gradient(to bottom, rgba(" + c + ",.92) 0%, rgba(" + c + ",.75) 38%, rgba(" + c + ",0) 72%)";
+        if (as === "keski") return "linear-gradient(to bottom, rgba(" + c + ",0) 8%, rgba(" + c + ",.85) 35%, rgba(" + c + ",.85) 65%, rgba(" + c + ",0) 92%)";
+        return "linear-gradient(to top, rgba(" + c + ",.92) 0%, rgba(" + c + ",.75) 38%, rgba(" + c + ",0) 72%)";
+      };
+      var julisteHTML = function (j) {
+        var v = hae(JV, j.vari), f = hae(JF, j.fontti), kv = hae(JK_, j.kuva);
+        return '<div class="jl-juliste" role="img" aria-label="Julisteesi esikatselu" style="background-image:url(\'' + suojaa(kv.src) + '\')">' +
+          '<div class="jl-peite" style="background:' + liukuma(v, j.asettelu) + ';justify-content:' + paikat[j.asettelu || "ala"] + '">' +
+          '<p class="jl-nimi" style="color:' + v.teksti + ';font-family:' + f.css + ';font-weight:' + (f.paino || 800) + ';font-style:' + (f.tyyli || "normal") + ';text-transform:' + (f.isot ? "uppercase" : "none") + '">' + (suojaa(j.nimi) || '<span class="jl-tyhja">Tapahtuman nimi</span>') + '</p>' +
+          '<p class="jl-aika" style="color:' + v.teksti + '">' + (suojaa(j.aika) || '<span class="jl-tyhja">Päivämäärä</span>') + '</p>' +
+          '<p class="jl-paikka" style="color:' + v.teksti + '">' + (suojaa(j.paikka) || '<span class="jl-tyhja">Paikka</span>') + '</p>' +
+          (j.lisa ? '<p class="jl-lisa" style="background:' + v.korostus + ';color:' + v.tausta + '">' + suojaa(j.lisa) + '</p>' : '') +
+          '</div></div>';
+      };
+      var listaJ = function (j, selitykset) {
+        return '<ul class="vk-saannot jl-saannot">' + saannotJ(j).map(function (r) {
+          return '<li class="' + (r.ok ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (r.ok ? "✓" : (selitykset ? "✗" : "○")) + '</span><span><strong>' + suojaa(r.nimi) + '</strong>' +
+            '<span class="sr-only">' + (r.ok ? " – kunnossa" : " – ei vielä") + '</span>' + (selitykset ? '<span class="vk-selitys">' + suojaa(r.selitys) + '</span>' : '') + '</span></li>';
+        }).join("") + '</ul>';
+      };
+      var valintaRyhma = function (otsikko, lista, avain, valittu, sisalto) {
+        return '<fieldset class="jl-ryhma"><legend>' + suojaa(otsikko) + '</legend><div class="jl-napit" role="radiogroup" aria-label="' + suojaa(otsikko) + '">' + lista.map(function (x) {
+          var on = x.avain === valittu;
+          return '<button type="button" class="jl-nappi" role="radio" aria-checked="' + on + '" data-k="' + avain + '" data-a="' + suojaa(x.avain) + '">' + sisalto(x) + '</button>';
+        }).join("") + '</div></fieldset>';
+      };
+
+      window.lataaJuliste = function () {
+        var j = jt(kutsuTila()), v = hae(JV, j.vari), f = hae(JF, j.fontti), kv = hae(JK_, j.kuva);
+        var W = 900, H = 1200, c = document.createElement("canvas"); c.width = W; c.height = H;
+        var g = c.getContext("2d"), img = new Image();
+        img.onload = function () {
+          var s = Math.max(W / img.width, H / img.height), w = img.width * s, h = img.height * s;
+          g.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+          var col = rgb(v.tausta).join(","), as = j.asettelu || "ala", gr;
+          if (as === "yla") { gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "rgba(" + col + ",.92)"); gr.addColorStop(0.38, "rgba(" + col + ",.75)"); gr.addColorStop(0.72, "rgba(" + col + ",0)"); }
+          else if (as === "keski") { gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0.08, "rgba(" + col + ",0)"); gr.addColorStop(0.35, "rgba(" + col + ",.85)"); gr.addColorStop(0.65, "rgba(" + col + ",.85)"); gr.addColorStop(0.92, "rgba(" + col + ",0)"); }
+          else { gr = g.createLinearGradient(0, H, 0, 0); gr.addColorStop(0, "rgba(" + col + ",.92)"); gr.addColorStop(0.38, "rgba(" + col + ",.75)"); gr.addColorStop(0.72, "rgba(" + col + ",0)"); }
+          g.fillStyle = gr; g.fillRect(0, 0, W, H);
+          g.textAlign = "center"; g.fillStyle = v.teksti;
+          var nimi = f.isot ? String(j.nimi).toUpperCase() : String(j.nimi);
+          g.font = (f.tyyli === "italic" ? "italic " : "") + (f.paino || 800) + " 96px " + f.css;
+          var rivit = rivita(g, nimi, W - 120);
+          var korkeus = rivit.length * 104 + 60 + 52 + (j.lisa ? 100 : 0);
+          var y = as === "yla" ? 140 : as === "keski" ? (H - korkeus) / 2 + 80 : H - korkeus - 20;
+          rivit.forEach(function (r) { g.fillText(r, W / 2, y); y += 104; });
+          g.font = "700 48px 'Segoe UI', Arial, sans-serif"; g.fillText(j.aika, W / 2, y); y += 60;
+          g.font = "500 40px 'Segoe UI', Arial, sans-serif"; g.fillText(j.paikka, W / 2, y); y += 52;
+          if (j.lisa) {
+            g.font = "800 38px 'Segoe UI', Arial, sans-serif";
+            var lw = g.measureText(j.lisa).width + 60; g.fillStyle = v.korostus;
+            g.fillRect((W - lw) / 2, y + 4, lw, 64); g.fillStyle = v.tausta; g.fillText(j.lisa, W / 2, y + 50);
+          }
+          var a = document.createElement("a"); a.download = D.ala + "_juliste.png"; a.href = c.toDataURL("image/png");
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        };
+        img.src = kv.src;
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutJ(alue, tila);
+        var j = jt(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/2 · Juliste") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ohje) + '</p>' +
+          (TH.faktat ? '<ul class="jl-faktat">' + TH.faktat.map(function (f) { return '<li><strong>' + suojaa(f[0]) + ':</strong> ' + suojaa(f[1]) + '</li>'; }).join("") + '</ul>' : '') + '</div>' +
+          '<div class="jl-asettelu"><div class="jl-esikatselu" aria-live="polite"></div><div class="jl-ohjaimet">' +
+          '<div class="jl-kentat">' +
+          [["nimi", "Tapahtuman nimi", 40], ["aika", "Päivämäärä", 30], ["paikka", "Paikka", 40], ["lisa", "Lisätieto (esim. hinta)", 30]].map(function (x) {
+            return '<label class="jl-kentta"><span>' + x[1] + '</span><input type="text" data-kentta="' + x[0] + '" maxlength="' + x[2] + '" autocomplete="off" value="' + suojaa(j[x[0]]) + '"></label>';
+          }).join("") + '</div>' +
+          valintaRyhma("Kuva", JK_, "kuva", j.kuva, function (x) { return '<img src="' + suojaa(x.src) + '" alt="" width="64" height="48"><span>' + suojaa(x.nimi) + '</span>'; }) +
+          valintaRyhma("Värit", JV, "vari", j.vari, function (x) { return '<span class="jl-vari" style="background:' + x.tausta + ';color:' + x.teksti + '">Aa</span><span>' + suojaa(x.nimi) + '</span>'; }) +
+          valintaRyhma("Otsikon fontti", JF, "fontti", j.fontti, function (x) { return '<span class="jl-fontti" style="font-family:' + x.css + ';font-weight:' + (x.paino || 800) + ';font-style:' + (x.tyyli || "normal") + '">Aa</span><span>' + suojaa(x.nimi) + '</span>'; }) +
+          valintaRyhma("Tekstien paikka", JA, "asettelu", j.asettelu, function (x) { return '<span>' + suojaa(x.nimi) + '</span>'; }) +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.saannotOtsikko || "Tarkistuslista") + '</p><div class="jl-lista"></div><div class="jl-pisteet"></div>' +
+          '</div></div>' +
+          '<p class="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jl-lataa">' + suojaa(TH.lataaNappi || "Lataa juliste kuvana") + '</button>' +
+          '<button type="button" class="kutsu-tarkista jl-tarkista">' + suojaa(TH.tarkistaNappi || "Tarkista juliste") + '</button>' +
+          '<button type="button" class="kutsu-seuraava jl-jatka" hidden>' + suojaa(TH.jatkaNappi || "Jatka perusteluihin") + '</button></div>';
+        var esik = alue.querySelector(".jl-esikatselu"), lista = alue.querySelector(".jl-lista"), pist = alue.querySelector(".jl-pisteet");
+        var tark = alue.querySelector(".jl-tarkista"), jatka = alue.querySelector(".jl-jatka"), vihje = alue.querySelector(".kutsu-vihje");
+        function paivita() {
+          esik.innerHTML = julisteHTML(j);
+          lista.innerHTML = listaJ(j, tila.tarkistettu);
+          var m = saannotJ(j).length, p = pisteetJ(j);
+          pist.innerHTML = tila.tarkistettu ? '<p class="sj-pisteet">Pisteet: <strong>' + p + '/' + m + '</strong> – ' + suojaa(palauteJ(p, m)) + '</p>' : '';
+          var valmiina = String(j.nimi).trim().length >= 1;
+          tark.disabled = !valmiina; jatka.hidden = !tila.tarkistettu;
+          vihje.textContent = !valmiina ? "Kirjoita ensin tapahtuman nimi." : tila.tarkistettu ? "Voit vielä muokata julistetta ja tarkistaa uudelleen, tai jatkaa." : "Kun juliste on mielestäsi valmis, tarkista se.";
+        }
+        Array.prototype.forEach.call(alue.querySelectorAll(".jl-kentta input"), function (inp) {
+          inp.addEventListener("input", function () { j[inp.getAttribute("data-kentta")] = inp.value; tila.tarkistettu = false; kutsuTallenna(); paivita(); });
+        });
+        Array.prototype.forEach.call(alue.querySelectorAll(".jl-nappi"), function (b) {
+          b.addEventListener("click", function () {
+            var k = b.getAttribute("data-k"); j[k] = b.getAttribute("data-a"); tila.tarkistettu = false; kutsuTallenna();
+            Array.prototype.forEach.call(alue.querySelectorAll('.jl-nappi[data-k="' + k + '"]'), function (x) { x.setAttribute("aria-checked", x === b ? "true" : "false"); });
+            paivita();
+          });
+        });
+        tark.addEventListener("click", function () { if (tark.disabled) return; tila.tarkistettu = true; kutsuTallenna(); paivita(); if (lista.scrollIntoView) lista.scrollIntoView({ block: "center" }); });
+        jatka.addEventListener("click", function () {
+          tila.vaihe = "perustelu"; kutsuTallenna(); window.kutsuPiirra();
+          var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView();
+        });
+        alue.querySelector(".jl-lataa").addEventListener("click", window.lataaJuliste);
+        paivita();
+      };
+
+      var piirraPerustelutJ = function (alue, tila) {
+        var kys = TH.kysymykset || [], j = jt(tila), m = saannotJ(j).length;
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/2 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<div class="jl-pieni">' + julisteHTML(j) + '</div>' +
+          '<p class="sj-pisteet">Julisteen pisteet: <strong>' + pisteetJ(j) + '/' + m + '</strong></p>' +
+          kys.map(function (k, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="jl-p' + i + '">' + (i + 1) + '. ' + suojaa(k.kysymys) + '</label>' +
+              '<textarea id="jl-p' + i + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jl-takaisin">' + suojaa(TH.takaisinNappi || "Muokkaa julistetta") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function p() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", p); });
+        alue.querySelector(".jl-takaisin").addEventListener("click", function () { tila.vaihe = "suunnittelu"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        p();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), j = jt(tila), p = pisteetJ(j), m = saannotJ(j).length;
+        var v = hae(JV, j.vari), f = hae(JF, j.fontti), kv = hae(JK_, j.kuva);
+        var h = '<div class="tuotekortti jl-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "JULISTE") + '</p>' +
+          '<p class="tk-lause">' + p + '/' + m + ' pistettä – ' + suojaa(palauteJ(p, m)) + '</p>' +
+          '<div class="jl-raportti-sisalto"><div class="jl-pieni">' + julisteHTML(j) + '</div><div>' +
+          '<dl class="tk-tiedot"><dt>Kuva</dt><dd>' + suojaa(kv.nimi) + '</dd><dt>Värit</dt><dd>' + suojaa(v.nimi) + '</dd><dt>Fontti</dt><dd>' + suojaa(f.nimi) + '</dd><dt>Tekstien paikka</dt><dd>' + suojaa(hae(JA, j.asettelu).nimi) + '</dd></dl>' +
+          listaJ(j, true) + '</div></div>' +
+          '<div class="intro-nappi"><a class="macro-link btn-secondary" href="javascript:void(0)" onclick="lataaJuliste()">' + suojaa(TH.lataaNappi || "Lataa juliste kuvana") + '</a></div></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, i) {
+          return '<li><strong>' + suojaa(k.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var j = jt(tila), m = saannotJ(j).length;
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetJ(j) + "/" + m + " pistettä\n\nJULISTE\n";
+        t += "Nimi: " + (j.nimi || "-") + "\nPäivämäärä: " + (j.aika || "-") + "\nPaikka: " + (j.paikka || "-") + "\nLisätieto: " + (j.lisa || "-") + "\n";
+        t += "Kuva: " + hae(JK_, j.kuva).nimi + "\nVärit: " + hae(JV, j.vari).nimi + "\nFontti: " + hae(JF, j.fontti).nimi + "\nTekstien paikka: " + hae(JA, j.asettelu).nimi + "\n\nTARKISTUSLISTA\n";
+        saannotJ(j).forEach(function (r) { t += (r.ok ? "✓ " : "✗ ") + r.nimi + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, i) { t += (i + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";

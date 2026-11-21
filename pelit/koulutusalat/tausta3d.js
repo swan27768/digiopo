@@ -1825,6 +1825,221 @@ const MAAILMAT = {
      LENTOKENTTÄ – "Myrsky lentokentällä": lumimyrsky illalla, aamulla aurinko
      Terminaali keskellä, kiitotie takana, torni oikealla, bussipysäkki edessä.
      ------------------------------------------------------------------------ */
+  festari(scene) {
+    const V = { taivas: 0x2a2350, hamara: 0xff9a6b, valo: 0xffd98a, pinkki: 0xff5fa2, turkoosi: 0x3ddbd9, violetti: 0x8b5cf6 };
+    scene.background = new THREE.Color(V.taivas);
+    scene.fog = new THREE.Fog(0x4a3a6a, 30, 120);
+    const hemi = new THREE.HemisphereLight(0xffc8b0, 0x22304a, 1.05); scene.add(hemi);
+    const aurinko = new THREE.DirectionalLight(0xffb27a, 1.0); aurinko.position.set(-30, 12, -40); scene.add(aurinko);
+
+    /* Taivaan liukuväri (iso pallo) */
+    const taivasC = document.createElement("canvas"); taivasC.width = 16; taivasC.height = 256;
+    const tg = taivasC.getContext("2d"), gr = tg.createLinearGradient(0, 0, 0, 256);
+    gr.addColorStop(0, "#1d1a45"); gr.addColorStop(0.45, "#5b3a7a"); gr.addColorStop(0.62, "#e07a6a"); gr.addColorStop(0.72, "#ffb27a"); gr.addColorStop(1, "#ffb27a");
+    tg.fillStyle = gr; tg.fillRect(0, 0, 16, 256);
+    const taivasTx = new THREE.CanvasTexture(taivasC); taivasTx.colorSpace = THREE.SRGBColorSpace;
+    const taivas = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 16), new THREE.MeshBasicMaterial({ map: taivasTx, side: THREE.BackSide, fog: false }));
+    scene.add(taivas);
+
+    /* Maa ja järvi */
+    const maa = new THREE.Mesh(new THREE.PlaneGeometry(200, 120), mat(0x3f6b3a, { roughness: 1, metalness: 0 })); maa.rotation.x = -Math.PI / 2; maa.position.z = 30; scene.add(maa);
+    const jarvi = new THREE.Mesh(new THREE.PlaneGeometry(260, 120), new THREE.MeshStandardMaterial({ color: 0x6a5a8a, roughness: 0.25, metalness: 0.6 }));
+    jarvi.rotation.x = -Math.PI / 2; jarvi.position.set(0, -0.05, -60); scene.add(jarvi);
+    const ranta = new THREE.Mesh(new THREE.PlaneGeometry(200, 3), mat(0xc9b28a, { roughness: 1, metalness: 0 })); ranta.rotation.x = -Math.PI / 2; ranta.position.set(0, 0.01, -1); scene.add(ranta);
+    /* Saaret horisontissa */
+    [[-60, -95, 14], [-20, -100, 10], [40, -92, 18], [80, -98, 12]].forEach(([x, z, r]) => {
+      const s = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), mat(0x1d2a2a, { roughness: 1, metalness: 0 })); s.scale.y = 0.25; s.position.set(x, 0, z); scene.add(s);
+    });
+    const heijastus = new THREE.Mesh(new THREE.PlaneGeometry(14, 60), new THREE.MeshBasicMaterial({ color: 0xffb27a, transparent: true, opacity: 0.25, depthWrite: false, blending: THREE.AdditiveBlending }));
+    heijastus.rotation.x = -Math.PI / 2; heijastus.position.set(-20, 0.02, -50); scene.add(heijastus);
+
+    /* Puut */
+    const runkoMat = mat(0x4a3324, { metalness: 0, roughness: 1 }), latvaMat = [mat(0x1f4a2e, { metalness: 0, roughness: 1 }), mat(0x2b5a33, { metalness: 0, roughness: 1 })];
+    function puu(x, z, k) {
+      const g = new THREE.Group(); const s = k || 1;
+      const r = sylinteri(0.25 * s, 0.35 * s, 3 * s, runkoMat, 8); r.position.y = 1.5 * s; g.add(r);
+      const l = new THREE.Mesh(new THREE.SphereGeometry(2.2 * s, 10, 8), latvaMat[Math.floor(Math.random() * 2)]); l.position.y = 4.5 * s; l.scale.y = 1.3; g.add(l);
+      g.position.set(x, 0, z); scene.add(g);
+    }
+    for (let i = 0; i < 26; i++) { const x = -60 + Math.random() * 120, z = 18 + Math.random() * 30; if (Math.abs(x) < 8 && z < 30) continue; puu(x, z, 0.9 + Math.random() * 0.8); }
+    [[-34, 4], [-30, 10], [34, 6], [38, 12], [-14, 22], [16, 24]].forEach(([x, z]) => puu(x, z, 1.4));
+
+    /* Valoköynnökset */
+    const lamput = [];
+    function koynnos(a, b, n, roikku) {
+      for (let i = 0; i <= n; i++) {
+        const t = i / n, x = a[0] + (b[0] - a[0]) * t, z = a[2] + (b[2] - a[2]) * t, y = a[1] + (b[1] - a[1]) * t - Math.sin(Math.PI * t) * roikku;
+        const l = new THREE.Mesh(new THREE.SphereGeometry(0.09, 6, 4), hehku(V.valo, 2.4)); l.position.set(x, y, z); scene.add(l); lamput.push(l);
+      }
+      [a, b].forEach((p) => { const t = sylinteri(0.06, 0.06, p[1], mat(0x333333), 6); t.position.set(p[0], p[1] / 2, p[2]); scene.add(t); });
+    }
+    /* Markkinakatu (oikealla) */
+    for (let i = 0; i < 4; i++) koynnos([8 + i * 5, 4, 10], [8 + i * 5 + 5, 4, 10], 12, 0.8);
+    for (let i = 0; i < 4; i++) koynnos([8 + i * 5, 4, 15], [8 + i * 5 + 5, 4, 15], 12, 0.8);
+    koynnos([-12, 4.5, 6], [6, 4.5, 6], 30, 1.2);
+
+    /* Kojut */
+    const kojuVarit = [0xd94860, 0xf2a541, 0x3b8fd9, 0x2f9e6e, 0xb15dd1, 0xf08aa0];
+    function koju(x, z, v, ry) {
+      const g = new THREE.Group();
+      const poyta = laatikko(2.4, 0.9, 1.2, mat(0x8a6a4a, { metalness: 0 })); poyta.position.y = 0.45; g.add(poyta);
+      const katto = new THREE.Mesh(new THREE.ConeGeometry(1.95, 1.2, 4), mat(v, { metalness: 0, roughness: 0.8 })); katto.rotation.y = Math.PI / 4; katto.position.y = 2.9; g.add(katto);
+      [[-1.1, -0.6], [1.1, -0.6], [-1.1, 0.6], [1.1, 0.6]].forEach(([a, b]) => { const t = sylinteri(0.04, 0.04, 2.4, mat(0xdddddd), 6); t.position.set(a, 1.2, b); g.add(t); });
+      for (let i = 0; i < 5; i++) { const tuote = laatikko(0.25, 0.25 + Math.random() * 0.3, 0.25, mat(kojuVarit[(i + 2) % 6], { metalness: 0 })); tuote.position.set(-0.9 + i * 0.45, 1.0, 0); g.add(tuote); }
+      g.position.set(x, 0, z); g.rotation.y = ry || 0; scene.add(g);
+    }
+    for (let i = 0; i < 4; i++) { koju(10.5 + i * 5, 8.2, kojuVarit[i], 0); koju(10.5 + i * 5, 16.8, kojuVarit[(i + 3) % 6], Math.PI); }
+
+    /* Päälava rannalla */
+    const lava = new THREE.Group();
+    const lattia = laatikko(14, 1.2, 7, mat(0x22222a)); lattia.position.y = 0.6; lava.add(lattia);
+    const takaseina = laatikko(14, 7, 0.3, mat(0x15151c)); takaseina.position.set(0, 4.7, -3.4); lava.add(takaseina);
+    const lavaKatto = laatikko(15, 0.4, 8, mat(0x2a2a33)); lavaKatto.position.y = 8.3; lava.add(lavaKatto);
+    [[-7, -3.6], [7, -3.6], [-7, 3.6], [7, 3.6]].forEach(([x, z]) => { const p = laatikko(0.4, 8, 0.4, mat(0x8a93a8, { metalness: 0.8, roughness: 0.3 })); p.position.set(x, 4.2, z); lava.add(p); });
+    const nayttoC = document.createElement("canvas"); nayttoC.width = 512; nayttoC.height = 256; const nayttoTx = new THREE.CanvasTexture(nayttoC); nayttoTx.colorSpace = THREE.SRGBColorSpace;
+    function piirraNaytto(t) {
+      const g = nayttoC.getContext("2d"), gg = g.createLinearGradient(0, 0, 512, 256);
+      gg.addColorStop(0, "#ff5fa2"); gg.addColorStop(0.5, "#8b5cf6"); gg.addColorStop(1, "#3ddbd9");
+      g.fillStyle = gg; g.fillRect(0, 0, 512, 256);
+      g.fillStyle = "#fff"; g.textAlign = "center"; g.font = "bold 58px 'Segoe UI', Arial"; g.fillText(t[0], 256, 118); g.font = "bold 34px 'Segoe UI', Arial"; g.fillText(t[1], 256, 178);
+      nayttoTx.needsUpdate = true;
+    }
+    piirraNaytto(["KESÄYÖN FESTARIT", "RANTALAVA"]);
+    const naytto = new THREE.Mesh(new THREE.PlaneGeometry(9, 4.5), new THREE.MeshBasicMaterial({ map: nayttoTx })); naytto.position.set(0, 4.6, -3.2); lava.add(naytto);
+    [-6, 6].forEach((x) => { const k = laatikko(1.4, 2.6, 1.2, mat(0x111111)); k.position.set(x, 2.5, 2.4); lava.add(k); });
+    const bandi = [];
+    [[-3, 0xff5fa2], [0, 0xffd98a], [3, 0x3ddbd9]].forEach(([x, v]) => {
+      const g = new THREE.Group(); const keho = sylinteri(0.26, 0.3, 0.9, mat(v, { metalness: 0 }), 10); keho.position.y = 2.25; g.add(keho);
+      const paa = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), mat(0xe8c3a0, { metalness: 0 })); paa.position.y = 2.95; g.add(paa);
+      g.position.set(x, 0, 0); lava.add(g); bandi.push(g);
+    });
+    const keilat = [];
+    [0xff5fa2, 0x3ddbd9, 0xffd98a, 0x8b5cf6].forEach((v, i) => {
+      const k = new THREE.Mesh(new THREE.ConeGeometry(1.4, 8, 16, 1, true), new THREE.MeshBasicMaterial({ color: v, transparent: true, opacity: 0.12, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+      k.geometry.translate(0, -4, 0); const g = new THREE.Group(); g.add(k); g.position.set(-5 + i * 3.3, 8, 1.5); g.userData.v = i; lava.add(g); keilat.push(g);
+    });
+    lava.position.set(-6, 0, 0); scene.add(lava);
+
+    /* Pelitelta (vasemmalla) */
+    const telta = new THREE.Group();
+    const teltta = laatikko(10, 4, 7, new THREE.MeshStandardMaterial({ color: 0xf4f6fa, roughness: 0.9, transparent: true, opacity: 0.92 })); teltta.position.y = 2; telta.add(teltta);
+    const teltanKatto = new THREE.Mesh(new THREE.ConeGeometry(7, 2.4, 4), mat(0xf4f6fa, { metalness: 0 })); teltanKatto.rotation.y = Math.PI / 4; teltanKatto.scale.z = 0.7; teltanKatto.position.y = 5.2; telta.add(teltanKatto);
+    const aukko = new THREE.Mesh(new THREE.PlaneGeometry(8, 3.4), new THREE.MeshBasicMaterial({ color: 0x0a0d1c })); aukko.position.set(0, 1.8, 3.51); telta.add(aukko);
+    const ruudut = [];
+    for (let i = 0; i < 6; i++) { const r = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.55), hehku([0x3ddbd9, 0x8b5cf6, 0x51cf66][i % 3], 2)); r.position.set(-3.2 + i * 1.3, 1.5, 3.4); telta.add(r); ruudut.push(r); }
+    const pelaajat = [];
+    for (let i = 0; i < 6; i++) { const p = new THREE.Group(); const k = sylinteri(0.22, 0.26, 0.7, mat(0x222831, { metalness: 0 }), 8); k.position.y = 0.9; p.add(k); const h = new THREE.Mesh(new THREE.SphereGeometry(0.17, 8, 6), mat(0xe8c3a0, { metalness: 0 })); h.position.y = 1.45; p.add(h); p.position.set(-3.2 + i * 1.3, 0, 4.1); telta.add(p); pelaajat.push(p); }
+    const pelikyltti = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.9), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["PELITELTTA"], "#3ddbd9", "#0a0d1c", 512, 92) })); pelikyltti.position.set(0, 3.7, 3.52); telta.add(pelikyltti);
+    telta.position.set(-28, 0, 12); telta.rotation.y = 0.5; scene.add(telta);
+
+    /* Info-piste ja portti */
+    const info = new THREE.Group();
+    const infoKoju = laatikko(3, 1.1, 1.4, mat(0x3b8fd9, { metalness: 0 })); infoKoju.position.y = 0.55; info.add(infoKoju);
+    const infoKatto = laatikko(3.4, 0.2, 2, mat(0xf4f6fa, { metalness: 0 })); infoKatto.position.y = 2.6; info.add(infoKatto);
+    [[-1.5, -0.8], [1.5, -0.8], [-1.5, 0.8], [1.5, 0.8]].forEach(([a, b]) => { const t = sylinteri(0.05, 0.05, 2.5, mat(0xdddddd), 6); t.position.set(a, 1.3, b); info.add(t); });
+    const infoK = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.7), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["i  INFO"], "#ffffff", "#3b8fd9", 256, 74) })); infoK.position.set(0, 2.2, 1.01); info.add(infoK);
+    const tulkki = new THREE.Group(); const tk = sylinteri(0.24, 0.28, 0.9, mat(0x8b5cf6, { metalness: 0 }), 10); tk.position.y = 1.05; tulkki.add(tk); const th = new THREE.Mesh(new THREE.SphereGeometry(0.19, 10, 8), mat(0xe8c3a0, { metalness: 0 })); th.position.y = 1.7; tulkki.add(th);
+    const kasi1 = sylinteri(0.06, 0.06, 0.5, mat(0x8b5cf6, { metalness: 0 }), 6), kasi2 = kasi1.clone(); kasi1.position.set(-0.3, 1.3, 0.15); kasi2.position.set(0.3, 1.3, 0.15); tulkki.add(kasi1, kasi2);
+    tulkki.position.set(0.6, 0, 1.6); info.add(tulkki);
+    info.position.set(4, 0, 26); scene.add(info);
+    const portti = new THREE.Group();
+    [-4, 4].forEach((x) => { const p = laatikko(0.5, 5, 0.5, mat(0xffd98a, { metalness: 0 })); p.position.set(x, 2.5, 0); portti.add(p); });
+    const porttiKyltti = new THREE.Mesh(new THREE.PlaneGeometry(8.5, 1.4), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["KESÄYÖN FESTARIT"], "#1d1a45", "#ffd98a", 1024, 168), side: THREE.DoubleSide })); porttiKyltti.position.y = 4.6; portti.add(porttiKyltti);
+    const opaste = new THREE.Group(); const opTolppa = sylinteri(0.06, 0.06, 2.6, mat(0x444444), 6); opTolppa.position.y = 1.3; opaste.add(opTolppa);
+    [["RANTALAVA →", 2.3], ["← PELITELTTA", 1.8], ["MARKKINAT →", 1.3]].forEach(([t, y], i) => { const k = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 0.4), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri([t], "#ffffff", ["#d94860", "#3b8fd9", "#2f9e6e"][i], 256, 56), side: THREE.DoubleSide })); k.position.y = y; opaste.add(k); });
+    opaste.position.set(5.5, 0, 1.5); portti.add(opaste);
+    portti.position.set(-2, 0, 34); scene.add(portti);
+
+    /* Laituri ja kamarimuusikot */
+    const laituri = new THREE.Group();
+    const lankut = laatikko(3, 0.2, 10, mat(0x9a7a55, { metalness: 0, roughness: 0.9 })); lankut.position.set(0, 0.35, -5); laituri.add(lankut);
+    for (let z = -9.5; z <= -0.5; z += 3) [-1.3, 1.3].forEach((x) => { const t = sylinteri(0.12, 0.12, 1, mat(0x5a4330, { metalness: 0 }), 6); t.position.set(x, -0.1, z); laituri.add(t); });
+    const muusikot = [];
+    [[-0.6, 0xe86a8a, true], [0.7, 0x222831, false]].forEach(([x, v, sello]) => {
+      const g = new THREE.Group(); const k = sylinteri(0.24, 0.3, 0.9, mat(v, { metalness: 0 }), 10); k.position.y = 0.95; g.add(k);
+      const p = new THREE.Mesh(new THREE.SphereGeometry(0.19, 10, 8), mat(0xe8c3a0, { metalness: 0 })); p.position.y = 1.6; g.add(p);
+      const soitin = new THREE.Mesh(new THREE.SphereGeometry(sello ? 0.35 : 0.14, 10, 8), mat(0x8a4a20, { metalness: 0.2, roughness: 0.4 })); soitin.scale.set(1, 1.5, 0.4);
+      soitin.position.set(sello ? 0.1 : 0.2, sello ? 0.9 : 1.35, 0.3); if (!sello) soitin.rotation.z = 1.1; g.add(soitin);
+      g.position.set(x, 0.45, -8.5); g.rotation.y = Math.PI; laituri.add(g); muusikot.push(g);
+    });
+    const katos = laatikko(3.2, 0.12, 2.6, new THREE.MeshStandardMaterial({ color: 0xf4f6fa, transparent: true, opacity: 0.85 })); katos.position.set(0, 2.9, -8.4); laituri.add(katos);
+    [[-1.4, -9.5], [1.4, -9.5], [-1.4, -7.3], [1.4, -7.3]].forEach(([a, b]) => { const t = sylinteri(0.04, 0.04, 2.5, mat(0xdddddd), 6); t.position.set(a, 1.7, b); laituri.add(t); });
+    laituri.position.set(18, 0, 0); scene.add(laituri);
+
+    /* Yleisö */
+    const yleiso = [];
+    const vaatteet = [0xff5fa2, 0xffd98a, 0x3ddbd9, 0xf4f6fa, 0x8b5cf6, 0xd94860, 0x2f9e6e, 0x3b8fd9];
+    const yGeo = new THREE.CylinderGeometry(0.22, 0.26, 0.9, 7), pGeo = new THREE.SphereGeometry(0.17, 8, 6), pMat = mat(0xe8c3a0, { metalness: 0 });
+    const yMat = vaatteet.map((v) => mat(v, { metalness: 0, roughness: 0.9 }));
+    function ihminen(x, z) {
+      const g = new THREE.Group(); const k = new THREE.Mesh(yGeo, yMat[Math.floor(Math.random() * yMat.length)]); k.position.y = 0.95; g.add(k);
+      const jalat = sylinteri(0.17, 0.17, 0.5, mat(0x2a2f38, { metalness: 0 }), 6); jalat.position.y = 0.25; g.add(jalat);
+      const p = new THREE.Mesh(pGeo, pMat); p.position.y = 1.58; g.add(p);
+      g.position.set(x, 0, z); g.userData.v = Math.random() * 6.28; scene.add(g); yleiso.push(g);
+    }
+    for (let i = 0; i < 70; i++) ihminen(-14 + Math.random() * 16, 6 + Math.random() * 9);
+    for (let i = 0; i < 30; i++) ihminen(9 + Math.random() * 20, 10.5 + Math.random() * 4);
+
+    /* Ilotulitus (loppu) ja sade */
+    const tuli = hiukkaset(600, 0xffffff, 0.3);
+    const tuliVarit = new Float32Array(600 * 3), tv = [[1, .37, .64], [1, .85, .54], [.24, .86, .85], [.55, .36, .96]];
+    for (let i = 0; i < 600; i++) tuliVarit.set(tv[Math.floor(i / 150)], i * 3);
+    tuli.points.geometry.setAttribute("color", new THREE.BufferAttribute(tuliVarit, 3)); tuli.points.material.vertexColors = true; tuli.points.visible = false; scene.add(tuli.points);
+    const keskukset = [[-20, 26, -40], [0, 30, -50], [20, 24, -42], [35, 28, -55]];
+    const suunnat = new Float32Array(600 * 3);
+    for (let i = 0; i < 600; i++) {
+      const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, r = Math.sqrt(1 - u * u), n = 0.75 + Math.random() * 0.25;
+      suunnat.set([Math.cos(a) * r * n, u * n, Math.sin(a) * r * n], i * 3);
+    }
+    const sade = hiukkaset(1200, 0xcfe0ff, 0.08); sade.points.material.blending = THREE.NormalBlending; sade.points.material.opacity = 0.6;
+    for (let i = 0; i < 1200; i++) { sade.pos.set([-10 + Math.random() * 50, Math.random() * 18, -20 + Math.random() * 30], i * 3); sade.nopeus[i] = 9 + Math.random() * 4; }
+    sade.points.visible = false; scene.add(sade.points);
+
+    const tila = { tila: "ilta" };
+    function asetaTila(t) {
+      tila.tila = t.tila || "ilta";
+      const s = tila.tila === "sade";
+      sade.points.visible = s; tuli.points.visible = tila.tila === "loppu";
+      hemi.intensity = s ? 0.75 : 1.05; aurinko.intensity = s ? 0.3 : 1.0;
+      scene.fog.color.set(s ? 0x5a6378 : 0x4a3a6a); scene.fog.near = s ? 12 : 30; scene.fog.far = s ? 70 : 120;
+      piirraNaytto(tila.tila === "loppu" ? ["KIITOS!", "NÄHDÄÄN ENSI KESÄNÄ"] : ["KESÄYÖN FESTARIT", "RANTALAVA"]);
+    }
+    function paivita(dt, t) {
+      lamput.forEach((l, i) => { l.material.emissiveIntensity = 2 + Math.sin(t * 2 + i * 0.7) * 0.6; });
+      keilat.forEach((k) => { k.rotation.z = Math.sin(t * 0.8 + k.userData.v) * 0.5; });
+      bandi.forEach((b, i) => { b.position.y = Math.abs(Math.sin(t * 4 + i)) * 0.12; });
+      yleiso.forEach((h) => { h.position.y = Math.max(0, Math.sin(t * 3 + h.userData.v)) * 0.12; });
+      ruudut.forEach((r, i) => { r.material.emissiveIntensity = 1.6 + Math.sin(t * 6 + i * 1.7) * 0.6; });
+      pelaajat.forEach((p, i) => { p.rotation.y = Math.sin(t * 2 + i) * 0.15; });
+      muusikot.forEach((m, i) => { m.rotation.z = Math.sin(t * 1.4 + i) * 0.05; });
+      kasi1.rotation.z = Math.sin(t * 5) * 0.8; kasi2.rotation.z = -Math.sin(t * 5 + 1) * 0.8;
+      heijastus.material.opacity = 0.2 + Math.sin(t * 0.7) * 0.06;
+      if (sade.points.visible) {
+        for (let i = 0; i < 1200; i++) { let y = sade.pos[i * 3 + 1] - sade.nopeus[i] * dt; if (y < 0) y = 18; sade.pos[i * 3 + 1] = y; }
+        sade.points.geometry.attributes.position.needsUpdate = true;
+      }
+      if (tuli.points.visible) {
+        for (let i = 0; i < 600; i++) {
+          const k = Math.floor(i / 150), vaihe = ((t * 0.35 + k * 0.27) % 1), c = keskukset[k], r = (1 - Math.pow(1 - vaihe, 3)) * 9;
+          tuli.pos[i * 3] = c[0] + suunnat[i * 3] * r; tuli.pos[i * 3 + 1] = c[1] + suunnat[i * 3 + 1] * r - vaihe * vaihe * 5; tuli.pos[i * 3 + 2] = c[2] + suunnat[i * 3 + 2] * r;
+        }
+        tuli.points.geometry.attributes.position.needsUpdate = true;
+      }
+    }
+    const kohtaukset = {
+      kansi:     { kamera: [-2, 6, 46],    kohde: [-2, 4, 0],    tila: {} },
+      puisto:    { kamera: [10, 16, 44],   kohde: [0, 1, 4],     tila: {} },
+      portti:    { kamera: [2, 3, 44],     kohde: [-2, 3, 34],   tila: {} },
+      lava:      { kamera: [-6, 4, 16],    kohde: [-6, 4, 0],    tila: {} },
+      pelit:     { kamera: [-20, 3.5, 22], kohde: [-28, 2, 12],  tila: {} },
+      markkinat: { kamera: [6, 2.6, 12.5], kohde: [26, 2, 12.5], tila: {} },
+      info:      { kamera: [8, 2.8, 33],   kohde: [4, 1.6, 26],  tila: {} },
+      jarvi:     { kamera: [18, 3, 4],     kohde: [18, 1.4, -9], tila: { tila: "sade" } },
+      loppu:     { kamera: [0, 5, 20],     kohde: [0, 10, -40],  tila: { tila: "loppu" } }
+    };
+    return { kohtaukset, oletus: "puisto", asetaTila, paivita };
+  },
+
   areena(scene) {
     const V = { yo: 0x0d1530, oranssi: 0xff8f3a, turkoosi: 0x3ddbd9, punainen: 0xe8434f, valko: 0xf4f6fa, sininen: 0x2f6fe0, pinkki: 0xff5fa2 };
     scene.background = new THREE.Color(V.yo);
