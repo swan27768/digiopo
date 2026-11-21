@@ -49,8 +49,10 @@ TEEMA = """:root {
   --kansi-nappi-hehku: 255,154,74;
 }
 html body #passages .passage .cover-link.cover-3d {
-  background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.7) 38%, rgba(var(--tausta-rgb),.25) 62%, rgba(var(--tausta-rgb),0) 82%) !important;
-}"""
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.94) 0%, rgba(var(--tausta-rgb),.78) 40%, rgba(var(--tausta-rgb),.35) 64%, rgba(var(--tausta-rgb),0) 84%) !important;
+}
+html body #passages .passage .cover-pieni, html body #passages .passage .cover-subtitle { text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.7); }
+html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }"""
 
 KANSI = dict(pieni="Urheilu, tanssi ja sirkus · tarina", otsikko="Urheiluala",
              alaotsikko="Finaalipäivä · Ketä kaikkia tarvitaan, kun nuoret onnistuvat isolla areenalla?",
@@ -58,11 +60,16 @@ KANSI = dict(pieni="Urheilu, tanssi ja sirkus · tarina", otsikko="Urheiluala",
 
 ALKU = dict(tag="Tarina · noin 15 min",
             teksti="Olet nuorten salibandyjoukkue Kotkien valmentaja. Tänään pelataan SM-finaali. Erätauolla areenalla esiintyy tanssi- ja sirkusryhmä. Miten sinä toimisit isona päivänä?",
-            faktat=[("6", "ammattilaista"), ("1", "finaali"), ("2", "esitystä")],
-            kuva=[dict(src="../../images/koulutusalat/urheilu-jaakiekko.webp", alt="Kaksi jääkiekkoilijaa taistelee kiekosta.", leveys=402, korkeus=270, teksti="Joukkuelajissa pelataan yhdessä ja reilusti."),
-                  dict(src="../../images/koulutusalat/urheilu-jalkapallo.webp", alt="Jalkapallo nurmella maalin edessä.", leveys=400, korkeus=250, teksti="Jokaisessa lajissa tarvitaan valmentajia ja ohjaajia.")])
+            faktat=[("6", "ammattilaista"), ("1", "finaali"), ("2", "esitystä")])
 
 KUVA = "../../images/koulutusalat/"
+# Aidot urheilukuvat koko ruudun taustoina (muokattu niin, ettei lähde tunnistu)
+TAUSTAKUVAT = {"kansi": KUVA + "urheilu-jaakiekko-tausta.webp",
+               "alku": KUVA + "urheilu-jalkapallo-tausta.webp",
+               "tehtava": KUVA + "urheilu-lentopallo-tausta.webp",
+               "kortti": KUVA + "urheilu-juoksija-tausta.webp",
+               "loppu": [KUVA + "urheilu-jaakiekko-tausta.webp", KUVA + "urheilu-jalkapallo-tausta.webp", KUVA + "urheilu-lentopallo-tausta.webp"],
+               "oppilaitokset": [KUVA + "urheilu-juoksija-tausta.webp", KUVA + "urheilu-jalkapallo-tausta.webp"]}
 
 TARINA_ALKU = dict(nimi="Finaalipäivä", tausta="halli", teksti="""<<include "HUD">>
 <h1>Finaalipäivä</h1>
@@ -74,8 +81,7 @@ TARINA_ALKU = dict(nimi="Finaalipäivä", tausta="halli", teksti="""<<include "H
 KOHTAUKSET = [
  dict(nimi="Aamuharjoitus", tausta="lammittely", otsikko="Aamuharjoitus", avain="liikuntaneuvoja",
       kysymys="Miltä liikuntaneuvojan työ näytti?",
-      kuva=[dict(src=KUVA + "urheilu-juoksija.webp", alt="Juoksija kävelee juoksuradalla lähtötelineiden luona.", leveys=216, korkeus=206, teksti="Lämmittely herättää kehon ennen suoritusta."),
-            dict(src=KUVA + "urheilu-lentopallo.webp", alt="Kaksi lentopalloilijaa pallot kainalossa harjoituksissa.", leveys=280, korkeus=248, teksti="Harjoituksissa opitaan yhdessä.")],
+      taustakuva=KUVA + "urheilu-juoksija-tausta.webp",
       johdanto="""<p>Areenalla on vielä hiljaista. Joukkue tulee aamuharjoitukseen.</p>
 <p>Pelaajat ovat innoissaan. Moni haluaa treenata tänään tosi kovaa, jotta illalla menisi hyvin.</p>
 <p class="puhe"><strong>Jere, liikuntaneuvoja:</strong> ”Minä vedän lämmittelyn. Millainen harjoitus tänään tehdään?”</p>""",
