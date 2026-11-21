@@ -77,6 +77,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   --teksti-pehmea: #f6dccb; --teksti-pehmea-rgb: 246,220,203;
   --teksti-vaalea: #fff4ea;
   --nappi-teksti: #3a0d1c;
+  /* Kannen aloitusnappi samanvärinen kuin tarinan muut napit */
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #ffd6e0;
+  --kansi-nappi-varjo: #b02a52;
+  --kansi-nappi-hehku: 255,107,139;
 }
 /* Vaalea 3D-tehdas: kannen teksti tarvitsee tumman pohjan */
 html body #passages .passage .cover-link.cover-3d {
@@ -747,7 +753,7 @@ Alla on esimerkkejä oppilaitoksista, joissa voi opiskella elintarvikealaa toise
 </tw-passagedata><tw-passagedata pid="41" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Maistatus klo 13.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="42" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
 </tw-passagedata><tw-passagedata pid="43" name="Uusi välipala" tags="scene-yleis" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {tarkka: 0, luova: 0, asiakas: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {valmistaja: 0, leipuri: 0, meijeristi: 0, laborantti: 0, kehittaja: 0, prosessi: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
-&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/elintarvike-tehdas-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;h1&gt;Uusi välipala&lt;/h1&gt;
 &lt;p&gt;Kello on 8.00. Olet TET-harjoittelijana Makupaja Oy:n elintarviketehtaalla. Tehtaassa tuoksuu paahdettu kaura ja mansikka.&lt;/p&gt;
 &lt;p&gt;Tänään valmistetaan ensimmäinen erä uutta välipalaa. Se on Marjapala: kaurapatukka, jossa on mansikkaa ja jogurttikuorrute.&lt;/p&gt;
@@ -809,7 +815,7 @@ Alla on esimerkkejä oppilaitoksista, joissa voi opiskella elintarvikealaa toise
 &lt;&lt;link &quot;Vähennetään sokeria ja lisätään mansikkaa.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.luova += 2&gt;&gt;&lt;&lt;set $piirre.asiakas += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä ehdotus!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Ronja tekee kokeilun. Uusi versio on raikkaampi, ja siinä on vähemmän sokeria. Testiryhmän kaksi jäsentä maistaa sitä, ja molemmat tykkäävät.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kehittaja&quot; &quot;Pakkauslinja&quot; &quot;Miltä tuotekehittäjän työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;link &quot;Pidetään resepti samana. Testiryhmä oli pieni.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Pienikin testiryhmä kertoo paljon.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jos moni sanoo saman asian, siitä kannattaa ottaa vaarin. Ronja vähentää sokeria ja lisää mansikkaa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle siirtyminen vie 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kehittaja&quot; &quot;Pakkauslinja&quot; &quot;Miltä tuotekehittäjän työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="49" name="Pakkauslinja" tags="scene-pakkaus" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="49" name="Pakkauslinja" tags="scene-pakkaus" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/elintarvike-tehdas-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
 &lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
 &lt;h2&gt;Pakkauslinja&lt;/h2&gt;
 &lt;p&gt;Marjapalat kulkevat pakkauskoneeseen. Huomaat jotain: tänään patukoihin lisättiin mantelirouhetta, mutta pakkauksen tekstissä ei lue ”sisältää mantelia”.&lt;/p&gt;

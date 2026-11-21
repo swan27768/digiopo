@@ -38,6 +38,12 @@ TEEMA = """:root {
   --teksti-pehmea: #f6dccb; --teksti-pehmea-rgb: 246,220,203;
   --teksti-vaalea: #fff4ea;
   --nappi-teksti: #3a0d1c;
+  /* Kannen aloitusnappi samanvärinen kuin tarinan muut napit */
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #ffd6e0;
+  --kansi-nappi-varjo: #b02a52;
+  --kansi-nappi-hehku: 255,107,139;
 }
 /* Vaalea 3D-tehdas: kannen teksti tarvitsee tumman pohjan */
 html body #passages .passage .cover-link.cover-3d {
@@ -52,7 +58,7 @@ ALKU = dict(tag="Tarina · noin 15 min",
             teksti="Olet TET-harjoittelijana elintarviketehtaalla. Tänään tehdään ensimmäinen erä uutta välipalaa, Marjapalaa. Kello 13 koululaiset maistavat sitä. Miten sinä toimisit?",
             faktat=[("6", "ammattilaista"), ("5", "tuntia aikaa"), ("1", "oma välipala")])
 
-TARINA_ALKU = dict(nimi="Uusi välipala", tausta="yleis", teksti="""<<include "HUD">>
+TARINA_ALKU = dict(nimi="Uusi välipala", tausta="yleis", teksti="""<<run setup.taustakuva("../../images/koulutusalat/elintarvike-tehdas-tausta.webp")>><<include "HUD">>
 <h1>Uusi välipala</h1>
 <p>Kello on 8.00. Olet TET-harjoittelijana Makupaja Oy:n elintarviketehtaalla. Tehtaassa tuoksuu paahdettu kaura ja mansikka.</p>
 <p>Tänään valmistetaan ensimmäinen erä uutta välipalaa. Se on Marjapala: kaurapatukka, jossa on mansikkaa ja jogurttikuorrute.</p>
@@ -122,6 +128,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Pienikin testiryhmä kertoo paljon.</strong></p><p>Jos moni sanoo saman asian, siitä kannattaa ottaa vaarin. Ronja vähentää sokeria ja lisää mansikkaa.</p>"),
       ]),
  dict(nimi="Pakkauslinja", tausta="pakkaus", otsikko="Pakkauslinja", avain="prosessi",
+      taustakuva="../../images/koulutusalat/elintarvike-tehdas-tausta.webp",
       kysymys="Miltä prosessinhoitajan työ näytti?",
       johdanto="""<p>Marjapalat kulkevat pakkauskoneeseen. Huomaat jotain: tänään patukoihin lisättiin mantelirouhetta, mutta pakkauksen tekstissä ei lue ”sisältää mantelia”.</p>
 <p class="puhe"><strong>Tomi, prosessinhoitaja:</strong> ”Hyvä havainto. Mitä teet?”</p>""",
