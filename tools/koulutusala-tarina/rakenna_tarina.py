@@ -155,7 +155,7 @@ $('body').addClass('hide-navbar');
 <p class="alku-tag">{S['tag']}</p>
 <h2 class="alku-otsikko">{A['tarinaNimi']}</h2>
 <p class="alku-teksti">{S['teksti']}</p>
-<ul class="alku-faktat">
+{kuva_html(S)}<ul class="alku-faktat">
 {faktat}
 </ul>
 <div class="intro-nappi"><<link "Aloita tarina">><<goto "{A['TARINA_ALKU']['nimi']}">><</link>></div>
@@ -192,7 +192,7 @@ $('body').addClass('hide-navbar');
 <p class="alku-tag">{TH['tag']}</p>
 <h2 class="alku-otsikko">{TH['nimi']}</h2>
 <p>{A['KUTSU_JOHDANTO']}</p>
-<p>Saat {TH['maara']}. {TH['ohjeAskelLause']}</p>
+{kuva_html(A.get('TEHTAVA', {}))}<p>Saat {TH['maara']}. {TH['ohjeAskelLause']}</p>
 <ol class="kutsu-askeleet">{''.join(f'<li>{x}</li>' for x in TH['askeleet'])}</ol>
 <p>{TH['lopuksi']}</p>
 <div class="intro-nappi"><<link "Aloita">><<goto "Kutsu">><</link>></div>

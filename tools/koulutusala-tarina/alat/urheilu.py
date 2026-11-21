@@ -58,7 +58,11 @@ KANSI = dict(pieni="Urheilu, tanssi ja sirkus · tarina", otsikko="Urheiluala",
 
 ALKU = dict(tag="Tarina · noin 15 min",
             teksti="Olet nuorten salibandyjoukkue Kotkien valmentaja. Tänään pelataan SM-finaali. Erätauolla areenalla esiintyy tanssi- ja sirkusryhmä. Miten sinä toimisit isona päivänä?",
-            faktat=[("6", "ammattilaista"), ("1", "finaali"), ("2", "esitystä")])
+            faktat=[("6", "ammattilaista"), ("1", "finaali"), ("2", "esitystä")],
+            kuva=[dict(src="../../images/koulutusalat/urheilu-jaakiekko.webp", alt="Kaksi jääkiekkoilijaa taistelee kiekosta.", leveys=402, korkeus=270, teksti="Joukkuelajissa pelataan yhdessä ja reilusti."),
+                  dict(src="../../images/koulutusalat/urheilu-jalkapallo.webp", alt="Jalkapallo nurmella maalin edessä.", leveys=400, korkeus=250, teksti="Jokaisessa lajissa tarvitaan valmentajia ja ohjaajia.")])
+
+KUVA = "../../images/koulutusalat/"
 
 TARINA_ALKU = dict(nimi="Finaalipäivä", tausta="halli", teksti="""<<include "HUD">>
 <h1>Finaalipäivä</h1>
@@ -70,6 +74,8 @@ TARINA_ALKU = dict(nimi="Finaalipäivä", tausta="halli", teksti="""<<include "H
 KOHTAUKSET = [
  dict(nimi="Aamuharjoitus", tausta="lammittely", otsikko="Aamuharjoitus", avain="liikuntaneuvoja",
       kysymys="Miltä liikuntaneuvojan työ näytti?",
+      kuva=[dict(src=KUVA + "urheilu-juoksija.webp", alt="Juoksija kävelee juoksuradalla lähtötelineiden luona.", leveys=216, korkeus=206, teksti="Lämmittely herättää kehon ennen suoritusta."),
+            dict(src=KUVA + "urheilu-lentopallo.webp", alt="Kaksi lentopalloilijaa pallot kainalossa harjoituksissa.", leveys=280, korkeus=248, teksti="Harjoituksissa opitaan yhdessä.")],
       johdanto="""<p>Areenalla on vielä hiljaista. Joukkue tulee aamuharjoitukseen.</p>
 <p>Pelaajat ovat innoissaan. Moni haluaa treenata tänään tosi kovaa, jotta illalla menisi hyvin.</p>
 <p class="puhe"><strong>Jere, liikuntaneuvoja:</strong> ”Minä vedän lämmittelyn. Millainen harjoitus tänään tehdään?”</p>""",
@@ -212,7 +218,7 @@ TEHTAVA = dict(
     nimi="Viikko-ohjelma", tag="Tehtävä · noin 25 min",
     maara="<strong>yhden viikon</strong> harjoitukset yhdelle nuorelle",
     ohjeAskelLause="Teet kolme asiaa:",
-    askeleet=["Valitse urheilija, tanssija tai sirkusartisti.",
+    askeleet=["Valitse urheilija, tanssija tai sirkusartisti. Vaihtoehtoja on viisi.",
               "Lisää harjoitukset ja lepo viikkokalenteriin. Mittari ja valmentajan muistilista auttavat.",
               "Perustele kaksi asiaa omin sanoin."],
     lopuksi="Lopuksi näet, kuinka hyvä ohjelmasta tuli. Lataa vastauksesi ja palauta ne Classroomiin.",
@@ -263,6 +269,24 @@ KUTSU_KORTIT = [
   "saannot": saannot("Salibandytreeni", 4, "ottelua", [
       {"tyyppi": "maara", "harj": "voima", "min": 1, "nimi": "Vähintään 1 voimaharjoitus",
        "selitys": "Vahvat lihakset suojaavat polvia ja nilkkoja. Salibandyssa tehdään paljon nopeita käännöksiä.", "ammattilainen": "Fysioterapeutti"},
+  ], (12, 18))},
+ {"nimi": "Onni, 15", "laji": "jääkiekkoilija", "ikoni": "🏒", "lajiNimi": "Jäätreeni",
+  "kuvaus": "Pelaa nuorten jääkiekkojoukkueessa. Perjantai-iltana on tärkeä ottelu.",
+  "kiinteat": dict(koulu(), **{"Pe-Ilta": {"nimi": "Ottelu", "ikoni": "🏆", "kuorma": 3}}),
+  "saannot": saannot("Jäätreeni", 3, "ottelua", [
+      {"tyyppi": "maara", "harj": "voima", "min": 1, "nimi": "Vähintään 1 voimaharjoitus",
+       "selitys": "Jääkiekossa kamppaillaan ja taklataan. Vahva keskivartalo ja jalat suojaavat loukkaantumisilta.", "ammattilainen": "Valmentaja"},
+      {"tyyppi": "maara", "harj": "liikkuvuus", "min": 1, "nimi": "Vähintään 1 liikkuvuusharjoitus",
+       "selitys": "Luistelu kuormittaa lonkkia ja nivusia. Liikkuvuusharjoitus auttaa niitä palautumaan.", "ammattilainen": "Fysioterapeutti"},
+  ], (12, 18))},
+ {"nimi": "Mira, 15", "laji": "juoksija, 400 metriä", "ikoni": "🏃", "lajiNimi": "Vauhtitreeni",
+  "kuvaus": "Juoksee seurassa 400 metriä. Keskiviikkoiltana on hallikilpailu.",
+  "kiinteat": dict(koulu(), **{"Ke-Ilta": {"nimi": "Kilpailu", "ikoni": "🏆", "kuorma": 3}}),
+  "saannot": saannot("Vauhtitreeni", 1, "kilpailua", [
+      {"tyyppi": "maara", "harj": "kesto", "min": 1, "nimi": "Vähintään 1 kestävyysharjoitus",
+       "selitys": "Rauhallinen pitkä lenkki kasvattaa peruskuntoa. Silloin jaksaa juosta kovaa koko matkan.", "ammattilainen": "Valmentaja"},
+      {"tyyppi": "maara", "harj": "voima", "min": 1, "nimi": "Vähintään 1 voimaharjoitus",
+       "selitys": "Vahvat jalat antavat juoksuun vauhtia ja suojaavat jänteitä.", "ammattilainen": "Fysioterapeutti"},
   ], (12, 18))},
  {"nimi": "Aino, 15", "laji": "sirkusartisti, ilma-akrobatia", "ikoni": "🤸", "lajiNimi": "Sirkustreeni",
   "kuvaus": "Harjoittelee ilmavanteessa. Sunnuntai-iltana on sirkuskoulun esitys.",
