@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-init="no-js">
+<html data-init="no-js" data-tausta-maailma="kauppa" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
-<title>Kaupan_ala_uusi</title>
+<title>Kaupan ala – Ostajana muotimessuilla</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
@@ -36,12 +36,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <script src="../../js/lisenssiportti.js"></script>
     <script src="../../js/seuranta.js" defer></script>
 
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("kaupan_ala_uusi.state");}catch(e){}</script>
 <script id="sc-clear-saves">
 (function(){
   var prefix = "sc-a41f1838-9deb-4455-9d52-7a88cb1cfb80-";
@@ -58,1328 +62,353 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Kaupan_ala_uusi" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="a41f1838-9deb-4455-9d52-7a88cb1cfb80" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================================
-   KAUPANALA – TYYLITIEDOSTO (SUGAR CUBE / TWINE)
-   Perustuu samaan rakenteeseen kuin ohessa ollut CSS-malli.
-   ============================================================ */
-
-/* ============================================================
-   0. VÄRIT (ANNETTU PALETTI) + JOHDANNAISET
-   ============================================================ */
+	<tw-storydata name="Kaupan_ala_uusi" startnode="5" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="a41f1838-9deb-4455-9d52-7a88cb1cfb80" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
 :root {
-  --brand-main:   #ff6b35;   /* lämpimän oranssi */
-  --brand-dark:   #004b52;   /* tumma viherturkoosi */
-  --brand-accent: #ffd166;   /* keltainen korostus */
-  --brand-soft:   #ffe9dc;   /* vaalea oranssi tausta */
-  --bg-page:      #f3f4f6;   /* sivun taustaväri */
-  --text-main:    #1f2933;   /* päätekstin väri */
-
-  /* Johdannaiset (mallin mukaiset roolit) */
-  --bg-body: var(--bg-page);
-  --accent-1: var(--brand-dark);     /* isot otsikot / vahva korostus */
-  --accent-2: var(--brand-main);     /* toissijainen teema */
-  --accent-3: var(--brand-accent);   /* highlight / pisteet */
-
-  --btn-bg: var(--brand-main);
-  --btn-text: #ffffff;
-
-  --card-bg: #ffffff;
-  --card-border: rgba(0, 75, 82, 0.18);
-
-  --link-text: var(--brand-dark);
-
-  --nav-bg: rgba(255, 233, 220, 0.96);
-  --nav-border: rgba(0, 75, 82, 0.22);
-
-  --score-color: var(--brand-accent);
-
-  --danger-bg: #b91c1c;
-  --highlight-color: #b91c1c;
+  --a1: #f3c969; --a1-rgb: 243,201,105;
+  --a2: #e0a83a; --a2-rgb: 224,168,58;
+  --a3: #f8dc9a;
+  --korostus: #ff7f8e; --korostus-rgb: 255,127,142;
+  --tausta: #141218; --tausta-rgb: 20,18,24;
+  --tausta-2: #221e28; --tausta-2-rgb: 34,30,40;
+  --paneeli: #1b1820; --paneeli-rgb: 27,24,32;
+  --paneeli-2: #29232f;
+  --tumma: #0c0b0f; --tumma-rgb: 12,11,15;
+  --reuna: #f3c969;
+  --teksti-pehmea: #e6dfd2; --teksti-pehmea-rgb: 230,223,210;
+  --teksti-vaalea: #fbf7f0;
+  --nappi-teksti: #241a05;
+  /* Kannen aloitusnappi samanvärinen kuin tarinan muut napit */
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #fff1cc;
+  --kansi-nappi-varjo: #8a6412;
+  --kansi-nappi-hehku: 243,201,105;
 }
-
-/* ============================================================
-   1. BODY JA PASSAGE
-   ============================================================ */
-body {
-  background: var(--bg-body);
-  color: var(--text-main);
+/* Vaalea messuhalli: kannen teksti tarvitsee tumman pohjan */
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.7) 38%, rgba(var(--tausta-rgb),.25) 62%, rgba(var(--tausta-rgb),0) 82%) !important;
 }
-
-#passages .passage {
-  color: var(--text-main);
-}
-
-/* ============================================================
-   2. TEKSTIT JA LINKIT
-   ============================================================ */
-#passages .passage a:not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* ============================================================
-   3. NAPIT (YHTEINEN TYYLI)
-   ============================================================ */
-#passages .passage a.btn,
-#passages .passage button.btn,
-.navbar-fixed button.btn,
-.intro-nappi a,
-.answer-group a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-
-  border: 2px solid rgba(0, 75, 82, 0.18);
-  border-radius: 999px;
-
-  padding: 0.75rem 1.6rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-
-  text-decoration: none !important;
-  cursor: pointer;
-
-  box-shadow: 0 4px 0 rgba(0,0,0,0.22);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-#passages .passage a.btn:hover,
-#passages .passage button.btn:hover,
-.navbar-fixed button.btn:hover,
-.intro-nappi a:hover,
-.answer-group a:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
-#passages .passage a.btn:active,
-#passages .passage button.btn:active,
-.navbar-fixed button.btn:active,
-.intro-nappi a:active,
-.answer-group a:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.28);
-}
-
-/* Päätoimintonappi (haluttaessa erottuvampi) */
-.btn-primary {
-  background: linear-gradient(var(--brand-main), #ff8357) !important;
-  border-color: rgba(0, 75, 82, 0.22) !important;
-}
-
-/* Vaaranappi */
-.btn--danger,
-a.macro-link.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: rgba(0,0,0,0.2) !important;
-  color: #ffffff !important;
-}
-
-/* Highlight-teksti */
-p.highlight {
-  color: var(--highlight-color) !important;
-  font-weight: 700;
-}
-
-/* ============================================================
-   4. NAPPIKORJAUS – GOOGLE SITES SAFE (MALLIN MUKAINEN)
-   ============================================================ */
-.intro-nappi,
-.answer-group {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex-wrap: wrap !important;
-}
-
-.intro-nappi a,
-.answer-group a {
-  width: auto !important;
-  min-width: 140px !important;
-  max-width: none !important;
-  white-space: nowrap !important;
-  text-align: center !important;
-}
-
-/* ============================================================
-   5. NAVBAR
-   ============================================================ */
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-
-  padding: 0.35rem 0.75rem;
-  min-height: 42px;
-
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.18);
-}
-
-/* Piilotus kansisivulla */
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   6. KORTIT (KOULUT, VIDEOT, SISÄLTÖLAATIKOT)
-   ============================================================ */
-.media-card,
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-}
-
-/* ============================================================
-   7. INFO-TEXT – OPETUSKORTTI
-   ============================================================ */
-#passages .info-text {
-  background: #ffffff;
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  padding: 0.9rem 1.1rem;
-  margin: 1.2rem auto;
-  max-width: 720px;
-  text-align: center;
-}
-
-#passages .info-text p {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: var(--text-main);
-}
-
-/* ============================================================
-   8. KANSISIVU – JULISTE
-   ============================================================ */
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;
-  display: flex !important;
-
-  justify-content: center !important;
-  align-items: center !important;
-
-  background:
-    linear-gradient(rgba(255,233,220,0.90), rgba(255,233,220,0.90)),
-    url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover !important;
-  background-position: center center !important;
-
-  text-decoration: none !important;
-  cursor: pointer;
-  z-index: 10000;
-}
-
-/* Otsikkokontti */
-#passages .passage .cover-inner {
-  text-align: center;
-  max-width: 900px;
-  padding: 2rem 2.2rem;
-}
-
-/* KANSISIVUN OTSIKKO – LOPULLINEN KOKO */
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
-  line-height: 1.05 !important;
-
-  font-size: clamp(1.8rem, 3.8vw, 3rem) !important;
-  color: var(--accent-1) !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* KANSISIVU: poista body-tausta kokonaan */
-body.hide-navbar {
-  background: none !important;
-}
-
-/* ============================================================
-   9. LOMAKKEET – TEKSTI MUSTAKSI + SIISTI KENTTÄTYYLI
-   ============================================================ */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input,
-#passages .lomake-ryhma select {
-  color: #000000 !important;
-}
-
-/* Tekstialueet (selkeä ja tilava) */
-#passages .lomake-ryhma textarea {
-  width: 100% !important;
-  min-height: 10rem !important;
-  height: 10rem !important;
-
-  padding: 1rem 1.1rem !important;
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-
-  border-radius: 16px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-  resize: vertical;
-}
-
-/* Tekstikentät (korkeampi oletus) */
-#passages .lomake-ryhma input[type="text"] {
-  width: 100% !important;
-  min-height: 3.2rem !important;
-
-  padding: 0.9rem 1.1rem !important;
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-
-  border-radius: 14px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-}
-
-/* ============================================================
-   10. TOIMINTORIVI – ESITELMÄPOHJAAN
-   ============================================================ */
-.action-row {
-  justify-content: center !important;
-  gap: 1rem !important;
-}
-
-.action-row a {
-  min-width: 200px !important;
-}
-
-/* ============================================================
-   11. PIENTÄ HIENOSÄÄTÖÄ
-   ============================================================ */
-#passages .passage .cover-link {
-  text-decoration: none !important;
-}
-
-/* Vastausnapit (kevyt erottelu, mutta brändin mukainen) */
-.answer-group a {
-  background: var(--brand-accent) !important;
-  color: var(--brand-dark) !important;
-  border-color: rgba(0, 75, 82, 0.22) !important;
-}
-/* ============================================================
-   SIDEBAR POIS KOKONAAN (TWINE / SUGARCUBE)
-   ============================================================ */
-
-/* Piilota itse sidebar */
-#ui-bar {
-  display: none !important;
-}
-
-/* Poista sen varaama tila */
-#story {
-  margin-left: 0 !important;
-}
-
-/* Estä hover-avautuminen ja animaatiot */
-#ui-bar.stowed,
-#ui-bar-toggle,
-#ui-bar-history,
-#ui-bar-jumpto,
-#ui-bar-back,
-#ui-bar-forward,
-#ui-bar-body {
-  display: none !important;
-}
-
-/* Mobiilissa myös */
-@media (max-width: 768px) {
-  #ui-bar {
-    display: none !important;
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Ostajana muotimessuilla – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "kauppa",
+ "alaNimi": "Kaupan ala",
+ "tarinaNimi": "Ostajana muotimessuilla",
+ "kello": {
+  "alku": 540,
+  "raja": 360
+ },
+ "katsoTeksti": "Katso messuhallia",
+ "aikaRivi": "Tilaukset olivat valmiina kello",
+ "kutsuTilanneOtsikko": "Tehtävä",
+ "piirteet": {
+  "analyytikko": {
+   "nimi": "Laskelmoija",
+   "kuvaus": "Päätät faktojen ja lukujen perusteella."
+  },
+  "tyyli": {
+   "nimi": "Tyylitaituri",
+   "kuvaus": "Näet, mikä näyttää hyvältä ja houkuttelee asiakkaita."
+  },
+  "neuvottelija": {
+   "nimi": "Neuvottelija",
+   "kuvaus": "Etsit ratkaisun, joka sopii kaikille."
+  },
+  "vastuu": {
+   "nimi": "Vastuullinen valitsija",
+   "kuvaus": "Mietit, miten tuotteet on tehty."
   }
-
-  #story {
-    margin-left: 0 !important;
+ },
+ "ammatit": {
+  "ostaja": {
+   "nimi": "Sisäänostaja",
+   "kuvaus": "Päättää, mitä tuotteita kauppa ostaa myyntiin.",
+   "tutkinto": "Tradenomi (AMK). Alkuun pääsee merkonomina",
+   "piirteet": [
+    "analyytikko",
+    "tyyli"
+   ]
+  },
+  "edustaja": {
+   "nimi": "Myyntiedustaja",
+   "kuvaus": "Myy tuotteita kaupoille ja neuvottelee hinnoista.",
+   "tutkinto": "Liiketoiminnan perustutkinto (merkonomi)",
+   "piirteet": [
+    "neuvottelija",
+    "analyytikko"
+   ]
+  },
+  "vastuu": {
+   "nimi": "Vastuullisuusasiantuntija",
+   "kuvaus": "Selvittää, miten ja missä tuotteet on tehty.",
+   "tutkinto": "Esimerkiksi tradenomi (AMK)",
+   "piirteet": [
+    "vastuu",
+    "analyytikko"
+   ]
+  },
+  "visualisti": {
+   "nimi": "Visualisti",
+   "kuvaus": "Suunnittelee näyteikkunat ja myymälän ilmeen.",
+   "tutkinto": "Taideteollisuusalan perustutkinto",
+   "piirteet": [
+    "tyyli",
+    "neuvottelija"
+   ]
+  },
+  "verkkokauppa": {
+   "nimi": "Verkkokauppa-asiantuntija",
+   "kuvaus": "Pitää verkkokaupan tuotesivut ja kampanjat kunnossa.",
+   "tutkinto": "Liiketoiminnan perustutkinto (merkonomi), jatkossa esimerkiksi tradenomi (AMK)",
+   "piirteet": [
+    "analyytikko",
+    "tyyli"
+   ]
+  },
+  "varasto": {
+   "nimi": "Varastonhoitaja",
+   "kuvaus": "Vastaanottaa, tarkistaa ja lähettää tuotteita.",
+   "tutkinto": "Logistiikan perustutkinto (varastonhoitaja)",
+   "piirteet": [
+    "analyytikko",
+    "vastuu"
+   ]
   }
-}
-/* ============================================================
-   KORJAUS: NAVBAR POISTETTU – EI PADDING-TOP-TARVETTA
-   ============================================================ */
-/* ============================================================
-   TESTIVALINTASIVU – OMA TURVALLINEN LAYOUT
-   ============================================================ */
-
-.testivalinta-wrap {
-  display: flex !important;
-  justify-content: center !important;
-  gap: 2rem !important;
-  max-width: 1100px !important;
-  margin: 2rem auto !important;
-  padding: 0 1rem !important;
-  flex-wrap: wrap !important;
-}
-
-.testibox {
-  flex: 1 1 420px !important;
-  max-width: 520px !important;
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 1.6rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
-  border: 1px solid rgba(0,75,82,0.18);
-  display: flex;
-  flex-direction: column;
-}
-
-.testibox .action-row {
-  margin-top: auto;
-}
-/* Muuta kaikki SugarCube-linkit napeiksi action-row:ssa */
-.action-row a.macro-link {
-  background: var(--brand-main) !important;
-  color: #fff !important;
-  padding: 0.75rem 1.6rem !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  text-decoration: none !important;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.22) !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ============================================================
-   IFRAME-UPOTUS: MARGINAALIT JA MOBIILIPARANNUKSET
-   ============================================================ */
-
-/* Nollaa SugarCuben ui-bar-marginaali – tärkeä iframe-upotuksessa */
-#story {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-top: 0 !important;
-}
-
-#passages {
-  padding: 0 1.2rem;
-  box-sizing: border-box;
-}
-
-#passages .passage {
-  padding: 1.5rem 1.4rem;
-  margin: 0 auto;
-  max-width: 860px;
-  box-sizing: border-box;
-}
-
-/* ============================================================
-   MOBIILIVERSIO – parannettu
-   ============================================================ */
-
-@media (max-width: 600px) {
-  #passages {
-    padding: 0 0.5rem;
+ },
+ "kutsuKortit": [
+  {
+   "nimi": "Leveälahkeiset farkut",
+   "ikoni": "👖",
+   "kuvaus": "Kevään kuumin farkkumalli.",
+   "osto": 22,
+   "myynti": 59,
+   "ryhma": "trendi",
+   "trendi": 3,
+   "vastuu": 1,
+   "menekki": 0.8
+  },
+  {
+   "nimi": "Valkoinen t-paita",
+   "ikoni": "👕",
+   "kuvaus": "Perusmalli, joka sopii kaikkeen.",
+   "osto": 4,
+   "myynti": 15,
+   "ryhma": "perus",
+   "trendi": 1,
+   "vastuu": 1,
+   "menekki": 0.95
+  },
+  {
+   "nimi": "Luomupuuvillainen t-paita",
+   "ikoni": "🌱",
+   "kuvaus": "Reilusti tehty luomupaita.",
+   "osto": 7,
+   "myynti": 22,
+   "ryhma": "vastuullinen",
+   "trendi": 1,
+   "vastuu": 3,
+   "menekki": 0.9
+  },
+  {
+   "nimi": "Kierrätysmateriaalitakki",
+   "ikoni": "🧥",
+   "kuvaus": "Kevyt takki kierrätetystä polyesteristä.",
+   "osto": 38,
+   "myynti": 99,
+   "ryhma": "vastuullinen",
+   "trendi": 2,
+   "vastuu": 3,
+   "menekki": 0.6
+  },
+  {
+   "nimi": "Lippis",
+   "ikoni": "🧢",
+   "kuvaus": "Lippis, jossa on iso logo.",
+   "osto": 6,
+   "myynti": 25,
+   "ryhma": "trendi",
+   "trendi": 2,
+   "vastuu": 1,
+   "menekki": 0.7
+  },
+  {
+   "nimi": "Paksupohjaiset tennarit",
+   "ikoni": "👟",
+   "kuvaus": "Somessa nähty kenkämalli.",
+   "osto": 30,
+   "myynti": 79,
+   "ryhma": "trendi",
+   "trendi": 3,
+   "vastuu": 1,
+   "menekki": 0.75
+  },
+  {
+   "nimi": "Collegeshortsit",
+   "ikoni": "🩳",
+   "kuvaus": "Mukavat shortsit kesään.",
+   "osto": 9,
+   "myynti": 29,
+   "ryhma": "perus",
+   "trendi": 1,
+   "vastuu": 2,
+   "menekki": 0.85
+  },
+  {
+   "nimi": "Neuleliivi",
+   "ikoni": "🧶",
+   "kuvaus": "Retrohenkinen liivi. Rohkea valinta!",
+   "osto": 14,
+   "myynti": 45,
+   "ryhma": "trendi",
+   "trendi": 3,
+   "vastuu": 2,
+   "menekki": 0.55
+  },
+  {
+   "nimi": "Reppu kierrätysmuovista",
+   "ikoni": "🎒",
+   "kuvaus": "Tehty kierrätetyistä muovipulloista.",
+   "osto": 15,
+   "myynti": 45,
+   "ryhma": "vastuullinen",
+   "trendi": 2,
+   "vastuu": 3,
+   "menekki": 0.7
+  },
+  {
+   "nimi": "Sukat (3 paria)",
+   "ikoni": "🧦",
+   "kuvaus": "Värikkäät sukat kolmen parin pakkauksessa.",
+   "osto": 3,
+   "myynti": 12,
+   "ryhma": "perus",
+   "trendi": 1,
+   "vastuu": 2,
+   "menekki": 0.95
+  },
+  {
+   "nimi": "Neonaurinkolasit",
+   "ikoni": "🕶️",
+   "kuvaus": "Viraalituote: voi myydä loppuun tai jäädä hyllyyn.",
+   "osto": 4,
+   "myynti": 19,
+   "ryhma": "trendi",
+   "trendi": 3,
+   "vastuu": 1,
+   "menekki": 0.4
+  },
+  {
+   "nimi": "Collegehuppari",
+   "ikoni": "👚",
+   "kuvaus": "Pehmeä huppari, joka myy joka vuosi.",
+   "osto": 12,
+   "myynti": 39,
+   "ryhma": "perus",
+   "trendi": 1,
+   "vastuu": 2,
+   "menekki": 0.9
   }
-
-  #passages .passage {
-    padding: 1rem 0.75rem;
-  }
-
-  #passages h1 {
-    font-size: 1.6rem !important;
-    line-height: 1.2 !important;
-  }
-
-  #passages h2 {
-    font-size: 1.3rem !important;
-  }
-
-  #passages h3 {
-    font-size: 1.1rem !important;
-  }
-
-  /* 16px estää iOS-autozoomin */
-  #passages textarea,
-  #passages input,
-  #passages select {
-    font-size: 16px !important;
-  }
-
-  /* Napit koko leveyteen ja pinotaan */
-  .intro-nappi,
-  .answer-group,
-  .action-row {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-    align-items: stretch !important;
-  }
-
-  .intro-nappi a,
-  .answer-group a,
-  .action-row a,
-  .action-row a.macro-link {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    white-space: normal !important;
-    text-align: center !important;
-    font-size: 0.95rem !important;
-    padding: 0.75rem 1rem !important;
-  }
-
-  /* Testibox-kortit pinotaan */
-  .testivalinta-wrap {
-    grid-template-columns: 1fr !important;
-    padding: 0 0.25rem !important;
-  }
-
-  .testibox {
-    max-width: 100% !important;
-  }
-
-  /* Start-nav pinotaan */
-  .start-nav {
-    grid-template-columns: 1fr !important;
-    margin: 1rem auto !important;
-    padding: 0 0.5rem !important;
-  }
-
-  .school-card,
-  .media-card,
-  .info-text {
-    padding: 0.9rem 0.85rem !important;
-    border-radius: 12px !important;
-  }
-}
-
-@media (max-width: 400px) {
-  #passages .passage {
-    padding: 0.75rem 0.5rem;
-  }
-
-  #passages h1 { font-size: 1.35rem !important; }
-  #passages h2 { font-size: 1.15rem !important; }
-}
-
-/* ============================================================
-   SAAVUTETTAVUUS: ISOMPI JA SELKEÄMPI TEKSTI
-   ============================================================ */
-
-/* Perusteksti */
-html {
-  font-size: 19px;            /* nostettu 16px → 19px */
-}
-
-/* Pääsisältö */
-#passages .passage {
-  line-height: 1.7;
-}
-
-/* Otsikot */
-#passages h1 {
-  font-size: 2.1rem;
-  line-height: 1.25;
-}
-
-#passages h2 {
-  font-size: 1.6rem;
-}
-
-#passages h3 {
-  font-size: 1.25rem;
-}
-
-/* Painikkeet */
-#passages .btn,
-#passages .action-row a.macro-link {
-  font-size: 1.05rem;
-}
-
-/* Lomakekentät */
-#passages textarea,
-#passages input,
-#passages select {
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-/* Vastauksen vaihtoehdot */
-.answer-group a {
-  font-size: 1.05rem;
-}
-
-/* Info- ja huomautuslaatikot */
-.info-text,
-.notice-box {
-  font-size: 1rem;
-  line-height: 1.7;
-}
-
-/* ============================================================
-   RAWTEXT = OIKEA HTML-KAPPALE (TASAPALSTA MAHDOLLINEN)
-   ============================================================ */
-
-.rawtext p {
-  text-align: justify !important;
-  hyphens: auto !important;
-  -webkit-hyphens: auto !important;
-  -ms-hyphens: auto !important;
-}
-#passages .passage .rawtext p {
-  text-align: justify !important;   /* molemmat reunat suorat */
-  text-align-last: justify !important;
-  margin: 0 !important;
-}
-#passages .passage .rawtext {
-  text-align: justify !important;
-}
-var(--brand-dark);
-}
-/* ============================================================
-   ALOITUSSIVU – KAIKKI KORTIT SAMAN KOKOISIKSI
-   ============================================================ */
-
-/* Rivi tasakorkuiseksi */
-.testivalinta-wrap {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.6rem;
-  align-items: stretch;   /* sama korkeus */
-}
-
-/* Kaikki kortit täyttävät rivin korkeuden */
-.testibox,
-.testivalinta-wrap .school-card {
-  height: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* Painike pysyy alhaalla */
-.testibox .action-row,
-.testivalinta-wrap .school-card .action-row {
-  margin-top: auto !important;
-}
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 1.2rem !important;
-  flex-wrap: wrap !important;
-}
-
-/* ============================================================
-   SUGARCUBE-LINKIT VIEREKKÄIN
-   ============================================================ */
-
-#passages .action-row a,
-#passages .action-row .macro-link {
-  display: inline-flex !important;
-  width: auto !important;
-  margin: 0 !important;
-}
-/* ============================================================
-   START-NAV – 3 KORTTIA AINA SAMALLE RIVILLE
-   ============================================================ */
-
-.start-nav {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.4rem;
-  max-width: 1200px;
-  margin: 2.5rem auto 0 auto;
-  padding: 0;
-}
-
-.start-nav li {
-  background: white;
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,.12);
-  text-align: center;
-}
-
-/* Mobiili */
-@media (max-width: 900px) {
-  .start-nav {
-    grid-template-columns: 1fr;
-  }
-}
-/* ============================================================
-   NAV-ICONIT
-   ============================================================ */
-
-.nav-icon {
-  width: 2.8rem;
-  height: 2.8rem;
-  fill: var(--brand-main);
-  margin: 0 auto 0.6rem auto;
-  display: block;
-}
-/* ============================================================
-   START-NAV – PAINIKELOOK
-   ============================================================ */
-
-.start-nav li a {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  background: var(--brand-main);
-  color: #fff !important;
-  padding: 0.65rem 1.6rem;
-  border-radius: 999px;
-  font-weight: 700;
-  text-decoration: none !important;
-  margin-top: 0.8rem;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
-}
-
-.start-nav li a:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-}
-
-.start-nav li a:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.28);
-}
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= NAVBAR POISTETTU ========= */
-
-(function () {
-  "use strict";
-
-  const AUTOSAVE_KEY = "kauppa_ammatti_autosave_v1";
-
-  /* ========= LATAA TXT ========= */
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const text =
-`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
-
-1. KOULUTUS JA OPPILAITOS:
-${v.koulutusPolku || ""}
-
-2. TYÖTEHTÄVÄT JA TYÖPÄIVÄT:
-${v.tyotehtavat || ""}
-
-3. MISSÄ TYÖTÄ VOISI TEHDÄ:
-${v.tyopaikat || ""}
-
-4. OMAT TAIDOT JA OMINAISUUDET:
-${v.vahvuudet || ""}
-
-5. HYVÄT PUOLET:
-${v.hyvatPuolet || ""}
-
-6. HAASTEET:
-${v.haasteet || ""}
-
-7. PALKKAUS JA TYÖEHDOT:
-${v.palkkaus || ""}
-
-8. HARJOITTELU / TYÖKOKEILU:
-${v.harjoittelu || ""}
-
-9. YHTEENVETO – SOPISIKO TYÖ SINULLE:
-${v.yhteenveto || ""}
-
-------------------------------
-Kaupan alan ammattitehtävä.`;
-
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (v.ammatti || "kaupanala") + "_esitelma.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  /* ========= AUTOSAVE ========= */
-  window.initAmmattiAutosave = function () {
-    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
-
-    fields.forEach((f,i) => f.value = saved[i] || "");
-
-    fields.forEach((field,i)=>{
-      field.addEventListener("input", ()=>{
-        const data = Array.from(fields).map(f=>f.value);
-        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
-
-        const keys = [
-          "koulutusPolku","tyotehtavat","tyopaikat",
-          "vahvuudet","hyvatPuolet","haasteet",
-          "palkkaus","harjoittelu","yhteenveto"
-        ];
-        keys.forEach((k,j)=> State.variables[k] = data[j] || "");
-      });
-    });
-  };
-
-  /* ========= TYHJENNÄ ========= */
-  window.resetAmmattitutkimus = function () {
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(t=>t.value="");
-
-    [
-      "koulutusPolku","tyotehtavat","tyopaikat",
-      "vahvuudet","hyvatPuolet","haasteet",
-      "palkkaus","harjoittelu","yhteenveto"
-    ].forEach(k=>State.variables[k]="");
-
-    localStorage.removeItem(AUTOSAVE_KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "kauppa_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "kauppa_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
-  
-/* Poistu-painike (sulje välilehti) */
-
-window.confirmExitStory = function () {
-  const ok = window.confirm("Haluatko varmasti sulkea esityksen?");
-  if (ok) {
-    window.close();
-  }
-};
-$(document).on('click', 'a.macro-link.btn--danger', function () {
-  SugarCube.Engine.play('Kansi');
-});
-
-document.addEventListener("passage:render", function () {
-  const wrap = document.querySelector(".testivalinta-wrap");
-  if (!wrap) return;
-
-  const cards = wrap.querySelectorAll(".testibox, .school-card");
-  if (!cards.length) return;
-
-  let maxTop = 0;
-
-  cards.forEach(c => {
-    c.style.marginTop = "0px";
-    const rect = c.getBoundingClientRect();
-    maxTop = Math.max(maxTop, rect.top);
-  });
-
-  cards.forEach(c => {
-    const rect = c.getBoundingClientRect();
-    const diff = maxTop - rect.top;
-    if (diff > 0) {
-      c.style.marginTop = diff + "px";
-    }
-  });
+ ],
+ "tehtava": {
+  "tyyppi": "budjetti",
+  "nimi": "Sisäänostajan budjetti",
+  "tag": "Tehtävä · noin 25 min",
+  "maara": "<strong>2 000 euroa<\/strong> ja 12 tuotetta, joista valita",
+  "ohjeAskelLause": "Teet kaksi asiaa:",
+  "askeleet": [
+   "Osta kevään valikoima. Pysy budjetissa ja valitse vähintään viisi eri tuotetta.",
+   "Vastaa kolmeen kysymykseen ja perustele valintasi."
+  ],
+  "lopuksi": "Peli laskee, paljonko myyt ja paljonko voittoa saat. Laskut ovat yksinkertaistettuja: verot ja muut kulut eivät ole mukana. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+  "tulosOtsikko": "Tilausvahvistuksesi",
+  "budjetti": 2000,
+  "askel": 5,
+  "maxMaara": 60,
+  "minKaytto": 1500,
+  "minTuotteita": 5,
+  "ostoOhje": "Kolibri on nuorten vaatekauppa. Osta kevään valikoima 2 000 eurolla. Lisää tuotteita viiden kappaleen erissä. Kokeile rohkeasti: voit muuttaa määriä niin monta kertaa kuin haluat.",
+  "tilanneOtsikko": "Sinä olet sisäänostaja",
+  "osa1": "Osa 1/2 · Ostot",
+  "osa2": "Osa 2/2 · Perustelut",
+  "valmisOstot": "Lähetä tilaus",
+  "takaisinOstoihin": "Muokkaa ostoja",
+  "valmisNappi": "Katso tilausvahvistus",
+  "perusteluOtsikko": "Tilaus on lähetetty!",
+  "perusteluOhje": "Vastaa vielä kolmeen kysymykseen. Kirjoita jokaiseen yksi tai kaksi lausetta.",
+  "ammattilainenTeksti": "Tätä työtä tekee",
+  "korttiYla": "TILAUSVAHVISTUS · KEVÄT",
+  "kauppaNimi": "Kolibri-vaatekauppa",
+  "ryhmat": {
+   "trendi": {
+    "nimi": "Trendi",
+    "vari": "#ff7f8e"
+   },
+   "perus": {
+    "nimi": "Perus",
+    "vari": "#8ec5ff"
+   },
+   "vastuullinen": {
+    "nimi": "Vastuullinen",
+    "vari": "#8ce99a"
+   }
+  },
+  "tavoitteet": [
+   {
+    "ryhma": "perus",
+    "min": 25,
+    "ok": "Perustuotteita on hyvin. Ne myyvät varmasti.",
+    "alle": "perustuotteita on vähän. Hupparit, t-paidat ja sukat myyvät joka kevät."
+   },
+   {
+    "ryhma": "vastuullinen",
+    "min": 20,
+    "ok": "Vastuullisia tuotteita on vähintään viidennes. Moni asiakas etsii niitä.",
+    "alle": "vastuullisia tuotteita on alle 20 %. Moni asiakas etsi niitä verkkokaupasta."
+   },
+   {
+    "ryhma": "trendi",
+    "max": 50,
+    "ok": "Trendituotteita on sopivasti.",
+    "yli": "yli puolet on trendituotteita. Jos trendi vaihtuu, osa jää myymättä."
+   }
+  ],
+  "kysymykset": [
+   {
+    "kysymys": "Käytit eniten rahaa tuotteeseen: {top}. Miksi?",
+    "ammattilainen": "Sisäänostaja",
+    "tutkinto": "Tradenomi (AMK). Alkuun pääsee merkonomina",
+    "placeholder": "Ostin tätä eniten, koska…"
+   },
+   {
+    "kysymys": "Asiakas kysyy, miksi vastuullinen t-paita on kalliimpi kuin halpa paita. Mitä vastaat?",
+    "ammattilainen": "Myyjä",
+    "tutkinto": "Liiketoiminnan perustutkinto (merkonomi)",
+    "placeholder": "Kertoisin asiakkaalle, että…"
+   },
+   {
+    "kysymys": "Osa tuotteista jää myymättä. Mitä teet niille?",
+    "ammattilainen": "Myymäläpäällikkö",
+    "tutkinto": "Esimerkiksi merkonomi ja työkokemus tai tradenomi (AMK)",
+    "placeholder": "Myymättä jääneet tuotteet…"
+   }
+  ]
+ }
 });
 </script><tw-tag name="Cover" color="green"></tw-tag><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-State.variables.pisteet = 0;
-Engine.play(&quot;start&quot;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;set $hideNavbar = true&gt;&gt;
-&lt;&lt;set $hideNavbar = false&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">&lt;h1&gt; Sopiiko kaupan ala sinulle?&lt;/h1&gt;
-&lt;div class=&quot;info-text&quot;&gt;
-&lt;p&gt;Tämä testi auttaa sinua pohtimaan, millaiset tiedot, taidot ja asiakaspalveluvalmiudet sinulla on suhteessa kaupan alaan. Vastaa kysymyksiin rehellisesti – lopuksi saat palautteen siitä, kuinka hyvin ala voisi sopia juuri sinulle.&lt;/p&gt;
-&lt;/div&gt;
-&lt;h3&gt;Kysymys 1 / 10&lt;/h3&gt;
-&lt;h2&gt;Mitä kiinteistövälittäjä tekee työssään?&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Huoltaa kiinteistöjä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Myy kiinteistöjä&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Sisustaa kiinteistöjä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="600,100" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-    &lt;p class=&quot;info-text rawtext&quot;&gt;
-Kaupan alalla työskennellään muun muassa liike-elämän, taloushallinnon sekä vakuutus- ja rahoitusalan tehtävissä. Työpaikkoja voivat olla esimerkiksi kaupat, yritykset, tilitoimistot, pankit, vakuutusyhtiöt, kirjastot ja erilaiset virastot. Alalla  korostuvat huolellisuus, järjestelmällisyys, yhteistyötaidot, stressinsietokyky ja rohkeus ottaa harkittuja riskejä. Myös asiakaspalvelutaidot ovat keskeisiä – kaupan alalla kohdataan hyvin erilaisia  ihmisiä ja tavoitteena on rakentaa toimivia ja luottamuksellisia asiakassuhteita.
-  &lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-    [[Sopiiko kaupan ala sinulle? – Testaa tästä-&gt;Testit: alku]]
-     [[Siirry suoraan tehtävään-&gt;Ammattitehtävä]]
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Testit: alku" tags="" position="400,325" size="100,100">&lt;ul class=&quot;start-nav&quot;&gt;
-
-&lt;li&gt;
-  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
-    &lt;path d=&quot;M4 4h16v12H4zM2 18h20v2H2z&quot;&gt;&lt;/path&gt;
-  &lt;/svg&gt;
-  &lt;span class=&quot;badge&quot;&gt;TESTI 1&lt;/span&gt;
-  &lt;h2&gt;Tietovisa&lt;/h2&gt;
-  &lt;&lt;link &quot;Aloita&quot; &quot;Kysymys 1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/li&gt;
-
-&lt;li&gt;
-  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
-    &lt;path d=&quot;M12 2a5 5 0 015 5v1h2v12H5V8h2V7a5 5 0 015-5z&quot;&gt;&lt;/path&gt;
-  &lt;/svg&gt;
-  &lt;span class=&quot;badge&quot;&gt;TESTI 2&lt;/span&gt;
-  &lt;h2&gt;Asiakaspalvelutesti&lt;/h2&gt;
-  &lt;&lt;link &quot;Aloita&quot; &quot;AP 1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/li&gt;
-
-&lt;li&gt;
-  &lt;svg class=&quot;nav-icon&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;
-    &lt;path d=&quot;M6 2h9l5 5v15H6z&quot;&gt;&lt;/path&gt;
-  &lt;/svg&gt;
-  &lt;h2&gt;Ammatti-tutkimustehtävä&lt;/h2&gt;
-  &lt;&lt;link &quot;Siirry&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/li&gt;
-
-&lt;/ul&gt;
-</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
+/* Ostajana muotimessuilla – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {analyytikko: 0, tyyli: 0, neuvottelija: 0, vastuu: 0}&gt;&gt;&lt;&lt;set $kiinn to {ostaja: 0, edustaja: 0, vastuu: 0, visualisti: 0, verkkokauppa: 0, varasto: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="5" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;a class=&quot;cover-link&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;SugarCube.Engine.play(&#39;start&#39;)&quot;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
   &lt;div class=&quot;cover-inner&quot;&gt;
-    &lt;div class=&quot;cover-title&quot;&gt;
-     KAUPPA JA HALLINTO
-    &lt;/div&gt;
-
-      &lt;/div&gt;
-&lt;/a&gt;
-</tw-passagedata><tw-passagedata pid="6" name="Kysymys 2" tags="" position="400,575" size="100,100">&lt;h3&gt;Kysymys 2 / 10&lt;/h3&gt;
-&lt;h2&gt;Mikä on myyjän tärkein tehtävä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Suunnitella tuotteiden hinnat&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Palvella asiakkaita ja myydä tuotteita&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Puhdistaa myymälä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-</tw-passagedata><tw-passagedata pid="7" name="Kysymys 3" tags="" position="400,700" size="100,100">&lt;h3&gt;Kysymys 3 / 10&lt;/h3&gt;
-&lt;h2&gt;Mitä tehtäviä visuaalinen myynninedistäjä hoitaa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Huolehtii kassatoiminnoista&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Suunnittelee myymälän sisustuksen ja tuotteiden esillepanon&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vastaa asiakaspalvelusta&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="8" name="Kysymys 4" tags="" position="400,825" size="100,100">&lt;h3&gt;Kysymys 4 / 10&lt;/h3&gt;
-&lt;h2&gt;Mitä kirjanpitäjä tekee yrityksessä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Suunnittelee mainoskampanjoita&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Myy tuotteita&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kirjaa yrityksen taloudelliset tapahtumat&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="9" name="Kysymys 5" tags="" position="400,950" size="100,100">&lt;h3&gt;Kysymys 5 / 10&lt;/h3&gt;
-&lt;h2&gt;Mitä tekee markkinointipäällikkö?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Suunnittelee ja toteuttaa yrityksen markkinointistrategioita&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Myy tuotteita&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vastaa asiakaspalvelusta&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="10" name="Kysymys 6" tags="" position="400,1075" size="100,100">&lt;h3&gt;Kysymys 6 / 10&lt;/h3&gt;
-&lt;h2&gt;Mistä varastotyöntekijä ensisijaisesti vastaa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Tekee visuaalista esillepanoa&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vastaanottaa ja hyllyttää tuotteita sekä seuraa varaston saldoja&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Suunnittelee yrityksen sosiaalisen median sisällöt&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="11" name="Kysymys 7" tags="" position="400,1200" size="100,100">&lt;h3&gt;Kysymys 7 / 10&lt;/h3&gt;
-&lt;h2&gt;Mikä on asiakaslähtöisen toiminnan keskeinen periaate?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Yritys tarjoaa vain sitä, mitä itse haluaa myydä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Toiminta perustuu asiakkaiden tarpeiden ja toiveiden ymmärtämiseen&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Asiakkaan kanssa ei tule keskustella liikaa&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="12" name="Kysymys 8" tags="" position="400,1325" size="100,100">
-&lt;h3&gt;Kysymys 8 / 10&lt;/h3&gt;
-&lt;h2&gt;Mikä seuraavista kuuluu verkkokaupan asiakaspalveluun?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Tuotteiden somistaminen myymälään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Asiakaskysymyksiin vastaaminen chatissa ja sähköpostissa&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Yrityksen kirjanpidon hoitaminen&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="13" name="Kysymys 9" tags="" position="400,1450" size="100,100">&lt;h3&gt;Kysymys 9 / 10&lt;/h3&gt;
-&lt;h2&gt;Mikä on kassatyöskentelyn tärkeä taito?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Taito ratkaista monimutkaisia matemaattisia yhtälöitä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Huolellisuus ja tarkkuus maksujen käsittelyssä&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Yrityksen markkinointistrategian suunnittelu&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="14" name="Kysymys 10" tags="" position="400,1575" size="100,100">&lt;h3&gt;Kysymys 10 / 10&lt;/h3&gt;
-&lt;h2&gt;Mikä seuraavista kuvaa hyvin kaupan alan työympäristöä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Työ on lähes aina yksin, ilman asiakaskontakteja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;TietovisaTulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Työ on usein nopeatempoista ja sisältää runsaasti vuorovaikutusta asiakkaiden kanssa&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;TietovisaTulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Työ tapahtuu lähes aina toimiston suljetussa tilassa&quot;&gt;&gt;
-  &lt;&lt;goto &quot;TietovisaTulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="15" name="TietovisaTulos" tags="" position="400,1700" size="100,100">
-&lt;h1&gt;Testin tulos&lt;/h1&gt;
-&lt;p&gt;Sait &lt;strong&gt;$pisteet / 10 pistettä&lt;/strong&gt;&lt;/p&gt;
-
-&lt;&lt;if $pisteet &gt;= 8&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Erinomaista! Kaupan ala sopii sinulle erittäin hyvin.&lt;/p&gt;
-&lt;&lt;elseif $pisteet &gt;= 5&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Hyvä! Sinulla on hyvät lähtökohdat kaupan alalle.&lt;/p&gt;
-&lt;&lt;else&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Kaupan ala saattaa vaatia vielä lisätutustumista.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Jatka&quot; &quot;AP 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="AP 1" tags="" position="625,350" size="100,100">&lt;&lt;set $ap = 0&gt;&gt;
-&lt;h1&gt;Millainen asiakaspalvelija olet?&lt;/h1&gt;
-&lt;h2&gt;Kun asiakas tulee luoksesi, miten toimit?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Hymyilen, tervehdin ja kysyn, miten voin auttaa&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Odottelen, että asiakas kysyy jotain&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Katson muuta tekemistä, jotta asiakas ei häiritse&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="17" name="AP 2" tags="" position="625,475" size="100,100">&lt;h3&gt;Tilanne 2 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten suhtaudut asiakkaisiin, jotka ovat kärsimättömiä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Yritän pysyä rauhallisena ja kuunnella, mistä on kyse&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vastaan samalla sävyllä takaisin&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Yritän välttää tilannetta ja poistun paikalta&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="18" name="AP 3" tags="" position="625,600" size="100,100">
-&lt;h3&gt;Tilanne 3 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten tarjoat asiakkaalle lisätuotteita?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Ehdotan vain silloin, kun lisätuote oikeasti auttaa asiakasta&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Pakotan ostamaan mahdollisimman paljon&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;En koskaan ehdota mitään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;h1&gt;Valitse ammatti&lt;/h1&gt;
-
-&lt;h2&gt;Myynnin ja asiakaspalvelun ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Myyjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Myyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Asiakaspalvelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Asiakaspalvelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Kassamyyjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kassamyyjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Myyntineuvottelija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Myyntineuvottelija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;h2&gt;Markkinoinnin ja viestinnän ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Markkinointiassistentti&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Markkinointiassistentti&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Digimarkkinoija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Digimarkkinoija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Sisällöntuottaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Sisällöntuottaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Visuaalinen myynninedistäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Visuaalinen myynninedistäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-&lt;h2&gt;Taloushallinnon ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kirjanpitäjä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Kirjanpitäjä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Palkanlaskija&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Palkanlaskija&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Talousassistentti&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Talousassistentti&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Controller&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Controller&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-</tw-passagedata><tw-passagedata pid="20" name="Loppu" tags="" position="1000,700" size="100,100">&lt;h2&gt;Hienoa!&lt;/h2&gt;
-
-&lt;p&gt;
-Olet käynyt läpi koko kaupan alan tehtäväkokonaisuuden. Se kertoo, että jaksat pohtia uravalintojasi ja olet valmis tutustumaan itseesi sekä eri vaihtoehtoihin tarkemmin – nämä ovat tärkeitä taitoja tulevaisuutta ajatellen.
-&lt;/p&gt;
-&lt;p&gt;
-Kaupan ala tarvitsee monenlaisia osaajia: asiakaspalvelijoita, myyjiä, taloushallinnon ammattilaisia, markkinoijia ja esimiehiä. Alalla voi edetä monia eri reittejä, esimerkiksi ammatillisista opinnoista korkeakouluun tai suoraan työelämän kautta. Tärkeintä on, että löydät polun, joka tuntuu omalta ja jossa voit hyödyntää omia vahvuuksiasi – oli se sitten kaupan ala tai jokin muu sinua kiinnostava suunta.
-&lt;/p&gt;
-
-&lt;p class=&quot;highlight&quot; style=&quot;text-align:center; margin-top:2rem;&quot;&gt;
-Jatka rohkeasti tutustumista eri ammatteihin ja koulutuksiin – tulevaisuus on avoin.
-&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Muista tyhjentää tehtäväsivu ennen kuin seuraava oppilas käyttää tätä tehtävää.&lt;/strong&gt;&lt;/p&gt;
-
-  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-    &lt;a class=&quot;macro-link btn-secondary&quot;
-       href=&quot;javascript:void(0)&quot;
-       onclick=&quot;resetAmmattitutkimus()&quot;&gt;
-       Tyhjennä
-    &lt;/a&gt;
-
-    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-      &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
+    &lt;p class=&quot;cover-pieni&quot;&gt;Kaupan ala · tarina&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Kaupan ala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Ostajana muotimessuilla · Mitä nuoret haluavat pukea ensi keväänä?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M5 8h14l-1.2 12H6.2z&quot; fill=&quot;currentColor&quot;/&gt;&lt;path d=&quot;M9 8V6.5a3 3 0 0 1 6 0V8&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.2&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Astu messuille&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Esitelmäpohja" tags="" position="925,575" size="100,100">&lt;&lt;script&gt;&gt;
-setTimeout(initLopputehtavaAutosave, 100);
-&lt;&lt;/script&gt;&gt;
-
-&lt;h2&gt;✨ Kerro valitsemastasi ammatista&lt;/h2&gt;
-
-&lt;p&gt;Olet valinnut ammatin: &lt;strong&gt;&lt;&lt;print $ammatti&gt;&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Hae tarvittaessa tietoa ammatista ja vastaa sitten kysymyksiin omin sanoin.&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;📚 Hae tietoa:
-  &lt;a href=&quot;https://tyomarkkinatori.fi/henkiloasiakkaat/ammattitieto&quot; target=&quot;_blank&quot;&gt;Työmarkkinatori&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
-  &lt;a href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Opintopolku.fi&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Kirjoita omin sanoin: mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q1&quot; aria-label=&quot;Mitä tässä ammatissa tehdään?&quot; placeholder=&quot;Kerro omin sanoin, mitä työhön kuuluu...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Mitä pitää osata?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q2&quot; aria-label=&quot;Mitä pitää osata?&quot; placeholder=&quot;Taidot, tiedot ja ominaisuudet, joita ammatissa tarvitaan...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Miksi sinä sopisit tähän ammattiin? (motivaatio + omat vahvuudet)&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q3&quot; aria-label=&quot;Miksi sinä sopisit tähän ammattiin?&quot; placeholder=&quot;Miksi ammatti kiinnostaa sinua ja mitkä omat vahvuutesi sopivat siihen...&quot;&gt;&lt;/textarea&gt;
-
-&lt;/div&gt;
-
-&lt;div class=&quot;intro-nappi action-row&quot;&gt;
-&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;downloadLopputehtava()&quot;&gt;Lataa vastaukset&lt;/a&gt;
-&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaLopputehtava()&quot;&gt;Tyhjennä&lt;/a&gt;
-&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="22" name="AP 4" tags="" position="625,725" size="100,100">&lt;h3&gt;Tilanne 4 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten toimit kiireisessä tilanteessa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Pyydän apua ja autan muita samalla&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Teen vain oman osuuteni ja jätän muut selviytymään&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Vetäydyn taka-alalle&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="AP 5" tags="" position="625,850" size="100,100">&lt;h3&gt;Tilanne 5 / 5&lt;/h3&gt;
-&lt;h2&gt;Miten suhtaudut asiakkaaseen, joka tarvitsee erityistä tukea?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Kuuntelen ja mukautan palvelun asiakkaan tarpeisiin&quot;&gt;&gt;
-  &lt;&lt;set $ap += 1&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Olen asiallinen mutta en tee mitään ylimääräistä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Koen tilanteen ärsyttäväksi&quot;&gt;&gt;
-  &lt;&lt;goto &quot;AP Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="AP Tulos" tags="" position="625,975" size="100,100">&lt;h1&gt;Palveluprofiilisi&lt;/h1&gt;
-
-&lt;p&gt;Sait &lt;strong&gt;$ap / 5 pistettä&lt;/strong&gt;&lt;/p&gt;
-
-&lt;&lt;if $ap == 5&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Huippupalvelija – asiakaslähtöisyys on sinulle luontaista.&lt;/p&gt;
-&lt;&lt;elseif $ap &gt;= 3&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Hyvä asiakaspalvelija – sinulla on erinomaiset lähtökohdat alalle.&lt;/p&gt;
-&lt;&lt;else&gt;&gt;
-&lt;p class=&quot;highlight&quot;&gt;Palvelutaitoja kannattaa vielä harjoitella – kehityt nopeasti.&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;link &quot;Tutustu kauppa-alan koulutuksiin&quot; &quot;Toinen aste&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="25" name="Toinen aste" tags="" position="825,300" size="100,100">
 &lt;h1&gt;Kaupan alan toisen asteen oppilaitokset&lt;/h1&gt;
@@ -1447,7 +476,7 @@ Toisen asteen opinnoissa suoritetaan useimmiten &lt;strong&gt;liiketoiminnan per
 &lt;/div&gt;
 
 &lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry korkeakouluihin&quot; &quot;Korkeakoulut&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Jatka ammattitehtävään&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry korkeakouluihin&quot; &quot;Korkeakoulut&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Takaisin&quot; &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="26" name="Korkeakoulut" tags="" position="950,300" size="100,100">&lt;h1&gt;Kaupan alan korkeakoulut&lt;/h1&gt;
 
@@ -1512,8 +541,160 @@ Korkeakouluopinnoissa suoritetaan useimmiten &lt;strong&gt;tradenomin&lt;/strong
 
 &lt;/div&gt;
 &lt;div class=&quot;action-row&quot;&gt;
-&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry toisen asteen koulutuksiin&quot; &quot;Toinen aste&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Jatka ammattitehtävään&quot; &quot;Ammattitehtävä&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;nobr&gt;&gt;&lt;&lt;link &quot;Siirry toisen asteen koulutuksiin&quot; &quot;Toinen aste&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; &lt;&lt;link &quot;Takaisin&quot; &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/nobr&gt;&gt;
 &lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="27" name="start" tags="scene-halli alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Ostajana muotimessuilla&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet TET-harjoittelijana nuorten vaatekaupassa. Tänään lähdet sisäänostajan mukaan muotimessuille valitsemaan kevään vaatteita. Miten sinä toimisit?&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2 000 €&lt;/strong&gt;&lt;span&gt;budjetti&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;oma ammattikortti&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Ostajana muotimessuilla&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="28" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Tilaukset klo 15.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="29" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="30" name="Ostajana muotimessuilla" tags="scene-halli" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {analyytikko: 0, tyyli: 0, neuvottelija: 0, vastuu: 0}&gt;&gt;&lt;&lt;set $kiinn to {ostaja: 0, edustaja: 0, vastuu: 0, visualisti: 0, verkkokauppa: 0, varasto: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Ostajana muotimessuilla&lt;/h1&gt;
+&lt;p&gt;Kello on 9.00. Olet TET-harjoittelijana Kolibri-vaatekaupassa. Kauppa myy vaatteita nuorille.&lt;/p&gt;
+&lt;p&gt;Tänään olet sisäänostaja Sofian mukana muotimessuilla. Messuhallissa on satoja osastoja: vaatteita, kenkiä, laukkuja ja koruja.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Sofia, sisäänostaja:&lt;/strong&gt; ”Kevään tilaukset pitää lähettää kello 15. Ennen kuin ostamme mitään, mietitään, mitä asiakkaamme oikeasti haluavat.”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita messukierros&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Trendit&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="31" name="Trendit" tags="scene-trendit" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Trendiseinä&lt;/h2&gt;
+&lt;p&gt;Messuhallin seinällä on suuri trendiseinä. Siinä on kymmeniä uusia värejä ja malleja.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Sofia, sisäänostaja:&lt;/strong&gt; ”Kaikkea ei voi ostaa. Miten päätämme, mitä kannattaa ostaa?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Katsotaan, mitä asiakkaat ovat ostaneet ja hakeneet verkkokaupasta.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.analyytikko += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Myyntitiedoista näkee, että leveät farkut ja huppari myivät hyvin. Moni asiakas myös etsi verkkokaupasta kierrätysmateriaalista tehtyjä vaatteita.&lt;/p&gt;&lt;p&gt;Hyvä ostaja yhdistää trendit ja asiakastiedon.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ostaja&quot; &quot;Myyntiosasto&quot; &quot;Miltä sisäänostajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ostetaan sitä, mikä näyttää minusta hyvältä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tyyli += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Oma maku on hyvä alku, mutta ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Asiakkaiden maku voi olla erilainen. Sofia avaa myyntitiedot: leveät farkut ja huppari myivät hyvin, ja moni etsi kierrätysmateriaalista tehtyjä vaatteita.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ostaja&quot; &quot;Myyntiosasto&quot; &quot;Miltä sisäänostajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ostetaan samoja vaatteita kuin kilpailija.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Silloin kaupat näyttävät samalta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Asiakkaalla ei ole syytä tulla juuri teille. Sofia avaa myyntitiedot ja etsii tuotteita, joita omat asiakkaat haluavat.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ostaja&quot; &quot;Myyntiosasto&quot; &quot;Miltä sisäänostajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="32" name="Myyntiosasto" tags="scene-edustaja" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Myyntiedustajan osasto&lt;/h2&gt;
+&lt;p&gt;Pysähdytte farkkumerkin osastolle. Myyntiedustaja Antti esittelee uutta mallia.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Antti, myyntiedustaja:&lt;/strong&gt; ”Jos tilaatte heti 500 paria, saatte 20 % alennusta!”&lt;/p&gt;
+&lt;p&gt;Kolibri myy keväällä yleensä noin 100 paria farkkuja.&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Ehdotan pienempää koe-erää, esimerkiksi 80 paria.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.neuvottelija += 2&gt;&gt;&lt;&lt;set $piirre.analyytikko += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Fiksu neuvottelu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Antti suostuu 80 parin erään ja antaa 10 % alennusta. Jos farkut myyvät hyvin, lisää voi tilata myöhemmin.&lt;/p&gt;&lt;p&gt;Myyntiedustaja ja ostaja etsivät ratkaisua, joka sopii molemmille.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;edustaja&quot; &quot;Vastuullisuus&quot; &quot;Miltä myyntiedustajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tilataan 500 paria. Alennus on hyvä!&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Sofia pysäyttää sinut.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jos myydään vain 100 paria, 400 paria jää varastoon. Ne sitovat rahaa, ja ne pitää lopulta myydä halvalla. Sofia neuvottelee 80 parin koe-erän.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;edustaja&quot; &quot;Vastuullisuus&quot; &quot;Miltä myyntiedustajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kieltäydytään. Alennukset ovat aina huijausta.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian jyrkkää.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Alennus voi olla hyvä, jos määrä on sopiva. Sofia neuvottelee 80 parin koe-erän ja 10 % alennuksen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;edustaja&quot; &quot;Vastuullisuus&quot; &quot;Miltä myyntiedustajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="33" name="Vastuullisuus" tags="scene-vastuu" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Vastuullisuus&lt;/h2&gt;
+&lt;p&gt;Eräällä osastolla myydään t-paitoja vain 2 eurolla. Myyjä ei osaa kertoa, missä ja miten paidat on tehty.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Noora, vastuullisuusasiantuntija:&lt;/strong&gt; ”Halpa hinta houkuttaa. Mitä tekisit?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Pyydän tiedot tehtaasta ja materiaaleista ennen kuin ostamme.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.vastuu += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri oikein!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Tietoja ei löydy. Noora kertoo, että silloin ei voi tietää, onko työntekijöille maksettu reilusti. Ostatte paidat toiselta toimittajalta, joka kertoo tehtaansa avoimesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;vastuu&quot; &quot;Messuosasto&quot; &quot;Miltä vastuullisuusasiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ostetaan paljon. Saamme hyvän voiton.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Halpa hinta voi tarkoittaa, että joku muu maksaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Työntekijöille voidaan maksaa liian vähän, tai materiaali voi olla huonoa. Noora pyytää tiedot tehtaasta. Niitä ei löydy, joten paitoja ei osteta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;vastuu&quot; &quot;Messuosasto&quot; &quot;Miltä vastuullisuusasiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kysyn Nooralta, mitä vastuullisuusmerkkejä kannattaa etsiä.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.vastuu += 1&gt;&gt;&lt;&lt;set $piirre.neuvottelija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä kysymys!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Noora näyttää, millaisia merkkejä luomupuuvillasta ja reilusta työstä on. Näiltä paidoilta merkit puuttuvat, joten ostatte paidat toiselta toimittajalta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;vastuu&quot; &quot;Messuosasto&quot; &quot;Miltä vastuullisuusasiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="34" name="Messuosasto" tags="scene-somistus" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Kolibrin messuosasto&lt;/h2&gt;
+&lt;p&gt;Myös Kolibrilla on messuilla oma pieni osasto. Visualisti Iiris rakentaa sitä. Kassit ovat täynnä vaatteita.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Iiris, visualisti:&lt;/strong&gt; ”Ohikulkijalla on kolme sekuntia aikaa huomata meidät. Miten vaatteet kannattaa laittaa esille?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Puetaan mallinukelle valmis asu ja valitaan väreiksi kaksi pääväriä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tyyli += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ammattilaisen ote!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun asukokonaisuus on valmis, asiakas näkee heti, miten vaatteita voi yhdistää. Selkeät värit erottuvat kauas.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;visualisti&quot; &quot;Kuvausstudio&quot; &quot;Miltä visualistin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Laitetaan kaikki vaatteet esille, niin valikoima näkyy.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian täynnä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun kaikkea on paljon, mikään ei erotu. Iiris valitsee yhden asukokonaisuuden mallinukelle ja kaksi pääväriä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;visualisti&quot; &quot;Kuvausstudio&quot; &quot;Miltä visualistin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kysytään ohikulkijoilta, mikä osastoissa houkuttelee.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tyyli += 1&gt;&gt;&lt;&lt;set $piirre.neuvottelija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Kiinnostava idea!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Moni sanoo, että valmis asu mallinukella houkuttelee eniten. Iiris pukee mallinuken ja valitsee kaksi pääväriä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;visualisti&quot; &quot;Kuvausstudio&quot; &quot;Miltä visualistin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="35" name="Kuvausstudio" tags="scene-verkko" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Kuvausstudio&lt;/h2&gt;
+&lt;p&gt;Messuilla on pieni kuvausstudio. Siellä uudet vaatteet kuvataan verkkokauppaa varten.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Joona, verkkokauppa-asiantuntija:&lt;/strong&gt; ”Asiakas ei voi verkkokaupassa koskea vaatteeseen. Mitä tuotesivulle pitää kirjoittaa?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Mitat, materiaali, pesuohje ja kuvia joka puolelta.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.analyytikko += 1&gt;&gt;&lt;&lt;set $piirre.vastuu += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Täydellistä!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun tiedot ovat tarkat, asiakas valitsee oikean koon. Silloin palautuksia tulee vähemmän, ja se säästää rahaa ja luontoa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkkokauppa&quot; &quot;Varasto&quot; &quot;Miltä verkkokauppa-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Lyhyt teksti: ”Ihana ja trendikäs!”&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Asiakas ei tiedä, sopiiko koko.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Moni tilaa monta kokoa ja palauttaa osan. Joona lisää tuotesivulle mitat, materiaalin ja pesuohjeen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkkokauppa&quot; &quot;Varasto&quot; &quot;Miltä verkkokauppa-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kuvataan vaate mallin päällä ja kerrotaan mallin pituus.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tyyli += 1&gt;&gt;&lt;&lt;set $piirre.analyytikko += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä idea!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun asiakas näkee vaatteen ihmisen päällä, hän ymmärtää sen koon. Joona lisää vielä mitat, materiaalin ja pesuohjeen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;verkkokauppa&quot; &quot;Varasto&quot; &quot;Miltä verkkokauppa-asiantuntijan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="36" name="Varasto" tags="scene-varasto" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Messujen varasto&lt;/h2&gt;
+&lt;p&gt;Messujen varastoon tulee laatikoita näytevaatteita. Lähetysluettelon mukaan huppareita pitäisi olla 40. Laatikoissa on vain 32.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Kim, varastonhoitaja:&lt;/strong&gt; ”Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kirjataan puuttuvat hupparit ja ilmoitetaan toimittajalle.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.analyytikko += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Oikein toimittu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Toimittaja huomaa, että yksi laatikko jäi heidän varastoonsa. Se lähetetään perään, eikä Kolibri maksa tuotteista, joita ei tullut.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;varasto&quot; &quot;Tilaukset lähtevät&quot; &quot;Miltä varastonhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kuitataan lähetys vastaanotetuksi. Ei se niin tarkkaa ole.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Silloin Kolibri maksaa myös puuttuvista huppareista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kim laskee laatikot uudelleen ja kirjaa puutteen. Toimittaja lähettää puuttuvan laatikon perään.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;varasto&quot; &quot;Tilaukset lähtevät&quot; &quot;Miltä varastonhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Lasken laatikot vielä kerran itse.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.analyytikko += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Tarkistus on hyvä alku.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Huppareita on edelleen 32. Kim kirjaa puutteen ja ilmoittaa toimittajalle. Puuttuva laatikko lähetetään perään.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavalle osastolle kävelet 15 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;varasto&quot; &quot;Tilaukset lähtevät&quot; &quot;Miltä varastonhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="37" name="Tilaukset lähtevät" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Tilaukset lähtevät!&lt;/h1&gt;
+&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Sofia lähettää kevään tilaukset ajoissa.&lt;/p&gt;
+&lt;p&gt;Keväällä Kolibrin hyllyillä on leveitä farkkuja, huppareita ja luomupuuvillaisia t-paitoja. Moni niistä on valittu messuilla.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Kevään valikoimaan tarvittiin kuusi eri ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Sofia, sisäänostaja&lt;/strong&gt; – päätti, mitä ostetaan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Antti, myyntiedustaja&lt;/strong&gt; – myi farkkuja ja neuvotteli hinnan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Noora, vastuullisuusasiantuntija&lt;/strong&gt; – selvitti, miten vaatteet on tehty&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Iiris, visualisti&lt;/strong&gt; – teki osastosta houkuttelevan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Joona, verkkokauppa-asiantuntija&lt;/strong&gt; – teki tuotesivuista selkeitä&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Kim, varastonhoitaja&lt;/strong&gt; – piti huolen, että kaikki tuotteet tulivat perille&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Kaupan alalle voi opiskella ammattikoulussa: merkonomiksi liiketoiminnan perustutkinnossa ja varastonhoitajaksi logistiikan perustutkinnossa. Monet jatkavat sen jälkeen tradenomiksi.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="38" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Sisäänostajan budjetti&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Kutsu: ohje" tags="scene-halli" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Sisäänostajan budjetti&lt;/h2&gt;
+&lt;p&gt;Tarinassa näit, miten sisäänostaja Sofia valitsi kevään vaatteet. Nyt sinä olet Kolibrin sisäänostaja!&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;2 000 euroa&lt;/strong&gt; ja 12 tuotetta, joista valita. Teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Osta kevään valikoima. Pysy budjetissa ja valitse vähintään viisi eri tuotetta.&lt;/li&gt;&lt;li&gt;Vastaa kolmeen kysymykseen ja perustele valintasi.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Peli laskee, paljonko myyt ja paljonko voittoa saat. Laskut ovat yksinkertaistettuja: verot ja muut kulut eivät ole mukana. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Kutsu" tags="scene-halli" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Tilausvahvistuksesi&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="42" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Kävit muotimessuilla ja ostit kaupalle oman kevään valikoiman. Samalla tutustuit kahdeksaan kaupan alan ammattiin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;&lt;link &quot;Missä kaupan alaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Toinen aste&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */

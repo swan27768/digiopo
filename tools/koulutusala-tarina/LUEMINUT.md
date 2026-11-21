@@ -9,7 +9,7 @@ Tällä työkalulla tehdään Amispolun alatehtävät (8. lk, Oma reitti → Vai
 |---|---|
 | `pelit/koulutusalat/tarina-yhteinen.js` | Yhteinen moottori: kello, ammattikortti, kortin lataus kuvana, Kenet kutsut paikalle?, palautustiedosto, tyhjennys, "Katso ympärille" -nappi |
 | `pelit/koulutusalat/tarina-yhteinen.css` | Yhteiset tyylit. Värit tulevat CSS-muuttujista (--a1, --a2, --korostus, --tausta …) |
-| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`, `elintarvike`) |
+| `pelit/koulutusalat/tausta3d.js` | 3D-taustat. Jokaisella alalla oma maailma `MAAILMAT`-oliossa (nyt: `tekniikka`, `sote`, `it`, `elintarvike`, `kauppa`) |
 | `vendor/three/three.module.min.js` | three.js r187 |
 | `tools/koulutusala-tarina/rakenna_tarina.py` | Rakentaja |
 | `tools/koulutusala-tarina/alat/*.py` | Alan sisältö: tekstit, kohtaukset, ammatit, kortit, teema |
@@ -27,8 +27,15 @@ tuotteen vaihe vaiheelta. `KUTSU_KORTIT` = vaiheet (`otsikko, kysymys, miksi, am
 vaihtoehdot[nimi, kuvaus, hinta, allergeenit, tagit, palaute]`). Ensimmäinen vaihe on kohderyhmä (`tarve`,
 `kielletty`). Peli laskee hinnan, kerää allergeenit, varoittaa sopimattomista valinnoista ja lopuksi tuote nimetään.
 
+Tyyppi `budjetti` (esimerkki `alat/kauppa.py`): oppilas ostaa valikoiman budjetilla. `KUTSU_KORTIT` = tuotteet
+(`nimi, ikoni, kuvaus, osto, myynti, ryhma, trendi, vastuu, menekki`). `TEHTAVA`: `budjetti, askel, maxMaara,
+minKaytto, minTuotteita, ryhmat, tavoitteet, kysymykset` (kolme perustelukysymystä, `{top}` = eniten ostettu tuote).
+
+Taustakuvat: `TAUSTAKUVAT = {"kansi": ..., "alku": ..., "tehtava": ...}` ja kohtauksessa `taustakuva`.
+Kannen napin värit: CSS-muuttujat `--kansi-nappi-bg, -teksti, -reuna, -varjo, -hehku` teemassa.
+
 Valmiit tehtävätyypit: tekniikka = Kenet kutsut paikalle? (vikatilanne), sote = Kenet kutsut paikalle?,
-it = Tietoturvatarkastus, elintarvike = Kehitä oma välipala. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
+it = Tietoturvatarkastus, elintarvike = Kehitä oma välipala, kauppa = Sisäänostajan budjetti. Seuraaville aloille kannattaa keksiä taas oma tehtävä.
 
 Huom: 3D-kohtauksen nimi `tehdas` piilottaa Katso-napin (tekniikan aloitussivu). Käytä muilla aloilla muuta nimeä.
 

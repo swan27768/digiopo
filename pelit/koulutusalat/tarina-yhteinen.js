@@ -39,7 +39,7 @@
     var RAJA = (D.kello && typeof D.kello.raja === "number") ? D.kello.raja : null;
     var KUTSU_KEY = D.ala + "_kutsu_v1";
     /* Tallennus on sidottu korttisarjaan: jos kortit vaihtuvat, vanhat vastaukset hylätään */
-    var KORTTI_SIG = KORTIT.map(function (k) { return k.oikea || k.otsikko; }).join("|");
+    var KORTTI_SIG = KORTIT.map(function (k) { return k.oikea || k.otsikko || k.nimi; }).join("|");
     var TH = Object.assign({
       nimi: "Kenet kutsut paikalle?", kysymys: "Kenet kutsut paikalle?", korttiSana: "Kortti",
       seuraava: "Seuraava kortti", miksiLabel: "Miksi juuri hän? Kirjoita yksi lause.",
@@ -574,6 +574,174 @@
         });
         t += "Hinta: " + euro(a.hinta) + "\nAllergeenit: " + (a.allerg.length ? a.allerg.join(", ") : "ei") + "\n";
         sopivuusTeksti(a).forEach(function (r) { t += r + "\n"; });
+        return t;
+      };
+    }
+
+    /* --- Tehtävätyyppi "budjetti": oppilas ostaa valikoiman annetulla budjetilla ---
+       kutsuKortit = tuotteet: { nimi, ikoni, kuvaus, osto, myynti, ryhma, trendi(1-3), vastuu(1-3), menekki(0-1) }
+       TH.budjetti, TH.askel, TH.maxMaara, TH.minKaytto, TH.minTuotteita, TH.ryhmat {avain: {nimi, vari}},
+       TH.kysymykset [ { kysymys ({top} = eniten ostettu tuote), ammattilainen, tutkinto } ] */
+    if (TH.tyyppi === "budjetti") {
+      var BUD = TH.budjetti || 2000, ASK = TH.askel || 5, MAX = TH.maxMaara || 60;
+      var RYHMAT = TH.ryhmat || {};
+      var eur = function (x) { return Math.round(x).toLocaleString("fi-FI") + " €"; };
+      var tahdet = function (n) { return "★★★".slice(0, n) + "☆☆☆".slice(0, 3 - n); };
+      var ostot = function (tila) { if (!tila.ostot) tila.ostot = {}; return tila.ostot; };
+      var laskeB = function (tila) {
+        var o = ostot(tila), kaytetty = 0, myynti = 0, jaa = 0, kpl = 0, tuotteita = 0, ryhmaEur = {};
+        KORTIT.forEach(function (t) {
+          var q = o[t.nimi] || 0; if (!q) return;
+          tuotteita++; kpl += q;
+          kaytetty += q * t.osto; myynti += q * t.myynti * (t.menekki || 1); jaa += Math.round(q * (1 - (t.menekki || 1)));
+          ryhmaEur[t.ryhma] = (ryhmaEur[t.ryhma] || 0) + q * t.osto;
+        });
+        var osuus = {}; Object.keys(RYHMAT).forEach(function (r) { osuus[r] = kaytetty ? Math.round((ryhmaEur[r] || 0) / kaytetty * 100) : 0; });
+        var top = null; KORTIT.forEach(function (t) { var q = o[t.nimi] || 0; if (q && (!top || q * t.osto > (o[top.nimi] || 0) * top.osto)) top = t; });
+        return { kaytetty: kaytetty, jaljella: BUD - kaytetty, myynti: myynti, voitto: myynti - kaytetty, jaa: jaa, kpl: kpl, tuotteita: tuotteita, osuus: osuus, top: top };
+      };
+      var palauteB = function (a) {
+        var r = [], pal = TH.palauteB || {};
+        (TH.tavoitteet || []).forEach(function (tv) {
+          var x = a.osuus[tv.ryhma] || 0;
+          if (tv.min != null && x < tv.min) r.push("Vinkki: " + tv.alle);
+          else if (tv.max != null && x > tv.max) r.push("Huomio: " + tv.yli);
+          else r.push("✓ " + tv.ok);
+        });
+        if (a.jaa > 0) r.push((pal.jaa || "Arviolta {n} kpl jää myymättä. Ne myydään alennuksella.").replace("{n}", a.jaa));
+        r.push(a.voitto > 0 ? "✓ Voittoarvio on " + eur(a.voitto) + "." : "Huomio: kauppa tekisi tappiota. Valitse tuotteita, jotka menevät varmemmin kaupaksi.");
+        return r;
+      };
+      var yhteenvetoPalkki = function (a) {
+        var palkki = Object.keys(RYHMAT).map(function (r) {
+          return a.osuus[r] ? '<span style="width:' + a.osuus[r] + '%;background:' + RYHMAT[r].vari + '" title="' + suojaa(RYHMAT[r].nimi) + '"></span>' : "";
+        }).join("");
+        var selite = Object.keys(RYHMAT).map(function (r) {
+          return '<span class="bj-selite"><i style="background:' + RYHMAT[r].vari + '"></i>' + suojaa(RYHMAT[r].nimi) + ' ' + (a.osuus[r] || 0) + ' %</span>';
+        }).join("");
+        return '<div class="bj-luvut">' +
+          '<div><span>Budjetti</span><strong>' + eur(BUD) + '</strong></div>' +
+          '<div><span>Käytetty</span><strong>' + eur(a.kaytetty) + '</strong></div>' +
+          '<div class="' + (a.jaljella < 0 ? "ei" : "") + '"><span>Jäljellä</span><strong>' + eur(a.jaljella) + '</strong></div>' +
+          '<div><span>Myyntiarvio</span><strong>' + eur(a.myynti) + '</strong></div>' +
+          '<div><span>Voittoarvio</span><strong class="' + (a.voitto < 0 ? "ei" : "ok") + '">' + eur(a.voitto) + '</strong></div></div>' +
+          '<div class="bj-palkki" aria-hidden="true">' + palkki + '</div><div class="bj-selitteet">' + selite + '</div>';
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelut(alue, tila);
+        var o = ostot(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/2 · Ostot") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ostoOhje) + '</p></div>' +
+          '<div class="bj-yhteenveto bj-sticky" aria-live="polite"></div>' +
+          '<div class="bj-tuotteet">' + KORTIT.map(function (t, j) {
+            return '<div class="bj-tuote" data-i="' + j + '">' +
+              '<div class="bj-yla"><span class="bj-ikoni" aria-hidden="true">' + suojaa(t.ikoni || "") + '</span><div><p class="bj-nimi">' + suojaa(t.nimi) + '</p>' +
+              '<p class="bj-ryhma" style="color:' + ((RYHMAT[t.ryhma] || {}).vari || "inherit") + '">' + suojaa((RYHMAT[t.ryhma] || {}).nimi || "") + '</p></div></div>' +
+              '<p class="bj-kuvaus">' + suojaa(t.kuvaus || "") + '</p>' +
+              '<p class="bj-hinnat">Ostohinta <strong>' + eur(t.osto) + '</strong> · Myyntihinta <strong>' + eur(t.myynti) + '</strong></p>' +
+              '<p class="bj-tahdet"><span>Trendi <b aria-label="' + t.trendi + '/3">' + tahdet(t.trendi) + '</b></span><span>Vastuullisuus <b aria-label="' + t.vastuu + '/3">' + tahdet(t.vastuu) + '</b></span></p>' +
+              '<div class="bj-maara"><button type="button" class="bj-miinus" aria-label="Vähemmän: ' + suojaa(t.nimi) + '">−</button>' +
+              '<output aria-live="polite">' + (o[t.nimi] || 0) + ' kpl</output>' +
+              '<button type="button" class="bj-plus" aria-label="Enemmän: ' + suojaa(t.nimi) + '">+</button></div></div>';
+          }).join("") + '</div>' +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisOstot || "Lähetä tilaus") + '</button></div>';
+        var yv = alue.querySelector(".bj-yhteenveto"), vihje = alue.querySelector("#kutsu-vihje"), nappi = alue.querySelector(".kutsu-tarkista");
+        function paivita() {
+          var a = laskeB(tila);
+          yv.innerHTML = yhteenvetoPalkki(a);
+          Array.prototype.forEach.call(alue.querySelectorAll(".bj-tuote"), function (el) {
+            var t = KORTIT[+el.getAttribute("data-i")], q = o[t.nimi] || 0;
+            el.querySelector("output").textContent = q + " kpl";
+            el.querySelector(".bj-miinus").disabled = q <= 0;
+            el.querySelector(".bj-plus").disabled = q + ASK > MAX || a.jaljella < ASK * t.osto;
+            el.classList.toggle("valittu", q > 0);
+          });
+          var minK = TH.minKaytto || BUD * 0.75, minT = TH.minTuotteita || 5;
+          var ok = a.kaytetty >= minK && a.tuotteita >= minT;
+          nappi.disabled = !ok;
+          vihje.textContent = ok ? "Hyvä! Voit vielä muokata tai lähettää tilauksen." :
+            (a.tuotteita < minT ? "Valitse vähintään " + minT + " eri tuotetta (nyt " + a.tuotteita + "). " : "") +
+            (a.kaytetty < minK ? "Käytä budjetista vähintään " + eur(minK) + "." : "");
+        }
+        Array.prototype.forEach.call(alue.querySelectorAll(".bj-tuote"), function (el) {
+          var t = KORTIT[+el.getAttribute("data-i")];
+          el.querySelector(".bj-plus").addEventListener("click", function () { o[t.nimi] = (o[t.nimi] || 0) + ASK; kutsuTallenna(); paivita(); });
+          el.querySelector(".bj-miinus").addEventListener("click", function () { o[t.nimi] = Math.max(0, (o[t.nimi] || 0) - ASK); if (!o[t.nimi]) delete o[t.nimi]; kutsuTallenna(); paivita(); });
+        });
+        nappi.addEventListener("click", function () {
+          if (nappi.disabled) return;
+          tila.vaihe = "perustelu"; kutsuTallenna();
+          window.kutsuPiirra();
+          var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView();
+          var e1 = document.querySelector(".bj-perustelu textarea"); if (e1) e1.focus({ preventScroll: true });
+        });
+        paivita();
+      };
+
+      var kysymysTeksti = function (k, a) { return k.kysymys.replace("{top}", a.top ? a.top.nimi.toLowerCase() : "tuote"); };
+      var piirraPerustelut = function (alue, tila) {
+        var a = laskeB(tila);
+        var kys = TH.kysymykset || [];
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/2 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Tilaus lähetetty") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa vielä kolmeen kysymykseen. Kirjoita jokaiseen yksi tai kaksi lausetta.") + '</p></div>' +
+          '<div class="bj-yhteenveto">' + yhteenvetoPalkki(a) + '</div>' +
+          kys.map(function (k, j) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="bj-p' + j + '">' + (j + 1) + '. ' + suojaa(kysymysTeksti(k, a)) + '</label>' +
+              '<textarea id="bj-p' + j + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[j] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava bj-takaisin">' + suojaa(TH.takaisinOstoihin || "Muokkaa ostoja") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function p() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", p); });
+        alue.querySelector(".bj-takaisin").addEventListener("click", function () { tila.vaihe = "osto"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        p();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), a = laskeB(tila), o = ostot(tila);
+        var rivit = KORTIT.filter(function (t) { return o[t.nimi]; }).map(function (t) {
+          return '<tr><td>' + suojaa((t.ikoni ? t.ikoni + " " : "") + t.nimi) + '</td><td>' + o[t.nimi] + '</td><td>' + eur(o[t.nimi] * t.osto) + '</td></tr>';
+        }).join("");
+        var h = '<div class="tuotekortti bj-tilaus"><p class="tk-yla">' + suojaa(TH.korttiYla || "TILAUSVAHVISTUS") + '</p>' +
+          '<p class="tk-tuotenimi">' + suojaa(TH.kauppaNimi || "Oma valikoima") + '</p>' +
+          '<table class="bj-taulu"><thead><tr><th>Tuote</th><th>Kpl</th><th>Hinta</th></tr></thead><tbody>' + rivit + '</tbody></table>' +
+          '<dl class="tk-tiedot"><dt>Käytetty</dt><dd>' + eur(a.kaytetty) + ' / ' + eur(BUD) + '</dd><dt>Myyntiarvio</dt><dd>' + eur(a.myynti) + '</dd><dt>Voittoarvio</dt><dd>' + eur(a.voitto) + '</dd>' +
+          '<dt>Valikoima</dt><dd>' + Object.keys(RYHMAT).map(function (r) { return suojaa(RYHMAT[r].nimi) + " " + (a.osuus[r] || 0) + " %"; }).join(", ") + '</dd></dl>' +
+          '<ul class="kehitys-sopivuus">' + palauteB(a).map(function (r) { return '<li>' + suojaa(r) + '</li>'; }).join("") + '</ul></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi ja ammattilaiset</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, j) {
+          return '<li><strong>' + suojaa(kysymysTeksti(k, a)) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[j] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var a = laskeB(tila), o = ostot(tila);
+        var t = "\n" + TH.nimi.toUpperCase() + "\n\nOSTOT\n";
+        KORTIT.forEach(function (k) { if (o[k.nimi]) t += "- " + k.nimi + ": " + o[k.nimi] + " kpl × " + k.osto + " € = " + eur(o[k.nimi] * k.osto) + "\n"; });
+        t += "\nKäytetty: " + eur(a.kaytetty) + " / " + eur(BUD) + "\nMyyntiarvio: " + eur(a.myynti) + "\nVoittoarvio: " + eur(a.voitto) + "\n";
+        t += "Valikoima: " + Object.keys(RYHMAT).map(function (r) { return RYHMAT[r].nimi + " " + (a.osuus[r] || 0) + " %"; }).join(", ") + "\n";
+        palauteB(a).forEach(function (r) { t += r + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, j) { t += (j + 1) + ". " + kysymysTeksti(k, a) + "\n   " + ((tila.perustelut || [])[j] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
         return t;
       };
     }

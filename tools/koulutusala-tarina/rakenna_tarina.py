@@ -34,6 +34,7 @@ IKONIT = {
     "virta": '<path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
     "play": '<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>',
     "sydan": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="currentColor"/>',
+    "kassi": '<path d="M5 8h14l-1.2 12H6.2z" fill="currentColor"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 

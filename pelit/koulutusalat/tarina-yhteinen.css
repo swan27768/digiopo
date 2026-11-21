@@ -1104,3 +1104,48 @@ html body #passages .passage input.kehitys-input,
 html body #passages .passage input.kehitys-input:hover,
 html body #passages .passage input.kehitys-input:focus { background: #ffffff !important; background-color: #ffffff !important; color: #111827 !important; border: 2px solid var(--a1) !important; min-height: 0 !important; }
 html body #passages .passage input.kehitys-input::placeholder { color: #8a8f98 !important; }
+
+/* Tehtävätyyppi "budjetti" (esim. kaupan ala: Sisäänostajan budjetti) */
+.bj-yhteenveto.bj-sticky { position: sticky; top: 0.4rem; z-index: 3; }
+.bj-yhteenveto { border: 2px solid rgba(var(--a1-rgb),.6); border-radius: 16px; padding: 0.7rem 0.9rem; margin: 0 0 1rem;
+  background: rgba(var(--tumma-rgb),.92); backdrop-filter: blur(6px); }
+.bj-luvut { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; }
+.bj-luvut div { display: flex; flex-direction: column; gap: 0.1rem; }
+#passages .passage .bj-luvut span { font-size: 0.72rem !important; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teksti-pehmea); }
+#passages .passage .bj-luvut strong { font-size: 1.05rem !important; color: var(--teksti-vaalea); }
+.bj-luvut .ei strong, .bj-luvut strong.ei { color: #ffa8a8 !important; }
+.bj-luvut strong.ok { color: #8ce99a !important; }
+.bj-palkki { display: flex; height: 0.55rem; border-radius: 999px; overflow: hidden; background: rgba(var(--teksti-pehmea-rgb),.15); margin: 0.6rem 0 0.35rem; }
+.bj-palkki span { display: block; height: 100%; margin: 0 !important; transition: width .2s ease; }
+.bj-selitteet { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; }
+#passages .passage .bj-selite { font-size: 0.8rem !important; color: var(--teksti-pehmea); }
+.bj-selite i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 3px; margin-right: 0.3rem; vertical-align: -1px; }
+.bj-tuotteet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; margin-bottom: 0.8rem; }
+@media (max-width: 860px) { .bj-tuotteet { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bj-luvut { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .bj-tuotteet { grid-template-columns: 1fr; } }
+.bj-tuote { border: 2px solid rgba(var(--a1-rgb),.28); border-radius: 14px; padding: 0.7rem 0.8rem; background: rgba(var(--paneeli-rgb),.85); display: flex; flex-direction: column; gap: 0.3rem; }
+.bj-tuote.valittu { border-color: var(--a1); background: rgba(var(--a1-rgb),.12); }
+.bj-yla { display: flex; gap: 0.6rem; align-items: center; }
+.bj-ikoni { font-size: 1.9rem; line-height: 1; }
+#passages .passage .bj-tuote p { margin: 0 !important; }
+#passages .passage .bj-nimi { font-weight: 800; font-size: 0.98rem !important; line-height: 1.25 !important; }
+#passages .passage .bj-ryhma { font-weight: 800; font-size: 0.72rem !important; letter-spacing: 0.1em; text-transform: uppercase; }
+#passages .passage .bj-kuvaus { font-size: 0.84rem !important; color: var(--teksti-pehmea); line-height: 1.35 !important; }
+#passages .passage .bj-hinnat { font-size: 0.82rem !important; }
+#passages .passage .bj-tahdet { display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; font-size: 0.78rem !important; color: var(--teksti-pehmea); }
+.bj-tahdet b { color: var(--a1); letter-spacing: 0.05em; font-weight: 400; }
+.bj-maara { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: auto; padding-top: 0.3rem; }
+.bj-maara button { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 2px solid var(--a1); background: rgba(var(--a1-rgb),.15); color: var(--teksti-vaalea); font: 800 1.3rem/1 "Segoe UI", Arial, sans-serif; cursor: pointer; padding: 0; }
+.bj-maara button:hover:not(:disabled) { background: rgba(var(--a1-rgb),.35); }
+.bj-maara button:disabled { opacity: .3; cursor: not-allowed; }
+.bj-maara button:focus-visible { outline: 3px solid var(--korostus); outline-offset: 2px; }
+.bj-maara output { font-weight: 800; font-size: 1.05rem; }
+.bj-perustelu { margin-bottom: 1rem; }
+.bj-perustelu textarea { width: 100%; box-sizing: border-box; min-height: 4.6rem; padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid var(--a1); font: 1rem/1.5 "Segoe UI", Arial, sans-serif; color: #111827 !important; background: #fff !important; resize: vertical; }
+html body #passages .passage .bj-perustelu textarea { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+.bj-napit { gap: 0.7rem; flex-wrap: wrap; }
+.bj-tilaus .bj-taulu { width: 100%; border-collapse: collapse; margin: 0 0 0.8rem; font-size: 0.92rem; }
+.bj-tilaus .bj-taulu th, .bj-tilaus .bj-taulu td { text-align: left; padding: 0.25rem 0.4rem; border-bottom: 1px solid rgba(58,29,18,.15); color: #2a2016; }
+.bj-tilaus .bj-taulu td:nth-child(n+2), .bj-tilaus .bj-taulu th:nth-child(n+2) { text-align: right; }
+.tuotekortti.bj-tilaus { background: linear-gradient(160deg, #fffaf0 0%, #fbeedd 100%); border-color: var(--a1); }
+#passages .passage .tuotekortti.bj-tilaus .tk-yla { color: #a8741a !important; }
