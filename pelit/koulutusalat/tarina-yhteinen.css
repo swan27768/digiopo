@@ -1149,3 +1149,41 @@ html body #passages .passage .bj-perustelu textarea { width: 100% !important; ma
 .bj-tilaus .bj-taulu td:nth-child(n+2), .bj-tilaus .bj-taulu th:nth-child(n+2) { text-align: right; }
 .tuotekortti.bj-tilaus { background: linear-gradient(160deg, #fffaf0 0%, #fbeedd 100%); border-color: var(--a1); }
 #passages .passage .tuotekortti.bj-tilaus .tk-yla { color: #a8741a !important; }
+
+/* Tehtävätyyppi "kartta" (esim. luontoala: Jäljitä lähde kartalla) */
+.kt-asettelu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1rem; align-items: start; margin-bottom: 1rem; }
+@media (max-width: 760px) { .kt-asettelu { grid-template-columns: 1fr; } }
+.kt-kartta-laatikko { border: 2px solid rgba(var(--a1-rgb),.55); border-radius: 16px; overflow: hidden; background: #cfd9b8; }
+.kt-kartta { display: block; width: 100%; height: auto; max-height: 70vh; }
+.kt-kohde { font: 700 3.2px "Segoe UI", Arial, sans-serif; fill: #24321f; paint-order: stroke; stroke: rgba(255,255,255,.7); stroke-width: .6px; }
+.kt-piste { cursor: pointer; outline: none; }
+.kt-piste circle { transition: r .12s ease; }
+.kt-piste:hover circle, .kt-piste:focus-visible circle { r: 4.6; }
+.kt-piste.valittu circle { stroke: #ff7b6b; stroke-width: 1.4; r: 4.8; }
+.kt-piste.korostus circle { stroke: #ffd166; stroke-width: 1.6; }
+.kt-nro { font: 800 3.4px "Segoe UI", Arial, sans-serif; fill: #1d2b22; pointer-events: none; }
+.kt-sivu { display: flex; flex-direction: column; gap: 0.7rem; }
+#passages .passage .kt-laskuri { margin: 0 !important; font-size: 0.95rem !important; }
+.kt-laskuri strong { color: var(--a1); font-size: 1.2rem; }
+.kt-info { border: 2px solid rgba(var(--a1-rgb),.35); border-radius: 14px; padding: 0.8rem 0.9rem; background: rgba(var(--tumma-rgb),.55); }
+#passages .passage .kt-info p { margin: 0 0 0.4rem !important; }
+#passages .passage .kt-pnimi { font-weight: 800; font-size: 1.05rem !important; color: var(--a1); }
+#passages .passage .kt-kuvaus, #passages .passage .kt-ohje { font-size: 0.92rem !important; color: var(--teksti-pehmea); }
+#passages .passage .kt-havainto { font-style: italic; }
+.kt-arvot { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.kt-arvo { display: inline-block; border-radius: 999px; padding: 0.2rem 0.6rem; font-size: 0.82rem; margin: 0 !important; border: 1px solid; }
+.kt-arvo.ok { color: #b2f2bb; border-color: rgba(140,233,154,.5); background: rgba(81,207,102,.12); }
+.kt-arvo.ei { color: #ffc9a8; border-color: rgba(255,138,61,.6); background: rgba(255,138,61,.15); }
+.kt-taulu { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.kt-taulu th, .kt-taulu td { padding: 0.25rem 0.35rem; text-align: left; border-bottom: 1px solid rgba(var(--teksti-pehmea-rgb),.18); }
+.kt-taulu th { color: var(--teksti-pehmea); font-weight: 700; }
+.kt-taulu td.ok { color: #b2f2bb; } .kt-taulu td.ei { color: #ffb38a; font-weight: 700; }
+#passages .passage .kt-raja { margin: 0.4rem 0 0 !important; font-size: 0.88rem !important; color: var(--a3); }
+.kt-lahteet { display: grid; grid-template-columns: 1fr; gap: 0.35rem; }
+.kt-lahde { text-align: left; padding: 0.5rem 0.8rem !important; font-size: 0.92rem !important; }
+.kt-korjaukset { margin-bottom: 0.8rem; }
+.kt-teksti { width: 100%; box-sizing: border-box; min-height: 4.4rem; padding: 0.7rem 0.9rem; border-radius: 12px; border: 2px solid var(--a1); font: 1rem/1.5 "Segoe UI", Arial, sans-serif; color: #111827 !important; background: #fff !important; resize: vertical; margin-bottom: 0.8rem; }
+html body #passages .passage textarea.kt-teksti { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+.kt-raportti-kartta { max-width: 320px; margin: 0 auto 0.8rem; border-radius: 12px; overflow: hidden; border: 2px solid rgba(0,0,0,.15); }
+.tuotekortti.kt-raportti { background: linear-gradient(160deg, #f7f3e6 0%, #e6efdc 100%); border-color: var(--a1); }
+#passages .passage .tuotekortti.kt-raportti .tk-yla { color: #2f6b45 !important; }

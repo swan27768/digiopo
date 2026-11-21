@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-init="no-js">
+<html data-init="no-js" data-tausta-maailma="luonto" data-tausta="kansi">
 <head>
 <meta charset="UTF-8" />
-<title>Luontoala</title>
+<title>Luonto- ja ympäristöala – Mysteeri joella</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
@@ -36,12 +36,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
 <link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <link rel="manifest" href="../../manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <script src="../../js/lisenssiportti.js"></script>
     <script src="../../js/seuranta.js" defer></script>
 
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("luontoala.state");}catch(e){}</script>
 <script id="sc-clear-saves">
 (function(){
   var prefix = "sc-a4e2f60b-aed2-481b-a0de-c474f2307390-";
@@ -58,1138 +62,421 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Luontoala" startnode="6" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="a4e2f60b-aed2-481b-a0de-c474f2307390" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">:root {
-
-  /* YLEINEN TAUSTA JA TEKSTIT */
-  --bg-body: #F2F6F2;           /* sumuinen vaalea sammal */
-  --text-main: #1E2A1E;         /* tumma metsä */
-
-  /* PÄÄTEEMAVÄRIT */
-  --accent-1: #2F5D3A;         /* metsänvihreä – isot otsikot */
-  --accent-2: #6BAA75;         /* vaalea sammal – alaotsikot */
-  --accent-3: #C58B3A;         /* puunkuori / kulta – korostus */
-
-  /* NAPIT */
-  --btn-bg: #2F5D3A;
-  --btn-text: #FFFFFF;
-
-  /* KORTIT / LAATIKOT */
-  --card-bg: #FFFFFF;
-  --card-border: #BFD3C4;      /* sammaleinen reunus */
-
-  /* LINKIT */
-  --link-text: #3E7C59;
-
-  /* YLÄPALKKI */
-  --nav-bg: rgba(245,248,245,0.96);
-  --nav-border: rgba(120,160,130,0.5);
-
-  /* PISTEET / HIGHLIGHT */
-  --score-color: #C58B3A;
-
-  /* VAARA / VIRHE */
-  --danger-bg: #8B2E2E;
-  --highlight-color: #8B2E2E;
+	<tw-storydata name="Luontoala" startnode="6" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="a4e2f60b-aed2-481b-a0de-c474f2307390" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+:root {
+  --a1: #f6a94d; --a1-rgb: 246,169,77;
+  --a2: #e07b39; --a2-rgb: 224,123,57;
+  --a3: #ffd08a;
+  --korostus: #ff7b6b; --korostus-rgb: 255,123,107;
+  --tausta: #0f1f18; --tausta-rgb: 15,31,24;
+  --tausta-2: #1a3127; --tausta-2-rgb: 26,49,39;
+  --paneeli: #142a20; --paneeli-rgb: 20,42,32;
+  --paneeli-2: #1d3a2c;
+  --tumma: #08130e; --tumma-rgb: 8,19,14;
+  --reuna: #f6a94d;
+  --teksti-pehmea: #d8e6d6; --teksti-pehmea-rgb: 216,230,214;
+  --teksti-vaalea: #f3f8ef;
+  --nappi-teksti: #2a1405;
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a2), var(--a1));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #ffe3bf;
+  --kansi-nappi-varjo: #8a4316;
+  --kansi-nappi-hehku: 246,169,77;
 }
-
-  
- /* BODY JA PASSAGE */
-body {
-  background: var(--bg-body);
-  color: var(--text-main);
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.7) 38%, rgba(var(--tausta-rgb),.25) 62%, rgba(var(--tausta-rgb),0) 82%) !important;
 }
-
-#passages .passage {
-  color: var(--text-main);
-}
-
-/* TEKSTIT JA LINKIT */
-#passages .passage a:not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* NAPIT YHTEISESTI */
-#passages .passage a.btn,
-#passages .passage button.btn,
-.navbar-fixed button.btn {
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-  border: 2px solid #8A5A2B;   /* puunkuoren ruskea */
-  border-radius: 999px;
-
-  padding: 0.75rem 1.6rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-
-  box-shadow: 0 5px 0 rgba(0,0,0,0.28);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-#passages .passage a.btn:hover,
-#passages .passage button.btn:hover,
-.navbar-fixed button.btn:hover {
-  filter: brightness(1.07);
-  transform: translateY(-1px);
-}
-
-#passages .passage a.btn:active,
-#passages .passage button.btn:active,
-.navbar-fixed button.btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.30);
-}
-
-.btn--danger {
-  background: var(--danger-bg);
-  color: #fff !important;
-  border-color: #4A1414;
-}
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   1. POISTA SUGARCUBEN OLETUS-UI
-   ============================================================ */
-
-#sidebar,
-#ui-bar,
-#ui-bar-toggle,
-#toolbar {
-  display: none !important;
-}
-
-/* ============================================================
-   2. PERUSRUNK0
-   ============================================================ */
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  padding-top: 0; /* navbar poistettu */
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg-body);
-  color: var(--text-main);
-}
-
-/* ============================================================
-   3. PASSAGE-ALUE
-   ============================================================ */
-
-#story {
-  margin-left: 0 !important;
-}
-
-#passages {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-#passages .passage {
-  margin: 2rem auto;
-  padding: 2.2rem 3rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-/* ============================================================
-   4. TYPOGRAFIA
-   ============================================================ */
-
-#passages .passage p,
-#passages .passage li,
-#passages .passage div,
-#passages .passage span,
-#passages .passage section {
-  font-size: 16px;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  hyphens: auto;
-}
-
-#passages .passage ul,
-#passages .passage ol {
-  padding-left: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-#passages .passage li {
-  margin-bottom: 0.35rem;
-}
-
-/* Otsikot */
-
-#passages .passage h1,
-#passages .passage h2,
-#passages .passage h3 {
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  margin: 0.6rem auto 1.2rem;
-}
-
-/* H1 */
-#passages .passage h1 {
-  font-size: 2.2rem;
-  color: var(--accent-1);
-  border: 2px solid var(--accent-1);
-  border-radius: 12px;
-  padding: 0.5rem 1.6rem;
-}
-
-/* H2 */
-#passages .passage h2 {
-  font-size: 1.6rem;
-  color: var(--accent-2);
-}
-
-/* H3 */
-#passages .passage h3 {
-  font-size: 1.25rem;
-  color: var(--accent-3);
-}
-
-/* Linkit */
-/* Linkit vain leipätekstissä – EI napeille */
-#passages .passage a:not(.btn):not(.external-link):not(.link-internal):not(.macro-link) {
-  color: var(--link-text) !important;
-  text-decoration: underline;
-}
-
-/* ============================================================
-   NAPIT – VARMA SUGARCUBE (EI RIIPPUVUUTTA .btn-LUOKASTA)
-   Toimii sekä [[wikilink]] että <<link>> ja <<button>>
-   ============================================================ */
-
-/* 1) Wrapperit: napit keskelle ja pinoon */
-.intro-nappi,
-.answer-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ============================================================
-   YHTEINEN NAPPI – MAISTUVA AMMATTI
-   ============================================================ */
-
-.intro-nappi a.link-internal,
-.intro-nappi a.macro-link,
-.answer-group a.link-internal,
-.answer-group a.macro-link,
-.navbar-fixed button,
-.navbar-fixed a {
-  appearance: none;
-  display: inline-block;
-  width: min(520px, 100%);
-  box-sizing: border-box;
-
-  padding: 0.75rem 1.6rem;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-
-  background: var(--btn-bg);
-  color: var(--btn-text) !important;
-
-  border: 2px solid rgba(0,0,0,0.15);
-  border-radius: 999px;
-
-  text-decoration: none !important;
-  cursor: pointer;
-
-  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.1s ease;
-}
-
-.intro-nappi a:hover,
-.answer-group a:hover,
-.navbar-fixed button:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-}
-
-.intro-nappi a:active,
-.answer-group a:active,
-.navbar-fixed button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-}
-
-.answer-group {
-  display: flex;
-  flex-direction: row;      /* NAPIT VIEREKKÄIN */
-  justify-content: center;
-  align-items: stretch;
-  gap: 0.75rem;
-  flex-wrap: wrap;          /* sallii rivittymisen pienellä näytöllä */
-}
-.answer-group a {
-  width: auto;
-  min-width: 140px;
-}
-
-/* ============================================================
-   6. NAVBAR
-   ============================================================ */
-
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-
-  padding: 0.35rem 0.75rem;
-  min-height: 42px;
-
-  background: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.55);
-}
-
-/* Piilotus kansisivulla */
-body.hide-navbar .navbar-fixed {
-  display: none !important;
-}
-
-/* ============================================================
-   7. KORTIT (KOULUT, VIDEOT)
-   ============================================================ */
-
-.media-card,
-.school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 1.4rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
-}
-
-/* ============================================================
-   8. KANSISIVU – JULISTE (KORJATTU)
-   ============================================================ */
-/* KANSI: koko näkymä keskitetty */
-#passages .passage .cover-link {
-  position: fixed !important;
-  inset: 0 !important;                /* top/right/bottom/left = 0 */
-  display: flex !important;
-
-  justify-content: center !important; /* vaaka */
-  align-items: center !important;     /* pysty */
-
-  background:
-    linear-gradient(rgba(240,245,240,0.88), rgba(240,245,240,0.88)),
-    url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover !important;
-  background-position: center center !important;
-
-  text-decoration: none !important;
-  cursor: pointer;
-  z-index: 10000;                     /* varmasti muiden yläpuolella */
-}
-
-/* Otsikkokontti */
-#passages .passage .cover-inner {
-  text-align: center;
-  max-width: 900px;
-  padding: 2rem 2.2rem;
-}
-
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1;
-
-  font-size: clamp(0.28rem, 0.65vw, 0.5rem);  /* erittäin pieni */
-  color: #2F5D3A;
-
-  margin: 0;
-  padding: 0;
-
-  background: none;
-  border: none;
-  box-shadow: none;
-
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-a.macro-link.btn--danger {
-  background: var(--danger-bg) !important;
-  border-color: #4A1414 !important;
-  color: #ffffff !important;
-}
-p.highlight {
-  color: var(--highlight-color) !important;
-  font-weight: 700;
-}
-a.macro-link.btn--danger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.lomake-ryhma textarea {
-  width: 100%;
-  min-height: 8rem;
-  padding: 1rem 1.1rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  border-radius: 16px;
-  border: 2px solid var(--card-border);
-  box-sizing: border-box;
-}
-/* Ammattitutkimus – suuret ja korkeat tekstikentät (varma yliajo) */
-#passages .lomake-ryhma textarea {
-  width: 100% !important;
-  min-height: 10rem !important;
-  height: 10rem !important;
-  padding: 1rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.6 !important;
-
-  border-radius: 16px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-  resize: vertical;
-}
-
-/* Jos jokin kenttä on vielä textbox (input), tee siitäkin selvästi korkeampi */
-#passages .lomake-ryhma input[type="text"] {
-  width: 100% !important;
-  min-height: 3.2rem !important;
-  padding: 0.9rem 1.1rem !important;
-
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-
-  border-radius: 14px !important;
-  border: 2px solid var(--card-border) !important;
-  background: #ffffff !important;
-
-  box-sizing: border-box !important;
-}
-
-tarea,
-#passages .lomake-ryhma input[type="text"] {
-  color: #000000 !important;
-}
-#passages .passage .cover-link {
-  text-decoration: none !important;
-}
-.answer-group a {
-  background: #7EDC9A !important;     /* sammalenvihreä */
-  color: #103820 !important;
-  border-color: #4F8A62 !important;
-}
-/* ================================
-   METSÄTEKSTUURI – KOKO SIVUSTO
-   ================================ */
-
-body {
-  position: relative;
-  background:
-    linear-gradient(
-      rgba(242,246,242,0.93),
-      rgba(242,246,242,0.93)
-    ),
-    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-}
-/* KANSISIVU: poista body-tausta kokonaan */
-body.hide-navbar {
-  background: none !important;
-}
-
-/* KANSISIVUN OTSIKKO – LOPULLINEN KOKO */
-#passages .passage .cover-title {
-  font-family: "Segoe UI", Arial, sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
-  line-height: 1.05 !important;
-
-  font-size: clamp(1.8rem, 3.8vw, 3rem) !important;  /* SELKEÄ ja maltillinen */
-  color: #2F5D3A !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* ==============================
-   NAPPIKORJAUS – GOOGLE SITES SAFE
-   ============================== */
-
-.intro-nappi,
-.answer-group {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 0.75rem !important;
-  flex-wrap: wrap !important;
-}
-
-.intro-nappi a,
-.answer-group a {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-
-  width: auto !important;
-  min-width: 140px !important;
-  max-width: none !important;
-
-  white-space: nowrap !important;
-}
-/* ESITELMÄPOHJA – kirjoitusteksti mustaksi */
-#passages .lomake-ryhma textarea,
-#passages .lomake-ryhma input,
-#passages .lomake-ryhma select {
-  color: #000000 !important;
-}
-
-/* ============================
-   INFO-TEXT – OPETUSKORTTI
-   ============================ */
-
-#passages .info-text {
-  background: #ffffff;
-  border: 1px solid #BFD3C4;
-  border-radius: 14px;
-  padding: 0.9rem 1.1rem;
-  margin: 1.2rem auto;
-  max-width: 720px;
-  text-align: center;
-}
-
-#passages .info-text p {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.95rem;
-  color: #1E2A1E;
-}
-/* TOIMINTORIVI ESITELMÄPOHJAAN */
-.action-row {
-  justify-content: center !important;
-  gap: 1rem !important;
-}
-
-.action-row a {
-  min-width: 200px !important;
-}
-
-/* PÄÄTOIMINTONAPPI */
-.btn-primary {
-  background: linear-gradient(#3F7E59, #2F5D3A) !important;
-}
-/* ======================================
-   SAAVUTETTAVUUS – LUETTAVUUSKORJAUS
-   ====================================== */
-
-/* Perusteksti isommaksi ja selkeämmäksi */
-#passages .passage p,
-#passages .passage li,
-#passages .passage span,
-#passages .passage div {
-  font-size: 18px !important;
-  line-height: 1.85 !important;
-}
-
-/* Lomakekenttien teksti */
-#passages textarea,
-#passages input,
-#passages select {
-  font-size: 18px !important;
-  line-height: 1.6 !important;
-}
-
-/* Otsikot suhteessa uuteen kokoon */
-#passages .passage h1 { font-size: 2.4rem !important; }
-#passages .passage h2 { font-size: 1.8rem !important; }
-#passages .passage h3 { font-size: 1.4rem !important; }
-
-/* Napit helpommin luettaviksi */
-.intro-nappi a,
-.answer-group a,
-.navbar-fixed .btn {
-  font-size: 1.05rem !important;
-  padding: 0.9rem 1.7rem !important;
-}
-/* ============================================================
-   MOBIILIVERSIO – parannettu
-   ============================================================ */
-
-@media (max-width: 600px) {
-  /* Pienempi padding sivuilla */
-  #passages {
-    margin: 0.75rem auto;
-    padding: 0 0.5rem;
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Mysteeri joella – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "luonto",
+ "alaNimi": "Luonto- ja ympäristöala",
+ "tarinaNimi": "Mysteeri joella",
+ "kello": {
+  "alku": 480,
+  "raja": 480
+ },
+ "katsoTeksti": "Katso maisemaa",
+ "aikaRivi": "Mysteeri ratkesi kello",
+ "kutsuTilanneOtsikko": "Tehtävä",
+ "piirteet": {
+  "tutkija": {
+   "nimi": "Tutkija",
+   "kuvaus": "Keräät todisteita ennen kuin teet päätöksen."
+  },
+  "luonto": {
+   "nimi": "Luonnon puolustaja",
+   "kuvaus": "Mietit, miten luonto voi hyvin."
+  },
+  "viestija": {
+   "nimi": "Selkeä viestijä",
+   "kuvaus": "Kerrot asiat rauhallisesti ja totuudenmukaisesti."
+  },
+  "tiimi": {
+   "nimi": "Kuuntelija",
+   "kuvaus": "Kuuntelet muita ja saat heiltä tärkeää tietoa."
   }
-
-  #passages .passage {
-    padding: 1.2rem 1rem;
-    margin: 0.75rem auto;
+ },
+ "ammatit": {
+  "kalavesi": {
+   "nimi": "Kalavesienhoitaja",
+   "kuvaus": "Hoitaa jokia ja järviä, jotta kalat voivat hyvin.",
+   "tutkinto": "Kalatalouden perustutkinto (kalavesienhoitaja)",
+   "piirteet": [
+    "tutkija",
+    "luonto"
+   ]
+  },
+  "ymparisto": {
+   "nimi": "Ympäristönhoitaja",
+   "kuvaus": "Tutkii ja hoitaa luontoa ja ympäristöä maastossa.",
+   "tutkinto": "Luonto- ja ympäristöalan perustutkinto (ympäristönhoitaja)",
+   "piirteet": [
+    "tutkija",
+    "luonto"
+   ]
+  },
+  "ohjaaja": {
+   "nimi": "Luonto-ohjaaja",
+   "kuvaus": "Vie ihmisiä turvallisesti retkille luontoon.",
+   "tutkinto": "Luonto- ja ympäristöalan perustutkinto (luonto-ohjaaja)",
+   "piirteet": [
+    "viestija",
+    "tiimi"
+   ]
+  },
+  "poro": {
+   "nimi": "Poronhoitaja",
+   "kuvaus": "Hoitaa poroja ja tuntee Lapin luonnon.",
+   "tutkinto": "Luonto- ja ympäristöalan perustutkinto (poronhoitaja)",
+   "piirteet": [
+    "luonto",
+    "tiimi"
+   ]
+  },
+  "metsa": {
+   "nimi": "Metsäkoneenkuljettaja",
+   "kuvaus": "Tekee metsätöitä isoilla koneilla.",
+   "tutkinto": "Metsäalan perustutkinto (metsäkoneenkuljettaja)",
+   "piirteet": [
+    "luonto",
+    "viestija"
+   ]
+  },
+  "laborantti": {
+   "nimi": "Laborantti",
+   "kuvaus": "Tutkii näytteitä laboratoriossa.",
+   "tutkinto": "Laboratorioalan perustutkinto (laborantti)",
+   "piirteet": [
+    "tutkija",
+    "tiimi"
+   ]
   }
-
-  /* Otsikot skaalautuvat */
-  #passages .passage h1 { font-size: 1.7rem !important; padding: 0.35rem 0.8rem; letter-spacing: 0.03em !important; }
-  #passages .passage h2 { font-size: 1.3rem !important; }
-  #passages .passage h3 { font-size: 1.1rem !important; }
-
-  /* Perusteksti */
-  #passages .passage p,
-  #passages .passage li,
-  #passages .passage span,
-  #passages .passage div {
-    font-size: 15px !important;
-    line-height: 1.65 !important;
+ },
+ "kutsuKortit": [
+  {
+   "nimi": "Tunturipuro",
+   "x": 54,
+   "y": 11,
+   "kuvaus": "Joen alku tunturin rinteellä.",
+   "arvot": {
+    "happi": 11.2,
+    "sameus": 1,
+    "ph": 7.1
+   },
+   "havainto": "Vesi on kirkasta ja kylmää. Pohjassa näkyy kiviä."
+  },
+  {
+   "nimi": "Suon laskuoja",
+   "x": 57,
+   "y": 29,
+   "kuvaus": "Kohta, jossa suolta tuleva oja laskee jokeen.",
+   "arvot": {
+    "happi": 10.4,
+    "sameus": 3,
+    "ph": 6.3
+   },
+   "havainto": "Vesi on vähän ruskeaa, kuin teetä. Väri tulee suon kasveista, ja se on luonnollista."
+  },
+  {
+   "nimi": "Poroaita",
+   "x": 48,
+   "y": 47,
+   "kuvaus": "Poroaidan kohdalla porot ylittävät joen.",
+   "arvot": {
+    "happi": 10.1,
+    "sameus": 2,
+    "ph": 6.8
+   },
+   "havainto": "Vesi on kirkasta. Rannalla on porojen jälkiä."
+  },
+  {
+   "nimi": "Hakkuuaukean oja",
+   "x": 45,
+   "y": 58.5,
+   "kuvaus": "Kohta, jossa hakkuuaukean uusi oja laskee jokeen.",
+   "arvot": {
+    "happi": 7.2,
+    "sameus": 48,
+    "ph": 6.4
+   },
+   "havainto": "Vesi on mutaista! Ojasta valuu ruskeaa lietettä jokeen."
+  },
+  {
+   "nimi": "Riippusilta",
+   "x": 55,
+   "y": 73,
+   "kuvaus": "Retkeilijöiden riippusilta.",
+   "arvot": {
+    "happi": 7.6,
+    "sameus": 35,
+    "ph": 6.6
+   },
+   "havainto": "Vesi on sameaa. Pohjan kivet ovat liejun peitossa."
+  },
+  {
+   "nimi": "Kylän puhdistamo",
+   "x": 58,
+   "y": 85,
+   "kuvaus": "Kylän jätevedenpuhdistamon putki laskee jokeen.",
+   "arvot": {
+    "happi": 7.9,
+    "sameus": 28,
+    "ph": 6.8
+   },
+   "havainto": "Vesi on yhä sameaa, mutta ei sen huonompaa kuin ylempänä."
+  },
+  {
+   "nimi": "Leirintäalue",
+   "x": 45,
+   "y": 103,
+   "kuvaus": "Leirintäalueen uimaranta.",
+   "arvot": {
+    "happi": 8.3,
+    "sameus": 22,
+    "ph": 6.9
+   },
+   "havainto": "Vesi on vähän sameaa. Ranta on siisti."
+  },
+  {
+   "nimi": "Joen suu",
+   "x": 48,
+   "y": 116,
+   "kuvaus": "Kohta, jossa joki laskee järveen.",
+   "arvot": {
+    "happi": 8.6,
+    "sameus": 15,
+    "ph": 7.0
+   },
+   "havainto": "Järvessä liete laskeutuu pohjaan, ja vesi kirkastuu vähitellen."
   }
-
-  /* Lomakekentät */
-  #passages textarea,
-  #passages input,
-  #passages select {
-    font-size: 16px !important; /* iOS ei zoomaa 16px+ kentissä */
-  }
-
-  /* Napit koko leveyteen, pinotaan allekkain */
-  .intro-nappi,
-  .answer-group,
-  .intro-nappi-row,
-  .action-row {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-  }
-
-  .intro-nappi a,
-  .answer-group a,
-  .intro-nappi-row a,
-  .action-row a,
-  .intro-nappi a.link-internal,
-  .intro-nappi a.macro-link,
-  .answer-group a.link-internal,
-  .answer-group a.macro-link,
-  .intro-nappi a.btn-primary,
-  .intro-nappi a.btn-secondary,
-  .action-row a.btn-primary,
-  .action-row a.btn-secondary {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    white-space: normal !important;
-    font-size: 0.95rem !important;
-    padding: 0.75rem 1rem !important;
-  }
-
-  /* Koulukortit mobiilissa */
-  .school-card {
-    padding: 0.9rem 1rem;
-    border-radius: 12px;
-    margin-bottom: 0.75rem;
-  }
-
-  /* info-text -laatikko tiiviimpi */
-  .info-text {
-    padding: 0.8rem 1rem;
-  }
-}
-
-@media (max-width: 400px) {
-  #passages .passage {
-    padding: 0.8rem 0.6rem;
-  }
-  #passages .passage h1 { font-size: 1.35rem !important; }
-}
-</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ========= NAVBAR POISTETTU ========= */
-
-(function () {
-  "use strict";
-
-  const AUTOSAVE_KEY = "luonto_ammatti_autosave_v1";
-
-  /* ========= LATAA TXT ========= */
-  window.downloadAmmattitutkimus = function () {
-    const v = State.variables;
-
-    const text =
-`ESITELMÄ AMMATISTA: ${v.ammatti || ""}
-
-1. MITÄ TÄSSÄ TYÖSSÄ TEHDÄÄN:
-${v.tyotehtavat || ""}
-
-2. MISSÄ TÖITÄ TEHDÄÄN:
-${v.tyopaikat || ""}
-
-3. MILLAISTA TYÖAIKA ON:
-${v.tyoajat || ""}
-
-4. MISSÄ TÄTÄ AMMATTIA VOI OPISKELLA:
-${v.opiskelupaikat || ""}
-
-5. MIKSI TÄMÄ AMMATTI KIINNOSTAA MINUA:
-${v.omaPerustelu || ""}
-
-------------------------------
-Luonto-, ympäristö- ja metsäalan ammattitehtävä.`;
-
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (v.ammatti || "luontoala") + "_esitelma.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  /* ========= AUTOSAVE ========= */
-  window.initAmmattiAutosave = function () {
-    const fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || "[]"); } catch(e){}
-
-    fields.forEach((f,i) => f.value = saved[i] || "");
-
-    fields.forEach((field,i)=>{
-      field.addEventListener("input", ()=>{
-        const data = Array.from(fields).map(f=>f.value);
-        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
-        ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu"]
-          .forEach((k,j)=> State.variables[k] = data[j] || "");
-      });
-    });
-  };
-
-  /* ========= TYHJENNÄ ========= */
-  window.resetAmmattitutkimus = function () {
-    document.querySelectorAll("#passages textarea").forEach(t=>t.value="");
-    ["tyotehtavat","tyopaikat","tyoajat","opiskelupaikat","omaPerustelu","ammatti"]
-      .forEach(k=>State.variables[k]="");
-    localStorage.removeItem(AUTOSAVE_KEY);
-    alert("Vastaukset tyhjennetty.");
-  };
-
-  /* ── LOPPUTEHTÄVÄ (3 kysymystä) ── */
-  window.initLopputehtavaAutosave = function () {
-    var KEY = "luonto_ala_lt_v1";
-    var fields = document.querySelectorAll("#passages .lomake-ryhma textarea");
-    if (!fields.length) return;
-    var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-    fields.forEach(function(f,i){ f.value = saved[i] || ""; });
-    fields.forEach(function(field){
-      field.addEventListener("input", function(){
-        var data = Array.from(fields).map(function(f){ return f.value; });
-        localStorage.setItem(KEY, JSON.stringify(data));
-      });
-    });
-  };
-  window.tyhjennaLopputehtava = function () {
-    var KEY = "luonto_ala_lt_v1";
-    document.querySelectorAll("#passages .lomake-ryhma textarea").forEach(function(f){ f.value = ""; });
-    localStorage.removeItem(KEY);
-  };
-  window.downloadLopputehtava = function () {
-    var ammatti = State.variables.ammatti || "";
-    var g = function(id){ var el = document.getElementById(id); return el ? el.value : ""; };
-    var text = "AMMATTI: " + ammatti + "\n\n" +
-      "1. MITÄ TÄSSÄ AMMATISSA TEHDÄÄN?\n" + g("lt_q1") + "\n\n" +
-      "2. MITÄ PITÄÄ OSATA?\n" + g("lt_q2") + "\n\n" +
-      "3. MIKSI SINÄ SOPISIT TÄHÄN AMMATTIIN?\n" + g("lt_q3") + "\n";
-    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "ammatti_" + ammatti.replace(/\s+/g,"_") + ".txt";
-    a.click();
-  };
-
-})();
-
-  
-/* Poistu-painike (sulje välilehti) */
-
-window.confirmExitStory = function () {
-  const ok = window.confirm("Haluatko varmasti sulkea esityksen?");
-  if (ok) {
-    window.close();
-  }
-};
-$(document).on('click', 'a.macro-link.btn--danger', function () {
-  SugarCube.Engine.play('Kansi');
+ ],
+ "tehtava": {
+  "tyyppi": "kartta",
+  "nimi": "Jäljitä lähde kartalla",
+  "tag": "Tehtävä · noin 25 min",
+  "maara": "joen kartan, jossa on <strong>8 näytepistettä<\/strong>",
+  "ohjeAskelLause": "Teet kaksi asiaa:",
+  "askeleet": [
+   "Ota enintään viisi vesinäytettä. Valitse pisteet fiksusti!",
+   "Päättele, mistä ongelma alkaa. Perustele vastauksesi ja valitse, miten joki korjataan."
+  ],
+  "lopuksi": "Lopuksi näet, ratkaisitko mysteerin. Lataa vastauksesi ja palauta ne Classroomiin.",
+  "tulosOtsikko": "Tutkimusraporttisi",
+  "naytteet": 5,
+  "minNaytteet": 3,
+  "karttaNimi": "Kuukkelijoen kartta. Joki virtaa tunturilta alas järveen.",
+  "karttaOhje": "Kuukkelijoki virtaa tunturilta järveen. Jossain kohdassa vesi muuttuu huonoksi. Valitse kartalta piste ja ota näyte. Hyvässä vedessä happea on yli 9 mg/l ja sameus on alle 5.",
+  "raja": "Vinkki: Vertaa näytteitä yläjuoksulta alajuoksulle. Missä kohdassa arvot muuttuvat?",
+  "tilanneOtsikko": "Sinä olet ympäristönhoitaja",
+  "valitseOhje": "Valitse kartalta numeroitu piste. Näet sen kuvauksen ja voit ottaa näytteen.",
+  "osa1": "Osa 1/2 · Näytteet",
+  "osa2": "Osa 2/2 · Ratkaisu",
+  "ratkaiseNappi": "Ratkaise mysteeri",
+  "takaisinNappi": "Takaisin näytteisiin",
+  "valmisNappi": "Katso tutkimusraportti",
+  "lahdeKysymys": "Mistä kohdasta ongelma alkaa?",
+  "perusteluKysymys": "Mihin näytteisiin päätelmäsi perustuu?",
+  "perusteluPlaceholder": "Päättelin tämän, koska näytteessä…",
+  "korjausKysymys": "Miten joki kannattaa korjata?",
+  "korjausPerusteluKysymys": "Miksi valitsit tämän korjauksen?",
+  "mittarit": [
+   {
+    "avain": "happi",
+    "nimi": "Happi",
+    "yksikko": "mg/l",
+    "min": 9
+   },
+   {
+    "avain": "sameus",
+    "nimi": "Sameus",
+    "yksikko": "NTU",
+    "max": 5
+   },
+   {
+    "avain": "ph",
+    "nimi": "pH",
+    "yksikko": "",
+    "min": 6,
+    "max": 8
+   }
+  ],
+  "joki": "M 55 6 C 48 18, 62 26, 56 36 C 50 46, 40 52, 46 62 C 52 72, 64 76, 56 88 C 48 100, 38 104, 48 118",
+  "sivuvedet": [
+   {
+    "d": "M 22 26 C 32 26, 44 30, 56.5 30",
+    "vari": "#8c7a55",
+    "leveys": 1.4
+   },
+   {
+    "d": "M 80 52 C 70 54, 58 60, 45.5 58.5",
+    "vari": "#8b5a2b",
+    "leveys": 1.8
+   }
+  ],
+  "alueet": [
+   {
+    "d": "M 0 0 L 100 0 L 100 14 C 80 18, 66 6, 55 12 C 42 4, 20 18, 0 12 Z",
+    "vari": "#b5865a"
+   },
+   {
+    "d": "M 6 18 C 14 14, 26 18, 28 26 C 30 34, 16 38, 8 34 C 2 30, 2 22, 6 18 Z",
+    "vari": "#9aa56b"
+   },
+   {
+    "d": "M 66 44 C 76 40, 92 44, 94 52 C 96 62, 80 66, 70 62 C 62 58, 60 48, 66 44 Z",
+    "vari": "#d9c08f"
+   },
+   {
+    "d": "M 68 80 C 76 76, 92 78, 94 86 C 96 94, 82 96, 72 94 C 64 92, 62 84, 68 80 Z",
+    "vari": "#c9b9a8"
+   },
+   {
+    "d": "M 14 98 C 22 94, 34 98, 34 104 C 34 110, 22 112, 16 110 C 10 108, 8 102, 14 98 Z",
+    "vari": "#a9c78f"
+   },
+   {
+    "d": "M 22 120 C 36 112, 62 112, 78 120 C 84 126, 70 132, 48 132 C 28 132, 14 128, 22 120 Z",
+    "vari": "#6fa9dc",
+    "opacity": 1
+   }
+  ],
+  "kohteet": [
+   {
+    "x": 50,
+    "y": 5,
+    "teksti": "▲ Tunturi"
+   },
+   {
+    "x": 16,
+    "y": 24,
+    "teksti": "Suo"
+   },
+   {
+    "x": 82,
+    "y": 50,
+    "teksti": "Hakkuuaukea"
+   },
+   {
+    "x": 82,
+    "y": 84,
+    "teksti": "Kylä"
+   },
+   {
+    "x": 24,
+    "y": 101,
+    "teksti": "Leirintä"
+   },
+   {
+    "x": 66,
+    "y": 126,
+    "teksti": "Järvi"
+   },
+   {
+    "x": 34,
+    "y": 47,
+    "teksti": "Poroaita"
+   }
+  ],
+  "oikea": "Hakkuuaukean oja",
+  "lahella": [
+   "Riippusilta"
+  ],
+  "tulosOikein": "Ratkaisit mysteerin!",
+  "tulosLahella": "Melkein!",
+  "tulosVaarin": "Mysteeri ratkesi toisin",
+  "selitysOikein": "✓ Oikein! Joki on kirkas ojan yläpuolella, mutta ojan kohdalla sameus nousee yhtäkkiä ja happi vähenee.",
+  "selitysLahella": "Melkein: sillan kohdalla vesi on jo sameaa, mutta ongelma alkaa vähän ylempää, hakkuuaukean ojan kohdalta.",
+  "selitysVaarin": "Ongelma alkaa hakkuuaukean ojan kohdalta. Sitä ylempänä vesi on kirkasta, alempana sameaa. Suon ruskea väri on luonnollista.",
+  "korjaukset": [
+   {
+    "nimi": "Laskeutusallas ojaan ja suojavyöhyke rantaan",
+    "oikein": true,
+    "palaute": "Paras ratkaisu: allas pysäyttää mudan, ja rannan puusto sitoo maata. Näin korjataan ongelman syy."
+   },
+   {
+    "nimi": "Kalastuskielto joelle",
+    "oikein": false,
+    "palaute": "Kielto suojaa kaloja hetken, mutta muta valuu jokeen edelleen."
+   },
+   {
+    "nimi": "Kylän puhdistamon sulkeminen",
+    "oikein": false,
+    "palaute": "Näytteiden mukaan puhdistamo ei ollut ongelman syy."
+   },
+   {
+    "nimi": "Joen pohjan ruoppaus",
+    "oikein": false,
+    "palaute": "Ruoppaus poistaa vanhan mudan, mutta uutta tulee niin kauan kuin oja on korjaamatta."
+   }
+  ],
+  "ammattilaisetOtsikko": "Näitä töitä tekevät",
+  "ammattilaiset": [
+   {
+    "nimi": "Ympäristönhoitaja",
+    "tehtava": "ottaa vesinäytteet maastossa",
+    "tutkinto": "Luonto- ja ympäristöalan perustutkinto"
+   },
+   {
+    "nimi": "Laborantti",
+    "tehtava": "tutkii näytteet laboratoriossa",
+    "tutkinto": "Laboratorioalan perustutkinto"
+   },
+   {
+    "nimi": "Metsäkoneenkuljettaja",
+    "tehtava": "kaivaa laskeutusaltaan",
+    "tutkinto": "Metsäalan perustutkinto"
+   },
+   {
+    "nimi": "Kalavesienhoitaja",
+    "tehtava": "kunnostaa joen pohjan kaloille sopivaksi",
+    "tutkinto": "Kalatalouden perustutkinto"
+   },
+   {
+    "nimi": "Ympäristöasiantuntija",
+    "tehtava": "valvoo, että luontoa ei pilata",
+    "tutkinto": "Esimerkiksi insinööri (AMK) tai biologi (yliopisto)"
+   }
+  ],
+  "korttiYla": "TUTKIMUSRAPORTTI · KUUKKELIJOKI"
+ }
 });
 </script><tw-passagedata pid="1" name="StoryInit" tags="" position="825,25" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
-&lt;&lt;script&gt;&gt;
-State.reset();
-State.variables.pisteet = 0;
-Engine.play(&quot;start&quot;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;set $hideNavbar = true&gt;&gt;
-&lt;&lt;set $hideNavbar = false&gt;&gt;
-
-/* Ammattitutkimus-lomakkeen kentät */
-&lt;&lt;set $ammattiNimi = &quot;&quot;&gt;&gt;
-&lt;&lt;set $koulutusPolku = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyotehtavat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $tyopaikat = &quot;&quot;&gt;&gt;
-&lt;&lt;set $vahvuudet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $hyvatPuolet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $haasteet = &quot;&quot;&gt;&gt;
-&lt;&lt;set $palkkaus = &quot;&quot;&gt;&gt;
-&lt;&lt;set $yhteenvetoOmaNakyma = &quot;&quot;&gt;&gt;
-
-</tw-passagedata><tw-passagedata pid="2" name="Kysymys 1" tags="" position="400,450" size="100,100">&lt;h2&gt;1 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö ulkona työskentelystä säästä riippumatta?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 2&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="3" name="start" tags="" position="600,100" size="100,100">&lt;div class=&quot;quiz-page&quot;&gt;
-    &lt;p&gt;
-&lt;strong&gt;Ympäristöala&lt;/strong&gt; keskittyy ympäristön suojeluun ja hyvinvointiin. Alan ammattilaiset huolehtivat esimerkiksi jätehuollosta, kierrätyksestä, vesien ja maaperän puhdistamisesta sekä ympäristön tilan seurannasta. Tavoitteena on vähentää ihmisen toiminnasta aiheutuvia haittoja luonnolle. Ympäristöalalla voi työskennellä esimerkiksi kunnissa, ympäristöviranomaisilla, tutkimuslaitoksissa ja ympäristöalan yrityksissä.
-  &lt;/p&gt;
-  &lt;p&gt;
-&lt;strong&gt;Luontoala&lt;/strong&gt; liittyy luonnossa toimimiseen, luonnon hoitoon ja ihmisten ohjaamiseen luonnossa. Alan ammattilaiset voivat toimia esimerkiksi luonto-ohjaajina, eräoppaina ja luonnonvaratuottajina. Työssä liikutaan paljon ulkona ja opastetaan ihmisiä toimimaan luonnossa turvallisesti ja vastuullisesti.
-  &lt;/p&gt;
-  &lt;p&gt;
-&lt;strong&gt;Metsäala&lt;/strong&gt; keskittyy metsien hoitoon ja kestävään käyttöön. Metsäalan ammattilaiset huolehtivat metsien istutuksesta, hoidosta, hakkuista ja metsien monimuotoisuuden säilyttämisestä. Alalla työskennellään esimerkiksi metsureina, metsäkoneenkuljettajina ja metsänhoitajina metsänhoitoyhdistyksissä, yrityksissä ja Metsähallituksella.
-  &lt;/p&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-    [[Sopiiko luonto-, ympäristö- tai metsäala sinulle? – Testaa tästä-&gt;Ammattitesti: alku]]
-  &lt;/div&gt;
-  &lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Siirry suoraan tehtävään-&gt;Ammattitehtävä]]
- &lt;/div&gt;
-&lt;/div&gt;
-&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Ammattitesti: alku" tags="" position="400,325" size="100,100">
-&lt;h1&gt;Luontoala – sopiiko se minulle?&lt;/h1&gt;
-
-&lt;p&gt;
-Tässä testissä vastaat kysymyksiin, jotka liittyvät ympäristö-, luonto- ja metsäalaan ja siellä tarvittaviin taitoihin. Jokaisesta myönteisestä vastauksesta saat pisteen. Testin lopuksi näet yhteenvedon siitä, kuinka hyvin kiinnostuksesi ja vahvuutesi voivat sopia luontoalalle. Tässä testissä ei ole oikeita tai vääriä vastauksia. Kysymykset auttavat sinua pohtimaan, voisiko luontoala olla sinulle sopiva ala.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-&lt;&lt;link &quot;Sopiiko tämä ala sinulle - Testaa!&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 1&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="5" name="StoryHeader" tags="" position="925,25" size="100,100"></tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="" position="475,75" size="100,100">&lt;&lt;script&gt;&gt;
-$(&#39;body&#39;).removeClass(&#39;hide-navbar&#39;);
-&lt;&lt;/script&gt;&gt;
-
-&lt;&lt;script&gt;&gt;
+/* Mysteeri joella – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {tutkija: 0, luonto: 0, viestija: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {kalavesi: 0, ymparisto: 0, ohjaaja: 0, poro: 0, metsa: 0, laborantti: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-ruska-tausta.webp&quot;)&gt;&gt;&lt;&lt;script&gt;&gt;
 $(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
 &lt;&lt;/script&gt;&gt;
-
-&lt;a class=&quot;cover-link&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;SugarCube.Engine.play(&#39;start&#39;)&quot;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
   &lt;div class=&quot;cover-inner&quot;&gt;
-    &lt;div class=&quot;cover-title&quot;&gt;
-     LUONTO-, YMPÄRISTÖ- JA METSÄALA
-    &lt;/div&gt;
-
-      &lt;/div&gt;
-&lt;/a&gt;
-</tw-passagedata><tw-passagedata pid="7" name="Kysymys 2" tags="" position="400,575" size="100,100">&lt;h2&gt;2 / 10&lt;/h2&gt;
-&lt;p&gt;Oletko valmis tekemään fyysistä työtä?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 3&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="8" name="Kysymys 3" tags="" position="400,700" size="100,100">&lt;h2&gt;3 / 10&lt;/h2&gt;
-&lt;p&gt;Kiinnostaako sinua luonnon ja ympäristön suojeleminen?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 4&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="9" name="Kysymys 4" tags="" position="400,825" size="100,100">&lt;h2&gt;4 / 10&lt;/h2&gt;
-&lt;p&gt;Pystytkö noudattamaan turvallisuusohjeita tarkasti?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 5&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="10" name="Kysymys 5" tags="" position="400,950" size="100,100">&lt;h2&gt;5 / 10&lt;/h2&gt;
-&lt;p&gt;Pidätkö työstä, jossa ollaan joskus yksin ja joskus tiimin kanssa?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 6&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="11" name="Kysymys 6" tags="" position="400,1075" size="100,100">&lt;h2&gt;6 / 10&lt;/h2&gt;
-&lt;p&gt;Kiinnostaako sinua oppia kasveista ja eläimistä?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 7&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="12" name="Kysymys 7" tags="" position="400,1200" size="100,100">&lt;h2&gt;7 / 10&lt;/h2&gt;
-&lt;p&gt;Oletko valmis heräämään aikaisin ja työskentelemään pitkiä päiviä?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 8&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="13" name="Kysymys 8" tags="" position="400,1325" size="100,100">&lt;h2&gt;8 / 10&lt;/h2&gt;
-&lt;p&gt;Pärjäätkö luonnossa ilman mukavuuksia?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 9&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="14" name="Kysymys 9" tags="" position="400,1450" size="100,100">&lt;h2&gt;9 / 10&lt;/h2&gt;
-&lt;p&gt;Haluaisitko ohjata muita luonnossa?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Kysymys 10&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="15" name="Kysymys 10" tags="" position="400,1575" size="100,100">&lt;h2&gt;10 / 10&lt;/h2&gt;
-&lt;p&gt;Onko sinulle tärkeää, että työsi hyödyttää luontoa?&lt;/p&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;KYLLÄ&quot;&gt;&gt;
-  &lt;&lt;set $pisteet += 1&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;EI&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Tulos&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="16" name="Tulos" tags="" position="400,1700" size="100,100">&lt;h1&gt;TULOKSESI&lt;/h1&gt;
-
-&lt;p&gt;Sait &lt;strong&gt;&lt;&lt;print $pisteet&gt;&gt;&lt;/strong&gt; / 10 pistettä.&lt;/p&gt;
-
-&lt;&lt;if $pisteet &gt;= 8&gt;&gt;
-&lt;p&gt;&lt;strong&gt;Luonto-, ympäristö- ja metsäala sopii sinulle erittäin hyvin!&lt;/strong&gt;&lt;/p&gt;
-&lt;&lt;elseif $pisteet &gt;= 5&gt;&gt;
-&lt;p&gt;&lt;strong&gt;Ala voi sopia sinulle – sinulla on monia hyviä ominaisuuksia tälle alalle.&lt;/strong&gt;&lt;/p&gt;
-&lt;&lt;else&gt;&gt;
-&lt;p&gt;&lt;strong&gt;Ala ei ehkä ole paras mahdollinen sinulle, mutta voit silti tutustua siihen lisää.&lt;/strong&gt;&lt;/p&gt;
-&lt;&lt;/if&gt;&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Tietokilpailu-&gt;Ammatti 1]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="17" name="Ammatti 1" tags="" position="625,350" size="100,100">&lt;h2&gt;Mikä ammattilainen huolehtii jätehuollosta ja kierrätyksestä?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Ympäristönhuoltaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Myyjä&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 1 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="18" name="Ammatti 1 oikein" tags="" position="575,475" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Ympäristönhuoltaja&lt;/strong&gt; huolehtii jätehuollosta, kierrätyksestä ja ympäristön siisteydestä. Työ auttaa pitämään asuinympäristöt puhtaina ja turvallisina.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Seuraava kysymys-&gt;Ammatti 2]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="19" name="Ammatti 2" tags="" position="575,600" size="100,100">&lt;h2&gt;Kuka tutkii ympäristön tilaa ja valvoo ympäristölakeja?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Ympäristötarkastaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Autonasentaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Tarjoilija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 2 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="20" name="Ammatti 1 väärin" tags="" position="675,475" size="100,100">&lt;h2&gt;Ei aivan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;ympäristönhuoltaja&lt;/strong&gt;. Hän huolehtii jätteiden keräyksestä, lajittelusta ja kierrätyksestä.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Jatka-&gt;Ammatti 2]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="21" name="Ammatti 2 oikein" tags="" position="550,700" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Ympäristötarkastaja&lt;/strong&gt; valvoo ympäristölakien noudattamista ja tutkii ympäristön tilaa.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Seuraava kysymys-&gt;Ammatti 3]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="22" name="Ammatti 3" tags="" position="600,800" size="100,100">&lt;h2&gt;Kuka puhdistaa maaperää ja vesiä ympäristön suojelemiseksi?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Ympäristönhoitaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Sähköasentaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kampaaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 3 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="23" name="Ammatti 2 väärin" tags="" position="650,700" size="100,100">&lt;h2&gt;Ei aivan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;ympäristötarkastaja&lt;/strong&gt;. Hän valvoo ympäristölakeja ja ympäristönsuojelua.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Jatka-&gt;Ammatti 3]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="24" name="Ammatti 3 oikein" tags="" position="550,900" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Ympäristönhoitaja&lt;/strong&gt; puhdistaa maaperää ja vesiä ja hoitaa luontoalueita.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Seuraava kysymys-&gt;Ammatti 4]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="25" name="Ammatti 3 väärin" tags="" position="650,900" size="100,100">&lt;h2&gt;Ei aivan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;ympäristönhoitaja&lt;/strong&gt;. Hän huolehtii luonnon ja ympäristön kunnostamisesta.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Jatka-&gt;Ammatti 4]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="26" name="Ammattitehtävä" tags="" position="850,475" size="100,100">&lt;h1&gt;Valitse ammatti&lt;/h1&gt;
-&lt;h2&gt;Luontoalan ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Luonto-ohjaaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Luonto-ohjaaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Eräopas&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Eräopas&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Luonnonvaratuottaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Luonnonvaratuottaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Poronhoitaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Poronhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-&lt;h2&gt;Metsäalan ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Metsuri&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Metsuri&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Metsäkoneen kuljettaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Metsäkoneen kuljettaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Luonnontuotejalostaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Luonnontuotejalostaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Metsänhoitaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Metsänhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-
-&lt;h2&gt;Ympäristöalan ammatit&lt;/h2&gt;
-&lt;div class=&quot;answer-group&quot;&gt;
-&lt;&lt;link &quot;Ympäristönhoitaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Ympäristönhoitaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ympäristönhuoltaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Ympäristönhuoltaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Ympäristötarkastaja&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Ympäristötarkastaja&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;&lt;link &quot;Jätehuollon työntekijä&quot;&gt;&gt;&lt;&lt;set $ammatti=&quot;Jätehuollon työntekijä&quot;&gt;&gt;&lt;&lt;goto &quot;Esitelmäpohja&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="27" name="Loppu" tags="" position="1000,700" size="100,100">
-&lt;h2&gt;Hyvä homma!&lt;/h2&gt;
-
-&lt;p&gt;
-Olet pohtinut omaa kiinnostustasi palvelualan ammatteihin. Voit näyttää vastauksesi opettajalle tai jatkaa keskustelua opinto-ohjaajan kanssa. 
-&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;&lt;strong&gt;Muista tyhjentää tehtäväsivu ennen kuin poistut.&lt;/strong&gt;&lt;/p&gt;
-  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-    &lt;a class=&quot;macro-link btn-secondary&quot;
-       href=&quot;javascript:void(0)&quot;
-       onclick=&quot;resetAmmattitutkimus()&quot;&gt;
-       Tyhjennä
-    &lt;/a&gt;
-    &lt;&lt;link &quot;Poistu&quot;&gt;&gt;
-      &lt;&lt;goto &quot;Kansi&quot;&gt;&gt;
-    &lt;&lt;/link&gt;&gt;
-
+    &lt;p class=&quot;cover-pieni&quot;&gt;Luonto- ja ympäristöala · tarina&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Luontoala&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Mysteeri joella · Miksi Lapin joen kalat voivat huonosti?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M5 19C5 10 11 5 20 4c0 9-5 15-14 15z&quot; fill=&quot;currentColor&quot;/&gt;&lt;path d=&quot;M5 19l8-8&quot; fill=&quot;none&quot; stroke=&quot;#2a1405&quot; stroke-width=&quot;1.6&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Lähde maastoon&lt;/span&gt;&lt;/button&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-
 </tw-passagedata><tw-passagedata pid="28" name="Oppilaitokset" tags="" position="850,300" size="100,100">&lt;h2&gt;Luonto-, ympäristö- ja metsäalan koulutukset&lt;/h2&gt;
 
 &lt;p&gt;
@@ -1233,115 +520,160 @@ Luonto-, ympäristö- ja metsäalan ammatteihin voi opiskella monissa oppilaitok
 &lt;/div&gt;
 
 &lt;div class=&quot;intro-nappi&quot;&gt;
-  [[Palaa esitelmäpohjaan-&gt;Esitelmäpohja]]
+  [[Takaisin-&gt;Loppu]]
  &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="29" name="Esitelmäpohja" tags="" position="925,575" size="100,100">&lt;&lt;script&gt;&gt;
-setTimeout(initLopputehtavaAutosave, 100);
-&lt;&lt;/script&gt;&gt;
-
-&lt;h2&gt;✨ Kerro valitsemastasi ammatista&lt;/h2&gt;
-
-&lt;p&gt;Olet valinnut ammatin: &lt;strong&gt;&lt;&lt;print $ammatti&gt;&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Hae tarvittaessa tietoa ammatista ja vastaa sitten kysymyksiin omin sanoin.&lt;/p&gt;
-
-&lt;div class=&quot;info-text&quot;&gt;
-  &lt;p&gt;📚 Hae tietoa:
-  &lt;a href=&quot;https://tyomarkkinatori.fi/henkiloasiakkaat/ammattitieto&quot; target=&quot;_blank&quot;&gt;Työmarkkinatori&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
-  &lt;a href=&quot;https://opintopolku.fi&quot; target=&quot;_blank&quot;&gt;Opintopolku.fi&lt;/a&gt;&lt;/p&gt;
+</tw-passagedata><tw-passagedata pid="37" name="start" tags="scene-laakso alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-ruska-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Mysteeri joella&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet TET-harjoittelijana Lapissa. Joesta on löytynyt kuolleita kaloja, ja vesi on samentunut. Selvitä luonnon ammattilaisten kanssa, mistä ongelma johtuu.&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;8&lt;/strong&gt;&lt;span&gt;näytepistettä&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;span&gt;mysteeri&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Mysteeri joella&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-
-&lt;div class=&quot;lomake-ryhma&quot;&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Kirjoita omin sanoin: mitä tässä ammatissa tehdään?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q1&quot; aria-label=&quot;Mitä tässä ammatissa tehdään?&quot; placeholder=&quot;Kerro omin sanoin, mitä työhön kuuluu...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;2. Mitä pitää osata?&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q2&quot; aria-label=&quot;Mitä pitää osata?&quot; placeholder=&quot;Taidot, tiedot ja ominaisuudet, joita ammatissa tarvitaan...&quot;&gt;&lt;/textarea&gt;
-
-&lt;p&gt;&lt;strong&gt;3. Miksi sinä sopisit tähän ammattiin? (motivaatio + omat vahvuudet)&lt;/strong&gt;&lt;/p&gt;
-&lt;textarea id=&quot;lt_q3&quot; aria-label=&quot;Miksi sinä sopisit tähän ammattiin?&quot; placeholder=&quot;Miksi ammatti kiinnostaa sinua ja mitkä omat vahvuutesi sopivat siihen...&quot;&gt;&lt;/textarea&gt;
-
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="38" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Pimeä tulee klo 16.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Mysteeri joella" tags="scene-laakso" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {tutkija: 0, luonto: 0, viestija: 0, tiimi: 0}&gt;&gt;&lt;&lt;set $kiinn to {kalavesi: 0, ymparisto: 0, ohjaaja: 0, poro: 0, metsa: 0, laborantti: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;
+&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-ruska-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Mysteeri joella&lt;/h1&gt;
+&lt;p&gt;Kello on 8.00. On syyskuu, ja Lapin tunturit hehkuvat ruskan väreissä. Olet TET-harjoittelijana luonto- ja ympäristöalan työpaikalla.&lt;/p&gt;
+&lt;p&gt;Aamulla tuli outo ilmoitus: Kuukkelijoesta on löytynyt kuolleita harjuksia, ja joen vesi on samentunut.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Ohjaajasi Aatu:&lt;/strong&gt; ”Tämä on mysteeri, joka pitää ratkaista ennen kuin pimeä tulee. Lähdetään joen rantaan.”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Lähde joelle&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Kuolleet kalat&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Kuolleet kalat" tags="scene-ranta" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Joen ranta&lt;/h2&gt;
+&lt;p&gt;Rannalla on kolme kuollutta harjusta. Joen vesi on ruskean sameaa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Aatu, kalavesienhoitaja:&lt;/strong&gt; ”Ensin pitää kerätä todisteet. Mitä teet?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kuvaan kalat, kirjaan paikan ja laitan yhden kalan kylmälaukkuun tutkittavaksi.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tutkija += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Oikea tutkijan ote!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kuvat ja paikka auttavat myöhemmin. Laboratorio voi tutkia kalan ja selvittää, mihin se kuoli.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kalavesi&quot; &quot;Näytteenotto&quot; &quot;Miltä kalavesienhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Heitän kalat takaisin jokeen.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Todisteet katoavat.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Aatu ehtii onneksi ottaa yhden kalan talteen. Hän kuvaa sen ja kirjaa paikan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kalavesi&quot; &quot;Näytteenotto&quot; &quot;Miltä kalavesienhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kirjoitan someen, että joki on myrkytetty.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian aikaista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kukaan ei vielä tiedä, mitä tapahtui. Väärä tieto voi pelottaa ihmisiä turhaan. Aatu kuvaa kalat ja kirjaa paikan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;kalavesi&quot; &quot;Näytteenotto&quot; &quot;Miltä kalavesienhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-
+</tw-passagedata><tw-passagedata pid="42" name="Näytteenotto" tags="scene-naytteet" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Näytteenotto&lt;/h2&gt;
+&lt;p&gt;Ympäristönhoitaja Saana tulee paikalle näytepulloineen.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Saana, ympäristönhoitaja:&lt;/strong&gt; ”Näytteistä näkee, onko vedessä tarpeeksi happea ja kuinka sameaa se on. Mistä näytteet kannattaa ottaa?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Monesta kohdasta, sekä ylä- että alajuoksulta.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tutkija += 2&gt;&gt;&lt;&lt;set $piirre.luonto += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri niin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun näytteitä on joen eri kohdista, niitä voi verrata. Silloin näkee, missä kohdassa vesi muuttuu huonoksi.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ymparisto&quot; &quot;Laavulla&quot; &quot;Miltä ympäristönhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Yhdestä kohdasta tästä rannalta.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Yksi näyte ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Se kertoo vain, että vesi on huonoa tässä. Se ei kerro, mistä ongelma tulee. Saana päättää ottaa näytteitä monesta kohdasta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ymparisto&quot; &quot;Laavulla&quot; &quot;Miltä ympäristönhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ei tarvita näytteitä. Vedestä näkee, että se on sameaa.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Silmä ei näe kaikkea.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Esimerkiksi hapen määrää ei voi nähdä. Saana ottaa näytteitä monesta kohdasta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ymparisto&quot; &quot;Laavulla&quot; &quot;Miltä ympäristönhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="43" name="Laavulla" tags="scene-laavu" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Laavulla&lt;/h2&gt;
+&lt;p&gt;Joen varrella on laavu. Luonto-ohjaaja Mikko on siellä retkiryhmän kanssa. Yksi retkeläisistä haluaa täyttää juomapullonsa joesta.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Mikko, luonto-ohjaaja:&lt;/strong&gt; ”Mitä sanoisit hänelle?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kerron rauhallisesti, että vettä tutkitaan, ja haetaan juomavesi lähteestä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.viestija += 2&gt;&gt;&lt;&lt;set $piirre.luonto += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hienosti!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Retkeläinen ymmärtää. Mikko kertoo vielä, että ryhmä näki eilen sateen jälkeen mutaista vettä ylempänä, hakkuuaukean kohdalla. Tärkeä vihje!&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ohjaaja&quot; &quot;Poroaidalla&quot; &quot;Miltä luonto-ohjaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Antaa juoda. Lapin vesi on aina puhdasta.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei tällä kertaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sameaa vettä ei kannata juoda keittämättä. Mikko hakee juomaveden lähteestä. Hän kertoo, että ryhmä näki eilen mutaista vettä hakkuuaukean kohdalla.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ohjaaja&quot; &quot;Poroaidalla&quot; &quot;Miltä luonto-ohjaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Sanon, että joki on myrkyllinen, eikä sinne saa mennä.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Retkeläiset säikähtävät.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kukaan ei vielä tiedä, onko joki myrkyllinen. Mikko rauhoittaa ryhmän. Hän kertoo, että he näkivät eilen mutaista vettä hakkuuaukean kohdalla.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ohjaaja&quot; &quot;Poroaidalla&quot; &quot;Miltä luonto-ohjaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="44" name="Poroaidalla" tags="scene-porot" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Poroaidalla&lt;/h2&gt;
+&lt;p&gt;Ylempänä joen varrella on poroaita. Poronhoitaja Elle on tuomassa poroja syyslaitumelle.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Elle, poronhoitaja:&lt;/strong&gt; ”Kuljen täällä joka päivä. Kesällä tuolla metsässä kaivettiin uusi oja.”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kysyn tarkemmin, missä oja on, ja merkitsen sen karttaan.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tiimi += 2&gt;&gt;&lt;&lt;set $piirre.tutkija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Paikallinen tieto on arvokasta!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Elle näyttää kartalta: oja on hakkuuaukealla, ja se laskee suoraan jokeen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;poro&quot; &quot;Hakkuuaukea&quot; &quot;Miltä poronhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ohitan asian. Porot eivät liity tähän.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Tärkeä vihje jäi melkein kuulematta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Aatu kysyy Elleltä lisää. Oja on hakkuuaukealla, ja se laskee suoraan jokeen.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;poro&quot; &quot;Hakkuuaukea&quot; &quot;Miltä poronhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kysyn, ovatko porot sotkeneet joen.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;set $piirre.tutkija += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä, että kysyt, mutta porot eivät ole syy.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Porot ovat kulkeneet täällä satoja vuosia. Elle näyttää kartalta, missä uusi oja on.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;poro&quot; &quot;Hakkuuaukea&quot; &quot;Miltä poronhoitajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="45" name="Hakkuuaukea" tags="scene-hakkuu" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Hakkuuaukea&lt;/h2&gt;
+&lt;p&gt;Hakkuuaukealla seisoo metsäkone. Uudesta ojasta valuu ruskeaa mutaa kohti jokea.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Jussi, metsäkoneenkuljettaja:&lt;/strong&gt; ”Ojan päähän piti tehdä laskeutusallas, mutta se jäi kesken. Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Kerron, mitä näytteet ja havainnot kertovat, ja ehdotan, että allas tehdään heti.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.viestija += 2&gt;&gt;&lt;&lt;set $piirre.luonto += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Rakentava ratkaisu!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jussi soittaa metsäyhtiöön. Allas tehdään vielä tällä viikolla, ja rantaan jätetään puusto suojavyöhykkeeksi.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;metsa&quot; &quot;Laboratorio&quot; &quot;Miltä metsäkoneenkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Syytän Jussia kovaan ääneen.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Syyttely ei auta.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Jussi ei yksin päättänyt asiasta. Aatu juttelee rauhallisesti, ja yhdessä sovitaan, että allas tehdään heti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;metsa&quot; &quot;Laboratorio&quot; &quot;Miltä metsäkoneenkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;En sano mitään. Se ei kuulu minulle.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Luonnon puolesta saa puhua.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Aatu kertoo havainnoista. Jussi soittaa metsäyhtiöön, ja allas tehdään vielä tällä viikolla.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;metsa&quot; &quot;Laboratorio&quot; &quot;Miltä metsäkoneenkuljettajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="46" name="Laboratorio" tags="scene-kyla" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Kylän laboratorio&lt;/h2&gt;
+&lt;p&gt;Kylän laboratoriossa laborantti Noora tutkii Saanan näytteet. Tulokset ovat valmiina.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Noora, laborantti:&lt;/strong&gt; ”Näytteitä on kahdeksasta kohdasta. Miten saamme selville, mistä ongelma alkaa?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Vertaillaan tuloksia järjestyksessä yläjuoksulta alajuoksulle.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $piirre.tutkija += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Täsmälleen!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Yläjuoksulla vesi on kirkasta. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä, ja happea on vähemmän. Mysteeri on ratkaistu!&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laborantti&quot; &quot;Joki toipuu&quot; &quot;Miltä laborantin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Katsotaan vain huonoin tulos.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Huonoin tulos ei kerro, mistä ongelma alkaa.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Noora järjestää tulokset joen suunnassa. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laborantti&quot; &quot;Joki toipuu&quot; &quot;Miltä laborantin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Syy on varmasti kylän puhdistamo.&quot;&gt;&gt;&lt;&lt;set $aika += 10&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Arvaus ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Tulosten mukaan vesi on jo ennen kylää sameaa. Ongelma alkaa ylempää, hakkuuaukean ojan kohdalta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 10 min. Seuraavaan paikkaan kävelet 20 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laborantti&quot; &quot;Joki toipuu&quot; &quot;Miltä laborantin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="47" name="Joki toipuu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-talvi-tausta.webp&quot;)&gt;&gt;&lt;h1&gt;Joki toipuu&lt;/h1&gt;
+&lt;p class=&quot;highlight&quot;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;. Mysteeri on ratkaistu ennen pimeää!&lt;/p&gt;
+&lt;p&gt;Ojaan rakennetaan laskeutusallas, joka pysäyttää mudan. Rantaan jätetään puusto suojavyöhykkeeksi. Pian tulee talvi, ja joki saa levätä jään alla.&lt;/p&gt;
+&lt;p&gt;Seuraavana keväänä vesi on taas kirkasta, ja harjukset palaavat kutemaan.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Yhden mysteerin ratkaisuun tarvittiin kuusi ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Aatu, kalavesienhoitaja&lt;/strong&gt; – keräsi todisteet&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Saana, ympäristönhoitaja&lt;/strong&gt; – otti vesinäytteet&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mikko, luonto-ohjaaja&lt;/strong&gt; – piti retkeläiset turvassa&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Elle, poronhoitaja&lt;/strong&gt; – kertoi, missä uusi oja on&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jussi, metsäkoneenkuljettaja&lt;/strong&gt; – teki korjauksen&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Noora, laborantti&lt;/strong&gt; – tutki näytteet&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Kaikkiin näihin ammatteihin voi opiskella ammattikoulussa.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="48" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
 &lt;div class=&quot;intro-nappi action-row&quot;&gt;
-&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;downloadLopputehtava()&quot;&gt;Lataa vastaukset&lt;/a&gt;
-&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaLopputehtava()&quot;&gt;Tyhjennä&lt;/a&gt;
-&lt;&lt;link &quot;Loppusanat&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="30" name="Ammatti 4" tags="" position="600,975" size="100,100">&lt;h2&gt;Kuka neuvoo ihmisiä lajittelussa ja ympäristöasioissa?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Ympäristöneuvoja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 4 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Tarjoilija&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 4 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Varastonhoitaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 4 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Jäljitä lähde kartalla&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="31" name="Ammatti 5" tags="" position="600,1175" size="100,100">&lt;h2&gt;Kuka suunnittelee jätehuollon ja ympäristönsuojelun ratkaisuja?&lt;/h2&gt;
-
-&lt;div class=&quot;answer-group&quot;&gt;
-
-&lt;&lt;link &quot;Ympäristöinsinööri&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 5 oikein&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Kokki&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 5 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
-&lt;&lt;link &quot;Bussinkuljettaja&quot;&gt;&gt;
-  &lt;&lt;goto &quot;Ammatti 5 väärin&quot;&gt;&gt;
-&lt;&lt;/link&gt;&gt;
-
+</tw-passagedata><tw-passagedata pid="49" name="Kutsu: ohje" tags="scene-laakso" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-metsa-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Jäljitä lähde kartalla&lt;/h2&gt;
+&lt;p&gt;Tarinassa mysteeri ratkesi. Nyt saat ratkaista sen itse! Olet ympäristönhoitaja, ja sinulla on rahaa vain viiteen vesinäytteeseen.&lt;/p&gt;
+&lt;p&gt;Saat joen kartan, jossa on &lt;strong&gt;8 näytepistettä&lt;/strong&gt;. Teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Ota enintään viisi vesinäytettä. Valitse pisteet fiksusti!&lt;/li&gt;&lt;li&gt;Päättele, mistä ongelma alkaa. Perustele vastauksesi ja valitse, miten joki korjataan.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Lopuksi näet, ratkaisitko mysteerin. Lataa vastauksesi ja palauta ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="32" name="Ammatti 4 oikein" tags="" position="550,1075" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Ympäristöneuvoja&lt;/strong&gt; neuvoo ihmisiä lajittelussa ja ympäristöasioissa.&lt;/p&gt;
-
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="50" name="Kutsu" tags="scene-laakso" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-metsa-tausta.webp&quot;)&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="51" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/luonto-metsa-tausta.webp&quot;)&gt;&gt;
+&lt;h2&gt;Tutkimusraporttisi&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="52" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Ratkaisit Kuukkelijoen mysteerin ja jäljitit ongelman lähteen kartalta. Samalla tutustuit kymmeneen luonto- ja ympäristöalan ammattiin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;
-[[Seuraava kysymys-&gt;Ammatti 5]]
+&lt;&lt;link &quot;Missä luontoalaa voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="33" name="Ammatti 4 väärin" tags="" position="650,1075" size="100,100">&lt;h2&gt;Ei aivan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;ympäristöneuvoja&lt;/strong&gt;. Hän opastaa ihmisiä toimimaan ympäristöystävällisesti.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Jatka-&gt;Ammatti 5]]
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="34" name="Ammatti 5 oikein" tags="" position="550,1275" size="100,100">&lt;h2&gt;Oikein!&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Ympäristöinsinööri&lt;/strong&gt; suunnittelee jätehuollon ja ympäristönsuojelun ratkaisuja.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Valmis-&gt;Palaute]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="35" name="Ammatti 5 väärin" tags="" position="650,1275" size="100,100">&lt;h2&gt;Ei aivan.&lt;/h2&gt;
-&lt;p&gt;Oikea vastaus on &lt;strong&gt;ympäristöinsinööri&lt;/strong&gt;. Hän suunnittelee ympäristönsuojelun ja jätehuollon teknisiä ratkaisuja.&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Valmis-&gt;Palaute]]
-&lt;/div&gt;
-</tw-passagedata><tw-passagedata pid="36" name="Palaute" tags="" position="600,1400" size="100,100">&lt;h1&gt;Hienoa, tietokilpailu on valmis!&lt;/h1&gt;
-
-&lt;p&gt;
-Ympäristöalalla työskentelevät ihmiset tekevät tärkeää työtä luonnon ja ihmisten hyvinvoinnin eteen.
-Ala tarjoaa monipuolisia työmahdollisuuksia esimerkiksi jätehuollossa, ympäristönsuojelussa,
-neuvonnassa ja suunnittelussa.
-&lt;/p&gt;
-
-&lt;p&gt;
-Jos ympäristöasiat kiinnostavat sinua ja haluat tehdä työtä, jolla on merkitystä, ympäristöala
-voi olla sinulle erittäin hyvä vaihtoehto.
-&lt;/p&gt;
-
-&lt;div class=&quot;intro-nappi&quot;&gt;
-[[Ammatinvalintatehtävä-&gt;Ammattitehtävä]]
-&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
