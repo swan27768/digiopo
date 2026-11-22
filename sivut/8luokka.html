@@ -2507,7 +2507,7 @@
       { nimi:"Luonto-ohjaaja",      ala:"Luonto- ja ympäristöala", k:["luonto"],         lyhyt:"Ohjaat luonnossa ja hoidat ympäristöä.",                     am:"luonto-ohjaaja, luonnonvaratuottaja, poronhoitaja, ympäristönhoitaja, ympäristönhuoltaja", pt:"Luonto- ja ympäristöalan perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto" },
       { nimi:"Puutarhuri",          ala:"Puutarha-ala",         k:["luonto"],            lyhyt:"Kasvatat ja hoidat kasveja sekä viheralueita.",              am:"puutarhuri", pt:"Puutarha-alan perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto" },
       { nimi:"Kalastaja",           ala:"Kalatalous",           k:["luonto","elaimet"],            lyhyt:"Kalastat, viljelet ja jalostat kalaa.",                      am:"kalastaja, kalanviljelijä, kalanjalostaja, kalastuksenohjaaja, kalavesienhoitaja", pt:"Kalatalouden perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto" },
-      { nimi:"Hevostenhoitaja",     ala:"Hevostalous",          k:["elaimet","liikunta"], lyhyt:"Hoidat hevosia tallilla ja ohjaat ratsastusta.",             am:"hevostenhoitaja, ratsastuksenohjaaja, hevospalveluohjaaja", pt:"Hevostalouden perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto" },
+      { nimi:"Hevostenhoitaja",     ala:"Hevostalous",          k:["elaimet","liikunta"], lyhyt:"Hoidat hevosia tallilla ja ohjaat ratsastusta.",             am:"hevostenhoitaja, ratsastuksenohjaaja, hevospalveluohjaaja", pt:"Hevostalouden perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto", p:"../pelit/koulutusalat/elaimet-ala.html" },
       { nimi:"Putkiasentaja",       ala:"Talotekniikka",        k:["rakentaminen","tekniikka"],         lyhyt:"Asennat LVI-järjestelmiä: putket, ilmanvaihto ja kylmä.",    am:"putkiasentaja, ilmanvaihtoasentaja, kylmäasentaja, rakennuspeltiseppä, tekninen eristäjä", pt:"Talotekniikan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/rakennus-ala.html"},
       { nimi:"Koneistaja",          ala:"Kone- ja tuotantotekniikka", k:["tekniikka"],   lyhyt:"Valmistat ja kokoat koneita ja metalliosia.",                am:"koneistaja, koneasentaja, koneautomaatioasentaja, levyseppähitsaaja, muovituotevalmistaja", pt:"Kone- ja tuotantotekniikan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka" },
       { nimi:"Maalari",             ala:"Pintakäsittelyala",    k:["rakentaminen"],         lyhyt:"Maalaat ja pinnoitat rakennuksia ja tuotteita.",             am:"maalari, lattianpäällystäjä, pintakäsittelijä", pt:"Pintakäsittelyalan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/rakennus-ala.html"},
@@ -2914,7 +2914,8 @@
       kauneus:  '../pelit/koulutusalat/kauneus-ala.html',
       rakennus: '../pelit/koulutusalat/rakennus-ala.html',
       turvallisuus: '../pelit/koulutusalat/turvallisuus-ala.html',
-      liikenne: '../pelit/koulutusalat/liikenne-ala.html'
+      liikenne: '../pelit/koulutusalat/liikenne-ala.html',
+      elaimet: '../pelit/koulutusalat/elaimet-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
@@ -2924,11 +2925,12 @@
       kauneus:'Kauneus ja hyvinvointi',
       rakennus:'Rakentaminen ja talot',
       turvallisuus:'Turvallisuusala',
-      liikenne:'Autot ja liikenne'
+      liikenne:'Autot ja liikenne',
+      elaimet:'Eläimet'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin kolmestatoista pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen johonkin neljästätoista pelitarina-alasta
     const PELI_ALA = {
-      ihmiset:'ihmiset', elaimet:'luonto', luonto:'luonto', ruoka:'ruoka',
+      ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
       pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'taide',
       kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus'
@@ -2937,7 +2939,7 @@
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','tekniikka','rakennus','liikenne','data','ruoka','luonto','taide','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
       const kat = [];
       amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -2976,7 +2978,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:''
     };
 
     /* ── Tab-vaihto ── */
