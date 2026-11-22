@@ -13,7 +13,7 @@ sisällön SAILYTA-listan passaget (esim. oppilaitossivut). Kaikki muu
 korvataan. Yhteinen koodi on tiedostoissa tarina-yhteinen.js/.css ja
 3D-taustat tausta3d.js:ssä.
 """
-import json, re, runpy, sys
+import os, json, re, runpy, sys
 
 def esc(t):
     return (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -55,6 +55,7 @@ TYYLIT = {
  "luottavainen": {"nimi": "Luottavainen", "kuvaus": "Uskot, että asiat järjestyvät. Se auttaa jaksamaan, mutta joskus tilanne vaatii nopeaa toimintaa."},
 }
 TYYLIPISTEET = 2
+MOOTTORI = "sugarcube-2.37.3.js"   # yhteinen SugarCube-moottori pelien vieressä
 
 # --------------------------------------------------------------------------
 def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, sakko=0, paras=None):
@@ -368,6 +369,21 @@ $('body').addClass('hide-navbar');
     js = js.replace("</", "<\\/")
     s = re.sub(r'(<script role="script" id="twine-user-script" type="text/twine-javascript">).*?(</script>)',
                lambda mm: mm.group(1) + js + mm.group(2), s, count=1, flags=re.S)
+
+    # --- SugarCube-moottori yhteiseen tiedostoon, jotta selain lataa sen vain kerran.
+    # Moottorit eroavat vain tarinan nimen osalta (generateName("…")); yhteinen versio lukee
+    # nimen tw-storydata-elementistä, joten tallennusavain (sessionStorage) pysyy samana.
+    mm = re.search(r'<script id="script-sugarcube" type="text/javascript">(.*?)</script>', s, re.S)
+    if mm:
+        moottori = mm.group(1)
+        assert len(re.findall(r'_name=generateName\("[^"]*"\)', moottori)) == 1, "moottorin nimikohtaa ei löydy"
+        yhteinen = re.sub(r'_name=generateName\("[^"]*"\)', '_name=generateName($storydata.attr("name"))', moottori)
+        polku = os.path.join(os.path.dirname(os.path.abspath(dst)), MOOTTORI)
+        if os.path.exists(polku):
+            assert open(polku, encoding="utf-8").read() == yhteinen, f"{MOOTTORI} poikkeaa tämän tarinan moottorista"
+        else:
+            open(polku, "w", encoding="utf-8").write(yhteinen)
+        s = s[:mm.start()] + f'<script id="script-sugarcube" src="{MOOTTORI}"></script>' + s[mm.end():]
 
     open(dst, "w", encoding="utf-8").write(s)
     print(f"OK {dst}: {len(s)} tavua, {len(nimet)} passagea")
