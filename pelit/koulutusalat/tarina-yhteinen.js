@@ -2078,6 +2078,144 @@
       };
     }
 
+    /* --- Tehtävätyyppi "vianetsinta": oppilas on automekaanikko ---
+       Kolme autoa. Jokaisesta oppilas valitsee rajallisen määrän testejä, päättelee vian
+       ja kokoaa korjaustilauksen (hinta lasketaan). Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "vianetsinta") {
+      var AU = TH.autot || [], MAXT = TH.maxTesteja || 3;
+      var atila = function (tila, i) { if (!tila.a) tila.a = []; if (!tila.a[i]) tila.a[i] = { testit: [], vika: null, tilaus: [], valmis: false }; return tila.a[i]; };
+      var avaimet = function (au, at) { return at.testit.filter(function (k) { return au.testit[k].avain; }).length; };
+      var tilausOk = function (au, at) { var o = au.tilaus.map(function (x, j) { return x.oikein ? j : -1; }).filter(function (j) { return j >= 0; }).sort().join(); return o === at.tilaus.slice().sort().join(); };
+      var pisteetAu = function (au, at) { return Math.min(2, avaimet(au, at)) + (at.vika === au.oikeaVika ? 2 : 0) + (tilausOk(au, at) ? 1 : 0); };
+      var MAXA = 5;
+      var kaikkiV = function (tila) { var p = 0; AU.forEach(function (au, i) { if (tila.a && tila.a[i] && tila.a[i].valmis) p += pisteetAu(au, tila.a[i]); }); return { p: p, m: AU.length * MAXA }; };
+      var palauteV = function (p, m) { return p >= m - 1 ? TH.palaute[0] : p >= m - 5 ? TH.palaute[1] : TH.palaute[2]; };
+      var summa = function (au, lista) { return lista.reduce(function (s, j) { return s + au.tilaus[j].hinta; }, 0); };
+      var eur = function (n) { return n.toLocaleString("fi-FI") + " €"; };
+      var ylosV = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutV(alue, tila);
+        var i = tila.auto || 0, au = AU[i], at = atila(tila, i);
+        var jaljella = MAXT - at.testit.length, diagnoosi = at.diag || jaljella <= 0, lukittu = at.valmis;
+        var h = '<p class="kohtaus-nro">' + suojaa((TH.osa1 || "Auto") + " " + (i + 1) + "/" + AU.length) + '</p>' +
+          '<div class="vn-tabletti"><div class="vn-yla"><span class="vn-logo">🔧 ' + suojaa(TH.korjaamo || "KORJAAMO") + '</span><span class="vn-tyomaarays">Työmääräys ' + (101 + i) + '</span></div>' +
+          '<div class="vn-auto"><span class="vn-ikoni" aria-hidden="true">' + suojaa(au.ikoni || "🚗") + '</span><div><p class="vn-malli">' + suojaa(au.malli) + '</p><p class="vn-tiedot">' + suojaa(au.tiedot) + '</p></div></div>' +
+          '<p class="vn-asiakas"><span class="hp-kuka">Asiakas kertoo</span>”' + suojaa(au.oire) + '”</p>' +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.tuloksetOtsikko || "Testitulokset") + '</p>' +
+          (at.testit.length ? '<ul class="vn-tulokset">' + at.testit.map(function (k) { var t = au.testit[k];
+            return '<li class="' + (t.poikkeama ? "poikkeama" : "ok") + '"><span class="vn-testi">' + suojaa(t.ikoni || "") + ' ' + suojaa(t.nimi) + '</span><span class="vn-tulos">' + suojaa(t.tulos) + '</span><span class="vn-chip">' + (t.poikkeama ? "POIKKEAMA" : "OK") + '</span></li>'; }).join("") + '</ul>'
+            : '<p class="vn-tyhja">Ei vielä testejä. Valitse alta, mitä tutkit.</p>') + '</div>';
+        if (!diagnoosi) {
+          h += '<p class="hp-ohje">' + suojaa(TH.testiOhje || "Mitä testaat?") + ' <strong>Testejä jäljellä: ' + jaljella + '</strong></p><div class="vn-testit">' +
+            au.testit.map(function (t, k) { if (at.testit.indexOf(k) !== -1) return '';
+              return '<button type="button" class="vn-testinappi" data-t="' + k + '"><span class="vn-iso" aria-hidden="true">' + suojaa(t.ikoni || "🔍") + '</span><span>' + suojaa(t.nimi) + '</span><span class="vn-aika">' + suojaa(t.kesto || "") + '</span></button>'; }).join("") +
+            '</div><div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava vn-diag"' + (at.testit.length ? "" : " disabled") + '>' + suojaa(TH.diagNappi || "Tiedän vian – tee diagnoosi") + '</button></div>';
+        } else {
+          h += '<div class="vn-paatos"><p class="vk-saannot-otsikko">1. Mikä on vika?</p><div class="hp-ohjeet" role="radiogroup" aria-label="Vika">' + au.viat.map(function (v, j) {
+              var on = at.vika === j;
+              return '<button type="button" class="hp-ohjenappi vn-vika' + (on ? " valittu" : "") + (lukittu && on ? (j === au.oikeaVika ? " ok" : " ei") : "") + (lukittu && !on && j === au.oikeaVika ? " puuttui" : "") + '" role="radio" aria-checked="' + on + '" data-v="' + j + '"' + (lukittu ? " disabled" : "") + '>' + suojaa(v) + '</button>'; }).join("") + '</div>' +
+            '<p class="vk-saannot-otsikko">2. Korjaustilaus</p><ul class="vn-tilaus">' + au.tilaus.map(function (x, j) {
+              var on = at.tilaus.indexOf(j) !== -1, luokka = lukittu ? (on === !!x.oikein ? (on ? " ok" : "") : (on ? " ei" : " puuttui")) : "";
+              return '<li class="' + luokka + '"><label><input type="checkbox" data-r="' + j + '"' + (on ? " checked" : "") + (lukittu ? " disabled" : "") + '> <span class="vn-rivi">' + suojaa(x.nimi) + '</span><span class="vn-hinta">' + eur(x.hinta) + '</span></label></li>'; }).join("") +
+            '</ul><p class="vn-summa">Arvio yhteensä: <strong>' + eur(summa(au, at.tilaus)) + '</strong></p></div>';
+          if (lukittu) {
+            var pp = pisteetAu(au, at), ak = avaimet(au, at), oik = au.tilaus.map(function (x, j) { return x.oikein ? j : -1; }).filter(function (j) { return j >= 0; });
+            h += '<div class="hp-palaute"><p class="sj-pisteet">Auton pisteet: <strong>' + pp + '/' + MAXA + '</strong></p><ul class="vk-saannot">' +
+              '<li class="' + (ak >= 2 ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (ak >= 2 ? "✓" : "✗") + '</span><span><strong>Oikeat testit (' + Math.min(2, ak) + '/2)</strong><span class="vk-selitys">' + suojaa(au.testiSelitys) + '</span></span></li>' +
+              '<li class="' + (at.vika === au.oikeaVika ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (at.vika === au.oikeaVika ? "✓" : "✗") + '</span><span><strong>Vika: ' + suojaa(au.viat[au.oikeaVika]) + '</strong><span class="vk-selitys">' + suojaa(au.vikaSelitys) + '</span></span></li>' +
+              '<li class="' + (tilausOk(au, at) ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (tilausOk(au, at) ? "✓" : "✗") + '</span><span><strong>Oikea tilaus: ' + suojaa(oik.map(function (j) { return au.tilaus[j].nimi; }).join(" + ")) + ' = ' + eur(summa(au, oik)) + '</strong><span class="vk-selitys">' + suojaa(au.tilausSelitys) + '</span></span></li></ul></div>' +
+              '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-tarkista vn-seuraava">' + suojaa(i + 1 < AU.length ? (TH.seuraavaNappi || "Seuraava auto") : (TH.jatkaNappi || "Jatka perusteluihin")) + '</button></div>';
+          } else {
+            var valmiina = at.vika !== null && at.tilaus.length > 0;
+            h += '<p class="kutsu-vihje" aria-live="polite">' + (valmiina ? "Valmista! Tarkista työsi." : "Valitse vika ja ainakin yksi korjaus.") + '</p>' +
+              '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-tarkista vn-tarkista"' + (valmiina ? "" : " disabled") + '>' + suojaa(TH.tarkistaNappi || "Tarkista") + '</button></div>';
+          }
+        }
+        alue.innerHTML = h;
+        var uusi = function () { kutsuTallenna(); window.kutsuPiirra(); };
+        Array.prototype.forEach.call(alue.querySelectorAll(".vn-testinappi"), function (b) {
+          b.addEventListener("click", function () { at.testit.push(+b.getAttribute("data-t")); uusi(); var x = alue.querySelector(".vn-testinappi") || alue.querySelector(".vn-vika"); if (x) x.focus({ preventScroll: true }); });
+        });
+        var dg = alue.querySelector(".vn-diag"); if (dg) dg.addEventListener("click", function () { if (dg.disabled) return; at.diag = true; uusi(); });
+        Array.prototype.forEach.call(alue.querySelectorAll(".vn-vika:not([disabled])"), function (b) {
+          b.addEventListener("click", function () { at.vika = +b.getAttribute("data-v"); uusi(); var f = alue.querySelector('[data-v="' + at.vika + '"]'); if (f) f.focus({ preventScroll: true }); });
+        });
+        Array.prototype.forEach.call(alue.querySelectorAll(".vn-tilaus input:not([disabled])"), function (c) {
+          c.addEventListener("change", function () { var j = +c.getAttribute("data-r"), k = at.tilaus.indexOf(j); if (c.checked && k === -1) at.tilaus.push(j); if (!c.checked && k !== -1) at.tilaus.splice(k, 1); uusi(); var f = alue.querySelector('[data-r="' + j + '"]'); if (f) f.focus({ preventScroll: true }); });
+        });
+        var ta = alue.querySelector(".vn-tarkista"); if (ta) ta.addEventListener("click", function () { if (ta.disabled) return; at.valmis = true; uusi(); var p = alue.querySelector(".hp-palaute"); if (p && p.scrollIntoView) p.scrollIntoView({ block: "start" }); });
+        var se = alue.querySelector(".vn-seuraava"); if (se) se.addEventListener("click", function () {
+          if (i + 1 < AU.length) tila.auto = i + 1; else tila.vaihe = "perustelu"; uusi(); ylosV();
+        });
+      };
+
+      var piirraPerustelutV = function (alue, tila) {
+        var kys = TH.kysymykset || [], k = kaikkiV(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Korjausten pisteet: <strong>' + k.p + '/' + k.m + '</strong></p>' +
+          kys.map(function (q, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="vn-p' + i + '">' + (i + 1) + '. ' + suojaa(q.kysymys) + '</label>' +
+              '<textarea id="vn-p' + i + '" maxlength="400" placeholder="' + suojaa(q.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(q.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function pv() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", pv); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        pv();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), k = kaikkiV(tila);
+        var h = '<div class="tuotekortti vn-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "KORJAAMORAPORTTI") + '</p>' +
+          '<p class="tk-lause">' + k.p + '/' + k.m + ' pistettä – ' + suojaa(palauteV(k.p, k.m)) + '</p><ol class="hp-raportti-lista">' +
+          AU.map(function (au, i) {
+            var at = (tila.a || [])[i]; if (!at) return '<li><strong>' + suojaa(au.malli) + '</strong> – ei korjattu</li>';
+            return '<li><strong>' + suojaa(au.malli) + '</strong> · ' + pisteetAu(au, at) + '/' + MAXA + ' p' +
+              '<span class="hp-r-rivi">Testit: ' + suojaa(at.testit.map(function (t) { return au.testit[t].nimi; }).join(", ") || "–") + '</span>' +
+              '<span class="hp-r-rivi">Diagnoosi: ' + suojaa(at.vika !== null ? au.viat[at.vika] : "–") + '</span>' +
+              '<span class="hp-r-rivi">Tilaus: ' + suojaa(at.tilaus.map(function (j) { return au.tilaus[j].nimi; }).join(" + ") || "–") + ' = ' + eur(summa(au, at.tilaus)) + '</span></li>';
+          }).join("") + '</ol></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (q, i) {
+          return '<li><strong>' + suojaa(q.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(q.ammattilainen) + ' – ' + suojaa(q.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var k = kaikkiV(tila), t = "\n" + TH.nimi.toUpperCase() + " – " + k.p + "/" + k.m + " pistettä\n";
+        AU.forEach(function (au, i) {
+          var at = (tila.a || [])[i]; t += "\nAUTO " + (i + 1) + ": " + au.malli + "\n";
+          if (!at) { t += "  Ei korjattu\n"; return; }
+          t += "  Pisteet: " + pisteetAu(au, at) + "/" + MAXA + "\n  Testit: " + at.testit.map(function (x) { return au.testit[x].nimi; }).join(" | ") + "\n";
+          t += "  Diagnoosi: " + (at.vika !== null ? au.viat[at.vika] : "-") + (at.vika === au.oikeaVika ? " (oikein)" : " (oikea: " + au.viat[au.oikeaVika] + ")") + "\n";
+          t += "  Korjaustilaus: " + at.tilaus.map(function (j) { return au.tilaus[j].nimi; }).join(", ") + " = " + eur(summa(au, at.tilaus)) + "\n";
+        });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (q, i) { t += (i + 1) + ". " + q.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + q.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";

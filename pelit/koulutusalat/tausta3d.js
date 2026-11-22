@@ -2208,6 +2208,193 @@ const MAAILMAT = {
     return { kohtaukset, oletus: "satama", asetaTila, paivita };
   },
 
+  /* ------------------------------------------------------------------------
+     LIIKENNE – "Lumimyräkkäpäivä": talvinen kaupunki, moottoritie, rata, korjaamo ja liikennekeskus
+     ------------------------------------------------------------------------ */
+  liikenne(scene) {
+    const V = { taivas: 0xaab8c8, lumi: 0xeef3f8, tie: 0x3a3f46, viiva: 0xf2f2f2 };
+    scene.background = new THREE.Color(V.taivas);
+    scene.fog = new THREE.Fog(V.taivas, 30, 120);
+    const hemi = new THREE.HemisphereLight(0xeef4ff, 0x8a96a6, 1.1); scene.add(hemi);
+    const aur = new THREE.DirectionalLight(0xffffff, 0.7); aur.position.set(-20, 30, 10); scene.add(aur);
+
+    const maa = new THREE.Mesh(new THREE.PlaneGeometry(260, 260), mat(V.lumi, { roughness: 1, metalness: 0 })); maa.rotation.x = -Math.PI / 2; maa.position.y = -0.02; scene.add(maa);
+    /* Moottoritie (x-suunta) ja katu (z-suunta) */
+    const tieMat = mat(V.tie, { roughness: 0.6, metalness: 0.2 });
+    const mt = laatikko(240, 0.04, 14, tieMat); mt.position.set(0, 0.02, -18); scene.add(mt);
+    const katu = laatikko(10, 0.04, 80, tieMat); katu.position.set(-6, 0.03, 18); scene.add(katu);
+    for (let x = -118; x < 120; x += 8) { [-18 - 3.5, -18 + 3.5].forEach((z) => { const v = laatikko(3.5, 0.05, 0.18, mat(V.viiva, { metalness: 0 })); v.position.set(x, 0.05, z); scene.add(v); }); }
+    const keski = laatikko(240, 0.6, 0.4, mat(0x9aa3ad, { metalness: 0.7 })); keski.position.set(0, 0.35, -18); scene.add(keski);
+    /* Lumivallit tienvarsilla */
+    [-26, -10].forEach((z) => { const v = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 240, 8, 1, false, 0, Math.PI), mat(0xf6f9fc, { roughness: 1, metalness: 0 })); v.rotation.z = Math.PI / 2; v.rotation.y = 0; v.position.set(0, 0, z); v.scale.set(1, 1, 0.5); scene.add(v); });
+    /* Ylikulkusilta */
+    const silta = laatikko(8, 1, 40, mat(0xb7bcc2, { roughness: 0.9, metalness: 0 })); silta.position.set(30, 6, -18); scene.add(silta);
+    [-26, -10].forEach((z) => { const p = laatikko(1.4, 6, 1.4, mat(0xb7bcc2, { metalness: 0 })); p.position.set(30, 3, z); scene.add(p); });
+    const opaste = new THREE.Mesh(new THREE.PlaneGeometry(6, 1.6), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["⚠ LIUKASTA – 80"], "#ffffff", "#0b3d91", 512, 128) })); opaste.position.set(30, 8.2, -14.9); scene.add(opaste);
+    const opasteTaka = new THREE.Mesh(new THREE.PlaneGeometry(6, 1.6), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["⚠ LIUKASTA – 80"], "#ffffff", "#0b3d91", 512, 128) })); opasteTaka.position.set(30, 8.2, -21.1); opasteTaka.rotation.y = Math.PI; scene.add(opasteTaka);
+    /* Kuusimetsä */
+    const havu = mat(0x2c4a33, { roughness: 1, metalness: 0 }), lumiHattu = mat(0xf6f9fc, { roughness: 1, metalness: 0 }), runko = mat(0x6a4a32, { metalness: 0 });
+    const puut = [];
+    for (let i = 0; i < 90; i++) {
+      const x = -110 + Math.random() * 220, z = i < 20 ? -30 - Math.random() * 4 : -54 - Math.random() * 36; const g = new THREE.Group(), k = 0.8 + Math.random() * 0.9;
+      const r = sylinteri(0.2 * k, 0.25 * k, 2 * k, runko, 6); r.position.y = k; g.add(r);
+      const c = new THREE.Mesh(new THREE.ConeGeometry(1.8 * k, 6 * k, 8), havu); c.position.y = 4.5 * k; g.add(c);
+      const h = new THREE.Mesh(new THREE.ConeGeometry(0.9 * k, 2 * k, 8), lumiHattu); h.position.y = 6.8 * k; g.add(h);
+      g.position.set(x, 0, z); scene.add(g); puut.push(g);
+    }
+    /* Rata ja juna */
+    const rataZ = -48;
+    const rata = laatikko(240, 0.3, 4, mat(0x6b6660, { roughness: 1, metalness: 0 })); rata.position.set(0, 0.15, rataZ); scene.add(rata);
+    [-0.75, 0.75].forEach((d) => { const k = laatikko(240, 0.15, 0.12, mat(0x8a8f96, { metalness: 0.9, roughness: 0.3 })); k.position.set(0, 0.38, rataZ + d); scene.add(k); });
+    for (let x = -110; x <= 110; x += 22) { const p = sylinteri(0.12, 0.15, 7, mat(0x6a7078, { metalness: 0.7 }), 6); p.position.set(x, 3.5, rataZ - 2.6); scene.add(p); const o = laatikko(0.1, 0.1, 3, mat(0x6a7078)); o.position.set(x, 6.8, rataZ - 1.2); scene.add(o); }
+    const ajolanka = laatikko(240, 0.04, 0.04, mat(0x222222)); ajolanka.position.set(0, 6.4, rataZ); scene.add(ajolanka);
+    const juna = new THREE.Group();
+    const veturi = laatikko(9, 3.6, 3, mat(0xf2f4f6, { metalness: 0.5, roughness: 0.4 })); veturi.position.set(0, 2.4, 0); juna.add(veturi);
+    const vVihr = laatikko(9.02, 0.9, 3.02, mat(0x3fae49, { metalness: 0.3 })); vVihr.position.set(0, 1.6, 0); juna.add(vVihr);
+    const nokka = laatikko(1.2, 2.2, 2.9, mat(0x2a3a4a, { metalness: 0.6, roughness: 0.2 })); nokka.position.set(4.9, 2.9, 0); juna.add(nokka);
+    const valo = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), hehku(0xfff4d8, 2.4)); valo.position.set(5.5, 1.6, 0.9); juna.add(valo); const valo2 = valo.clone(); valo2.position.z = -0.9; juna.add(valo2);
+    for (let i = 1; i <= 5; i++) { const v = laatikko(12, 4.4, 3, mat(0xdfe4ea, { metalness: 0.5, roughness: 0.4 })); v.position.set(-i * 12.4 + 1.5, 2.8, 0); juna.add(v); const r = laatikko(12.02, 0.5, 3.02, mat(0x3fae49)); r.position.set(-i * 12.4 + 1.5, 1.6, 0); juna.add(r);
+      for (let j = 0; j < 6; j++) [1.52, -1.52].forEach((z) => { const ik = laatikko(1.2, 0.7, 0.02, mat(0x1f2a36, { metalness: 0.6, roughness: 0.2 })); ik.position.set(-i * 12.4 + 1.5 - 5 + j * 2, 3.6, z); juna.add(ik); }); }
+    juna.position.set(-30, 0.4, rataZ); scene.add(juna);
+    /* Kaatunut puu radalla (tila "puu") */
+    const kaatunut = new THREE.Group(); const kr = sylinteri(0.25, 0.35, 12, runko, 6); kr.position.y = 6; kaatunut.add(kr);
+    const kc = new THREE.Mesh(new THREE.ConeGeometry(2.2, 6, 8), havu); kc.position.y = 10; kaatunut.add(kc);
+    kaatunut.position.set(40, 0, rataZ + 6); kaatunut.rotation.x = -0.6; kaatunut.visible = false; scene.add(kaatunut);
+
+    /* Autot moottoritiellä */
+    const autoVarit = [0xc8201c, 0x1d4fb0, 0xf2f2f2, 0x2a2a2a, 0x8a8f96, 0x3a7a4a];
+    function auto(vari, pituus) {
+      const g = new THREE.Group(); const l = pituus || 4.2;
+      const k = laatikko(l, 0.9, 1.8, mat(vari, { metalness: 0.6, roughness: 0.35 })); k.position.y = 0.75; g.add(k);
+      const y = laatikko(l * 0.55, 0.7, 1.6, mat(0x1f2a36, { metalness: 0.6, roughness: 0.2 })); y.position.set(-l * 0.05, 1.5, 0); g.add(y);
+      const yk = laatikko(l * 0.55, 0.12, 1.62, mat(V.lumi, { metalness: 0 })); yk.position.set(-l * 0.05, 1.9, 0); g.add(yk);
+      [[l * 0.32, 0.8], [l * 0.32, -0.8], [-l * 0.32, 0.8], [-l * 0.32, -0.8]].forEach(([x, z]) => { const r = sylinteri(0.35, 0.35, 0.3, mat(0x111111), 12); r.rotation.x = Math.PI / 2; r.position.set(x, 0.35, z); g.add(r); });
+      [0.6, -0.6].forEach((z) => { const v = laatikko(0.05, 0.18, 0.4, hehku(0xfff4d8, 1.5)); v.position.set(l / 2 + 0.01, 0.85, z); g.add(v); const t = laatikko(0.05, 0.18, 0.4, hehku(0xff2a2a, 1.2)); t.position.set(-l / 2 - 0.01, 0.85, z); g.add(t); });
+      return g;
+    }
+    const liikkuvat = [];
+    for (let i = 0; i < 10; i++) { const s = i % 2 ? 1 : -1, a = auto(autoVarit[i % 6]); a.rotation.y = s > 0 ? 0 : Math.PI; a.userData = { s, x: -110 + i * 23, v: 14 + Math.random() * 6, z: -18 + (s > 0 ? 4 : -4) + (i % 4 < 2 ? 1.6 : -1.6) * s }; scene.add(a); liikkuvat.push(a); }
+    /* Rekka */
+    const rekka = new THREE.Group();
+    const ohj = laatikko(2.4, 3, 2.5, mat(0x1d4fb0, { metalness: 0.5 })); ohj.position.set(6.4, 2, 0); rekka.add(ohj);
+    const pera = laatikko(12, 3.6, 2.5, mat(0xeeeeee, { metalness: 0.3 })); pera.position.set(-1.2, 2.5, 0); rekka.add(pera);
+    const peraLumi = laatikko(12, 0.15, 2.5, mat(V.lumi, { metalness: 0 })); peraLumi.position.set(-1.2, 4.38, 0); rekka.add(peraLumi);
+    for (let i = 0; i < 4; i++) [1.2, -1.2].forEach((z) => { const r = sylinteri(0.55, 0.55, 0.4, mat(0x111111), 12); r.rotation.x = Math.PI / 2; r.position.set(6.4 - (i ? 3 + i * 2.2 : 0), 0.55, z); rekka.add(r); });
+    const rekkaValot = [0.9, -0.9].map((z) => { const v = laatikko(0.05, 0.25, 0.4, hehku(0xfff4d8, 2)); v.position.set(7.62, 1.1, z); rekka.add(v); return v; });
+    rekka.userData = { x: -40 }; rekka.position.set(-40, 0, -18 + 5.5); scene.add(rekka);
+    /* Taukopaikka ja kyltti */
+    const tauko = new THREE.Mesh(new THREE.PlaneGeometry(3, 1.4), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["P  ☕  1 km"], "#ffffff", "#0b3d91", 384, 180) })); tauko.position.set(-60, 3, -10.2); scene.add(tauko);
+    const taukoT = sylinteri(0.08, 0.08, 3, mat(0x8a9099, { metalness: 0.7 }), 6); taukoT.position.set(-60, 1.5, -10.25); scene.add(taukoT);
+
+    /* Kaupunki: bussi ja pysäkki kadulla */
+    const bussi = new THREE.Group();
+    const bk = laatikko(2.5, 3, 11, mat(0xf2f4f6, { metalness: 0.4, roughness: 0.4 })); bk.position.y = 1.9; bussi.add(bk);
+    const bs = laatikko(2.52, 0.9, 11.02, mat(0x1d4fb0, { metalness: 0.3 })); bs.position.y = 0.9; bussi.add(bs);
+    for (let i = 0; i < 5; i++) [1.27, -1.27].forEach((x) => { const ik = laatikko(0.02, 1.2, 1.8, mat(0x1f2a36, { metalness: 0.6, roughness: 0.2 })); ik.position.set(x, 2.4, -4 + i * 2.1); bussi.add(ik); });
+    const bTaulu = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 0.4), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["7  KESKUSTA"], "#ffb02a", "#111111", 384, 80) })); bTaulu.position.set(0, 3.1, 5.52); bussi.add(bTaulu);
+    for (let i = 0; i < 2; i++) [1.25, -1.25].forEach((x) => { const r = sylinteri(0.5, 0.5, 0.35, mat(0x111111), 12); r.rotation.z = Math.PI / 2; r.position.set(x, 0.5, -3.5 + i * 7); bussi.add(r); });
+    const ramppi = laatikko(1.1, 0.06, 1.4, mat(0x9aa3ad, { metalness: 0.7 })); ramppi.position.set(-1.8, 0.25, 0.5); ramppi.rotation.z = 0.25; bussi.add(ramppi);
+    bussi.position.set(-4.5, 0, 22); scene.add(bussi);
+    const katos = new THREE.Group(); const kk = laatikko(3.6, 0.15, 1.6, mat(0x6a7078, { metalness: 0.6 })); kk.position.y = 2.6; katos.add(kk); const kkl = laatikko(3.6, 0.15, 1.6, mat(V.lumi, { metalness: 0 })); kkl.position.y = 2.75; katos.add(kkl);
+    const lasi = laatikko(3.6, 2.4, 0.05, mat(0xbfd8ff, { transparent: true, opacity: 0.35, metalness: 0.2 })); lasi.position.set(0, 1.3, -0.75); katos.add(lasi);
+    katos.position.set(-12, 0, 22); katos.rotation.y = Math.PI / 2; scene.add(katos);
+    const ihmiset = [];
+    function ihminen(x, z, takki) { const g = new THREE.Group(); const k = sylinteri(0.26, 0.3, 0.9, mat(takki, { metalness: 0 }), 10); k.position.y = 1.05; g.add(k); const j = sylinteri(0.2, 0.18, 0.6, mat(0x1d2230, { metalness: 0 }), 8); j.position.y = 0.3; g.add(j); const p = new THREE.Mesh(new THREE.SphereGeometry(0.19, 12, 10), mat(0xe0b896, { metalness: 0 })); p.position.y = 1.72; g.add(p); const pipo = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), mat(takki === 0x1d4fb0 ? 0xff4a4a : 0x2a5bd7, { metalness: 0 })); pipo.position.y = 1.78; g.add(pipo); g.position.set(x, 0, z); g.userData.v = Math.random() * 6; scene.add(g); ihmiset.push(g); return g; }
+    ihminen(-12.5, 20.6, 0x7a2a5a); ihminen(-12.4, 23.2, 0x3a5a2a);
+    const pyoratuoli = new THREE.Group(); const pi = ihminen(0, 0, 0x1d4fb0); scene.remove(pi); pi.scale.set(1, 0.72, 1); pyoratuoli.add(pi);
+    [0.35, -0.35].forEach((z) => { const r = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.04, 6, 18), mat(0x333333, { metalness: 0.6 })); r.position.set(0, 0.35, z); pyoratuoli.add(r); });
+    pyoratuoli.position.set(-10.6, 0, 22.4); pyoratuoli.rotation.y = -Math.PI / 2; scene.add(pyoratuoli);
+    /* Talot kadun varrella */
+    for (let i = 0; i < 6; i++) { const k = 8 + (i * 5) % 8; const t = laatikko(9, k, 8, mat([0xc9b8a2, 0x9fb0bf, 0xd8cfc2, 0xb0a18c][i % 4], { roughness: 0.9, metalness: 0 })); t.position.set(i < 3 ? -22 : 10, k / 2, (i < 3 ? 14 : 44) + (i % 3) * 13); scene.add(t); const l = laatikko(9.2, 0.3, 8.2, mat(V.lumi, { metalness: 0 })); l.position.set(t.position.x, k + 0.15, t.position.z); scene.add(l); }
+
+    /* Korjaamo: halli, nostin, auto, renkaat ja asiakaspalvelu */
+    const korjaamo = new THREE.Group();
+    const kl = laatikko(18, 0.1, 12, mat(0x8a9099, { roughness: 0.7, metalness: 0.2 })); korjaamo.add(kl);
+    const sMat = mat(0xd8dde3, { roughness: 0.9, metalness: 0.1 });
+    [[0, 3, -6, 18, 0], [-9, 3, 0, 12, Math.PI / 2], [9, 3, 0, 12, Math.PI / 2]].forEach(([x, y, z, w, r]) => { const s = laatikko(w, 6, 0.2, sMat); s.position.set(x, y, z); s.rotation.y = r; korjaamo.add(s); });
+    const kKatto = laatikko(18.4, 0.3, 12.4, mat(0x4a525c)); kKatto.position.y = 6.1; korjaamo.add(kKatto); const kKL = laatikko(18.4, 0.3, 12.4, mat(V.lumi, { metalness: 0 })); kKL.position.y = 6.4; korjaamo.add(kKL);
+    [[-6.5, 2.2], [6.5, 2.2]].forEach(([x]) => { const e = laatikko(5, 6, 0.2, sMat); e.position.set(x, 3, 6); korjaamo.add(e); });
+    const ylapalkki = laatikko(8, 1.6, 0.2, sMat); ylapalkki.position.set(0, 5.2, 6); korjaamo.add(ylapalkki);
+    const kyltti = new THREE.Mesh(new THREE.PlaneGeometry(6, 1.2), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["AUTOKORJAAMO"], "#ffffff", "#c8201c", 512, 100) })); kyltti.position.set(0, 7.3, 6.15); korjaamo.add(kyltti);
+    const nostin = new THREE.Group(); [-1.3, 1.3].forEach((z) => { const p = laatikko(0.3, 3.2, 0.3, mat(0xc8201c, { metalness: 0.5 })); p.position.set(-2.2, 1.6, z * 1.2); nostin.add(p); const v = laatikko(4.4, 0.15, 0.3, mat(0x555a60, { metalness: 0.7 })); v.position.set(0, 1.7, z); nostin.add(v); });
+    korjaamo.add(nostin);
+    const nostoAuto = auto(0xf2f2f2); nostoAuto.position.set(0, 1.8, 0); korjaamo.add(nostoAuto);
+    const kolariAuto = auto(0x1d4fb0); kolariAuto.position.set(-4.5, 0.05, -3.2); kolariAuto.rotation.y = 0.2; korjaamo.add(kolariAuto);
+    const kolho = laatikko(0.6, 0.6, 1.9, mat(0x163a80, { metalness: 0.6 })); kolho.position.set(2.2, 0.75, 0); kolho.rotation.z = 0.35; kolariAuto.add(kolho);
+    const anturi = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), hehku(0xff8a2a, 1.8)); anturi.position.set(2.15, 0.6, 0); kolariAuto.add(anturi);
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.15, 8, 18), mat(0x161616, { roughness: 0.9 })); r.rotation.x = Math.PI / 2; r.position.set(6.5 + (i % 2) * 0.9, 0.18 + j * 0.3, -4 + Math.floor(i / 2) * 1); korjaamo.add(r); }
+    const tiski = laatikko(3, 1.1, 0.8, mat(0x3a4a5c, { metalness: 0.3 })); tiski.position.set(6, 0.55, 3.6); korjaamo.add(tiski);
+    const naytto = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.5), new THREE.MeshBasicMaterial({ map: kayraTekstuuri("#6fffe9", 3) })); naytto.position.set(6, 1.45, 3.4); naytto.rotation.y = Math.PI; korjaamo.add(naytto);
+    const mekaanikko = ihminen(0, 0, 0x2a5bd7); scene.remove(mekaanikko); mekaanikko.position.set(1.8, 0, 1.6); korjaamo.add(mekaanikko);
+    const myyja = ihminen(0, 0, 0x3a3f47); scene.remove(myyja); myyja.position.set(6, 0, 2.8); korjaamo.add(myyja);
+    const jono = [0, 1, 2].map((i) => { const a = ihminen(0, 0, [0x8a3a2a, 0x2a6a5a, 0x6a5a2a][i]); scene.remove(a); a.position.set(6 - i * 0.2, 0, 4.6 + i * 0.9); a.visible = false; korjaamo.add(a); return a; });
+    const kValo = new THREE.PointLight(0xfff4e0, 14, 22, 1.5); kValo.position.set(0, 5.5, 0); korjaamo.add(kValo);
+    korjaamo.position.set(26, 0, 22); korjaamo.rotation.y = -Math.PI / 2; scene.add(korjaamo);
+
+    /* Liikennekeskus: huone näyttöineen (kaukana muusta maailmasta) */
+    const lk = new THREE.Group();
+    const lkl = laatikko(16, 0.1, 12, mat(0x2a2f38, { roughness: 1, metalness: 0 })); lk.add(lkl);
+    const lks = mat(0x1e2632, { roughness: 1, metalness: 0 });
+    [[0, 3, -6, 16, 0], [0, 3, 6, 16, 0], [-8, 3, 0, 12, Math.PI / 2], [8, 3, 0, 12, Math.PI / 2]].forEach(([x, y, z, w, r]) => { const s = laatikko(w, 6, 0.2, lks); s.position.set(x, y, z); s.rotation.y = r; lk.add(s); });
+    const kameraKuva = (siemen) => { const c = document.createElement("canvas"); c.width = 256; c.height = 144; const g = c.getContext("2d");
+      g.fillStyle = "#c9d3dd"; g.fillRect(0, 0, 256, 144); g.fillStyle = "#3a3f46"; g.beginPath(); g.moveTo(90 + siemen * 6, 0); g.lineTo(166 - siemen * 4, 0); g.lineTo(256, 144); g.lineTo(0, 144); g.fill();
+      g.fillStyle = "#f2f2f2"; for (let y = 10; y < 144; y += 22) g.fillRect(126 + (y / 144) * 4, y, 3, 10);
+      ["#c8201c", "#1d4fb0", "#eeeeee"].forEach((v, i) => { g.fillStyle = v; g.fillRect(70 + i * 40 + siemen * 5, 60 + i * 20, 18 + i * 6, 12 + i * 4); });
+      g.fillStyle = "rgba(255,255,255,.5)"; for (let i = 0; i < 160; i++) g.fillRect(Math.random() * 256, Math.random() * 144, 2, 2);
+      g.fillStyle = "#ffd43b"; g.font = "bold 12px Arial"; g.fillText("KAMERA " + (siemen + 1), 6, 14);
+      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
+    for (let r = 0; r < 2; r++) for (let c = 0; c < 4; c++) { const n = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 1.8), new THREE.MeshBasicMaterial({ map: kameraKuva(r * 4 + c) })); n.position.set(-5.1 + c * 3.4, 2.4 + r * 1.95, -5.85); lk.add(n); }
+    [-4, 0, 4].forEach((x, i) => { const p = laatikko(3.4, 0.08, 1.3, mat(0x9aa3ad, { metalness: 0.4 })); p.position.set(x, 1, -1); lk.add(p);
+      [-0.8, 0.8].forEach((dx, j) => { const n = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.85), new THREE.MeshBasicMaterial({ map: kayraTekstuuri(["#6fffe9", "#ffb02a", "#4aa8ff"][(i + j) % 3], i * 3 + j) })); n.position.set(x + dx, 1.6, -1.45); n.rotation.y = -dx * 0.25; lk.add(n); });
+      const p2 = ihminen(0, 0, 0x2a3a5a); scene.remove(p2); p2.position.set(x, 0.1, 0.1); lk.add(p2); p2.userData.lk = true; });
+    const lkValo = new THREE.PointLight(0xbfd8ff, 16, 20, 1.5); lkValo.position.set(0, 5, 1); lk.add(lkValo);
+    lk.position.set(0, 0, 140); scene.add(lk);
+
+    /* Lumisade */
+    const lumi = hiukkaset(1800, 0xffffff, 0.16); lumi.points.material.blending = THREE.NormalBlending; lumi.points.material.opacity = 0.85;
+    for (let i = 0; i < 1800; i++) { lumi.pos.set([-60 + Math.random() * 120, Math.random() * 25, -60 + Math.random() * 100], i * 3); lumi.nopeus[i] = 1.5 + Math.random() * 1.5; }
+    scene.add(lumi.points);
+
+    const tila = { tila: "lumi" };
+    function asetaTila(t) {
+      tila.tila = t.tila || "lumi";
+      const myrsky = tila.tila === "myrsky" || tila.tila === "puu", ilta = tila.tila === "ilta";
+      kaatunut.visible = tila.tila === "puu";
+      jono.forEach((a) => { a.visible = tila.tila === "jono"; });
+      scene.background.set(myrsky ? 0x8a96a6 : ilta ? 0xe8b8a0 : V.taivas);
+      scene.fog.near = myrsky ? 18 : 30; scene.fog.far = myrsky ? 80 : 120; scene.fog.color.copy(scene.background);
+      hemi.intensity = myrsky ? 0.85 : 1.1; aur.color.set(ilta ? 0xffc8a0 : 0xffffff);
+      lumi.points.visible = !ilta; lumi.points.material.size = myrsky ? 0.22 : 0.16;
+    }
+    function paivita(dt, t) {
+      const myrsky = tila.tila === "myrsky" || tila.tila === "puu";
+      liikkuvat.forEach((a) => { const u = a.userData; u.x += u.s * u.v * dt * (myrsky ? 0.6 : 1); if (u.x > 115) u.x = -115; if (u.x < -115) u.x = 115; a.position.set(u.x, 0, u.z); });
+      if (tila.tila !== "tauko") { rekka.userData.x += dt * 9; if (rekka.userData.x > 115) rekka.userData.x = -115; } rekka.position.x = tila.tila === "tauko" ? -66 : rekka.userData.x; rekka.position.z = tila.tila === "tauko" ? -7 : -18 + 5.5;
+      const junaSeis = tila.tila === "puu";
+      if (!junaSeis) { juna.position.x += dt * 16; if (juna.position.x > 160) juna.position.x = -100; } else juna.position.x = 20;
+      const tuuli = myrsky ? 3 : 0.8;
+      for (let i = 0; i < 1800; i++) { let y = lumi.pos[i * 3 + 1] - lumi.nopeus[i] * dt; let x = lumi.pos[i * 3] + tuuli * dt; if (y < 0) y = 25; if (x > 60) x = -60; lumi.pos[i * 3 + 1] = y; lumi.pos[i * 3] = x; }
+      lumi.points.geometry.attributes.position.needsUpdate = true;
+      anturi.material.emissiveIntensity = Math.sin(t * 6) > 0 ? 2.2 : 0.3;
+      ihmiset.forEach((p) => { p.rotation.y = Math.sin(t * 0.6 + p.userData.v) * 0.4; });
+      mekaanikko.position.z = 1.6 + Math.sin(t * 0.5) * 1.2;
+      nostoAuto.position.y = 1.8 + Math.sin(t * 0.3) * 0.05;
+    }
+    const kohtaukset = {
+      kansi:          { kamera: [-30, 10, 8],    kohde: [10, 2, -20],     tila: {} },
+      liikenne:       { kamera: [-34, 14, 10],   kohde: [8, 1, -20],      tila: {} },
+      korjaamo:       { kamera: [13, 3.4, 23],   kohde: [27, 1.6, 22],    tila: {} },
+      moottoritie:    { kamera: [-80, 6, -4],    kohde: [-55, 1.5, -16],  tila: { tila: "myrsky" } },
+      bussi:          { kamera: [-17, 3, 32],    kohde: [-7, 1.5, 21],    tila: {} },
+      kolari:         { kamera: [23, 2.2, 14.5], kohde: [29.2, 0.8, 17.5],      tila: {} },
+      juna:           { kamera: [54, 5, -38],    kohde: [28, 3, -49],     tila: { tila: "puu" } },
+      huolto:         { kamera: [21.5, 2.6, 21], kohde: [23, 1.2, 28],    tila: { tila: "jono" } },
+      liikennekeskus: { kamera: [0, 3, 145],     kohde: [0, 3, 135],      tila: {} },
+      loppu:          { kamera: [-30, 10, 8],    kohde: [10, 2, -20],     tila: { tila: "ilta" } }
+    };
+    return { kohtaukset, oletus: "liikenne", asetaTila, paivita };
+  },
+
   hoitola(scene) {
     const V = { seina: 0xf3e3df, salvia: 0xb7c9b0, roosa: 0xe9b7b0, kerma: 0xfaf4ee, puu: 0xc49a74, kulta: 0xd4b06a };
     scene.background = new THREE.Color(0xf6ebe6);
