@@ -1446,3 +1446,50 @@ html body #passages .passage .jl-kentta input { width: 100% !important; min-widt
 #passages .passage .jr-raportti ul.vk-saannot li.ok { background: rgba(47,158,68,.12); } #passages .passage .jr-raportti ul.vk-saannot li.ok .vk-merkki { color: #2b8a3e; }
 #passages .passage .jr-raportti ul.vk-saannot li.ei { background: rgba(201,42,42,.08); } #passages .passage .jr-raportti ul.vk-saannot li.ei .vk-merkki { color: #c92a2a; }
 #passages .passage .jr-raportti ul.vk-saannot .vk-selitys { color: #6b5a5e !important; }
+
+/* Tehtävätyyppi "pohjapiirros" (rakentaminen: Suunnittele mökki) */
+#passages .passage .pp-tyokalut { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+#passages .passage .pp-nappula { display: inline-flex !important; align-items: center; justify-content: center; width: 1.7rem; height: 1.7rem; border-radius: 6px; margin: 0 !important;
+  font: 900 0.85rem/1 "Segoe UI", Arial, sans-serif !important; color: #1b1b1b; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+#passages .passage .pp-tyokalu .pp-nappula { width: 1.9rem; height: 1.9rem; }
+#passages .passage .pp-tyokalu[data-a=""] .pp-nappula { color: var(--teksti-vaalea); box-shadow: inset 0 0 0 2px rgba(var(--teksti-pehmea-rgb),.5); }
+#passages .passage .pp-asettelu { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 1rem; align-items: start; margin: 0 0 0.8rem !important; }
+@media (max-width: 860px) { #passages .passage .pp-asettelu { grid-template-columns: 1fr; } }
+#passages .passage .pp-vasen, #passages .passage .pp-alue { margin: 0 !important; }
+#passages .passage .pp-ruudukko { display: grid; gap: 0; margin: 0 !important; border: 4px solid #3a3f4a; background: #f4f0e8; touch-action: none; user-select: none; -webkit-user-select: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35); border-radius: 4px;
+  background-image: linear-gradient(rgba(60,70,90,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(60,70,90,.18) 1px, transparent 1px); }
+#passages .passage .pp-solu { aspect-ratio: 1; display: flex !important; align-items: center; justify-content: center; margin: 0 !important; padding: 0; border: 0; border-radius: 0;
+  background: transparent; cursor: crosshair; font: 800 0.8rem/1 "Segoe UI", Arial, sans-serif !important; color: #1b1b1b; outline-offset: -3px; min-width: 0;
+  box-shadow: inset 0 0 0 0.5px rgba(60,70,90,.25); }
+#passages .passage span.pp-solu { cursor: default; }
+#passages .passage .pp-solu span { margin: 0 !important; font-size: inherit !important; line-height: 1 !important; opacity: .75; }
+#passages .passage button.pp-solu:hover { box-shadow: inset 0 0 0 2px rgba(0,0,0,.35); }
+#passages .passage button.pp-solu:focus-visible { outline: 3px solid var(--korostus); }
+#passages .passage .pp-solu.pp-vesi { background: #9fd4ff !important; font-size: 1rem !important; box-shadow: inset 0 0 0 2px #2b7fd0; }
+#passages .passage .pp-solu.pp-vesi span { opacity: 1; }
+#passages .passage .pp-solu.pp-ovi { box-shadow: inset 0 -5px 0 #8a5a2b; }
+#passages .passage .pp-ovimerkki { display: grid; margin: 0.15rem 0 0 !important; }
+#passages .passage .pp-ovimerkki span { margin: 0 !important; text-align: center; font-size: 0.72rem !important; line-height: 1.2 !important; color: var(--teksti-pehmea); white-space: nowrap; }
+#passages .passage ul.pp-pinnat { list-style: none; padding: 0 !important; margin: 0 0 0.3rem !important; display: flex; flex-direction: column; gap: 0.25rem; }
+#passages .passage ul.pp-pinnat li { display: flex; align-items: center; gap: 0.5rem; margin: 0 !important; font-size: 0.9rem !important; line-height: 1.3 !important; }
+#passages .passage ul.pp-pinnat li strong { margin-left: auto; }
+#passages .passage .pp-yht { font-size: 0.85rem !important; color: var(--teksti-pehmea); margin: 0 0 0.7rem !important; text-align: right; }
+#passages .passage .pp-pieni-kehys { max-width: 320px; margin: 0 auto 1rem !important; }
+#passages .passage .pp-ruudukko.pp-pieni .pp-solu { font-size: 0.62rem !important; }
+@media (max-width: 700px) {
+  #passages .passage .pp-tyokalut { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #passages .passage .pp-solu { font-size: 0.66rem !important; }
+}
+.tuotekortti.pp-raportti { background: linear-gradient(160deg, #fbf8f2 0%, #efe9dd 100%); border-color: var(--a1); }
+#passages .passage .tuotekortti.pp-raportti .tk-yla { color: #7a4a12 !important; }
+#passages .passage .pp-raportti-sisalto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; margin: 0.4rem 0 0 !important; }
+@media (max-width: 640px) { #passages .passage .pp-raportti-sisalto { grid-template-columns: 1fr; } }
+#passages .passage .pp-raportti-sisalto > div { margin: 0 !important; }
+#passages .passage .pp-raportti ul.pp-pinnat li, #passages .passage .pp-raportti ul.pp-pinnat li strong { color: #2a2620; }
+#passages .passage .pp-raportti .pp-yht, #passages .passage .pp-raportti .pp-ovimerkki span { color: #5a5246; }
+#passages .passage .pp-raportti ul.vk-saannot li { background: rgba(0,0,0,.04); color: #2a2620; }
+#passages .passage .pp-raportti ul.vk-saannot li span { color: #2a2620; }
+#passages .passage .pp-raportti ul.vk-saannot li.ok { background: rgba(47,158,68,.12); } #passages .passage .pp-raportti ul.vk-saannot li.ok .vk-merkki { color: #2b8a3e; }
+#passages .passage .pp-raportti ul.vk-saannot li.ei { background: rgba(201,42,42,.08); } #passages .passage .pp-raportti ul.vk-saannot li.ei .vk-merkki { color: #c92a2a; }
+#passages .passage .pp-raportti ul.vk-saannot .vk-selitys { color: #5a5246 !important; }

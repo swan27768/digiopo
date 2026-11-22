@@ -1722,6 +1722,201 @@
       };
     }
 
+    /* --- Tehtävätyyppi "pohjapiirros": oppilas suunnittelee mökin ruudukkoon ---
+       Valitaan tila (keittiö, olohuone…) ja maalataan ruutuja (1 ruutu = 1 m²). Vesipiste
+       ja ulko-ovi ovat valmiina. Muistilista tarkistaa säännöt (tilat mukana, koot,
+       vesipisteen läheisyys, eteinen ulko-ovella, yhtenäiset huoneet, ei hukkaruutuja). */
+    if (TH.tyyppi === "pohjapiirros") {
+      var GW = TH.leveys || 8, GH = TH.korkeus || 6, TILAT = TH.tilat || [];
+      var VESI = TH.vesipiste || [2, 0], OVI = TH.ovi || [GH - 1, 5];
+      var tilaA = function (a) { return TILAT.filter(function (x) { return x.avain === a; })[0]; };
+      var pj = function (tila) { if (!tila.pohja || tila.pohja.length !== GW * GH) { tila.pohja = []; for (var i = 0; i < GW * GH; i++) tila.pohja.push(""); } return tila.pohja; };
+      var idx = function (r, c) { return r * GW + c; };
+      var onVesi = function (r, c) { return r === VESI[0] && c === VESI[1]; };
+      var naapurit = function (r, c) { return [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]].filter(function (p) { return p[0] >= 0 && p[0] < GH && p[1] >= 0 && p[1] < GW; }); };
+      var pinta = function (p) { var m = {}; TILAT.forEach(function (t) { m[t.avain] = 0; }); p.forEach(function (a) { if (a && m[a] != null) m[a]++; }); return m; };
+      var yhtenainen = function (p, a) {
+        var solut = []; p.forEach(function (x, i) { if (x === a) solut.push(i); });
+        if (solut.length <= 1) return true;
+        var nahty = {}, jono = [solut[0]]; nahty[solut[0]] = 1;
+        while (jono.length) { var i = jono.shift(), r = Math.floor(i / GW), c = i % GW;
+          naapurit(r, c).forEach(function (q) { var j = idx(q[0], q[1]); if (!nahty[j] && p[j] === a) { nahty[j] = 1; jono.push(j); } }); }
+        return Object.keys(nahty).length === solut.length;
+      };
+      var vesiNaapuri = function (p, a) { return naapurit(VESI[0], VESI[1]).some(function (q) { return p[idx(q[0], q[1])] === a; }); };
+      var saannotP = function (tila) {
+        var p = pj(tila), m = pinta(p), vapaat = 0;
+        p.forEach(function (x, i) { if (!x && !onVesi(Math.floor(i / GW), i % GW)) vapaat++; });
+        return (TH.saannot || []).map(function (s) {
+          var ok = false;
+          if (s.tyyppi === "kaikki") ok = TILAT.every(function (t) { return m[t.avain] > 0; });
+          else if (s.tyyppi === "min") ok = m[s.tila] >= s.min;
+          else if (s.tyyppi === "vesi") ok = vesiNaapuri(p, s.tila);
+          else if (s.tyyppi === "ovi") ok = p[idx(OVI[0], OVI[1])] === s.tila;
+          else if (s.tyyppi === "yhtenainen") ok = TILAT.every(function (t) { return m[t.avain] > 0 && yhtenainen(p, t.avain); });
+          else if (s.tyyppi === "taysi") ok = vapaat === 0;
+          return { s: s, ok: ok };
+        });
+      };
+      var pisteetP = function (tila) { return saannotP(tila).filter(function (r) { return r.ok; }).length; };
+      var palauteP = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 2 ? TH.palaute[1] : TH.palaute[2]; };
+      var ylosP = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+
+      var ruudukko = function (tila, muokattava) {
+        var p = pj(tila), h = '<div class="pp-alue"><div class="pp-ruudukko' + (muokattava ? "" : " pp-pieni") + '" style="grid-template-columns:repeat(' + GW + ',1fr)" role="grid" aria-label="Mökin pohjapiirros, ' + GW + ' × ' + GH + ' metriä">';
+        for (var r = 0; r < GH; r++) {
+          h += '<div class="pp-rivi" role="row" style="display:contents">';
+          for (var c = 0; c < GW; c++) {
+            var i = idx(r, c), a = p[i], t = tilaA(a);
+            if (onVesi(r, c)) { h += '<span class="pp-solu pp-vesi" role="gridcell" title="Vesipiste"><span aria-hidden="true">💧</span><span class="sr-only">Vesipiste</span></span>'; continue; }
+            var reunat = "";
+            if (a) naapurit(r, c).forEach(function () {});
+            var lbl = "Rivi " + (r + 1) + ", sarake " + (c + 1) + ": " + (t ? t.nimi : "tyhjä");
+            var sis = t ? '<span aria-hidden="true">' + suojaa(t.lyhenne) + '</span>' : '';
+            var tyyli = t ? ' style="background:' + t.vari + '"' : '';
+            var ovi = (r === OVI[0] && c === OVI[1]) ? " pp-ovi" : "";
+            h += muokattava
+              ? '<button type="button" role="gridcell" class="pp-solu' + (t ? " tay" : "") + ovi + '" data-i="' + i + '" aria-label="' + suojaa(lbl) + '"' + tyyli + '>' + sis + '</button>'
+              : '<span role="gridcell" class="pp-solu' + (t ? " tay" : "") + ovi + '"' + tyyli + '>' + sis + '</span>';
+          }
+          h += '</div>';
+        }
+        h += '</div><div class="pp-ovimerkki" style="grid-template-columns:repeat(' + GW + ',1fr)" aria-hidden="true">';
+        for (var c2 = 0; c2 < GW; c2++) h += '<span>' + (c2 === OVI[1] ? '🚪 ovi' : '') + '</span>';
+        return h + '</div></div>';
+      };
+      var pintaLista = function (tila) {
+        var m = pinta(pj(tila)), yht = 0;
+        var h = '<ul class="pp-pinnat">' + TILAT.map(function (t) { yht += m[t.avain];
+          return '<li><span class="pp-nappula" style="background:' + t.vari + '" aria-hidden="true">' + suojaa(t.lyhenne) + '</span>' + suojaa(t.nimi) + ' <strong>' + m[t.avain] + ' m²</strong></li>'; }).join("") + '</ul>';
+        return h + '<p class="pp-yht">Yhteensä <strong>' + yht + ' m²</strong> / ' + (GW * GH - 1) + ' m²</p>';
+      };
+      var saantoListaP = function (tila, selitykset) {
+        return '<ul class="vk-saannot">' + saannotP(tila).map(function (r) {
+          return '<li class="' + (r.ok ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (r.ok ? "✓" : (selitykset ? "✗" : "○")) + '</span><span><strong>' + suojaa(r.s.nimi) + '</strong>' +
+            '<span class="sr-only">' + (r.ok ? " – kunnossa" : " – ei vielä") + '</span>' + (selitykset ? '<span class="vk-selitys">' + suojaa(r.s.selitys) + (r.s.ammattilainen ? ' <em>(' + suojaa(r.s.ammattilainen) + ')</em>' : '') + '</span>' : '') + '</span></li>';
+        }).join("") + '</ul>';
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutP(alue, tila);
+        var p = pj(tila), valittu = tila.sivellin || (TILAT[0] && TILAT[0].avain), maalaa = null;
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/2 · Pohjapiirros") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tilaus") + '</p><p class="kutsu-teksti">' + suojaa(TH.ohje) + '</p></div>' +
+          '<div class="vk-tyokalut pp-tyokalut" role="radiogroup" aria-label="Valitse tila, jota piirrät">' + TILAT.concat([{ avain: "", nimi: "Pyyhi", lyhenne: "⌫", vari: "transparent" }]).map(function (t) {
+            return '<button type="button" class="vk-tyokalu pp-tyokalu" role="radio" aria-checked="' + (t.avain === valittu) + '" data-a="' + t.avain + '">' +
+              '<span class="pp-nappula" style="background:' + t.vari + '" aria-hidden="true">' + suojaa(t.lyhenne) + '</span><span class="vk-t-nimi">' + suojaa(t.nimi) + '</span></button>';
+          }).join("") + '</div>' +
+          '<p class="vk-vinkki">' + suojaa(TH.vinkki || "Valitse tila ja napauta tai vedä ruutujen yli. 1 ruutu = 1 m².") + '</p>' +
+          '<div class="pp-asettelu"><div class="pp-vasen"></div><div class="vk-oikea pp-oikea" aria-live="polite"></div></div>' +
+          '<p class="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava pp-tyhjenna">' + suojaa(TH.tyhjennaNappi || "Tyhjennä") + '</button>' +
+          '<button type="button" class="kutsu-tarkista pp-tarkista">' + suojaa(TH.tarkistaNappi || "Tarkista piirustus") + '</button>' +
+          '<button type="button" class="kutsu-seuraava pp-jatka" hidden>' + suojaa(TH.jatkaNappi || "Jatka perusteluihin") + '</button></div>';
+        var vasen = alue.querySelector(".pp-vasen"), oikea = alue.querySelector(".pp-oikea"), vihje = alue.querySelector(".kutsu-vihje"), jatka = alue.querySelector(".pp-jatka");
+        function paivitaSivu() {
+          var m = saannotP(tila).length, pp = pisteetP(tila);
+          oikea.innerHTML = '<p class="vk-saannot-otsikko">' + suojaa(TH.pinnatOtsikko || "Pinta-alat") + '</p>' + pintaLista(tila) +
+            '<p class="vk-saannot-otsikko">' + suojaa(TH.saannotOtsikko || "Muistilista") + '</p>' + saantoListaP(tila, tila.tarkistettu) +
+            (tila.tarkistettu ? '<p class="sj-pisteet">Pisteet: <strong>' + pp + '/' + m + '</strong> – ' + suojaa(palauteP(pp, m)) + '</p>' : '');
+          jatka.hidden = !tila.tarkistettu;
+          var kaytetty = p.filter(Boolean).length;
+          vihje.textContent = kaytetty < 5 ? "Aloita piirtämällä tiloja ruudukkoon." : tila.tarkistettu ? "Voit vielä muokata ja tarkistaa uudelleen, tai jatkaa." : "Kun piirustus on mielestäsi valmis, tarkista se.";
+        }
+        function piirraRuudukko() { vasen.innerHTML = ruudukko(tila, true); kytke(); }
+        function aseta(b) {
+          if (!b || !b.hasAttribute("data-i")) return;
+          var i = +b.getAttribute("data-i"), uusi = maalaa === null ? (p[i] === valittu ? "" : valittu) : maalaa;
+          if (maalaa === null) maalaa = uusi;
+          if (p[i] === uusi) return;
+          p[i] = uusi; var t = tilaA(uusi);
+          b.className = "pp-solu" + (t ? " tay" : "") + ((Math.floor(i / GW) === OVI[0] && i % GW === OVI[1]) ? " pp-ovi" : "");
+          b.style.background = t ? t.vari : ""; b.innerHTML = t ? '<span aria-hidden="true">' + suojaa(t.lyhenne) + '</span>' : "";
+          b.setAttribute("aria-label", "Rivi " + (Math.floor(i / GW) + 1) + ", sarake " + (i % GW + 1) + ": " + (t ? t.nimi : "tyhjä"));
+          tila.tarkistettu = false; paivitaSivu();
+        }
+        function kytke() {
+          var g = vasen.querySelector(".pp-ruudukko");
+          g.addEventListener("pointerdown", function (e) { var b = e.target.closest(".pp-solu[data-i]"); if (!b) return; e.preventDefault(); maalaa = null; aseta(b); });
+          g.addEventListener("pointermove", function (e) { if (maalaa === null || !(e.buttons & 1) && e.pointerType === "mouse") return; var el = document.elementFromPoint(e.clientX, e.clientY); var b = el && el.closest ? el.closest(".pp-solu[data-i]") : null; if (b && g.contains(b)) aseta(b); });
+          var lopeta = function () { if (maalaa !== null) { maalaa = null; kutsuTallenna(); } };
+          g.addEventListener("pointerup", lopeta); g.addEventListener("pointercancel", lopeta); g.addEventListener("pointerleave", lopeta);
+          g.addEventListener("keydown", function (e) { var b = e.target.closest(".pp-solu[data-i]"); if (b && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); maalaa = null; aseta(b); maalaa = null; kutsuTallenna(); } });
+        }
+        Array.prototype.forEach.call(alue.querySelectorAll(".pp-tyokalu"), function (b) {
+          b.addEventListener("click", function () {
+            valittu = tila.sivellin = b.getAttribute("data-a"); kutsuTallenna();
+            Array.prototype.forEach.call(alue.querySelectorAll(".pp-tyokalu"), function (x) { x.setAttribute("aria-checked", x === b ? "true" : "false"); x.classList.toggle("valittu", x === b); });
+          });
+          b.classList.toggle("valittu", b.getAttribute("data-a") === valittu);
+        });
+        alue.querySelector(".pp-tyhjenna").addEventListener("click", function () { for (var i = 0; i < p.length; i++) p[i] = ""; tila.tarkistettu = false; kutsuTallenna(); piirraRuudukko(); paivitaSivu(); });
+        alue.querySelector(".pp-tarkista").addEventListener("click", function () { tila.tarkistettu = true; kutsuTallenna(); paivitaSivu(); var s = oikea.querySelector(".sj-pisteet"); if (s && s.scrollIntoView) s.scrollIntoView({ block: "center" }); });
+        jatka.addEventListener("click", function () { tila.vaihe = "perustelu"; kutsuTallenna(); window.kutsuPiirra(); ylosP(); });
+        piirraRuudukko(); paivitaSivu();
+      };
+
+      var piirraPerustelutP = function (alue, tila) {
+        var kys = TH.kysymykset || [], m = saannotP(tila).length;
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/2 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<div class="pp-pieni-kehys">' + ruudukko(tila, false) + '</div>' +
+          '<p class="sj-pisteet">Piirustuksen pisteet: <strong>' + pisteetP(tila) + '/' + m + '</strong></p>' +
+          kys.map(function (k, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="pp-p' + i + '">' + (i + 1) + '. ' + suojaa(k.kysymys) + '</label>' +
+              '<textarea id="pp-p' + i + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava pp-takaisin">' + suojaa(TH.takaisinNappi || "Muokkaa piirustusta") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function pv() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", pv); });
+        alue.querySelector(".pp-takaisin").addEventListener("click", function () { tila.vaihe = "suunnittelu"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        pv();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), p = pisteetP(tila), m = saannotP(tila).length;
+        var h = '<div class="tuotekortti pp-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "POHJAPIIRROS") + '</p>' +
+          '<p class="tk-lause">' + p + '/' + m + ' pistettä – ' + suojaa(palauteP(p, m)) + '</p>' +
+          '<div class="pp-raportti-sisalto"><div>' + ruudukko(tila, false) + '</div><div>' + pintaLista(tila) + saantoListaP(tila, true) + '</div></div></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, i) {
+          return '<li><strong>' + suojaa(k.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var p = pj(tila), m = pinta(p), t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetP(tila) + "/" + saannotP(tila).length + " pistettä\n\nPOHJAPIIRROS (1 ruutu = 1 m², ~ = vesipiste)\n";
+        for (var r = 0; r < GH; r++) { var rivi = ""; for (var c = 0; c < GW; c++) { var x = tilaA(p[idx(r, c)]); rivi += onVesi(r, c) ? "~ " : (x ? x.lyhenne : ".") + " "; } t += rivi + "\n"; }
+        t += " ".repeat(OVI[1] * 2) + "^ ulko-ovi\n\nPINTA-ALAT\n";
+        TILAT.forEach(function (x) { t += x.nimi + " (" + x.lyhenne + "): " + m[x.avain] + " m²\n"; });
+        t += "\nMUISTILISTA\n"; saannotP(tila).forEach(function (r) { t += (r.ok ? "✓ " : "✗ ") + r.s.nimi + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, i) { t += (i + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";
