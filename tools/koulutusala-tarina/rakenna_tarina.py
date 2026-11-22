@@ -38,6 +38,7 @@ IKONIT = {
     "lehti": '<path d="M5 19C5 10 11 5 20 4c0 9-5 15-14 15z" fill="currentColor"/><path d="M5 19l8-8" fill="none" stroke="#2a1405" stroke-width="1.6" stroke-linecap="round"/>',
     "kone": '<path d="M21 15.5v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V8.5l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-5z" fill="currentColor"/>',
     "pokaali": '<path d="M7 4h10v4a5 5 0 0 1-10 0z" fill="currentColor"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.8 3.5M17 6h2.5a2.5 2.5 0 0 1-2.8 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 13v4M8.5 20h7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+    "kilpi": '<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.9-4.3-1.6-7.5-5.3-7.5-9.9V6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 
