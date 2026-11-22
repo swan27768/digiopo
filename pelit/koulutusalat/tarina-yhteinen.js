@@ -1526,6 +1526,202 @@
       };
     }
 
+    /* --- Tehtävätyyppi "jarjestys": hoidon vaiheet oikeaan järjestykseen + kotihoito-ohjeet ---
+       Oppilas valitsee hoidon, järjestää sen vaiheet nuolinapeilla ja tarkistaa. Sitten hän
+       valitsee asiakkaalle kolme oikeaa kotihoito-ohjetta. Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "jarjestys") {
+      var HO = TH.hoidot || [];
+      var hoito = function (tila) { return typeof tila.hoito === "number" ? HO[tila.hoito] : null; };
+      var sekoita = function (n) {
+        var a = [], i; for (i = 0; i < n; i++) a.push(i);
+        var siemen = 7;
+        for (i = n - 1; i > 0; i--) { siemen = (siemen * 9301 + 49297) % 233280; var j = Math.floor(siemen / 233280 * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+        if (a.every(function (x, k) { return x === k; })) a.reverse();
+        return a;
+      };
+      var oikeinPaikalla = function (tila) { return (tila.jarjestys || []).filter(function (x, i) { return x === i; }).length; };
+      var ohjePisteet = function (tila) {
+        var h = hoito(tila); if (!h) return 0;
+        var p = 0; (tila.ohjeet || []).forEach(function (i) { p += h.ohjeet[i].oikein ? 1 : -1; });
+        return Math.max(0, p);
+      };
+      var maxJ = function (h) { return h.vaiheet.length + (h.ohjeet || []).filter(function (o) { return o.oikein; }).length; };
+      var pisteetJ2 = function (tila) { return oikeinPaikalla(tila) + ohjePisteet(tila); };
+      var palauteJ2 = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 3 ? TH.palaute[1] : TH.palaute[2]; };
+      var ylos = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        var h = hoito(tila);
+        if (!h) return piirraValintaJ(alue, tila);
+        if (tila.vaihe === "ohjeet") return piirraOhjeet(alue, tila, h);
+        if (tila.vaihe === "perustelu") return piirraPerustelutJ2(alue, tila, h);
+        if (!tila.jarjestys || tila.jarjestys.length !== h.vaiheet.length) tila.jarjestys = sekoita(h.vaiheet.length);
+        function piirra(fokus) {
+          var n = h.vaiheet.length, p = oikeinPaikalla(tila);
+          alue.innerHTML =
+            '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/3 · Hoidon vaiheet") + '</p>' +
+            '<div class="kutsu-kortti vk-henkilo"><span class="vk-iso-ikoni" aria-hidden="true">' + suojaa(h.ikoni || "") + '</span><div><p class="kutsu-tilanne">' + suojaa(h.nimi) + '</p>' +
+            '<p class="kutsu-teksti">' + suojaa(h.asiakas) + '</p><p class="vk-ohje">' + suojaa(TH.ohje) + '</p></div></div>' +
+            '<ol class="jr-lista">' + tila.jarjestys.map(function (v, i) {
+              var ok = tila.tarkistettu && v === i, vaara = tila.tarkistettu && v !== i;
+              return '<li class="jr-vaihe' + (ok ? " ok" : "") + (vaara ? " ei" : "") + '">' +
+                '<span class="jr-nro" aria-hidden="true">' + (i + 1) + '</span>' +
+                '<span class="jr-teksti"><strong>' + suojaa(h.vaiheet[v].nimi) + '</strong>' +
+                (ok ? '<span class="jr-selitys">✓ ' + suojaa(h.vaiheet[v].selitys) + '</span>' : '') +
+                (vaara ? '<span class="jr-selitys">✗ Ei vielä oikealla paikalla.</span>' : '') +
+                '<span class="sr-only">, kohta ' + (i + 1) + '/' + n + (ok ? ", oikein" : vaara ? ", väärällä paikalla" : "") + '</span></span>' +
+                '<span class="jr-napit"><button type="button" class="jr-nuoli" data-i="' + i + '" data-s="-1" aria-label="Siirrä ylös: ' + suojaa(h.vaiheet[v].nimi) + '"' + (i === 0 ? " disabled" : "") + '>▲</button>' +
+                '<button type="button" class="jr-nuoli" data-i="' + i + '" data-s="1" aria-label="Siirrä alas: ' + suojaa(h.vaiheet[v].nimi) + '"' + (i === n - 1 ? " disabled" : "") + '>▼</button></span></li>';
+            }).join("") + '</ol>' +
+            (tila.tarkistettu ? '<p class="sj-pisteet">Oikealla paikalla: <strong>' + p + '/' + n + '</strong>' + (p === n ? " – Täydellinen järjestys!" : " – Siirrä punaisia vaiheita ja tarkista uudelleen.") + '</p>' : '') +
+            '<p class="kutsu-vihje" aria-live="polite">' + (tila.tarkistettu ? "Voit vielä korjata järjestystä tai jatkaa kotihoito-ohjeisiin." : "Siirrä vaiheita nuolilla. Kun järjestys on mielestäsi oikein, tarkista se.") + '</p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jr-vaihda">' + suojaa(TH.vaihdaNappi || "Vaihda hoitoa") + '</button>' +
+            '<button type="button" class="kutsu-tarkista jr-tarkista">' + suojaa(TH.tarkistaNappi || "Tarkista järjestys") + '</button>' +
+            (tila.tarkistettu ? '<button type="button" class="kutsu-seuraava jr-jatka">' + suojaa(TH.jatkaNappi || "Jatka kotihoito-ohjeisiin") + '</button>' : '') + '</div>';
+          Array.prototype.forEach.call(alue.querySelectorAll(".jr-nuoli"), function (b) {
+            b.addEventListener("click", function () {
+              var i = +b.getAttribute("data-i"), s = +b.getAttribute("data-s"), j = i + s, a = tila.jarjestys;
+              if (j < 0 || j >= a.length) return;
+              var t = a[i]; a[i] = a[j]; a[j] = t; tila.tarkistettu = false; kutsuTallenna();
+              piirra('.jr-nuoli[data-i="' + j + '"][data-s="' + s + '"]');
+            });
+          });
+          alue.querySelector(".jr-tarkista").addEventListener("click", function () {
+            tila.tarkistettu = true; kutsuTallenna(); piirra(".jr-tarkista");
+            var l = alue.querySelector(".sj-pisteet"); if (l && l.scrollIntoView) l.scrollIntoView({ block: "center" });
+          });
+          alue.querySelector(".jr-vaihda").addEventListener("click", function () {
+            delete tila.hoito; tila.jarjestys = null; tila.tarkistettu = false; tila.ohjeet = []; kutsuTallenna(); window.kutsuPiirra(); ylos();
+          });
+          var jatka = alue.querySelector(".jr-jatka");
+          if (jatka) jatka.addEventListener("click", function () { tila.vaihe = "ohjeet"; kutsuTallenna(); window.kutsuPiirra(); ylos(); });
+          if (fokus) { var f = alue.querySelector(fokus); if (f && !f.disabled) f.focus({ preventScroll: true }); }
+        }
+        piirra();
+      };
+
+      var piirraValintaJ = function (alue, tila) {
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa0 || "Valitse hoito") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.valintaOtsikko || "Minkä hoidon teet?") + '</p><p class="kutsu-teksti">' + suojaa(TH.valintaOhje || "Valitse hoito.") + '</p></div>' +
+          '<div class="vk-henkilot jr-hoidot">' + HO.map(function (x, i) {
+            return '<button type="button" class="vk-henkilokortti" data-i="' + i + '"><span class="vk-iso-ikoni" aria-hidden="true">' + suojaa(x.ikoni || "") + '</span>' +
+              '<span class="vk-hk-nimi">' + suojaa(x.nimi) + '</span><span class="vk-hk-laji">' + suojaa(x.ammatti) + '</span>' +
+              '<span class="vk-hk-kuvaus">' + suojaa(x.asiakas) + '</span><span class="vk-hk-valitse">Valitse →</span></button>';
+          }).join("") + '</div>';
+        Array.prototype.forEach.call(alue.querySelectorAll(".vk-henkilokortti"), function (b) {
+          b.addEventListener("click", function () {
+            tila.hoito = +b.getAttribute("data-i"); tila.jarjestys = null; tila.tarkistettu = false; tila.ohjeet = []; tila.ohjeTarkistettu = false; tila.vaihe = "jarjestys";
+            kutsuTallenna(); window.kutsuPiirra(); ylos();
+          });
+        });
+      };
+
+      var piirraOhjeet = function (alue, tila, h) {
+        var valitut = tila.ohjeet || (tila.ohjeet = []), tarvitaan = h.ohjeet.filter(function (o) { return o.oikein; }).length;
+        function piirra(fokus) {
+          var t = tila.ohjeTarkistettu;
+          alue.innerHTML =
+            '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/3 · Kotihoito-ohjeet") + '</p>' +
+            '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.ohjeetOtsikko || "Kotihoito-ohjeet") + '</p><p class="kutsu-teksti">' + suojaa((TH.ohjeetOhje || "Valitse asiakkaalle {n} hyvää kotihoito-ohjetta.").replace("{n}", tarvitaan)) + '</p></div>' +
+            '<div class="jr-ohjeet" role="group" aria-label="Kotihoito-ohjeet">' + h.ohjeet.map(function (o, i) {
+              var on = valitut.indexOf(i) !== -1, tulos = t && on ? (o.oikein ? " ok" : " ei") : (t && o.oikein ? " puuttui" : "");
+              return '<button type="button" class="jr-ohje' + (on ? " valittu" : "") + tulos + '" aria-pressed="' + on + '" data-i="' + i + '">' +
+                '<span class="jr-ruutu" aria-hidden="true">' + (on ? "✓" : "") + '</span><span class="jr-ohje-teksti">' + suojaa(o.teksti) +
+                (t && (on || o.oikein) ? '<span class="jr-selitys">' + (o.oikein ? (on ? "✓ " : "Tämä olisi ollut hyvä ohje: ") : "✗ ") + suojaa(o.selitys) + '</span>' : '') + '</span></button>';
+            }).join("") + '</div>' +
+            (t ? '<p class="sj-pisteet">Ohjeiden pisteet: <strong>' + ohjePisteet(tila) + '/' + tarvitaan + '</strong></p>' : '') +
+            '<p class="kutsu-vihje" aria-live="polite">' + (valitut.length !== tarvitaan ? "Valitse " + tarvitaan + " ohjetta. Valittuna " + valitut.length + "." : t ? "Voit vielä muuttaa valintoja tai jatkaa." : "Hyvä! Tarkista valintasi.") + '</p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jr-takaisin">' + suojaa(TH.takaisinNappi || "Takaisin järjestykseen") + '</button>' +
+            '<button type="button" class="kutsu-tarkista jr-tarkista-o"' + (valitut.length === tarvitaan ? "" : " disabled") + '>' + suojaa(TH.ohjeTarkistaNappi || "Tarkista ohjeet") + '</button>' +
+            (t ? '<button type="button" class="kutsu-seuraava jr-jatka-o">' + suojaa(TH.jatka2Nappi || "Jatka perusteluihin") + '</button>' : '') + '</div>';
+          Array.prototype.forEach.call(alue.querySelectorAll(".jr-ohje"), function (b) {
+            b.addEventListener("click", function () {
+              var i = +b.getAttribute("data-i"), k = valitut.indexOf(i);
+              if (k !== -1) valitut.splice(k, 1); else if (valitut.length < tarvitaan) valitut.push(i); else return;
+              tila.ohjeTarkistettu = false; kutsuTallenna(); piirra('.jr-ohje[data-i="' + i + '"]');
+            });
+          });
+          var to = alue.querySelector(".jr-tarkista-o");
+          to.addEventListener("click", function () { if (to.disabled) return; tila.ohjeTarkistettu = true; kutsuTallenna(); piirra(".jr-tarkista-o"); });
+          alue.querySelector(".jr-takaisin").addEventListener("click", function () { tila.vaihe = "jarjestys"; kutsuTallenna(); window.kutsuPiirra(); ylos(); });
+          var j = alue.querySelector(".jr-jatka-o");
+          if (j) j.addEventListener("click", function () { tila.vaihe = "perustelu"; kutsuTallenna(); window.kutsuPiirra(); ylos(); });
+          if (fokus) { var f = alue.querySelector(fokus); if (f && !f.disabled) f.focus({ preventScroll: true }); }
+        }
+        piirra();
+      };
+
+      var piirraPerustelutJ2 = function (alue, tila, h) {
+        var kys = TH.kysymykset || [];
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa3 || "Osa 3/3 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Pisteet tähän asti: <strong>' + pisteetJ2(tila) + '/' + maxJ(h) + '</strong></p>' +
+          kys.map(function (k, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="jr-p' + i + '">' + (i + 1) + '. ' + suojaa(k.kysymys) + '</label>' +
+              '<textarea id="jr-p' + i + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jr-takaisin2">' + suojaa(TH.takaisin2Nappi || "Takaisin ohjeisiin") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function p() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", p); });
+        alue.querySelector(".jr-takaisin2").addEventListener("click", function () { tila.vaihe = "ohjeet"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        p();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), h = hoito(tila);
+        if (!h) return "<p>Et vielä tehnyt tehtävää.</p>";
+        var p = pisteetJ2(tila), m = maxJ(h);
+        var x = '<div class="tuotekortti jr-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "HOITOSUUNNITELMA") + '</p>' +
+          '<p class="tk-tuotenimi">' + suojaa((h.ikoni ? h.ikoni + " " : "") + h.nimi) + '</p>' +
+          '<p class="tk-lause">' + p + '/' + m + ' pistettä – ' + suojaa(palauteJ2(p, m)) + '</p>' +
+          '<p class="jr-alaotsikko">Sinun järjestyksesi</p><ol class="jr-lista jr-pieni">' + (tila.jarjestys || []).map(function (v, i) {
+            return '<li class="jr-vaihe ' + (v === i ? "ok" : "ei") + '"><span class="jr-nro" aria-hidden="true">' + (i + 1) + '</span><span class="jr-teksti"><strong>' + suojaa(h.vaiheet[v].nimi) + '</strong>' +
+              (v !== i ? '<span class="jr-selitys">Oikea paikka: ' + (v + 1) + '.</span>' : '') + '</span></li>';
+          }).join("") + '</ol>' +
+          '<p class="jr-alaotsikko">Kotihoito-ohjeet</p><ul class="vk-saannot">' + (tila.ohjeet || []).map(function (i) {
+            var o = h.ohjeet[i];
+            return '<li class="' + (o.oikein ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (o.oikein ? "✓" : "✗") + '</span><span><strong>' + suojaa(o.teksti) + '</strong><span class="vk-selitys">' + suojaa(o.selitys) + '</span></span></li>';
+          }).join("") + '</ul></div>';
+        x += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, i) {
+          return '<li><strong>' + suojaa(k.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) x += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (a) {
+          return '<li><strong>' + suojaa(a.nimi) + '</strong> – ' + suojaa(a.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(a.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return x;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var h = hoito(tila);
+        if (!h) return "\n" + TH.nimi.toUpperCase() + "\nTehtävä jäi kesken.\n";
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetJ2(tila) + "/" + maxJ(h) + " pistettä\nHoito: " + h.nimi + "\n\nJÄRJESTYKSESI\n";
+        (tila.jarjestys || []).forEach(function (v, i) { t += (i + 1) + ". " + h.vaiheet[v].nimi + (v === i ? " ✓" : " ✗ (oikea paikka " + (v + 1) + ")") + "\n"; });
+        t += "\nKOTIHOITO-OHJEET\n";
+        (tila.ohjeet || []).forEach(function (i) { t += (h.ohjeet[i].oikein ? "✓ " : "✗ ") + h.ohjeet[i].teksti + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, i) { t += (i + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";

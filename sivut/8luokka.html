@@ -2515,7 +2515,7 @@
       { nimi:"Hammaslaborantti",    ala:"Hammastekniikka",      k:["ihmiset","tekniikka"],lyhyt:"Valmistat hammasproteeseja ja oikomiskojeita.",             am:"hammaslaborantti", pt:"Hammastekniikan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
       { nimi:"Lääketeknikko",       ala:"Lääkeala",             k:["ihmiset"],           lyhyt:"Valmistat ja toimitat lääkkeitä apteekissa.",                am:"lääketeknikko", pt:"Lääkealan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
       { nimi:"Välinehuoltaja",      ala:"Välinehuoltoala",      k:["ihmiset"],           lyhyt:"Huollat ja steriloit hoitovälineitä sairaalassa.",           am:"välinehuoltaja", pt:"Välinehuoltoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
-      { nimi:"Kampaaja",            ala:"Hius- ja kauneudenhoito", k:["kauneus"],lyhyt:"Leikkaat ja muotoilet hiuksia sekä hoidat ihoa.",            am:"kampaaja, parturi, kosmetologi, kosmetiikkaneuvoja", pt:"Hius- ja kauneudenhoitoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
+      { nimi:"Kampaaja",            ala:"Hius- ja kauneudenhoito", k:["kauneus"],lyhyt:"Leikkaat ja muotoilet hiuksia sekä hoidat ihoa.",            am:"kampaaja, parturi, kosmetologi, kosmetiikkaneuvoja", pt:"Hius- ja kauneudenhoitoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote", p:"../pelit/koulutusalat/kauneus-ala.html"},
       { nimi:"Kuorma-autonkuljettaja", ala:"Logistiikka",       k:["auto"],         lyhyt:"Kuljetat tavaraa ja ihmisiä sekä hoidat varastoa.",          am:"kuorma-autonkuljettaja, linja-autonkuljettaja, yhdistelmäajoneuvonkuljettaja, palvelulogistiikkatyöntekijä", pt:"Logistiikan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka" },
       { nimi:"Matkailun asiakaspalvelija", ala:"Matkailuala",   k:["matkailu","ihmiset"],  lyhyt:"Palvelet matkailijoita ja järjestät elämyksiä.",             am:"matkailun asiakaspalvelija", pt:"Matkailualan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
       { nimi:"Matruusi",            ala:"Merenkulkuala",        k:["auto","tekniikka"],         lyhyt:"Työskentelet laivan kannella tai konehuoneessa.",            am:"matruusi, konemies, vahtiperämies, vahtikonemestari, laivasähköasentaja", pt:"Merenkulkualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka" },
@@ -2902,26 +2902,28 @@
       data:     '../pelit/koulutusalat/it-ala.html',
       ruoka:    '../pelit/koulutusalat/elintarvike-ala.html',
       liikunta: '../pelit/koulutusalat/palvelu-ala.html',
-      urheilu:  '../pelit/koulutusalat/urheilu-ala.html'
+      urheilu:  '../pelit/koulutusalat/urheilu-ala.html',
+      kauneus:  '../pelit/koulutusalat/kauneus-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
       taide:'Taide ja kulttuuri', kauppa:'Kauppa ja myynti',
       data:'IT ja tietotekniikka', ruoka:'Elintarvikeala', liikunta:'Palveluala',
-      urheilu:'Urheilu, tanssi ja sirkus'
+      urheilu:'Urheilu, tanssi ja sirkus',
+      kauneus:'Kauneus ja hyvinvointi'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin yhdeksästä pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen johonkin kymmenestä pelitarina-alasta
     const PELI_ALA = {
       ihmiset:'ihmiset', elaimet:'luonto', luonto:'luonto', ruoka:'ruoka',
       auto:'tekniikka', rakentaminen:'tekniikka', tekniikka:'tekniikka',
       pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'taide',
-      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'liikunta', turvallisuus:'liikunta'
+      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'liikunta'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','tekniikka','data','ruoka','luonto','taide','kauppa','liikunta','urheilu'];
+      const jarjestys = ['ihmiset','tekniikka','data','ruoka','luonto','taide','kauppa','liikunta','urheilu','kauneus'];
       const kat = [];
       amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -2960,7 +2962,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:''
     };
 
     /* ── Tab-vaihto ── */
