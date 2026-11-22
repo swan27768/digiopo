@@ -613,6 +613,7 @@
               <p class="is8-006">Ei tarvitse vielä tietää aloista mitään — valitse vain, mikä kuulostaa kivalta. Voit valita useita. Näytämme sinulle sopivia ammatteja ja tutkintoja.</p>
               <div class="tj-kiinnostukset" role="group" aria-label="Valitse mikä sinua kiinnostaa">
                 <button type="button" class="tj-nappi" data-ala="ihmiset"      onclick="toggleAmisFil(this)" aria-pressed="false">Ihmiset ja auttaminen</button>
+                <button type="button" class="tj-nappi" data-ala="kasvatus"     onclick="toggleAmisFil(this)" aria-pressed="false">Lapset ja nuoret</button>
                 <button type="button" class="tj-nappi" data-ala="elaimet"      onclick="toggleAmisFil(this)" aria-pressed="false">Eläimet</button>
                 <button type="button" class="tj-nappi" data-ala="luonto"       onclick="toggleAmisFil(this)" aria-pressed="false">Luonto ja ympäristö</button>
                 <button type="button" class="tj-nappi" data-ala="ruoka"        onclick="toggleAmisFil(this)" aria-pressed="false">Ruoka ja leipominen</button>
@@ -2487,7 +2488,7 @@
 
     const TJ_TUTKINNOT = [
       { nimi:"Lähihoitaja",         ala:"Sote-ala",             k:["ihmiset"],           lyhyt:"Hoidat ihmisiä — vanhuksia, lapsia, sairaita.",              am:"lähihoitaja, perustason ensihoitaja", pt:"Sosiaali- ja terveysalan perustutkinto",           v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", ik:"⚕️",  imgKey:"sote",         p:"../pelit/koulutusalat/sote.html",           op:"https://opintopolku.fi/konfo/fi/haku?keyword=l%C3%A4hihoitaja&koulutustyyppi=amm" },
-      { nimi:"Lastenohjaaja",       ala:"Kasvatus",             k:["ihmiset"],           lyhyt:"Ohjaat lapsia päiväkodeissa ja iltapäivätoiminnassa.",        am:"lastenohjaaja, nuoriso- ja yhteisöohjaaja, kommunikaation ja viittomakielen ohjaaja", pt:"Kasvatus- ja ohjausalan perustutkinto", v:"#f97316",tv:"#fff7ed",tt:"#9a3412", ik:"👶",  imgKey:"sote",         p:"../pelit/koulutusalat/sote.html",           op:"https://opintopolku.fi/konfo/fi/haku?keyword=lastenohjaaja&koulutustyyppi=amm" },
+      { nimi:"Lastenohjaaja",       ala:"Kasvatus",             k:["ihmiset","kasvatus"],           lyhyt:"Ohjaat lapsia päiväkodeissa ja iltapäivätoiminnassa.",        am:"lastenohjaaja, nuoriso- ja yhteisöohjaaja, kommunikaation ja viittomakielen ohjaaja", pt:"Kasvatus- ja ohjausalan perustutkinto", v:"#f97316",tv:"#fff7ed",tt:"#9a3412", ik:"👶",  imgKey:"sote",         p:"../pelit/koulutusalat/kasvatus-ala.html",           op:"https://opintopolku.fi/konfo/fi/haku?keyword=lastenohjaaja&koulutustyyppi=amm" },
       { nimi:"Sähköasentaja",       ala:"Tekniikka",            k:["tekniikka"],         lyhyt:"Asennat sähkölaitteita rakennuksiin ja teollisuuteen.",       am:"sähköasentaja, automaatioasentaja, sähköverkkoasentaja", pt:"Sähkö- ja automaatioalan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", ik:"⚡",  imgKey:"tekniikka",    p:"../pelit/koulutusalat/tekniikka-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=s%C3%A4hk%C3%B6asentaja&koulutustyyppi=amm" },
       { nimi:"Autonasentaja",       ala:"Tekniikka",            k:["auto","tekniikka"],         lyhyt:"Huollat ja korjaat autoja ja muita ajoneuvoja.",              am:"automekaanikko, autokorimekaanikko, automaalari, automyyjä", pt:"Ajoneuvoalan perustutkinto",            v:"#6366f1",tv:"#eef2ff",tt:"#3730a3", ik:"🚗",  imgKey:"tekniikka",    p:"../pelit/koulutusalat/tekniikka-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=autonasentaja&koulutustyyppi=amm" },
       { nimi:"Talonrakentaja",      ala:"Rakentaminen",         k:["rakentaminen"],         lyhyt:"Rakennat taloja perustuksista kattoon.",                     am:"talonrakentaja, maarakentaja, maarakennuskoneenkuljettaja, kivirakentaja", pt:"Rakennusalan perustutkinto",             v:"#84cc16",tv:"#f7fee7",tt:"#365314", ik:"🏗️", imgKey:"tekniikka",    p:"../pelit/koulutusalat/rakennus-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=talonrakentaja&koulutustyyppi=amm" },
@@ -2918,7 +2919,8 @@
       liikenne: '../pelit/koulutusalat/liikenne-ala.html',
       elaimet: '../pelit/koulutusalat/elaimet-ala.html',
       musiikki: '../pelit/koulutusalat/musiikki-ala.html',
-      kasityo:  '../pelit/koulutusalat/kasityo-ala.html'
+      kasityo:  '../pelit/koulutusalat/kasityo-ala.html',
+      kasvatus: '../pelit/koulutusalat/kasvatus-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
@@ -2931,20 +2933,21 @@
       liikenne:'Autot ja liikenne',
       elaimet:'Eläimet',
       musiikki:'Musiikki',
-      kasityo:'Käsityö'
+      kasityo:'Käsityö',
+      kasvatus:'Kasvatus ja ohjaus'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin kuudestatoista pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen johonkin seitsemästätoista pelitarina-alasta
     const PELI_ALA = {
       ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
       pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'musiikki',
-      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:'kasityo'
+      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:'kasityo', kasvatus:'kasvatus'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','musiikki','kasityo','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','musiikki','kasityo','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
       const kat = [];
       amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -2983,7 +2986,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:''
     };
 
     /* ── Tab-vaihto ── */

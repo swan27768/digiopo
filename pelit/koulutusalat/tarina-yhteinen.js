@@ -2622,6 +2622,136 @@
       };
     }
 
+    /* --- Tehtävätyyppi "ryhmanjako": oppilas jakaa lapset retkiryhmiin ---
+       Jokaiselle lapselle valitaan ryhmä napeilla. Ryhmien koot näkyvät heti.
+       Tarkistus näyttää, mitkä ohjaajien toiveet ja turvallisuussäännöt täyttyvät.
+       Jakoa voi muokata ja tarkistaa uudelleen. Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "ryhmanjako") {
+      var RY = TH.ryhmat || [], LA = TH.lapset || [], RS = TH.saannot || [];
+      var rjTila = function (tila) { if (!tila.jako) tila.jako = {}; return tila; };
+      var lapsiN = function (a) { for (var i = 0; i < LA.length; i++) if (LA[i].avain === a) return LA[i]; return { nimi: a }; };
+      var ryhmaN = function (a) { for (var i = 0; i < RY.length; i++) if (RY[i].avain === a) return RY[i]; return { nimi: "–" }; };
+      var jasenet = function (jako, r) { return LA.filter(function (l) { return jako[l.avain] === r; }); };
+      var tarkistaR = function (jako) {
+        return RS.map(function (q) {
+          var ok = false;
+          if (q.tyyppi === "koko") ok = RY.every(function (r) { var n = jasenet(jako, r.avain).length; return n >= q.min && n <= q.max; });
+          else if (q.tyyppi === "vain") ok = q.ryhmat.indexOf(jako[q.lapsi]) !== -1;
+          else if (q.tyyppi === "ei") ok = !!jako[q.lapsi] && jako[q.lapsi] !== q.ryhma;
+          else if (q.tyyppi === "yhdessa") ok = !!jako[q.lapset[0]] && q.lapset.every(function (a) { return jako[a] === jako[q.lapset[0]]; });
+          else if (q.tyyppi === "erikseen") ok = q.lapset.every(function (a) { return !!jako[a]; }) && q.lapset.every(function (a, i) { return q.lapset.every(function (b, j) { return i === j || jako[a] !== jako[b]; }); });
+          else if (q.tyyppi === "maxKoko") ok = !!jako[q.lapsi] && jasenet(jako, jako[q.lapsi]).length <= q.max;
+          else if (q.tyyppi === "jokaisessa") ok = RY.every(function (r) { return jasenet(jako, r.avain).some(function (l) { return (l.tagit || []).indexOf(q.tagi) !== -1; }); });
+          return { r: q, ok: ok };
+        });
+      };
+      var pisteetR = function (tila) { return tila.tarkistettu || tila.vaihe === "perustelu" || tila.valmis ? tarkistaR(tila.jako).filter(function (x) { return x.ok; }).length : 0; };
+      var palauteR = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 2 ? TH.palaute[1] : TH.palaute[2]; };
+      var ylosR = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = rjTila(kutsuTila());
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutR(alue, tila);
+        var jako = tila.jako, luk = tila.tarkistettu, sijoittamatta = LA.filter(function (l) { return !jako[l.avain]; }).length;
+        var h = '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Ryhmänjako") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ohje) + '</p></div>' +
+          '<div class="rj-ryhmat">' + RY.map(function (r) {
+            var j = jasenet(jako, r.avain);
+            return '<div class="rj-ryhma rj-' + suojaa(r.avain) + '"><p class="rj-r-nimi"><span aria-hidden="true">' + suojaa(r.ikoni || "") + '</span> ' + suojaa(r.nimi) + ' <span class="rj-maara">' + j.length + '</span></p>' +
+              '<p class="rj-r-tiedot">' + suojaa(r.ohjaaja) + '</p><p class="rj-r-kuvaus">' + suojaa(r.kuvaus) + '</p>' +
+              '<p class="rj-r-jasenet">' + (j.length ? j.map(function (l) { return '<span>' + suojaa(l.nimi) + '</span>'; }).join("") : '<em>Ei vielä lapsia</em>') + '</p></div>';
+          }).join("") + '</div>' +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.lapsetOtsikko || "Lapset") + ' <span class="rj-sij">' + (LA.length - sijoittamatta) + '/' + LA.length + ' sijoitettu</span></p><ul class="rj-lapset">' +
+          LA.map(function (l) {
+            return '<li class="rj-lapsi' + (jako[l.avain] ? " sijoitettu" : "") + '"><div class="rj-l-tiedot"><p class="rj-l-nimi">' + suojaa(l.nimi) + ' <span class="rj-l-luokka">' + suojaa(l.luokka) + '</span></p><p class="rj-l-kuvaus">' + suojaa(l.kuvaus) + '</p></div>' +
+              '<div class="rj-napit" role="group" aria-label="Ryhmä: ' + suojaa(l.nimi) + '">' + RY.map(function (r) {
+                var on = jako[l.avain] === r.avain;
+                return '<button type="button" class="rj-nappi rj-' + suojaa(r.avain) + (on ? " valittu" : "") + '" data-l="' + suojaa(l.avain) + '" data-r="' + suojaa(r.avain) + '" aria-pressed="' + on + '"' + (luk ? " disabled" : "") + '>' + suojaa(r.lyhyt || r.nimi) + '</button>';
+              }).join("") + '</div></li>';
+          }).join("") + '</ul>';
+        var tulos = tarkistaR(jako);
+        h += '<p class="vk-saannot-otsikko">' + suojaa(TH.saannotOtsikko || "Muistilista") + '</p><ul class="vk-saannot">' + tulos.map(function (x) {
+          return '<li class="' + (luk ? (x.ok ? "ok" : "ei") : "") + '"><span class="vk-merkki" aria-hidden="true">' + (luk ? (x.ok ? "✓" : "✗") : "○") + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong>' + (luk ? '<span class="vk-selitys">' + suojaa(x.r.selitys) + '</span>' : '') + '</span></li>';
+        }).join("") + '</ul>';
+        if (luk) {
+          var p = tulos.filter(function (x) { return x.ok; }).length;
+          h += '<p class="sj-pisteet">Ryhmänjaon pisteet: <strong>' + p + '/' + RS.length + '</strong></p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava rj-muokkaa">' + suojaa(TH.muokkaaNappi || "Muokkaa ryhmiä") + '</button><button type="button" class="kutsu-tarkista rj-jatka">' + suojaa(TH.jatkaNappi || "Jatka perusteluihin") + '</button></div>';
+        } else {
+          h += '<p class="kutsu-vihje" aria-live="polite">' + (sijoittamatta ? "Sijoita vielä " + sijoittamatta + " lasta." : "Kaikki lapset ovat ryhmissä. Tarkista jako.") + '</p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava rj-tyhjenna"' + (sijoittamatta === LA.length ? " disabled" : "") + '>' + suojaa(TH.tyhjennaNappi || "Tyhjennä") + '</button><button type="button" class="kutsu-tarkista rj-tarkista"' + (sijoittamatta ? " disabled" : "") + '>' + suojaa(TH.tarkistaNappi || "Tarkista ryhmät") + '</button></div>';
+        }
+        alue.innerHTML = h;
+        var uusi = function () { kutsuTallenna(); window.kutsuPiirra(); };
+        Array.prototype.forEach.call(alue.querySelectorAll(".rj-nappi:not([disabled])"), function (b) {
+          b.addEventListener("click", function () { var l = b.getAttribute("data-l"), r = b.getAttribute("data-r"); jako[l] = jako[l] === r ? null : r; if (!jako[l]) delete jako[l]; uusi();
+            var f = alue.querySelector('.rj-nappi[data-l="' + l + '"][data-r="' + r + '"]'); if (f) f.focus({ preventScroll: true }); });
+        });
+        var ty = alue.querySelector(".rj-tyhjenna"); if (ty) ty.addEventListener("click", function () { if (ty.disabled) return; tila.jako = {}; uusi(); });
+        var ta = alue.querySelector(".rj-tarkista"); if (ta) ta.addEventListener("click", function () { if (ta.disabled) return; tila.tarkistettu = true; tila.kerrat = (tila.kerrat || 0) + 1; uusi(); var s = alue.querySelector(".vk-saannot"); if (s && s.scrollIntoView) s.scrollIntoView({ block: "center" }); var f = alue.querySelector(".rj-jatka"); if (f) f.focus({ preventScroll: true }); });
+        var mu = alue.querySelector(".rj-muokkaa"); if (mu) mu.addEventListener("click", function () { tila.tarkistettu = false; uusi(); });
+        var ja = alue.querySelector(".rj-jatka"); if (ja) ja.addEventListener("click", function () { tila.vaihe = "perustelu"; uusi(); ylosR(); });
+      };
+
+      var piirraPerustelutR = function (alue, tila) {
+        var kys = TH.kysymykset || [], p = pisteetR(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Ryhmänjaon pisteet: <strong>' + p + '/' + RS.length + '</strong></p>' +
+          kys.map(function (q, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="rj-p' + i + '">' + (i + 1) + '. ' + suojaa(q.kysymys) + '</label>' +
+              '<textarea id="rj-p' + i + '" maxlength="400" placeholder="' + suojaa(q.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(q.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava rj-takaisin">' + suojaa(TH.takaisinNappi || "Takaisin ryhmiin") + '</button><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function pv() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", pv); });
+        alue.querySelector(".rj-takaisin").addEventListener("click", function () { tila.vaihe = null; tila.tarkistettu = false; kutsuTallenna(); window.kutsuPiirra(); ylosR(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        pv();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = rjTila(kutsuTila()), tulos = tarkistaR(tila.jako), p = tulos.filter(function (x) { return x.ok; }).length;
+        var h = '<div class="tuotekortti hk-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "RYHMÄNJAKO") + '</p>' +
+          '<p class="tk-lause">' + p + '/' + RS.length + ' – ' + suojaa(palauteR(p, RS.length)) + '</p><ol class="hp-raportti-lista">' +
+          RY.map(function (r) { return '<li><strong>' + suojaa((r.ikoni || "") + " " + r.nimi) + '</strong> · ' + suojaa(r.ohjaaja) + '<span class="hp-r-rivi">' + suojaa(jasenet(tila.jako, r.avain).map(function (l) { return l.nimi; }).join(", ") || "–") + '</span></li>'; }).join("") +
+          '</ol><ul class="vk-saannot">' + tulos.map(function (x) {
+            return '<li class="' + (x.ok ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (x.ok ? "✓" : "✗") + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong></span></li>'; }).join("") + '</ul></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (q, i) {
+          return '<li><strong>' + suojaa(q.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(q.ammattilainen) + ' – ' + suojaa(q.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        rjTila(tila);
+        var tulos = tarkistaR(tila.jako), p = tulos.filter(function (x) { return x.ok; }).length;
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + p + "/" + RS.length + " sääntöä täyttyy\n";
+        RY.forEach(function (r) { t += "\n" + r.nimi.toUpperCase() + " (" + r.ohjaaja + ")\n  " + (jasenet(tila.jako, r.avain).map(function (l) { return l.nimi; }).join(", ") || "-") + "\n"; });
+        t += "\nMUISTILISTA\n"; tulos.forEach(function (x) { t += (x.ok ? "✓ " : "✗ ") + x.r.nimi + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (q, i) { t += (i + 1) + ". " + q.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + q.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";

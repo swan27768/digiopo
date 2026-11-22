@@ -168,7 +168,7 @@ KOHTAUKSET = [
 ]
 
 TARINA_LOPPU = dict(nimi="Messut", teksti="""<h1>Messut aukeavat</h1>
-<p class="highlight">Kello on <<print setup.kello($aika)>>. Messuhallin ovet aukeavat!</p>
+<p class="highlight">Kello on <<print setup.kello($aika)>>, kun osasto on valmis. Kello 16 messuhallin ovet aukeavat!</p>
 <p>Ensimmäiset kävijät pysähtyvät pajan osastolle. Joku silittää tyynyä, toinen kokeilee keinutuolia. Sinä seisot tiskin takana ja huomaat, kuinka paljon osaamista jokaisessa esineessä on.</p>
 <p>Huomasitko? Messuosastoon tarvittiin monta ammattilaista:</p>
 <ul class="ammattilista">
@@ -375,9 +375,9 @@ SEURAUKSET = {
 }
 # Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
 LOPPU_TASOT = [
-    "Kello on <<print setup.kello($aika)>>. Messuhallin ovet aukeavat, ja pajan osasto on valmis. Kaikki onnistui juuri niin kuin piti!",
-    "Kello on <<print setup.kello($aika)>>. Messut alkavat, ja osastolla käy paljon väkeä. Pari asiaa olisi voinut mennä paremmin, mutta päivä onnistui.",
-    "Kello on <<print setup.kello($aika)>>. Osasto saatiin pystyyn, mutta päivä oli täynnä korjattavaa. Muutama kävijä huomasi keskeneräiset asiat.",
+    "Kello on <<print setup.kello($aika)>>, kun pajan osasto on valmis. Kello 16 messuhallin ovet aukeavat. Kaikki onnistui juuri niin kuin piti!",
+    "Kello on <<print setup.kello($aika)>>, kun osasto on valmis. Kello 16 messut alkavat, ja osastolla käy paljon väkeä. Pari asiaa olisi voinut mennä paremmin, mutta päivä onnistui.",
+    "Kello on <<print setup.kello($aika)>>, kun osasto vihdoin saatiin pystyyn. Päivä oli täynnä korjattavaa, ja muutama kävijä huomasi keskeneräiset asiat.",
 ]
 MYOHASSA = "Osasto ei ollut valmis ovien auetessa, ja ensimmäiset kävijät kulkivat ohi."
 # Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)

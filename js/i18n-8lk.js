@@ -489,7 +489,7 @@
         taide: tj.amis_fil_taide, musiikki: tj.amis_fil_musiikki,
         kauppa: tj.amis_fil_kauppa, matkailu: tj.amis_fil_matkailu,
         liikunta: tj.amis_fil_liikunta, kauneus: tj.amis_fil_kauneus,
-        turvallisuus: tj.amis_fil_turvallisuus, kasityo: tj.amis_fil_kasityo
+        turvallisuus: tj.amis_fil_turvallisuus, kasityo: tj.amis_fil_kasityo, kasvatus: tj.amis_fil_kasvatus
       };
       amisPanel.querySelectorAll('.tj-kiinnostukset .tj-nappi[data-ala]').forEach(function(btn) {
         var ala = btn.dataset.ala;
