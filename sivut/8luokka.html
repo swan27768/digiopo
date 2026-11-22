@@ -2501,7 +2501,7 @@
       { nimi:"Kokki",               ala:"Ravintola-ala",        k:["ruoka"],             lyhyt:"Valmistat ruokaa ravintolassa tai suurkeittiössä.",           am:"kokki, tarjoilija", pt:"Ravintola- ja catering-alan perustutkinto",                   v:"#f59e0b",tv:"#fffbeb",tt:"#92400e", ik:"👨‍🍳", imgKey:"ruoka",   p:"../pelit/koulutusalat/elintarvike-ala.html",op:"https://opintopolku.fi/konfo/fi/haku?keyword=kokki&koulutustyyppi=amm" },
       { nimi:"Leipuri-kondiittori", ala:"Ravintola-ala",        k:["ruoka"],             lyhyt:"Leivot leipää, kakkuja ja leivonnaisia.",                    am:"leipuri-kondiittori, elintarvikkeiden valmistaja, meijeristi", pt:"Elintarvikealan perustutkinto",                      v:"#d97706",tv:"#fef3c7",tt:"#92400e", ik:"🍞",  imgKey:"ruoka",   p:"../pelit/koulutusalat/elintarvike-ala.html",op:"https://opintopolku.fi/konfo/fi/haku?keyword=leipuri&koulutustyyppi=amm" },
       { nimi:"Liikunta-ala",        ala:"Liikunta ja urheilu",  k:["liikunta","ihmiset"],lyhyt:"Ohjaat liikuntaa eri-ikäisille ihmisille.",                  am:"liikuntaneuvoja, personal trainer, valmentaja", pt:"Liikunnanohjauksen perustutkinto",       v:"#10b981",tv:"#ecfdf5",tt:"#064e3b", ik:"",    imgKey:"liikunta-ala", p:"../pelit/koulutusalat/urheilu-ala.html",   op:"https://opintopolku.fi/konfo/fi/haku?keyword=liikunta&koulutustyyppi=amm" },
-      { nimi:"Muusikko",            ala:"Musiikkiala",          k:["musiikki"],             lyhyt:"Soitat, laulat tai teet musiikkiteknologiaa.",               am:"muusikko, musiikkiteknologi, pianonvirittäjä", pt:"Musiikkialan perustutkinto", v:"#ec4899",tv:"#fdf2f8",tt:"#831843", imgKey:"taide" },
+      { nimi:"Muusikko",            ala:"Musiikkiala",          k:["musiikki"],             lyhyt:"Soitat, laulat tai teet musiikkiteknologiaa.",               am:"muusikko, musiikkiteknologi, pianonvirittäjä", pt:"Musiikkialan perustutkinto", v:"#ec4899",tv:"#fdf2f8",tt:"#831843", imgKey:"taide", p:"../pelit/koulutusalat/musiikki-ala.html" },
       { nimi:"Sirkusartisti",       ala:"Sirkusala",            k:["musiikki","liikunta"],  lyhyt:"Esiinnyt sirkustaiteilijana ja kehität akrobatiaa.",         am:"sirkusartisti", pt:"Sirkusalan perustutkinto", v:"#ec4899",tv:"#fdf2f8",tt:"#831843", imgKey:"taide", p:"../pelit/koulutusalat/urheilu-ala.html" },
       { nimi:"Tanssija",            ala:"Tanssiala",            k:["musiikki","liikunta"],  lyhyt:"Tanssit ja esiinnyt eri tanssilajeissa.",                    am:"tanssija", pt:"Tanssialan perustutkinto", v:"#ec4899",tv:"#fdf2f8",tt:"#831843", imgKey:"taide", p:"../pelit/koulutusalat/urheilu-ala.html" },
       { nimi:"Luonto-ohjaaja",      ala:"Luonto- ja ympäristöala", k:["luonto"],         lyhyt:"Ohjaat luonnossa ja hoidat ympäristöä.",                     am:"luonto-ohjaaja, luonnonvaratuottaja, poronhoitaja, ympäristönhoitaja, ympäristönhuoltaja", pt:"Luonto- ja ympäristöalan perustutkinto", v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", imgKey:"luonto" },
@@ -2915,7 +2915,8 @@
       rakennus: '../pelit/koulutusalat/rakennus-ala.html',
       turvallisuus: '../pelit/koulutusalat/turvallisuus-ala.html',
       liikenne: '../pelit/koulutusalat/liikenne-ala.html',
-      elaimet: '../pelit/koulutusalat/elaimet-ala.html'
+      elaimet: '../pelit/koulutusalat/elaimet-ala.html',
+      musiikki: '../pelit/koulutusalat/musiikki-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
@@ -2926,20 +2927,21 @@
       rakennus:'Rakentaminen ja talot',
       turvallisuus:'Turvallisuusala',
       liikenne:'Autot ja liikenne',
-      elaimet:'Eläimet'
+      elaimet:'Eläimet',
+      musiikki:'Musiikki'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin neljästätoista pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen johonkin viidestätoista pelitarina-alasta
     const PELI_ALA = {
       ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
-      pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'taide',
+      pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'musiikki',
       kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','musiikki','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
       const kat = [];
       amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -2978,7 +2980,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:''
     };
 
     /* ── Tab-vaihto ── */

@@ -2345,6 +2345,141 @@
       };
     }
 
+    /* --- Tehtävätyyppi "setlista": oppilas kokoaa konsertin setlistan ---
+       Kappaleita lisätään ja järjestetään nuolilla. Kesto ja energiakäyrä päivittyvät heti,
+       ja muistilista kertoo, mitkä säännöt täyttyvät. Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "setlista") {
+      var KP = TH.kappaleet || [], SA = TH.saannot || [];
+      var slTila = function (tila) { if (!tila.lista) tila.lista = []; return tila; };
+      var kesto = function (k) { var o = String(k.kesto).split(":"); return (+o[0]) * 60 + (+o[1] || 0); };
+      var mmss = function (s) { var m = Math.floor(s / 60), x = s % 60; return m + ":" + (x < 10 ? "0" : "") + x; };
+      var ryhma = function (e) { return e <= 2 ? "matala" : e >= 4 ? "korkea" : "keski"; };
+      var tarkista = function (lista) {
+        var L = lista.map(function (i) { return KP[i]; }), yht = L.reduce(function (s, k) { return s + kesto(k); }, 0);
+        return SA.map(function (r) {
+          var ok = false;
+          if (r.tyyppi === "kesto") ok = yht >= r.min * 60 && yht <= r.max * 60;
+          else if (r.tyyppi === "alku") ok = L.length > 0 && L[0].energia >= r.minEnergia;
+          else if (r.tyyppi === "loppu") ok = L.length > 0 && (L[L.length - 1].tagit || []).indexOf(r.tagi) !== -1;
+          else if (r.tyyppi === "rauhallinen") ok = L.slice(1, -1).some(function (k) { return k.energia <= r.maxEnergia; });
+          else if (r.tyyppi === "uudet") { var u = L.filter(function (k) { return (k.tagit || []).indexOf("uusi") !== -1; }).length; ok = L.length > 0 && u >= (r.min || 0) && u <= r.max; }
+          else if (r.tyyppi === "vaihtelu") { ok = L.length > 2; for (var i = 2; i < L.length; i++) if (ryhma(L[i].energia) === ryhma(L[i - 1].energia) && ryhma(L[i].energia) === ryhma(L[i - 2].energia)) ok = false; }
+          else if (r.tyyppi === "mukana") ok = L.some(function (k) { return (k.tagit || []).indexOf(r.tagi) !== -1; });
+          return { r: r, ok: ok };
+        });
+      };
+      var palauteS = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 2 ? TH.palaute[1] : TH.palaute[2]; };
+      var ylosS = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = slTila(kutsuTila());
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutS(alue, tila);
+        var lista = tila.lista, tulos = tarkista(lista), yht = lista.reduce(function (s, i) { return s + kesto(KP[i]); }, 0), lukittu = tila.tarkistettu;
+        var p = tulos.filter(function (x) { return x.ok; }).length;
+        var h = '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Setlista") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ohje) + '</p></div>' +
+          '<div class="sl-ruutu"><div class="sl-vasen"><p class="vk-saannot-otsikko">' + suojaa(TH.kappaleetOtsikko || "Kappaleet") + '</p><ul class="sl-kappaleet">' +
+          KP.map(function (k, i) {
+            var mukana = lista.indexOf(i) !== -1;
+            return '<li class="' + (mukana ? "mukana" : "") + '"><span class="sl-energia e' + k.energia + '" aria-label="Energia ' + k.energia + '/5">' + k.energia + '</span><span class="sl-nimi">' + suojaa(k.nimi) +
+              ((k.tagit || []).map(function (t) { return '<span class="sl-tagi t-' + t + '">' + suojaa((TH.tagiNimet || {})[t] || t) + '</span>'; }).join("")) + '<span class="sl-kuvaus">' + suojaa(k.kuvaus || "") + '</span></span>' +
+              '<span class="sl-kesto">' + suojaa(k.kesto) + '</span><button type="button" class="sl-lisaa" data-i="' + i + '"' + (mukana || lukittu ? " disabled" : "") + ' aria-label="Lisää ' + suojaa(k.nimi) + ' setlistaan">' + (mukana ? "✓" : "+") + '</button></li>';
+          }).join("") + '</ul></div>' +
+          '<div class="sl-oikea"><div class="sl-paperi"><p class="sl-paperi-otsikko">' + suojaa(TH.setlistaOtsikko || "SETLISTA") + '</p>' +
+          (lista.length ? '<ol class="sl-lista">' + lista.map(function (i, j) { var k = KP[i];
+            return '<li><span class="sl-nro">' + (j + 1) + '.</span><span class="sl-nimi">' + suojaa(k.nimi) + '</span><span class="sl-kesto">' + suojaa(k.kesto) + '</span>' +
+              (lukittu ? '' : '<span class="sl-napit"><button type="button" class="sl-nuoli" data-j="' + j + '" data-s="-1" aria-label="Siirrä ' + suojaa(k.nimi) + ' ylöspäin"' + (j ? "" : " disabled") + '>↑</button><button type="button" class="sl-nuoli" data-j="' + j + '" data-s="1" aria-label="Siirrä ' + suojaa(k.nimi) + ' alaspäin"' + (j < lista.length - 1 ? "" : " disabled") + '>↓</button><button type="button" class="sl-poista" data-j="' + j + '" aria-label="Poista ' + suojaa(k.nimi) + '">✕</button></span>') + '</li>'; }).join("") + '</ol>'
+            : '<p class="sl-tyhja">Lisää kappaleita listasta painamalla +.</p>') +
+          '<p class="sl-yht">Kesto yhteensä: <strong>' + mmss(yht) + '</strong> <span>(tavoite ' + suojaa(TH.tavoiteTeksti || "") + ')</span></p></div>' +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.kayraOtsikko || "Energiakäyrä") + '</p><div class="sl-kayra" role="img" aria-label="Energiakäyrä: ' + lista.map(function (i) { return KP[i].energia; }).join(", ") + '">' +
+          (lista.length ? lista.map(function (i, j) { var e = KP[i].energia; return '<span class="sl-pylvas e' + e + '" style="height:' + (e * 20) + '%" title="' + (j + 1) + '. ' + suojaa(KP[i].nimi) + '"></span>'; }).join("") : '<span class="sl-tyhja">Käyrä piirtyy, kun lisäät kappaleita.</span>') + '</div>' +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.saannotOtsikko || "Muistilista") + '</p><ul class="vk-saannot">' + tulos.map(function (x) {
+            return '<li class="' + (x.ok ? "ok" : (lukittu ? "ei" : "")) + '"><span class="vk-merkki" aria-hidden="true">' + (x.ok ? "✓" : (lukittu ? "✗" : "○")) + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong>' + (lukittu ? '<span class="vk-selitys">' + suojaa(x.r.selitys) + '</span>' : '') + '</span></li>';
+          }).join("") + '</ul></div></div>';
+        if (lukittu) {
+          h += '<p class="sj-pisteet">Setlistan pisteet: <strong>' + p + '/' + SA.length + '</strong></p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sl-muokkaa">' + suojaa(TH.takaisinNappi || "Muokkaa") + '</button><button type="button" class="kutsu-tarkista sl-jatka">' + suojaa(TH.jatkaNappi || "Jatka") + '</button></div>';
+        } else {
+          h += '<p class="kutsu-vihje" aria-live="polite">' + (lista.length < 3 ? "Lisää vielä kappaleita." : "Kun lista on valmis, tarkista se.") + '</p>' +
+            '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sl-tyhjenna"' + (lista.length ? "" : " disabled") + '>' + suojaa(TH.tyhjennaNappi || "Tyhjennä") + '</button><button type="button" class="kutsu-tarkista sl-tarkista"' + (lista.length >= 3 ? "" : " disabled") + '>' + suojaa(TH.tarkistaNappi || "Tarkista") + '</button></div>';
+        }
+        alue.innerHTML = h;
+        var uusi = function (fokus) { kutsuTallenna(); window.kutsuPiirra(); if (fokus) { var f = alue.querySelector(fokus); if (f) f.focus({ preventScroll: true }); } };
+        Array.prototype.forEach.call(alue.querySelectorAll(".sl-lisaa:not([disabled])"), function (b) {
+          b.addEventListener("click", function () { lista.push(+b.getAttribute("data-i")); uusi(".sl-lisaa:not([disabled])"); });
+        });
+        Array.prototype.forEach.call(alue.querySelectorAll(".sl-nuoli:not([disabled])"), function (b) {
+          b.addEventListener("click", function () { var j = +b.getAttribute("data-j"), s = +b.getAttribute("data-s"), t = lista[j]; lista[j] = lista[j + s]; lista[j + s] = t; uusi('.sl-nuoli[data-j="' + (j + s) + '"][data-s="' + s + '"]'); });
+        });
+        Array.prototype.forEach.call(alue.querySelectorAll(".sl-poista"), function (b) {
+          b.addEventListener("click", function () { lista.splice(+b.getAttribute("data-j"), 1); uusi(".sl-poista"); });
+        });
+        var ty = alue.querySelector(".sl-tyhjenna"); if (ty) ty.addEventListener("click", function () { tila.lista = []; uusi(); });
+        var ta = alue.querySelector(".sl-tarkista"); if (ta) ta.addEventListener("click", function () { if (ta.disabled) return; tila.tarkistettu = true; tila.pisteet = tarkista(tila.lista).filter(function (x) { return x.ok; }).length; uusi(".sl-jatka"); });
+        var mu = alue.querySelector(".sl-muokkaa"); if (mu) mu.addEventListener("click", function () { tila.tarkistettu = false; uusi(); });
+        var ja = alue.querySelector(".sl-jatka"); if (ja) ja.addEventListener("click", function () { tila.vaihe = "perustelu"; uusi(); ylosS(); });
+      };
+
+      var piirraPerustelutS = function (alue, tila) {
+        var kys = TH.kysymykset || [], p = tarkista(tila.lista).filter(function (x) { return x.ok; }).length;
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Setlistan pisteet: <strong>' + p + '/' + SA.length + '</strong></p>' +
+          kys.map(function (q, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="sl-p' + i + '">' + (i + 1) + '. ' + suojaa(q.kysymys) + '</label>' +
+              '<textarea id="sl-p' + i + '" maxlength="400" placeholder="' + suojaa(q.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(q.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sl-takaisin">' + suojaa(TH.takaisinNappi || "Muokkaa") + '</button><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function pv() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", pv); });
+        alue.querySelector(".sl-takaisin").addEventListener("click", function () { tila.vaihe = null; tila.tarkistettu = false; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        pv();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = slTila(kutsuTila()), tulos = tarkista(tila.lista), p = tulos.filter(function (x) { return x.ok; }).length;
+        var yht = tila.lista.reduce(function (s, i) { return s + kesto(KP[i]); }, 0);
+        var h = '<div class="tuotekortti sl-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "SETLISTA") + '</p>' +
+          '<p class="tk-lause">' + p + '/' + SA.length + ' – ' + suojaa(palauteS(p, SA.length)) + '</p><ol class="sl-lista">' +
+          tila.lista.map(function (i) { return '<li><span class="sl-nimi">' + suojaa(KP[i].nimi) + '</span><span class="sl-kesto">' + suojaa(KP[i].kesto) + '</span></li>'; }).join("") +
+          '</ol><p class="sl-yht">Kesto yhteensä: <strong>' + mmss(yht) + '</strong></p><ul class="vk-saannot">' + tulos.map(function (x) {
+            return '<li class="' + (x.ok ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (x.ok ? "✓" : "✗") + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong></span></li>'; }).join("") + '</ul></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (q, i) {
+          return '<li><strong>' + suojaa(q.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(q.ammattilainen) + ' – ' + suojaa(q.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        slTila(tila);
+        var tulos = tarkista(tila.lista), p = tulos.filter(function (x) { return x.ok; }).length, yht = tila.lista.reduce(function (s, i) { return s + kesto(KP[i]); }, 0);
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + p + "/" + SA.length + " sääntöä täyttyy\n\nSETLISTA (" + mmss(yht) + ")\n";
+        tila.lista.forEach(function (i, j) { t += (j + 1) + ". " + KP[i].nimi + " (" + KP[i].kesto + ", energia " + KP[i].energia + "/5)\n"; });
+        t += "\nMUISTILISTA\n"; tulos.forEach(function (x) { t += (x.ok ? "✓ " : "✗ ") + x.r.nimi + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (q, i) { t += (i + 1) + ". " + q.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + q.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";
