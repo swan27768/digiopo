@@ -285,7 +285,11 @@ $('body').addClass('hide-navbar');
     tarina = unesc(re.search(r'<tw-storydata[^>]*name="([^"]*)"', s).group(1))
     # Sama muoto kuin SugarCuben Util.slugify: alaviivat ja välilyönnit -> '-'
     slug = re.sub(r'[_\s\u2013\u2014-]+', '-', re.sub(r'[^\w\s\u2013\u2014-]+', '', tarina.strip())).lower()
-    nollaus = ('<script id="sc-aloita-alusta">try{sessionStorage.removeItem("' + slug + '.state");}catch(e){}</script>\n')
+    # Tarina alkaa aina alusta: tila tyhjennetään latauksessa, ja jos selain palauttaa sivun
+    # välimuistista (Takaisin-nappi, suljettu välilehti avataan uudelleen), sivu ladataan alusta.
+    avain = slug + '.state'
+    nollaus = ('<script id="sc-aloita-alusta">try{sessionStorage.removeItem("' + avain + '");}catch(e){}'
+               'window.addEventListener("pageshow",function(e){if(e.persisted){try{sessionStorage.removeItem("' + avain + '");}catch(x){}location.reload();}});</script>\n')
     if 'id="sc-aloita-alusta"' not in s:
         s = s.replace('<script id="sc-clear-saves">', nollaus + '<script id="sc-clear-saves">', 1)
         assert 'id="sc-aloita-alusta"' in s

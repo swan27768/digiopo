@@ -2154,6 +2154,13 @@
         var b = btn || document.querySelector('[aria-controls="klinikka-wrapper"]');
         if (b) b.setAttribute('aria-expanded', String(!auki));
       }
+      /* ── Pelitarinat alkavat aina alusta: kun tehtävä suljetaan tai polkua vaihdetaan,
+         alan pelin iframe ladataan uudelleen (peli tyhjentää oman tilansa latautuessaan). ── */
+      function nollaaPelitarinat() {
+        document.querySelectorAll('#amis-v3-sisalto iframe.amis-v3-iframe').forEach(function (f) {
+          var src = f.getAttribute('src'); if (src) f.setAttribute('src', src);
+        });
+      }
       /* ── "Oma reitti löytyy tutkimalla": avaa/sulje koko tehtävä ── */
       function avaaReitti(btn) {
         var t = document.getElementById('tutkija-alue');
@@ -2161,6 +2168,7 @@
         var auki = t.style.display && t.style.display !== 'none';
         if (auki) {
           t.style.display = 'none';
+          nollaaPelitarinat();
           if (btn) {
             btn.setAttribute('aria-expanded', 'false');
             var x = btn.querySelector('.tutki-teksti'); if (x) x.textContent = 'Tutki tarkemmin';
@@ -2970,6 +2978,7 @@
       ['amis','lukio'].forEach(p => {
         document.getElementById('tutkija-'+p).style.display = p === polku ? 'block' : 'none';
       });
+      if (polku !== 'amis' && typeof nollaaPelitarinat === 'function') nollaaPelitarinat();
       document.querySelectorAll('.tutkija-tab').forEach(t => { t.classList.remove('aktiivinen'); t.setAttribute('aria-selected','false'); });
       nappi.classList.add('aktiivinen'); nappi.setAttribute('aria-selected','true');
       if (polku === 'amis') paivitaAmis(); else { paivitaLukio(); paivitaKK(); }
