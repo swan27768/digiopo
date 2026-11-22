@@ -83,8 +83,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Oikea tutkijan ote!</strong></p><p>Kuvat ja paikka auttavat myöhemmin. Laboratorio voi tutkia kalan ja selvittää, mihin se kuoli.</p>"),
        dict(teksti="Heitän kalat takaisin jokeen.", aika=10, piirteet={},
             palaute="<p><strong>Todisteet katoavat.</strong></p><p>Aatu ehtii onneksi ottaa yhden kalan talteen. Hän kuvaa sen ja kirjaa paikan.</p>"),
-       dict(teksti="Kirjoitan someen, että joki on myrkytetty.", aika=10, piirteet={},
-            palaute="<p><strong>Liian aikaista.</strong></p><p>Kukaan ei vielä tiedä, mitä tapahtui. Väärä tieto voi pelottaa ihmisiä turhaan. Aatu kuvaa kalat ja kirjaa paikan.</p>"),
+       dict(teksti="Soitan heti kunnan ympäristöviranomaiselle ja kerron kuolleista kaloista.", aika=10, piirteet={"viestija": 1}, palaute="<p><strong>Hyvä ilmoittaa, mutta ensin todisteet.</strong></p><p>Viranomainen tarvitsee kuvia, paikan ja kalan tutkittavaksi. Jos niitä ei kerätä nyt, virta vie ne mukanaan. Aatu kuvaa kalat ja kirjaa paikan, ja sitten soitetaan.</p>"),
       ]),
  dict(nimi="Näytteenotto", taustakuva=KUVA + "luonto-pitkospuut-tausta.webp", tausta="naytteet", otsikko="Näytteenotto", avain="ymparisto",
       kysymys="Miltä ympäristönhoitajan työ näytti?",
@@ -107,8 +106,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Hienosti!</strong></p><p>Retkeläinen ymmärtää. Mikko kertoo vielä, että ryhmä näki eilen sateen jälkeen mutaista vettä ylempänä, hakkuuaukean kohdalla. Tärkeä vihje!</p>"),
        dict(teksti="Antaa juoda. Lapin vesi on aina puhdasta.", aika=10, piirteet={},
             palaute="<p><strong>Ei tällä kertaa.</strong></p><p>Sameaa vettä ei kannata juoda keittämättä. Mikko hakee juomaveden lähteestä. Hän kertoo, että ryhmä näki eilen mutaista vettä hakkuuaukean kohdalla.</p>"),
-       dict(teksti="Sanon, että joki on myrkyllinen, eikä sinne saa mennä.", aika=10, piirteet={},
-            palaute="<p><strong>Retkeläiset säikähtävät.</strong></p><p>Kukaan ei vielä tiedä, onko joki myrkyllinen. Mikko rauhoittaa ryhmän. Hän kertoo, että he näkivät eilen mutaista vettä hakkuuaukean kohdalla.</p>"),
+       dict(teksti="Neuvon keittämään veden ennen juomista.", aika=10, piirteet={"luonto": 1}, palaute="<p><strong>Melkein!</strong></p><p>Keittäminen tappaa bakteerit, mutta ei poista mutaa tai mahdollisia kemikaaleja. Kun kukaan ei vielä tiedä, mitä vedessä on, juomavesi haetaan lähteestä.</p>"),
       ]),
  dict(nimi="Poroaidalla", taustakuva=KUVA + "luonto-tunturi-tausta.webp", tausta="porot", otsikko="Poroaidalla", avain="poro",
       kysymys="Miltä poronhoitajan työ näytti?",
@@ -131,8 +129,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kerron, mitä näytteet ja havainnot kertovat, ja ehdotan, että allas tehdään heti.", aika=15, piirteet={"viestija": 2, "luonto": 1},
             palaute="<p><strong>Rakentava ratkaisu!</strong></p><p>Jussi soittaa metsäyhtiöön. Allas tehdään vielä tällä viikolla, ja rantaan jätetään puusto suojavyöhykkeeksi.</p>"),
-       dict(teksti="Syytän Jussia kovaan ääneen.", aika=10, piirteet={},
-            palaute="<p><strong>Syyttely ei auta.</strong></p><p>Jussi ei yksin päättänyt asiasta. Aatu juttelee rauhallisesti, ja yhdessä sovitaan, että allas tehdään heti.</p>"),
+       dict(teksti="Otan kuvan mutavirrasta ja ilmoitan metsäyhtiölle, että Jussi teki virheen.", aika=10, piirteet={}, palaute="<p><strong>Syyttely ei auta.</strong></p><p>Jussi ei yksin päättänyt altaasta, ja hän voi korjata asian heti. Aatu juttelee rauhallisesti, ja yhdessä sovitaan, että allas tehdään heti.</p>"),
        dict(teksti="En sano mitään. Se ei kuulu minulle.", aika=10, piirteet={},
             palaute="<p><strong>Luonnon puolesta saa puhua.</strong></p><p>Aatu kertoo havainnoista. Jussi soittaa metsäyhtiöön, ja allas tehdään vielä tällä viikolla.</p>"),
       ]),
@@ -146,8 +143,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Täsmälleen!</strong></p><p>Yläjuoksulla vesi on kirkasta. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä, ja happea on vähemmän. Mysteeri on ratkaistu!</p>"),
        dict(teksti="Katsotaan vain huonoin tulos.", aika=10, piirteet={},
             palaute="<p><strong>Huonoin tulos ei kerro, mistä ongelma alkaa.</strong></p><p>Noora järjestää tulokset joen suunnassa. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.</p>"),
-       dict(teksti="Syy on varmasti kylän puhdistamo.", aika=10, piirteet={},
-            palaute="<p><strong>Arvaus ei riitä.</strong></p><p>Tulosten mukaan vesi on jo ennen kylää sameaa. Ongelma alkaa ylempää, hakkuuaukean ojan kohdalta.</p>"),
+       dict(teksti="Lähetetään näytteet isompaan laboratorioon lisätutkimuksiin.", aika=10, piirteet={"tutkija": 1}, palaute="<p><strong>Huolellista, mutta hidasta.</strong></p><p>Lisätutkimukset kestävät viikkoja. Vastaus löytyy jo nyt, kun tulokset järjestetään joen suuntaan. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.</p>"),
       ]),
 ]
 
@@ -283,10 +279,10 @@ SAILYTA_KORVAUKSET = []
 SEURAUKSET = {
     "Kuolleet kalat": "Osa todisteista katosi. Tutkimus alkoi heikommista tiedoista.",
     "Näytteenotto": "Näytteenotto piti suunnitella uudelleen. Tulokset valmistuivat myöhemmin.",
-    "Laavulla": "Retkeläiset hämmentyivät. Joesta alkoi liikkua huhuja.",
+    "Laavulla": "Retkeläiset saivat ensin väärän neuvon, ja Mikko joutui korjaamaan sen.",
     "Poroaidalla": "Ellen vihje jäi melkein kuulematta. Ojan löytäminen viivästyi.",
-    "Hakkuuaukea": "Keskustelu hakkuuaukealla meni ensin huonosti. Altaan rakentamisesta sopiminen viivästyi.",
-    "Laboratorio": "Tulokset piti järjestää uudelleen. Väärä epäily ehti levitä.",
+    "Hakkuuaukea": "Syyttely kiristi tunnelmaa. Altaan rakentamisesta sopiminen viivästyi.",
+    "Laboratorio": "Tulokset piti järjestää uudelleen, ja ongelman lähde selvisi myöhemmin.",
 }
 # Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
 LOPPU_TASOT = [
@@ -295,3 +291,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>>. Mysteeri ratkesi lopulta, mutta mutkien ja turhien epäilyjen kautta. Mutaa ehti valua jokeen vielä monta päivää.",
 ]
 MYOHASSA = "Työ venyi pimeän puolelle, ja tutkimus jatkuu huomenna."
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

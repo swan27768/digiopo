@@ -99,8 +99,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tarkistetaan, että äänenvoimakkuus pysyy luvassa sovitussa rajassa. Käännetään kaiuttimet järvelle päin.", aika=60, piirteet={"vastuullinen": 2, "tarkka": 1},
             palaute="<p><strong>Hienoa yhteistyötä!</strong></p><p>Joonas mittaa äänen ja säätää kaiuttimia. Konsertti kuulostaa yhä hyvältä, ja lähitalossa on hiljaisempaa.</p>"),
-       dict(teksti="Soitetaan vielä kovempaa. Festarit ovat vain kerran vuodessa.", aika=60, piirteet={},
-            palaute="<p><strong>Ei käy.</strong></p><p>Festareilla on lupa, jossa on rajat äänenvoimakkuudelle. Joonas mittaa äänen ja kääntää kaiuttimet järvelle päin.</p>"),
+       dict(teksti="Jatketaan samalla äänellä. Konsertti loppuu kuitenkin kello 22.", aika=60, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Festareilla on lupa, jossa on rajat äänenvoimakkuudelle. Raja pätee koko illan. Joonas mittaa äänen ja kääntää kaiuttimet järvelle päin.</p>"),
        dict(teksti="Lopetetaan konsertti.", aika=45, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian jyrkkää.</strong></p><p>Yleisö pettyisi, ja ongelman voi ratkaista muuten. Joonas säätää ääntä ja kaiuttimien suuntaa.</p>"),
       ]),
@@ -152,8 +151,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Siirretään konsertti laiturin katoksen alle ja kerrotaan siitä yleisölle.", aika=60, piirteet={"vastuullinen": 1, "luova": 1, "kohtaaja": 1},
             palaute="<p><strong>Täydellinen ratkaisu!</strong></p><p>Katoksen alla soittimet pysyvät kuivina. Yleisö seuraa konserttia rannalta sateenvarjojen alta.</p>"),
-       dict(teksti="Soitetaan vaikka sateessa. Show must go on!", aika=60, piirteet={},
-            palaute="<p><strong>Liian riskialtista.</strong></p><p>Kastuessaan soitin voi haljeta. Konsertti siirretään laiturin katoksen alle.</p>"),
+       dict(teksti="Soitetaan, mutta pidetään soittimet sateenvarjojen alla.", aika=60, piirteet={}, palaute="<p><strong>Liian riskialtista.</strong></p><p>Tuuli kuljettaa sadetta sateenvarjojen alle, ja kosteus voi haljoittaa puisen soittimen. Konsertti siirretään laiturin katoksen alle.</p>"),
        dict(teksti="Perutaan konsertti heti.", aika=45, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian aikaisin.</strong></p><p>Ehkä ei sada ollenkaan. Ja vaikka satoi, konsertti onnistuu laiturin katoksen alla.</p>"),
       ]),
@@ -273,3 +271,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>> sunnuntaina. Viimeinen sävel soi järven yllä. Festarit onnistuivat, mutta palautteessa on pari moitetta.",
     "Kello on <<print setup.kello($aika)>> sunnuntaina. Festarit päättyvät, mutta viikonloppuna meni moni asia pieleen. Ensi vuoden festarit ovat vaakalaudalla.",
 ]
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

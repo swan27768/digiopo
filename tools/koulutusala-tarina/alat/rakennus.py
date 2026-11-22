@@ -86,8 +86,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kysytään suunnittelijoilta, kestääkö seinä isomman aukon. Muutos merkitään piirustuksiin.", aika=55, piirteet={"tarkka": 2, "vastuullinen": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Rakennesuunnittelija laskee, että seinään tarvitaan vahvempi palkki. Muutos ehtii tehtaalle, ja omistaja saa isomman ikkunan turvallisesti.</p>"),
-       dict(teksti="Sahataan aukko työmaalla isommaksi. Ei sitä kukaan huomaa.", aika=30, piirteet={},
-            palaute="<p><strong>Vaarallista!</strong></p><p>Kantava seinä kannattelee kattoa. Jos aukkoa suurennetaan ilman laskelmia, seinä voi heiketä. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
+       dict(teksti="Sahataan aukko isommaksi ja laitetaan yläpuolelle varmuuden vuoksi tukevampi palkki.", aika=30, piirteet={}, palaute="<p><strong>Vaarallista!</strong></p><p>Kantava seinä kannattelee kattoa. Vain rakennesuunnittelija voi laskea, millainen palkki riittää. Arvaus voi heikentää seinää. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
        dict(teksti="Kieltäydytään. Piirustuksia ei muuteta koskaan.", aika=30, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian jyrkkää.</strong></p><p>Muutos on mahdollinen, kun se suunnitellaan oikein. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
       ]),
@@ -142,8 +141,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Huolellista!</strong></p><p>Kun vedeneriste saa kuivua, kylpyhuone pysyy kuivana vuosikymmeniä. Eteinen valmistuu samalla.</p>"),
        dict(teksti="Laatoitetaan heti. Kyllä se kuivuu laattojen alla.", aika=45, piirteet={},
             palaute="<p><strong>Kosteusvaurion riski!</strong></p><p>Märkä vedeneriste ei toimi kunnolla. Vesi voi päästä rakenteisiin, ja korjaus maksaisi tuhansia euroja. Odotetaan kuivumista.</p>"),
-       dict(teksti="Jätetään vedeneristys kokonaan pois, niin päästään nopeammin.", aika=30, piirteet={},
-            palaute="<p><strong>Ei käy.</strong></p><p>Märkätilaan vedeneristys on pakollinen. Ilman sitä vesi kastelee seinät ja lattian.</p>"),
+       dict(teksti="Kuivatetaan vedeneristettä lämpöpuhaltimella ja laatoitetaan tunnin päästä.", aika=30, piirteet={}, palaute="<p><strong>Ei riitä.</strong></p><p>Puhallin kuivaa vain pinnan. Vedeneriste tarvitsee valmistajan ohjeen mukaisen kuivumisajan. Odotetaan, ja laatoittaja tekee sillä välin eteisen.</p>"),
       ]),
  dict(nimi="Maalaus", tausta="maalaus", otsikko="Sade uhkaa", avain="maalari",
       kysymys="Miltä maalarin työ näytti?",
@@ -154,8 +152,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Ammattilaisen päätös!</strong></p><p>Märkä maali valuisi ja irtoaisi. Sisätyöt etenevät, ja ulkoseinä maalataan ensi viikolla poutapäivänä.</p>"),
        dict(teksti="Maalataan nopeasti ennen sadetta.", aika=60, piirteet={},
             palaute="<p><strong>Riski ei kannata.</strong></p><p>Jos sade ehtii ennen kuin maali kuivuu, työ menee hukkaan. Pia maalaa sisätiloja.</p>"),
-       dict(teksti="Maalataan vaikka sateessa. Maali on vesiohenteista.", aika=60, piirteet={},
-            palaute="<p><strong>Ei toimi.</strong></p><p>Märkään pintaan maali ei tartu kunnolla. Pia maalaa sisätiloja, ja ulkoseinä maalataan kuivana päivänä.</p>"),
+       dict(teksti="Maalataan seinä nyt ja suojataan se pressulla, jos sade alkaa.", aika=60, piirteet={"vastuullinen": 1}, palaute="<p><strong>Hyvä yritys, mutta ilma on jo liian kosteaa.</strong></p><p>Maali kuivuu huonosti kostealla säällä, eikä pressu suojaa kaikkea. Pia maalaa sisäkatot, ja ulkoseinä maalataan kuivana päivänä.</p>"),
       ]),
 ]
 
@@ -283,7 +280,7 @@ SEURAUKSET = {
     "Elementtien nosto": "Työmaalla oli vaaratilanne. Siitä tehtiin ilmoitus, ja nostot keskeytettiin.",
     "Kattoristikot": "Leevin turvallisuus oli vaarassa. Työmaalla pidettiin ylimääräinen turvallisuuspalaveri.",
     "Sähköt": "Talon omistaja harmistui. Hänelle piti selittää uudelleen, miksi sähkötyöt kuuluvat ammattilaisille.",
-    "Putket": "Kylpyhuoneen aikataulusta tuli riitaa. Laatoitus siirtyi.",
+    "Putket": "Kylpyhuoneen aikataulusta tuli kiistaa. Laatoitus siirtyi.",
     "Maalaus": "Ulkoseinän maalaus siirtyi, ja Pia joutui vaihtamaan työsuunnitelman kesken päivän.",
 }
 # Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
@@ -293,3 +290,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>> perjantaina. Talo ei ole vielä valmis. Virheiden korjaaminen siirtää harjannostajaisia.",
 ]
 MYOHASSA = "Viikko venyi, eikä katto ollut valmis perjantaina kello 16."
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

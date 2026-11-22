@@ -357,3 +357,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>>. Kotkat voittaa finaalin niukasti jatkoajalla. Pari asiaa teki illasta turhan vaikean.",
     "Kello on <<print setup.kello($aika)>>. Kotkat häviää finaalin 3–5. Päivän virheet tuntuivat illalla kentällä.",
 ]
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

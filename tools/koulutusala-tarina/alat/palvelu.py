@@ -143,8 +143,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Reilua ja välittävää!</strong></p><p>Laura antaa huoneet niille, jotka niitä eniten tarvitsevat. Muut saavat loungesta mukavat paikat, tyynyt, peitot ja aamupalan.</p>"),
        dict(teksti="Ne, jotka tulivat ensin, saavat huoneet.", aika=10, piirteet={},
             palaute="<p><strong>Nopeasti päätetty, mutta ei aina reilua.</strong></p><p>Pikkulapsen perhe ja iäkäs matkustaja tulivat viimeisinä. Laura järjestää heille huoneet ja muille paikat loungesta.</p>"),
-       dict(teksti="Huutokaupataan huoneet. Eniten maksavat saavat ne.", aika=10, piirteet={},
-            palaute="<p><strong>Hotelli ei toimi näin hätätilanteessa.</strong></p><p>Laura antaa huoneet niille, jotka tarvitsevat niitä eniten. Muut pääsevät loungeen.</p>"),
+       dict(teksti="Arvotaan huoneet reilusti kaikkien kesken.", aika=10, piirteet={"rauhallinen": 1}, palaute="<p><strong>Reilua, mutta ei paras ratkaisu.</strong></p><p>Arvonnassa pikkulapsen perhe tai iäkäs matkustaja voi jäädä ilman huonetta. Hätätilanteessa huoneet annetaan niille, jotka tarvitsevat lepoa eniten. Muut pääsevät loungeen.</p>"),
       ]),
 ]
 
@@ -303,3 +302,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>>. Yö lentokentällä oli kaoottinen. Moni matkustaja oli vihainen, ja lentoasema saa paljon valituksia.",
 ]
 MYOHASSA = "Ilta venyi niin myöhään, että osa matkustajista pääsi hotelliin vasta keskellä yötä."
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

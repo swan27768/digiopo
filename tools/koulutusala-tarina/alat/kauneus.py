@@ -126,8 +126,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Selkää ei hierota tänään. Neuvotaan asiakasta menemään lääkäriin. Tilalle voi tehdä kevyen niskahieronnan.", aika=45, piirteet={"turva": 2, "kohtaaja": 1},
             palaute="<p><strong>Vastuullista!</strong></p><p>Säteilevä kipu ja puutuminen voivat johtua hermon puristuksesta. Lääkäri selvittää syyn. Asiakas kiittää hyvästä neuvosta.</p>"),
-       dict(teksti="Hierotaan oikein kovaa, niin kipu lähtee.", aika=45, piirteet={},
-            palaute="<p><strong>Ei ole turvallista.</strong></p><p>Kova hieronta voi pahentaa oireita. Sami neuvoo asiakasta menemään lääkäriin.</p>"),
+       dict(teksti="Hierotaan selkää kevyesti, ettei kipu pahene.", aika=45, piirteet={}, palaute="<p><strong>Ei vielä.</strong></p><p>Kun kipu säteilee jalkaan ja varpaat puutuvat, syy voi olla hermossa. Silloin selkää ei hierota ennen lääkärin tutkimusta. Sami neuvoo asiakasta menemään lääkäriin.</p>"),
        dict(teksti="Perutaan aika ja asiakas lähtee.", aika=15, piirteet={"turva": 1},
             palaute="<p><strong>Oikea suunta, mutta…</strong></p><p>…asiakas tarvitsee myös neuvon, mihin mennä. Sami neuvoo häntä menemään lääkäriin.</p>"),
       ]),
@@ -320,3 +319,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä on ohi. Suurin osa asiakkaista oli tyytyväisiä, mutta pari asiaa pitää korjata.",
     "Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä oli raskas. Moni asiakas lähti pettyneenä, ja hoitolan maine kärsi.",
 ]
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True

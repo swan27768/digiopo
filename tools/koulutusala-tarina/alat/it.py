@@ -62,8 +62,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kirjoitan tarkasti: mikä puhelin, mitä painoin ja mitä tapahtui.", aika=10, piirteet={"tarkka": 2},
             palaute="<p><strong>Juuri näin!</strong></p><p>Tätä kutsutaan bugiraportiksi. Kun koodari tietää tarkalleen, miten virhe syntyy, hän löytää sen nopeasti.</p>"),
-       dict(teksti="Huudan koodarille, että peli ei toimi.", aika=20, piirteet={},
-            palaute="<p><strong>Koodari ei tiedä, mistä aloittaa.</strong></p><p>Peli toimii hänen koneellaan. Kestää kauan ennen kuin virhe löytyy.</p><p>Emma kirjoittaa bugiraportin: mikä puhelin, mitä painettiin ja mitä tapahtui. Sitten vika löytyy.</p>"),
+       dict(teksti="Lähetän koodarille viestin: peli kaatuu, korjaa pian.", aika=20, piirteet={}, palaute="<p><strong>Koodari ei tiedä, mistä aloittaa.</strong></p><p>Peli toimii hänen koneellaan. Kestää kauan ennen kuin virhe löytyy.</p><p>Emma kirjoittaa bugiraportin: mikä puhelin, mitä painettiin ja mitä tapahtui. Sitten vika löytyy.</p>"),
        dict(teksti="Jätän asian. Vanhoja puhelimia on vähän.", aika=10, piirteet={},
             palaute="<p><strong>Moni pelaaja käyttää vanhaa puhelinta.</strong></p><p>Jos peli kaatuu heti julkaisupäivänä, pelaajat antavat huonoja arvosteluja.</p><p>Emma kirjoittaa bugiraportin ja vie sen koodarille.</p>"),
       ]),

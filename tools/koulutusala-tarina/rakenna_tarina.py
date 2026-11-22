@@ -44,12 +44,14 @@ IKONIT = {
 }
 
 # --------------------------------------------------------------------------
-def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, sakko=0):
+def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, sakko=0, paras=None):
     sets = f"<<set $aika += {v['aika']}>>" + (f"<<set $aika += {lisa}>>" if lisa else "")
     # Huono valinta (ei piirteitä, tai huono=True) jättää seurauksen loppuun ja vie lisäaikaa
     huono = seuraus and v.get("huono", not v.get("piirteet"))
     if huono:
         sets += f'<<set $seuraukset.push("{seuraus}")>>' + (f"<<set $aika += {sakko}>>" if sakko else "")
+    elif seuraus and paras is not None and sum(v.get("piirteet", {}).values()) < paras:
+        sets += "<<set $melkein += 1>>"   # järkevä, mutta ei paras valinta
     for k, n in v.get("piirteet", {}).items():
         sets += f"<<set $piirre.{k} += {n}>>"
     run = f'<<run setup.tausta("{v["tausta"]}")>>' if v.get("tausta") else ""
@@ -72,8 +74,15 @@ def kuva_html(k):
 def kohtaus_passage(k, nro, yht, seuraava, A):
     # Kohtauskohtainen lisäaika (esim. yö kuluu) ja siirtymäteksti ohittavat alan oletukset
     seuraus = A.get("SEURAUKSET", {}).get(k["nimi"])
+    valinnat = list(k["valinnat"])
+    paras_p = max(sum(v.get("piirteet", {}).values()) for v in valinnat)
+    if A.get("SEKOITA_VALINNAT"):
+        # Paras vaihtoehto eri kohtaan eri kohtauksissa, ettei oikea vastaus ole aina ensimmäinen
+        pisteet = [sum(v.get("piirteet", {}).values()) for v in valinnat]
+        paras = valinnat.pop(pisteet.index(max(pisteet)))
+        valinnat.insert([1, 2, 0, 2, 1, 0][(nro - 1) % 6] % (len(valinnat) + 1), paras)
     vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], k.get("siirtymaTeksti", A.get("siirtymaTeksti", "")), k.get("lisaaika", 0),
-                           seuraus, A.get("KORJAUSAIKA", 20)) for v in k["valinnat"])
+                           seuraus, A.get("KORJAUSAIKA", 20), paras_p) for v in valinnat)
     tk = f'<<run setup.taustakuva("{k["taustakuva"]}")>>' if k.get("taustakuva") else ""
     return f"""{tk}<<include "HUD">>
 <p class="kohtaus-nro">Kohtaus {nro}/{yht}</p>
@@ -128,7 +137,7 @@ def rakenna(A, src, dst):
     TH.update({k: v for k, v in A.get("TEHTAVA", {}).items() if k in TH})
     pset = ", ".join(f"{k}: 0" for k in PIIRTEET)
     kset = ", ".join(f"{k}: 0" for k in AMMATIT)
-    alustus = f'<<set $aika to 0>><<set $piirre to {{{pset}}}>><<set $kiinn to {{{kset}}}>><<set $korttiTop to []>>' + ("<<set $seuraukset to []>>" if A.get("SEURAUKSET") else "")
+    alustus = f'<<set $aika to 0>><<set $piirre to {{{pset}}}>><<set $kiinn to {{{kset}}}>><<set $korttiTop to []>>' + ("<<set $seuraukset to []>><<set $melkein to 0>>" if A.get("SEURAUKSET") else "")
 
     korvaa("StoryInit", f"""<<run Config.saves.maxAutoSaves = 0;>>
 /* {A['tarinaNimi']} – alkuarvot */
@@ -194,7 +203,8 @@ $('body').addClass('hide-navbar');
                  + (f'<<if _myoh>><p class="myohassa"><span aria-hidden="true">⏰ </span>{myoh}</p><</if>>' if myoh else "")
                  + '<<if _n gt 0>><div class="seuraukset"><p class="seuraukset-otsikko">Valintojesi seuraukset</p><ul><<for _s range $seuraukset>><li><<print _s>></li><</for>></ul>'
                  + '<p class="seuraukset-vinkki">Ammattilaiset korjasivat virheet, mutta niistä jäi jälki. Pelaa uudelleen ja kokeile, saatko päivän sujumaan ilman mutkia.</p></div>'
-                 + '<<else>><p class="seuraukset-hyva"><span aria-hidden="true">⭐ </span>Teit joka tilanteessa hyvän valinnan. Päivä sujui ilman mutkia!</p><</if>>')
+                 + '<<elseif $melkein gt 0>><p class="seuraukset-hyva"><span aria-hidden="true">👍 </span>Selvisit ilman isoja virheitä. <<print $melkein>> kertaa tarjolla olisi ollut vielä parempi vaihtoehto. Palautteesta näit, mikä se oli.</p>'
+                 + '<<else>><p class="seuraukset-hyva"><span aria-hidden="true">⭐ </span>Teit joka tilanteessa parhaan valinnan. Päivä sujui ilman mutkia!</p><</if>>')
         lteksti, n = re.subn(r'<p class="highlight">.*?</p>', lambda m: lohko, lteksti, count=1, flags=re.S)
         assert n == 1, "TARINA_LOPPU: highlight-kappaletta ei löydy"
     lisaa(L["nimi"], lteksti + '\n<div class="intro-nappi"><<link "Katso ammattikorttisi">><<goto "Ammattikortti">><</link>></div>', "scene-loppu")

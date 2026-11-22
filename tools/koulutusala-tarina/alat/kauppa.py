@@ -262,3 +262,5 @@ LOPPU_TASOT = [
     "Kello on <<print setup.kello($aika)>>. Messupäivä meni moneen kertaan pieleen. Kolibrin kevätmyynti jää tavoitteesta.",
 ]
 MYOHASSA = "Tilaukset lähtivät myöhässä, ja osa tuotteista ehti loppua tehtaalta."
+# Näytä paras vaihtoehto eri kohdassa eri kohtauksissa (rakennusskripti järjestää)
+SEKOITA_VALINNAT = True
