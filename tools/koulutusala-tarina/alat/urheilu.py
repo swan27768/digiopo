@@ -54,7 +54,7 @@ html body #passages .passage .cover-link.cover-3d {
 html body #passages .passage .cover-pieni, html body #passages .passage .cover-subtitle { text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.7); }
 html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }"""
 
-KANSI = dict(pieni="Urheilu, tanssi ja sirkus · tarina", otsikko="Urheiluala",
+KANSI = dict(pieni="Palveluala", otsikko="Urheiluala",
              alaotsikko="Finaalipäivä · Ketä kaikkia tarvitaan, kun nuoret onnistuvat isolla areenalla?",
              nappi="Astu areenalle", ikoni="pokaali")
 

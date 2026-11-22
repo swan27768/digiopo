@@ -53,7 +53,7 @@ html body #passages .passage .cover-link.cover-3d {
 html body #passages .passage .cover-pieni, html body #passages .passage .cover-subtitle { text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.7); }
 html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }"""
 
-KANSI = dict(pieni="Taide ja humanistinen ala · tarina", otsikko="Taideala",
+KANSI = dict(pieni="Taide ja humanistinen ala", otsikko="Taideala",
              alaotsikko="Festarit 48 tunnissa · Ketä kaikkia tarvitaan, kun kaupunki juhlii koko viikonlopun?",
              nappi="Avaa portit", ikoni="play")
 

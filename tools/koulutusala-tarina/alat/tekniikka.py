@@ -33,7 +33,7 @@ TEEMA = """:root {
   --nappi-teksti: #051b1f;
 }"""
 
-KANSI = dict(pieni="Tarina tekniikan alalta", otsikko="Tekniikan ala",
+KANSI = dict(pieni="Tekniikan ala", otsikko="Tekniikan ala",
              alaotsikko="Linja seis! · Ehditkö korjata tehtaan ennen kuin rekka tulee?")
 
 ALKU = dict(tag="Tarina · noin 15 min",

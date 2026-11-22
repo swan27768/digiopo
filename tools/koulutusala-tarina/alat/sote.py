@@ -37,7 +37,7 @@ html body #passages .passage .cover-link.cover-3d {
   background: linear-gradient(to top, rgba(var(--tausta-rgb),.95) 0%, rgba(var(--tausta-rgb),.8) 40%, rgba(var(--tausta-rgb),.35) 70%, rgba(var(--tausta-rgb),0) 90%) !important;
 }"""
 
-KANSI = dict(pieni="Terveys- ja hyvinvointiala · tarina", otsikko="Sote-ala",
+KANSI = dict(pieni="Terveys- ja hyvinvointiala", otsikko="Sote-ala",
              alaotsikko="Hälytys 112 · Seuraa yhtä iltaa hätäpuhelusta sairaalaan.",
              nappi="Aloita tästä", ikoni="syke")
 

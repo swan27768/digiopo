@@ -50,7 +50,7 @@ html body #passages .passage .cover-link.cover-3d {
   background: linear-gradient(to top, rgba(var(--tausta-rgb),.92) 0%, rgba(var(--tausta-rgb),.7) 38%, rgba(var(--tausta-rgb),.25) 62%, rgba(var(--tausta-rgb),0) 82%) !important;
 }"""
 
-KANSI = dict(pieni="Elintarvikeala · tarina", otsikko="Elintarvikeala",
+KANSI = dict(pieni="Elintarvikeala", otsikko="Elintarvikeala",
              alaotsikko="Uusi välipala · Ehtiikö Marjapala koululaisten maisteltavaksi kello 13?",
              nappi="Aloita maistelu", ikoni="sydan")
 

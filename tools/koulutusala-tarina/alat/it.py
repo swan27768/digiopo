@@ -38,7 +38,7 @@ TEEMA = """:root {
   --nappi-teksti: #160a33;
 }"""
 
-KANSI = dict(pieni="Tieto- ja viestintätekniikka · tarina", otsikko="IT-ala",
+KANSI = dict(pieni="Tieto- ja viestintätekniikka", otsikko="IT-ala",
              alaotsikko="Julkaisupäivä · Saadaanko uusi peli julkaistua kello 12?",
              nappi="Aloita peli", ikoni="play")
 
