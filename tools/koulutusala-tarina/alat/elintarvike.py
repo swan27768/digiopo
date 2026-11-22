@@ -73,16 +73,16 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Riisun korut, pesen kädet ja puen työvaatteet ja hiussuojan.", aika=10, piirteet={"tarkka": 2},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Korut ja omat vaatteet voivat tuoda bakteereja ruokaan. Pieni osa voi myös pudota tuotteeseen. Siksi kaikki tekevät samoin, myös tehtaan johtaja.</p>"),
-       dict(teksti="Laitan hanskat sormuksen päälle, niin se ei haittaa.", aika=15, piirteet={},
+       dict(teksti="Laitan hanskat sormuksen päälle, niin se ei haittaa.", tyyli="kaytannollinen", aika=15, piirteet={},
             palaute="<p><strong>Sami pyytää riisumaan sormuksen.</strong></p><p>Hanska voi revetä, ja sormuksen alle jää bakteereja. Korut riisutaan aina.</p><p>Pesette kädet ja puette työvaatteet ja hiussuojan.</p>"),
-       dict(teksti="Riisun korut, mutta menen sisään omassa hupparissa, koska se on puhdas.", aika=15, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Omista vaatteista tulee nukkaa ja bakteereja, vaikka ne näyttäisivät puhtailta. Tuotantoon mennään aina työvaatteissa ja hiussuojassa. Puet työvaatteet.</p>"),
+       dict(teksti="Riisun korut, mutta menen sisään omassa hupparissa, koska se on puhdas.", tyyli="luottavainen", aika=15, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Omista vaatteista tulee nukkaa ja bakteereja, vaikka ne näyttäisivät puhtailta. Tuotantoon mennään aina työvaatteissa ja hiussuojassa. Puet työvaatteet.</p>"),
       ]),
  dict(nimi="Leipomo", tausta="leipomo", otsikko="Leipomo", avain="leipuri",
       kysymys="Miltä leipuri-kondiittorin työ näytti?",
       johdanto="""<p>Leipomossa sekoitetaan Marjapalan kauramassaa. Massa murenee käsissä. Se on liian kuivaa.</p>
 <p class="puhe"><strong>Hanna, leipuri-kondiittori:</strong> ”Tästä ei saa ehjiä paloja. Mitä tehdään?”</p>""",
       valinnat=[
-       dict(teksti="Lisään vähän vettä silmämääräisesti.", aika=15, piirteet={},
+       dict(teksti="Lisään vähän vettä silmämääräisesti.", tyyli="nopea", aika=15, piirteet={},
             palaute="<p><strong>Massa paranee, mutta seuraava erä on erilainen.</strong></p><p>Isoissa määrissä kaikki punnitaan tarkasti. Muuten jokainen erä maistuu ja näyttää erilaiselta.</p><p>Hanna punnitsee lisänesteen ja kirjaa sen reseptiin.</p>"),
        dict(teksti="Punnitsen lisää nestettä ja kirjaan muutoksen reseptiin.", aika=10, piirteet={"tarkka": 2, "luova": 1},
             palaute="<p><strong>Ammattilaisen tapa!</strong></p><p>Kun muutos on kirjattu, jokainen erä onnistuu samalla tavalla. Massa pysyy nyt koossa, ja palat ovat ehjiä.</p>"),
@@ -97,7 +97,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Odotan, että lämpö nousee 72 asteeseen, ja kirjaan sen.", aika=15, piirteet={"tarkka": 2},
             palaute="<p><strong>Täsmälleen oikein!</strong></p><p>Lämpötila kirjataan joka kerta. Jos ruoasta tulee kysyttävää, kirjauksista näkee, että kaikki tehtiin oikein.</p>"),
-       dict(teksti="68 astetta riittää. Nyt on kiire.", aika=10, piirteet={},
+       dict(teksti="68 astetta riittää. Nyt on kiire.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Ei riitä.</strong></p><p>Jos lämpötila jää liian matalaksi, kaikki bakteerit eivät kuole. Veera kuumentaa erän uudelleen 72 asteeseen ja kirjaa sen.</p><p>Ruoan turvallisuudesta ei jousteta, vaikka olisi kiire.</p>"),
        dict(teksti="Kerron heti Veeralle, että lämpö on liian matala.", aika=10, piirteet={"tiimi": 2},
             palaute="<p><strong>Hyvä, että kerroit!</strong></p><p>Veera huomaa, että laitteen säätö oli väärin. Hän korjaa sen, ja maito kuumenee 72 asteeseen. Lämpötila kirjataan.</p>"),
@@ -109,8 +109,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Mitataan uudelleen ja kerrotaan tulos tuotekehitykselle.", aika=15, piirteet={"tarkka": 2, "tiimi": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Uusi mittaus näyttää saman tuloksen. Patukoita paistetaan hetki pidempään, ja kosteus laskee sopivaksi.</p>"),
-       dict(teksti="Mitataan uudelleen. Jos tulos on sama, laitetaan erä sivuun.", aika=10, piirteet={"tarkka": 1}, palaute="<p><strong>Melkein!</strong></p><p>Uusintamittaus on oikea alku. Tieto pitää kuitenkin viedä myös tuotekehitykselle, jotta paistoaika korjataan. Muuten seuraavakin erä on liian kostea. Patukoita paistetaan pidempään.</p>"),
-       dict(teksti="Ei tehdä mitään. Patukka syödään kuitenkin nopeasti.", aika=10, piirteet={},
+       dict(teksti="Mitataan uudelleen. Jos tulos on sama, laitetaan erä sivuun.", tyyli="varovainen", aika=10, piirteet={"tarkka": 1}, palaute="<p><strong>Melkein!</strong></p><p>Uusintamittaus on oikea alku. Tieto pitää kuitenkin viedä myös tuotekehitykselle, jotta paistoaika korjataan. Muuten seuraavakin erä on liian kostea. Patukoita paistetaan pidempään.</p>"),
+       dict(teksti="Ei tehdä mitään. Patukka syödään kuitenkin nopeasti.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Kaupassa patukka voi olla viikkoja.</strong></p><p>Siinä ajassa kostea patukka voi homehtua. Elias kertoo tuloksen tuotekehitykselle. Patukoita paistetaan pidempään.</p>"),
       ]),
  dict(nimi="Makutesti", tausta="kehitys", otsikko="Tuotekehitys: makutesti", avain="kehittaja",
@@ -118,11 +118,11 @@ KOHTAUKSET = [
       johdanto="""<p>Tuotekehityksessä on aamulla käynyt testiryhmä: kymmenen seitsemäsluokkalaista. Moni heistä sanoi, että Marjapala on liian makea.</p>
 <p class="puhe"><strong>Ronja, tuotekehittäjä:</strong> ”Ennen maistatusta ehditään vielä muuttaa reseptiä. Mitä ehdotat?”</p>""",
       valinnat=[
-       dict(teksti="Lisätään sokeria. Kaikki tykkäävät makeasta.", aika=10, piirteet={},
+       dict(teksti="Lisätään sokeria. Kaikki tykkäävät makeasta.", tyyli="empaattinen", aika=10, piirteet={},
             palaute="<p><strong>Palaute oli päinvastainen.</strong></p><p>Testiryhmä sanoi, että patukka on liian makea. Ronja vähentää sokeria ja lisää mansikkaa, jotta maku on raikkaampi.</p>"),
        dict(teksti="Vähennetään sokeria ja lisätään mansikkaa.", aika=15, piirteet={"luova": 2, "asiakas": 2},
             palaute="<p><strong>Hyvä ehdotus!</strong></p><p>Ronja tekee kokeilun. Uusi versio on raikkaampi, ja siinä on vähemmän sokeria. Testiryhmän kaksi jäsentä maistaa sitä, ja molemmat tykkäävät.</p>"),
-       dict(teksti="Pidetään resepti samana. Testiryhmä oli pieni.", aika=10, piirteet={},
+       dict(teksti="Pidetään resepti samana. Testiryhmä oli pieni.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Pienikin testiryhmä kertoo paljon.</strong></p><p>Jos moni sanoo saman asian, siitä kannattaa ottaa vaarin. Ronja vähentää sokeria ja lisää mansikkaa.</p>"),
       ]),
  dict(nimi="Pakkauslinja", tausta="pakkaus", otsikko="Pakkauslinja", avain="prosessi",
@@ -133,8 +133,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Pysäytän linjan ja kerron heti Tomille.", aika=15, piirteet={"tarkka": 2, "tiimi": 1},
             palaute="<p><strong>Hienosti toimittu!</strong></p><p>Pähkinäallergia voi olla hengenvaarallinen. Tomi tulostaa uudet tarrat, joissa manteli mainitaan. Väärät pakkaukset kerätään pois.</p>"),
-       dict(teksti="Annetaan tämän erän mennä ja korjataan tarrat huomisesta alkaen.", aika=10, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Allergiselle manteli voi olla hengenvaarallinen jo tänään. Tomi pysäyttää linjan ja tulostaa uudet tarrat. Väärät pakkaukset kerätään pois.</p>"),
-       dict(teksti="Kirjoitan asiasta lapun ja jatkan töitä.", aika=10, piirteet={"tiimi": 1},
+       dict(teksti="Annetaan tämän erän mennä ja korjataan tarrat huomisesta alkaen.", tyyli="nopea", aika=10, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Allergiselle manteli voi olla hengenvaarallinen jo tänään. Tomi pysäyttää linjan ja tulostaa uudet tarrat. Väärät pakkaukset kerätään pois.</p>"),
+       dict(teksti="Kirjoitan asiasta lapun ja jatkan töitä.", tyyli="kaytannollinen", aika=10, piirteet={"tiimi": 1},
             palaute="<p><strong>Hyvä, että huomasit, mutta lappu ei riitä.</strong></p><p>Linja pitää pysäyttää heti, ettei vääriä pakkauksia tule lisää. Tomi pysäyttää linjan ja tulostaa uudet tarrat.</p>"),
       ]),
 ]

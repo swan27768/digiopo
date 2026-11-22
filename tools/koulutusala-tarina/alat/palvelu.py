@@ -78,9 +78,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kone lentää odotuskierrosta, kunnes kiitotie on aurattu, tai menee toiselle kentälle.", aika=15, piirteet={"rauhallinen": 2, "turva": 1},
             palaute="<p><strong>Turvallisuus ensin!</strong></p><p>Polttoainetta on tarpeeksi, joten kone voi odottaa. Anni ohjaa koneen odottamaan ja kertoo lentäjälle selkeästi, mitä tapahtuu.</p>"),
-       dict(teksti="Annetaan laskeutua heti. Matkustajat haluavat kotiin.", aika=10, piirteet={},
+       dict(teksti="Annetaan laskeutua heti. Matkustajat haluavat kotiin.", tyyli="empaattinen", aika=10, piirteet={},
             palaute="<p><strong>Liian vaarallista.</strong></p><p>Lumisella kiitotiellä kone voi liukua. Anni ohjaa koneen odottamaan, kunnes kiitotie on aurattu.</p>"),
-       dict(teksti="Kysytään lentäjältä, mitä hän haluaa tehdä.", aika=10, piirteet={"tiimi": 1},
+       dict(teksti="Kysytään lentäjältä, mitä hän haluaa tehdä.", tyyli="luottavainen", aika=10, piirteet={"tiimi": 1},
             palaute="<p><strong>Yhteistyö on tärkeää, mutta päätös on lennonjohdon.</strong></p><p>Lennonjohtaja näkee kokonaisuuden: kaikki koneet ja kiitotien kunnon. Anni ohjaa koneen odottamaan.</p>"),
       ]),
  dict(nimi="Kiitotie", tausta="kiitotie", otsikko="Kiitotie", avain="kenttahuolto",
@@ -91,9 +91,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kun kiitotie on aurattu ja sen liukkaus mitattu.", aika=15, piirteet={"turva": 2},
             palaute="<p><strong>Juuri niin!</strong></p><p>Tero mittaa kitkan erikoisautolla. Lennonjohto saa tiedon, ja odottava kone laskeutuu turvallisesti.</p>"),
-       dict(teksti="Heti kun aurat ovat ajaneet kerran yli.", aika=10, piirteet={},
+       dict(teksti="Heti kun aurat ovat ajaneet kerran yli.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Liukkaus pitää tarkistaa.</strong></p><p>Lumen alla voi olla jäätä. Tero mittaa kitkan, ja kiitotietä hiekoitetaan vielä kerran.</p>"),
-       dict(teksti="Vasta kun myrsky on ohi.", aika=15, piirteet={"turva": 1},
+       dict(teksti="Vasta kun myrsky on ohi.", tyyli="varovainen", aika=15, piirteet={"turva": 1},
             palaute="<p><strong>Varovaista, mutta myrsky voi kestää koko yön.</strong></p><p>Kun kiitotie aurataan ja mitataan, kentän voi avata turvallisesti jo aiemmin.</p>"),
       ]),
  dict(nimi="Lähtöaula", tausta="aula", otsikko="Lähtöaula", avain="virkailija",
@@ -104,9 +104,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kuuntelen rauhassa, pahoittelen tilannetta ja kerron vaihtoehdot.", aika=15, piirteet={"rauhallinen": 2, "asiakas": 2},
             palaute="<p><strong>Ammattilaisen tapa!</strong></p><p>Matkustaja rauhoittuu, kun häntä kuunnellaan. Mira löytää hänelle paikan aamun ensimmäiseltä lennolta.</p>"),
-       dict(teksti="Sanon, ettei myrsky ole minun vikani.", aika=10, piirteet={},
+       dict(teksti="Sanon, ettei myrsky ole minun vikani.", tyyli="suora", aika=10, piirteet={},
             palaute="<p><strong>Totta, mutta se ei auta.</strong></p><p>Matkustaja suuttuu vielä enemmän. Mira pahoittelee tilannetta ja etsii hänelle paikan aamun lennolta.</p>"),
-       dict(teksti="Pyydän häntä menemään jonon perälle odottamaan.", aika=10, piirteet={},
+       dict(teksti="Pyydän häntä menemään jonon perälle odottamaan.", tyyli="kaytannollinen", aika=10, piirteet={},
             palaute="<p><strong>Hän on jo jonossa.</strong></p><p>Mira kuuntelee häntä ja kertoo vaihtoehdot. Aamun lennolta löytyy paikka.</p>"),
       ]),
  dict(nimi="Ravintola", tausta="ravintola", otsikko="Kentän ravintola", avain="kokki",
@@ -116,9 +116,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tehdään isoja kattilallisia keittoa ja merkitään allergeenit selvästi.", aika=15, piirteet={"tiimi": 1, "asiakas": 1, "turva": 1},
             palaute="<p><strong>Fiksu ratkaisu!</strong></p><p>Keiton saa valmiiksi nopeasti, ja sitä riittää kaikille. Allergeenimerkinnät auttavat, kun syöjiä on paljon.</p>"),
-       dict(teksti="Suljetaan ravintola. Liikaa ihmisiä.", aika=10, piirteet={},
+       dict(teksti="Suljetaan ravintola. Liikaa ihmisiä.", tyyli="varovainen", aika=10, piirteet={},
             palaute="<p><strong>Nälkäiset matkustajat jäisivät ilman ruokaa.</strong></p><p>Jasmin keittää ison kattilallisen keittoa ja merkitsee allergeenit.</p>"),
-       dict(teksti="Tehdään kaikille oma annos tavallisesta listasta.", aika=20, piirteet={"asiakas": 1},
+       dict(teksti="Tehdään kaikille oma annos tavallisesta listasta.", tyyli="empaattinen", aika=20, piirteet={"asiakas": 1},
             palaute="<p><strong>Ystävällistä, mutta liian hidasta.</strong></p><p>Jono kasvaa, ja raaka-aineet loppuvat. Jasmin vaihtaa keittoon, jota riittää kaikille.</p>"),
       ]),
  dict(nimi="Bussipysäkki", tausta="bussi", otsikko="Bussipysäkki", avain="kuljettaja",
@@ -128,9 +128,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tarkistan reitin ja kelin. Kerron matkustajille, että ajetaan rauhallisesti.", aika=15, piirteet={"turva": 2, "asiakas": 1},
             palaute="<p><strong>Turvallinen ja palveleva kuljettaja!</strong></p><p>Kari kertoo matkan kestävän tavallista kauemmin. Matkustajat tietävät, mitä odottaa, ja kaikki pääsevät perille turvallisesti.</p>"),
-       dict(teksti="Lähden heti ja ajan tavallista nopeutta.", aika=10, piirteet={},
+       dict(teksti="Lähden heti ja ajan tavallista nopeutta.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Liukkaalla tiellä tämä on vaarallista.</strong></p><p>Kari tarkistaa reitin ja ajaa rauhallisesti. Kaikki pääsevät perille turvallisesti.</p>"),
-       dict(teksti="Odotan, kunnes tie on aurattu.", aika=20, piirteet={"turva": 1},
+       dict(teksti="Odotan, kunnes tie on aurattu.", tyyli="varovainen", aika=20, piirteet={"turva": 1},
             palaute="<p><strong>Varovaista, mutta matkustajat jäisivät kentälle.</strong></p><p>Karin bussissa on talvirenkaat. Hän tarkistaa reitin ja ajaa rauhallisesti.</p>"),
       ]),
  dict(nimi="Hotelli", tausta="hotelli", otsikko="Lentokenttähotelli", avain="matkailu",
@@ -141,9 +141,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Niille, jotka tarvitsevat lepoa eniten, kuten perheelle ja iäkkäälle matkustajalle. Muille lounge, tyynyt ja peitot.", aika=15, piirteet={"asiakas": 2, "rauhallinen": 1},
             palaute="<p><strong>Reilua ja välittävää!</strong></p><p>Laura antaa huoneet niille, jotka niitä eniten tarvitsevat. Muut saavat loungesta mukavat paikat, tyynyt, peitot ja aamupalan.</p>"),
-       dict(teksti="Ne, jotka tulivat ensin, saavat huoneet.", aika=10, piirteet={},
+       dict(teksti="Ne, jotka tulivat ensin, saavat huoneet.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Nopeasti päätetty, mutta ei aina reilua.</strong></p><p>Pikkulapsen perhe ja iäkäs matkustaja tulivat viimeisinä. Laura järjestää heille huoneet ja muille paikat loungesta.</p>"),
-       dict(teksti="Arvotaan huoneet reilusti kaikkien kesken.", aika=10, piirteet={"rauhallinen": 1}, palaute="<p><strong>Reilua, mutta ei paras ratkaisu.</strong></p><p>Arvonnassa pikkulapsen perhe tai iäkäs matkustaja voi jäädä ilman huonetta. Hätätilanteessa huoneet annetaan niille, jotka tarvitsevat lepoa eniten. Muut pääsevät loungeen.</p>"),
+       dict(teksti="Arvotaan huoneet reilusti kaikkien kesken.", tyyli="kaytannollinen", aika=10, piirteet={"rauhallinen": 1}, palaute="<p><strong>Reilua, mutta ei paras ratkaisu.</strong></p><p>Arvonnassa pikkulapsen perhe tai iäkäs matkustaja voi jäädä ilman huonetta. Hätätilanteessa huoneet annetaan niille, jotka tarvitsevat lepoa eniten. Muut pääsevät loungeen.</p>"),
       ]),
 ]
 

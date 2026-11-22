@@ -73,9 +73,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Katsotaan, mitä asiakkaat ovat ostaneet ja hakeneet verkkokaupasta.", aika=10, piirteet={"analyytikko": 2},
             palaute="<p><strong>Juuri näin!</strong></p><p>Myyntitiedoista näkee, että leveät farkut ja huppari myivät hyvin. Moni asiakas myös etsi verkkokaupasta kierrätysmateriaalista tehtyjä vaatteita.</p><p>Hyvä ostaja yhdistää trendit ja asiakastiedon.</p>"),
-       dict(teksti="Ostetaan sitä, mikä näyttää minusta hyvältä.", aika=15, piirteet={"tyyli": 1},
+       dict(teksti="Ostetaan sitä, mikä näyttää minusta hyvältä.", tyyli="rohkea", aika=15, piirteet={"tyyli": 1},
             palaute="<p><strong>Oma maku on hyvä alku, mutta ei riitä.</strong></p><p>Asiakkaiden maku voi olla erilainen. Sofia avaa myyntitiedot: leveät farkut ja huppari myivät hyvin, ja moni etsi kierrätysmateriaalista tehtyjä vaatteita.</p>"),
-       dict(teksti="Ostetaan samoja vaatteita kuin kilpailija.", aika=15, piirteet={},
+       dict(teksti="Ostetaan samoja vaatteita kuin kilpailija.", tyyli="varovainen", aika=15, piirteet={},
             palaute="<p><strong>Silloin kaupat näyttävät samalta.</strong></p><p>Asiakkaalla ei ole syytä tulla juuri teille. Sofia avaa myyntitiedot ja etsii tuotteita, joita omat asiakkaat haluavat.</p>"),
       ]),
  dict(nimi="Myyntiosasto", tausta="edustaja", otsikko="Myyntiedustajan osasto", avain="edustaja",
@@ -86,9 +86,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Ehdotan pienempää koe-erää, esimerkiksi 80 paria.", aika=15, piirteet={"neuvottelija": 2, "analyytikko": 1},
             palaute="<p><strong>Fiksu neuvottelu!</strong></p><p>Antti suostuu 80 parin erään ja antaa 10 % alennusta. Jos farkut myyvät hyvin, lisää voi tilata myöhemmin.</p><p>Myyntiedustaja ja ostaja etsivät ratkaisua, joka sopii molemmille.</p>"),
-       dict(teksti="Tilataan 500 paria. Alennus on hyvä!", aika=10, piirteet={},
+       dict(teksti="Tilataan 500 paria. Alennus on hyvä!", tyyli="rohkea", aika=10, piirteet={},
             palaute="<p><strong>Sofia pysäyttää sinut.</strong></p><p>Jos myydään vain 100 paria, 400 paria jää varastoon. Ne sitovat rahaa, ja ne pitää lopulta myydä halvalla. Sofia neuvottelee 80 parin koe-erän.</p>"),
-       dict(teksti="Kieltäydytään. Alennukset ovat aina huijausta.", aika=10, piirteet={},
+       dict(teksti="Kieltäydytään. Alennukset ovat aina huijausta.", tyyli="varovainen", aika=10, piirteet={},
             palaute="<p><strong>Liian jyrkkää.</strong></p><p>Alennus voi olla hyvä, jos määrä on sopiva. Sofia neuvottelee 80 parin koe-erän ja 10 % alennuksen.</p>"),
       ]),
  dict(nimi="Vastuullisuus", tausta="vastuu", otsikko="Vastuullisuus", avain="vastuu",
@@ -98,7 +98,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Pyydän tiedot tehtaasta ja materiaaleista ennen kuin ostamme.", aika=15, piirteet={"vastuu": 2},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Tietoja ei löydy. Noora kertoo, että silloin ei voi tietää, onko työntekijöille maksettu reilusti. Ostatte paidat toiselta toimittajalta, joka kertoo tehtaansa avoimesti.</p>"),
-       dict(teksti="Ostetaan paljon. Saamme hyvän voiton.", aika=10, piirteet={},
+       dict(teksti="Ostetaan paljon. Saamme hyvän voiton.", tyyli="kaytannollinen", aika=10, piirteet={},
             palaute="<p><strong>Halpa hinta voi tarkoittaa, että joku muu maksaa.</strong></p><p>Työntekijöille voidaan maksaa liian vähän, tai materiaali voi olla huonoa. Noora pyytää tiedot tehtaasta. Niitä ei löydy, joten paitoja ei osteta.</p>"),
        dict(teksti="Kysyn Nooralta, mitä vastuullisuusmerkkejä kannattaa etsiä.", aika=10, piirteet={"vastuu": 1, "neuvottelija": 1},
             palaute="<p><strong>Hyvä kysymys!</strong></p><p>Noora näyttää, millaisia merkkejä luomupuuvillasta ja reilusta työstä on. Näiltä paidoilta merkit puuttuvat, joten ostatte paidat toiselta toimittajalta.</p>"),
@@ -110,7 +110,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Puetaan mallinukelle valmis asu ja valitaan väreiksi kaksi pääväriä.", aika=15, piirteet={"tyyli": 2},
             palaute="<p><strong>Ammattilaisen ote!</strong></p><p>Kun asukokonaisuus on valmis, asiakas näkee heti, miten vaatteita voi yhdistää. Selkeät värit erottuvat kauas.</p>"),
-       dict(teksti="Laitetaan kaikki vaatteet esille, niin valikoima näkyy.", aika=15, piirteet={},
+       dict(teksti="Laitetaan kaikki vaatteet esille, niin valikoima näkyy.", tyyli="kaytannollinen", aika=15, piirteet={},
             palaute="<p><strong>Liian täynnä.</strong></p><p>Kun kaikkea on paljon, mikään ei erotu. Iiris valitsee yhden asukokonaisuuden mallinukelle ja kaksi pääväriä.</p>"),
        dict(teksti="Kysytään ohikulkijoilta, mikä osastoissa houkuttelee.", aika=15, piirteet={"tyyli": 1, "neuvottelija": 1},
             palaute="<p><strong>Kiinnostava idea!</strong></p><p>Moni sanoo, että valmis asu mallinukella houkuttelee eniten. Iiris pukee mallinuken ja valitsee kaksi pääväriä.</p>"),
@@ -122,7 +122,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Mitat, materiaali, pesuohje ja kuvia joka puolelta.", aika=15, piirteet={"analyytikko": 1, "vastuu": 1},
             palaute="<p><strong>Täydellistä!</strong></p><p>Kun tiedot ovat tarkat, asiakas valitsee oikean koon. Silloin palautuksia tulee vähemmän, ja se säästää rahaa ja luontoa.</p>"),
-       dict(teksti="Lyhyt teksti: ”Ihana ja trendikäs!”", aika=10, piirteet={},
+       dict(teksti="Lyhyt teksti: ”Ihana ja trendikäs!”", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Asiakas ei tiedä, sopiiko koko.</strong></p><p>Moni tilaa monta kokoa ja palauttaa osan. Joona lisää tuotesivulle mitat, materiaalin ja pesuohjeen.</p>"),
        dict(teksti="Kuvataan vaate mallin päällä ja kerrotaan mallin pituus.", aika=15, piirteet={"tyyli": 1, "analyytikko": 1},
             palaute="<p><strong>Hyvä idea!</strong></p><p>Kun asiakas näkee vaatteen ihmisen päällä, hän ymmärtää sen koon. Joona lisää vielä mitat, materiaalin ja pesuohjeen.</p>"),
@@ -134,9 +134,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kirjataan puuttuvat hupparit ja ilmoitetaan toimittajalle.", aika=15, piirteet={"analyytikko": 2},
             palaute="<p><strong>Oikein toimittu!</strong></p><p>Toimittaja huomaa, että yksi laatikko jäi heidän varastoonsa. Se lähetetään perään, eikä Kolibri maksa tuotteista, joita ei tullut.</p>"),
-       dict(teksti="Kuitataan lähetys vastaanotetuksi. Ei se niin tarkkaa ole.", aika=10, piirteet={},
+       dict(teksti="Kuitataan lähetys vastaanotetuksi. Ei se niin tarkkaa ole.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Silloin Kolibri maksaa myös puuttuvista huppareista.</strong></p><p>Kim laskee laatikot uudelleen ja kirjaa puutteen. Toimittaja lähettää puuttuvan laatikon perään.</p>"),
-       dict(teksti="Lasken laatikot vielä kerran itse.", aika=15, piirteet={"analyytikko": 1},
+       dict(teksti="Lasken laatikot vielä kerran itse.", tyyli="varovainen", aika=15, piirteet={"analyytikko": 1},
             palaute="<p><strong>Tarkistus on hyvä alku.</strong></p><p>Huppareita on edelleen 32. Kim kirjaa puutteen ja ilmoittaa toimittajalle. Puuttuva laatikko lähetetään perään.</p>"),
       ]),
 ]

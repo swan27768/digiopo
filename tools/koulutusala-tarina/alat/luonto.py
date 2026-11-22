@@ -81,9 +81,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kuvaan kalat, kirjaan paikan ja laitan yhden kalan kylmälaukkuun tutkittavaksi.", aika=15, piirteet={"tutkija": 2},
             palaute="<p><strong>Oikea tutkijan ote!</strong></p><p>Kuvat ja paikka auttavat myöhemmin. Laboratorio voi tutkia kalan ja selvittää, mihin se kuoli.</p>"),
-       dict(teksti="Heitän kalat takaisin jokeen.", aika=10, piirteet={},
+       dict(teksti="Heitän kalat takaisin jokeen.", tyyli="kaytannollinen", aika=10, piirteet={},
             palaute="<p><strong>Todisteet katoavat.</strong></p><p>Aatu ehtii onneksi ottaa yhden kalan talteen. Hän kuvaa sen ja kirjaa paikan.</p>"),
-       dict(teksti="Soitan heti kunnan ympäristöviranomaiselle ja kerron kuolleista kaloista.", aika=10, piirteet={"viestija": 1}, palaute="<p><strong>Hyvä ilmoittaa, mutta ensin todisteet.</strong></p><p>Viranomainen tarvitsee kuvia, paikan ja kalan tutkittavaksi. Jos niitä ei kerätä nyt, virta vie ne mukanaan. Aatu kuvaa kalat ja kirjaa paikan, ja sitten soitetaan.</p>"),
+       dict(teksti="Soitan heti kunnan ympäristöviranomaiselle ja kerron kuolleista kaloista.", tyyli="nopea", aika=10, piirteet={"viestija": 1}, palaute="<p><strong>Hyvä ilmoittaa, mutta ensin todisteet.</strong></p><p>Viranomainen tarvitsee kuvia, paikan ja kalan tutkittavaksi. Jos niitä ei kerätä nyt, virta vie ne mukanaan. Aatu kuvaa kalat ja kirjaa paikan, ja sitten soitetaan.</p>"),
       ]),
  dict(nimi="Näytteenotto", taustakuva=KUVA + "luonto-pitkospuut-tausta.webp", tausta="naytteet", otsikko="Näytteenotto", avain="ymparisto",
       kysymys="Miltä ympäristönhoitajan työ näytti?",
@@ -92,9 +92,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Monesta kohdasta, sekä ylä- että alajuoksulta.", aika=15, piirteet={"tutkija": 2, "luonto": 1},
             palaute="<p><strong>Juuri niin!</strong></p><p>Kun näytteitä on joen eri kohdista, niitä voi verrata. Silloin näkee, missä kohdassa vesi muuttuu huonoksi.</p>"),
-       dict(teksti="Yhdestä kohdasta tästä rannalta.", aika=10, piirteet={},
+       dict(teksti="Yhdestä kohdasta tästä rannalta.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Yksi näyte ei riitä.</strong></p><p>Se kertoo vain, että vesi on huonoa tässä. Se ei kerro, mistä ongelma tulee. Saana päättää ottaa näytteitä monesta kohdasta.</p>"),
-       dict(teksti="Ei tarvita näytteitä. Vedestä näkee, että se on sameaa.", aika=10, piirteet={},
+       dict(teksti="Ei tarvita näytteitä. Vedestä näkee, että se on sameaa.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Silmä ei näe kaikkea.</strong></p><p>Esimerkiksi hapen määrää ei voi nähdä. Saana ottaa näytteitä monesta kohdasta.</p>"),
       ]),
  dict(nimi="Laavulla", taustakuva=KUVA + "luonto-metsa-tausta.webp", tausta="laavu", otsikko="Laavulla", avain="ohjaaja",
@@ -104,9 +104,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kerron rauhallisesti, että vettä tutkitaan, ja haetaan juomavesi lähteestä.", aika=15, piirteet={"viestija": 2, "luonto": 1},
             palaute="<p><strong>Hienosti!</strong></p><p>Retkeläinen ymmärtää. Mikko kertoo vielä, että ryhmä näki eilen sateen jälkeen mutaista vettä ylempänä, hakkuuaukean kohdalla. Tärkeä vihje!</p>"),
-       dict(teksti="Antaa juoda. Lapin vesi on aina puhdasta.", aika=10, piirteet={},
+       dict(teksti="Antaa juoda. Lapin vesi on aina puhdasta.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Ei tällä kertaa.</strong></p><p>Sameaa vettä ei kannata juoda keittämättä. Mikko hakee juomaveden lähteestä. Hän kertoo, että ryhmä näki eilen mutaista vettä hakkuuaukean kohdalla.</p>"),
-       dict(teksti="Neuvon keittämään veden ennen juomista.", aika=10, piirteet={"luonto": 1}, palaute="<p><strong>Melkein!</strong></p><p>Keittäminen tappaa bakteerit, mutta ei poista mutaa tai mahdollisia kemikaaleja. Kun kukaan ei vielä tiedä, mitä vedessä on, juomavesi haetaan lähteestä.</p>"),
+       dict(teksti="Neuvon keittämään veden ennen juomista.", tyyli="kaytannollinen", aika=10, piirteet={"luonto": 1}, palaute="<p><strong>Melkein!</strong></p><p>Keittäminen tappaa bakteerit, mutta ei poista mutaa tai mahdollisia kemikaaleja. Kun kukaan ei vielä tiedä, mitä vedessä on, juomavesi haetaan lähteestä.</p>"),
       ]),
  dict(nimi="Poroaidalla", taustakuva=KUVA + "luonto-tunturi-tausta.webp", tausta="porot", otsikko="Poroaidalla", avain="poro",
       kysymys="Miltä poronhoitajan työ näytti?",
@@ -115,9 +115,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kysyn tarkemmin, missä oja on, ja merkitsen sen karttaan.", aika=15, piirteet={"tiimi": 2, "tutkija": 1},
             palaute="<p><strong>Paikallinen tieto on arvokasta!</strong></p><p>Elle näyttää kartalta: oja on hakkuuaukealla, ja se laskee suoraan jokeen.</p>"),
-       dict(teksti="Ohitan asian. Porot eivät liity tähän.", aika=10, piirteet={},
+       dict(teksti="Ohitan asian. Porot eivät liity tähän.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Tärkeä vihje jäi melkein kuulematta.</strong></p><p>Aatu kysyy Elleltä lisää. Oja on hakkuuaukealla, ja se laskee suoraan jokeen.</p>"),
-       dict(teksti="Kysyn, ovatko porot sotkeneet joen.", aika=10, piirteet={"tutkija": 1},
+       dict(teksti="Kysyn, ovatko porot sotkeneet joen.", tyyli="suora", aika=10, piirteet={"tutkija": 1},
             palaute="<p><strong>Hyvä, että kysyt, mutta porot eivät ole syy.</strong></p><p>Porot ovat kulkeneet täällä satoja vuosia. Elle näyttää kartalta, missä uusi oja on.</p>"),
       ]),
  dict(nimi="Hakkuuaukea", taustakuva=KUVA + "luonto-hakkuu-tausta.webp",
@@ -129,8 +129,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kerron, mitä näytteet ja havainnot kertovat, ja ehdotan, että allas tehdään heti.", aika=15, piirteet={"viestija": 2, "luonto": 1},
             palaute="<p><strong>Rakentava ratkaisu!</strong></p><p>Jussi soittaa metsäyhtiöön. Allas tehdään vielä tällä viikolla, ja rantaan jätetään puusto suojavyöhykkeeksi.</p>"),
-       dict(teksti="Otan kuvan mutavirrasta ja ilmoitan metsäyhtiölle, että Jussi teki virheen.", aika=10, piirteet={}, palaute="<p><strong>Syyttely ei auta.</strong></p><p>Jussi ei yksin päättänyt altaasta, ja hän voi korjata asian heti. Aatu juttelee rauhallisesti, ja yhdessä sovitaan, että allas tehdään heti.</p>"),
-       dict(teksti="En sano mitään. Se ei kuulu minulle.", aika=10, piirteet={},
+       dict(teksti="Otan kuvan mutavirrasta ja ilmoitan metsäyhtiölle, että Jussi teki virheen.", tyyli="suora", aika=10, piirteet={}, palaute="<p><strong>Syyttely ei auta.</strong></p><p>Jussi ei yksin päättänyt altaasta, ja hän voi korjata asian heti. Aatu juttelee rauhallisesti, ja yhdessä sovitaan, että allas tehdään heti.</p>"),
+       dict(teksti="En sano mitään. Se ei kuulu minulle.", tyyli="varovainen", aika=10, piirteet={},
             palaute="<p><strong>Luonnon puolesta saa puhua.</strong></p><p>Aatu kertoo havainnoista. Jussi soittaa metsäyhtiöön, ja allas tehdään vielä tällä viikolla.</p>"),
       ]),
  dict(nimi="Laboratorio", taustakuva=KUVA + "luonto-kyla-tausta.webp",
@@ -141,9 +141,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Vertaillaan tuloksia järjestyksessä yläjuoksulta alajuoksulle.", aika=15, piirteet={"tutkija": 2},
             palaute="<p><strong>Täsmälleen!</strong></p><p>Yläjuoksulla vesi on kirkasta. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä, ja happea on vähemmän. Mysteeri on ratkaistu!</p>"),
-       dict(teksti="Katsotaan vain huonoin tulos.", aika=10, piirteet={},
+       dict(teksti="Katsotaan vain huonoin tulos.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Huonoin tulos ei kerro, mistä ongelma alkaa.</strong></p><p>Noora järjestää tulokset joen suunnassa. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.</p>"),
-       dict(teksti="Lähetetään näytteet isompaan laboratorioon lisätutkimuksiin.", aika=10, piirteet={"tutkija": 1}, palaute="<p><strong>Huolellista, mutta hidasta.</strong></p><p>Lisätutkimukset kestävät viikkoja. Vastaus löytyy jo nyt, kun tulokset järjestetään joen suuntaan. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.</p>"),
+       dict(teksti="Lähetetään näytteet isompaan laboratorioon lisätutkimuksiin.", tyyli="varovainen", aika=10, piirteet={"tutkija": 1}, palaute="<p><strong>Huolellista, mutta hidasta.</strong></p><p>Lisätutkimukset kestävät viikkoja. Vastaus löytyy jo nyt, kun tulokset järjestetään joen suuntaan. Hakkuuaukean ojan kohdalla sameus nousee yhtäkkiä.</p>"),
       ]),
 ]
 

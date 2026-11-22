@@ -86,8 +86,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kysytään suunnittelijoilta, kestääkö seinä isomman aukon. Muutos merkitään piirustuksiin.", aika=55, piirteet={"tarkka": 2, "vastuullinen": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Rakennesuunnittelija laskee, että seinään tarvitaan vahvempi palkki. Muutos ehtii tehtaalle, ja omistaja saa isomman ikkunan turvallisesti.</p>"),
-       dict(teksti="Sahataan aukko isommaksi ja laitetaan yläpuolelle varmuuden vuoksi tukevampi palkki.", aika=30, piirteet={}, palaute="<p><strong>Vaarallista!</strong></p><p>Kantava seinä kannattelee kattoa. Vain rakennesuunnittelija voi laskea, millainen palkki riittää. Arvaus voi heikentää seinää. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
-       dict(teksti="Kieltäydytään. Piirustuksia ei muuteta koskaan.", aika=30, piirteet={"vastuullinen": 1},
+       dict(teksti="Sahataan aukko isommaksi ja laitetaan yläpuolelle varmuuden vuoksi tukevampi palkki.", tyyli="rohkea", aika=30, piirteet={}, palaute="<p><strong>Vaarallista!</strong></p><p>Kantava seinä kannattelee kattoa. Vain rakennesuunnittelija voi laskea, millainen palkki riittää. Arvaus voi heikentää seinää. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
+       dict(teksti="Kieltäydytään. Piirustuksia ei muuteta koskaan.", tyyli="varovainen", aika=30, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian jyrkkää.</strong></p><p>Muutos on mahdollinen, kun se suunnitellaan oikein. Aino ottaa yhteyttä suunnittelijoihin.</p>"),
       ]),
  dict(nimi="Elementtien nosto", tausta="nosto", otsikko="Elementtien nosto", avain="elementtiasentaja",
@@ -99,9 +99,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Keskeytetään nostot, kunnes tuuli heikkenee. Kukaan ei mene riippuvan taakan alle.", aika=60, piirteet={"turva": 2, "vastuullinen": 1},
             palaute="<p><strong>Turvallisuus ensin!</strong></p><p>Iltapäivällä tuuli tyyntyy, ja nostot jatkuvat. Aikataulu pysyy, koska kukaan ei loukkaantunut.</p>"),
-       dict(teksti="Jatketaan. Pidetään elementistä käsin kiinni, ettei se heilu.", aika=45, piirteet={},
+       dict(teksti="Jatketaan. Pidetään elementistä käsin kiinni, ettei se heilu.", tyyli="rohkea", aika=45, piirteet={},
             palaute="<p><strong>Hengenvaarallista!</strong></p><p>Tonnien painoista elementtiä ei voi pidellä käsin. Nostot keskeytetään, kunnes tuuli heikkenee.</p>"),
-       dict(teksti="Nostetaan vain pienet elementit.", aika=45, piirteet={},
+       dict(teksti="Nostetaan vain pienet elementit.", tyyli="kaytannollinen", aika=45, piirteet={},
             palaute="<p><strong>Ei auta.</strong></p><p>Pienikin seinäelementti toimii tuulessa kuin purje. Nostot keskeytetään, kunnes tuuli heikkenee.</p>"),
       ]),
  dict(nimi="Kattoristikot", tausta="katto", otsikko="Työ korkealla", avain="kirvesmies",
@@ -113,9 +113,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Leevi tulee heti alas. Korkealla käytetään aina valjaita ja kypärää. Näytetään, miten valjaat kiinnitetään.", aika=60, piirteet={"turva": 2, "opastaja": 1},
             palaute="<p><strong>Hyvä esimies!</strong></p><p>Jari näyttää Leeville, miten valjaat kiinnitetään. Leevi oppii, ja työ jatkuu turvallisesti.</p>"),
-       dict(teksti="Annetaan olla. Hän on nuori ja ketterä.", aika=45, piirteet={},
+       dict(teksti="Annetaan olla. Hän on nuori ja ketterä.", tyyli="luottavainen", aika=45, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Putoaminen on rakennustyömaan yleisimpiä vakavia onnettomuuksia. Leevi tulee alas ja saa valjaat.</p>"),
-       dict(teksti="Leevi saa jäädä kotiin loppuviikoksi.", aika=45, piirteet={"turva": 1},
+       dict(teksti="Leevi saa jäädä kotiin loppuviikoksi.", tyyli="suora", aika=45, piirteet={"turva": 1},
             palaute="<p><strong>Rangaistus ei opeta.</strong></p><p>Uusi työntekijä tarvitsee opastusta. Jari näyttää Leeville, miten valjaita käytetään.</p>"),
       ]),
  dict(nimi="Sähköt", tausta="sahkot", otsikko="Sähkötyöt", avain="sahko",
@@ -126,9 +126,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Ei voi. Sähkötöitä saa tehdä vain sähköalan ammattilainen, koska virhe voi aiheuttaa tulipalon tai sähköiskun.", aika=60, piirteet={"turva": 2, "vastuullinen": 1},
             palaute="<p><strong>Oikein!</strong></p><p>Sanna kertoo, että sähkötyöt myös tarkastetaan ennen käyttöönottoa. Omistaja ymmärtää ja keksii säästää muualta.</p>"),
-       dict(teksti="Totta kai, kunhan hän katsoo ohjeet netistä.", aika=45, piirteet={},
+       dict(teksti="Totta kai, kunhan hän katsoo ohjeet netistä.", tyyli="empaattinen", aika=45, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Kiukaan ja saunan sähköt ovat vaativia töitä. Sanna tekee ne itse.</p>"),
-       dict(teksti="Sanna voi tehdä ne illalla halvemmalla ilman kuittia.", aika=45, piirteet={},
+       dict(teksti="Sanna voi tehdä ne illalla halvemmalla ilman kuittia.", tyyli="kaytannollinen", aika=45, piirteet={},
             palaute="<p><strong>Ei ole reilua eikä turvallista.</strong></p><p>Pimeä työ on laitonta, eikä sitä tarkasteta kunnolla. Sähkötyöt tehdään oikein ja kirjataan.</p>"),
       ]),
  dict(nimi="Putket", tausta="putket", otsikko="Kylpyhuone", avain="putki",
@@ -139,9 +139,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Odotetaan valmistajan ohjeen mukainen kuivumisaika. Laatoittaja tekee sillä välin eteisen.", aika=60, piirteet={"tarkka": 2, "vastuullinen": 1},
             palaute="<p><strong>Huolellista!</strong></p><p>Kun vedeneriste saa kuivua, kylpyhuone pysyy kuivana vuosikymmeniä. Eteinen valmistuu samalla.</p>"),
-       dict(teksti="Laatoitetaan heti. Kyllä se kuivuu laattojen alla.", aika=45, piirteet={},
+       dict(teksti="Laatoitetaan heti. Kyllä se kuivuu laattojen alla.", tyyli="nopea", aika=45, piirteet={},
             palaute="<p><strong>Kosteusvaurion riski!</strong></p><p>Märkä vedeneriste ei toimi kunnolla. Vesi voi päästä rakenteisiin, ja korjaus maksaisi tuhansia euroja. Odotetaan kuivumista.</p>"),
-       dict(teksti="Kuivatetaan vedeneristettä lämpöpuhaltimella ja laatoitetaan tunnin päästä.", aika=30, piirteet={}, palaute="<p><strong>Ei riitä.</strong></p><p>Puhallin kuivaa vain pinnan. Vedeneriste tarvitsee valmistajan ohjeen mukaisen kuivumisajan. Odotetaan, ja laatoittaja tekee sillä välin eteisen.</p>"),
+       dict(teksti="Kuivatetaan vedeneristettä lämpöpuhaltimella ja laatoitetaan tunnin päästä.", tyyli="kaytannollinen", aika=30, piirteet={}, palaute="<p><strong>Ei riitä.</strong></p><p>Puhallin kuivaa vain pinnan. Vedeneriste tarvitsee valmistajan ohjeen mukaisen kuivumisajan. Odotetaan, ja laatoittaja tekee sillä välin eteisen.</p>"),
       ]),
  dict(nimi="Maalaus", tausta="maalaus", otsikko="Sade uhkaa", avain="maalari",
       kysymys="Miltä maalarin työ näytti?",
@@ -150,9 +150,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Ulkona ei maalata nyt. Pia maalaa sisäkatot, ja ulkoseinä maalataan kuivana päivänä.", aika=60, piirteet={"tarkka": 2, "vastuullinen": 1},
             palaute="<p><strong>Ammattilaisen päätös!</strong></p><p>Märkä maali valuisi ja irtoaisi. Sisätyöt etenevät, ja ulkoseinä maalataan ensi viikolla poutapäivänä.</p>"),
-       dict(teksti="Maalataan nopeasti ennen sadetta.", aika=60, piirteet={},
+       dict(teksti="Maalataan nopeasti ennen sadetta.", tyyli="nopea", aika=60, piirteet={},
             palaute="<p><strong>Riski ei kannata.</strong></p><p>Jos sade ehtii ennen kuin maali kuivuu, työ menee hukkaan. Pia maalaa sisätiloja.</p>"),
-       dict(teksti="Maalataan seinä nyt ja suojataan se pressulla, jos sade alkaa.", aika=60, piirteet={"vastuullinen": 1}, palaute="<p><strong>Hyvä yritys, mutta ilma on jo liian kosteaa.</strong></p><p>Maali kuivuu huonosti kostealla säällä, eikä pressu suojaa kaikkea. Pia maalaa sisäkatot, ja ulkoseinä maalataan kuivana päivänä.</p>"),
+       dict(teksti="Maalataan seinä nyt ja suojataan se pressulla, jos sade alkaa.", tyyli="rohkea", aika=60, piirteet={"vastuullinen": 1}, palaute="<p><strong>Hyvä yritys, mutta ilma on jo liian kosteaa.</strong></p><p>Maali kuivuu huonosti kostealla säällä, eikä pressu suojaa kaikkea. Pia maalaa sisäkatot, ja ulkoseinä maalataan kuivana päivänä.</p>"),
       ]),
 ]
 

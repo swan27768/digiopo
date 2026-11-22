@@ -59,7 +59,7 @@ KOHTAUKSET = [
       johdanto="""<p>Soittaja on 12-vuotias Eetu. Hän on mummonsa luona. Mummo kaatui keittiössä eikä pääse ylös. Eetu itkee.</p>
 <p class="puhe"><strong>Laura, hätäkeskuspäivystäjä:</strong> ”Jokainen sekunti on tärkeä. Mitä kysyisit Eetulta ensimmäisenä?”</p>""",
       valinnat=[
-       dict(teksti="Kysyn, mitä mummolle tapahtui.", aika=15, piirteet={},
+       dict(teksti="Kysyn, mitä mummolle tapahtui.", tyyli="empaattinen", aika=15, piirteet={},
             palaute="<p><strong>Tärkeä kysymys, mutta ei ensimmäinen.</strong></p><p>Jos puhelu katkeaa, apu ei löydä perille ilman osoitetta. Siksi hätäkeskuksessa kysytään ensin, missä ollaan.</p><p>Laura kysyy osoitteen ja sitten, mitä tapahtui. Ambulanssi lähtee matkaan.</p>"),
        dict(teksti="Kysyn osoitteen, jossa he ovat.", aika=10, piirteet={"tarkka": 2},
             palaute="<p><strong>Juuri niin!</strong></p><p>Osoite kysytään ensin. Jos puhelu katkeaa, apu löytää silti perille.</p><p>Sitten Laura kysyy, mitä tapahtui. Ambulanssi lähtee matkaan jo puhelun aikana.</p>"),
@@ -72,7 +72,7 @@ KOHTAUKSET = [
 <p>Aino sanoo tiukasti: ”En minä mihinkään sairaalaan lähde! Kuka sitten hoitaa Mirrin?”</p>
 <p class="puhe"><strong>Mira, perustason ensihoitaja:</strong> ”Ranne pitää kuvata sairaalassa. Miten saisimme Ainon lähtemään?”</p>""",
       valinnat=[
-       dict(teksti="Sanon Ainolle, että nyt on pakko lähteä.", aika=15, piirteet={},
+       dict(teksti="Sanon Ainolle, että nyt on pakko lähteä.", tyyli="suora", aika=15, piirteet={},
             palaute="<p><strong>Aino suuttuu ja kieltäytyy entistä tiukemmin.</strong></p><p>Hoitoon ei yleensä voi pakottaa. Siksi hoitajan pitää saada potilaan luottamus.</p><p>Mira istuu Ainon viereen ja kysyy, mikä häntä huolettaa. Kun kissan hoito on sovittu, Aino suostuu lähtemään.</p>"),
        dict(teksti="Kysyn rauhassa, mikä lähtemisessä huolettaa.", aika=10, piirteet={"kuuntelija": 2},
             palaute="<p><strong>Hyvä veto!</strong></p><p>Aino on huolissaan kissastaan Mirristä. Eetu lupaa, että hänen äitinsä tulee illalla hoitamaan Mirrin. Aino huokaisee ja suostuu lähtemään.</p><p>Kun kuuntelee, löytää usein ratkaisun.</p>"),
@@ -86,9 +86,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kerron Aleksille heti, mitä huomasin.", aika=5, piirteet={"tiimi": 2, "rauhallinen": 1},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Aleksi mittaa verenpaineen. Se on matala. Hän nostaa Ainon jalat ylös ja antaa nestettä suoneen. Pian Ainon olo helpottaa.</p><p>Ensihoidossa pienikin muutos kerrotaan heti.</p>"),
-       dict(teksti="Annan Ainolle vettä juotavaksi.", aika=10, piirteet={},
+       dict(teksti="Annan Ainolle vettä juotavaksi.", tyyli="empaattinen", aika=10, piirteet={},
             palaute="<p><strong>Aleksi pysäyttää sinut ystävällisesti.</strong></p><p>Jos Aino tarvitsee leikkauksen, vatsan pitää olla tyhjä. Siksi potilaalle ei anneta juotavaa ennen kuin tiedetään, mikä on vialla.</p><p>Aleksi mittaa verenpaineen. Se on matala. Hän nostaa Ainon jalat ylös ja antaa nestettä suoneen.</p>"),
-       dict(teksti="Odotan hetken. Ehkä huimaus menee ohi itsestään.", aika=15, piirteet={},
+       dict(teksti="Odotan hetken. Ehkä huimaus menee ohi itsestään.", tyyli="luottavainen", aika=15, piirteet={},
             palaute="<p><strong>Aino kalpenee lisää.</strong></p><p>Onneksi Aleksi huomaa sen itse. Ensihoidossa pienikin muutos kerrotaan heti, koska tilanne voi muuttua nopeasti.</p><p>Aleksi mittaa verenpaineen. Se on matala. Hän nostaa Ainon jalat ylös ja antaa nestettä suoneen.</p>"),
       ]),
  dict(nimi="Päivystys", tausta="paivystys", otsikko="Päivystys", avain="sairaanhoitaja",
@@ -97,11 +97,11 @@ KOHTAUKSET = [
       johdanto="""<p>Sairaalan päivystyksessä Aino pääsee röntgeniin. Aulaan tulee samaan aikaan kolme uutta potilasta.</p>
 <p class="puhe"><strong>Petra, sairaanhoitaja:</strong> ”Minun pitää päättää, kuka pääsee hoitoon ensin. Kenet sinä ottaisit ensimmäisenä?”</p>""",
       valinnat=[
-       dict(teksti="Nuoren jalkapalloilijan, jonka nilkka on turvoksissa.", aika=15, piirteet={},
+       dict(teksti="Nuoren jalkapalloilijan, jonka nilkka on turvoksissa.", tyyli="nopea", aika=15, piirteet={},
             palaute="<p><strong>Nilkka on kipeä, mutta odottaminen ei ole vaarallista.</strong></p><p>Petra ottaa ensin 60-vuotiaan miehen, jolla on puristavaa kipua rinnassa. Rintakipu voi olla sydänkohtaus, ja silloin jokainen minuutti on tärkeä.</p>"),
        dict(teksti="Miehen, jolla on puristavaa kipua rinnassa ja joka hikoilee.", aika=10, piirteet={"tarkka": 2, "rauhallinen": 1},
             palaute="<p><strong>Oikein!</strong></p><p>Rintakipu ja hikoilu voivat olla sydänkohtauksen merkkejä. Silloin jokainen minuutti on tärkeä.</p><p>Tätä kutsutaan hoidon kiireellisyyden arvioinniksi. Se on yksi sairaanhoitajan tärkeistä taidoista.</p>"),
-       dict(teksti="Kuumeisen lapsen, joka leikkii ja juo hyvin.", aika=15, piirteet={},
+       dict(teksti="Kuumeisen lapsen, joka leikkii ja juo hyvin.", tyyli="empaattinen", aika=15, piirteet={},
             palaute="<p><strong>Lapsen kuume huolettaa, mutta leikkivä ja juova lapsi voi odottaa hetken.</strong></p><p>Petra ottaa ensin 60-vuotiaan miehen, jolla on puristavaa kipua rinnassa. Rintakipu voi olla sydänkohtaus, ja silloin jokainen minuutti on tärkeä.</p>"),
       ]),
  dict(nimi="Synnytysosasto", tausta="synnytys", otsikko="Synnytysosasto", avain="katilo",
@@ -110,11 +110,11 @@ KOHTAUKSET = [
       johdanto="""<p>Ainon ranne on kipsattu. Sinut lähetetään viemään papereita synnytysosastolle. Siellä on juuri syntynyt vauva.</p>
 <p>Vauvan isä katsoo vauvaa huolestuneena ja kysyy sinulta: ”Miksi vauvan kädet ja jalat ovat sinertävät? Onko jotain vialla?”</p>""",
       valinnat=[
-       dict(teksti="Sanon, että varmasti kaikki on hyvin.", aika=10, piirteet={"kuuntelija": 1},
+       dict(teksti="Sanon, että varmasti kaikki on hyvin.", tyyli="luottavainen", aika=10, piirteet={"kuuntelija": 1},
             palaute="<p><strong>Tarkoitit hyvää, mutta vastasyntyneen voinnin arvioi kätilö.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
        dict(teksti="Pyydän kätilö Hennan paikalle vastaamaan.", aika=10, piirteet={"tiimi": 2, "tarkka": 1},
             palaute="<p><strong>Hyvin toimittu!</strong></p><p>Henna selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p><p>Kun et tiedä vastausta, ohjaa kysymys oikealle ammattilaiselle.</p>"),
-       dict(teksti="Etsin vastauksen netistä puhelimella.", aika=15, piirteet={},
+       dict(teksti="Etsin vastauksen netistä puhelimella.", tyyli="kaytannollinen", aika=15, piirteet={},
             palaute="<p><strong>Netistä löytyy kymmeniä pelottavia vastauksia.</strong></p><p>Kätilö Henna tulee paikalle ja selittää: vastasyntyneen kädet ja jalat ovat usein sinertävät ensimmäisinä päivinä, koska verenkierto vasta tasaantuu. Kasvot ja vartalo ovat punakat, ja se on hyvä merkki.</p>"),
       ]),
  dict(nimi="Rauhallinen huone", tausta="nuoret", otsikko="Päivystyksen rauhallinen huone", avain="mielenterveys",
@@ -124,11 +124,11 @@ KOHTAUKSET = [
 <p>Lääkäri on tutkinut Saran: kyse on paniikkikohtauksesta. Se on pelottava, mutta ei vaarallinen.</p>
 <p class="puhe"><strong>Jesse, lähihoitaja:</strong> ”Mennään Saran kanssa rauhalliseen huoneeseen. Miten auttaisit häntä?”</p>""",
       valinnat=[
-       dict(teksti="Sanon Saralle, että hänen pitää vain rauhoittua.", aika=10, piirteet={},
+       dict(teksti="Sanon Saralle, että hänen pitää vain rauhoittua.", tyyli="suora", aika=10, piirteet={},
             palaute="<p><strong>Tarkoitit hyvää, mutta käsky ei auta.</strong></p><p>Kun ahdistus on kova, käsky rauhoittua voi tuntua siltä, ettei häntä uskota. Jesse istuu Saran viereen ja ohjaa hengittämään hitaasti.</p>"),
        dict(teksti="Istun viereen ja hengitän hitaasti Saran kanssa.", aika=10, piirteet={"kuuntelija": 2, "rauhallinen": 2},
             palaute="<p><strong>Hyvin toimittu!</strong></p><p>Rauhallinen ihminen vieressä auttaa. Jesse ohjaa: hengitä sisään neljä sekuntia ja ulos kuusi sekuntia. Vähitellen Saran hengitys tasaantuu.</p>"),
-       dict(teksti="Kysyn nopeasti monta kysymystä siitä, mitä tapahtui.", aika=10, piirteet={},
+       dict(teksti="Kysyn nopeasti monta kysymystä siitä, mitä tapahtui.", tyyli="nopea", aika=10, piirteet={},
             palaute="<p><strong>Kysymyksille on aikansa myöhemmin.</strong></p><p>Kun ahdistus on päällä, monta kysymystä lisää painetta. Jesse istuu Saran viereen ja ohjaa ensin hengittämään hitaasti.</p>"),
       ]),
 ]

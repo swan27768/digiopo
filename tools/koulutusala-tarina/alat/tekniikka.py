@@ -50,7 +50,7 @@ KOHTAUKSET = [
   "johdanto": "<p>Ohjaamossa on kuusi näyttöä. Yhdellä vilkkuu punainen teksti: <strong>VIKA E-47 · ROBOTTI 3 · YLIVIRTA</strong>.</p>\n<p class=\"puhe\"><strong>Sanna, automaatioasentaja:</strong> ”Ylivirta tarkoittaa, että moottori on ottanut liikaa sähköä. Robotti pysäytti koko linjan, ettei mitään hajoa. Mitä tekisit ensin?”</p>",
   "valinnat": [
    {
-    "teksti": "Painan Käynnistä-nappia. Ehkä vika katoaa.",
+    "teksti": "Painan Käynnistä-nappia. Ehkä vika katoaa.", "tyyli": "nopea",
     "aika": 25,
     "piirteet": {},
     "palaute": "<p><strong>Linja lähtee käyntiin… ja pysähtyy taas kahden minuutin päästä.</strong></p><p>Kotona laitteen uudelleenkäynnistys auttaa usein. Tehtaassa vika palaa, jos sen syytä ei löydy. Robotti voi myös hajota pahemmin.</p><p>Sanna avaa hälytyslokin. Siitä näkyy, että robotin 3 moottori kuumeni ja sähkökeskuksessa laukesi sulake.</p>"
@@ -83,7 +83,7 @@ KOHTAUKSET = [
   "johdanto": "<p>Sähkökeskuksessa on kymmeniä sulakkeita. Yksi on lauennut, ja sen merkkivalo vilkkuu punaisena.</p>\n<p class=\"puhe\"><strong>Mikko, sähköasentaja:</strong> ”Tämä sulake syöttää sähköä robotille 3. Mitä tehdään?”</p>",
   "valinnat": [
    {
-    "teksti": "Nostan sulakkeen heti takaisin ylös.",
+    "teksti": "Nostan sulakkeen heti takaisin ylös.", "tyyli": "rohkea",
     "aika": 20,
     "piirteet": {},
     "palaute": "<p><strong>Mikko pysäyttää sinut.</strong> ”Odota! Jos johdossa on oikosulku, voi tulla tulipalo tai sähköisku.”</p><p>Sulake laukeaa aina jostain syystä. Ensin pitää selvittää syy. Ja muista: sähkötöitä saa tehdä vain koulutettu ammattilainen.</p><p>Mikko mittaa johdon. Se on kunnossa, joten vika on robotissa.</p>"
@@ -116,7 +116,7 @@ KOHTAUKSET = [
   "johdanto": "<p>Robotti 3 avataan. Moottorin kiinnike on kulunut. Siksi moottori tärisi, kuumeni ja otti liikaa sähköä.</p>\n<p>Uusi kiinnike tehdään heti metallista CNC-koneella. Kone tekee osan tietokoneohjelman mukaan.</p>\n<p class=\"puhe\"><strong>Aino, CNC-koneistaja:</strong> ”Piirustuksen mukaan reikien välin pitää olla 48,00 mm. Se saa heittää enintään 0,05 mm suuntaan tai toiseen. Mittasin juuri ensimmäisen osan: 48,20 mm. Kelpaako se?”</p>",
   "valinnat": [
    {
-    "teksti": "Kelpaa. 0,2 mm on tosi vähän.",
+    "teksti": "Kelpaa. 0,2 mm on tosi vähän.", "tyyli": "kaytannollinen",
     "aika": 35,
     "piirteet": {},
     "palaute": "<p><strong>Silmälle ero on pieni, mutta osa ei sovi paikalleen.</strong></p><p>Sallittu ero on vain 0,05 mm. Osassa ero on 0,20 mm, eli neljä kertaa sallitun verran.</p><p>Aino korjaa ohjelman ja tekee uuden osan. Koneistajan työssä mittaaminen ja laskeminen ovat arkea.</p>"
@@ -150,7 +150,7 @@ KOHTAUKSET = [
   "johdanto": "<p>Uusi osa on paikallaan. Mutta miksi moottori kuumeni niin paljon? Hallissa on tukalan kuuma.</p>\n<p class=\"puhe\"><strong>Jari, kylmäasentaja:</strong> ”Hallin jäähdytyslaite puhaltaa vain vähän ilmaa. Jos halli kuumenee, moottorit kuumenevat taas. Miten selvitetään vika?”</p>",
   "valinnat": [
    {
-    "teksti": "Avataan hallin isot ovet, niin tulee viileämpää.",
+    "teksti": "Avataan hallin isot ovet, niin tulee viileämpää.", "tyyli": "kaytannollinen",
     "aika": 35,
     "piirteet": {
      "tiimi": 1

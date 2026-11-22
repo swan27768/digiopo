@@ -106,6 +106,16 @@
       return el;
     }
     var kuvaTassa = false;
+    /* Kohtauksen vaihtoehdot sekoitetaan joka kerta, ettei oikea vastaus ole aina samassa kohdassa */
+    setup.sekoitaValinnat = function () {
+      var lista = document.getElementById("valinnat");
+      if (!lista) return;
+      var linkit = Array.prototype.slice.call(lista.querySelectorAll(":scope > a.macro-link"));
+      for (var i = linkit.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1)), t = linkit[i]; linkit[i] = linkit[j]; linkit[j] = t;
+      }
+      linkit.forEach(function (a) { lista.appendChild(a); });
+    };
     setup.taustakuva = function (src) {
       var el = taustaElementti();
       var url = 'url("' + src + '")';
@@ -167,7 +177,7 @@
       var k = laske(), nimi = V().korttiNimi || "";
       var h = '<div class="ammattikortti" role="group" aria-label="Ammattikortti">';
       h += '<div class="ak-yla"><p class="ak-otsikko">AMMATTIKORTTI · ' + suojaa(D.alaNimi.toUpperCase()) + '</p><p class="ak-nimi" id="ak-nimi">' + suojaa(nimi) + '</p></div>';
-      h += '<p class="ak-osio">Vahvuutesi tarinassa</p>';
+      h += '<p class="ak-osio">Näin toimit tarinassa</p>';
       if (k.piirteet.length) {
         h += '<div class="ak-piirteet">' + k.piirteet.map(function (x) {
           return '<div class="ak-piirre"><strong>' + suojaa(PIIRTEET[x.avain].nimi) + '</strong><span>' + suojaa(PIIRTEET[x.avain].kuvaus) + '</span></div>';
@@ -216,7 +226,7 @@
         y += 80;
         g.fillStyle = "#ffffff"; g.font = "800 64px " + F; g.fillText(V().korttiNimi || D.tarinaNimi, P, y);
         y += 90;
-        g.fillStyle = KOR; g.font = "bold 30px " + F; g.fillText("VAHVUUTESI TARINASSA", P, y);
+        g.fillStyle = KOR; g.font = "bold 30px " + F; g.fillText("NÄIN TOIMIT TARINASSA", P, y);
         y += 60;
         (k.piirteet.length ? k.piirteet : [{ avain: null }]).forEach(function (x) {
           g.fillStyle = A1; g.font = "bold 40px " + F;

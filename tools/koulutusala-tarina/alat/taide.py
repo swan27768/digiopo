@@ -85,9 +85,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tehdään korjaustarra ja liimataan se karttoihin ennen kuin portit aukeavat.", aika=45, piirteet={"tarkka": 2, "luova": 1},
             palaute="<p><strong>Nopea ja fiksu korjaus!</strong></p><p>Sini suunnittelee tarran, jossa on oikea paikka. Vapaaehtoiset liimaavat tarrat, ja kävijät löytävät pelitelttaan.</p>"),
-       dict(teksti="Ei haittaa. Ihmiset kyllä löytävät perille.", aika=30, piirteet={},
+       dict(teksti="Ei haittaa. Ihmiset kyllä löytävät perille.", tyyli="luottavainen", aika=30, piirteet={},
             palaute="<p><strong>Väärä kartta hämmentää kävijöitä.</strong></p><p>Moni etsisi pelitelttaa rannasta. Sini tekee korjaustarran, ja vapaaehtoiset liimaavat sen karttoihin.</p>"),
-       dict(teksti="Painetaan kaikki kartat uudelleen.", aika=60, piirteet={"tarkka": 1},
+       dict(teksti="Painetaan kaikki kartat uudelleen.", tyyli="varovainen", aika=60, piirteet={"tarkka": 1},
             palaute="<p><strong>Huolellista, mutta hidasta ja kallista.</strong></p><p>Uudet kartat eivät ehtisi ajoissa. Sini tekee korjaustarran, joka korjaa virheen heti.</p>"),
       ]),
  dict(nimi="Rantalava", tausta="lava", otsikko="Avajaiskonsertti", avain="musiikkiteknologi",
@@ -99,8 +99,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tarkistetaan, että äänenvoimakkuus pysyy luvassa sovitussa rajassa. Käännetään kaiuttimet järvelle päin.", aika=60, piirteet={"vastuullinen": 2, "tarkka": 1},
             palaute="<p><strong>Hienoa yhteistyötä!</strong></p><p>Joonas mittaa äänen ja säätää kaiuttimia. Konsertti kuulostaa yhä hyvältä, ja lähitalossa on hiljaisempaa.</p>"),
-       dict(teksti="Jatketaan samalla äänellä. Konsertti loppuu kuitenkin kello 22.", aika=60, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Festareilla on lupa, jossa on rajat äänenvoimakkuudelle. Raja pätee koko illan. Joonas mittaa äänen ja kääntää kaiuttimet järvelle päin.</p>"),
-       dict(teksti="Lopetetaan konsertti.", aika=45, piirteet={"vastuullinen": 1},
+       dict(teksti="Jatketaan samalla äänellä. Konsertti loppuu kuitenkin kello 22.", tyyli="kaytannollinen", aika=60, piirteet={}, palaute="<p><strong>Ei käy.</strong></p><p>Festareilla on lupa, jossa on rajat äänenvoimakkuudelle. Raja pätee koko illan. Joonas mittaa äänen ja kääntää kaiuttimet järvelle päin.</p>"),
+       dict(teksti="Lopetetaan konsertti.", tyyli="varovainen", aika=45, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian jyrkkää.</strong></p><p>Yleisö pettyisi, ja ongelman voi ratkaista muuten. Joonas säätää ääntä ja kaiuttimien suuntaa.</p>"),
       ]),
  dict(nimi="Infopiste", tausta="info", otsikko="Infopiste", avain="tulkki",
@@ -110,9 +110,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Laura tulkkaa esityksen. Varataan perheelle paikat edestä, mistä tulkin näkee hyvin.", aika=45, piirteet={"kohtaaja": 2, "vastuullinen": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Kun tulkki seisoo lavan vieressä ja paikat ovat edessä, perhe voi seurata esitystä kuten muutkin.</p>"),
-       dict(teksti="Annetaan perheelle käsiohjelma, jossa on näytelmän juoni.", aika=30, piirteet={"kohtaaja": 1},
+       dict(teksti="Annetaan perheelle käsiohjelma, jossa on näytelmän juoni.", tyyli="kaytannollinen", aika=30, piirteet={"kohtaaja": 1},
             palaute="<p><strong>Hyvä lisä, mutta ei riitä.</strong></p><p>Juonen voi lukea, mutta repliikit jäisivät kuulematta. Laura tulkkaa esityksen, ja perhe saa paikat edestä.</p>"),
-       dict(teksti="Esitys on puhetta, joten ehdotetaan jotain muuta ohjelmaa.", aika=30, piirteet={},
+       dict(teksti="Esitys on puhetta, joten ehdotetaan jotain muuta ohjelmaa.", tyyli="suora", aika=30, piirteet={},
             palaute="<p><strong>Kaikilla on oikeus kulttuuriin.</strong></p><p>Juuri siksi festareilla on tulkki. Laura tulkkaa esityksen, ja perhe saa paikat edestä.</p>"),
       ]),
  dict(nimi="Pelitelta", tausta="pelit", otsikko="Pelitelta", avain="media",
@@ -123,7 +123,7 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Vain niiden, jotka ovat antaneet luvan. Alaikäisten kohdalla kysytään myös huoltajalta.", aika=60, piirteet={"vastuullinen": 2, "tarkka": 1},
             palaute="<p><strong>Vastuullinen valinta!</strong></p><p>Aaro kerää luvat ennen turnausta. Ne, jotka eivät halua näkyä, kuvataan selän takaa.</p>"),
-       dict(teksti="Kaikkia saa kuvata, koska teltta on julkinen paikka.", aika=45, piirteet={},
+       dict(teksti="Kaikkia saa kuvata, koska teltta on julkinen paikka.", tyyli="nopea", aika=45, piirteet={},
             palaute="<p><strong>Ei ihan.</strong></p><p>Lähikuviin, jotka julkaistaan netissä, pitää kysyä lupa. Varsinkin lasten ja nuorten kohdalla. Aaro kerää luvat ensin.</p>"),
        dict(teksti="Kuvataan vain näyttöjä ja käsiä, ei kasvoja.", aika=45, piirteet={"luova": 2},
             palaute="<p><strong>Luova ratkaisu!</strong></p><p>Lähetys näyttää yhä hienolta. Kun joku antaa luvan, Aaro voi kuvata myös hänen kasvonsa.</p>"),
@@ -137,9 +137,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tehdään koruja ja pikkuveistoksia kierrätysmateriaaleista, joita kojuilla on.", aika=60, piirteet={"luova": 2, "kohtaaja": 1},
             palaute="<p><strong>Luovaa!</strong></p><p>Pirjo kerää kojuilta pahvia, kangassuikaleita ja nappeja. Lapset tekevät hienoja koruja, ja jono liikkuu.</p>"),
-       dict(teksti="Suljetaan paja. Ei voi mitään.", aika=30, piirteet={},
+       dict(teksti="Suljetaan paja. Ei voi mitään.", tyyli="varovainen", aika=30, piirteet={},
             palaute="<p><strong>Lapset pettyisivät.</strong></p><p>Pirjo keksii uuden työn kierrätysmateriaaleista, ja paja jatkuu.</p>"),
-       dict(teksti="Annetaan jokaiselle lapselle vain pieni nokare savea.", aika=45, piirteet={"kohtaaja": 1},
+       dict(teksti="Annetaan jokaiselle lapselle vain pieni nokare savea.", tyyli="kaytannollinen", aika=45, piirteet={"kohtaaja": 1},
             palaute="<p><strong>Reilua, mutta…</strong></p><p>…pienestä nokareesta ei saa paljon tehtyä. Pirjo keksii lisäksi korutyön kierrätysmateriaaleista.</p>"),
       ]),
  dict(nimi="Rantakonsertti", tausta="jarvi", otsikko="Rantakonsertti", avain="muusikko",
@@ -151,8 +151,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Siirretään konsertti laiturin katoksen alle ja kerrotaan siitä yleisölle.", aika=60, piirteet={"vastuullinen": 1, "luova": 1, "kohtaaja": 1},
             palaute="<p><strong>Täydellinen ratkaisu!</strong></p><p>Katoksen alla soittimet pysyvät kuivina. Yleisö seuraa konserttia rannalta sateenvarjojen alta.</p>"),
-       dict(teksti="Soitetaan, mutta pidetään soittimet sateenvarjojen alla.", aika=60, piirteet={}, palaute="<p><strong>Liian riskialtista.</strong></p><p>Tuuli kuljettaa sadetta sateenvarjojen alle, ja kosteus voi haljoittaa puisen soittimen. Konsertti siirretään laiturin katoksen alle.</p>"),
-       dict(teksti="Perutaan konsertti heti.", aika=45, piirteet={"vastuullinen": 1},
+       dict(teksti="Soitetaan, mutta pidetään soittimet sateenvarjojen alla.", tyyli="rohkea", aika=60, piirteet={}, palaute="<p><strong>Liian riskialtista.</strong></p><p>Tuuli kuljettaa sadetta sateenvarjojen alle, ja kosteus voi haljoittaa puisen soittimen. Konsertti siirretään laiturin katoksen alle.</p>"),
+       dict(teksti="Perutaan konsertti heti.", tyyli="varovainen", aika=45, piirteet={"vastuullinen": 1},
             palaute="<p><strong>Liian aikaisin.</strong></p><p>Ehkä ei sada ollenkaan. Ja vaikka satoi, konsertti onnistuu laiturin katoksen alla.</p>"),
       ]),
 ]

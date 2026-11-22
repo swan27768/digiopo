@@ -88,9 +88,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Emma pysyy turvallisen matkan päässä ja kertoo puhelimessa, mitä näkee. Poliisi lähtee paikalle.", aika=40, piirteet={"turva": 2, "tarkka": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Vartijan tärkeä tehtävä on huomata asioita ja ilmoittaa niistä. Poliisi saa kiinni kaksi ihmistä, jotka yrittivät murtautua konttiin. Kukaan ei loukkaantunut.</p>"),
-       dict(teksti="Emma menee yksin konttien väliin ja ottaa heidät kiinni.", aika=40, piirteet={},
+       dict(teksti="Emma menee yksin konttien väliin ja ottaa heidät kiinni.", tyyli="rohkea", aika=40, piirteet={},
             palaute="<p><strong>Vaarallista!</strong></p><p>Pimeässä yksin voi joutua vaaraan. Emma ei tiedä, onko murtautujilla aseita. Hän jää odottamaan poliisia turvallisen matkan päähän.</p>"),
-       dict(teksti="Emma huutaa kauempaa, ettei alueelle saa tulla, ja soittaa sitten poliisille.", aika=30, piirteet={"turva": 1}, palaute="<p><strong>Rohkeaa, mutta riskialtista.</strong></p><p>Huutaminen paljastaa Emman paikan, ja murtautujat ehtivät karata. Vartija pysyy turvassa, seuraa tilannetta ja kertoo poliisille, mitä näkee.</p>"),
+       dict(teksti="Emma huutaa kauempaa, ettei alueelle saa tulla, ja soittaa sitten poliisille.", tyyli="suora", aika=30, piirteet={"turva": 1}, palaute="<p><strong>Rohkeaa, mutta riskialtista.</strong></p><p>Huutaminen paljastaa Emman paikan, ja murtautujat ehtivät karata. Vartija pysyy turvassa, seuraa tilannetta ja kertoo poliisille, mitä näkee.</p>"),
       ]),
  dict(nimi="Klubin ovi", tausta="klubi", otsikko="Ovella jonoa", avain="jarjestyksenvalvoja",
       taustakuva=KUVA + "turva-satama-tausta.webp",
@@ -101,9 +101,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Sami ei päästä nuorta sisään. Hän puhuu rauhallisesti ja huolehtii, että nuori pääsee turvallisesti kotiin. Hän soittaa nuoren huoltajalle.", aika=45, piirteet={"kuuntelija": 2, "turva": 1},
             palaute="<p><strong>Hienoa!</strong></p><p>Järjestyksenvalvoja pitää huolta myös siitä, ettei kukaan jää yksin huonoon kuntoon. Nuoren äiti tulee hakemaan hänet kotiin.</p>"),
-       dict(teksti="Sami päästää hänet sisään, koska kaverit lupaavat pitää hänestä huolta.", aika=30, piirteet={},
+       dict(teksti="Sami päästää hänet sisään, koska kaverit lupaavat pitää hänestä huolta.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Humalassa olevaa ei päästetä tapahtumaan. Hän voi satuttaa itseään tai muita. Sami ohjaa nuoren ulos ja soittaa hänen huoltajalleen.</p>"),
-       dict(teksti="Sami käskee nuoren lähteä yksin kotiin.", aika=30, piirteet={},
+       dict(teksti="Sami käskee nuoren lähteä yksin kotiin.", tyyli="suora", aika=30, piirteet={},
             palaute="<p><strong>Vaarallista.</strong></p><p>Humalainen nuori voi kaatua, eksyä tai joutua vaaraan. Sami pysäyttää hänet ja soittaa hänen huoltajalleen.</p>"),
       ]),
  dict(nimi="Hätäpuhelu yöllä", tausta="112", otsikko="Lapsi soittaa", avain="hatakeskus",
@@ -115,8 +115,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Noora kysyy ensin osoitteen ja sitten, mitä tapahtui. Hän puhuu rauhallisesti ja lyhyin lausein.", aika=45, piirteet={"rauhallinen": 2, "tarkka": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Kun osoite on tiedossa, ensihoito voi lähteä heti, vaikka puhelu katkeaisi. Noora neuvoo lasta katsomaan, hengittääkö äiti. Hän pysyy puhelimessa, kunnes ensihoitajat ovat perillä.</p>"),
-       dict(teksti="Noora rauhoittaa ensin lasta pitkään ja kysyy sitten osoitteen.", aika=45, piirteet={"rauhallinen": 1}, palaute="<p><strong>Rauhallisuus on tärkeää, mutta osoite ensin.</strong></p><p>Jos puhelu katkeaa, apu ei löydä perille. Noora kysyy osoitteen heti ja rauhoittaa lasta sen jälkeen. Silloin ensihoito on jo matkalla.</p>"),
-       dict(teksti="Noora käskee lasta tiukasti lopettamaan itkemisen.", aika=40, piirteet={},
+       dict(teksti="Noora rauhoittaa ensin lasta pitkään ja kysyy sitten osoitteen.", tyyli="empaattinen", aika=45, piirteet={"rauhallinen": 1}, palaute="<p><strong>Rauhallisuus on tärkeää, mutta osoite ensin.</strong></p><p>Jos puhelu katkeaa, apu ei löydä perille. Noora kysyy osoitteen heti ja rauhoittaa lasta sen jälkeen. Silloin ensihoito on jo matkalla.</p>"),
+       dict(teksti="Noora käskee lasta tiukasti lopettamaan itkemisen.", tyyli="suora", aika=40, piirteet={},
             palaute="<p><strong>Ei auta.</strong></p><p>Pelästynyt lapsi rauhoittuu, kun aikuinen puhuu itse rauhallisesti. Noora vaihtaa äänensävyä ja kysyy ensin osoitteen.</p>"),
       ]),
  dict(nimi="Tulipalo satamassa", tausta="palo", otsikko="Savua varastosta", avain="pelastaja",
@@ -127,9 +127,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kukaan ei mene palavaan halliin ilman suojavarusteita. Savusukeltajat tarkistavat ensin, onko sisällä ihmisiä.", aika=60, piirteet={"turva": 2, "rauhallinen": 1},
             palaute="<p><strong>Oikein!</strong></p><p>Palon savu on myrkyllistä. Jo muutama hengenveto voi viedä tajun. Pelastajat sammuttavat palon, eikä kukaan loukkaannu. Tavaran voi korvata, ihmistä ei.</p>"),
-       dict(teksti="Omistaja saa käydä nopeasti, kun hän pitää märkää huivia suun edessä.", aika=45, piirteet={},
+       dict(teksti="Omistaja saa käydä nopeasti, kun hän pitää märkää huivia suun edessä.", tyyli="empaattinen", aika=45, piirteet={},
             palaute="<p><strong>Hengenvaarallista!</strong></p><p>Märkä huivi ei suojaa myrkylliseltä savulta. Jussi pysäyttää omistajan, ja savusukeltajat menevät halliin.</p>"),
-       dict(teksti="Jussi juoksee itse hakemaan läppärin ilman paria.", aika=45, piirteet={},
+       dict(teksti="Jussi juoksee itse hakemaan läppärin ilman paria.", tyyli="rohkea", aika=45, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Pelastajat menevät savuun aina parina ja oikeilla varusteilla. Ihmisten pelastaminen on tärkeämpää kuin tavarat.</p>"),
       ]),
  dict(nimi="Yöpartio", tausta="partio", otsikko="Kadonnut nuori", avain="poliisi",
@@ -141,9 +141,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Aleksi istuu viereen ja kysyy rauhallisesti, mitä on tapahtunut. Hän tarjoaa lämmintä paikkaa autosta ja kertoo huoltajille, että nuori on löytynyt.", aika=45, piirteet={"kuuntelija": 2, "rauhallinen": 1},
             palaute="<p><strong>Hienoa!</strong></p><p>Poliisin työ on myös auttamista. Nuori kertoo riidasta kotona. Sosiaalipäivystyksen työntekijä tulee juttelemaan, ja nuori pääsee turvaan.</p>"),
-       dict(teksti="Aleksi vie nuoren heti kotiin kysymättä mitään.", aika=30, piirteet={},
+       dict(teksti="Aleksi vie nuoren heti kotiin kysymättä mitään.", tyyli="nopea", aika=30, piirteet={},
             palaute="<p><strong>Liian nopeasti.</strong></p><p>Jos kotona on jotain vakavaa, nuori ei ehkä ole siellä turvassa. Aleksi pysähtyy ja kuuntelee nuorta ensin.</p>"),
-       dict(teksti="Aleksi soittaa heti huoltajille ja pyytää heitä hakemaan nuoren laiturilta.", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Huoltajille kerrotaan, mutta ensin kuunnellaan.</strong></p><p>Nuori sanoi, ettei halua mennä kotiin. Jos kotona on jotain vakavaa, hän ei ehkä ole siellä turvassa. Aleksi kysyy ensin rauhassa, mitä on tapahtunut.</p>"),
+       dict(teksti="Aleksi soittaa heti huoltajille ja pyytää heitä hakemaan nuoren laiturilta.", tyyli="kaytannollinen", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Huoltajille kerrotaan, mutta ensin kuunnellaan.</strong></p><p>Nuori sanoi, ettei halua mennä kotiin. Jos kotona on jotain vakavaa, hän ei ehkä ole siellä turvassa. Aleksi kysyy ensin rauhassa, mitä on tapahtunut.</p>"),
       ]),
  dict(nimi="Aamu vankilassa", tausta="vankila", otsikko="Levoton aamu", avain="vanginvartija",
       taustakuva=KUVA + "turva-vankila-tausta.webp",
@@ -154,9 +154,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Leila puhuu rauhallisesti ja kuuntelee. Hän lupaa, että Tomi pääsee aamulla puhumaan sosiaalityöntekijän kanssa asunnosta.", aika=45, piirteet={"kuuntelija": 2, "rauhallinen": 1},
             palaute="<p><strong>Hyvä!</strong></p><p>Vanginvartija huolehtii turvallisuudesta, mutta hän myös tukee vankia uuteen elämään. Kun Tomilla on asunto ja suunnitelma, hän ei palaa niin helposti rikosten pariin.</p>"),
-       dict(teksti="Leila ei vastaa mitään. Kyllä Tomi rauhoittuu itsekseen.", aika=30, piirteet={},
+       dict(teksti="Leila ei vastaa mitään. Kyllä Tomi rauhoittuu itsekseen.", tyyli="luottavainen", aika=30, piirteet={},
             palaute="<p><strong>Ei hyvä.</strong></p><p>Kun kukaan ei kuuntele, tilanne voi pahentua. Leila menee puhumaan Tomille.</p>"),
-       dict(teksti="Leila sanoo Tomille, että asunnon etsiminen on hänen oma asiansa.", aika=30, piirteet={}, palaute="<p><strong>Ei auta.</strong></p><p>Vanginvartijan työhön kuuluu myös vangin tukeminen uuteen elämään. Ilman asuntoa Tomi voi helposti palata rikosten pariin. Leila rauhoittaa tilanteen ja järjestää tapaamisen sosiaalityöntekijän kanssa.</p>"),
+       dict(teksti="Leila sanoo Tomille, että asunnon etsiminen on hänen oma asiansa.", tyyli="suora", aika=30, piirteet={}, palaute="<p><strong>Ei auta.</strong></p><p>Vanginvartijan työhön kuuluu myös vangin tukeminen uuteen elämään. Ilman asuntoa Tomi voi helposti palata rikosten pariin. Leila rauhoittaa tilanteen ja järjestää tapaamisen sosiaalityöntekijän kanssa.</p>"),
       ]),
 ]
 

@@ -62,8 +62,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Kirjoitan tarkasti: mikä puhelin, mitä painoin ja mitä tapahtui.", aika=10, piirteet={"tarkka": 2},
             palaute="<p><strong>Juuri näin!</strong></p><p>Tätä kutsutaan bugiraportiksi. Kun koodari tietää tarkalleen, miten virhe syntyy, hän löytää sen nopeasti.</p>"),
-       dict(teksti="Lähetän koodarille viestin: peli kaatuu, korjaa pian.", aika=20, piirteet={}, palaute="<p><strong>Koodari ei tiedä, mistä aloittaa.</strong></p><p>Peli toimii hänen koneellaan. Kestää kauan ennen kuin virhe löytyy.</p><p>Emma kirjoittaa bugiraportin: mikä puhelin, mitä painettiin ja mitä tapahtui. Sitten vika löytyy.</p>"),
-       dict(teksti="Jätän asian. Vanhoja puhelimia on vähän.", aika=10, piirteet={},
+       dict(teksti="Lähetän koodarille viestin: peli kaatuu, korjaa pian.", tyyli="nopea", aika=20, piirteet={}, palaute="<p><strong>Koodari ei tiedä, mistä aloittaa.</strong></p><p>Peli toimii hänen koneellaan. Kestää kauan ennen kuin virhe löytyy.</p><p>Emma kirjoittaa bugiraportin: mikä puhelin, mitä painettiin ja mitä tapahtui. Sitten vika löytyy.</p>"),
+       dict(teksti="Jätän asian. Vanhoja puhelimia on vähän.", tyyli="luottavainen", aika=10, piirteet={},
             palaute="<p><strong>Moni pelaaja käyttää vanhaa puhelinta.</strong></p><p>Jos peli kaatuu heti julkaisupäivänä, pelaajat antavat huonoja arvosteluja.</p><p>Emma kirjoittaa bugiraportin ja vie sen koodarille.</p>"),
       ]),
  dict(nimi="Koodi", tausta="koodi", otsikko="Koodarin pöytä", avain="koodari",
@@ -71,7 +71,7 @@ KOHTAUKSET = [
       johdanto="""<p>Koodari Onni lukee Emman raportin ja löytää virheen koodista. Hän kirjoittaa korjauksen.</p>
 <p class="puhe"><strong>Onni, ohjelmistokehittäjä:</strong> ”Korjaus on valmis. Aikaa on vähän. Laitetaanko se suoraan peliin?”</p>""",
       valinnat=[
-       dict(teksti="Laitetaan heti. Aikaa on vähän.", aika=20, piirteet={},
+       dict(teksti="Laitetaan heti. Aikaa on vähän.", tyyli="nopea", aika=20, piirteet={},
             palaute="<p><strong>Hups! Korjaus rikkoi pelin äänet.</strong></p><p>Uusi koodi voi vaikuttaa muihin kohtiin. Onni joutuu perumaan muutoksen ja korjaamaan sen uudelleen.</p><p>Siksi korjaus testataan aina ennen kuin se lisätään peliin.</p>"),
        dict(teksti="Testataan korjaus ensin.", aika=10, piirteet={"tarkka": 2, "ongelma": 1},
             palaute="<p><strong>Hyvä veto!</strong></p><p>Testissä huomataan, että korjaus rikkoi pelin äänet. Onni korjaa senkin. Nyt kaikki toimii.</p><p>Hyvä koodari tarkistaa työnsä, vaikka olisi kiire.</p>"),
@@ -84,7 +84,7 @@ KOHTAUKSET = [
 <p class="puhe"><strong>Aada, UX-suunnittelija:</strong> ”Minä suunnittelen, miten peliä käytetään. Mitä tehdään, kun pelaajat eivät löydä nappia?”</p>
 <p class="pieni">UX = käyttäjäkokemus. Se tarkoittaa, miltä jonkin käyttäminen tuntuu.</p>""",
       valinnat=[
-       dict(teksti="Kirjoitetaan ruudulle pitkä ohje.", aika=15, piirteet={},
+       dict(teksti="Kirjoitetaan ruudulle pitkä ohje.", tyyli="kaytannollinen", aika=15, piirteet={},
             palaute="<p><strong>Kukaan ei lue pitkää ohjetta.</strong></p><p>Testaajat ohittavat tekstin heti. Hyvä peli on niin selkeä, ettei ohjetta tarvita.</p><p>Aada tekee napista isomman ja siirtää sen keskelle ruutua.</p>"),
        dict(teksti="Tehdään napista isompi ja selkeämpi.", aika=10, piirteet={"kayttaja": 2},
             palaute="<p><strong>Toimii!</strong></p><p>Aada tekee napista isomman ja kirkkaamman. Nyt kaikki viisi löytävät sen heti.</p><p>Kun ajattelee pelaajan puolelta, peliä on helppo käyttää.</p>"),
@@ -96,11 +96,11 @@ KOHTAUKSET = [
       johdanto="""<p>Peli pitäisi lähettää sovelluskauppaan, mutta studion netti pätkii. Konesalin kaapissa vilkkuu oranssi valo.</p>
 <p class="puhe"><strong>Mikael, tietoverkkoasentaja:</strong> ”Jossain on vika. Miten lähtisit etsimään sitä?”</p>""",
       valinnat=[
-       dict(teksti="Käynnistetään kaikki laitteet uudelleen yhtä aikaa.", aika=20, piirteet={},
+       dict(teksti="Käynnistetään kaikki laitteet uudelleen yhtä aikaa.", tyyli="nopea", aika=20, piirteet={},
             palaute="<p><strong>Kaikkien työt katkeavat.</strong></p><p>Netti toimii hetken, mutta vika palaa. Syy ei löytynyt.</p><p>Mikael tarkistaa laitteet yksi kerrallaan. Kytkimestä löytyy löysä kaapeli.</p>"),
        dict(teksti="Tarkistetaan järjestyksessä: kaapelit, laitteet ja valot.", aika=10, piirteet={"ongelma": 2, "tarkka": 1},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Kytkimestä löytyy löysä kaapeli. Mikael vaihtaa sen, ja valo muuttuu vihreäksi.</p><p>Kun vikaa etsii askel kerrallaan, syy löytyy nopeasti.</p>"),
-       dict(teksti="Ostetaan uusi reititin.", aika=20, piirteet={},
+       dict(teksti="Ostetaan uusi reititin.", tyyli="kaytannollinen", aika=20, piirteet={},
             palaute="<p><strong>Kallis ratkaisu, eikä vika ollut reitittimessä.</strong></p><p>Mikael tarkistaa laitteet yksi kerrallaan. Kytkimestä löytyy löysä kaapeli. Uutta laitetta ei tarvittu.</p>"),
       ]),
  dict(nimi="Epäilyttävä viesti", tausta="tietoturva", otsikko="Epäilyttävä viesti", avain="tietoturva",
@@ -109,11 +109,11 @@ KOHTAUKSET = [
 <p>Onni on jo klikkaamassa. Kiire on kova.</p>
 <p class="puhe"><strong>Leila, tietoturva-asiantuntija:</strong> ”Odota hetki! Mitä tekisit tälle viestille?”</p>""",
       valinnat=[
-       dict(teksti="Klikataan linkkiä. Julkaisu ei saa myöhästyä.", aika=20, piirteet={},
+       dict(teksti="Klikataan linkkiä. Julkaisu ei saa myöhästyä.", tyyli="nopea", aika=20, piirteet={},
             palaute="<p><strong>Linkki vie huijaussivulle.</strong></p><p>Onni ehtii kirjoittaa salasanansa. Leila vaihtaa salasanan heti ja tarkistaa, ettei kukaan päässyt tilille.</p><p>Huijarit käyttävät kiirettä hyväkseen. Siksi kiireessä kannattaa pysähtyä.</p>"),
        dict(teksti="Näytän viestin Leilalle ennen kuin kukaan klikkaa.", aika=10, piirteet={"tarkka": 2, "tiimi": 1},
             palaute="<p><strong>Hienosti toimittu!</strong></p><p>Leila tarkistaa lähettäjän osoitteen. Se on väärä. Viesti on huijaus.</p><p>Leila varoittaa myös muita, ettei kukaan klikkaa linkkiä.</p>"),
-       dict(teksti="Poistan viestin heti.", aika=10, piirteet={"tarkka": 1},
+       dict(teksti="Poistan viestin heti.", tyyli="varovainen", aika=10, piirteet={"tarkka": 1},
             palaute="<p><strong>Hyvä, ettet klikannut!</strong></p><p>Sama viesti tuli kuitenkin muillekin. Leila pyytää, että epäilyttävät viestit näytetään hänelle. Silloin hän voi varoittaa koko tiimiä.</p>"),
       ]),
  dict(nimi="Asiakastuki", tausta="tuki", otsikko="Asiakastuki", avain="tuki",
@@ -121,11 +121,11 @@ KOHTAUKSET = [
       johdanto="""<p>Peli on jo ladattavissa ennakkoon. Tukipuhelimeen soittaa 68-vuotias Veikko. Hän haluaa pelata peliä lapsenlapsensa kanssa, mutta peli ei asennu hänen tablettiinsa.</p>
 <p class="puhe"><strong>Juho, IT-tukihenkilö:</strong> ”Haluatko auttaa Veikkoa? Miten neuvoisit?”</p>""",
       valinnat=[
-       dict(teksti="Lähetän Veikolle linkin pitkään ohjesivuun.", aika=10, piirteet={},
+       dict(teksti="Lähetän Veikolle linkin pitkään ohjesivuun.", tyyli="kaytannollinen", aika=10, piirteet={},
             palaute="<p><strong>Veikko eksyy ohjesivulle.</strong></p><p>Hän soittaa uudelleen. Juho neuvoo häntä puhelimessa askel kerrallaan.</p><p>Syy löytyy: tabletin muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.</p>"),
        dict(teksti="Neuvon askel kerrallaan ja kysyn, mitä Veikko näkee ruudulla.", aika=15, piirteet={"kayttaja": 2, "ongelma": 1},
             palaute="<p><strong>Hyvää palvelua!</strong></p><p>Veikko kertoo, mitä ruudulla lukee. Syy löytyy: tabletin muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.</p><p>Veikko kiittää. Hän pääsee pelaamaan lapsenlapsensa kanssa.</p>"),
-       dict(teksti="Sanon, että tabletti on varmasti liian vanha.", aika=5, piirteet={},
+       dict(teksti="Sanon, että tabletti on varmasti liian vanha.", tyyli="suora", aika=5, piirteet={},
             palaute="<p><strong>Arvaus meni pieleen.</strong></p><p>Juho tarkistaa asian. Tabletti on tarpeeksi uusi, mutta sen muisti on täynnä. Kun vanhoja kuvia siirretään pilveen, peli asentuu.</p><p>Ennen kuin vastaa, kannattaa selvittää syy.</p>"),
       ]),
 ]

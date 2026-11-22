@@ -86,9 +86,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Annetaan Nallelle sen omaa ruokaa rauhallisessa paikassa. Venla istuu lähellä ja seuraa, juoko ja syökö koira. Jos koira ei syö huomennakaan, soitetaan eläinlääkärille.", aika=45, piirteet={"tarkkailija": 2, "rauhallinen": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Uusi paikka jännittää monia koiria. Kun Nalle saa rauhan ja tutun ruoan, se syö iltapäivällä. Venla kirjaa havainnot hoitokorttiin.</p>"),
-       dict(teksti="Annetaan Nallelle makkaraa, niin se ainakin syö jotain.", aika=30, piirteet={},
+       dict(teksti="Annetaan Nallelle makkaraa, niin se ainakin syö jotain.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Ei hyvä.</strong></p><p>Suolainen ja rasvainen ihmisten ruoka voi sotkea koiran vatsan. Venla tarjoaa Nallelle sen omaa ruokaa rauhallisessa paikassa.</p>"),
-       dict(teksti="Soitetaan heti omistajille ja kysytään, mitä tehdä.", aika=30, piirteet={"asiakas": 1}, palaute="<p><strong>Hyvä ajatus, mutta ei vielä.</strong></p><p>Omistajat ovat lomalla, eivätkä he voi auttaa kaukaa. Yksi syömätön päivä uudessa paikassa on tavallista. Ensin annetaan Nallelle rauhaa ja tuttua ruokaa ja seurataan tilannetta. Venla tekee niin, ja Nalle syö iltapäivällä.</p>"),
+       dict(teksti="Soitetaan heti omistajille ja kysytään, mitä tehdä.", tyyli="varovainen", aika=30, piirteet={"asiakas": 1}, palaute="<p><strong>Hyvä ajatus, mutta ei vielä.</strong></p><p>Omistajat ovat lomalla, eivätkä he voi auttaa kaukaa. Yksi syömätön päivä uudessa paikassa on tavallista. Ensin annetaan Nallelle rauhaa ja tuttua ruokaa ja seurataan tilannetta. Venla tekee niin, ja Nalle syö iltapäivällä.</p>"),
       ]),
  dict(nimi="Trimmaamo", tausta="trimmaamo", otsikko="Takkuinen turkki", avain="trimmaaja",
       taustakuva=KUVA + "elaimet-koirapesu-tausta.webp",
@@ -99,9 +99,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Aada kuivaa haavan varovasti eikä leikkaa sen läheltä. Hän näyttää haavan omistajalle ja neuvoo viemään koiran eläinlääkäriin.", aika=50, piirteet={"tarkkailija": 2, "asiakas": 1},
             palaute="<p><strong>Ammattilaisen työtä!</strong></p><p>Trimmaaja näkee koiran ihon tarkemmin kuin kukaan muu. Omistaja on kiitollinen, ja eläinlääkäri hoitaa tulehtuneen haavan.</p>"),
-       dict(teksti="Aada laittaa haavaan ihmisten haavavoidetta.", aika=40, piirteet={},
+       dict(teksti="Aada laittaa haavaan ihmisten haavavoidetta.", tyyli="kaytannollinen", aika=40, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Kaikki ihmisten lääkkeet eivät sovi eläimille. Koira voi myös nuolla voiteen. Aada kertoo haavasta omistajalle.</p>"),
-       dict(teksti="Aada leikkaa haavan ympäriltä karvat lyhyiksi, jotta haava pääsee kuivumaan.", aika=40, piirteet={}, palaute="<p><strong>Ei hyvä.</strong></p><p>Tulehtuneen haavan lähellä leikkaaminen voi sattua ja pahentaa haavaa. Haava kuuluu eläinlääkärille. Aada kertoo haavasta omistajalle.</p>"),
+       dict(teksti="Aada leikkaa haavan ympäriltä karvat lyhyiksi, jotta haava pääsee kuivumaan.", tyyli="rohkea", aika=40, piirteet={}, palaute="<p><strong>Ei hyvä.</strong></p><p>Tulehtuneen haavan lähellä leikkaaminen voi sattua ja pahentaa haavaa. Haava kuuluu eläinlääkärille. Aada kertoo haavasta omistajalle.</p>"),
       ]),
  dict(nimi="Eläinklinikka", tausta="klinikka", otsikko="Kissalla on kipuja", avain="klinikka",
       taustakuva=KUVA + "elaimet-klinikka-tausta.webp",
@@ -112,9 +112,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Noora sanoo, ettei lääkettä saa antaa enää. Kissa tuodaan heti klinikalle, ja eläinlääkäri tutkii sen.", aika=45, piirteet={"tarkkailija": 1, "rauhallinen": 2},
             palaute="<p><strong>Oikein!</strong></p><p>Monet ihmisten särkylääkkeet ovat kissalle myrkyllisiä, jo pieninä määrinä. Kissa saa hoitoa ajoissa ja toipuu.</p>"),
-       dict(teksti="Noora sanoo, että puolikas tabletti illalla on varmasti hyvä.", aika=30, piirteet={},
+       dict(teksti="Noora sanoo, että puolikas tabletti illalla on varmasti hyvä.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Vaarallista!</strong></p><p>Kissa ei pysty käsittelemään monia ihmisten lääkkeitä. Noora soittaa takaisin ja pyytää tuomaan kissan heti klinikalle.</p>"),
-       dict(teksti="Noora sanoo, ettei lääkettä anneta enää, ja varaa kissalle ajan huomiseksi.", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Hyvä alku, mutta liian hidas.</strong></p><p>On tärkeää, että lääkkeen antaminen loppui. Ihmisten särkylääke voi kuitenkin myrkyttää kissan jo nyt. Siksi kissa tuodaan klinikalle heti eikä vasta huomenna.</p>"),
+       dict(teksti="Noora sanoo, ettei lääkettä anneta enää, ja varaa kissalle ajan huomiseksi.", tyyli="luottavainen", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Hyvä alku, mutta liian hidas.</strong></p><p>On tärkeää, että lääkkeen antaminen loppui. Ihmisten särkylääke voi kuitenkin myrkyttää kissan jo nyt. Siksi kissa tuodaan klinikalle heti eikä vasta huomenna.</p>"),
       ]),
  dict(nimi="Navetta", tausta="navetta", otsikko="Lehmä ei nouse", avain="maaseutu",
       taustakuva=KUVA + "elaimet-navetta-tausta.webp",
@@ -125,9 +125,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Soitetaan eläinlääkärille heti. Sillä välin Mansikki saa vettä ja pehmeät kuivikkeet, ja sen vointia seurataan.", aika=45, piirteet={"tarkkailija": 2, "vastuullinen": 1},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Poikimisen jälkeen lehmältä voi loppua veren kalsium. Silloin se ei jaksa nousta. Eläinlääkäri antaa lääkettä, ja Mansikki nousee illalla.</p>"),
-       dict(teksti="Yritetään vetää Mansikki pystyyn köydellä.", aika=40, piirteet={},
+       dict(teksti="Yritetään vetää Mansikki pystyyn köydellä.", tyyli="rohkea", aika=40, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Väkisin nostaminen voi satuttaa lehmää. Jussi soittaa eläinlääkärille.</p>"),
-       dict(teksti="Odotetaan huomiseen. Ehkä se on vain väsynyt.", aika=30, piirteet={},
+       dict(teksti="Odotetaan huomiseen. Ehkä se on vain väsynyt.", tyyli="luottavainen", aika=30, piirteet={},
             palaute="<p><strong>Liian riskialtista.</strong></p><p>Makaava lehmä tarvitsee apua nopeasti. Jussi soittaa eläinlääkärille.</p>"),
       ]),
  dict(nimi="Talli", tausta="talli", otsikko="Ontuva hevonen", avain="hevonen",
@@ -139,9 +139,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Tähti jää lepoon. Linnea puhdistaa ja tutkii kavion. Sofia ratsastaa tänään toisella hevosella.", aika=45, piirteet={"vastuullinen": 2, "asiakas": 1},
             palaute="<p><strong>Hienoa!</strong></p><p>Kaviosta löytyy kivi, joka oli painanut pohjaa. Kun kivi on poistettu, Tähti toipuu. Sofia pääsee silti tunnille.</p>"),
-       dict(teksti="Sofia saa ratsastaa Tähdellä, kunhan hän ratsastaa vain käyntiä.", aika=30, piirteet={},
+       dict(teksti="Sofia saa ratsastaa Tähdellä, kunhan hän ratsastaa vain käyntiä.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Ei hyvä.</strong></p><p>Ontuva hevonen on kipeä. Ratsastus voi pahentaa vammaa. Linnea tutkii kavion ja antaa Sofialle toisen hevosen.</p>"),
-       dict(teksti="Tähti jää lepoon, ja eläinlääkäri kutsutaan heti paikalle.", aika=30, piirteet={"vastuullinen": 1}, palaute="<p><strong>Turvallinen valinta, mutta ensin kannattaa katsoa itse.</strong></p><p>Hevostenhoitaja tutkii ensin kavion. Usein syy löytyy sieltä, kuten nyt: kavioon oli juuttunut kivi. Eläinlääkäri kutsutaan, jos syytä ei löydy tai ontuminen jatkuu.</p>"),
+       dict(teksti="Tähti jää lepoon, ja eläinlääkäri kutsutaan heti paikalle.", tyyli="varovainen", aika=30, piirteet={"vastuullinen": 1}, palaute="<p><strong>Turvallinen valinta, mutta ensin kannattaa katsoa itse.</strong></p><p>Hevostenhoitaja tutkii ensin kavion. Usein syy löytyy sieltä, kuten nyt: kavioon oli juuttunut kivi. Eläinlääkäri kutsutaan, jos syytä ei löydy tai ontuminen jatkuu.</p>"),
       ]),
  dict(nimi="Lammastarha", tausta="lampaat", otsikko="Yskivä lammas", avain="elainlaakari",
       taustakuva=KUVA + "elaimet-lampaat-tausta.webp",
@@ -152,9 +152,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Vain sairas lammas saa lääkettä. Se erotetaan muista, ja muita seurataan tarkasti.", aika=45, piirteet={"vastuullinen": 2, "tarkkailija": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Jos antibiootteja käytetään turhaan, bakteerit tottuvat niihin, eivätkä lääkkeet enää tehoa. Se on vaarallista sekä eläimille että ihmisille.</p>"),
-       dict(teksti="Kaikki lampaat saavat antibioottia varmuuden vuoksi.", aika=40, piirteet={},
+       dict(teksti="Kaikki lampaat saavat antibioottia varmuuden vuoksi.", tyyli="varovainen", aika=40, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Turha antibiootti lisää resistenssiä eli sitä, etteivät lääkkeet enää tehoa. Mikael hoitaa vain sairaan lampaan.</p>"),
-       dict(teksti="Annetaan antibioottia sairaalle lampaalle ja sen kahdelle aitauskaverille.", aika=30, piirteet={"tarkkailija": 1}, palaute="<p><strong>Melkein!</strong></p><p>Kaverit eivät ole sairaita, joten lääke olisi niille turha. Turha antibiootti lisää resistenssiä eli sitä, etteivät lääkkeet enää tehoa. Mikael hoitaa vain sairaan lampaan ja erottaa sen muista.</p>"),
+       dict(teksti="Annetaan antibioottia sairaalle lampaalle ja sen kahdelle aitauskaverille.", tyyli="kaytannollinen", aika=30, piirteet={"tarkkailija": 1}, palaute="<p><strong>Melkein!</strong></p><p>Kaverit eivät ole sairaita, joten lääke olisi niille turha. Turha antibiootti lisää resistenssiä eli sitä, etteivät lääkkeet enää tehoa. Mikael hoitaa vain sairaan lampaan ja erottaa sen muista.</p>"),
       ]),
 ]
 

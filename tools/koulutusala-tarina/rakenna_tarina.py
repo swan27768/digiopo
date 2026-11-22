@@ -43,6 +43,19 @@ IKONIT = {
     "syke": '<path d="M2 12h4l2-5 4 10 3-7 2 2h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
 }
 
+# Toimintatyylit: yhteiset kaikille aloille. Jokainen ei-paras vaihtoehto antaa yhden tyylin (tyyli="..."),
+# jotta ammattikortti kertoo oppilaan tavasta toimia eikä vain oikeista vastauksista.
+TYYLIT = {
+ "nopea": {"nimi": "Nopea toimija", "kuvaus": "Tartut toimeen heti ja pidät aikataulusta kiinni. Muista myös pysähtyä tarkistamaan."},
+ "rohkea": {"nimi": "Rohkea tekijä", "kuvaus": "Uskallat hoitaa asiat itse. Kun rohkeuteen yhdistää turvallisuuden, siitä on paljon hyötyä."},
+ "empaattinen": {"nimi": "Toisten ajattelija", "kuvaus": "Haluat, että muilla on hyvä mieli, ja kuuntelet heidän toiveitaan. Joskus pitää silti sanoa myös ei."},
+ "varovainen": {"nimi": "Varovainen", "kuvaus": "Et halua ottaa riskejä. Se on usein viisasta, mutta liika varovaisuus voi jättää asian hoitamatta."},
+ "kaytannollinen": {"nimi": "Käytännöllinen", "kuvaus": "Keksit nopeasti helpon ratkaisun. Kun opit punnitsemaan riskejä, ratkaisusi ovat entistä parempia."},
+ "suora": {"nimi": "Suorapuheinen", "kuvaus": "Sanot asiat suoraan. Kun mukaan tulee lempeyttä, viestisi menee vielä paremmin perille."},
+ "luottavainen": {"nimi": "Luottavainen", "kuvaus": "Uskot, että asiat järjestyvät. Se auttaa jaksamaan, mutta joskus tilanne vaatii nopeaa toimintaa."},
+}
+TYYLIPISTEET = 2
+
 # --------------------------------------------------------------------------
 def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, sakko=0, paras=None):
     sets = f"<<set $aika += {v['aika']}>>" + (f"<<set $aika += {lisa}>>" if lisa else "")
@@ -54,6 +67,9 @@ def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, 
         sets += "<<set $melkein += 1>>"   # järkevä, mutta ei paras valinta
     for k, n in v.get("piirteet", {}).items():
         sets += f"<<set $piirre.{k} += {n}>>"
+    if v.get("tyyli"):
+        assert v["tyyli"] in TYYLIT, v["tyyli"]
+        sets += f"<<set $piirre.{v['tyyli']} += {TYYLIPISTEET}>>"
     run = f'<<run setup.tausta("{v["tausta"]}")>>' if v.get("tausta") else ""
     kului = f'Aikaa kului {v["aika"]} min.' + (f' <span class="aika-sakko">Virheen korjaaminen vei lisäksi {sakko} min.</span>' if huono and sakko else "") + (f" {siirtyma_teksti}" if siirtyma_teksti else "")
     return (f'<<link "{v["teksti"]}">>{sets}{run}<<replace "#valinnat">>'
@@ -91,7 +107,8 @@ def kohtaus_passage(k, nro, yht, seuraava, A):
 <p class="valitse-ohje">Mitä teet?</p>
 <div id="valinnat" class="answer-group valinnat">
 {vv}
-</div>"""
+</div>
+<<done>><<run setup.sekoitaValinnat()>><</done>>"""
 
 # --------------------------------------------------------------------------
 def rakenna(A, src, dst):
@@ -127,7 +144,9 @@ def rakenna(A, src, dst):
         uudet.append(f'<tw-passagedata pid="{pid}" name="{esc(nimi)}" tags="{tags}" position="{pos}" size="100,100">'
                      + esc(teksti.strip() + "\n") + "</tw-passagedata>")
 
-    PIIRTEET, AMMATIT = A["PIIRTEET"], A["AMMATIT"]
+    PIIRTEET, AMMATIT = dict(A["PIIRTEET"]), A["AMMATIT"]
+    if any(v.get("tyyli") for k in A["KOHTAUKSET"] for v in k["valinnat"]):
+        PIIRTEET.update(TYYLIT)   # tyylit mukaan korttiin ja alkuarvoihin
     # Loppuosan tehtävä: oletuksena "Kenet kutsut paikalle?". Ala voi muuttaa tekstit TEHTAVA-sanakirjalla.
     TH = dict(nimi="Kenet kutsut paikalle?", tag="Tehtävä · noin 25 min",
               maara=f"<strong>{len(A['KUTSU_KORTIT'])} tilannetta</strong>",

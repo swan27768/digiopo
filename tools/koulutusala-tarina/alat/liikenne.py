@@ -88,8 +88,8 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Talvirenkaat vaihdetaan heti. Asiakas odottaa tunnin kahvilla, ja sitten hän pääsee turvallisesti matkaan.", aika=45, piirteet={"turva": 2, "asiakas": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Kesärenkailla auto ei pysy lumella tiellä. Laki vaatii talvirenkaat talvikelillä. Oskari vaihtaa renkaat, ja asiakas lähtee turvallisesti.</p>"),
-       dict(teksti="Asiakas saa lainaksi korjaamon sijaisauton, jossa on talvirenkaat. Omat renkaat vaihdetaan ensi viikolla.", aika=30, piirteet={"asiakas": 1}, palaute="<p><strong>Toimiva ajatus, mutta ei paras.</strong></p><p>Korjaamolla on vain yksi sijaisauto, ja sitä tarvitaan myräkässä moneen kertaan. Kun renkaat vaihdetaan heti, asiakkaan oma auto on turvallinen koko talven.</p>"),
-       dict(teksti="Vaihdetaan talvirenkaat vain eteen. Se on nopeampaa.", aika=35, piirteet={},
+       dict(teksti="Asiakas saa lainaksi korjaamon sijaisauton, jossa on talvirenkaat. Omat renkaat vaihdetaan ensi viikolla.", tyyli="empaattinen", aika=30, piirteet={"asiakas": 1}, palaute="<p><strong>Toimiva ajatus, mutta ei paras.</strong></p><p>Korjaamolla on vain yksi sijaisauto, ja sitä tarvitaan myräkässä moneen kertaan. Kun renkaat vaihdetaan heti, asiakkaan oma auto on turvallinen koko talven.</p>"),
+       dict(teksti="Vaihdetaan talvirenkaat vain eteen. Se on nopeampaa.", tyyli="kaytannollinen", aika=35, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Jos talvirenkaat ovat vain edessä, auton takapää voi lähteä liukkaalla luistamaan. Kaikissa renkaissa pitää olla samanlaiset renkaat.</p>"),
       ]),
  dict(nimi="Moottoritiellä", tausta="moottoritie", otsikko="Rekka ja lumipyry", avain="yhdistelma",
@@ -101,9 +101,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Mira pysähtyy taukopaikalle ja pitää lakisääteisen tauon. Hän ilmoittaa kauppaan, että kuorma myöhästyy.", aika=45, piirteet={"turva": 2, "tarkka": 1},
             palaute="<p><strong>Oikein!</strong></p><p>Ajo- ja lepoajat on määrätty laissa. Väsynyt kuljettaja on yhtä vaarallinen kuin humalainen. Kun Mira ilmoittaa myöhästymisestä, kauppa osaa varautua.</p>"),
-       dict(teksti="Mira ajaa tauotta perille. Tunti ei ole paljon.", aika=40, piirteet={},
+       dict(teksti="Mira ajaa tauotta perille. Tunti ei ole paljon.", tyyli="rohkea", aika=40, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Ajoajat tarkistetaan ajopiirturista, ja rikkomuksesta tulee sakko. Tärkeintä on silti, että väsyneenä riski joutua onnettomuuteen kasvaa. Mira pysähtyy taukopaikalle.</p>"),
-       dict(teksti="Mira pitää lyhyen kahvitauon ja jatkaa sitten matkaa.", aika=40, piirteet={"turva": 1}, palaute="<p><strong>Tauko on hyvä, mutta liian lyhyt.</strong></p><p>Laki määrää, kuinka pitkä tauon pitää olla. Pikainen kahvi ei riitä, ja väsymys palaa nopeasti. Mira pitää koko tauon ja ilmoittaa kauppaan, että kuorma myöhästyy.</p>"),
+       dict(teksti="Mira pitää lyhyen kahvitauon ja jatkaa sitten matkaa.", tyyli="kaytannollinen", aika=40, piirteet={"turva": 1}, palaute="<p><strong>Tauko on hyvä, mutta liian lyhyt.</strong></p><p>Laki määrää, kuinka pitkä tauon pitää olla. Pikainen kahvi ei riitä, ja väsymys palaa nopeasti. Mira pitää koko tauon ja ilmoittaa kauppaan, että kuorma myöhästyy.</p>"),
       ]),
  dict(nimi="Bussipysäkillä", tausta="bussi", otsikko="Myöhässä oleva bussi", avain="linja",
       taustakuva=KUVA + "liikenne-bussi-tausta.webp",
@@ -114,9 +114,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Ahmed pysähtyy, puhdistaa luiskan lumesta ja auttaa matkustajan kyytiin. Hän varmistaa, että pyörätuoli on kiinnitetty.", aika=45, piirteet={"asiakas": 2, "turva": 1},
             palaute="<p><strong>Hienoa!</strong></p><p>Linja-autonkuljettaja on asiakaspalvelija. Jokaisella on oikeus päästä kyytiin. Muutama minuutti lisää ei haittaa, kun kaikki pääsevät turvallisesti perille.</p>"),
-       dict(teksti="Ahmed ajaa pysäkin ohi, koska hän on jo myöhässä.", aika=30, piirteet={},
+       dict(teksti="Ahmed ajaa pysäkin ohi, koska hän on jo myöhässä.", tyyli="nopea", aika=30, piirteet={},
             palaute="<p><strong>Ei käy.</strong></p><p>Matkustaja jäisi pakkaseen, eikä seuraava bussi välttämättä pääse yhtään paremmin. Ahmed pysähtyy ja auttaa.</p>"),
-       dict(teksti="Ahmed sanoo, että matkustaja voi odottaa seuraavaa bussia.", aika=30, piirteet={},
+       dict(teksti="Ahmed sanoo, että matkustaja voi odottaa seuraavaa bussia.", tyyli="suora", aika=30, piirteet={},
             palaute="<p><strong>Ei reilua.</strong></p><p>Kun luiska puhdistetaan, kyytiin pääsee turvallisesti. Ahmed auttaa matkustajan kyytiin.</p>"),
       ]),
  dict(nimi="Kolarikorjaamo", tausta="kolari", otsikko="Kolhiintunut auto", avain="korimekaanikko",
@@ -127,9 +127,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Elina vaihtaa puskurin ja säätää anturin valmistajan ohjeen mukaan. Hän kertoo asiakkaalle, miksi se on tärkeää.", aika=45, piirteet={"tarkka": 2, "turva": 1},
             palaute="<p><strong>Ammattilaisen työtä!</strong></p><p>Jos anturi osoittaa vähänkin vinoon, hätäjarrutus ei toimi oikein. Asiakas ymmärtää, kun Elina selittää asian.</p>"),
-       dict(teksti="Elina vaihtaa vain puskurin, kuten asiakas pyysi.", aika=30, piirteet={},
+       dict(teksti="Elina vaihtaa vain puskurin, kuten asiakas pyysi.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Riskialtista.</strong></p><p>Säätämätön anturi voi jarruttaa turhaan tai jättää jarruttamatta. Elina kertoo asiakkaalle, miksi anturi pitää säätää.</p>"),
-       dict(teksti="Elina vaihtaa puskurin ja katsoo silmällä, että anturi on suorassa.", aika=30, piirteet={}, palaute="<p><strong>Ei riitä.</strong></p><p>Anturin suuntaa ei näe silmällä. Jo pieni virhe voi saada hätäjarrutuksen toimimaan väärin. Anturi säädetään laitteella valmistajan ohjeen mukaan.</p>"),
+       dict(teksti="Elina vaihtaa puskurin ja katsoo silmällä, että anturi on suorassa.", tyyli="kaytannollinen", aika=30, piirteet={}, palaute="<p><strong>Ei riitä.</strong></p><p>Anturin suuntaa ei näe silmällä. Jo pieni virhe voi saada hätäjarrutuksen toimimaan väärin. Anturi säädetään laitteella valmistajan ohjeen mukaan.</p>"),
       ]),
  dict(nimi="Puu radalla", tausta="juna", otsikko="Lumen painama puu", avain="veturi",
       taustakuva=KUVA + "liikenne-yojuna-tausta.webp",
@@ -140,9 +140,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Pekka jarruttaa ja pysäyttää junan. Hän ilmoittaa liikenteenohjaukseen ja kertoo matkustajille, mitä tapahtuu.", aika=45, piirteet={"turva": 2, "rauhallinen": 1},
             palaute="<p><strong>Juuri oikein!</strong></p><p>Liikenteenohjaus katkaisee sähköt, ja huoltomiehet poistavat puun. Matkustajat pysyvät rauhallisina, kun heille kerrotaan, mitä tapahtuu.</p>"),
-       dict(teksti="Pekka ajaa hiljaa puun ohi.", aika=30, piirteet={},
+       dict(teksti="Pekka ajaa hiljaa puun ohi.", tyyli="rohkea", aika=30, piirteet={},
             palaute="<p><strong>Vaarallista!</strong></p><p>Puu voi repiä sähköjohdon alas tai rikkoa junan. Pekka pysäyttää junan ja ilmoittaa liikenteenohjaukseen.</p>"),
-       dict(teksti="Pekka hidastaa ja ilmoittaa liikenteenohjaukseen. Hän pysähtyy, jos puu näyttää koskettavan johtoa.", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Ilmoitus on tärkeä, mutta pysähtyminen pitää aloittaa heti.</strong></p><p>Kaukaa ei näe varmasti, koskeeko puu johtoa. Junan jarrutusmatka on satoja metrejä. Pekka jarruttaa ja pysäyttää junan.</p>"),
+       dict(teksti="Pekka hidastaa ja ilmoittaa liikenteenohjaukseen. Hän pysähtyy, jos puu näyttää koskettavan johtoa.", tyyli="luottavainen", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Ilmoitus on tärkeä, mutta pysähtyminen pitää aloittaa heti.</strong></p><p>Kaukaa ei näe varmasti, koskeeko puu johtoa. Junan jarrutusmatka on satoja metrejä. Pekka jarruttaa ja pysäyttää junan.</p>"),
       ]),
  dict(nimi="Asiakaspalvelussa", tausta="huolto", otsikko="Jono tiskillä", avain="huoltomyyja",
       taustakuva=KUVA + "liikenne-sahkoauto-tausta.webp",
@@ -153,9 +153,9 @@ KOHTAUKSET = [
       valinnat=[
        dict(teksti="Sanna kuuntelee rauhallisesti ja kertoo, kauanko odotus todella kestää. Hän tarjoaa vapaata aikaa huomisaamuna.", aika=45, piirteet={"asiakas": 2, "rauhallinen": 1},
             palaute="<p><strong>Hienoa!</strong></p><p>Kun asiakasta kuunnellaan ja hänelle kerrotaan totuus, hän rauhoittuu. Asiakas varaa ajan aamuksi ja lähtee bussilla kotiin.</p>"),
-       dict(teksti="Sanna lupaa, että kaikkien renkaat vaihdetaan tunnin sisällä.", aika=30, piirteet={},
+       dict(teksti="Sanna lupaa, että kaikkien renkaat vaihdetaan tunnin sisällä.", tyyli="empaattinen", aika=30, piirteet={},
             palaute="<p><strong>Lupaus, jota ei voi pitää.</strong></p><p>Korjaamossa ei ehdi vaihtaa kaikkia renkaita tunnissa. Asiakkaat suuttuvat vielä enemmän, kun lupaus ei pidä. Sanna kertoo totuuden ja tarjoaa uuden ajan.</p>"),
-       dict(teksti="Sanna päästää vihaisen asiakkaan jonon ohi, jotta tilanne rauhoittuu.", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Tilanne rauhoittuu, mutta ei reilusti.</strong></p><p>Muut jonossa odottavat suuttuvat, kun kovaa ääntä pitävä pääsee ohi. Sanna kuuntelee asiakasta, kertoo rehellisesti odotusajan ja tarjoaa uuden ajan.</p>"),
+       dict(teksti="Sanna päästää vihaisen asiakkaan jonon ohi, jotta tilanne rauhoittuu.", tyyli="kaytannollinen", aika=30, piirteet={"rauhallinen": 1}, palaute="<p><strong>Tilanne rauhoittuu, mutta ei reilusti.</strong></p><p>Muut jonossa odottavat suuttuvat, kun kovaa ääntä pitävä pääsee ohi. Sanna kuuntelee asiakasta, kertoo rehellisesti odotusajan ja tarjoaa uuden ajan.</p>"),
       ]),
 ]
 
