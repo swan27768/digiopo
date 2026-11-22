@@ -162,7 +162,7 @@ KOHTAUKSET = [
 
 TARINA_LOPPU = dict(nimi="Ensimmäinen päivä takana", teksti="""<h1>Ensimmäinen päivä takana</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä on ohi!</p>
-<p>Asiakkaat lähtivät hyvällä mielellä, ja ajanvarauskalenteri täyttyy jo ensi viikolle.</p>
+<<if _taso is 0>><p>Asiakkaat lähtivät hyvällä mielellä, ja ajanvarauskalenteri täyttyy jo ensi viikolle.</p><</if>>
 <p>Huomasitko? Hoitolassa tarvittiin monta kauneus- ja hyvinvointialan ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Laura, estenomi</strong> – neuvoi hygieniassa</li>
@@ -303,3 +303,20 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
 """ + kortti("Laurea-ammattikorkeakoulu", "Kauneudenhoito- ja kosmetiikka-alan koulutus, estenomi (AMK).", "https://www.laurea.fi")
     + kortti("Etsi lisää Opintopolusta", "Hae sanalla ”hius- ja kauneudenhoitoala”.", "https://opintopolku.fi/konfo/fi/haku?keyword=hius-%20ja%20kauneudenhoitoala")
     + """<div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Välinehuolto": "Välineet piti pestä ja desinfioida uudelleen. Ensimmäinen asiakas joutui odottamaan.",
+    "Kampaamo": "Sara ehti pettyä, kun värjäys ei onnistunutkaan heti.",
+    "Kasvohoito": "Asiakkaan iho ehti ärtyä. Hoito keskeytettiin, ja asiakas lähti harmissaan.",
+    "Hieronta": "Asiakas hämmentyi saamastaan neuvosta. Hän ei ole varma, tuleeko uudelleen.",
+    "Some": "Kuvan julkaisu viivästyi, kun lupa piti kysyä jälkikäteen.",
+    "Tuote-esittely": "Asiakas huomasi liioittelun ja epäili myyjän rehellisyyttä.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä on ohi! Asiakkaat olivat tyytyväisiä, ja ajanvarauskirja täyttyy.",
+    "Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä on ohi. Suurin osa asiakkaista oli tyytyväisiä, mutta pari asiaa pitää korjata.",
+    "Kello on <<print setup.kello($aika)>>. Hoitola Helmen ensimmäinen päivä oli raskas. Moni asiakas lähti pettyneenä, ja hoitolan maine kärsi.",
+]

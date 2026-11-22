@@ -159,9 +159,9 @@ KOHTAUKSET = [
       ]),
 ]
 
-TARINA_LOPPU = dict(nimi="Harjannostajaiset", teksti="""<h1>Harjannostajaiset</h1>
+TARINA_LOPPU = dict(nimi="Harjannostajaiset", teksti="""<h1>Viikko päättyy</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>> perjantaina. Talo on vesikatossa!</p>
-<p>Katolle nostetaan lippu. Se on vanha suomalainen tapa juhlistaa sitä, että talon runko ja katto ovat valmiit. Omistaja tarjoaa koko porukalle kahvit ja pullat.</p>
+<<if _taso lte 1>><p>Katolle nostetaan lippu. Se on vanha suomalainen tapa juhlistaa sitä, että talon runko ja katto ovat valmiit. Omistaja tarjoaa koko porukalle kahvit ja pullat.</p><</if>>
 <p>Huomasitko? Talon rakentamisessa tarvittiin monta ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Aino, rakennusarkkitehti</strong> – suunnitteli talon ja muutoksen</li>
@@ -275,3 +275,21 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
 """ + kortti("Tampereen ammattikorkeakoulu (TAMK)", "Rakennusmestari (AMK) ja rakennusarkkitehti (AMK).", "https://www.tuni.fi/fi/tule-opiskelemaan")
     + kortti("Etsi lisää Opintopolusta", "Hae sanalla ”rakennusalan perustutkinto”.", "https://opintopolku.fi/konfo/fi/haku?keyword=rakennusalan%20perustutkinto")
     + """<div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Piirustukset": "Muutoksen suunnittelu viivästyi, ja seinäelementit valmistuivat tehtaalla myöhemmin.",
+    "Elementtien nosto": "Työmaalla oli vaaratilanne. Siitä tehtiin ilmoitus, ja nostot keskeytettiin.",
+    "Kattoristikot": "Leevin turvallisuus oli vaarassa. Työmaalla pidettiin ylimääräinen turvallisuuspalaveri.",
+    "Sähköt": "Talon omistaja harmistui. Hänelle piti selittää uudelleen, miksi sähkötyöt kuuluvat ammattilaisille.",
+    "Putket": "Kylpyhuoneen aikataulusta tuli riitaa. Laatoitus siirtyi.",
+    "Maalaus": "Ulkoseinän maalaus siirtyi, ja Pia joutui vaihtamaan työsuunnitelman kesken päivän.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>> perjantaina. Talo on vesikatossa! Kaikki työt tehtiin turvallisesti ja oikein.",
+    "Kello on <<print setup.kello($aika)>> perjantaina. Talo on vesikatossa, mutta muutama työ tehdään vielä uudelleen.",
+    "Kello on <<print setup.kello($aika)>> perjantaina. Talo ei ole vielä valmis. Virheiden korjaaminen siirtää harjannostajaisia.",
+]
+MYOHASSA = "Viikko venyi, eikä katto ollut valmis perjantaina kello 16."

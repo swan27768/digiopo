@@ -285,3 +285,21 @@ LOPPU_TEKSTI = "Autoit lentoasemaa lumimyrskyn keskellä ja järjestit kahdeksal
 OPPILAITOKSET = ("Missä palvelualaa voi opiskella?", "Oppilaitokset")
 SAILYTA = ["Oppilaitokset"]
 SAILYTA_KORVAUKSET = []
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Lennonjohtotorni": "Laskeutumislupaa melkein annettiin liian aikaisin. Lentäjä joutui odottamaan epäselvää ohjetta.",
+    "Kiitotie": "Kiitotien avaaminen viivästyi, kun liukkaus piti mitata uudelleen.",
+    "Lähtöaula": "Matkustaja suuttui vielä enemmän ja teki valituksen.",
+    "Ravintola": "Ruokajono kasvoi pitkäksi, ennen kuin ruokaa riitti kaikille.",
+    "Bussipysäkki": "Matkustajat kärsivät odottaessaan, mutta kaikki pääsivät hotelliin turvallisesti.",
+    "Hotelli": "Huonejako aiheutti riitaa aulassa, ennen kuin huoneet jaettiin uudelleen.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Kaikilla matkustajilla on paikka, jossa olla yön yli. Myrsky ei voittanut!",
+    "Kello on <<print setup.kello($aika)>>. Melkein kaikilla matkustajilla on paikka yön yli. Pari asiaa olisi voinut mennä paremmin.",
+    "Kello on <<print setup.kello($aika)>>. Yö lentokentällä oli kaoottinen. Moni matkustaja oli vihainen, ja lentoasema saa paljon valituksia.",
+]
+MYOHASSA = "Ilta venyi niin myöhään, että osa matkustajista pääsi hotelliin vasta keskellä yötä."

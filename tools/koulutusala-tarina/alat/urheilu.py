@@ -162,7 +162,7 @@ KOHTAUKSET = [
 
 TARINA_LOPPU = dict(nimi="Loppusummeri", teksti="""<h1>Loppusummeri</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Kotkat voittaa finaalin 5–4!</p>
-<p>Venla pelasi teipatulla nilkalla koko ottelun. Erätauon show oli illan kohokohta, ja yleisö taputti seisaaltaan.</p>
+<<if _taso is 0>><p>Venla pelasi teipatulla nilkalla koko ottelun. Erätauon show oli illan kohokohta, ja yleisö taputti seisaaltaan.</p><</if>>
 <p>Huomasitko? Finaalipäivänä tarvittiin monta ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Jere, liikuntaneuvoja</strong> – veti aamun harjoituksen</li>
@@ -340,3 +340,20 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
     + kortti("Jyväskylän yliopisto", "Liikuntatieteet, esimerkiksi valmennustiede.", "https://www.jyu.fi")
     + kortti("Etsi lisää Opintopolusta", "Hae sanoilla liikunnanohjaus, tanssiala tai sirkusala.", "https://opintopolku.fi/konfo/fi/haku?keyword=liikunnanohjaus")
     + """<div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Aamuharjoitus": "Aamuharjoitus venyi liian raskaaksi. Osa pelaajista oli illalla väsyneitä.",
+    "Fysioterapia": "Venlan nilkan tutkiminen viivästyi, ja hän jännitti, pääseekö pelaamaan.",
+    "Tanssiryhmä": "Mette ehti hätääntyä vielä enemmän, ennen kuin hän rauhoittui.",
+    "Sirkusnumero": "Harjoitus viivästyi, koska kiinnitykset tarkistettiin vasta viime hetkellä.",
+    "Pukukoppi": "Hieroja ehti hoitaa vain osan pelaajista.",
+    "Finaali": "Tilanne kärjistyi hetkeksi, ja erotuomari antoi joukkueelle varoituksen.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Kotkat voittaa finaalin 5–4! Koko päivän työ palkittiin.",
+    "Kello on <<print setup.kello($aika)>>. Kotkat voittaa finaalin niukasti jatkoajalla. Pari asiaa teki illasta turhan vaikean.",
+    "Kello on <<print setup.kello($aika)>>. Kotkat häviää finaalin 3–5. Päivän virheet tuntuivat illalla kentällä.",
+]

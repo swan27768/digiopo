@@ -142,9 +142,9 @@ KOHTAUKSET = [
       ]),
 ]
 
-TARINA_LOPPU = dict(nimi="Maistatus", teksti="""<h1>Maistatus!</h1>
+TARINA_LOPPU = dict(nimi="Maistatus", teksti="""<h1>Päivä päättyy</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Marjapalat ovat valmiita ja pakattuja. Ne ehtivät koululle ajoissa!</p>
-<p>Koululla 7.-luokkalaiset maistavat Marjapalaa. Moni sanoo, että se on raikas ja juuri sopivan makea.</p>
+<<if _taso lte 1>><p>Koululla 7.-luokkalaiset maistavat Marjapalaa. Moni sanoo, että se on raikas ja juuri sopivan makea.</p><</if>>
 <p>Huomasitko? Yhteen välipalaan tarvittiin kuusi eri ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Sami, elintarvikkeiden valmistaja</strong> – piti huolen hygieniasta</li>
@@ -288,3 +288,21 @@ TAUSTAKUVAT = {"kansi": "../../images/koulutusalat/elintarvike-leivat-tausta.web
 OPPILAITOKSET = ("Missä elintarvikealaa voi opiskella?", "Valitse alue")
 SAILYTA = ["Valitse alue", "Koulutukset: Elintarvikeala (Uusimaa)", "Koulutukset: Elintarvikeala (Muu Suomi)"]
 SAILYTA_KORVAUKSET = [("[[Palaa alkuun->start]]", "")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Hygieniasulku": "Jouduit palaamaan hygieniasululle. Tuotantoon pääsy viivästyi.",
+    "Leipomo": "Arvioimalla lisätty vesi piti kirjata jälkikäteen. Erät eivät olleet samanlaisia.",
+    "Meijeri": "Kuorrute piti kuumentaa uudelleen. Pakkaus viivästyi.",
+    "Laboratorio": "Laborantti joutui mittaamaan näytteen uudelleen. Erä odotti tuloksia puoli tuntia.",
+    "Makutesti": "Testiryhmän palaute oli jäädä huomiotta. Reseptin muuttaminen viivästyi.",
+    "Pakkauslinja": "Pakkauslinja pysäytettiin, ja virheelliset pakkaukset kerättiin pois. Tarrojen tulostaminen vei aikaa.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Marjapalat ovat valmiita ja pakattuja. Ne ehtivät koululle ajoissa!",
+    "Kello on <<print setup.kello($aika)>>. Marjapalat valmistuivat, mutta matkan varrella tuli mutkia. Osa pakkauksista lähtee koululle vasta huomenna.",
+    "Kello on <<print setup.kello($aika)>>. Päivä meni monelta osin pieleen. Marjapalat eivät ehtineet koululle, ja maistatus siirtyy ensi viikkoon.",
+]
+MYOHASSA = "Tuotanto venyi niin pitkälle, että koulukuljetus lähti ilman Marjapaloja."

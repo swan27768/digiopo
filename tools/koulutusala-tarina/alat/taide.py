@@ -161,7 +161,7 @@ KOHTAUKSET = [
 
 TARINA_LOPPU = dict(nimi="Festarit päättyvät", teksti="""<h1>Festarit päättyvät</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>> sunnuntaina. Viimeinen sävel soi järven yllä, ja yleisö taputtaa.</p>
-<p>48 tunnissa festareilla kävi yli 6000 ihmistä. Kaikki sujui, koska moni ammattilainen teki työnsä hyvin.</p>
+<p>48 tunnissa festareilla kävi yli 6000 ihmistä. <<if _taso is 0>>Kaikki sujui, koska moni ammattilainen teki työnsä hyvin.<<else>>Moni ammattilainen teki parhaansa, ja hekin oppivat virheistä.<</if>></p>
 <p>Huomasitko? Festareilla tarvittiin monta taiteen ja humanistisen alan ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Sini, graafinen suunnittelija</strong> – korjasi festarikartan</li>
@@ -256,3 +256,20 @@ LOPPU_TEKSTI = "Hoidit festareiden yllättävät tilanteet 48 tunnissa ja teit j
 OPPILAITOKSET = ("Missä taidealaa voi opiskella?", "Oppilaitokset")
 SAILYTA = ["Oppilaitokset"]
 SAILYTA_KORVAUKSET = []
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Portti": "Kartan korjaaminen vei aikaa. Ensimmäiset kävijät etsivät pelitelttaa rannasta.",
+    "Rantalava": "Naapuri soitti valituksen myös kaupungille. Ensi vuonna äänirajoja valvotaan tarkemmin.",
+    "Infopiste": "Kuuro perhe ehti pettyä, ennen kuin heille järjestettiin tulkki.",
+    "Pelitelta": "Osa kuvista piti poistaa lähetyksestä, koska lupia ei ollut kysytty.",
+    "Markkinat": "Jonossa olleet lapset pettyivät hetkeksi, ennen kuin uusi työ keksittiin.",
+    "Rantakonsertti": "Soittajat hätääntyivät. Konsertti alkoi myöhässä katoksen alla.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>> sunnuntaina. Viimeinen sävel soi järven yllä, ja yleisö taputtaa. Festarit onnistuivat!",
+    "Kello on <<print setup.kello($aika)>> sunnuntaina. Viimeinen sävel soi järven yllä. Festarit onnistuivat, mutta palautteessa on pari moitetta.",
+    "Kello on <<print setup.kello($aika)>> sunnuntaina. Festarit päättyvät, mutta viikonloppuna meni moni asia pieleen. Ensi vuoden festarit ovat vaakalaudalla.",
+]

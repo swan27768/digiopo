@@ -218,7 +218,7 @@ KOHTAUKSET = [
  }
 ]
 
-TARINA_LOPPU = dict(nimi="Rekka lähtee", teksti="<h1>Rekka lähtee!</h1>\n<<if $aika lte 180>><p class=\"highlight\">Kello on <<print setup.kello($aika)>>. Rekka lähtee ajoissa, ja 120 sähköpyörää on matkalla kauppoihin!</p>\n<<else>><p class=\"highlight\">Kello on <<print setup.kello($aika)>>. Rekka lähtee <<print $aika - 180>> minuuttia myöhässä, mutta 120 sähköpyörää on matkalla kauppoihin.</p>\n<p>Oikeissakaan töissä ei aina ehdi. Silloin tärkeintä on, että työ tehtiin turvallisesti ja hyvin.</p><</if>>\n<p>Huomasitko? Yhden vian korjaamiseen tarvittiin viisi eri ammattilaista:</p>\n<ul class=\"ammattilista\">\n<li><strong>Sanna, automaatioasentaja</strong> – löysi vian koneen viesteistä</li>\n<li><strong>Mikko, sähköasentaja</strong> – hoiti sähköt turvallisesti</li>\n<li><strong>Aino, CNC-koneistaja</strong> – teki uuden osan sadasosamillin tarkkuudella</li>\n<li><strong>Jari, kylmäasentaja</strong> – korjasi hallin jäähdytyksen</li>\n<li><strong>Noora, hyötyajoneuvomekaanikko</strong> – sai rekan nostimen toimimaan</li>\n</ul>\n<p>Kaikkiin näihin ammatteihin voi opiskella ammattikoulussa.</p>")
+TARINA_LOPPU = dict(nimi="Rekka lähtee", teksti="<h1>Rekka lähtee!</h1>\n<p class=\"highlight\">Kello on <<print setup.kello($aika)>>. Rekka lähtee ajoissa, ja 120 sähköpyörää on matkalla kauppoihin!</p>\n<p>Huomasitko? Yhden vian korjaamiseen tarvittiin viisi eri ammattilaista:</p>\n<ul class=\"ammattilista\">\n<li><strong>Sanna, automaatioasentaja</strong> – löysi vian koneen viesteistä</li>\n<li><strong>Mikko, sähköasentaja</strong> – hoiti sähköt turvallisesti</li>\n<li><strong>Aino, CNC-koneistaja</strong> – teki uuden osan sadasosamillin tarkkuudella</li>\n<li><strong>Jari, kylmäasentaja</strong> – korjasi hallin jäähdytyksen</li>\n<li><strong>Noora, hyötyajoneuvomekaanikko</strong> – sai rekan nostimen toimimaan</li>\n</ul>\n<p>Kaikkiin näihin ammatteihin voi opiskella ammattikoulussa.</p>")
 
 PIIRTEET = {
  "vianetsija": {
@@ -383,3 +383,18 @@ LOPPU_TEKSTI = "Selvitit tehtaan vian ja ratkaisit kahdeksan vikatilannetta. Sam
 OPPILAITOKSET = ("Missä tekniikan alaa voi opiskella?", "Oppilaitokset")
 SAILYTA = ["Oppilaitokset"]
 SAILYTA_KORVAUKSET = [("Takaisin tehtäväsivulle", "Takaisin")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Ohjaamo": "Linja pysähtyi uudelleen, koska vian syytä ei ollut selvitetty. Aikaa hukkui.",
+    "Sähkökeskus": "Sulakkeen nostaminen ilman syyn selvittämistä oli vaarallista. Vian etsintä alkoi alusta.",
+    "Koneistamo": "Väärän kokoinen osa ei sopinut. Se piti koneistaa uudelleen.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Rekka lähtee ajoissa, ja 120 sähköpyörää on matkalla kauppoihin!",
+    "Kello on <<print setup.kello($aika)>>. Rekka lähtee, mutta matkan varrella hukkui aikaa. Kuljettajalla on kiire ehtiä perille.",
+    "Kello on <<print setup.kello($aika)>>. Liian moni asia meni pieleen. Osa sähköpyöristä jää odottamaan seuraavaa rekkaa.",
+]
+MYOHASSA = "Rekka lähti <<print $aika - 180>> minuuttia myöhässä, eikä kauppa saanut pyöriä ennen viikonloppua."

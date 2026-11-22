@@ -349,3 +349,20 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
 """ + kortti("Taitotalo, Helsinki", "Eläintenhoidon ammattitutkinto: esimerkiksi trimmaaja ja klinikkaeläinhoitaja.", "https://www.taitotalo.fi")
     + kortti("Helsingin yliopisto", "Eläinlääketieteellinen tiedekunta. Eläinlääkäriksi opiskellaan yliopistossa lukion tai ammattikoulun jälkeen.", "https://www.helsinki.fi")
     + """<div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Koirahoitola": "Nallen hoito alkoi väärin. Se rauhoittui ja alkoi syödä vasta seuraavana päivänä.",
+    "Trimmaamo": "Haava jäi hetkeksi huomiotta. Omistaja harmitteli, että hän kuuli siitä vasta kysyttyään.",
+    "Eläinklinikka": "Väärä neuvo ehti huolestuttaa omistajaa. Kissa pääsi klinikalle tuntia myöhemmin kuin olisi voinut.",
+    "Navetta": "Eläinlääkärille soitettiin myöhässä. Mansikki joutui odottamaan apua turhan kauan.",
+    "Talli": "Tähden tutkiminen viivästyi, ja ratsastustunti alkoi myöhässä.",
+    "Lammastarha": "Lammastilan omistaja jäi epäilemään, hoidettiinko lampaat oikein. Eläinlääkäri sopi uuden tarkastuksen.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Eläimet ovat syöneet, ja ilta-aurinko paistaa tarhoihin. Kaikki eläimet voivat hyvin.",
+    "Kello on <<print setup.kello($aika)>>. Eläimet ovat syöneet, ja ilta-aurinko paistaa tarhoihin. Pari eläintä tarvitsee huomenna vielä erityistä huolenpitoa.",
+    "Kello on <<print setup.kello($aika)>>. Päivä oli raskas. Moni eläin tarvitsee lisähoitoa, ja eläinlääkärin puhelin soi vielä illalla.",
+]

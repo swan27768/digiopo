@@ -277,3 +277,21 @@ LOPPU_TEKSTI = "Ratkaisit Kuukkelijoen mysteerin ja jäljitit ongelman lähteen 
 OPPILAITOKSET = ("Missä luontoalaa voi opiskella?", "Oppilaitokset")
 SAILYTA = ["Oppilaitokset"]
 SAILYTA_KORVAUKSET = []
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Kuolleet kalat": "Osa todisteista katosi. Tutkimus alkoi heikommista tiedoista.",
+    "Näytteenotto": "Näytteenotto piti suunnitella uudelleen. Tulokset valmistuivat myöhemmin.",
+    "Laavulla": "Retkeläiset hämmentyivät. Joesta alkoi liikkua huhuja.",
+    "Poroaidalla": "Ellen vihje jäi melkein kuulematta. Ojan löytäminen viivästyi.",
+    "Hakkuuaukea": "Keskustelu hakkuuaukealla meni ensin huonosti. Altaan rakentamisesta sopiminen viivästyi.",
+    "Laboratorio": "Tulokset piti järjestää uudelleen. Väärä epäily ehti levitä.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Mysteeri on ratkaistu ennen pimeää! Laskeutusallas rakennetaan, ja joki alkaa puhdistua.",
+    "Kello on <<print setup.kello($aika)>>. Mysteeri ratkesi, mutta mutkien kautta. Joki puhdistuu, kunhan oja korjataan.",
+    "Kello on <<print setup.kello($aika)>>. Mysteeri ratkesi lopulta, mutta mutkien ja turhien epäilyjen kautta. Mutaa ehti valua jokeen vielä monta päivää.",
+]
+MYOHASSA = "Työ venyi pimeän puolelle, ja tutkimus jatkuu huomenna."

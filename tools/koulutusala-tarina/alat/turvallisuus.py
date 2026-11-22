@@ -331,3 +331,21 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
     + kortti("Poliisiammattikorkeakoulu, Tampere", "Poliisi (AMK) -tutkinto.", "https://polamk.fi")
     + kortti("Rikosseuraamusalan koulutuskeskus RSKK, Vantaa", "Rikosseuraamusalan tutkinto. Sillä pääsee töihin vanginvartijaksi.", "https://rskk.fi")
     + """<div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Sataman portti": "Poliisi saapui myöhemmin. Murtautujat ehtivät viedä yhden laatikon.",
+    "Klubin ovi": "Ovella syntyi kinastelua, ja jono jumittui hetkeksi.",
+    "Hätäpuhelu yöllä": "Osoitteen selvittäminen viivästyi. Ensihoito lähti liikkeelle minuutteja myöhemmin.",
+    "Tulipalo satamassa": "Pelastustyö hidastui, koska omistajaa piti estää menemästä halliin.",
+    "Yöpartio": "Nuori ehti sulkeutua. Hänen luottamuksensa voittaminen vei pidempään.",
+    "Aamu vankilassa": "Tomin levottomuus ehti pahentua. Rauhoittaminen vei aamulla paljon aikaa.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Yövuoro on melkein ohi! Kaupunki on turvassa, ja kaikki yön tilanteet päättyivät hyvin.",
+    "Kello on <<print setup.kello($aika)>>. Yövuoro on melkein ohi. Yö meni enimmäkseen hyvin, mutta pari tilannetta jäi kaivelemaan.",
+    "Kello on <<print setup.kello($aika)>>. Yövuoro on melkein ohi, mutta yö oli raskas. Moni tilanne päättyi huonosti.",
+]
+MYOHASSA = "Vuoro venyi yli seitsemän, koska virheiden selvittäminen vei aikaa."

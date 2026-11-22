@@ -81,7 +81,7 @@ TARINA_ALKU = dict(nimi="Myräkkä tulee", tausta="liikennekeskus", teksti="""<<
 KOHTAUKSET = [
  dict(nimi="Korjaamo aamulla", tausta="korjaamo", otsikko="Kesärenkaat alla", avain="automekaanikko",
       taustakuva=KUVA + "liikenne-lumipyry-tausta.webp",
-      kysymys="Miltä automekaanikon työ näytti?", lisaaika=60, siirtymaTeksti="Seuraava tilanne on vähän ennen kymmentä.",
+      kysymys="Miltä automekaanikon työ näytti?", lisaaika=45, siirtymaTeksti="Seuraava tilanne on vähän ennen kymmentä.",
       johdanto="""<p>Autokorjaamolle tulee asiakas. Hänen autossaan on vielä kesärenkaat, vaikka maa on valkoinen.</p>
 <p>”Lähden nyt Tampereelle. Talvirenkaat vaihdetaan vasta ensi viikolla, kun minulla on aikaa”, hän sanoo.</p>
 <p class="puhe"><strong>Oskari, automekaanikko:</strong> ”Mitä hänelle sanotaan?”</p>""",
@@ -109,7 +109,7 @@ KOHTAUKSET = [
       ]),
  dict(nimi="Bussipysäkillä", tausta="bussi", otsikko="Myöhässä oleva bussi", avain="linja",
       taustakuva=KUVA + "liikenne-bussi-tausta.webp",
-      kysymys="Miltä linja-autonkuljettajan työ näytti?", lisaaika=60, siirtymaTeksti="Seuraava tilanne on puoli kahdelta.",
+      kysymys="Miltä linja-autonkuljettajan työ näytti?", lisaaika=50, siirtymaTeksti="Seuraava tilanne on puoli kahdelta.",
       johdanto="""<p>Kaupungissa bussit ovat myöhässä lumen takia. Kuljettaja Ahmed on jo 15 minuuttia myöhässä aikataulusta.</p>
 <p>Pysäkillä odottaa matkustaja pyörätuolissa. Bussin luiska on jäinen, ja pysäkin reunassa on lumivalli.</p>
 <p class="puhe"><strong>Ahmed, linja-autonkuljettaja:</strong> ”Miten toimin?”</p>""",
@@ -322,3 +322,21 @@ LISAPASSAGET = [dict(nimi="Oppilaitokset", tags="scene-loppu", teksti=
     + """<h3>Myöhemmin aikuisena</h3>
 <p>Veturinkuljettajat ja liikennekeskusten päivystäjät koulutetaan yleensä rautatie- tai liikenneyhtiön omassa koulutuksessa. Ajoneuvoalan insinööriksi voi opiskella ammattikorkeakoulussa.</p>
 <div class="intro-nappi"><<link "Takaisin">><<goto "Loppu">><</link>></div>""")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Korjaamo aamulla": "Väärä neuvo hämmensi asiakasta. Hän lähti matkaan reilusti myöhemmin kuin oli suunnitellut.",
+    "Moottoritiellä": "Ajoaikojen venyttäminen merkittiin ajopiirturiin. Kuljetusyritys sai huomautuksen.",
+    "Bussipysäkillä": "Matkustaja ehti pelästyä, että hän jää kyydistä. Bussiyhtiö sai palautetta.",
+    "Kolarikorjaamo": "Korjausohjeista ehdittiin poiketa. Työ piti tarkistaa uudelleen ennen luovutusta.",
+    "Puu radalla": "Juna pysähtyi viime hetkellä, ja matkustajat säikähtivät jarrutusta.",
+    "Asiakaspalvelussa": "Tiskillä syntyi riita. Asiakas kirjoitti korjaamosta huonon arvion nettiin.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Lumisade loppuu, ja tiet aurataan. Myräkästä selvittiin ilman vakavia onnettomuuksia!",
+    "Kello on <<print setup.kello($aika)>>. Lumisade loppuu, ja tiet aurataan. Päivä meni enimmäkseen hyvin, mutta muutamassa paikassa sattui.",
+    "Kello on <<print setup.kello($aika)>>. Lumisade loppuu, mutta päivä oli kaoottinen. Liikenne on vielä illallakin sekaisin.",
+]
+MYOHASSA = "Vuoro venyi yli neljän, koska virheiden korjaaminen vei aikaa."

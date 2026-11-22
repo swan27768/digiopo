@@ -141,7 +141,7 @@ KOHTAUKSET = [
       ]),
 ]
 
-TARINA_LOPPU = dict(nimi="Tilaukset lähtevät", teksti="""<h1>Tilaukset lähtevät!</h1>
+TARINA_LOPPU = dict(nimi="Tilaukset lähtevät", teksti="""<h1>Messupäivä päättyy</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Sofia lähettää kevään tilaukset ajoissa.</p>
 <p>Keväällä Kolibrin hyllyillä on leveitä farkkuja, huppareita ja luomupuuvillaisia t-paitoja. Moni niistä on valittu messuilla.</p>
 <p>Huomasitko? Kevään valikoimaan tarvittiin kuusi eri ammattilaista:</p>
@@ -244,3 +244,21 @@ TAUSTAKUVAT = {"kansi": "../../images/koulutusalat/kauppa-messut-tausta.webp",
 OPPILAITOKSET = ("Missä kaupan alaa voi opiskella?", "Toinen aste")
 SAILYTA = ["Toinen aste", "Korkeakoulut"]
 SAILYTA_KORVAUKSET = [('<<link "Jatka ammattitehtävään" "Ammattitehtävä">><</link>>', '<<link "Takaisin" "Loppu">><</link>>')]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Trendit": "Tuotevalinnat piti aloittaa alusta myyntitiedoista.",
+    "Myyntiosasto": "Neuvottelu meni ensin väärään suuntaan. Sofia joutui korjaamaan tilannetta.",
+    "Vastuullisuus": "Halpojen paitojen selvittäminen vei aikaa, ja kaupat jäivät syntymättä.",
+    "Messuosasto": "Osasto piti rakentaa uudelleen. Ensimmäiset asiakkaat kävelivät ohi.",
+    "Kuvausstudio": "Tuotesivu piti kirjoittaa uudelleen. Verkkokaupan avaaminen viivästyi.",
+    "Varasto": "Varaston kirjanpitoa piti korjata, ja puuttuvien huppareiden selvittäminen vei aikaa.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Sofia lähettää kevään tilaukset ajoissa. Kolibrin kevätmallisto on vastuullinen ja houkutteleva!",
+    "Kello on <<print setup.kello($aika)>>. Sofia lähettää kevään tilaukset, mutta muutama asia meni vikaan. Kevään myynnistä tulee hyvä, muttei huippu.",
+    "Kello on <<print setup.kello($aika)>>. Messupäivä meni moneen kertaan pieleen. Kolibrin kevätmyynti jää tavoitteesta.",
+]
+MYOHASSA = "Tilaukset lähtivät myöhässä, ja osa tuotteista ehti loppua tehtaalta."

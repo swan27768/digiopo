@@ -131,9 +131,9 @@ KOHTAUKSET = [
       ]),
 ]
 
-TARINA_LOPPU = dict(nimi="Peli julkaistu", teksti="""<h1>Peli julkaistu!</h1>
+TARINA_LOPPU = dict(nimi="Peli julkaistu", teksti="""<h1>Julkaisupäivän ilta</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Kettu kiertoradalla on valmis. Kello 12.00 Iida painaa julkaisunappia, ja peli ilmestyy sovelluskauppoihin!</p>
-<p>Ensimmäisen tunnin aikana peli ladataan 10 000 kertaa.</p>
+<<if _taso is 0>><p>Ensimmäisen tunnin aikana peli ladataan 10 000 kertaa.</p><</if>>
 <p>Huomasitko? Yhden pelin julkaisuun tarvittiin kuusi eri ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Emma, ohjelmistotestaaja</strong> – löysi bugin ja kuvasi sen tarkasti</li>
@@ -241,3 +241,21 @@ LOPPU_TEKSTI = "Autoit pelistudiota julkaisemaan pelin ja tarkastit kahdeksan ti
 OPPILAITOKSET = ("Missä IT-alaa voi opiskella?", "Koulutus")
 SAILYTA = ["Koulutus", "Korkeakoulut"]
 SAILYTA_KORVAUKSET = [("<</link>\n  </div>", "<</link>>\n  </div>")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Testaus": "Epäselvän bugiraportin takia koodari etsi vikaa turhaan. Korjaus viivästyi.",
+    "Koodi": "Testaamaton korjaus rikkoi pelin äänet. Muutos piti perua ja tehdä uudelleen.",
+    "Pelitestaus": "Pitkän ohjeen kirjoittaminen meni hukkaan, kun kukaan ei lukenut sitä.",
+    "Konesali": "Vian etsiminen arvaamalla katkaisi kaikkien työt hetkeksi.",
+    "Epäilyttävä viesti": "Salasana päätyi huijareille. Kaikki tunnukset piti vaihtaa ja tarkistaa.",
+    "Asiakastuki": "Veikko joutui soittamaan uudelleen. Hän ehti jo turhautua.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Kettu kiertoradalla on valmis. Kello 12.00 Iida painaa julkaisunappia, ja peli ilmestyy sovelluskauppoihin!",
+    "Kello on <<print setup.kello($aika)>>. Peli julkaistiin, mutta pari ongelmaa jäi korjattavaksi. Tiimi tekee huomenna ensimmäisen päivityksen.",
+    "Kello on <<print setup.kello($aika)>>. Julkaisu siirtyi. Pelissä oli liian monta ongelmaa, ja ne pitää korjata ennen kuin peli voidaan julkaista.",
+]
+MYOHASSA = "Kello ehti yli kahdentoista, joten julkaisu siirtyi iltapäivään."

@@ -135,7 +135,7 @@ KOHTAUKSET = [
 
 TARINA_LOPPU = dict(nimi="Vuoro päättyy", teksti="""<h1>Vuoro päättyy</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>. Iltavuoro on ohi.</p>
-<p>Ainon ranne on kipsattu, ja hän pääsee huomenna kotiin Mirrin luo. Rintakipuinen mies on hoidossa. Vauva nukkuu äitinsä vieressä. Sara on rauhoittunut ja lähtee kotiin äitinsä kanssa.</p>
+<p><<if _taso lte 1>>Ainon ranne on kipsattu, ja hän pääsee huomenna kotiin Mirrin luo.<<else>>Ainon ranne on kipsattu, mutta hän jää sairaalaan seurantaan vielä muutamaksi päiväksi.<</if>> Rintakipuinen mies on hoidossa. Vauva nukkuu äitinsä vieressä. Sara on rauhoittunut ja lähtee kotiin äitinsä kanssa.</p>
 <p>Huomasitko? Yhden illan aikana tarvittiin kuusi eri ammattilaista:</p>
 <ul class="ammattilista">
 <li><strong>Laura, hätäkeskuspäivystäjä</strong> – lähetti avun oikeaan paikkaan</li>
@@ -239,3 +239,20 @@ LOPPU_TEKSTI = "Seurasit yhtä iltaa hätäpuhelusta sairaalaan ja ratkaisit kah
 OPPILAITOKSET = ("Missä sote-alaa voi opiskella?", "Valitse alue")
 SAILYTA = ["Valitse alue", "Koulutukset: SOTE (Uusimaa)", "Koulutukset: SOTE (Muu Suomi)"]
 SAILYTA_KORVAUKSET = [("elintarvikealan koulutuksia", "sote-alan koulutuksia")]
+
+# --- Valintojen seuraukset (näkyvät tarinan lopussa) ---
+# Kohtauksen nimi -> seuraus, jos kohtauksessa valittiin huono vaihtoehto (valinta ilman piirteitä).
+SEURAUKSET = {
+    "Hätäkeskus": "Osoitteen selvittäminen viivästyi. Ambulanssi lähti liikkeelle myöhemmin.",
+    "Kotikäynti": "Aino ei aluksi luottanut hoitajiin. Hoitoon lähteminen viivästyi.",
+    "Ambulanssi": "Ainon matala verenpaine huomattiin hetkeä myöhemmin kuin olisi voinut.",
+    "Päivystys": "Rintakipuisen miehen hoitoon pääsy oli vähällä viivästyä.",
+    "Synnytysosasto": "Isä ehti pelästyä netin tiedoista, ennen kuin kätilö rauhoitti hänet.",
+    "Rauhallinen huone": "Sara ahdistui hetkeksi vielä enemmän, ennen kuin hän alkoi rauhoittua.",
+}
+# Loppukappale: [kaikki meni hyvin, osa meni pieleen, moni meni pieleen]
+LOPPU_TASOT = [
+    "Kello on <<print setup.kello($aika)>>. Iltavuoro on ohi. Kaikki potilaat saivat hyvää hoitoa ajoissa.",
+    "Kello on <<print setup.kello($aika)>>. Iltavuoro on ohi. Potilaat saivat hoitoa, mutta pari tilannetta olisi voinut hoitaa paremmin.",
+    "Kello on <<print setup.kello($aika)>>. Iltavuoro oli raskas. Moni potilas joutui odottamaan, ja Aino joutui jäämään sairaalaan pidemmäksi aikaa.",
+]

@@ -44,12 +44,16 @@ IKONIT = {
 }
 
 # --------------------------------------------------------------------------
-def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0):
+def valinta(v, avain, seuraava, kysymys, siirtyma_teksti, lisa=0, seuraus=None, sakko=0):
     sets = f"<<set $aika += {v['aika']}>>" + (f"<<set $aika += {lisa}>>" if lisa else "")
+    # Huono valinta (ei piirteitä, tai huono=True) jättää seurauksen loppuun ja vie lisäaikaa
+    huono = seuraus and v.get("huono", not v.get("piirteet"))
+    if huono:
+        sets += f'<<set $seuraukset.push("{seuraus}")>>' + (f"<<set $aika += {sakko}>>" if sakko else "")
     for k, n in v.get("piirteet", {}).items():
         sets += f"<<set $piirre.{k} += {n}>>"
     run = f'<<run setup.tausta("{v["tausta"]}")>>' if v.get("tausta") else ""
-    kului = f'Aikaa kului {v["aika"]} min.' + (f" {siirtyma_teksti}" if siirtyma_teksti else "")
+    kului = f'Aikaa kului {v["aika"]} min.' + (f' <span class="aika-sakko">Virheen korjaaminen vei lisäksi {sakko} min.</span>' if huono and sakko else "") + (f" {siirtyma_teksti}" if siirtyma_teksti else "")
     return (f'<<link "{v["teksti"]}">>{sets}{run}<<replace "#valinnat">>'
             f'<div class="palaute">{v["palaute"]}<p class="aika-kului">{kului}</p></div>'
             f'<<kiinnostus "{avain}" "{seuraava}" "{kysymys}">><</replace>><</link>>')
@@ -67,7 +71,9 @@ def kuva_html(k):
 
 def kohtaus_passage(k, nro, yht, seuraava, A):
     # Kohtauskohtainen lisäaika (esim. yö kuluu) ja siirtymäteksti ohittavat alan oletukset
-    vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], k.get("siirtymaTeksti", A.get("siirtymaTeksti", "")), k.get("lisaaika", 0)) for v in k["valinnat"])
+    seuraus = A.get("SEURAUKSET", {}).get(k["nimi"])
+    vv = "\n".join(valinta(v, k["avain"], seuraava, k["kysymys"], k.get("siirtymaTeksti", A.get("siirtymaTeksti", "")), k.get("lisaaika", 0),
+                           seuraus, A.get("KORJAUSAIKA", 20)) for v in k["valinnat"])
     tk = f'<<run setup.taustakuva("{k["taustakuva"]}")>>' if k.get("taustakuva") else ""
     return f"""{tk}<<include "HUD">>
 <p class="kohtaus-nro">Kohtaus {nro}/{yht}</p>
@@ -122,7 +128,7 @@ def rakenna(A, src, dst):
     TH.update({k: v for k, v in A.get("TEHTAVA", {}).items() if k in TH})
     pset = ", ".join(f"{k}: 0" for k in PIIRTEET)
     kset = ", ".join(f"{k}: 0" for k in AMMATIT)
-    alustus = f'<<set $aika to 0>><<set $piirre to {{{pset}}}>><<set $kiinn to {{{kset}}}>><<set $korttiTop to []>>'
+    alustus = f'<<set $aika to 0>><<set $piirre to {{{pset}}}>><<set $kiinn to {{{kset}}}>><<set $korttiTop to []>>' + ("<<set $seuraukset to []>>" if A.get("SEURAUKSET") else "")
 
     korvaa("StoryInit", f"""<<run Config.saves.maxAutoSaves = 0;>>
 /* {A['tarinaNimi']} – alkuarvot */
@@ -177,7 +183,21 @@ $('body').addClass('hide-navbar');
         seuraava = kohtaukset[i + 1]["nimi"] if i + 1 < len(kohtaukset) else A["TARINA_LOPPU"]["nimi"]
         lisaa(k["nimi"], kohtaus_passage(k, i + 1, len(kohtaukset), seuraava, A), f"scene-{k['tausta']}")
     L = A["TARINA_LOPPU"]
-    lisaa(L["nimi"], L["teksti"] + '\n<div class="intro-nappi"><<link "Katso ammattikorttisi">><<goto "Ammattikortti">><</link>></div>', "scene-loppu")
+    lteksti = L["teksti"]
+    if A.get("LOPPU_TASOT"):
+        # Loppu riippuu valinnoista: huonot valinnat ja myöhästyminen muuttavat lopun ja näkyvät listana
+        raja = (A.get("kello") or {}).get("raja")
+        t0, t1, t2 = A["LOPPU_TASOT"]
+        myoh = A.get("MYOHASSA")
+        lohko = (f'<<set _n to $seuraukset.length>><<set _myoh to {"$aika gt " + str(raja) if raja is not None else "false"}>><<set _taso to _n + (_myoh ? 1 : 0)>>'
+                 f'<p class="highlight"><<if _taso is 0>>{t0}<<elseif _taso lte 2>>{t1}<<else>>{t2}<</if>></p>'
+                 + (f'<<if _myoh>><p class="myohassa"><span aria-hidden="true">⏰ </span>{myoh}</p><</if>>' if myoh else "")
+                 + '<<if _n gt 0>><div class="seuraukset"><p class="seuraukset-otsikko">Valintojesi seuraukset</p><ul><<for _s range $seuraukset>><li><<print _s>></li><</for>></ul>'
+                 + '<p class="seuraukset-vinkki">Ammattilaiset korjasivat virheet, mutta niistä jäi jälki. Pelaa uudelleen ja kokeile, saatko päivän sujumaan ilman mutkia.</p></div>'
+                 + '<<else>><p class="seuraukset-hyva"><span aria-hidden="true">⭐ </span>Teit joka tilanteessa hyvän valinnan. Päivä sujui ilman mutkia!</p><</if>>')
+        lteksti, n = re.subn(r'<p class="highlight">.*?</p>', lambda m: lohko, lteksti, count=1, flags=re.S)
+        assert n == 1, "TARINA_LOPPU: highlight-kappaletta ei löydy"
+    lisaa(L["nimi"], lteksti + '\n<div class="intro-nappi"><<link "Katso ammattikorttisi">><<goto "Ammattikortti">><</link>></div>', "scene-loppu")
 
     lisaa("Ammattikortti", f"""{tk('kortti')}<<run setup.tallennaKortti()>>
 <h1>Ammattikorttisi</h1>
