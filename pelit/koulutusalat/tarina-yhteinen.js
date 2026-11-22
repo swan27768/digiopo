@@ -1392,8 +1392,20 @@
             var lw = g.measureText(j.lisa).width + 60; g.fillStyle = v.korostus;
             g.fillRect((W - lw) / 2, y + 4, lw, 64); g.fillStyle = v.tausta; g.fillText(j.lisa, W / 2, y + 50);
           }
-          var a = document.createElement("a"); a.download = D.ala + "_juliste.png"; a.href = c.toDataURL("image/png");
-          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          /* Blob-osoite eikä data-osoite: Safari voi avata data-kuvan peli-ikkunaan latauksen sijaan,
+             jolloin peli katoaa näkyvistä. Samalla tavalla ladataan myös vastaukset. */
+          var tallenna = function (blob) {
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob); a.download = D.ala + "_juliste.png";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+          };
+          if (c.toBlob) c.toBlob(tallenna, "image/png");
+          else {
+            var d = atob(c.toDataURL("image/png").split(",")[1]), u = new Uint8Array(d.length);
+            for (var i = 0; i < d.length; i++) u[i] = d.charCodeAt(i);
+            tallenna(new Blob([u], { type: "image/png" }));
+          }
         };
         img.src = kv.src;
       };
@@ -1491,7 +1503,7 @@
           '<div class="jl-raportti-sisalto"><div class="jl-pieni">' + julisteHTML(j) + '</div><div>' +
           '<dl class="tk-tiedot"><dt>Kuva</dt><dd>' + suojaa(kv.nimi) + '</dd><dt>Värit</dt><dd>' + suojaa(v.nimi) + '</dd><dt>Fontti</dt><dd>' + suojaa(f.nimi) + '</dd><dt>Tekstien paikka</dt><dd>' + suojaa(hae(JA, j.asettelu).nimi) + '</dd></dl>' +
           listaJ(j, true) + '</div></div>' +
-          '<div class="intro-nappi"><a class="macro-link btn-secondary" href="javascript:void(0)" onclick="lataaJuliste()">' + suojaa(TH.lataaNappi || "Lataa juliste kuvana") + '</a></div></div>';
+          '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista jl-lataa-tulos" onclick="lataaJuliste()">' + suojaa(TH.lataaNappi || "Lataa juliste kuvana") + '</button></div></div>';
         h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, i) {
           return '<li><strong>' + suojaa(k.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
             '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
