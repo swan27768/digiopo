@@ -554,7 +554,7 @@
 
           <!-- Arvaa ja tarkista: sukupuolijakauma aloittain (js/arvaa-tarkista.js, css/arvaa-tarkista.css).
                Oikeat luvut (data-oikea = naisten osuus, %) päivitetään Tilastokeskuksen julkaisusta vuosittain.
-               Sijaitsee koulutusalakarusellin jälkeen, ennen Oma reitti löytyy tutkimalla -osiota. -->
+               Sijaitsee koulutusalakarusellin jälkeen, ennen "Tutki tarkemmin" -herolaatikkoa. -->
           <section class="arvaa arvaa--hero" id="arvaa-tarkista" aria-labelledby="arvaa-otsikko">
             <div class="arvaa__hero">
               <div class="arvaa__hero-teksti">
@@ -649,10 +649,10 @@
 
             <!-- Tab-palkki -->
             <div class="tutkija-tabbar" role="tablist" aria-label="Valitse tutkija">
-              <button type="button" class="tutkija-tab amis-tab aktiivinen" id="tab-amis" role="tab" aria-selected="true" aria-controls="tutkija-amis" onclick="vaihdaTutkija('amis',this)">
+              <button type="button" class="tutkija-tab amis-tab aktiivinen" id="tab-amis" role="tab" aria-selected="true" tabindex="0" aria-controls="tutkija-amis" onclick="vaihdaTutkija('amis',this)">
                 Amispolku
               </button>
-              <button type="button" class="tutkija-tab lukio-tab" id="tab-lukio" role="tab" aria-selected="false" aria-controls="tutkija-lukio" onclick="vaihdaTutkija('lukio',this)">
+              <button type="button" class="tutkija-tab lukio-tab" id="tab-lukio" role="tab" aria-selected="false" tabindex="-1" aria-controls="tutkija-lukio" onclick="vaihdaTutkija('lukio',this)">
                 Lukiopolku
               </button>
             </div>
@@ -890,7 +890,7 @@
               <p class="tj-tulos-otsikko" id="lukio-tulos-otsikko" aria-live="polite">Kaikki painotukset</p>
               <p class="tj-ei-tuloksia" id="lukio-ei-tuloksia" role="status">Ei tuloksia.</p>
               <div class="linja-grid" id="lukio-linjat" role="list"></div>
-              <p style="font-size:11px;color:#9ca3af;margin:6px 0 0;">Lähde: <a class="is8-001" href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener">opintopolku.fi/lukiokoulutus</a></p>
+              <p style="font-size:11px;color:#6b7280;margin:6px 0 0;">Lähde: <a class="is8-001" href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener">opintopolku.fi/lukiokoulutus</a></p>
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot &amp; arki</h4>
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
@@ -899,21 +899,21 @@
 
               <h4 class="tj-osio-otsikko is8-002">Päivä lukiolaisena</h4>
               <div class="tj-tarinat-valit" role="tablist" aria-label="Valitse lukiotyyppi">
-                <button type="button" class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true"  onclick="vaihdaLukioTarina('yleislukio',this)">
+                <button type="button" class="tj-tarina-nappi aktiivinen-lukio" role="tab" aria-selected="true" id="tab-tarina-yleislukio" aria-controls="lukio-yleislukio" tabindex="0"  onclick="vaihdaLukioTarina('yleislukio',this)">
                   <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#bfdbfe"/><circle cx="20" cy="24" r="13" fill="#c98642"/><path d="M7 18 Q7 6 20 6 Q33 6 33 18 Z" fill="#2c1810"/><circle cx="15.5" cy="23" r="2" fill="#111"/><circle cx="24.5" cy="23" r="2" fill="#111"/><path d="M15 29 Q20 33 25 29" stroke="#8b5e3c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
                   Emre – Yleislukio
                 </button>
-                <button type="button" class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('ib',this)">
+                <button type="button" class="tj-tarina-nappi"                  role="tab" aria-selected="false" id="tab-tarina-ib" aria-controls="lukio-ib" tabindex="-1" onclick="vaihdaLukioTarina('ib',this)">
                   <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#fce7f3"/><circle cx="20" cy="24" r="13" fill="#f5d0b3"/><path d="M7 16 Q7 6 20 6 Q33 6 33 16 L33 20 L7 20 Z" fill="#1a1a1a"/><circle cx="15.5" cy="25" r="2" fill="#222"/><circle cx="24.5" cy="25" r="2" fill="#222"/><path d="M15 30 Q20 34 25 30" stroke="#b08060" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
                   Yuki – IB-lukio
                 </button>
-                <button type="button" class="tj-tarina-nappi"                  role="tab" aria-selected="false" onclick="vaihdaLukioTarina('urheilu',this)">
+                <button type="button" class="tj-tarina-nappi"                  role="tab" aria-selected="false" id="tab-tarina-urheilu" aria-controls="lukio-urheilu" tabindex="-1" onclick="vaihdaLukioTarina('urheilu',this)">
                   <svg class="tarina-avatar" width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#d1fae5"/><circle cx="20" cy="24" r="13" fill="#fddab6"/><path d="M7 17 Q7 6 20 6 Q33 6 33 17 Z" fill="#d4a030"/><ellipse cx="33" cy="13" rx="5" ry="7" fill="#d4a030"/><circle cx="15.5" cy="23" r="2" fill="#333"/><circle cx="24.5" cy="23" r="2" fill="#333"/><path d="M15 29 Q20 33 25 29" stroke="#a07040" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
                   Aino – Urheilulukio
                 </button>
               </div>
 
-              <div class="tj-tarina aktiivinen" id="lukio-yleislukio" role="tabpanel">
+              <div class="tj-tarina aktiivinen" id="lukio-yleislukio" role="tabpanel" aria-labelledby="tab-tarina-yleislukio" tabindex="0">
                 <div class="tj-tarina-header">
                   <div class="tj-tarina-header-flex">
                     <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#bfdbfe"/><circle cx="20" cy="24" r="13" fill="#c98642"/><path d="M7 18 Q7 6 20 6 Q33 6 33 18 Z" fill="#2c1810"/><circle cx="15.5" cy="23" r="2" fill="#111"/><circle cx="24.5" cy="23" r="2" fill="#111"/><path d="M15 29 Q20 33 25 29" stroke="#8b5e3c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
@@ -927,7 +927,7 @@
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">15:30</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>Päivä päättyy</h6><p>"Lukio on vapaampi kuin yläkoulu — mutta vastaat itse itsestäsi." — Emre</p></div></div>
                 </div>
               </div>
-              <div class="tj-tarina" id="lukio-ib" role="tabpanel">
+              <div class="tj-tarina" id="lukio-ib" role="tabpanel" aria-labelledby="tab-tarina-ib" tabindex="0">
                 <div class="tj-tarina-header">
                   <div class="tj-tarina-header-flex">
                     <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#fce7f3"/><circle cx="20" cy="24" r="13" fill="#f5d0b3"/><path d="M7 16 Q7 6 20 6 Q33 6 33 16 L33 20 L7 20 Z" fill="#1a1a1a"/><circle cx="15.5" cy="25" r="2" fill="#222"/><circle cx="24.5" cy="25" r="2" fill="#222"/><path d="M15 30 Q20 34 25 30" stroke="#b08060" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
@@ -941,7 +941,7 @@
                   <div class="tj-aika-rivi"><span class="tj-aika-merkki lukio">16:00</span><div class="tj-aika-viiva"></div><div class="tj-aika-sisalto"><h6>CAS — vapaaehtoistoiminta ja harrastukset</h6><p>"IB on rankka — mutta se avaa ovet maailmalle." — Yuki</p></div></div>
                 </div>
               </div>
-              <div class="tj-tarina" id="lukio-urheilu" role="tabpanel">
+              <div class="tj-tarina" id="lukio-urheilu" role="tabpanel" aria-labelledby="tab-tarina-urheilu" tabindex="0">
                 <div class="tj-tarina-header">
                   <div class="tj-tarina-header-flex">
                     <svg class="tarina-avatar" width="44" height="44" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#d1fae5"/><circle cx="20" cy="24" r="13" fill="#fddab6"/><path d="M7 17 Q7 6 20 6 Q33 6 33 17 Z" fill="#d4a030"/><ellipse cx="33" cy="13" rx="5" ry="7" fill="#d4a030"/><circle cx="15.5" cy="23" r="2" fill="#333"/><circle cx="24.5" cy="23" r="2" fill="#333"/><path d="M15 29 Q20 33 25 29" stroke="#a07040" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
@@ -2540,9 +2540,9 @@
             <p class="tj-kortti-lyhyt">${lyhyt}</p>
             <button type="button" class="tj-avaa" onclick="toggleAmisTutkinto(this)" aria-expanded="false">${lueLisaa}</button>
             <div class="tj-lisatiedot" aria-hidden="true">
-              <span style="font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Esimerkkiammatit</span><br>
+              <span class="tj-lbl-esim" style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">${tj.esimerkkiammatit || 'Esimerkkiammatit'}</span><br>
               <span style="font-size:12.5px;color:#374151;">${t.am}</span>
-              <div style="margin-top:8px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">Tutkinto</div>
+              <div class="tj-lbl-tutkinto" style="margin-top:8px;font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.4px;">${tj.tutkinto_otsikko || 'Tutkinto'}</div>
               <div style="font-size:12.5px;color:#374151;font-weight:700;">${t.pt}</div>
               <div style="margin-top:7px;">${kesto} &middot; <a href="https://opintopolku.fi/konfo/fi/haku?keyword=${encodeURIComponent(t.pt)}&koulutustyyppi=amm" target="_blank" rel="noopener" style="color:#d97706">${haeOp}</a></div>
             </div>
@@ -2683,9 +2683,9 @@
     }
     function vaihdaLukioTarina(id, nappi) {
       document.querySelectorAll('#tutkija-lukio .tj-tarina').forEach(t => t.classList.remove('aktiivinen'));
-      document.querySelectorAll('#tutkija-lukio .tj-tarina-nappi').forEach(n => { n.classList.remove('aktiivinen-lukio'); n.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('#tutkija-lukio .tj-tarina-nappi').forEach(n => { n.classList.remove('aktiivinen-lukio'); n.setAttribute('aria-selected','false'); n.setAttribute('tabindex','-1'); });
       document.getElementById('lukio-'+id).classList.add('aktiivinen');
-      nappi.classList.add('aktiivinen-lukio'); nappi.setAttribute('aria-selected','true');
+      nappi.classList.add('aktiivinen-lukio'); nappi.setAttribute('aria-selected','true'); nappi.setAttribute('tabindex','0');
     }
 
     /* ── Korkeakoulut ── */
@@ -2842,7 +2842,8 @@
       amisValitut.forEach(k => { [].concat(PELI_ALA[k] || []).forEach(g => { if (kat.indexOf(g) === -1) kat.push(g); }); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
       if (valitut.length === 0) {
-        sisalto.innerHTML = '<div class="amis-v3-ohje"><p>Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva alan tarina ilmestyy tähän automaattisesti.</p></div>';
+        sisalto.innerHTML = '<div class="amis-v3-ohje"><p></p></div>';
+        sisalto.querySelector('p').textContent = tjT().amis_v3_ohje || 'Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva alan tarina ilmestyy tähän automaattisesti.';
         sisalto.dataset.ala = '';
         return;
       }
@@ -2861,23 +2862,18 @@
       const tiedosto = AMIS_V3_TIEDOSTOT[ala];
       const valintaPalkki = valitut.length > 1 ? `
         <div class="amis-v3-valinta-palkki">
-          <p class="amis-v3-valinta-ohje">Sinulla on useita kiinnostuksia — minkä alan tarinaa haluat kokeilla?</p>
+          <p class="amis-v3-valinta-ohje">${esc8(tjT().amis_v3_useita || 'Sinulla on useita kiinnostuksia — minkä alan tarinaa haluat kokeilla?')}</p>
           <div class="amis-v3-valinta-napit" role="group">
             ${valitut.map(a => `
               <button type="button" class="amis-v3-valinta-nappi${a === ala ? ' aktiivinen' : ''}"
-                onclick="renderAmisV3('${a}')" aria-pressed="${a === ala}">
-                ${AMIS_V3_IKONIT[a] ? AMIS_V3_IKONIT[a] + ' ' : ''}${AMIS_V3_NIMET[a]}
+                onclick="renderAmisV3('${a}')" aria-pressed="${a === ala}" data-ala="${a}">
+                ${esc8(alaNimi(a))}
               </button>`).join('')}
           </div>
         </div>` : '';
       sisalto.innerHTML = valintaPalkki +
-        `<iframe src="${tiedosto}" class="amis-v3-iframe" data-ala="${ala}" title="${AMIS_V3_NIMET[ala]} — alan tarina" allowfullscreen loading="lazy"></iframe>`;
+        `<iframe src="${tiedosto}" class="amis-v3-iframe" data-ala="${ala}" title="${esc8(alaNimi(ala) + ' — ' + (tjT().alan_tarina || 'alan tarina'))}" allowfullscreen loading="lazy"></iframe>`;
     }
-
-    const AMIS_V3_IKONIT = {
-      ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:'', merenkulku:'', yrittajyys:'', muotoilu:''
-    };
 
     /* ── Tab-vaihto ── */
     function vaihdaTutkija(polku, nappi) {
@@ -2885,8 +2881,8 @@
         document.getElementById('tutkija-'+p).style.display = p === polku ? 'block' : 'none';
       });
       if (polku !== 'amis' && typeof nollaaPelitarinat === 'function') nollaaPelitarinat();
-      document.querySelectorAll('.tutkija-tab').forEach(t => { t.classList.remove('aktiivinen'); t.setAttribute('aria-selected','false'); });
-      nappi.classList.add('aktiivinen'); nappi.setAttribute('aria-selected','true');
+      document.querySelectorAll('.tutkija-tab').forEach(t => { t.classList.remove('aktiivinen'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
+      nappi.classList.add('aktiivinen'); nappi.setAttribute('aria-selected','true'); nappi.setAttribute('tabindex','0');
       if (polku === 'amis') paivitaAmis(); else { paivitaLukio(); paivitaKK(); }
     }
 
@@ -2902,7 +2898,7 @@
       if (!el) return;
       const valmiit = amisTarinatValmiit().filter(a => AMIS_V3_NIMET[a]);
       if (valmiit.length === 0) { el.hidden = true; el.textContent = ''; return; }
-      el.textContent = '✓ Alan tehtävä tehty: ' + valmiit.map(a => AMIS_V3_NIMET[a]).join(', ');
+      el.textContent = (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' ' + valmiit.map(alaNimi).join(', ');
       el.hidden = false;
     }
     window.addEventListener('message', function (e) {
@@ -2933,6 +2929,49 @@
       yv.hidden = !(aOk && tarinaOk);
       if (puuttuu) puuttuu.hidden = !(aOk && !tarinaOk);
     }
+    /* ── Käännetyt tekstit (DIGIOPO_T.g8.tutkija), suomi varalla ── */
+    function tjT() { return (window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija) || {}; }
+    function alaNimi(a) { const n = tjT().v3_nimet; return (n && n[a]) || AMIS_V3_NIMET[a] || a; }
+    function esc8(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+    /* Kielen vaihtuessa päivitetään jo piirretyt tekstit lataamatta alan tarinaa uudelleen */
+    document.addEventListener('digiopo:langchange', function () {
+      const tj = tjT();
+      document.querySelectorAll('#amis-tutkinnot .tj-lbl-esim').forEach(e => { e.textContent = tj.esimerkkiammatit || 'Esimerkkiammatit'; });
+      document.querySelectorAll('#amis-tutkinnot .tj-lbl-tutkinto').forEach(e => { e.textContent = tj.tutkinto_otsikko || 'Tutkinto'; });
+      const sis = document.getElementById('amis-v3-sisalto');
+      if (sis) {
+        const ohje = sis.querySelector('.amis-v3-ohje p');
+        if (ohje && tj.amis_v3_ohje) ohje.textContent = tj.amis_v3_ohje;
+        const vo = sis.querySelector('.amis-v3-valinta-ohje');
+        if (vo) vo.textContent = tj.amis_v3_useita || 'Sinulla on useita kiinnostuksia — minkä alan tarinaa haluat kokeilla?';
+        sis.querySelectorAll('.amis-v3-valinta-nappi[data-ala]').forEach(b => { b.textContent = alaNimi(b.dataset.ala); });
+        const fr = sis.querySelector('iframe.amis-v3-iframe');
+        if (fr) fr.title = alaNimi(fr.dataset.ala) + ' — ' + (tj.alan_tarina || 'alan tarina');
+      }
+      paivitaAmisTarinaTila();
+    });
+
+    /* ── Välilehdet näppäimistöllä: ← → vaihtaa, Home/End ensimmäiseen/viimeiseen ── */
+    function tabNappaimet(lista) {
+      if (!lista) return;
+      lista.addEventListener('keydown', function (e) {
+        const tabs = Array.from(lista.querySelectorAll('[role="tab"]'));
+        const i = tabs.indexOf(document.activeElement);
+        if (i < 0) return;
+        let j = null;
+        if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') j = 0;
+        else if (e.key === 'End') j = tabs.length - 1;
+        if (j === null) return;
+        e.preventDefault();
+        tabs[j].click();
+        tabs[j].focus();
+      });
+    }
+    tabNappaimet(document.querySelector('#tutkija-alue .tutkija-tabbar'));
+    tabNappaimet(document.querySelector('#tutkija-lukio .tj-tarinat-valit'));
+
     /* ── Init ── */
     (function() {
       try {

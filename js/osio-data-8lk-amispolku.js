@@ -130,7 +130,7 @@
     var nimet = [];
     try {
       var valmiit = JSON.parse(localStorage.getItem('dg8-amis-tarina-valmis') || '[]');
-      if (typeof AMIS_V3_NIMET !== 'undefined') valmiit.forEach(function (a) { if (AMIS_V3_NIMET[a]) nimet.push(AMIS_V3_NIMET[a]); });
+      if (typeof AMIS_V3_NIMET !== 'undefined') valmiit.forEach(function (a) { if (AMIS_V3_NIMET[a]) nimet.push(typeof alaNimi === 'function' ? alaNimi(a) : AMIS_V3_NIMET[a]); });
     } catch (e) {}
     if (!nimet.length) {
       document.querySelectorAll('#tutkija-amis .tj-nappi.valittu-amis').forEach(function (b) { nimet.push(b.textContent.trim()); });
