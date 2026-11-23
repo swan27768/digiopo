@@ -44,9 +44,9 @@
       'Psykologia', 'Filosofia', 'Terveystieto', 'Kuvataide', 'Musiikki', 'Liikunta'],
     jatko: [
       { id: 'amk', teksti: 'Ammattikorkeakoulu (AMK)', kortti: 'Ammattikorkeakoulu (AMK)',
-        selitys: 'AMK:ssa opiskelu on käytännönläheistä. Valmistut yleensä 3,5–4 vuodessa.' },
+        selitys: 'AMK:ssa opiskelu on käytännönläheistä. Valmistut yleensä 3,5–4,5 vuodessa.' },
       { id: 'yliopisto', teksti: 'Yliopisto', kortti: 'Yliopisto',
-        selitys: 'Yliopistossa opiskelu on tieteellistä. Kandidaatti ja maisteri vievät yhteensä yleensä noin 5 vuotta.' },
+        selitys: 'Yliopistossa opiskelu on tieteellistä. Kandidaatti (3 v) ja maisteri (2 v) vievät yhteensä yleensä 5 vuotta.' },
       { id: 'molemmat', teksti: 'Molemmat kiinnostavat', kortti: 'AMK tai yliopisto',
         selitys: 'Hyvä! Voit hakea molempiin samassa korkeakoulujen yhteishaussa.' },
       { id: 'eos', teksti: 'En tiedä vielä', kortti: 'Vielä auki',
@@ -81,6 +81,11 @@
       if (v && typeof v === 'object') {
         Object.keys(t).forEach(function (k) { if (v[k] != null) t[k] = v[k]; });
         if (!Array.isArray(t.aineet)) t.aineet = [];
+        /* Vanhat indeksipohjaiset painotukset (l0–l9) uusiin tunnisteisiin. Poistetut linjat
+           (kieli, musiikki, kuvataide, urheilu) vastaavat nyt erikoislukioita. */
+        var VANHAT = { l0: 'l-yleinen', l1: 'e1', l2: 'l-matlu', l3: 'e3', l4: 'e4', l5: 'e2',
+          l6: 'l-teatteri', l7: 'l-media', l8: 'l-yhteiskunta', l9: 'l-yrittajyys' };
+        if (VANHAT[t.painotus]) { t.painotus = VANHAT[t.painotus]; localStorage.setItem(AVAIN, JSON.stringify(t)); }
         return t;
       }
       /* Siirto vanhasta ohjatusta suunnitelmasta: jatkosuunta ja vapaat tekstit talteen */
@@ -103,8 +108,8 @@
     var t = tj(), lista = [];
     var valitut = (typeof lukioValitut !== 'undefined') ? lukioValitut : new Set();
     if (typeof TJ_LINJAT !== 'undefined') TJ_LINJAT.forEach(function (l, i) {
-      lista.push({ id: 'l' + i, ryhma: 'p', nimi: (t.l_nimi || [])[i] || l.nimi, kuvaus: (t.l_kuvaus || [])[i] || l.kuvaus,
-        /* Yleislinja sopii kaikkeen, joten sitä ei merkitä erikseen */
+      lista.push({ id: 'l-' + (l.id || i), ryhma: 'p', nimi: (t.l_nimi || [])[i] || l.nimi, kuvaus: (t.l_kuvaus || [])[i] || l.kuvaus,
+        /* "Ei erityistä painotusta" sopii kaikkeen, joten sitä ei merkitä erikseen */
         sopii: valitut.size > 0 && l.k.length < 7 && l.k.some(function (a) { return valitut.has(a); }) });
     });
     if (typeof TJ_ERIKOISLUKIOT !== 'undefined') TJ_ERIKOISLUKIOT.forEach(function (e, i) {
