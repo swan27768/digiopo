@@ -157,7 +157,7 @@
           (v.linkki ? '<p><a href="' + esc(v.linkki) + '" target="_blank" rel="noopener">' + esc(d.ui.lue_lisaa) + ' →</a></p>' : '') +
           (v.erityis ? '<p><button type="button" class="amis-tt-erityis" data-erityis="1">' + esc(d.ui.erityis_nappi) + '</button></p>' : '');
       }
-      return '<li class="amis-tt-kortti' + (vas ? ' vastattu' : '') + '">' +
+      return '<li class="amis-tt-kortti' + (vas ? ' vastattu ' + (vas === v.oikea ? 'tulos-ok' : 'tulos-ei') : '') + '">' +
         '<p class="amis-tt-vaite"><span class="amis-tt-nro" aria-hidden="true">' + (i + 1) + '</span>' + esc(v.vaite) + '</p>' +
         '<div class="amis-tt-napit" role="group" aria-label="' + esc(v.vaite) + '">' + nappi('totta', d.ui.totta) + nappi('tarua', d.ui.tarua) + '</div>' +
         '<div class="amis-tt-palaute" id="amis-tt-palaute-' + v.id + '" aria-live="polite"' + (vas ? '' : ' hidden') + '>' + palaute + '</div>' +
@@ -235,9 +235,15 @@
 
   function piirraTekstit(d) {
     var set = function (id, t) { var el = $(id); if (el) el.textContent = t; };
-    set('amis-tt-otsikko', d.ui.osa1);
+    /* Osa-otsikot: "Osa 1: Otsikko" → merkki + otsikko */
+    var otsikko = function (id, t) {
+      var el = $(id); if (!el) return;
+      var m = String(t).match(/^([^:]+):\s*(.+)$/);
+      el.innerHTML = m ? '<span class="amis-v3-osa-nro">' + esc(m[1]) + '</span> ' + esc(m[2]) : esc(t);
+    };
+    otsikko('amis-tt-otsikko', d.ui.osa1);
+    otsikko('amis-polku-otsikko', d.ui.osa2);
     set('amis-tt-ohje', d.ui.osa1_ohje);
-    set('amis-polku-otsikko', d.ui.osa2);
     set('amis-polku-ohje', d.ui.osa2_ohje);
     set('amis-polku-selvita-label', d.ui.selvita);
     set('amis-polku-puuttuu', d.ui.puuttuu);
