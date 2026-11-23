@@ -1,4 +1,4 @@
-/* DigiOpo – Arvaa ja tarkista (8. lk, Amispolku).
+/* DigiOpo – Arvaa ja tarkista (8. lk, koulutusalakarusellin jälkeen).
  * Oppilas arvaa naisten osuuden kolmella ammatillisen koulutuksen alalla ja näkee oikeat luvut.
  * Oikeat luvut ovat HTML:ssä (data-oikea), jotta ne päivitetään yhdestä paikasta.
  * Käännökset: translations/<kieli>.json → g8.arvaa (i18n.js lähettää digiopo:langchange). */
