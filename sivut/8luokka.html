@@ -889,6 +889,7 @@
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot &amp; arki</h4>
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
+              <p class="erikoislukio-huomio" id="erikoislukio-huomio" role="status" hidden></p>
               <div class="erikoislukio-grid" id="erikoislukio-grid" role="list"></div>
 
               <h4 class="tj-osio-otsikko is8-002">Päivä lukiolaisena</h4>
@@ -1020,86 +1021,35 @@
               <p class="tj-tulos-otsikko" id="kk-tulos-otsikko">Kaikki vaihtoehdot</p>
               <p class="tj-ei-tuloksia" id="kk-ei-tuloksia" role="status">Ei tuloksia valituilla kiinnostuksilla.</p>
               <div class="kk-grid" id="kk-kortit" role="list"></div>
+              <button type="button" class="kk-nayta-kaikki" id="kk-nayta-kaikki" onclick="vaihdaKKKaikki()" aria-controls="kk-kortit" aria-expanded="false" hidden>Näytä kaikki</button>
 
               <a href="https://opintopolku.fi/konfo/fi/" target="_blank" rel="noopener" class="kk-opintopolku-nappi">
                 Kaikki koulutusohjelmat — opintopolku.fi
               </a>
 
-              <!-- Lukiosuunnitelma wizard -->
+              <!-- ══ Vaihe 4: Oma lukiosuunnitelma ══
+                   Sisältö ja logiikka: js/osio-data-8lk-lukiopolku.js (valinnat → kortti → PDF) -->
               <div class="lukio-suunnitelma">
                 <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span>Oma lukiosuunnitelma</h4>
-                <p class="tj-kuvaus">Vastaa yhteen kysymykseen kerrallaan — kuin pelissä.</p>
+                <p class="lv4-intro">Tee oma lukiosuunnitelma valitsemalla. Valinnat eivät sido sinua mihinkään – mieltä saa muuttaa. Lopuksi lataat suunnitelman PDF:nä ja palautat sen opolle Classroomiin.</p>
 
-                <div class="ls-wizard" id="ls-wizard">
-                  <!-- Edistymispalkit -->
-                  <div class="ls-wizard-progpalkki" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1">
-                    <div class="ls-wizard-askel-dot aktiivinen" id="lsdot-0"></div>
-                    <div class="ls-wizard-askel-dot" id="lsdot-1"></div>
-                    <div class="ls-wizard-askel-dot" id="lsdot-2"></div>
-                    <div class="ls-wizard-askel-dot" id="lsdot-3"></div>
-                    <div class="ls-wizard-askel-dot" id="lsdot-4"></div>
+                <div class="amis-v3-tehtava lukio-v4" id="lukio-v4-tehtava">
+                  <p id="lv4-kieli" class="amis-v3-kieli" role="note" hidden></p>
+                  <div id="lv4-kysymykset"></div>
+                  <label class="amis-polku-selvita-label" id="lv4-haave-label" for="lv4-haave">Mitä haaveilet opiskelevasi tai tekeväsi lukion jälkeen? (vapaaehtoinen)</label>
+                  <textarea id="lv4-haave" class="amis-polku-selvita" rows="2" maxlength="300"></textarea>
+                  <label class="amis-polku-selvita-label" id="lv4-selvita-label" for="lv4-selvita">Yksi asia, jonka haluan vielä selvittää (vapaaehtoinen)</label>
+                  <textarea id="lv4-selvita" class="amis-polku-selvita" rows="2" maxlength="300"></textarea>
+                  <label class="amis-polku-selvita-label" id="lv4-nimi-label" for="lv4-nimi">Nimesi (näkyy vain PDF:ssä, vapaaehtoinen)</label>
+                  <input type="text" id="lv4-nimi" class="amis-polku-selvita" maxlength="60" autocomplete="name">
+                  <p class="amis-polku-puuttuu" id="lv4-puuttuu">Valitse vielä painotus, vähintään yksi aine ja suunta lukion jälkeen.</p>
+                  <div class="amis-polku-kortti" id="lv4-kortti" hidden></div>
+                  <div class="amis-v3-toiminnot">
+                    <button type="button" class="amis-kuittaa" id="lv4-valmis" hidden>Valmis – tallenna suunnitelmani</button>
+                    <button type="button" class="amis-v3-lataa" id="lv4-lataa" hidden>Lataa suunnitelma PDF:nä</button>
                   </div>
-                  <p class="ls-wizard-laskuri" id="ls-wizard-laskuri">Kysymys 1 / 5</p>
-
-                  <!-- Askel 1 -->
-                  <div class="ls-wizard-step nakyvissa" id="ls-step-0">
-                    <p class="ls-wizard-kysymys">Mikä lukion painotus tai erikoislukio kiinnostaa eniten?</p>
-                    <textarea id="ls-linja" class="tj-textarea lukio" placeholder="Esim. matematiikka- ja tiedekorostus, urheilulukio, IB..." rows="3"></textarea>
-                    <div class="ls-wizard-nav">
-                      <button type="button" class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
-
-                  <!-- Askel 2 -->
-                  <div class="ls-wizard-step" id="ls-step-1">
-                    <p class="ls-wizard-kysymys">Kolme ainetta, jotka haluaisin valita:</p>
-                    <textarea id="ls-aineet" class="tj-textarea lukio" placeholder="Esim. matematiikka (pitkä), englanti, kuvataide..." rows="3"></textarea>
-                    <div class="ls-wizard-nav">
-                      <button type="button" class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
-                      <button type="button" class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
-
-                  <!-- Askel 3 -->
-                  <div class="ls-wizard-step" id="ls-step-2">
-                    <p class="ls-wizard-kysymys">Lukion jälkeen minua kiinnostaa:</p>
-                    <div class="ls-radio-ryhma" role="group" aria-label="Jatko-opinnot">
-                      <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="amk"> AMK</label>
-                      <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="yliopisto"> Yliopisto</label>
-                      <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="molemmat"> Molemmat kiinnostavat</label>
-                      <label class="ls-radio-nappi"><input type="radio" name="ls-jatko" value="eos"> En tiedä vielä</label>
-                    </div>
-                    <div class="ls-wizard-nav">
-                      <button type="button" class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
-                      <button type="button" class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
-
-                  <!-- Askel 4 -->
-                  <div class="ls-wizard-step" id="ls-step-3">
-                    <p class="ls-wizard-kysymys">Mitä haaveilen opiskelevani tai tekeväni lukion jälkeen?</p>
-                    <textarea id="ls-haave" class="tj-textarea lukio" placeholder="Esim. haluaisin opiskella lääkäriksi, tai perustaa yrityksen..." rows="3"></textarea>
-                    <div class="ls-wizard-nav">
-                      <button type="button" class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
-                      <button type="button" class="ls-wizard-btn-eteen" onclick="seuraavaLsAskel()">Seuraava <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
-
-                  <!-- Askel 5 — viimeinen, tallenna tässä -->
-                  <div class="ls-wizard-step" id="ls-step-4">
-                    <p class="ls-wizard-kysymys">Yksi asia, jonka pitää vielä selvittää:</p>
-                    <textarea id="ls-selvita" class="tj-textarea lukio" placeholder="Esim. miten aineiden valinta vaikuttaa jatko-opintoihin..." rows="3"></textarea>
-                    <div class="ls-wizard-nav">
-                      <button type="button" class="ls-wizard-btn-takaisin" onclick="edellinenLsAskel()"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Takaisin</button>
-                      <button type="button" class="ls-wizard-tallenna" onclick="tallennaLukioSuunnitelma()">Tallenna ✓</button>
-                    </div>
-                  </div>
-
-                  <div class="tj-tallennettu" id="ls-tallennettu" role="status"></div>
-                  <button type="button" id="ls-lataa-nappi" onclick="lataaLukioSuunnitelmaTxt()" style="display:none;margin-top:10px;width:100%;background:#1d4ed8;color:white;border:none;border-radius:8px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:left;">
-                    Lataa suunnitelma TXT-tiedostona — lähetä Classroomiin
-                  </button>
-                  <button type="button" class="ls-wizard-tyhjenna-linkki" onclick="tyhjennaLukioSuunnitelma()">Tyhjennä vastaukset</button>
+                  <p class="amis-v3-lataa-ohje" id="lv4-lataa-ohje" hidden></p>
+                  <p class="amis-v3-tyhjenna-rivi"><button type="button" class="amis-v3-tyhjenna" id="lv4-tyhjenna">Tyhjennä vastaukset</button></p>
                 </div>
               </div>
 
@@ -2698,14 +2648,31 @@
         k.style.display = ok ? '' : 'none';
         if (ok) n++;
       });
+      /* Erikoislukiot näkyvät aina; oppilaan valintoihin sopivat korostetaan.
+         Jos mikään ei sovi, kerrotaan se eikä jätetä tyhjää kohtaa. */
+      const tjLp = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      let elSopivia = 0;
       document.querySelectorAll('#erikoislukio-grid .erikoislukio-kortti').forEach(k => {
         const f = JSON.parse(k.dataset.f);
         const req = JSON.parse(k.dataset.req || '[]');
-        const reqOk = lukioValitut.size === 0 || req.length === 0 || req.some(a => lukioValitut.has(a));
-        const filterOk = lukioValitut.size === 0 || f.length === 0 || f.some(a => lukioValitut.has(a));
-        k.style.display = (reqOk && filterOk) ? '' : 'none';
+        const ehdot = f.concat(req);
+        const sopii = lukioValitut.size > 0 && ehdot.some(a => lukioValitut.has(a));
+        k.style.display = '';
+        k.classList.toggle('sopii', sopii);
+        let merkki = k.querySelector('.el-sopii-merkki');
+        if (sopii && !merkki) {
+          merkki = document.createElement('span');
+          merkki.className = 'el-sopii-merkki';
+          k.insertBefore(merkki, k.firstChild);
+        }
+        if (merkki) { merkki.hidden = !sopii; merkki.textContent = tjLp.el_sopii || 'Sopii valintoihisi'; }
+        if (sopii) elSopivia++;
       });
-      const tjLp = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      const elHuom = document.getElementById('erikoislukio-huomio');
+      if (elHuom) {
+        elHuom.hidden = !(lukioValitut.size > 0 && elSopivia === 0);
+        elHuom.textContent = tjLp.el_ei_sopivia || 'Valitsemiisi aineisiin ei ole omaa erikoislukiota. Yleislukiossa voit painottaa niitä itse. Tässä kaikki erikoislukiot:';
+      }
       document.getElementById('lukio-tulos-otsikko').textContent =
         lukioValitut.size === 0
           ? `${tjLp.kaikki_linjat || 'Kaikki painotukset'} (${TJ_LINJAT.length})`
@@ -2759,6 +2726,8 @@
     ];
 
     let kkRend = false;
+    let kkKaikkiAuki = false;
+    function vaihdaKKKaikki() { kkKaikkiAuki = !kkKaikkiAuki; paivitaKK(); }
     function renderKK() {
       if (kkRend) return;
       const g = document.getElementById('kk-kortit');
@@ -2785,118 +2754,29 @@
     function paivitaKK() {
       renderKK();
       const kortit = document.querySelectorAll('#kk-kortit .kk-kortti');
+      const KK_ALKU = 8;   // ilman suodatusta näytetään ensin näin monta
+      const rajaa = lukioValitut.size === 0 && !kkKaikkiAuki;
       let n = 0;
       kortit.forEach(k => {
         const alat = JSON.parse(k.dataset.k);
         const ok = lukioValitut.size === 0 || alat.some(a => lukioValitut.has(a));
-        k.classList.toggle('piilotettu', !ok);
+        k.classList.toggle('piilotettu', !ok || (rajaa && n >= KK_ALKU));
         if (ok) n++;
       });
       const tjKK = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
+      const kkNappi = document.getElementById('kk-nayta-kaikki');
+      if (kkNappi) {
+        kkNappi.hidden = !(lukioValitut.size === 0 && n > KK_ALKU);
+        kkNappi.setAttribute('aria-expanded', String(kkKaikkiAuki));
+        kkNappi.textContent = kkKaikkiAuki
+          ? (tjKK.kk_nayta_vahemman || 'Näytä vähemmän')
+          : (tjKK.kk_nayta_kaikki || 'Näytä kaikki') + ' (' + n + ')';
+      }
       document.getElementById('kk-tulos-otsikko').textContent =
         lukioValitut.size === 0
           ? `${tjKK.kaikki_vaihtoehdot || 'Kaikki vaihtoehdot'} (${KK_DATA.length})`
           : `${n} ${tjKK.koulutusta_loytyy || 'koulutusta löytyi'}`;
       document.getElementById('kk-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
-    }
-
-    // ── Wizard-logiikka (Lukiosuunnitelma) ──
-    var lsWizardAskel = 0;
-
-    function naytaLsAskel(n) {
-      for (var i = 0; i < 5; i++) {
-        var step = document.getElementById('ls-step-' + i);
-        var dot  = document.getElementById('lsdot-' + i);
-        if (step) step.classList.remove('nakyvissa');
-        if (dot) {
-          dot.classList.remove('aktiivinen', 'valmis');
-          if (i < n)      dot.classList.add('valmis');
-          else if (i === n) dot.classList.add('aktiivinen');
-        }
-      }
-      var curr = document.getElementById('ls-step-' + n);
-      if (curr) curr.classList.add('nakyvissa');
-      var laskuri = document.getElementById('ls-wizard-laskuri');
-      if (laskuri) laskuri.textContent = 'Kysymys ' + (n + 1) + ' / 5';
-      var pb = document.querySelector('.ls-wizard-progpalkki');
-      if (pb) pb.setAttribute('aria-valuenow', n + 1);
-      lsWizardAskel = n;
-    }
-
-    function seuraavaLsAskel() {
-      if (lsWizardAskel < 4) naytaLsAskel(lsWizardAskel + 1);
-    }
-
-    function edellinenLsAskel() {
-      if (lsWizardAskel > 0) naytaLsAskel(lsWizardAskel - 1);
-    }
-
-    function tallennaLukioSuunnitelma() {
-      const jatko = (document.querySelector('input[name="ls-jatko"]:checked') || {}).value || '';
-      const linja   = document.getElementById('ls-linja').value.trim();
-      const aineet  = document.getElementById('ls-aineet').value.trim();
-      const haave   = document.getElementById('ls-haave').value.trim();
-      const selvita = document.getElementById('ls-selvita').value.trim();
-      // Vaadi vähintään yksi täytetty kenttä
-      if (!linja && !aineet && !jatko && !haave && !selvita) {
-        const tallennettu = document.getElementById('ls-tallennettu');
-        tallennettu.textContent = 'Täytä ainakin yksi kohta ennen tallentamista.';
-        tallennettu.classList.add('nakyva');
-        return;
-      }
-      const data = { linja, aineet, jatko, haave, selvita };
-      try { localStorage.setItem('dg8-lukio-suunnitelma', JSON.stringify(data)); } catch(e){}
-      document.getElementById('ls-tallennettu').textContent = '✓ Tallennettu! Suunnitelmasi ovat tallessa tässä selaimessa.';
-      document.getElementById('ls-tallennettu').classList.add('nakyva');
-      const lataa = document.getElementById('ls-lataa-nappi');
-      if (lataa) lataa.style.display = 'block';
-      const yv = document.getElementById('lukio-yhteenveto');
-      if (yv) { yv.hidden = false; yv.scrollIntoView({behavior:'smooth', block:'nearest'}); }
-    }
-
-    function lataaLukioSuunnitelmaTxt() {
-      const jatkoMap = { amk:'AMK', yliopisto:'Yliopisto', molemmat:'Molemmat kiinnostavat', eos:'En tiedä vielä' };
-      const jatko = (document.querySelector('input[name="ls-jatko"]:checked') || {}).value || '';
-      const teksti = [
-        'OMA LUKIOSUUNNITELMA',
-        '====================',
-        '',
-        '1. Lukiolinja tai erikoislukio:',
-        document.getElementById('ls-linja').value.trim() || '–',
-        '',
-        '2. Kolme kiinnostavaa ainetta:',
-        document.getElementById('ls-aineet').value.trim() || '–',
-        '',
-        '3. Lukion jälkeen minua kiinnostaa:',
-        jatkoMap[jatko] || '–',
-        '',
-        '4. Haaveeni lukion jälkeen:',
-        document.getElementById('ls-haave').value.trim() || '–',
-        '',
-        '5. Yksi selvitettävä asia:',
-        document.getElementById('ls-selvita').value.trim() || '–',
-      ].join('\n');
-      const blob = new Blob([teksti], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'oma-lukiosuunnitelma.txt'; a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function tyhjennaLukioSuunnitelma() {
-      ['ls-linja','ls-aineet','ls-haave','ls-selvita'].forEach(function(id) {
-        var el = document.getElementById(id); if (el) el.value = '';
-      });
-      const r = document.querySelector('input[name="ls-jatko"]:checked');
-      if (r) r.checked = false;
-      var tallennettu = document.getElementById('ls-tallennettu');
-      if (tallennettu) { tallennettu.textContent = ''; tallennettu.classList.remove('nakyva'); }
-      const lataa = document.getElementById('ls-lataa-nappi');
-      if (lataa) lataa.style.display = 'none';
-      const yv = document.getElementById('lukio-yhteenveto');
-      if (yv) yv.hidden = true;
-      try { localStorage.removeItem('dg8-lukio-suunnitelma'); } catch(e){}
-      naytaLsAskel(0);
     }
 
     /* ── Vaihe 3: Alan pelitarina (iframe) ── */
@@ -3077,25 +2957,11 @@
         // Vanha Vaihe 3:n kuittaus on poistettu käytöstä: siivotaan sen tallenteet pois
         ['dg8-amis-v2-a','dg8-amis-v2-b'].forEach(function(k) { localStorage.removeItem(k); });
         tarkistaAmisYhteenveto();
-        const s = JSON.parse(localStorage.getItem('dg8-lukio-suunnitelma') || 'null');
-        if (s) {
-          if (s.linja)   { const el = document.getElementById('ls-linja');   if (el) el.value = s.linja; }
-          if (s.aineet)  { const el = document.getElementById('ls-aineet');  if (el) el.value = s.aineet; }
-          if (s.jatko)   { const r = document.querySelector(`input[name="ls-jatko"][value="${s.jatko}"]`); if (r) r.checked = true; }
-          if (s.haave)   { const el = document.getElementById('ls-haave');   if (el) el.value = s.haave; }
-          if (s.selvita) { const el = document.getElementById('ls-selvita'); if (el) el.value = s.selvita; }
-          // Näytä latausnappi ja Hyvä työ! -boksi jos jo tallennettu
-          const lataa = document.getElementById('ls-lataa-nappi');
-          if (lataa) lataa.style.display = 'block';
-          const yv = document.getElementById('lukio-yhteenveto');
-          if (yv) yv.hidden = false;
-          // Hyppää wizardissa viimeiseen askeleeseen jotta tallennettu tieto näkyy
-          naytaLsAskel(4);
-        }
       } catch(e){}
     })();
     </script>
     <script src="../js/osio-data-8lk-amispolku.js"></script>
+    <script src="../js/osio-data-8lk-lukiopolku.js"></script>
     <script src="../js/osio-rakenne.js"></script>
     <script src="../js/paivan-kysymys.js" defer></script>
     <script src="../js/korttimerkit.js"></script>

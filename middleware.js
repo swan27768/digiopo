@@ -26,6 +26,7 @@ export const config = {
     '/js/osio-data-7lk.js',
     '/js/osio-data-8lk.js',
     '/js/osio-data-8lk-amispolku.js',
+    '/js/osio-data-8lk-lukiopolku.js',
     '/js/osio-data-9lk.js',
     '/js/tehtavat.json',
   ],
