@@ -47,8 +47,8 @@
       erityis_piilota: 'Piilota erityisammattioppilaitokset ↑'
     },
     vaitteet: [
-      { id: 'yliopisto', vaite: 'Amiksesta ei pääse yliopistoon.', oikea: 'tarua',
-        selitys: 'Ammatillinen perustutkinto antaa oikeuden hakea ammattikorkeakouluun ja yliopistoon – ihan kuten lukio. Osa jatkaa opiskelua heti, osa käy ensin töissä.',
+      { id: 'yliopisto', vaite: 'Amiksesta ei voi jatkaa opiskelua korkeakouluun.', oikea: 'tarua',
+        selitys: 'Ammatillinen perustutkinto antaa oikeuden hakea korkeakouluun. Moni amiksesta valmistunut jatkaa ammattikorkeakouluun. Osa jatkaa opiskelua heti, osa käy ensin töissä.',
         linkki: 'https://opintopolku.fi/konfo/fi/sivu/opinnot-ammatillisessa-koulutuksessa' },
       { id: 'yto', vaite: 'Amiksessa opiskellaan myös matikkaa ja kieliä.', oikea: 'totta',
         selitys: 'Jokaiseen tutkintoon kuuluu yhteisiä opintoja eli YTO-aineita: matikkaa, äidinkieltä, ruotsia, englantia sekä yhteiskunta- ja työelämätaitoja. Niitä on noin viidesosa opinnoista.',
@@ -83,8 +83,8 @@
       { id: 'jatko', kysymys: 'Mitä voisit tehdä valmistumisen jälkeen?', kortti: 'Valmistumisen jälkeen', vaihtoehdot: [
         { id: 'toihin', teksti: 'Mennä töihin', kortti: 'Töihin omalle alalle',
           selitys: 'Amiksesta pääset suoraan töihin omalle alallesi. Joskus työpaikka löytyy sieltä, missä olit oppimassa.' },
-        { id: 'opiskelu', teksti: 'Jatkaa opiskelua', kortti: 'Jatko-opintoihin (AMK tai yliopisto)',
-          selitys: 'Voit hakea ammattikorkeakouluun tai yliopistoon. Voit myös opiskella lisää myöhemmin töiden ohessa.' },
+        { id: 'opiskelu', teksti: 'Jatkaa opiskelua', kortti: 'Jatko-opintoihin (esim. AMK)',
+          selitys: 'Voit hakea jatko-opintoihin korkeakouluun, useimmiten ammattikorkeakouluun. Voit myös opiskella lisää myöhemmin töiden ohessa.' },
         { id: 'eos', teksti: 'En tiedä vielä', kortti: 'Vielä auki',
           selitys: 'Ihan ok. Moni päättää vasta opintojen lopussa – ja suunta voi muuttua myöhemminkin.' } ] }
     ]
