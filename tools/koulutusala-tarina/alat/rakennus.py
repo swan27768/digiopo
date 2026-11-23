@@ -197,7 +197,7 @@ KUTSU_JOHDANTO = "Talo on katossa! Nyt sinä pääset suunnittelemaan. Asiakas h
 TEHTAVA = dict(
     tyyppi="pohjapiirros",
     nimi="Suunnittele mökki", tag="Tehtävä · noin 20 min",
-    maara="<strong>yhden mökin</strong> pohjapiirros",
+    maara="suunniteltavaksi <strong>yhden mökin</strong> pohjapiirroksen",
     ohjeAskelLause="Teet kaksi asiaa:",
     askeleet=["Piirrä mökin tilat ruudukkoon. Yksi ruutu on yksi neliömetri (m²).",
               "Perustele kaksi asiaa omin sanoin."],

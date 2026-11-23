@@ -209,7 +209,7 @@ def A(avain, nimi, lyhyt, ikoni, paino, kuvaus, tagit=()):
 TEHTAVA = dict(
     tyyppi="lastaus",
     nimi="Lastaussuunnitelma", tag="Tehtävä · noin 15 min",
-    maara="<strong>12 ajoneuvoa ja yksi autokansi</strong>",
+    maara="<strong>12 ajoneuvoa ja yhden autokannen</strong>",
     ohjeAskelLause="Teet kaksi asiaa:",
     askeleet=["Sijoita kaikki ajoneuvot autokannelle. Huolehdi, että laiva pysyy tasapainossa ja turvallisena.",
               "Perustele kaksi asiaa omin sanoin."],

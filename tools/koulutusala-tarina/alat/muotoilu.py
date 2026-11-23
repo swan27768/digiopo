@@ -211,7 +211,7 @@ def V(teksti, tagit=(), **kw):
 TEHTAVA = dict(
     tyyppi="ilme",
     nimi="Visuaalinen ilme", tag="Tehtävä · noin 15 min",
-    maara="<strong>yksi juliste skeittipuiston avajaisiin</strong>",
+    maara="suunniteltavaksi <strong>yhden julisteen</strong> skeittipuiston avajaisiin",
     ohjeAskelLause="Teet kaksi asiaa:",
     askeleet=["Suunnittele juliste: valitse värit, fontti, otsikon koko, kuva, asettelu ja lisätiedot.",
               "Perustele kaksi asiaa omin sanoin."],

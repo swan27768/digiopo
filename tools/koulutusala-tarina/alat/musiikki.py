@@ -209,7 +209,7 @@ def K(nimi, kesto, energia, kuvaus, tagit=()):
 TEHTAVA = dict(
     tyyppi="setlista",
     nimi="Keikan setlista", tag="Tehtävä · noin 20 min",
-    maara="<strong>yhden keikan setlista</strong>",
+    maara="koottavaksi <strong>yhden keikan setlistan</strong>",
     ohjeAskelLause="Teet kaksi asiaa:",
     askeleet=["Valitse kappaleet ja laita ne järjestykseen. Keikka kestää 40–45 minuuttia.",
               "Perustele kaksi asiaa omin sanoin."],

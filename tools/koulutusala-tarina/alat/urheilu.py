@@ -222,7 +222,7 @@ def saannot(laji_nimi, tapahtuma_pv, tapahtuma_nimi, lisat, kuorma):
 TEHTAVA = dict(
     tyyppi="viikko",
     nimi="Viikko-ohjelma", tag="Tehtävä · noin 25 min",
-    maara="<strong>yhden viikon</strong> harjoitukset yhdelle nuorelle",
+    maara="suunniteltavaksi <strong>yhden viikon</strong> harjoitukset yhdelle nuorelle",
     ohjeAskelLause="Teet kolme asiaa:",
     askeleet=["Valitse urheilija, tanssija tai sirkusartisti. Vaihtoehtoja on viisi.",
               "Lisää harjoitukset ja lepo viikkokalenteriin. Mittari ja valmentajan muistilista auttavat.",
