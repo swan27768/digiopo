@@ -59,7 +59,7 @@ html body #passages .passage .cover-pieni, html body #passages .passage .cover-s
 html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }"""
 
 KANSI = dict(pieni="Kasvatus- ja ohjausala", otsikko="Kasvatus ja ohjaus",
-             alaotsikko="Retkipäivä · Miten saadaan kymmenet lapset turvallisesti metsään ja takaisin?",
+             alaotsikko="Retkipäivä · Miten saadaan 12 oppilasta turvallisesti metsään ja takaisin?",
              nappi="Lähde retkelle", ikoni="sydan")
 
 ALKU = dict(tag="Tarina · noin 15 min",
