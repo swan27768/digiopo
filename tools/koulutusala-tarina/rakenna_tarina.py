@@ -32,6 +32,7 @@ def attr(a, nimi):
 # Kannen napin kuvakkeet (SVG-polut, 24x24)
 IKONIT = {
     "sakset": '<circle cx="6.5" cy="17.5" r="3" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="17.5" cy="17.5" r="3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8.6 15.4 18 3.5M15.4 15.4 6 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+    "kuppi": '<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 3.5c-.8 1 .8 2 0 3M12 3.5c-.8 1 .8 2 0 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
     "virta": '<path d="M12 3v9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
     "play": '<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>',
     "sydan": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="currentColor"/>',

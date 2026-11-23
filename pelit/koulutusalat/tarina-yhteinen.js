@@ -2900,6 +2900,182 @@
       };
     }
 
+    /* --- Tehtävätyyppi "kannattavuus": oppilas säätää kesäkahvilan hintaa, aukioloa ja mainontaa ---
+       Kolme viikkoa eri tilanteissa. Malli laskee asiakkaat, tulot ja kulut heti, ja
+       kannattavuuskaavio näyttää, montako asiakasta tarvitaan, ennen kuin kahvila tekee voittoa.
+       Tarkistus näyttää viikon tavoitteet. Lopuksi kaksi perustelua. */
+    if (TH.tyyppi === "kannattavuus") {
+      var VK = TH.viikot || [], MK = TH.malli || {}, SL = TH.saatimet || [];
+      var euro = function (x) { var n = Math.round(x), s = Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); return (n < 0 ? "−" : "") + s + " €"; };
+      var euro2 = function (x) { return x.toFixed(2).replace(".", ",") + " €"; };
+      var kvTila = function (tila, i) { if (!tila.v) tila.v = []; if (!tila.v[i]) { var a = {}; SL.forEach(function (s) { a[s.avain] = s.oletus; }); tila.v[i] = { a: a, tarkistettu: false }; } return tila.v[i]; };
+      var laskeKv = function (vk, a) {
+        var h = a.hinta, t = a.tunnit, m = a.mainonta;
+        var kys = Math.exp(-vk.k * (h - MK.perushinta));
+        if (vk.kilpailijanHinta && h > vk.kilpailijanHinta) kys *= Math.exp(-MK.kilpailuJousto * (h - vk.kilpailijanHinta));
+        var as = Math.round(vk.perusasiakkaat * kys * Math.pow(t / MK.perustunnit, vk.tuntiEksp) * (1 + MK.mainosMax * (1 - Math.exp(-m / MK.mainosPuoli))));
+        var kiint = MK.kiinteat, raaka = as * MK.raakaaine, palkat = t * 7 * MK.tuntipalkka;
+        var tulot = as * h, kulut = kiint + raaka + palkat + m;
+        var kiinteatYht = kiint + palkat + m, kate = h - MK.raakaaine;
+        return { asiakkaat: as, tulot: tulot, kiint: kiint, raaka: raaka, palkat: palkat, mainos: m, kulut: kulut, tulos: tulot - kulut, raja: kate > 0 ? Math.ceil(kiinteatYht / kate) : null, kiinteatYht: kiinteatYht };
+      };
+      var tarkistaK = function (vk, a) {
+        var r = laskeKv(vk, a);
+        return (vk.saannot || []).map(function (q) {
+          var ok = q.tyyppi === "tulosVah" ? r.tulos >= q.arvo : q.tyyppi === "hintaMax" ? a.hinta <= q.arvo + 1e-9 : q.tyyppi === "hintaMin" ? a.hinta >= q.arvo - 1e-9 :
+            q.tyyppi === "tunnitMin" ? a.tunnit >= q.arvo : q.tyyppi === "tunnitMax" ? a.tunnit <= q.arvo : q.tyyppi === "mainontaMin" ? a.mainonta >= q.arvo : false;
+          return { r: q, ok: ok };
+        });
+      };
+      var pisteetK = function (tila) { var p = 0, m = 0; VK.forEach(function (vk, i) { m += (vk.saannot || []).length; var t = (tila.v || [])[i]; if (t && t.tarkistettu) p += tarkistaK(vk, t.a).filter(function (x) { return x.ok; }).length; }); return { p: p, m: m }; };
+      var palauteK = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 3 ? TH.palaute[1] : TH.palaute[2]; };
+      var ylosK = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+      var arvoTeksti = function (s, x) { return s.muoto === "euro2" ? euro2(x) : s.muoto === "euro" ? euro(x) : x + " " + (s.yksikko || ""); };
+
+      var kaavio = function (r, hinta) {
+        var W = 560, H = 230, L = 52, B = 30, T = 12, R = 14, xm = Math.max(400, Math.ceil(Math.max(r.asiakkaat, r.raja || 0) * 1.35 / 100) * 100);
+        var ym = Math.max(xm * hinta, r.kiinteatYht + xm * MK.raakaaine) * 1.05;
+        var X = function (x) { return L + x / xm * (W - L - R); }, Y = function (y) { return H - B - y / ym * (H - B - T); };
+        var s = '<svg class="kv-kaavio" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Kannattavuuskaavio: tulot ja kulut asiakasmäärän mukaan. Voitolle pääsee ' + (r.raja ? r.raja + ' asiakkaan kohdalla' : 'vasta, kun hinta on suurempi kuin raaka-aineet') + '.">';
+        for (var g = 0; g <= 4; g++) { var yy = Y(ym * g / 4); s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy + '" class="kv-ruudukko"/><text x="' + (L - 6) + '" y="' + (yy + 4) + '" class="kv-akseli" text-anchor="end">' + Math.round(ym * g / 4 / 100) * 100 + '</text>'; }
+        for (var gx = 0; gx <= 4; gx++) { var xx = X(xm * gx / 4); s += '<text x="' + xx + '" y="' + (H - B + 16) + '" class="kv-akseli" text-anchor="middle">' + Math.round(xm * gx / 4) + '</text>'; }
+        if (r.raja && r.raja < xm) s += '<polygon class="kv-voitto" points="' + X(r.raja) + ',' + Y(r.kiinteatYht + r.raja * MK.raakaaine) + ' ' + X(xm) + ',' + Y(xm * hinta) + ' ' + X(xm) + ',' + Y(r.kiinteatYht + xm * MK.raakaaine) + '"/>';
+        s += '<line class="kv-kulut" x1="' + X(0) + '" y1="' + Y(r.kiinteatYht) + '" x2="' + X(xm) + '" y2="' + Y(r.kiinteatYht + xm * MK.raakaaine) + '"/>';
+        s += '<line class="kv-tulot" x1="' + X(0) + '" y1="' + Y(0) + '" x2="' + X(xm) + '" y2="' + Y(xm * hinta) + '"/>';
+        if (r.raja && r.raja < xm) s += '<circle class="kv-raja" cx="' + X(r.raja) + '" cy="' + Y(r.raja * hinta) + '" r="5"/>';
+        var ax = X(Math.min(r.asiakkaat, xm));
+        s += '<line class="kv-nyt" x1="' + ax + '" x2="' + ax + '" y1="' + T + '" y2="' + (H - B) + '"/><text class="kv-nyt-teksti" x="' + Math.min(ax + 4, W - R - 4) + '" y="' + (T + 10) + '" text-anchor="' + (ax > W - 120 ? "end" : "start") + '">' + suojaa(TH.ennusteTeksti || "Ennuste") + ' ' + r.asiakkaat + '</text>';
+        s += '<text x="' + (W - R) + '" y="' + (H - 2) + '" class="kv-akseli" text-anchor="end">' + suojaa(TH.xAkseli || "asiakkaita viikossa") + '</text></svg>';
+        s += '<p class="kv-selite"><span class="kv-s-tulot"></span> ' + suojaa(TH.tulotNimi || "Tulot") + ' <span class="kv-s-kulut"></span> ' + suojaa(TH.kulutNimi || "Kulut") + ' <span class="kv-s-voitto"></span> ' + suojaa(TH.voittoalue || "Voittoalue") + '</p>';
+        return s;
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraPerustelutK(alue, tila);
+        var i = tila.viikko || 0, vk = VK[i], vt = kvTila(tila, i), luk = vt.tarkistettu;
+        var h = '<p class="kohtaus-nro">' + suojaa((TH.osa1 || "Viikko") + " " + (i + 1) + "/" + VK.length) + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne"><span aria-hidden="true">' + suojaa(vk.ikoni || "") + '</span> ' + suojaa(vk.nimi) + '</p><p class="kutsu-teksti">' + suojaa(vk.kuvaus) + '</p></div>' +
+          '<div class="kv-saatimet">' + SL.map(function (s) {
+            return '<div class="kv-saadin"><label for="kv-' + s.avain + '"><span>' + suojaa(s.nimi) + '</span><strong class="kv-arvo" data-s="' + s.avain + '">' + suojaa(arvoTeksti(s, vt.a[s.avain])) + '</strong></label>' +
+              '<input type="range" id="kv-' + s.avain + '" data-s="' + s.avain + '" min="' + s.min + '" max="' + s.max + '" step="' + s.askel + '" value="' + vt.a[s.avain] + '"' + (luk ? " disabled" : "") + '>' +
+              '<p class="kv-vihje">' + suojaa(s.vihje || "") + '</p></div>';
+          }).join("") + '</div>' +
+          '<div class="kv-tulos" aria-live="polite"></div>' +
+          '<p class="vk-saannot-otsikko">' + suojaa(TH.tavoitteetOtsikko || "Viikon tavoitteet") + '</p><ul class="vk-saannot kv-saannot"></ul>' +
+          '<div class="kv-alaosa"></div>';
+        alue.innerHTML = h;
+        var tulosEl = alue.querySelector(".kv-tulos"), saannotEl = alue.querySelector(".kv-saannot"), alaEl = alue.querySelector(".kv-alaosa");
+        var paivita = function () {
+          var r = laskeKv(vk, vt.a);
+          tulosEl.innerHTML =
+            '<div class="kv-luvut"><div><span>' + suojaa(TH.asiakkaatNimi || "Asiakkaita viikossa") + '</span><strong>' + r.asiakkaat + '</strong></div>' +
+            '<div><span>' + suojaa(TH.tulotNimi || "Tulot") + '</span><strong>' + euro(r.tulot) + '</strong></div>' +
+            '<div><span>' + suojaa(TH.kulutNimi || "Kulut") + '</span><strong>' + euro(r.kulut) + '</strong></div>' +
+            '<div class="kv-tulosluku ' + (r.tulos >= 0 ? "voitto" : "tappio") + '"><span>' + suojaa(r.tulos >= 0 ? (TH.voittoNimi || "Voitto") : (TH.tappioNimi || "Tappio")) + '</span><strong>' + euro(r.tulos) + '</strong></div></div>' +
+            '<details class="kv-erittely"><summary>' + suojaa(TH.erittelyNimi || "Mistä kulut tulevat?") + '</summary><ul>' +
+            '<li>' + suojaa(TH.kiinteatNimi || "Vuokra, sähkö ja laina") + ': <strong>' + euro(r.kiint) + '</strong></li>' +
+            '<li>' + suojaa(TH.raakaNimi || "Raaka-aineet") + ' (' + euro2(MK.raakaaine) + ' / asiakas): <strong>' + euro(r.raaka) + '</strong></li>' +
+            '<li>' + suojaa(TH.palkatNimi || "Palkat") + ' (' + vt.a.tunnit + ' h × 7 pv × ' + euro(MK.tuntipalkka) + '): <strong>' + euro(r.palkat) + '</strong></li>' +
+            '<li>' + suojaa(TH.mainosNimi || "Mainonta") + ': <strong>' + euro(r.mainos) + '</strong></li></ul></details>' +
+            kaavio(r, vt.a.hinta) +
+            '<p class="kv-raja-teksti">' + (r.raja ? suojaa(TH.rajaTeksti || "Kannattavuusraja") + ': <strong>' + r.raja + ' ' + suojaa(TH.rajaYksikko || "asiakasta viikossa") + '</strong>. ' + suojaa(r.asiakkaat >= r.raja ? (TH.rajaYli || "Ennuste ylittää rajan, joten kahvila tekee voittoa.") : (TH.rajaAli || "Ennuste jää rajan alle, joten kahvila tekee tappiota.")) : suojaa(TH.rajaEi || "Hinta ei edes kata raaka-aineita.")) + '</p>';
+          var t = tarkistaK(vk, vt.a);
+          saannotEl.innerHTML = t.map(function (x) {
+            return '<li class="' + (luk ? (x.ok ? "ok" : "ei") : "") + '"><span class="vk-merkki" aria-hidden="true">' + (luk ? (x.ok ? "✓" : "✗") : "○") + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong>' + (luk ? '<span class="vk-selitys">' + suojaa(x.r.selitys) + '</span>' : '') + '</span></li>';
+          }).join("");
+        };
+        var napit = function () {
+          if (luk) {
+            var p = tarkistaK(vk, vt.a).filter(function (x) { return x.ok; }).length;
+            alaEl.innerHTML = '<p class="sj-pisteet">' + suojaa(vk.nimi) + ': <strong>' + p + '/' + (vk.saannot || []).length + '</strong></p>' +
+              '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava kv-muokkaa">' + suojaa(TH.muokkaaNappi || "Muuta valintoja") + '</button><button type="button" class="kutsu-tarkista kv-seuraava">' + suojaa(i + 1 < VK.length ? (TH.seuraavaNappi || "Seuraava viikko") : (TH.jatkaNappi || "Jatka perusteluihin")) + '</button></div>';
+          } else {
+            alaEl.innerHTML = '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava kv-palauta">' + suojaa(TH.palautaNappi || "Palauta alkuarvot") + '</button><button type="button" class="kutsu-tarkista kv-tarkista">' + suojaa(TH.tarkistaNappi || "Lukitse viikon suunnitelma") + '</button></div>';
+          }
+          var uusi = function () { kutsuTallenna(); window.kutsuPiirra(); };
+          var ta = alaEl.querySelector(".kv-tarkista"); if (ta) ta.addEventListener("click", function () { vt.tarkistettu = true; vt.kerrat = (vt.kerrat || 0) + 1; uusi(); var s = alue.querySelector(".kv-saannot"); if (s && s.scrollIntoView) s.scrollIntoView({ block: "center" }); var f = alue.querySelector(".kv-seuraava"); if (f) f.focus({ preventScroll: true }); });
+          var pa = alaEl.querySelector(".kv-palauta"); if (pa) pa.addEventListener("click", function () { SL.forEach(function (s) { vt.a[s.avain] = s.oletus; }); uusi(); });
+          var mu = alaEl.querySelector(".kv-muokkaa"); if (mu) mu.addEventListener("click", function () { vt.tarkistettu = false; uusi(); });
+          var se = alaEl.querySelector(".kv-seuraava"); if (se) se.addEventListener("click", function () { if (i + 1 < VK.length) tila.viikko = i + 1; else tila.vaihe = "perustelu"; uusi(); ylosK(); });
+        };
+        Array.prototype.forEach.call(alue.querySelectorAll('.kv-saadin input[type="range"]'), function (inp) {
+          inp.addEventListener("input", function () {
+            var k = inp.getAttribute("data-s"), s = SL.filter(function (x) { return x.avain === k; })[0];
+            vt.a[k] = parseFloat(inp.value); var el = alue.querySelector('.kv-arvo[data-s="' + k + '"]'); if (el) el.textContent = arvoTeksti(s, vt.a[k]);
+            paivita(); kutsuTallenna();
+          });
+        });
+        paivita(); napit();
+      };
+
+      var piirraPerustelutK = function (alue, tila) {
+        var kys = TH.kysymykset || [], k = pisteetK(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
+          '<p class="sj-pisteet">Tavoitteet: <strong>' + k.p + '/' + k.m + '</strong></p>' +
+          kys.map(function (q, i) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="kv-p' + i + '">' + (i + 1) + '. ' + suojaa(q.kysymys) + '</label>' +
+              '<textarea id="kv-p' + i + '" maxlength="400" placeholder="' + suojaa(q.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(q.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava kv-takaisin">' + suojaa(TH.takaisinNappi || "Takaisin laskuriin") + '</button><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function pv() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen (vähintään lyhyt lause)." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", pv); });
+        alue.querySelector(".kv-takaisin").addEventListener("click", function () { tila.vaihe = null; tila.viikko = VK.length - 1; kutsuTallenna(); window.kutsuPiirra(); ylosK(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        pv();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), k = pisteetK(tila);
+        var h = '<div class="tuotekortti hk-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "KANNATTAVUUSLASKELMA") + '</p>' +
+          '<p class="tk-lause">' + k.p + '/' + k.m + ' – ' + suojaa(palauteK(k.p, k.m)) + '</p><ol class="hp-raportti-lista">' +
+          VK.map(function (vk, i) {
+            var t = (tila.v || [])[i]; if (!t) return '<li><strong>' + suojaa(vk.nimi) + '</strong> – ei tehty</li>';
+            var r = laskeKv(vk, t.a), ok = tarkistaK(vk, t.a);
+            return '<li><strong>' + suojaa((vk.ikoni || "") + " " + vk.nimi) + '</strong> · ' + suojaa(r.tulos >= 0 ? "voitto " : "tappio ") + euro(r.tulos) +
+              '<span class="hp-r-rivi">' + suojaa("Hinta " + euro2(t.a.hinta) + " · auki " + t.a.tunnit + " h/pv · mainonta " + euro(t.a.mainonta) + " · " + r.asiakkaat + " asiakasta") + '</span>' +
+              '<span class="hp-r-rivi">' + suojaa(ok.map(function (x) { return (x.ok ? "✓ " : "✗ ") + x.r.nimi; }).join(" · ")) + '</span></li>';
+          }).join("") + '</ol></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (q, i) {
+          return '<li><strong>' + suojaa(q.kysymys) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[i] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(q.ammattilainen) + ' – ' + suojaa(q.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        if (TH.ammattilaiset) h += '<h3 class="kehitys-perustelut-otsikko">' + suojaa(TH.ammattilaisetOtsikko || "Näitä töitä tekevät") + '</h3><ol class="kutsu-lista">' + TH.ammattilaiset.map(function (x) {
+          return '<li><strong>' + suojaa(x.nimi) + '</strong> – ' + suojaa(x.tehtava) + '<span class="kl-ammattilainen">Koulutus: ' + suojaa(x.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var k = pisteetK(tila), t = "\n" + TH.nimi.toUpperCase() + " – " + k.p + "/" + k.m + " tavoitetta\n";
+        VK.forEach(function (vk, i) {
+          var v = (tila.v || [])[i]; t += "\n" + vk.nimi.toUpperCase() + "\n";
+          if (!v) { t += "  Ei tehty\n"; return; }
+          var r = laskeKv(vk, v.a);
+          t += "  Hinta " + euro2(v.a.hinta) + ", auki " + v.a.tunnit + " h/pv, mainonta " + euro(v.a.mainonta) + "\n";
+          t += "  Asiakkaita " + r.asiakkaat + ", tulot " + euro(r.tulot) + ", kulut " + euro(r.kulut) + ", tulos " + euro(r.tulos) + "\n";
+          tarkistaK(vk, v.a).forEach(function (x) { t += "  " + (x.ok ? "✓ " : "✗ ") + x.r.nimi + "\n"; });
+        });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (q, i) { t += (i + 1) + ". " + q.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + q.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";
