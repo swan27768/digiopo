@@ -25,6 +25,7 @@ export const config = {
     '/9luokka',
     '/js/osio-data-7lk.js',
     '/js/osio-data-8lk.js',
+    '/js/osio-data-8lk-amispolku.js',
     '/js/osio-data-9lk.js',
     '/js/tehtavat.json',
   ],

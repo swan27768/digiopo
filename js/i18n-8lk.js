@@ -567,13 +567,6 @@
           if (arkiData[ai][1]) { var ap = ak.querySelector('p');  if (ap) ap.textContent = arkiData[ai][1]; }
         }
 
-        /* Kuittaa A */
-        var kuittaaA = document.getElementById('kuittaa-a');
-        if (kuittaaA && tj.v2a_kuittaa && !kuittaaA.classList.contains('kuitattu')) {
-          var kaSpan = kuittaaA.querySelector('span');
-          kuittaaA.textContent = ' ' + tj.v2a_kuittaa;
-          if (kaSpan) kuittaaA.insertBefore(kaSpan, kuittaaA.firstChild);
-        }
       }
 
       /* ── Vaihe 4: Amispolku → jatko-opinnot ── */

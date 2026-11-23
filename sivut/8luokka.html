@@ -652,7 +652,7 @@
                 <ul>
                   <li>Valitset sinua kiinnostavat asiat ja löydät sopivia ammatteja ja tutkintoja (Vaihe 1)</li>
                   <li>Kurkistat valittuun alaan ja teet oman alasi tehtävän (Vaihe 2)</li>
-                  <li>Tutustut ammattikoulun opintoihin pähkinäkuoressa (Vaihe 3)</li>
+                  <li>Arvaat, mikä amiksesta on totta, ja teet oman amispolkusi (Vaihe 3)</li>
                 </ul>
               </div>
 
@@ -668,7 +668,7 @@
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro" aria-hidden="true">3</div>
-                  <span class="tj-askel-teksti">Ammattikoulun opinnot</span>
+                  <span class="tj-askel-teksti">Totta vai tarua &amp; oma polku</span>
                 </li>
               </ol>
 
@@ -721,59 +721,22 @@
                 <p id="amis-v3-valmis" role="status" hidden style="margin:10px 0 0;padding:10px 14px;background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;font-size:13.5px;font-weight:700;color:#065f46;"></p>
               </div>
 
-              <h4 class="tj-osio-otsikko is8-002"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>Ammattikoulun opinnot pähkinäkuoressa</h4>
-              <p class="tj-kuvaus" data-kaannos="amis-v1-alaotsikko" style="margin-top:4px;margin-bottom:12px;">Tutustu amiksen arkeen — ja kuittaa kun olet valmis.</p>
+              <h4 class="tj-osio-otsikko is8-002"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>Amis – totta vai tarua?</h4>
+              <p class="tj-kuvaus" style="margin-top:4px;margin-bottom:12px;">Mitä sinä luulet amiksesta? Arvaa ensin, sitten näet, miten asia oikeasti on. Lopuksi teet oman amispolkusi.</p>
 
-              <!-- ── OSA A: Opiskelu amiksessa pähkinäkuoressa ── -->
-              <div class="amis-v2-osa" id="amis-osa-a" style="background:#fffbeb;border-color:#fde68a;">
+              <!-- ══ Vaihe 3: Totta vai tarua? + Oma amispolku ══
+                   Sisältö ja logiikka: js/osio-data-8lk-amispolku.js (renderöi listat ja kortin) -->
+              <div class="amis-v2-osa amis-v3-tehtava" id="amis-v3-tehtava" style="background:#fffbeb;border-color:#fde68a;">
+                <p id="amis-v3-kieli" class="amis-v3-kieli" role="note" hidden></p>
+
                 <div class="amis-v2-osa-otsikko">
-                  <span class="amis-v2-label">Opiskelu amiksessa pähkinäkuoressa</span>
+                  <span class="amis-v2-label" id="amis-tt-otsikko">Osa 1: Totta vai tarua?</span>
+                  <span class="amis-tt-laskuri" id="amis-tt-laskuri" aria-live="polite"></span>
                 </div>
+                <p class="amis-v3-ohje-teksti" id="amis-tt-ohje">Lue väite. Valitse, onko se mielestäsi totta vai tarua. Sen jälkeen näet, miten asia oikeasti on.</p>
+                <ol class="amis-tt-lista" id="amis-tt-lista" aria-labelledby="amis-tt-otsikko"></ol>
+                <p class="amis-tt-tulos" id="amis-tt-tulos" role="status" hidden></p>
 
-                <!-- a) Näin amiksessa opitaan -->
-                <div class="tj-arki" role="list">
-                  <div class="tj-arki-kortti" role="listitem">
-                    <h5>Käytännön harjoittelu</h5>
-                    <p>Pajassa, keittiössä tai hoitoympäristössä — teet oikeita töitä ohjatusti.</p>
-                  </div>
-                  <div class="tj-arki-kortti" role="listitem">
-                    <h5>Työssäoppiminen</h5>
-                    <p>Olet oikealla työpaikalla viikkoja kerrallaan. Se on usein paras osa amisesta.</p>
-                  </div>
-                  <div class="tj-arki-kortti" role="listitem">
-                    <h5>Näytöt — näytät, mitä osaat</h5>
-                    <p>Osaaminen arvioidaan näytöissä: teet oikeita töitä. Yo-kirjoituksia ei tarvita, ellet valitse kaksoistutkintoa.</p>
-                  </div>
-                </div>
-
-                <!-- b) YTO-aineet -->
-                <div class="yto-boksi">
-                  <p class="yto-otsikko">Amissakin on "kouluaineita" — YTO-aineet</p>
-                  <p class="yto-kuvaus">Ammatillisiin opintoihin kuuluu pakollisia yleissivistäviä aineita:</p>
-                  <div class="yto-lista" role="list">
-                    <div class="yto-aine" role="listitem"><span>Matematiikka ja luonnontieteet</span></div>
-                    <div class="yto-aine" role="listitem"><span>Viestintä ja vuorovaikutus</span></div>
-                    <div class="yto-aine" role="listitem"><span>Kielet (suomi, ruotsi, englanti)</span></div>
-                    <div class="yto-aine" role="listitem"><span>Yhteiskunta- ja työelämäosaaminen</span></div>
-                  </div>
-                  <a href="https://opintopolku.fi/konfo/fi/sivu/opinnot-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" class="yto-linkki">Lue lisää opintopolku.fi →</a>
-                </div>
-
-                <!-- c) Oppisopimus -->
-                <div class="is8-008">
-                  <h5 class="is8-009">Oppisopimus</h5>
-                  <p style="font-size:13px;color:#6b7280;line-height:1.55;margin:0;">Jos sinulla on työpaikka, voit opiskella oppisopimuksella — opit pääosin töissä ja saat palkkaa. <a class="is8-007" href="https://oppisopimus.fi/" target="_blank" rel="noopener">Katso lisää: oppisopimus.fi →</a></p>
-                </div>
-
-                <!-- Kaksoistutkinto -->
-                <div class="is8-008">
-                  <h5 class="is8-009">Kaksoistutkinto — ammatti + ylioppilastutkinto</h5>
-                  <p style="font-size:13px;color:#6b7280;line-height:1.55;margin:0 0 8px;">Amiksessa voit tehdä ammatillisen tutkinnon <strong>lisäksi</strong> lukio-opintoja ja kirjoittaa ylioppilaaksi. Näin saat kaksi tutkintoa yhdellä kertaa. Ylioppilastutkintoon kuuluu vähintään 5 koetta. Opiskelu kestää yleensä 3–4 vuotta ja vaatii vähän enemmän — mutta se parantaa mahdollisuuksiasi hakea jatko-opintoihin (AMK tai yliopisto).</p>
-                  <p style="font-size:12.5px;color:#6b7280;line-height:1.55;margin:0 0 8px;">Kerro kiinnostuksesta jo yhteishaussa tai kysy asiasta omasta oppilaitoksesta. Valinnan voi tehdä myös opintojen aikana.</p>
-                  <a href="https://opintopolku.fi/konfo/fi/sivu/kaksoistutkinto" target="_blank" rel="noopener" style="color:#d97706;font-weight:600;font-size:12.5px;">Lue lisää: opintopolku.fi →</a>
-                </div>
-
-                <!-- d) Tarvitsetko enemmän tukea? Erityisammattioppilaitokset (siirretty tänne) -->
               <!-- ── Sivupolku: Erityisammattioppilaitokset ── -->
               <div class="amis-sivupolku">
                 <button type="button"
@@ -828,12 +791,30 @@
                 </div>
               </div>
 
-                <button type="button" class="amis-kuittaa" id="kuittaa-a" onclick="kuitaaAmisV2('a')" aria-label="Kuittaa tehdyksi">
-                  <span aria-hidden="true">○</span> Olen tutustunut — kuittaa ✓
-                </button>
+                <!-- Osa 2: Rakenna oma amispolkusi (aukeaa, kun kaikkiin väitteisiin on vastattu) -->
+                <section class="amis-polku" id="amis-polku" aria-labelledby="amis-polku-otsikko" hidden>
+                  <div class="amis-v2-osa-otsikko">
+                    <span class="amis-v2-label" id="amis-polku-otsikko">Osa 2: Rakenna oma amispolkusi</span>
+                  </div>
+                  <p class="amis-v3-ohje-teksti" id="amis-polku-ohje">Valitse joka kohdasta se, mikä tuntuu nyt sopivalta. Valinnat eivät sido sinua mihinkään – mieltä saa muuttaa.</p>
+                  <div id="amis-polku-kysymykset"></div>
+                  <label class="amis-polku-selvita-label" id="amis-polku-nimi-label" for="amis-polku-nimi">Nimesi (näkyy vain PDF:ssä, vapaaehtoinen)</label>
+                  <input type="text" id="amis-polku-nimi" class="amis-polku-selvita" maxlength="60" autocomplete="name">
+                  <label class="amis-polku-selvita-label" id="amis-polku-selvita-label" for="amis-polku-selvita">Mitä haluaisit vielä selvittää amiksesta? (vapaaehtoinen)</label>
+                  <textarea id="amis-polku-selvita" class="amis-polku-selvita" rows="2" maxlength="300"></textarea>
+                  <p class="amis-polku-puuttuu" id="amis-polku-puuttuu">Valitse vielä vastaus jokaiseen kolmeen kohtaan.</p>
+                  <div class="amis-polku-kortti" id="amis-polku-kortti" hidden></div>
+                  <div class="amis-v3-toiminnot">
+                    <button type="button" class="amis-kuittaa" id="amis-v3-valmis-nappi" hidden>Valmis – tallenna polkuni</button>
+                    <button type="button" class="amis-v3-lataa" id="amis-v3-lataa" hidden>Lataa polkuni PDF:nä</button>
+                  </div>
+                  <p class="amis-v3-lataa-ohje" id="amis-v3-lataa-ohje" hidden></p>
+                </section>
+
+                <p class="amis-v3-tyhjenna-rivi"><button type="button" class="amis-v3-tyhjenna" id="amis-v3-tyhjenna">Tyhjennä vastaukset</button></p>
               </div>
 
-              <!-- Muistutus: Vaihe 3 kuitattu, mutta Vaihe 2:n tehtävä vielä kesken -->
+              <!-- Muistutus: Vaihe 3 tallennettu, mutta Vaihe 2:n tehtävä vielä kesken -->
               <p id="amis-yhteenveto-puuttuu" role="status" hidden style="margin:16px 0;padding:12px 16px;background:#fff7ed;border:1.5px dashed #fdba74;border-radius:12px;font-size:13.5px;color:#9a3412;line-height:1.55;">
                 <strong>Vielä yksi juttu:</strong> tee Vaihe 2:n alan tehtävä loppuun asti. Yhteenveto aukeaa, kun pääset tehtävän tuloksiin.
               </p>
@@ -841,8 +822,8 @@
               <!-- Yhteenveto -->
               <div class="tj-yhteenveto" id="amis-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>Hyvä työ!</h5>
-                <p>Olet tutustunut ammatillisiin tutkintoihin, tehnyt oman alasi tehtävän ja saanut kuvan amisarjesta.</p>
-                <p><strong>Muistutus:</strong> tallenna vastauksesi ja lähetä ne opettajalle Classroomin kautta.</p>
+                <p>Olet tutustunut ammatillisiin tutkintoihin, tehnyt oman alasi tehtävän ja rakentanut oman amispolkusi.</p>
+                <p><strong>Muistutus:</strong> palauta opolle Classroomiin sekä Vaihe 2:n vastaukset että oma amispolkusi (PDF).</p>
                 <p>Haluatko tutkia lisää? Katso tutkintoja ja AMK-hakua <a href="https://opintopolku.fi" target="_blank" rel="noopener" style="color:#92400e;font-weight:700;">opintopolku.fi</a>:stä.</p>
               </div>
 
@@ -2662,12 +2643,6 @@
       btn.setAttribute('aria-expanded', auki);
       ld.setAttribute('aria-hidden', !auki);
     }
-    function vaihdaAmisTarina(id, nappi) {
-      document.querySelectorAll('#tutkija-amis .tj-tarina').forEach(t => t.classList.remove('aktiivinen'));
-      document.querySelectorAll('#tutkija-amis .tj-tarina-nappi').forEach(n => { n.classList.remove('aktiivinen-amis'); n.setAttribute('aria-selected','false'); });
-      document.getElementById('amis-'+id).classList.add('aktiivinen');
-      nappi.classList.add('aktiivinen-amis'); nappi.setAttribute('aria-selected','true');
-    }
 
     /* ── Lukio ── */
     const lukioValitut = new Set();
@@ -3063,7 +3038,8 @@
     });
 
     function tarkistaAmisYhteenveto() {
-      const aOk = document.getElementById('kuittaa-a') && document.getElementById('kuittaa-a').classList.contains('kuitattu');
+      let aOk = false;
+      try { aOk = localStorage.getItem('dg8-amis-v3-valmis') === '1'; } catch (e) {}
       const tarinaOk = amisTarinatValmiit().length > 0;
       const yv = document.getElementById('amis-yhteenveto');
       const puuttuu = document.getElementById('amis-yhteenveto-puuttuu');
@@ -3072,31 +3048,6 @@
       yv.hidden = !(aOk && tarinaOk);
       if (puuttuu) puuttuu.hidden = !(aOk && !tarinaOk);
     }
-    function kuitaaAmisV2(osa) {
-      const btn = document.getElementById('kuittaa-' + osa);
-      if (!btn || btn.disabled) return;
-      btn.classList.add('kuitattu');
-      btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!';
-      btn.disabled = true;
-      try { localStorage.setItem('dg8-amis-v2-' + osa, '1'); } catch(e){}
-      tarkistaAmisYhteenveto();
-    }
-
-    function avaaAmisPayiva(btn) {
-      const sisalto = document.getElementById('amis-paiva-sisalto');
-      const auki = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', !auki);
-      sisalto.hidden = auki;
-      // Aktivoi kuittausnappi B heti kun avattu
-      const kb = document.getElementById('kuittaa-b');
-      if (kb && !kb.classList.contains('kuitattu')) kb.disabled = false;
-      // Piilota vihje pysyvästi heti kun reveal avataan
-      if (!auki) {
-        const vihje = document.getElementById('amis-b-vihje');
-        if (vihje) vihje.hidden = true;
-      }
-    }
-
     /* ── Init ── */
     (function() {
       try {
@@ -3123,23 +3074,9 @@
         }
       } catch(e){}
       try {
-        // Palauta vaihe 2 kuittaukset
-        ['a','b'].forEach(function(osa) {
-          if (localStorage.getItem('dg8-amis-v2-' + osa)) {
-            const btn = document.getElementById('kuittaa-' + osa);
-            if (btn) { btn.classList.add('kuitattu'); btn.innerHTML = '<span aria-hidden="true">✓</span> Kuitattu!'; btn.disabled = true; }
-          }
-        });
-        // Jos kaikki kuitattu, näytä yhteenveto
+        // Vanha Vaihe 3:n kuittaus on poistettu käytöstä: siivotaan sen tallenteet pois
+        ['dg8-amis-v2-a','dg8-amis-v2-b'].forEach(function(k) { localStorage.removeItem(k); });
         tarkistaAmisYhteenveto();
-        // Jos B on aiemmin avattu (reveal näytetty), palauta reveal auki ja piilota vihje
-        if (localStorage.getItem('dg8-amis-v2-b')) {
-          const rv = document.getElementById('amis-paiva-reveal');
-          const si = document.getElementById('amis-paiva-sisalto');
-          if (rv && si) { rv.setAttribute('aria-expanded','true'); si.hidden = false; }
-          const vihje = document.getElementById('amis-b-vihje');
-          if (vihje) vihje.hidden = true;
-        }
         const s = JSON.parse(localStorage.getItem('dg8-lukio-suunnitelma') || 'null');
         if (s) {
           if (s.linja)   { const el = document.getElementById('ls-linja');   if (el) el.value = s.linja; }
@@ -3158,6 +3095,7 @@
       } catch(e){}
     })();
     </script>
+    <script src="../js/osio-data-8lk-amispolku.js"></script>
     <script src="../js/osio-rakenne.js"></script>
     <script src="../js/paivan-kysymys.js" defer></script>
     <script src="../js/korttimerkit.js"></script>
