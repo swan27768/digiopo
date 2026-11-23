@@ -67,6 +67,21 @@
       asetaTausta("");
     });
 
+    /* --- Valmis-ilmoitus: kertoo upottavalle sivulle (8. lk Amispolku, Vaihe 2),
+           että oppilas on tehnyt jatkotehtävän loppuun ja päässyt tuloksiin. --- */
+    $(document).on(":passagedisplay", function (ev) {
+      var nimi = ev && ev.passage && ev.passage.name;
+      if (nimi !== "Kutsu: tulos" && nimi !== "Loppu") return;
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: "koulutusala-tarina-valmis",
+            tiedosto: location.pathname.split("/").pop()
+          }, location.origin);
+        }
+      } catch (e) {}
+    });
+
     /* --- Katso ympärille: piilottaa tarinapaneelin hetkeksi --- */
     var KATSO = D.katsoTeksti || "Katso ympärille";
     function luoNappi() {

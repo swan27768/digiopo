@@ -718,6 +718,7 @@
                     <p>Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva ammattitilanne ilmestyy tähän automaattisesti.</p>
                   </div>
                 </div>
+                <p id="amis-v3-valmis" role="status" hidden style="margin:10px 0 0;padding:10px 14px;background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;font-size:13.5px;font-weight:700;color:#065f46;"></p>
               </div>
 
               <h4 class="tj-osio-otsikko is8-002"><span class="tj-osio-vaihe" aria-label="Vaihe 3">Vaihe 3</span>Ammattikoulun opinnot pähkinäkuoressa</h4>
@@ -740,8 +741,8 @@
                     <p>Olet oikealla työpaikalla viikkoja kerrallaan. Se on usein paras osa amisesta.</p>
                   </div>
                   <div class="tj-arki-kortti" role="listitem">
-                    <h5>Näytöt — ei kokeita</h5>
-                    <p>Et kirjoita yo-kirjoituksia. Näytät osaamisen tekemällä oikeita töitä.</p>
+                    <h5>Näytöt — näytät, mitä osaat</h5>
+                    <p>Osaaminen arvioidaan näytöissä: teet oikeita töitä. Yo-kirjoituksia ei tarvita, ellet valitse kaksoistutkintoa.</p>
                   </div>
                 </div>
 
@@ -831,6 +832,11 @@
                   <span aria-hidden="true">○</span> Olen tutustunut — kuittaa ✓
                 </button>
               </div>
+
+              <!-- Muistutus: Vaihe 3 kuitattu, mutta Vaihe 2:n tehtävä vielä kesken -->
+              <p id="amis-yhteenveto-puuttuu" role="status" hidden style="margin:16px 0;padding:12px 16px;background:#fff7ed;border:1.5px dashed #fdba74;border-radius:12px;font-size:13.5px;color:#9a3412;line-height:1.55;">
+                <strong>Vielä yksi juttu:</strong> tee Vaihe 2:n alan tehtävä loppuun asti. Yhteenveto aukeaa, kun pääset tehtävän tuloksiin.
+              </p>
 
               <!-- Yhteenveto -->
               <div class="tj-yhteenveto" id="amis-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
@@ -3025,13 +3031,46 @@
     }
 
     /* ── Vaihe 2: kuittaus & reveal ── */
+    /* Vaihe 2: tarinat ilmoittavat postMessagella, kun jatkotehtävä on tehty
+       (tarina-yhteinen.js, "Kutsu: tulos"). Valmiit alat muistetaan localStorageen. */
+    function amisTarinatValmiit() {
+      try { const v = JSON.parse(localStorage.getItem('dg8-amis-tarina-valmis') || '[]'); return Array.isArray(v) ? v : []; }
+      catch (e) { return []; }
+    }
+    function paivitaAmisTarinaTila() {
+      const el = document.getElementById('amis-v3-valmis');
+      if (!el) return;
+      const valmiit = amisTarinatValmiit().filter(a => AMIS_V3_NIMET[a]);
+      if (valmiit.length === 0) { el.hidden = true; el.textContent = ''; return; }
+      el.textContent = '✓ Alan tehtävä tehty: ' + valmiit.map(a => AMIS_V3_NIMET[a]).join(', ');
+      el.hidden = false;
+    }
+    window.addEventListener('message', function (e) {
+      if (e.origin !== location.origin) return;
+      if (!e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
+      const kehys = Array.from(document.querySelectorAll('#amis-v3-sisalto iframe.amis-v3-iframe'))
+        .find(f => f.contentWindow === e.source);
+      if (!kehys) return;
+      const ala = kehys.dataset.ala;
+      if (!ala || !AMIS_V3_NIMET[ala]) return;
+      const valmiit = amisTarinatValmiit();
+      if (valmiit.indexOf(ala) === -1) {
+        valmiit.push(ala);
+        try { localStorage.setItem('dg8-amis-tarina-valmis', JSON.stringify(valmiit)); } catch (err) {}
+      }
+      paivitaAmisTarinaTila();
+      tarkistaAmisYhteenveto();
+    });
+
     function tarkistaAmisYhteenveto() {
       const aOk = document.getElementById('kuittaa-a') && document.getElementById('kuittaa-a').classList.contains('kuitattu');
+      const tarinaOk = amisTarinatValmiit().length > 0;
       const yv = document.getElementById('amis-yhteenveto');
+      const puuttuu = document.getElementById('amis-yhteenveto-puuttuu');
+      paivitaAmisTarinaTila();
       if (!yv) return;
-      if (aOk) {
-        yv.hidden = false;
-      }
+      yv.hidden = !(aOk && tarinaOk);
+      if (puuttuu) puuttuu.hidden = !(aOk && !tarinaOk);
     }
     function kuitaaAmisV2(osa) {
       const btn = document.getElementById('kuittaa-' + osa);
