@@ -360,7 +360,17 @@
               <li class="osio-nuoli" aria-hidden="true">→</li>
 
               <li class="osio-askel">
-                <div class="osio-askel-nro" style="background:#d97706;" aria-hidden="true">2</div>
+                <div class="osio-askel-nro" style="background:#db2777;" aria-hidden="true">2</div>
+                <div class="osio-askel-teksti">
+                  <div class="osio-askel-nimi">Arvaa ja tarkista</div>
+                  <div class="osio-askel-kuvaus">Parin kanssa: onko alalla enemmän miehiä vai naisia?</div>
+                </div>
+              </li>
+
+              <li class="osio-nuoli" aria-hidden="true">→</li>
+
+              <li class="osio-askel">
+                <div class="osio-askel-nro" style="background:#d97706;" aria-hidden="true">3</div>
                 <div class="osio-askel-teksti">
                   <div class="osio-askel-nimi">Valitse polku &amp; tee tehtävä</div>
                   <div class="osio-askel-kuvaus">Amispolku tai Lukiopolku — tutki, kokeile ja kirjaa ajatuksesi</div>
@@ -370,7 +380,7 @@
               <li class="osio-nuoli" aria-hidden="true">→</li>
 
               <li class="osio-askel">
-                <div class="osio-askel-nro is8-004" aria-hidden="true">3</div>
+                <div class="osio-askel-nro is8-004" aria-hidden="true">4</div>
                 <div class="osio-askel-teksti">
                   <div class="osio-askel-nimi">Kokeile AmmattiSet</div>
                   <div class="osio-askel-kuvaus">Ryhmittele ammatit oikeille aloille — tunnetko koulutusalat?</div>
@@ -380,7 +390,7 @@
               <li class="osio-nuoli" aria-hidden="true">→</li>
 
               <li class="osio-askel">
-                <div class="osio-askel-nro is8-005" aria-hidden="true">4</div>
+                <div class="osio-askel-nro is8-005" aria-hidden="true">5</div>
                 <div class="osio-askel-teksti">
                   <div class="osio-askel-nimi">Ryhmätehtävä</div>
                   <div class="osio-askel-kuvaus">Maailma tarvitsee sinua — kokoa unelmatyöryhmä ja ratkaise ongelma</div>
@@ -740,23 +750,12 @@
                 </div>
                 <p class="amis-v3-ohje-teksti" id="amis-tt-ohje">Lue väite. Valitse, onko se mielestäsi totta vai tarua. Sen jälkeen näet, miten asia oikeasti on.</p>
                 <ol class="amis-tt-lista" id="amis-tt-lista" aria-labelledby="amis-tt-otsikko"></ol>
-              <!-- ── Sivupolku: Erityisammattioppilaitokset ── -->
-              <div class="amis-sivupolku">
-                <button type="button"
-                  class="amis-sivupolku-toggle"
-                  onclick="(function(b){var p=document.getElementById('erityis-sisalto');var auki=b.getAttribute('aria-expanded')==='true';p.hidden=!auki?false:true;b.setAttribute('aria-expanded',auki?'false':'true');})(this)"
-                  aria-expanded="false"
-                  aria-controls="erityis-sisalto"
-                >
-                  <span class="amis-sivupolku-vasen">
-                    <span class="amis-sivupolku-teksti">
-                      <span class="amis-sivupolku-otsikko">Erityisammattioppilaitokset</span>
-                      <span class="amis-sivupolku-kuvaus">Tarvitsetko enemmän tukea opiskelussa? Katso tästä</span>
-                    </span>
-                  </span>
-                  <span class="amis-sivupolku-nuoli" aria-hidden="true"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span>
-                </button>
-                <div id="erityis-sisalto" class="amis-sivupolku-sisalto" hidden>
+              <!-- ── Erityisammattioppilaitokset ──
+                   Osa tukiväitteen ("Jos opiskelu tuntuu vaikealta…") palautetta. js/osio-data-8lk-amispolku.js
+                   siirtää paneelin väitteen alle, kun siihen on vastattu, ja avaa/sulkee sen. -->
+              <div id="amis-erityis-varasto" hidden>
+                <div id="erityis-sisalto" class="amis-sivupolku-sisalto amis-erityis-paneeli" role="region" aria-labelledby="amis-erityis-otsikko" hidden>
+                  <h5 class="amis-erityis-otsikko" id="amis-erityis-otsikko">Erityisammattioppilaitokset</h5>
                   <p class="tj-kuvaus" style="margin-top:0;">Jos tarvitset enemmän tukea opiskelussa, erityisammattioppilaitokset tarjoavat saman ammatillisen koulutuksen — pienemmissä ryhmissä ja yksilöllisemmin. Haetaan samassa yhteishaussa opintopolku.fi:ssä.</p>
                   <div class="erityis-grid" role="list">
                     <div class="erityis-kortti" role="listitem">
@@ -791,6 +790,7 @@
                     </div>
                   </div>
                   <a href="https://opintopolku.fi/konfo/fi/sivu/erityinen-tuki-ammatillisessa-koulutuksessa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#92400e;text-decoration:none;">Lisää tietoa erityisestä tuesta — opintopolku.fi</a>
+                  <p class="amis-erityis-sulje-rivi"><button type="button" class="amis-tt-erityis amis-erityis-sulje" data-erityis-sulje="1">Sulje <span aria-hidden="true">↑</span></button></p>
                 </div>
               </div>
 
@@ -1014,7 +1014,7 @@
                 </div>
                 <div class="kk-info-kortti amis" role="listitem" style="background:#fffbeb; border:1.5px solid #fcd34d; display:flex; flex-direction:column;">
                   <h5 style="color:#92400e;">Ammattikoulu</h5>
-                  <p style="color:#78350f;">Myös ammatillinen koulutus on hyvä reitti. Sieltä pääsee töihin ja myös korkeakouluun.</p>
+                  <p style="color:#78350f;">Lukion jälkeen voit hakea myös ammattikouluun ja opiskella ammatin. Lukio-opinnot voivat lyhentää opiskelua, koska osa yhteisistä opinnoista on jo tehty.</p>
                   <button type="button"
                     onclick="vaihdaTutkija('amis', document.getElementById('tab-amis')); document.getElementById('tab-amis').scrollIntoView({behavior:'smooth', block:'center'});"
                     style="margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:7px; background:#d97706; color:#fff; border:none; border-radius:8px; padding:8px 15px; font-size:12px; font-weight:700; cursor:pointer;">

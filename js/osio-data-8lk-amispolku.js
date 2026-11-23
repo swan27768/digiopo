@@ -43,7 +43,8 @@
       pdf_loppu: 'Palauta tämä tiedosto opinto-ohjaajalle Classroomiin.',
       tyhjenna: 'Tyhjennä vastaukset',
       tyhjenna_varmista: 'Haluatko varmasti tyhjentää Vaihe 3:n vastaukset?',
-      erityis_nappi: 'Katso erityisammattioppilaitokset ↓'
+      erityis_nappi: 'Katso erityisammattioppilaitokset ↓',
+      erityis_piilota: 'Piilota erityisammattioppilaitokset ↑'
     },
     vaitteet: [
       { id: 'yliopisto', vaite: 'Amiksesta ei pääse yliopistoon.', oikea: 'tarua',
@@ -141,6 +142,9 @@
   function piirraVaitteet(d) {
     var lista = $('amis-tt-lista');
     if (!lista) return;
+    /* Erityisammattioppilaitosten paneeli talteen ennen listan uudelleenpiirtoa */
+    var er = $('erityis-sisalto'), varasto = $('amis-erityis-varasto');
+    if (er && varasto && er.parentNode !== varasto) varasto.appendChild(er);
     lista.innerHTML = d.vaitteet.map(function (v, i) {
       var vas = tila.tt[v.id];
       var nappi = function (arvo, teksti) {
@@ -155,14 +159,16 @@
           esc(ok ? d.ui.oikein : d.ui.vaarin) + ' ' + esc(d.ui.vaite_on) + ' <strong>' + esc(v.oikea === 'totta' ? d.ui.totta : d.ui.tarua).toLowerCase() + '</strong>.</p>' +
           '<p>' + esc(v.selitys) + '</p>' +
           (v.linkki ? '<p><a href="' + esc(v.linkki) + '" target="_blank" rel="noopener">' + esc(d.ui.lue_lisaa) + ' →</a></p>' : '') +
-          (v.erityis ? '<p><button type="button" class="amis-tt-erityis" data-erityis="1">' + esc(d.ui.erityis_nappi) + '</button></p>' : '');
+          (v.erityis ? '<p><button type="button" class="amis-tt-erityis" data-erityis="1" aria-controls="erityis-sisalto" aria-expanded="false">' + esc(d.ui.erityis_nappi) + '</button></p>' : '');
       }
       return '<li class="amis-tt-kortti' + (vas ? ' vastattu ' + (vas === v.oikea ? 'tulos-ok' : 'tulos-ei') : '') + '">' +
         '<p class="amis-tt-vaite"><span class="amis-tt-nro" aria-hidden="true">' + (i + 1) + '</span>' + esc(v.vaite) + '</p>' +
         '<div class="amis-tt-napit" role="group" aria-label="' + esc(v.vaite) + '">' + nappi('totta', d.ui.totta) + nappi('tarua', d.ui.tarua) + '</div>' +
         '<div class="amis-tt-palaute" id="amis-tt-palaute-' + v.id + '" aria-live="polite"' + (vas ? '' : ' hidden') + '>' + palaute + '</div>' +
+        (vas && v.erityis ? '<div class="amis-erityis-paikka"></div>' : '') +
         '</li>';
     }).join('');
+    kiinnitaErityis(d);
 
     var p = pisteet(d);
     var laskuri = $('amis-tt-laskuri');
@@ -395,12 +401,28 @@
     });
   }
 
-  function avaaErityis() {
-    var b = document.querySelector('#tutkija-amis .amis-sivupolku-toggle');
-    if (!b) return;
-    if (b.getAttribute('aria-expanded') !== 'true') b.click();
-    try { b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
-    try { b.focus(); } catch (e) {}
+  /* ── Erityisammattioppilaitokset: paneeli tukiväitteen alle, avaa/sulje ── */
+  function kiinnitaErityis(d) {
+    var er = $('erityis-sisalto');
+    var paikka = document.querySelector('#amis-tt-lista .amis-erityis-paikka');
+    if (er && paikka) paikka.appendChild(er);
+    paivitaErityisNappi(d);
+  }
+  function paivitaErityisNappi(d) {
+    var er = $('erityis-sisalto');
+    var b = document.querySelector('#amis-tt-lista .amis-tt-erityis[data-erityis]');
+    if (!er || !b) return;
+    var auki = !er.hidden;
+    b.setAttribute('aria-expanded', String(auki));
+    b.textContent = auki ? d.ui.erityis_piilota : d.ui.erityis_nappi;
+  }
+  function vaihdaErityis(d, auki) {
+    var er = $('erityis-sisalto');
+    if (!er) return;
+    er.hidden = !auki;
+    paivitaErityisNappi(d);
+    var b = document.querySelector('#amis-tt-lista .amis-tt-erityis[data-erityis]');
+    if (!auki && b) { try { b.focus(); b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} }
   }
 
   /* ── tapahtumat (delegointi) ── */
@@ -416,7 +438,10 @@
       if (uusi) uusi.focus();
       if (pisteet(d).n === pisteet(d).m) piirraPolku(d);
     } else if (t.dataset.erityis) {
-      avaaErityis();
+      var er = $('erityis-sisalto');
+      vaihdaErityis(d, !!(er && er.hidden));
+    } else if (t.dataset.erityisSulje) {
+      vaihdaErityis(d, false);
     } else if (t.dataset.kys) {
       tila.polku[t.dataset.kys] = t.dataset.vaihto; tallenna();
       piirraPolku(d);
@@ -433,6 +458,7 @@
     } else if (t.id === 'amis-v3-tyhjenna') {
       if (!window.confirm(d.ui.tyhjenna_varmista)) return;
       tila = { tt: {}, polku: {}, selvita: '', nimi: '' };
+      var erP = $('erityis-sisalto'); if (erP) erP.hidden = true;
       try { localStorage.removeItem(AVAIN); localStorage.removeItem(VALMIS); } catch (err) {}
       piirra();
     }
