@@ -66,11 +66,11 @@ ALKU = dict(tag="Tarina · noin 15 min",
             faktat=[("6", "ammattilaista"), ("7", "tuntia aikaa"), ("1", "kampanja")])
 
 KUVA = "../../images/koulutusalat/"
-TAUSTAKUVAT = {"kansi": KUVA + "muotoilu-mainoskuva-tausta.webp",
+TAUSTAKUVAT = {"kansi": KUVA + "muotoilu-skuutti-tausta.webp",
                "alku": KUVA + "muotoilu-tyopiste-tausta.webp",
                "tehtava": KUVA + "muotoilu-mainoskuva-tausta.webp",
                "kortti": KUVA + "muotoilu-kamera-tausta.webp",
-               "loppu": [KUVA + "muotoilu-kamera-tausta.webp", KUVA + "muotoilu-mainoskuva-tausta.webp"],
+               "loppu": [KUVA + "muotoilu-kulho-tausta.webp", KUVA + "muotoilu-ramppi-tausta.webp"],
                "oppilaitokset": [KUVA + "muotoilu-tyopiste-tausta.webp", KUVA + "muotoilu-kamera-tausta.webp"]}
 
 TARINA_ALKU = dict(nimi="Toimistoaamu", tausta="toimisto", teksti="""<<include "HUD">>
@@ -96,6 +96,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Ei toimi.</strong></p><p>Jos asiakasta ei kuunnella, luottamus katoaa. Sanni kysyy asiakkaalta tärkeimmän viestin ja ehdottaa ratkaisua yhdessä.</p>"),
       ]),
  dict(nimi="Logo", tausta="graafikko", otsikko="Punainen ja vihreä", avain="graafinen",
+      taustakuva=KUVA + "muotoilu-skuutti-tausta.webp",
       kysymys="Miltä graafisen suunnittelijan työ näytti?", lisaaika=25, siirtymaTeksti="Seuraava tilanne on puoli kahdentoista aikaan.",
       johdanto="""<p>Graafinen suunnittelija Leo tekee skeittipuistolle logoa. Asiakas haluaa logoon punaisen ja vihreän.</p>
 <p>Leo muistaa, että moni värisokea ei erota punaista ja vihreää toisistaan. Suomessa noin joka kahdeskymmenes mies on punavihersokea.</p>
@@ -137,6 +138,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Harhaanjohtavaa.</strong></p><p>Kun nuoret tulevat avajaisiin, he pettyvät. Mainos ei saa luvata enempää kuin todellisuudessa on. Onni tekee kuvan oikeista suunnitelmista.</p>"),
       ]),
  dict(nimi="Muotoilupaja", tausta="muotoilu", otsikko="Avajaislahja", avain="muotoilija",
+      taustakuva=KUVA + "muotoilu-kulho-tausta.webp",
       kysymys="Miltä teollisen muotoilijan työ näytti?", lisaaika=25, siirtymaTeksti="Seuraava tilanne on vähän ennen kolmea.",
       johdanto="""<p>Teollinen muotoilija Kaisa suunnittelee avajaisiin pienen lahjan nuorille. Idea on heijastin, jonka voi kiinnittää reppuun tai rullalautaan.</p>
 <p>3D-tulostin tekee jo ensimmäistä versiota.</p>
@@ -150,6 +152,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Halpaa, mutta…</strong></p><p>Turhat muovitavarat päätyvät usein roskiin. Hyvä muotoilu miettii, mitä käyttäjä oikeasti tarvitsee ja mistä tuote tehdään.</p>"),
       ]),
  dict(nimi="Muraali", tausta="muraali", otsikko="Nuorten oma seinä", avain="kuvataiteilija",
+      taustakuva=KUVA + "muotoilu-ramppi-tausta.webp",
       kysymys="Miltä kuvataiteilijan työ näytti?",
       johdanto="""<p>Kuvataiteilija Aino maalaa skeittipuiston muuriin muraalia eli suurta seinämaalausta. Paikalle tulee joukko nuoria.</p>
 <p>Nuoret kysyvät, saisivatko hekin maalata seinään jotain omaa.</p>
