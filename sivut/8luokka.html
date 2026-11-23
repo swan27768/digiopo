@@ -2924,11 +2924,12 @@
       kasityo:  '../pelit/koulutusalat/kasityo-ala.html',
       kasvatus: '../pelit/koulutusalat/kasvatus-ala.html',
       merenkulku: '../pelit/koulutusalat/merenkulku-ala.html',
-      yrittajyys: '../pelit/koulutusalat/yrittajyys-ala.html'
+      yrittajyys: '../pelit/koulutusalat/yrittajyys-ala.html',
+      muotoilu: '../pelit/koulutusalat/muotoilu-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
-      taide:'Taide ja kulttuuri', kauppa:'Kauppa ja myynti',
+      taide:'Festarit: media ja tapahtumat', kauppa:'Kauppa ja myynti',
       data:'IT ja tietotekniikka', ruoka:'Elintarvikeala', liikunta:'Palveluala',
       urheilu:'Urheilu, tanssi ja sirkus',
       kauneus:'Kauneus ja hyvinvointi',
@@ -2937,25 +2938,27 @@
       liikenne:'Autot ja liikenne',
       elaimet:'Eläimet',
       musiikki:'Musiikki',
-      kasityo:'Käsityö',
+      kasityo:'Käsityö ja valokuvaus',
       kasvatus:'Kasvatus ja ohjaus',
       merenkulku:'Merenkulku',
-      yrittajyys:'Yrittäjyys'
+      yrittajyys:'Yrittäjyys',
+      muotoilu:'Kampanja: taide ja muotoilu'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin yhdeksästätoista pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen yhteen tai useampaan pelitarina-alaan (kahdestakymmenestä).
+    // Media, taide ja käsityö tarjoavat kaikki samat kulttuurialan tarinat: Festarit, Kampanja ja Käsityömessut.
     const PELI_ALA = {
       ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
-      pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'musiikki',
-      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:'kasityo', kasvatus:'kasvatus', meri:'merenkulku', yrittajyys:'yrittajyys'
+      pelit:'data', tietokone:'data', media:['taide','muotoilu','kasityo'], taide:['taide','muotoilu','kasityo'], musiikki:'musiikki',
+      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:['taide','muotoilu','kasityo'], kasvatus:'kasvatus', meri:'merenkulku', yrittajyys:'yrittajyys'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','merenkulku','data','ruoka','luonto','elaimet','taide','musiikki','kasityo','kauppa','yrittajyys','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','merenkulku','data','ruoka','luonto','elaimet','taide','muotoilu','kasityo','musiikki','kauppa','yrittajyys','liikunta','urheilu','kauneus','turvallisuus'];
       const kat = [];
-      amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
+      amisValitut.forEach(k => { [].concat(PELI_ALA[k] || []).forEach(g => { if (kat.indexOf(g) === -1) kat.push(g); }); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
       if (valitut.length === 0) {
         sisalto.innerHTML = '<div class="amis-v3-ohje"><p>Valitse Vaihe 1:ssä jokin kiinnostava ala — sopiva pelitarina ilmestyy tähän automaattisesti.</p></div>';
@@ -2992,7 +2995,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:'', merenkulku:'', yrittajyys:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:'', merenkulku:'', yrittajyys:'', muotoilu:''
     };
 
     /* ── Tab-vaihto ── */
