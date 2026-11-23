@@ -73,7 +73,7 @@ TAUSTAKUVAT = {"kansi": KUVA + "muotoilu-skuutti-tausta.webp",
                "loppu": [KUVA + "muotoilu-kulho-tausta.webp", KUVA + "muotoilu-ramppi-tausta.webp"],
                "oppilaitokset": [KUVA + "muotoilu-tyopiste-tausta.webp", KUVA + "muotoilu-kamera-tausta.webp"]}
 
-TARINA_ALKU = dict(nimi="Toimistoaamu", tausta="toimisto", teksti="""<<include "HUD">>
+TARINA_ALKU = dict(nimi="Toimistoaamu", tausta="toimisto", teksti="""<<run setup.taustakuva("../../images/koulutusalat/muotoilu-kulho-tausta.webp")>><<include "HUD">>
 <h1>Toimistoaamu</h1>
 <p>Kello on 9.00. Astut mainostoimisto Kipinän avokonttoriin. Seinillä on julisteita, ja 3D-tulostin hurisee nurkassa.</p>
 <p>Olet toimiston harjoittelija. Tänään valmistellaan kampanjaa kaupungin uuden skeittipuiston avajaisiin. Kello 16 kampanja esitellään asiakkaalle.</p>
@@ -167,7 +167,7 @@ KOHTAUKSET = [
       ]),
 ]
 
-TARINA_LOPPU = dict(nimi="Esittely", teksti="""<h1>Kampanja valmis</h1>
+TARINA_LOPPU = dict(nimi="Esittely", teksti="""<<run setup.taustakuva(either("../../images/koulutusalat/muotoilu-skuutti-tausta.webp", "../../images/koulutusalat/muotoilu-ramppi-tausta.webp"))>><h1>Kampanja valmis</h1>
 <p class="highlight">Kello on <<print setup.kello($aika)>>, kun kampanja on valmis. Kello 16 se esitellään asiakkaalle.</p>
 <p>Neuvotteluhuoneen näytöllä vaihtuvat logo, juliste, 3D-kuva puistosta, heijastinlahja ja muraalin luonnos. Asiakas nyökkää ja hymyilee.</p>
 <p>Huomasitko? Yhteen kampanjaan tarvittiin monta taiteen ja muotoilun ammattilaista:</p>
