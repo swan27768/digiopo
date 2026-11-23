@@ -68,7 +68,7 @@ ALKU = dict(tag="Tarina · noin 15 min",
 KUVA = "../../images/koulutusalat/"
 TAUSTAKUVAT = {"kansi": KUVA + "muotoilu-skuutti-tausta.webp",
                "alku": KUVA + "muotoilu-tyopiste-tausta.webp",
-               "tehtava": KUVA + "muotoilu-mainoskuva-tausta.webp",
+               "tehtava": KUVA + "muotoilu-kulho-tausta.webp",
                "kortti": KUVA + "muotoilu-kamera-tausta.webp",
                "loppu": [KUVA + "muotoilu-kulho-tausta.webp", KUVA + "muotoilu-ramppi-tausta.webp"],
                "oppilaitokset": [KUVA + "muotoilu-tyopiste-tausta.webp", KUVA + "muotoilu-kamera-tausta.webp"]}
@@ -110,7 +110,7 @@ KOHTAUKSET = [
             palaute="<p><strong>Ei riitä.</strong></p><p>Joka kahdeskymmenes mies on paljon ihmisiä. Skeittipuiston logo näkyy kylteissä ja opasteissa, joten sen pitää toimia kaikille. Leo testaa logon.</p>"),
       ]),
  dict(nimi="Kuvituspöytä", tausta="kuvitus", otsikko="Tekoälyllä nopeammin?", avain="kuvittaja",
-      taustakuva=KUVA + "muotoilu-mainoskuva-tausta.webp",
+      taustakuva=KUVA + "muotoilu-tyopiste-tausta.webp",
       kysymys="Miltä kuvittajan työ näytti?", lisaaika=25, siirtymaTeksti="Seuraava tilanne on puoli yhden aikaan.",
       johdanto="""<p>Kuvittaja Emma tekee julisteen pääkuvaa. Aikaa on vähän.</p>
 <p>Harjoittelijakaveri ehdottaa, että tekoälyllä saisi hetkessä kuvan, joka näyttää tunnetun taiteilijan työltä.</p>
