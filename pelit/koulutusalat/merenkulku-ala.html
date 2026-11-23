@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html data-init="no-js" data-tausta-maailma="laiva" data-tausta="kansi">
+<head>
+<meta charset="UTF-8" />
+<title>Merenkulku – Ensimmäinen merivuoro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="application-name" content="SugarCube" />
+<meta name="version" content="2.37.3" />
+<!--
+
+SugarCube (v2.37.3): A free (gratis and libre) story format.
+
+Copyright © 2013–2021 Thomas Michael Edwards <thomasmedwards@gmail.com>.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<script id="script-libraries" type="text/javascript" src="koulutusalat-yhteinen.js"></script>
+<link rel="stylesheet" href="koulutusalat-yhteinen.css">
+<link rel="stylesheet" href="tarina-yhteinen.css">
+<script src="tarina-yhteinen.js"></script>
+<script type="module" src="tausta3d.js"></script>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="manifest" href="../../manifest.json" />
+    <meta name="theme-color" content="#7c3aed" />
+    <script src="../../js/lisenssiportti.js"></script>
+    <script src="../../js/seuranta.js" defer></script>
+
+<script id="sc-aloita-alusta">try{sessionStorage.removeItem("merenkulkuala.state");}catch(e){}window.addEventListener("pageshow",function(e){if(e.persisted){try{sessionStorage.removeItem("merenkulkuala.state");}catch(x){}location.reload();}});</script>
+<script id="sc-clear-saves">
+(function(){
+  var prefix = "sc-41e23748-470d-4fc7-892e-74bf5c28d0f6-";
+  Object.keys(localStorage).forEach(function(k){
+    if (k.indexOf(prefix) === 0) localStorage.removeItem(k);
+  });
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+	<div id="init-screen">
+		<div id="init-no-js"><noscript>JavaScript must be enabled to play.</noscript></div>
+		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
+		<div id="init-loading"><div>Loading&hellip;</div></div>
+	</div>
+	<tw-storydata name="Merenkulkuala" startnode="6" creator="Twine" creator-version="2.11.1" format="SugarCube" format-version="2.37.3" ifid="41e23748-470d-4fc7-892e-74bf5c28d0f6" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+:root {
+  --a1: #5cc8ff; --a1-rgb: 92,200,255;
+  --a2: #ff8a3d; --a2-rgb: 255,138,61;
+  --a3: #dff3ff;
+  --korostus: #ffb067; --korostus-rgb: 255,176,103;
+  --tausta: #0b1a2a; --tausta-rgb: 11,26,42;
+  --tausta-2: #112539; --tausta-2-rgb: 17,37,57;
+  --paneeli: #0f2133; --paneeli-rgb: 15,33,51;
+  --paneeli-2: #173049;
+  --tumma: #06101b; --tumma-rgb: 6,16,27;
+  --reuna: #5cc8ff;
+  --teksti-pehmea: #dbe9f4; --teksti-pehmea-rgb: 219,233,244;
+  --teksti-vaalea: #f6fbff;
+  --nappi-teksti: #061a2b;
+  --kansi-nappi-bg: linear-gradient(135deg, var(--a1), var(--a2));
+  --kansi-nappi-teksti: var(--nappi-teksti);
+  --kansi-nappi-reuna: #eaf7ff;
+  --kansi-nappi-varjo: #1d4f7a;
+  --kansi-nappi-hehku: 92,200,255;
+}
+html body #passages .passage .cover-link.cover-3d {
+  background: linear-gradient(to top, rgba(var(--tausta-rgb),.95) 0%, rgba(var(--tausta-rgb),.8) 40%, rgba(var(--tausta-rgb),.35) 64%, rgba(var(--tausta-rgb),0) 84%) !important;
+}
+html body #passages .passage .cover-pieni, html body #passages .passage .cover-subtitle { text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.7); }
+html body #passages .passage .cover-title { text-shadow: 0 2px 14px rgba(0,0,0,.6); }
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+/* Ensimmäinen merivuoro – alan sisältö. Moottori: tarina-yhteinen.js */
+TarinaYhteinen.alusta(setup, {
+ "ala": "merenkulku",
+ "alaNimi": "Merenkulku",
+ "tarinaNimi": "Ensimmäinen merivuoro",
+ "kello": {
+  "alku": 420,
+  "raja": 480
+ },
+ "katsoTeksti": "Katso laivaa",
+ "aikaRivi": "",
+ "kutsuTilanneOtsikko": "Tehtävä",
+ "piirteet": {
+  "tarkka": {
+   "nimi": "Tarkka",
+   "kuvaus": "Tarkistat asiat huolellisesti, ennen kuin jatkat."
+  },
+  "vastuullinen": {
+   "nimi": "Turvallisuuden vartija",
+   "kuvaus": "Mietit aina ensin, miten kaikki pysyvät turvassa."
+  },
+  "tiimi": {
+   "nimi": "Miehistön jäsen",
+   "kuvaus": "Teet yhteistyötä, ja muut voivat luottaa sinuun."
+  },
+  "kohtaaja": {
+   "nimi": "Huolehtija",
+   "kuvaus": "Huomaat, mitä muut tarvitsevat, ja autat heitä."
+  },
+  "nopea": {
+   "nimi": "Nopea toimija",
+   "kuvaus": "Tartut toimeen heti ja pidät aikataulusta kiinni. Muista myös pysähtyä tarkistamaan."
+  },
+  "rohkea": {
+   "nimi": "Rohkea tekijä",
+   "kuvaus": "Uskallat hoitaa asiat itse. Kun rohkeuteen yhdistää turvallisuuden, siitä on paljon hyötyä."
+  },
+  "empaattinen": {
+   "nimi": "Toisten ajattelija",
+   "kuvaus": "Haluat, että muilla on hyvä mieli, ja kuuntelet heidän toiveitaan. Joskus pitää silti sanoa myös ei."
+  },
+  "varovainen": {
+   "nimi": "Varovainen",
+   "kuvaus": "Et halua ottaa riskejä. Se on usein viisasta, mutta liika varovaisuus voi jättää asian hoitamatta."
+  },
+  "kaytannollinen": {
+   "nimi": "Käytännöllinen",
+   "kuvaus": "Keksit nopeasti helpon ratkaisun. Kun opit punnitsemaan riskejä, ratkaisusi ovat entistä parempia."
+  },
+  "suora": {
+   "nimi": "Suorapuheinen",
+   "kuvaus": "Sanot asiat suoraan. Kun mukaan tulee lempeyttä, viestisi menee vielä paremmin perille."
+  },
+  "luottavainen": {
+   "nimi": "Luottavainen",
+   "kuvaus": "Uskot, että asiat järjestyvät. Se auttaa jaksamaan, mutta joskus tilanne vaatii nopeaa toimintaa."
+  }
+ },
+ "ammatit": {
+  "luotsi": {
+   "nimi": "Luotsi",
+   "kuvaus": "Opastaa laivoja turvallisesti mereltä satamiin ja takaisin.",
+   "tutkinto": "Merikapteeni (AMK), merikokemus ja luotsin erityiskoulutus",
+   "piirteet": [
+    "tarkka",
+    "vastuullinen"
+   ]
+  },
+  "ahtaaja": {
+   "nimi": "Satama-ahtaaja",
+   "kuvaus": "Lastaa ja purkaa laivoja satamassa.",
+   "tutkinto": "Logistiikan perustutkinto (satama-ahtaaja)",
+   "piirteet": [
+    "vastuullinen",
+    "tiimi"
+   ]
+  },
+  "laivamies": {
+   "nimi": "Laivamies",
+   "kuvaus": "Tekee kannen ja konehuoneen töitä ja pitää vahtia.",
+   "tutkinto": "Merenkulkualan perustutkinto (laivamies)",
+   "piirteet": [
+    "tiimi",
+    "vastuullinen"
+   ]
+  },
+  "konemestari": {
+   "nimi": "Konemestari",
+   "kuvaus": "Vastaa laivan koneista, sähköstä ja huollosta.",
+   "tutkinto": "Konemestari (AMK) tai merenkulkualan perustutkinto (vahtikonemestari)",
+   "piirteet": [
+    "tarkka",
+    "vastuullinen"
+   ]
+  },
+  "laivakokki": {
+   "nimi": "Laivakokki",
+   "kuvaus": "Suunnittelee ja valmistaa ruoat miehistölle koko matkan ajaksi.",
+   "tutkinto": "Ravintola- ja catering-alan perustutkinto (kokki)",
+   "piirteet": [
+    "kohtaaja",
+    "tarkka"
+   ]
+  },
+  "peramies": {
+   "nimi": "Perämies",
+   "kuvaus": "Ohjaa laivaa vahtivuorollaan ja valvoo lastausta.",
+   "tutkinto": "Merikapteeni (AMK) tai merenkulkualan perustutkinto (vahtiperämies)",
+   "piirteet": [
+    "tarkka",
+    "tiimi"
+   ]
+  }
+ },
+ "kutsuKortit": [],
+ "tehtava": {
+  "tyyppi": "lastaus",
+  "nimi": "Lastaussuunnitelma",
+  "tag": "Tehtävä · noin 15 min",
+  "maara": "<strong>12 ajoneuvoa ja yksi autokansi<\/strong>",
+  "ohjeAskelLause": "Teet kaksi asiaa:",
+  "askeleet": [
+   "Sijoita kaikki ajoneuvot autokannelle. Huolehdi, että laiva pysyy tasapainossa ja turvallisena.",
+   "Perustele kaksi asiaa omin sanoin."
+  ],
+  "lopuksi": "Kallistusmittari näyttää heti, painaako laivan toinen puoli enemmän. Tarkistuslista kertoo, mitkä turvallisuussäännöt täyttyvät. Voit muokata suunnitelmaa ja tarkistaa sen uudelleen. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.",
+  "tulosOtsikko": "Lastaussuunnitelmasi",
+  "osa1": "Osa 1/2 · Autokansi",
+  "osa2": "Osa 2/2 · Perustelut",
+  "tilanneOtsikko": "Lastaus seuraavassa satamassa",
+  "ohje": "Autokannella on neljä kaistaa ja neljä riviä. Valitse ajoneuvo listasta ja paina kannen ruutua. Ruutujen merkit kertovat, missä on sähköpistoke, vaarallisten aineiden alue ja hätäpoistumistie.",
+  "kaistat": 4,
+  "rivit": 4,
+  "keulaTeksti": "KEULA",
+  "peraTeksti": "PERÄPORTTI",
+  "vasenTeksti": "◀ Vasen puoli",
+  "oikeaTeksti": "Oikea puoli ▶",
+  "kaistaTeksti": "Kaista",
+  "riviTeksti": "rivi",
+  "kallistusNimi": "Kallistus",
+  "ajoneuvotOtsikko": "Lastattavat ajoneuvot",
+  "saannotOtsikko": "Perämiehen tarkistuslista",
+  "kaikkiKannellaTeksti": "Kaikki ajoneuvot ovat kannella.",
+  "vihje": "Valitse ajoneuvo ja paina sitten kannen ruutua. Kannella olevan ajoneuvon saat takaisin listaan painamalla sitä.",
+  "valittuVihje": "Paina nyt kannen ruutua, johon ajoneuvo menee.",
+  "erikoisruudut": {
+   "sahko": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "adr": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "poistuminen": [
+    [
+     3,
+     2
+    ]
+   ]
+  },
+  "erikoisMerkit": {
+   "sahko": {
+    "ikoni": "⚡",
+    "nimi": "Sähköpistoke kylmärekalle"
+   },
+   "adr": {
+    "ikoni": "⚠️",
+    "nimi": "Vaarallisten aineiden alue"
+   },
+   "poistuminen": {
+    "ikoni": "🚪",
+    "nimi": "Hätäpoistumistie"
+   }
+  },
+  "tarkistaNappi": "Tarkista suunnitelma",
+  "muokkaaNappi": "Muokkaa suunnitelmaa",
+  "jatkaNappi": "Jatka perusteluihin",
+  "tyhjennaNappi": "Tyhjennä kansi",
+  "takaisinNappi": "Takaisin kannelle",
+  "valmisNappi": "Katso tulos",
+  "perusteluOtsikko": "Lastaussuunnitelma on valmis!",
+  "perusteluOhje": "Vastaa vielä kahteen kysymykseen. Kirjoita kumpaankin yksi tai kaksi lausetta.",
+  "ammattilainenTeksti": "Tätä työtä tekee",
+  "korttiYla": "LASTAUSSUUNNITELMA · M/S AALLOTAR",
+  "palaute": [
+   "Huippusuunnitelma! Laiva on tasapainossa, ja jokainen ajoneuvo on turvallisella paikalla.",
+   "Hyvä suunnitelma! Pari siirtoa, niin laiva olisi täysin turvallinen.",
+   "Hyvä alku! Lue tarkistuslistan selitykset ja kokeile siirtää ajoneuvoja."
+  ],
+  "ajoneuvot": [
+   {
+    "avain": "r1",
+    "nimi": "Rekka: sahatavara",
+    "lyhyt": "Sahapuu",
+    "ikoni": "🚛",
+    "paino": 38,
+    "kuvaus": "Raskas lasti.",
+    "tagit": [
+     "raskas"
+    ]
+   },
+   {
+    "avain": "r2",
+    "nimi": "Rekka: paperirullat",
+    "lyhyt": "Paperi",
+    "ikoni": "🚛",
+    "paino": 40,
+    "kuvaus": "Raskain lasti.",
+    "tagit": [
+     "raskas"
+    ]
+   },
+   {
+    "avain": "r8",
+    "nimi": "Rekka: koneet",
+    "lyhyt": "Koneet",
+    "ikoni": "🚛",
+    "paino": 36,
+    "kuvaus": "Raskas lasti.",
+    "tagit": [
+     "raskas"
+    ]
+   },
+   {
+    "avain": "r3",
+    "nimi": "Rekka: huonekalut",
+    "lyhyt": "Kalusteet",
+    "ikoni": "🚚",
+    "paino": 22,
+    "kuvaus": "Tavallinen lasti.",
+    "tagit": []
+   },
+   {
+    "avain": "r4",
+    "nimi": "Kylmärekka: kala",
+    "lyhyt": "Kala",
+    "ikoni": "❄️",
+    "paino": 30,
+    "kuvaus": "Kylmäkone tarvitsee sähköä koko matkan.",
+    "tagit": [
+     "kylma"
+    ]
+   },
+   {
+    "avain": "r7",
+    "nimi": "Kylmärekka: jäätelö",
+    "lyhyt": "Jäätelö",
+    "ikoni": "❄️",
+    "paino": 26,
+    "kuvaus": "Kylmäkone tarvitsee sähköä koko matkan.",
+    "tagit": [
+     "kylma"
+    ]
+   },
+   {
+    "avain": "r5",
+    "nimi": "Säiliörekka: maali",
+    "lyhyt": "Maali",
+    "ikoni": "🛢️",
+    "paino": 26,
+    "kuvaus": "Vaarallinen aine: syttyvä.",
+    "tagit": [
+     "adr"
+    ]
+   },
+   {
+    "avain": "r6",
+    "nimi": "Rekka: lannoite",
+    "lyhyt": "Lannoite",
+    "ikoni": "🧪",
+    "paino": 28,
+    "kuvaus": "Vaarallinen aine: hapettava. Voi kiihdyttää tulipaloa.",
+    "tagit": [
+     "adr"
+    ]
+   },
+   {
+    "avain": "r9",
+    "nimi": "Pakettiauto",
+    "lyhyt": "Paketti",
+    "ikoni": "🚐",
+    "paino": 4,
+    "kuvaus": "Kevyt ajoneuvo, ajaa ulos ensimmäisenä.",
+    "tagit": [
+     "kevyt"
+    ]
+   },
+   {
+    "avain": "r12",
+    "nimi": "Asuntoauto",
+    "lyhyt": "Asunto",
+    "ikoni": "🚐",
+    "paino": 4,
+    "kuvaus": "Kevyt ajoneuvo, ajaa ulos ensimmäisenä.",
+    "tagit": [
+     "kevyt"
+    ]
+   },
+   {
+    "avain": "r10",
+    "nimi": "Henkilöauto",
+    "lyhyt": "Auto",
+    "ikoni": "🚗",
+    "paino": 2,
+    "kuvaus": "Kevyt ajoneuvo, ajaa ulos ensimmäisenä.",
+    "tagit": [
+     "kevyt"
+    ]
+   },
+   {
+    "avain": "r11",
+    "nimi": "Henkilöauto",
+    "lyhyt": "Auto",
+    "ikoni": "🚗",
+    "paino": 2,
+    "kuvaus": "Kevyt ajoneuvo, ajaa ulos ensimmäisenä.",
+    "tagit": [
+     "kevyt"
+    ]
+   }
+  ],
+  "saannot": [
+   {
+    "tyyppi": "kallistus",
+    "max": 10,
+    "nimi": "Laiva ei kallistu (puolten painoero enintään 10 t)",
+    "selitys": "Jos toinen puoli on paljon painavampi, laiva kallistuu. Myrskyssä kallistunut laiva voi olla vaarassa kaatua."
+   },
+   {
+    "tyyppi": "kaistat",
+    "tagi": "raskas",
+    "kaistat": [
+     2,
+     3
+    ],
+    "nimi": "Raskaimmat rekat ovat keskikaistoilla",
+    "selitys": "Keskellä laivaa paino pitää laivan vakaana. Reunoilla raskas lasti saa laivan keinumaan enemmän."
+   },
+   {
+    "tyyppi": "ruudut",
+    "tagi": "kylma",
+    "ruudut": "sahko",
+    "nimi": "Kylmärekat ovat sähköpistokkeiden vieressä",
+    "selitys": "Kylmärekan kone tarvitsee sähköä koko matkan. Ilman sähköä kala ja jäätelö pilaantuvat."
+   },
+   {
+    "tyyppi": "ruudut",
+    "tagi": "adr",
+    "ruudut": "adr",
+    "nimi": "Vaaralliset aineet ovat omalla alueellaan",
+    "selitys": "Vaarallisten aineiden alueella on hyvä ilmanvaihto ja sammutuslaitteet. Siellä niitä on myös helppo valvoa."
+   },
+   {
+    "tyyppi": "eiVierekkain",
+    "tagi": "adr",
+    "nimi": "Vaaralliset aineet eivät ole vierekkäin",
+    "selitys": "Syttyvä maali ja hapettava lannoite yhdessä voivat pahentaa tulipaloa. Siksi ne pidetään erillään."
+   },
+   {
+    "tyyppi": "rivit",
+    "tagi": "kevyt",
+    "rivit": [
+     1,
+     2
+    ],
+    "nimi": "Kevyet autot ovat lähellä peräporttia",
+    "selitys": "Henkilöautot ja pakettiautot ajavat satamassa ulos ensimmäisinä. Silloin purku sujuu nopeasti."
+   },
+   {
+    "tyyppi": "tyhja",
+    "ruudut": "poistuminen",
+    "nimi": "Hätäpoistumistie on vapaana",
+    "selitys": "Hätäpoistumistien eteen ei saa koskaan pysäköidä. Tulipalossa ihmisten pitää päästä ulos autokannelta."
+   }
+  ],
+  "kysymykset": [
+   {
+    "kysymys": "Miksi laivan lasti pitää jakaa tasaisesti kannelle?",
+    "ammattilainen": "Perämies",
+    "tutkinto": "Merikapteeni (AMK)",
+    "placeholder": "Lasti pitää jakaa tasaisesti, koska…"
+   },
+   {
+    "kysymys": "Miksi vaaralliset aineet sijoitetaan omalle alueelleen?",
+    "ammattilainen": "Satama-ahtaaja",
+    "tutkinto": "Logistiikan perustutkinto (satama-ahtaaja)",
+    "placeholder": "Vaaralliset aineet ovat erillään, koska…"
+   }
+  ],
+  "ammattilaisetOtsikko": "Merenkulkualan ammatteja",
+  "ammattilaiset": [
+   {
+    "nimi": "Laivamies",
+    "tehtava": "tekee kannen ja konehuoneen töitä",
+    "tutkinto": "Merenkulkualan perustutkinto"
+   },
+   {
+    "nimi": "Vahtiperämies",
+    "tehtava": "ohjaa laivaa vahtivuorollaan",
+    "tutkinto": "Merenkulkualan perustutkinto"
+   },
+   {
+    "nimi": "Vahtikonemestari",
+    "tehtava": "huolehtii koneista vahtivuorollaan",
+    "tutkinto": "Merenkulkualan perustutkinto"
+   },
+   {
+    "nimi": "Satama-ahtaaja",
+    "tehtava": "lastaa ja purkaa laivoja",
+    "tutkinto": "Logistiikan perustutkinto"
+   },
+   {
+    "nimi": "Merikapteeni",
+    "tehtava": "johtaa laivaa ja koko miehistöä",
+    "tutkinto": "Merikapteeni (AMK)"
+   },
+   {
+    "nimi": "Konemestari",
+    "tehtava": "vastaa laivan koneista ja tekniikasta",
+    "tutkinto": "Konemestari (AMK)"
+   }
+  ]
+ }
+});
+</script><tw-passagedata pid="1" name="StoryInit" tags="" position="725,50" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
+/* Ensimmäinen merivuoro – alkuarvot */
+&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {tarkka: 0, vastuullinen: 0, tiimi: 0, kohtaaja: 0, nopea: 0, rohkea: 0, empaattinen: 0, varovainen: 0, kaytannollinen: 0, suora: 0, luottavainen: 0}&gt;&gt;&lt;&lt;set $kiinn to {luotsi: 0, ahtaaja: 0, laivamies: 0, konemestari: 0, laivakokki: 0, peramies: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;&lt;&lt;set $seuraukset to []&gt;&gt;&lt;&lt;set $melkein to 0&gt;&gt;
+&lt;&lt;set $korttiNimi to &quot;&quot;&gt;&gt;
+&lt;&lt;set $ammatti to &quot;&quot;&gt;&gt;
+</tw-passagedata><tw-passagedata pid="6" name="Kansi" tags="scene-kansi" position="475,75" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-luotsivene-tausta.webp&quot;)&gt;&gt;&lt;&lt;script&gt;&gt;
+$(&#39;body&#39;).addClass(&#39;hide-navbar&#39;);
+&lt;&lt;/script&gt;&gt;
+&lt;div class=&quot;cover-link cover-3d&quot;&gt;
+  &lt;div class=&quot;cover-inner&quot;&gt;
+    &lt;p class=&quot;cover-pieni&quot;&gt;Merenkulkuala&lt;/p&gt;
+    &lt;h1 class=&quot;cover-title&quot;&gt;Merenkulku&lt;/h1&gt;
+    &lt;p class=&quot;cover-subtitle&quot;&gt;Ensimmäinen merivuoro · Kuka kaikki tarvitaan, jotta laiva lähtee ajallaan?&lt;/p&gt;
+    &lt;button type=&quot;button&quot; class=&quot;cover-kaynnista&quot; onclick=&quot;kaynnistaTarina(this)&quot;&gt;&lt;svg class=&quot;cover-virta&quot; viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot; focusable=&quot;false&quot;&gt;&lt;path d=&quot;M4 15.5l1.6-5A2 2 0 0 1 7.5 9h9a2 2 0 0 1 1.9 1.5l1.6 5V19h-2.5v-1.6H6.5V19H4z&quot; fill=&quot;currentColor&quot;/&gt;&lt;circle cx=&quot;7.5&quot; cy=&quot;15&quot; r=&quot;1.2&quot; fill=&quot;#000&quot; opacity=&quot;.45&quot;/&gt;&lt;circle cx=&quot;16.5&quot; cy=&quot;15&quot; r=&quot;1.2&quot; fill=&quot;#000&quot; opacity=&quot;.45&quot;/&gt;&lt;/svg&gt;&lt;span&gt;Astu laivaan&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="32" name="start" tags="scene-satama alku-sivu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-ulappa-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;alku-kortti&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tarina · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Ensimmäinen merivuoro&lt;/h2&gt;
+&lt;p class=&quot;alku-teksti&quot;&gt;Olet merenkulun opiskelija ja ensimmäistä päivää harjoittelussa rahtilaivalla. Laiva saapuu aamulla Helsinkiin, ja kello 15 se lähtee taas merelle rekat kyydissään. Päivän aikana autat monta merenkulun ammattilaista. Joka kerta päätät, mikä on paras tapa toimia.&lt;/p&gt;
+&lt;ul class=&quot;alku-faktat&quot;&gt;
+&lt;li&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;span&gt;ammattilaista&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;60&lt;/strong&gt;&lt;span&gt;rekkaa&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;8&lt;/strong&gt;&lt;span&gt;tuntia satamassa&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita tarina&quot;&gt;&gt;&lt;&lt;goto &quot;Laiva saapuu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="33" name="HUD" tags="" position="1200,100" size="100,100">&lt;div class=&quot;hud&quot; role=&quot;status&quot;&gt;&lt;span class=&quot;hud-kello&quot;&gt;Kello &lt;&lt;print setup.kello($aika)&gt;&gt;&lt;/span&gt;&lt;span class=&quot;hud-rekka&quot;&gt;Laiva lähtee klo 15.00&lt;/span&gt;&lt;span class=&quot;hud-jaljella&quot;&gt;&lt;&lt;print setup.jaljella($aika)&gt;&gt;&lt;/span&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="34" name="Widgetit" tags="widget" position="1200,100" size="100,100">&lt;&lt;widget &quot;kiinnostus&quot;&gt;&gt;&lt;&lt;set _avain to _args[0]&gt;&gt;&lt;&lt;set _seuraava to _args[1]&gt;&gt;&lt;div class=&quot;kiinnostus&quot;&gt;&lt;p class=&quot;kiinnostus-kysymys&quot;&gt;&lt;&lt;print _args[2]&gt;&gt;&lt;/p&gt;&lt;div class=&quot;answer-group kiinnostus-napit&quot;&gt;&lt;&lt;capture _avain, _seuraava&gt;&gt;&lt;&lt;link &quot;Kiinnostava&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 2&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ehkä&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 1&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;Ei minun juttu&quot;&gt;&gt;&lt;&lt;set $kiinn[_avain] to 0&gt;&gt;&lt;&lt;set $aika += 0&gt;&gt;&lt;&lt;goto _seuraava&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;/capture&gt;&gt;&lt;/div&gt;&lt;/div&gt;&lt;&lt;/widget&gt;&gt;
+</tw-passagedata><tw-passagedata pid="35" name="Laiva saapuu" tags="scene-kansi" position="1200,100" size="100,100">&lt;&lt;set $aika to 0&gt;&gt;&lt;&lt;set $piirre to {tarkka: 0, vastuullinen: 0, tiimi: 0, kohtaaja: 0, nopea: 0, rohkea: 0, empaattinen: 0, varovainen: 0, kaytannollinen: 0, suora: 0, luottavainen: 0}&gt;&gt;&lt;&lt;set $kiinn to {luotsi: 0, ahtaaja: 0, laivamies: 0, konemestari: 0, laivakokki: 0, peramies: 0}&gt;&gt;&lt;&lt;set $korttiTop to []&gt;&gt;&lt;&lt;set $seuraukset to []&gt;&gt;&lt;&lt;set $melkein to 0&gt;&gt;
+&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;h1&gt;Laiva saapuu&lt;/h1&gt;
+&lt;p&gt;Kello on 7.00. Seisot rahtilaivan kannella. Aamu-usvan läpi näkyvät jo Helsingin saaret.&lt;/p&gt;
+&lt;p&gt;Olet merenkulun opiskelija, ja tämä on ensimmäinen päiväsi harjoittelussa. Laiva purkaa ja lastaa satamassa, ja kello 15 se lähtee taas merelle.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Jussi, laivamies:&lt;/strong&gt; ”Tervetuloa kyytiin! Luotsivene on jo tulossa. Tule mukaan.”&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita vuoro&quot;&gt;&gt;&lt;&lt;set $aika += 5&gt;&gt;&lt;&lt;goto &quot;Luotsitikkaat&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="36" name="Luotsitikkaat" tags="scene-luotsi" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-luotsi-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 1/6&lt;/p&gt;
+&lt;h2&gt;Luotsi tulee kyytiin&lt;/h2&gt;
+&lt;p&gt;Luotsi Tiina tuntee Helsingin vesialueen tarkasti. Hän opastaa laivan satamaan kapeiden väylien läpi.&lt;/p&gt;
+&lt;p&gt;Luotsivene ajaa laivan kylkeen, ja Tiina kiipeää laivaan köysitikkaita pitkin. Te valmistelette tikkaat Jussin kanssa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Jussi, laivamies:&lt;/strong&gt; ”Miten valmistaudumme?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Tikkaat lasketaan valmiiksi jo puoli tuntia etukäteen, ettei Tiinan tarvitse odottaa.&quot;&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;set $piirre.kaytannollinen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ajoissa, mutta tarkistus puuttuu.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Tikkaiden kiinnitys ja korkeus pitää tarkistaa juuri ennen nousua, koska laiva ja aallot liikkuvat. Jussi tarkistaa tikkaat ja jää Tiinaa vastaan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 25 min. Seuraava tilanne on vähän yli kahdeksan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;luotsi&quot; &quot;Autokansi&quot; &quot;Miltä luotsin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tarkistetaan tikkaat, kiinnitykset ja korkeus. Pelastusrengas ja radiopuhelin ovat valmiina, ja Tiinaa ollaan vastassa kannella.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 2&gt;&gt;&lt;&lt;set $piirre.tiimi += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Luotsin nousu laivaan on yksi merenkulun vaarallisimmista hetkistä. Kun tikkaat on tarkistettu ja joku on vastassa, Tiina pääsee kyytiin turvallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on vähän yli kahdeksan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;luotsi&quot; &quot;Autokansi&quot; &quot;Miltä luotsin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Tiina on ammattilainen. Riittää, että tikkaat roikkuvat laivan kyljessä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Luotsitikkaat piti kiinnittää uudelleen viime hetkellä, ja laiva joutui odottamaan väylällä.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.luottavainen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei käy.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Huonosti kiinnitetyt tikkaat voivat pettää, ja putoaminen kylmään mereen on hengenvaarallista. Jussi tarkistaa tikkaat ja on vastassa kannella.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt; Seuraava tilanne on vähän yli kahdeksan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;luotsi&quot; &quot;Autokansi&quot; &quot;Miltä luotsin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="37" name="Autokansi" tags="scene-satama" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-lautta-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 2/6&lt;/p&gt;
+&lt;h2&gt;Kiire autokannella&lt;/h2&gt;
+&lt;p&gt;Laiva on laiturissa, ja peräportti on auki. Satama-ahtaaja Mika ohjaa rekkoja sisään autokannelle.&lt;/p&gt;
+&lt;p&gt;Yksi kuljettaja kiirehtii, koska hänen pitää ehtiä seuraavaan työhön. Mika ei ole vielä kiinnittänyt hänen rekkaansa kanteen.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Mika, satama-ahtaaja:&lt;/strong&gt; ”Mitä tehdään ensin?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Rekat ajetaan ensin kaikki sisään, ja sitten ne sidotaan yhdellä kertaa.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;set $piirre.nopea += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Nopeaa, mutta riskialtista.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kiireessä joku rekka voi unohtua sitomatta. Mika sitoo jokaisen rekan heti, kun se on paikallaan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraava tilanne on puoli kymmenen aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ahtaaja&quot; &quot;Pelastusvene&quot; &quot;Miltä satama-ahtaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Merellä on tänään tyyntä, joten sidonta voidaan jättää väliin.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Yksi rekka oli siirtynyt satamassa, ja koko rivi jouduttiin sitomaan uudelleen.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.luottavainen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei käy.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sää voi muuttua nopeasti, ja laiva keinuu aina jonkin verran. Lasti sidotaan joka kerta, säästä riippumatta.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt; Seuraava tilanne on puoli kymmenen aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ahtaaja&quot; &quot;Pelastusvene&quot; &quot;Miltä satama-ahtaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Mika sitoo rekan kannelle sidontaliinoilla ja laittaa kiilat pyörien eteen. Vasta sitten seuraava rekka ajaa sisään.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 2&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ammattilaisen ote!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Merellä laiva keinuu, ja sitomaton rekka voi liikkua ja kaatua. Siitä voi seurata koko laivan kallistuminen. Sidonta tehdään aina heti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on puoli kymmenen aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;ahtaaja&quot; &quot;Pelastusvene&quot; &quot;Miltä satama-ahtaajan työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="38" name="Pelastusvene" tags="scene-turva" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-ulappa-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 3/6&lt;/p&gt;
+&lt;h2&gt;Ensimmäinen päivä laivalla&lt;/h2&gt;
+&lt;p&gt;Laivamies Jussi hoitaa kannen töitä: kiinnityksiä, huoltoa ja vahtivuoroja. Hän on myös vastuussa sinun perehdytyksestäsi.&lt;/p&gt;
+&lt;p&gt;Jos laivalla soi hälytys, jokaisen pitää tietää, mihin mennään ja mitä tehdään.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Jussi, laivamies:&lt;/strong&gt; ”Milloin käydään turvallisuusasiat läpi?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Heti. Jussi näyttää pelastusliivit, kokoontumispaikan ja pelastusveneen, ja kävelette hätäreitin yhdessä läpi.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 2&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Laivalla turvallisuusperehdytys tehdään ensimmäisenä päivänä. Kun olet kävellyt reitin itse, löydät sen myös pimeässä ja kiireessä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on puoli yhdentoista jälkeen.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivamies&quot; &quot;Konehuone&quot; &quot;Miltä laivamiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Saat turvallisuusohjeet luettavaksi hyttiisi.&quot;&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;set $piirre.kaytannollinen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ohjeet ovat tärkeät, mutta…&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Paperilta luettu reitti unohtuu helposti, kun hälytys soi. Jussi näyttää paikat ja reitin myös käytännössä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 20 min. Seuraava tilanne on puoli yhdentoista jälkeen.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivamies&quot; &quot;Konehuone&quot; &quot;Miltä laivamiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Turvallisuusasiat käydään läpi ensimmäisessä harjoituksessa ensi viikolla.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Iltapäivän harjoituksessa et löytänyt kokoontumispaikalle, ja harjoitus piti aloittaa alusta.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.luottavainen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Liian myöhään.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Hätätilanne voi tulla jo ensimmäisellä matkalla. Jussi käy turvallisuusasiat läpi heti ensimmäisenä päivänä.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt; Seuraava tilanne on puoli yhdentoista jälkeen.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivamies&quot; &quot;Konehuone&quot; &quot;Miltä laivamiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="39" name="Konehuone" tags="scene-konehuone" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 4/6&lt;/p&gt;
+&lt;h2&gt;Öljyä lattialla&lt;/h2&gt;
+&lt;p&gt;Konehuoneessa on kuuma, ja koneet jyrisevät. Konemestari Antti huoltaa koneita satamassa olon aikana.&lt;/p&gt;
+&lt;p&gt;Yhden polttoainepumpun tiivisteestä tihkuu öljyä lattialle. Laiva lähtee kello 15.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Antti, konemestari:&lt;/strong&gt; ”Mitä tehdään?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Vuodon alle laitetaan astia, ja pumppu korjataan seuraavalla satamakäynnillä.&quot;&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.tarkka += 1&gt;&gt;&lt;&lt;set $piirre.kaytannollinen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Väliaikainen ratkaisu.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Merellä vuoto voi pahentua, eikä silloin ole helppo korjata. Antti vaihtaa tiivisteen nyt, kun laiva on satamassa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 25 min. Seuraava tilanne on vähän ennen kahtatoista.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;konemestari&quot; &quot;Laivan keittiö&quot; &quot;Miltä konemestarin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Vuoto on pieni. Pyyhitään lattia ja jatketaan muita töitä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Pumpun vuoto paheni, ja konehuone piti siivota ennen lähtöä.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.nopea += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pieni vuoto kasvaa, ja öljy kuuman koneen lähellä voi syttyä. Antti vaihtaa tiivisteen ja siivoaa öljyn.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt; Seuraava tilanne on vähän ennen kahtatoista.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;konemestari&quot; &quot;Laivan keittiö&quot; &quot;Miltä konemestarin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Pumppu pysäytetään ja tiiviste vaihdetaan varaosaan. Öljy siivotaan imeytysmatoilla, ja korjaus kirjataan konepäiväkirjaan.&quot;&gt;&gt;&lt;&lt;set $aika += 50&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ammattilaisen ote!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Satamassa korjaaminen on turvallisempaa kuin merellä. Kirjaus kertoo seuraavalle vuorolle, mitä on tehty. Öljy lattialla on myös liukastumis- ja palovaara.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 50 min. Seuraava tilanne on vähän ennen kahtatoista.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;konemestari&quot; &quot;Laivan keittiö&quot; &quot;Miltä konemestarin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="40" name="Laivan keittiö" tags="scene-keittio" position="1200,100" size="100,100">&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 5/6&lt;/p&gt;
+&lt;h2&gt;Uusi allergia&lt;/h2&gt;
+&lt;p&gt;Laivakokki Satu tekee ruoan koko miehistölle. Merellä ei voi käydä kaupassa, joten ruoat pitää suunnitella koko matkaksi.&lt;/p&gt;
+&lt;p&gt;Uusi kansimies kertoo, että hänellä on vakava pähkinäallergia. Päivän jälkiruoaksi on suunniteltu pähkinäpiirakkaa.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Satu, laivakokki:&lt;/strong&gt; ”Miten toimin?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Satu tekee kansimiehelle oman jälkiruoan samalla pöydällä ja samoilla välineillä.&quot;&gt;&gt;&lt;&lt;set $aika += 30&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 1&gt;&gt;&lt;&lt;set $piirre.empaattinen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Hyvä ajatus, mutta riski jää.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Vakavassa allergiassa pienikin määrä pähkinää yhteisillä välineillä voi aiheuttaa reaktion. Satu jättää pähkinät pois kokonaan.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 30 min. Seuraava tilanne on yhden aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivakokki&quot; &quot;Komentosilta&quot; &quot;Miltä laivakokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Satu tekee koko miehistölle jälkiruoan ilman pähkinöitä ja merkitsee allergian ruokalistaan. Hän tarkistaa myös, että laivan apteekissa on adrenaliinikynä.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $piirre.kohtaaja += 2&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Huolellista!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Merellä lähin sairaala voi olla tuntien päässä. Kun allergiaruoka tehdään kaikille, vahinkoja ei pääse sattumaan, ja ensiapu on valmiina.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min. Seuraava tilanne on yhden aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivakokki&quot; &quot;Komentosilta&quot; &quot;Miltä laivakokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Kansimies voi itse jättää jälkiruoan syömättä.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Kansimies sai lievän allergisen reaktion, ja ruokalista tehtiin uudelleen.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.suora += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei riitä.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Pähkinää voi olla myös muissa ruoissa, eikä kansimies tiedä aina, mitä niissä on. Satu suunnittelee ruoan niin, että se on kaikille turvallista.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt; Seuraava tilanne on yhden aikaan.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;laivakokki&quot; &quot;Komentosilta&quot; &quot;Miltä laivakokin työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="41" name="Komentosilta" tags="scene-komentosilta" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-komentosilta-tausta.webp&quot;)&gt;&gt;&lt;&lt;include &quot;HUD&quot;&gt;&gt;
+&lt;p class=&quot;kohtaus-nro&quot;&gt;Kohtaus 6/6&lt;/p&gt;
+&lt;h2&gt;Liian painava rekka&lt;/h2&gt;
+&lt;p&gt;Komentosillalla perämies Sanna seuraa lastausta. Hän laskee, että laiva pysyy vakaana eikä kallistu.&lt;/p&gt;
+&lt;p&gt;Viimeisen rekan papereissa lukee 20 tonnia. Sataman vaa&#39;an mukaan rekka painaa kuitenkin 32 tonnia.&lt;/p&gt;
+&lt;p class=&quot;puhe&quot;&gt;&lt;strong&gt;Sanna, perämies:&lt;/strong&gt; ”Mitä teemme tälle rekalle?”&lt;/p&gt;
+&lt;p class=&quot;valitse-ohje&quot;&gt;Mitä teet?&lt;/p&gt;
+&lt;div id=&quot;valinnat&quot; class=&quot;answer-group valinnat&quot;&gt;
+&lt;&lt;link &quot;Sanna pyytää rekan punnittavaksi uudelleen. Hän laskee laivan vakavuuden oikealla painolla ja päättää, mihin kohtaan kantta rekka sijoitetaan.&quot;&gt;&gt;&lt;&lt;set $aika += 45&gt;&gt;&lt;&lt;set $piirre.tarkka += 2&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Juuri näin!&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Laivan vakavuus lasketaan lastin painojen mukaan. Väärä paino voi saada laivan kallistumaan. Oikea paino ja hyvä paikka pitävät laivan tasapainossa.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 45 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;peramies&quot; &quot;Lähtö&quot; &quot;Miltä perämiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Rekka jätetään satamaan ja otetaan mukaan seuraavalla matkalla.&quot;&gt;&gt;&lt;&lt;set $aika += 25&gt;&gt;&lt;&lt;set $melkein += 1&gt;&gt;&lt;&lt;set $piirre.vastuullinen += 1&gt;&gt;&lt;&lt;set $piirre.varovainen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Turvallista, mutta asiakas jää ilman.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Kun paino tarkistetaan ja vakavuus lasketaan uudelleen, rekka voidaan usein ottaa mukaan turvallisesti.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 25 min.&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;peramies&quot; &quot;Lähtö&quot; &quot;Miltä perämiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Ero on vain 12 tonnia. Isossa laivassa se ei tunnu missään.&quot;&gt;&gt;&lt;&lt;set $aika += 15&gt;&gt;&lt;&lt;set $seuraukset.push(&quot;Lastaussuunnitelma laskettiin vielä kerran uusiksi juuri ennen lähtöä.&quot;)&gt;&gt;&lt;&lt;set $aika += 20&gt;&gt;&lt;&lt;set $piirre.luottavainen += 2&gt;&gt;&lt;&lt;replace &quot;#valinnat&quot;&gt;&gt;&lt;div class=&quot;palaute&quot;&gt;&lt;p&gt;&lt;strong&gt;Ei käy.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Väärä paino väärässä paikassa voi kallistaa laivaa, varsinkin myrskyssä. Sanna laskee vakavuuden oikealla painolla.&lt;/p&gt;&lt;p class=&quot;aika-kului&quot;&gt;Aikaa kului 15 min. &lt;span class=&quot;aika-sakko&quot;&gt;Virheen korjaaminen vei lisäksi 20 min.&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;&lt;&lt;kiinnostus &quot;peramies&quot; &quot;Lähtö&quot; &quot;Miltä perämiehen työ näytti?&quot;&gt;&gt;&lt;&lt;/replace&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;done&gt;&gt;&lt;&lt;run setup.sekoitaValinnat()&gt;&gt;&lt;&lt;/done&gt;&gt;
+</tw-passagedata><tw-passagedata pid="42" name="Lähtö" tags="scene-loppu" position="1200,100" size="100,100">&lt;h1&gt;Köydet irti&lt;/h1&gt;
+&lt;&lt;set _n to $seuraukset.length&gt;&gt;&lt;&lt;set _myoh to $aika gt 480&gt;&gt;&lt;&lt;set _taso to _n + (_myoh ? 1 : 0)&gt;&gt;&lt;p class=&quot;highlight&quot;&gt;&lt;&lt;if _taso is 0&gt;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;, kun laiva on valmis lähtöön. Kello 15 köydet irrotetaan. Kaikki sujui juuri niin kuin piti!&lt;&lt;elseif _taso lte 2&gt;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;, kun laiva on valmis lähtöön. Pari asiaa olisi voinut mennä paremmin, mutta laiva lähtee ajallaan.&lt;&lt;else&gt;&gt;Kello on &lt;&lt;print setup.kello($aika)&gt;&gt;, kun laiva on vihdoin valmis. Päivä oli täynnä korjattavaa, ja kapteeni haluaa puhua kanssasi illalla.&lt;&lt;/if&gt;&gt;&lt;/p&gt;&lt;&lt;if _myoh&gt;&gt;&lt;p class=&quot;myohassa&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;⏰ &lt;/span&gt;Laiva lähti myöhässä, ja seuraavan sataman rekat joutuivat odottamaan.&lt;/p&gt;&lt;&lt;/if&gt;&gt;&lt;&lt;if _n gt 0&gt;&gt;&lt;div class=&quot;seuraukset&quot;&gt;&lt;p class=&quot;seuraukset-otsikko&quot;&gt;Valintojesi seuraukset&lt;/p&gt;&lt;ul&gt;&lt;&lt;for _s range $seuraukset&gt;&gt;&lt;li&gt;&lt;&lt;print _s&gt;&gt;&lt;/li&gt;&lt;&lt;/for&gt;&gt;&lt;/ul&gt;&lt;p class=&quot;seuraukset-vinkki&quot;&gt;Ammattilaiset korjasivat virheet, mutta niistä jäi jälki. Pelaa uudelleen ja kokeile, saatko päivän sujumaan ilman mutkia.&lt;/p&gt;&lt;/div&gt;&lt;&lt;elseif $melkein gt 0&gt;&gt;&lt;p class=&quot;seuraukset-hyva&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;👍 &lt;/span&gt;Selvisit ilman isoja virheitä. &lt;&lt;print $melkein&gt;&gt; kertaa tarjolla olisi ollut vielä parempi vaihtoehto. Palautteesta näit, mikä se oli.&lt;/p&gt;&lt;&lt;else&gt;&gt;&lt;p class=&quot;seuraukset-hyva&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;⭐ &lt;/span&gt;Teit joka tilanteessa parhaan valinnan. Päivä sujui ilman mutkia!&lt;/p&gt;&lt;&lt;/if&gt;&gt;
+&lt;p&gt;Peräportti nousee kiinni, ja koneet alkavat jyristä. Seisot kannella ja katsot, kuinka satama pienenee. Ensimmäinen merivuorosi on alkanut.&lt;/p&gt;
+&lt;p&gt;Huomasitko? Yksi laivan satamakäynti tarvitsi monta ammattilaista:&lt;/p&gt;
+&lt;ul class=&quot;ammattilista&quot;&gt;
+&lt;li&gt;&lt;strong&gt;Tiina, luotsi&lt;/strong&gt; – opasti laivan satamaan&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mika, satama-ahtaaja&lt;/strong&gt; – lastasi ja sitoi rekat&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jussi, laivamies&lt;/strong&gt; – hoiti kannen työt ja perehdytti sinut&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Antti, konemestari&lt;/strong&gt; – korjasi koneet&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Satu, laivakokki&lt;/strong&gt; – teki ruoan koko miehistölle&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sanna, perämies&lt;/strong&gt; – laski laivan vakavuuden&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Laivamieheksi, vahtiperämieheksi ja vahtikonemestariksi voi opiskella ammattikoulussa merenkulkualan perustutkinnossa. Satama-ahtaajaksi opiskellaan logistiikan perustutkinnossa ja kokiksi ravintola- ja catering-alan perustutkinnossa. Merikapteeniksi ja konemestariksi opiskellaan ammattikorkeakoulussa. Luotsilla on merikapteenin koulutus ja pitkä kokemus merellä.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Katso ammattikorttisi&quot;&gt;&gt;&lt;&lt;goto &quot;Ammattikortti&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="43" name="Ammattikortti" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-luotsivene-tausta.webp&quot;)&gt;&gt;&lt;&lt;run setup.tallennaKortti()&gt;&gt;
+&lt;h1&gt;Ammattikorttisi&lt;/h1&gt;
+&lt;p&gt;Kortti on tehty sinun valinnoistasi ja siitä, mikä sinua kiinnosti. Se ei ole testi vaan vinkki: näitä kannattaa tutkia lisää.&lt;/p&gt;
+&lt;div class=&quot;kortti-nimi-rivi&quot;&gt;&lt;label for=&quot;kortti-nimi&quot;&gt;Nimesi korttiin (vapaaehtoinen)&lt;/label&gt;
+&lt;input id=&quot;kortti-nimi&quot; type=&quot;text&quot; maxlength=&quot;40&quot; autocomplete=&quot;off&quot; oninput=&quot;paivitaKorttiNimi(this.value)&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Lastaussuunnitelma&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="44" name="Kutsu: ohje" tags="scene-satama" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-lautta-tausta.webp&quot;)&gt;&gt;
+&lt;div class=&quot;kutsu-ohje&quot;&gt;
+&lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 15 min&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Lastaussuunnitelma&lt;/h2&gt;
+&lt;p&gt;Laiva on matkalla, ja seuraavassa satamassa on taas lastaus. Nyt sinä pääset perämiehen apuna tekemään autokannen lastaussuunnitelman.&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;12 ajoneuvoa ja yksi autokansi&lt;/strong&gt;. Teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Sijoita kaikki ajoneuvot autokannelle. Huolehdi, että laiva pysyy tasapainossa ja turvallisena.&lt;/li&gt;&lt;li&gt;Perustele kaksi asiaa omin sanoin.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Kallistusmittari näyttää heti, painaako laivan toinen puoli enemmän. Tarkistuslista kertoo, mitkä turvallisuussäännöt täyttyvät. Voit muokata suunnitelmaa ja tarkistaa sen uudelleen. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="45" name="Kutsu" tags="scene-satama" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-lautta-tausta.webp&quot;)&gt;&gt;
+&lt;div id=&quot;kutsu-alue&quot; class=&quot;kutsu-alue&quot;&gt;&lt;/div&gt;
+&lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="46" name="Kutsu: tulos" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(&quot;../../images/koulutusalat/merenkulku-lautta-tausta.webp&quot;)&gt;&gt;
+&lt;h2&gt;Lastaussuunnitelmasi&lt;/h2&gt;
+&lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
+&lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi action-row&quot;&gt;
+&lt;a class=&quot;macro-link btn-primary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaVastaukset()&quot;&gt;Lataa vastaukset&lt;/a&gt;
+&lt;&lt;link &quot;Valmis&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="47" name="Loppu" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;nobr&gt;&gt;&lt;&lt;run setup.taustakuva(either(&quot;../../images/koulutusalat/merenkulku-ulappa-tausta.webp&quot;, &quot;../../images/koulutusalat/merenkulku-luotsivene-tausta.webp&quot;))&gt;&gt;
+&lt;h2&gt;Valmis!&lt;/h2&gt;
+&lt;p&gt;Autoit laivaa satamakäynnin aikana ja teit autokannen lastaussuunnitelman. Samalla tutustuit merenkulkualan ammatteihin.&lt;/p&gt;
+&lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;
+&lt;&lt;link &quot;Missä merenkulkua voi opiskella?&quot;&gt;&gt;&lt;&lt;goto &quot;Oppilaitokset&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;info-text&quot;&gt;
+  &lt;p&gt;&lt;strong&gt;Käytätkö yhteistä konetta?&lt;/strong&gt; Tyhjennä vastauksesi ennen kuin lopetat.&lt;/p&gt;
+  &lt;div class=&quot;intro-nappi action-row&quot;&gt;
+    &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;tyhjennaKaikki(this)&quot;&gt;Tyhjennä vastaukset&lt;/a&gt;
+    &lt;&lt;link &quot;Palaa alkuun&quot;&gt;&gt;&lt;&lt;goto &quot;Kansi&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;
+</tw-passagedata><tw-passagedata pid="48" name="Oppilaitokset" tags="scene-loppu" position="1200,100" size="100,100">&lt;&lt;run setup.taustakuva(either(&quot;../../images/koulutusalat/merenkulku-komentosilta-tausta.webp&quot;, &quot;../../images/koulutusalat/merenkulku-lautta-tausta.webp&quot;))&gt;&gt;&lt;h2&gt;Merenkulkualan koulutukset&lt;/h2&gt;
+&lt;p&gt;Merenkulkualaa opiskellaan rannikon oppilaitoksissa. Merityöhön tarvitaan myös merimieslääkärin tarkastus, jossa tutkitaan esimerkiksi näkö ja väriaisti. Tarkista ajantasaiset tiedot opinto-ohjaajaltasi ja Opintopolusta.&lt;/p&gt;
+&lt;h3&gt;Heti peruskoulun jälkeen&lt;/h3&gt;
+&lt;div class=&quot;school-card&quot;&gt;
+&lt;h3&gt;Etsi merenkulkualan perustutkinto&lt;/h3&gt;
+&lt;p&gt;Laivamies, vahtiperämies ja vahtikonemestari. Hae Opintopolusta sanalla ”merenkulkualan perustutkinto”.&lt;/p&gt;
+&lt;a href=&quot;https://opintopolku.fi/konfo/fi/haku?keyword=merenkulkualan%20perustutkinto&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Lue lisää&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;school-card&quot;&gt;
+&lt;h3&gt;Etsi satama-ahtaajan koulutus&lt;/h3&gt;
+&lt;p&gt;Logistiikan perustutkinto. Hae Opintopolusta sanalla ”satama-ahtaaja”.&lt;/p&gt;
+&lt;a href=&quot;https://opintopolku.fi/konfo/fi/haku?keyword=satama-ahtaaja&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Lue lisää&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;school-card&quot;&gt;
+&lt;h3&gt;Etsi kokin koulutus&lt;/h3&gt;
+&lt;p&gt;Ravintola- ja catering-alan perustutkinto. Laivakokiksi pääsee kokin koulutuksella.&lt;/p&gt;
+&lt;a href=&quot;https://opintopolku.fi/konfo/fi/haku?keyword=ravintola-%20ja%20catering-alan%20perustutkinto&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Lue lisää&lt;/a&gt;
+&lt;/div&gt;
+&lt;h3&gt;Myöhemmin&lt;/h3&gt;
+&lt;div class=&quot;school-card&quot;&gt;
+&lt;h3&gt;Kaakkois-Suomen ammattikorkeakoulu Xamk, Kotka&lt;/h3&gt;
+&lt;p&gt;Merikapteeni (AMK) ja konemestari (AMK).&lt;/p&gt;
+&lt;a href=&quot;https://www.xamk.fi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Lue lisää&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;school-card&quot;&gt;
+&lt;h3&gt;Satakunnan ammattikorkeakoulu, Rauma&lt;/h3&gt;
+&lt;p&gt;Merikapteeni (AMK) ja konemestari (AMK).&lt;/p&gt;
+&lt;a href=&quot;https://www.samk.fi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Lue lisää&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Takaisin&quot;&gt;&gt;&lt;&lt;goto &quot;Loppu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
+</tw-passagedata></tw-storydata>
+	<script id="script-sugarcube" src="sugarcube-2.37.3.js"></script>
+<script src="/js/tekijanoikeus.js" defer></script>
+</body>
+</html>

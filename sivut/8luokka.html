@@ -618,6 +618,7 @@
                 <button type="button" class="tj-nappi" data-ala="luonto"       onclick="toggleAmisFil(this)" aria-pressed="false">Luonto ja ympäristö</button>
                 <button type="button" class="tj-nappi" data-ala="ruoka"        onclick="toggleAmisFil(this)" aria-pressed="false">Ruoka ja leipominen</button>
                 <button type="button" class="tj-nappi" data-ala="auto"         onclick="toggleAmisFil(this)" aria-pressed="false">Autot ja liikenne</button>
+                <button type="button" class="tj-nappi" data-ala="meri"         onclick="toggleAmisFil(this)" aria-pressed="false">Meri ja laivat</button>
                 <button type="button" class="tj-nappi" data-ala="rakentaminen" onclick="toggleAmisFil(this)" aria-pressed="false">Rakentaminen ja talot</button>
                 <button type="button" class="tj-nappi" data-ala="tekniikka"    onclick="toggleAmisFil(this)" aria-pressed="false">Koneet ja tekniikka</button>
                 <button type="button" class="tj-nappi" data-ala="pelit"        onclick="toggleAmisFil(this)" aria-pressed="false">Pelit ja ohjelmointi</button>
@@ -2528,7 +2529,7 @@
       { nimi:"Kampaaja",            ala:"Hius- ja kauneudenhoito", k:["kauneus"],lyhyt:"Leikkaat ja muotoilet hiuksia sekä hoidat ihoa.",            am:"kampaaja, parturi, kosmetologi, kosmetiikkaneuvoja", pt:"Hius- ja kauneudenhoitoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote", p:"../pelit/koulutusalat/kauneus-ala.html"},
       { nimi:"Kuorma-autonkuljettaja", ala:"Logistiikka",       k:["auto"],         lyhyt:"Kuljetat tavaraa ja ihmisiä sekä hoidat varastoa.",          am:"kuorma-autonkuljettaja, linja-autonkuljettaja, yhdistelmäajoneuvonkuljettaja, palvelulogistiikkatyöntekijä", pt:"Logistiikan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/liikenne-ala.html" },
       { nimi:"Matkailun asiakaspalvelija", ala:"Matkailuala",   k:["matkailu","ihmiset"],  lyhyt:"Palvelet matkailijoita ja järjestät elämyksiä.",             am:"matkailun asiakaspalvelija", pt:"Matkailualan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
-      { nimi:"Matruusi",            ala:"Merenkulkuala",        k:["auto","tekniikka"],         lyhyt:"Työskentelet laivan kannella tai konehuoneessa.",            am:"matruusi, konemies, vahtiperämies, vahtikonemestari, laivasähköasentaja", pt:"Merenkulkualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/liikenne-ala.html" },
+      { nimi:"Matruusi",            ala:"Merenkulkuala",        k:["auto","tekniikka","meri"],         lyhyt:"Työskentelet laivan kannella tai konehuoneessa.",            am:"matruusi, konemies, vahtiperämies, vahtikonemestari, laivasähköasentaja", pt:"Merenkulkualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/merenkulku-ala.html" },
       { nimi:"Kiinteistönhoitaja",  ala:"Puhtaus- ja kiinteistöpalveluala", k:["rakentaminen","ihmiset"], lyhyt:"Huollat kiinteistöjä ja hoidat siisteyttä.",     am:"kiinteistönhoitaja, toimitilahuoltaja, kodinhuoltaja", pt:"Puhtaus- ja kiinteistöpalvelualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/rakennus-ala.html"},
       { nimi:"Turvallisuusvalvoja", ala:"Turvallisuusala",      k:["turvallisuus","ihmiset"],lyhyt:"Vartioit ja huolehdit ihmisten turvallisuudesta.",          am:"turvallisuusvalvoja", pt:"Turvallisuusalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote", p:"../pelit/koulutusalat/turvallisuus-ala.html" },
     ];
@@ -2920,7 +2921,8 @@
       elaimet: '../pelit/koulutusalat/elaimet-ala.html',
       musiikki: '../pelit/koulutusalat/musiikki-ala.html',
       kasityo:  '../pelit/koulutusalat/kasityo-ala.html',
-      kasvatus: '../pelit/koulutusalat/kasvatus-ala.html'
+      kasvatus: '../pelit/koulutusalat/kasvatus-ala.html',
+      merenkulku: '../pelit/koulutusalat/merenkulku-ala.html'
     };
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
@@ -2934,20 +2936,21 @@
       elaimet:'Eläimet',
       musiikki:'Musiikki',
       kasityo:'Käsityö',
-      kasvatus:'Kasvatus ja ohjaus'
+      kasvatus:'Kasvatus ja ohjaus',
+      merenkulku:'Merenkulku'
     };
-    // Kartoittaa jokaisen kiinnostuksen johonkin seitsemästätoista pelitarina-alasta
+    // Kartoittaa jokaisen kiinnostuksen johonkin kahdeksastatoista pelitarina-alasta
     const PELI_ALA = {
       ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
       pelit:'data', tietokone:'data', media:'taide', taide:'taide', musiikki:'musiikki',
-      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:'kasityo', kasvatus:'kasvatus'
+      kauppa:'kauppa', matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:'kasityo', kasvatus:'kasvatus', meri:'merenkulku'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','data','ruoka','luonto','elaimet','taide','musiikki','kasityo','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','merenkulku','data','ruoka','luonto','elaimet','taide','musiikki','kasityo','kauppa','liikunta','urheilu','kauneus','turvallisuus'];
       const kat = [];
       amisValitut.forEach(k => { const g = PELI_ALA[k]; if (g && kat.indexOf(g) === -1) kat.push(g); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -2986,7 +2989,7 @@
 
     const AMIS_V3_IKONIT = {
       ihmiset:'', tekniikka:'', luonto:'', taide:'',
-      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:''
+      kauppa:'', data:'', ruoka:'', liikunta:'', urheilu:'', kauneus:'', rakennus:'', turvallisuus:'', liikenne:'', elaimet:'', musiikki:'', kasityo:'', kasvatus:'', merenkulku:''
     };
 
     /* ── Tab-vaihto ── */
