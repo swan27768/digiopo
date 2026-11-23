@@ -85,8 +85,7 @@ KOHTAUKSET = [
       taustakuva=KUVA + "yrittaja-kahvila-tausta.webp",
       kysymys="Miltä yritysneuvojan työ näytti?", lisaaika=25, siirtymaTeksti="Seuraava tilanne on vähän yli kymmenen.",
       johdanto="""<p>Yritysneuvoja Mira auttaa uusia yrittäjiä maksutta. Hän käy kanssanne läpi liiketoimintasuunnitelman eli suunnitelman siitä, miten yritys toimii ja tekee rahaa.</p>
-<p>Mira kysyy, keitä asiakkaanne ovat ja mitä myytte.</p>
-<p class="puhe"><strong>Mira, yritysneuvoja:</strong> ”Mitä vastaatte?”</p>""",
+<p class="puhe"><strong>Mira, yritysneuvoja:</strong> ”Keitä asiakkaanne ovat ja mitä myytte?”</p>""",
       valinnat=[
        dict(teksti="Asiakkaita ovat rannan perheet, uimarit ja pyöräilijät. Myydään vain muutamaa tuotetta: kahvia, mehua, jäätelöä ja kahta leivonnaista.", aika=45, piirteet={"asiakas": 2, "laskija": 1},
             palaute="<p><strong>Juuri näin!</strong></p><p>Kun tiedät asiakkaasi, tiedät myös, mitä he haluavat ostaa. Lyhyt valikoima on helppo hoitaa, eikä raaka-aineita mene hukkaan.</p>"),
