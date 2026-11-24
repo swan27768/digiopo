@@ -850,6 +850,7 @@
                   <li>Valitset, mitkä aineet kiinnostavat sinua</li>
                   <li>Tutustut lukion painotuksiin ja erikoislukioihin</li>
                   <li>Opit, mihin lukion jälkeen voi hakea</li>
+                  <li>Pelaat alan tarinan ja tutustut ammatteihin, joihin opiskellaan korkeakoulussa</li>
                   <li>Kirjaat ajatuksesi ja teet oman lukiosuunnitelman</li>
                 </ul>
               </div>
@@ -870,6 +871,10 @@
                 </li>
                 <li class="tj-askel">
                   <div class="tj-askel-nro lv" aria-hidden="true">4</div>
+                  <span class="tj-askel-teksti">Kurkista alaan</span>
+                </li>
+                <li class="tj-askel">
+                  <div class="tj-askel-nro lv" aria-hidden="true">5</div>
                   <span class="tj-askel-teksti">Suunnitelmasi</span>
                 </li>
               </ol>
@@ -1032,10 +1037,22 @@
                 Kaikki koulutusohjelmat — opintopolku.fi
               </a>
 
-              <!-- ══ Vaihe 4: Oma lukiosuunnitelma ══
+              <!-- ══ Vaihe 4: Kurkista alaan – alan tarina lukiolaisille ══
+                   Tarina: pelit/koulutusalat/lukio-paivystys.html. Iframe luodaan vasta napista (3D-tausta on raskas).
+                   Valmis-kuittaus postMessagella ("koulutusala-tarina-valmis") → localStorage dg8-lukio-tarina-valmis. -->
+              <h4 class="tj-osio-otsikko lukio-tarina-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span><span class="lukio-tarina-nimi">Kurkista alaan</span></h4>
+              <p class="tj-kuvaus" id="lukio-tarina-kuvaus">Pelaa alan tarina. Seuraat yhtä iltaa ammattilaisten rinnalla ja teet sen jälkeen jatkotehtävän. Palauta vastauksesi Classroomiin.</p>
+              <div class="lukio-tarina-kortti">
+                <p class="lukio-tarina-kortti-nimi"><strong>Päivystyksen ilta</strong> · terveysala · noin 40 min</p>
+                <button type="button" class="kk-nayta-kaikki lukio-tarina-nappi" id="lukio-tarina-nappi" onclick="avaaLukioTarina()" aria-expanded="false" aria-controls="lukio-tarina-sisalto">Aloita tarina</button>
+              </div>
+              <div id="lukio-tarina-sisalto" hidden></div>
+              <p id="lukio-tarina-valmis" role="status" hidden style="margin:10px 0 0;padding:10px 14px;background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;font-size:13.5px;font-weight:700;color:#065f46;"></p>
+
+              <!-- ══ Vaihe 5: Oma lukiosuunnitelma ══
                    Sisältö ja logiikka: js/osio-data-8lk-lukiopolku.js (valinnat → kortti → PDF) -->
               <div class="lukio-suunnitelma">
-                <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span>Oma lukiosuunnitelma</h4>
+                <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 5">Vaihe 5</span>Oma lukiosuunnitelma</h4>
                 <p class="lv4-intro">Tee oma lukiosuunnitelma valitsemalla. Valinnat eivät sido sinua mihinkään – mieltä saa muuttaa. Lopuksi lataat suunnitelman PDF:nä ja palautat sen opolle Classroomiin.</p>
 
                 <div class="amis-v3-tehtava lukio-v4" id="lukio-v4-tehtava">
@@ -1062,6 +1079,7 @@
               <div class="tj-yhteenveto lv" id="lukio-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>Hyvä työ!</h5>
                 <p>Olet tutustunut lukion painotuksiin, erikoislukioihin ja jatko-opintomahdollisuuksiin — ja tehnyt oman suunnitelmasi.</p>
+                <p><strong>Muistutus:</strong> palauta opolle Classroomiin sekä Vaihe 4:n tarinan vastaukset että oma lukiosuunnitelmasi (PDF).</p>
                 <p>Haluatko tutkia lisää? Katso lukiokoulutusta <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#1e40af;font-weight:700;">opintopolku.fi</a>:stä.</p>
               </div>
 
@@ -2117,7 +2135,7 @@
       /* ── Pelitarinat alkavat aina alusta: kun tehtävä suljetaan tai polkua vaihdetaan,
          alan pelin iframe ladataan uudelleen (peli tyhjentää oman tilansa latautuessaan). ── */
       function nollaaPelitarinat() {
-        document.querySelectorAll('#amis-v3-sisalto iframe.amis-v3-iframe').forEach(function (f) {
+        document.querySelectorAll('#amis-v3-sisalto iframe.amis-v3-iframe, #lukio-tarina-sisalto iframe').forEach(function (f) {
           var src = f.getAttribute('src'); if (src) f.setAttribute('src', src);
         });
       }
@@ -2880,7 +2898,7 @@
       ['amis','lukio'].forEach(p => {
         document.getElementById('tutkija-'+p).style.display = p === polku ? 'block' : 'none';
       });
-      if (polku !== 'amis' && typeof nollaaPelitarinat === 'function') nollaaPelitarinat();
+      if (typeof nollaaPelitarinat === 'function') nollaaPelitarinat();
       document.querySelectorAll('.tutkija-tab').forEach(t => { t.classList.remove('aktiivinen'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
       nappi.classList.add('aktiivinen'); nappi.setAttribute('aria-selected','true'); nappi.setAttribute('tabindex','0');
       if (polku === 'amis') paivitaAmis(); else { paivitaLukio(); paivitaKK(); }
@@ -2901,6 +2919,42 @@
       el.textContent = (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' ' + valmiit.map(alaNimi).join(', ');
       el.hidden = false;
     }
+    /* ── Lukiopolku Vaihe 4: alan tarina ── */
+    function avaaLukioTarina() {
+      const sis = document.getElementById('lukio-tarina-sisalto');
+      const nappi = document.getElementById('lukio-tarina-nappi');
+      if (!sis) return;
+      const auki = !sis.hidden;
+      if (auki) {
+        sis.hidden = true; sis.innerHTML = '';
+      } else {
+        sis.innerHTML = '<iframe src="../pelit/koulutusalat/lukio-paivystys.html" class="amis-v3-iframe" data-ala="lukio-paivystys" allowfullscreen></iframe>';
+        sis.querySelector('iframe').title = 'Päivystyksen ilta — ' + (tjT().alan_tarina || 'alan tarina');
+        sis.hidden = false;
+        try { sis.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+      }
+      if (nappi) {
+        nappi.setAttribute('aria-expanded', String(!auki));
+        nappi.textContent = auki ? (tjT().lukio_tarina_nappi || 'Aloita tarina') : (tjT().sulje_tarina || 'Sulje tarina');
+      }
+    }
+    function paivitaLukioTarinaTila() {
+      const el = document.getElementById('lukio-tarina-valmis');
+      if (!el) return;
+      let ok = false;
+      try { ok = localStorage.getItem('dg8-lukio-tarina-valmis') === '1'; } catch (e) {}
+      el.hidden = !ok;
+      el.textContent = ok ? (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' Päivystyksen ilta' : '';
+    }
+    window.addEventListener('message', function (e) {
+      if (e.origin !== location.origin) return;
+      if (!e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
+      const lk = document.querySelector('#lukio-tarina-sisalto iframe');
+      if (lk && lk.contentWindow === e.source) {
+        try { localStorage.setItem('dg8-lukio-tarina-valmis', '1'); } catch (err) {}
+        paivitaLukioTarinaTila();
+      }
+    });
     window.addEventListener('message', function (e) {
       if (e.origin !== location.origin) return;
       if (!e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
@@ -2949,6 +3003,13 @@
         if (fr) fr.title = alaNimi(fr.dataset.ala) + ' — ' + (tj.alan_tarina || 'alan tarina');
       }
       paivitaAmisTarinaTila();
+      const lkKuv = document.getElementById('lukio-tarina-kuvaus');
+      if (lkKuv && tj.lukio_tarina_kuvaus) lkKuv.textContent = tj.lukio_tarina_kuvaus;
+      const lkNimi = document.querySelector('#tutkija-lukio .lukio-tarina-nimi');
+      if (lkNimi && tj.lukio_step_4) lkNimi.textContent = tj.lukio_step_4;
+      const lkNappi = document.getElementById('lukio-tarina-nappi');
+      if (lkNappi) lkNappi.textContent = lkNappi.getAttribute('aria-expanded') === 'true' ? (tj.sulje_tarina || 'Sulje tarina') : (tj.lukio_tarina_nappi || 'Aloita tarina');
+      paivitaLukioTarinaTila();
     });
 
     /* ── Välilehdet näppäimistöllä: ← → vaihtaa, Home/End ensimmäiseen/viimeiseen ── */
@@ -3002,6 +3063,7 @@
         ['dg8-amis-v2-a','dg8-amis-v2-b'].forEach(function(k) { localStorage.removeItem(k); });
         tarkistaAmisYhteenveto();
       } catch(e){}
+      paivitaLukioTarinaTila();
     })();
     </script>
     <script src="../js/osio-data-8lk-amispolku.js"></script>

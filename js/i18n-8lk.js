@@ -670,14 +670,14 @@
       var lGoalH = lukioPanel.querySelector('.tj-tavoite h5');
       if (lGoalH && tj.lukio_goal_heading) lGoalH.textContent = tj.lukio_goal_heading;
       var lGoalLis = lukioPanel.querySelectorAll('.tj-tavoite li');
-      var lGoals = [tj.lukio_goal_1, tj.lukio_goal_2, tj.lukio_goal_3, tj.lukio_goal_4];
+      var lGoals = [tj.lukio_goal_1, tj.lukio_goal_2, tj.lukio_goal_3, tj.lukio_goal_4, tj.lukio_goal_5];
       for (var li = 0; li < lGoalLis.length && li < lGoals.length; li++) {
         if (lGoals[li]) lGoalLis[li].textContent = lGoals[li];
       }
 
       /* Etenemispolku */
       var lSteps = lukioPanel.querySelectorAll('.tj-askel-teksti');
-      var lStepTexts = [tj.lukio_step_1, tj.lukio_step_2, tj.lukio_step_3, tj.lukio_step_4];
+      var lStepTexts = [tj.lukio_step_1, tj.lukio_step_2, tj.lukio_step_3, tj.lukio_step_4, tj.lukio_step_5];
       for (var ls = 0; ls < lSteps.length && ls < lStepTexts.length; ls++) {
         if (lStepTexts[ls]) lSteps[ls].textContent = lStepTexts[ls];
       }
@@ -799,10 +799,11 @@
       var lsPohja = lukioPanel.querySelector('.lukio-suunnitelma');
       if (lsPohja) {
         /* Heading */
-        if (lukioOsiot[4] && tj.ls_heading) {
-          var lv4span = lukioOsiot[4].querySelector('.tj-osio-vaihe');
-          lukioOsiot[4].textContent = tj.ls_heading;
-          if (lv4span) lukioOsiot[4].insertBefore(lv4span, lukioOsiot[4].firstChild);
+        var lsH = lsPohja.querySelector('h4');
+        if (lsH && tj.ls_heading) {
+          var lv4span = lsH.querySelector('.tj-osio-vaihe');
+          lsH.textContent = tj.ls_heading;
+          if (lv4span) lsH.insertBefore(lv4span, lsH.firstChild);
         }
         var lsKuvEl = lsPohja.querySelector('.tj-kuvaus');
         if (lsKuvEl && tj.ls_kuvaus) lsKuvEl.textContent = tj.ls_kuvaus;
