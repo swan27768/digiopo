@@ -1225,7 +1225,7 @@
         var h = '<div class="tuotekortti sj-raportti"><p class="tk-yla">' + suojaa(TH.korttiYla || "RAPORTTI") + '</p>' +
           '<p class="tk-tuotenimi">' + p + '/' + maxP + ' pistettä</p>' +
           '<p class="tk-lause">' + suojaa(p >= maxP - 2 ? TH.palaute[0] : p >= maxP / 2 ? TH.palaute[1] : TH.palaute[2]) + '</p>' +
-          '<table class="bj-taulu"><thead><tr><th>Matkustaja</th><th>Sijoitus</th><th></th></tr></thead><tbody>' + KORTIT.map(function (hh) {
+          '<table class="bj-taulu"><thead><tr><th>' + suojaa(TH.henkiloOtsikko || "Matkustaja") + '</th><th>' + suojaa(TH.sijoitusOtsikko || "Sijoitus") + '</th><th></th></tr></thead><tbody>' + KORTIT.map(function (hh) {
             var a = s[hh.nimi], t = a ? hh.sopivuus[a] : [0, "-"], v = vt(a) || {};
             return '<tr><td>' + suojaa((hh.ikoni ? hh.ikoni + " " : "") + hh.nimi) + '</td><td>' + suojaa((v.ikoni || "") + " " + (v.nimi || "-")) + '</td><td class="' + tasoLuokka[t[0]] + '">' + tasoMerkki[t[0]] + '</td></tr>' +
               '<tr class="sj-selitysrivi"><td colspan="3">' + suojaa(t[1]) + '</td></tr>';
