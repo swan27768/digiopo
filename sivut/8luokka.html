@@ -1038,14 +1038,11 @@
               </a>
 
               <!-- ══ Vaihe 4: Kurkista alaan – alan tarina lukiolaisille ══
-                   Tarina: pelit/koulutusalat/lukio-paivystys.html. Iframe luodaan vasta napista (3D-tausta on raskas).
-                   Valmis-kuittaus postMessagella ("koulutusala-tarina-valmis") → localStorage dg8-lukio-tarina-valmis. -->
+                   Tarinat: LUKIO_TARINAT (pelit/koulutusalat/lukio-*.html). Vaihe 1:n aineisiin sopivat ensin. Iframe luodaan vasta napista (3D-tausta on raskas).
+                   Valmis-kuittaus postMessagella ("koulutusala-tarina-valmis") → localStorage dg8-lukio-tarina-valmis (JSON-lista tarinoiden id:istä). -->
               <h4 class="tj-osio-otsikko lukio-tarina-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 4">Vaihe 4</span><span class="lukio-tarina-nimi">Kurkista alaan</span></h4>
-              <p class="tj-kuvaus" id="lukio-tarina-kuvaus">Pelaa alan tarina. Seuraat yhtä iltaa ammattilaisten rinnalla ja teet sen jälkeen jatkotehtävän. Palauta vastauksesi Classroomiin.</p>
-              <div class="lukio-tarina-kortti">
-                <p class="lukio-tarina-kortti-nimi"><strong>Päivystyksen ilta</strong> · terveysala · noin 40 min</p>
-                <button type="button" class="kk-nayta-kaikki lukio-tarina-nappi" id="lukio-tarina-nappi" onclick="avaaLukioTarina()" aria-expanded="false" aria-controls="lukio-tarina-sisalto">Aloita tarina</button>
-              </div>
+              <p class="tj-kuvaus" id="lukio-tarina-kuvaus">Valitse tarina, joka kiinnostaa sinua. Vaihe 1:n valintoihisi sopivat tarinat ovat ensimmäisinä. Seuraat ammattilaisten työtä ja teet sen jälkeen jatkotehtävän. Palauta vastauksesi Classroomiin.</p>
+              <div id="lukio-tarinat" role="list"><!-- renderLukioTarinat() --></div>
               <div id="lukio-tarina-sisalto" hidden></div>
               <p id="lukio-tarina-valmis" role="status" hidden style="margin:10px 0 0;padding:10px 14px;background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;font-size:13.5px;font-weight:700;color:#065f46;"></p>
 
@@ -2698,6 +2695,7 @@
           : `${n} ${tjLp.linjoja_loytyy || 'painotusta löytyi'}`;
       document.getElementById('lukio-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
       paivitaKK();
+      if (typeof renderLukioTarinat === 'function') renderLukioTarinat();
     }
     function vaihdaLukioTarina(id, nappi) {
       document.querySelectorAll('#tutkija-lukio .tj-tarina').forEach(t => t.classList.remove('aktiivinen'));
@@ -2919,40 +2917,75 @@
       el.textContent = (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' ' + valmiit.map(alaNimi).join(', ');
       el.hidden = false;
     }
-    /* ── Lukiopolku Vaihe 4: alan tarina ── */
-    function avaaLukioTarina() {
+    /* ── Lukiopolku Vaihe 4: alan tarinat ──
+       Uusi tarina: lisää rivi tähän. k = Vaihe 1:n aineet, joihin tarina sopii. */
+    const LUKIO_TARINAT = [
+      { id: 'paivystys', nimi: 'Päivystyksen ilta', ala: 'terveysala', tiedosto: '../pelit/koulutusalat/lukio-paivystys.html', k: ['matikka'] },
+      { id: 'kunta',     nimi: 'Kunnan iso päätös', ala: 'yhteiskunta', tiedosto: '../pelit/koulutusalat/lukio-kunta.html',     k: ['yhteiskunta', 'viestinta'] }
+    ];
+    let lukioTarinaAuki = '';
+    function lukioTarinatValmiit() {
+      try {
+        const v = localStorage.getItem('dg8-lukio-tarina-valmis');
+        if (v === '1') return ['paivystys'];            // vanha muoto: vain yksi tarina
+        const a = JSON.parse(v || '[]'); return Array.isArray(a) ? a : [];
+      } catch (e) { return []; }
+    }
+    function lukioTarinaNimi(t) { return t.nimi; }
+    function renderLukioTarinat() {
+      const el = document.getElementById('lukio-tarinat');
+      if (!el) return;
+      const tj = tjT(), valitut = (typeof lukioValitut !== 'undefined') ? lukioValitut : new Set();
+      const sopii = t => valitut.size > 0 && t.k.some(a => valitut.has(a));
+      const lista = LUKIO_TARINAT.slice().sort((x, y) => (sopii(y) ? 1 : 0) - (sopii(x) ? 1 : 0));
+      const valmiit = lukioTarinatValmiit();
+      el.innerHTML = lista.map(t => {
+        const auki = lukioTarinaAuki === t.id;
+        const ala = (tj.lukio_tarina_ala && tj.lukio_tarina_ala[t.id]) || t.ala;
+        return '<div class="lukio-tarina-kortti' + (sopii(t) ? ' sopii' : '') + '" role="listitem">' +
+          '<p class="lukio-tarina-kortti-nimi">' +
+            (sopii(t) ? '<span class="lukio-tarina-sopii">' + esc8(tj.el_sopii || 'Sopii valintoihisi') + '</span>' : '') +
+            '<strong>' + esc8(t.nimi) + '</strong> · ' + esc8(ala) + ' · ' + esc8(tj.lukio_tarina_kesto || 'noin 40 min') +
+            (valmiit.indexOf(t.id) >= 0 ? ' <span class="lukio-tarina-tehty">✓</span>' : '') + '</p>' +
+          '<button type="button" class="kk-nayta-kaikki lukio-tarina-nappi" data-tarina="' + t.id + '" aria-expanded="' + auki + '" aria-controls="lukio-tarina-sisalto">' +
+            esc8(auki ? (tj.sulje_tarina || 'Sulje tarina') : (tj.lukio_tarina_nappi || 'Aloita tarina')) + '</button></div>';
+      }).join('');
+      el.querySelectorAll('.lukio-tarina-nappi').forEach(b => b.addEventListener('click', () => avaaLukioTarina(b.dataset.tarina)));
+    }
+    function avaaLukioTarina(id) {
       const sis = document.getElementById('lukio-tarina-sisalto');
-      const nappi = document.getElementById('lukio-tarina-nappi');
       if (!sis) return;
-      const auki = !sis.hidden;
-      if (auki) {
-        sis.hidden = true; sis.innerHTML = '';
+      const t = LUKIO_TARINAT.find(x => x.id === id);
+      if (!t || lukioTarinaAuki === id) {
+        sis.hidden = true; sis.innerHTML = ''; lukioTarinaAuki = '';
       } else {
-        sis.innerHTML = '<iframe src="../pelit/koulutusalat/lukio-paivystys.html" class="amis-v3-iframe" data-ala="lukio-paivystys" allowfullscreen></iframe>';
-        sis.querySelector('iframe').title = 'Päivystyksen ilta — ' + (tjT().alan_tarina || 'alan tarina');
-        sis.hidden = false;
+        sis.innerHTML = '<iframe class="amis-v3-iframe" allowfullscreen></iframe>';
+        const f = sis.querySelector('iframe');
+        f.src = t.tiedosto; f.dataset.tarina = t.id;
+        f.title = t.nimi + ' — ' + (tjT().alan_tarina || 'alan tarina');
+        sis.hidden = false; lukioTarinaAuki = id;
         try { sis.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
       }
-      if (nappi) {
-        nappi.setAttribute('aria-expanded', String(!auki));
-        nappi.textContent = auki ? (tjT().lukio_tarina_nappi || 'Aloita tarina') : (tjT().sulje_tarina || 'Sulje tarina');
-      }
+      renderLukioTarinat();
+      const b = document.querySelector('#lukio-tarinat .lukio-tarina-nappi[data-tarina="' + id + '"]');
+      if (b) b.focus();
     }
     function paivitaLukioTarinaTila() {
       const el = document.getElementById('lukio-tarina-valmis');
       if (!el) return;
-      let ok = false;
-      try { ok = localStorage.getItem('dg8-lukio-tarina-valmis') === '1'; } catch (e) {}
-      el.hidden = !ok;
-      el.textContent = ok ? (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' Päivystyksen ilta' : '';
+      const valmiit = lukioTarinatValmiit().map(id => LUKIO_TARINAT.find(t => t.id === id)).filter(Boolean);
+      el.hidden = valmiit.length === 0;
+      el.textContent = valmiit.length ? (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' ' + valmiit.map(lukioTarinaNimi).join(', ') : '';
     }
     window.addEventListener('message', function (e) {
       if (e.origin !== location.origin) return;
       if (!e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
       const lk = document.querySelector('#lukio-tarina-sisalto iframe');
-      if (lk && lk.contentWindow === e.source) {
-        try { localStorage.setItem('dg8-lukio-tarina-valmis', '1'); } catch (err) {}
-        paivitaLukioTarinaTila();
+      if (lk && lk.contentWindow === e.source && lk.dataset.tarina) {
+        const v = lukioTarinatValmiit();
+        if (v.indexOf(lk.dataset.tarina) < 0) v.push(lk.dataset.tarina);
+        try { localStorage.setItem('dg8-lukio-tarina-valmis', JSON.stringify(v)); } catch (err) {}
+        paivitaLukioTarinaTila(); renderLukioTarinat();
       }
     });
     window.addEventListener('message', function (e) {
@@ -3007,8 +3040,7 @@
       if (lkKuv && tj.lukio_tarina_kuvaus) lkKuv.textContent = tj.lukio_tarina_kuvaus;
       const lkNimi = document.querySelector('#tutkija-lukio .lukio-tarina-nimi');
       if (lkNimi && tj.lukio_step_4) lkNimi.textContent = tj.lukio_step_4;
-      const lkNappi = document.getElementById('lukio-tarina-nappi');
-      if (lkNappi) lkNappi.textContent = lkNappi.getAttribute('aria-expanded') === 'true' ? (tj.sulje_tarina || 'Sulje tarina') : (tj.lukio_tarina_nappi || 'Aloita tarina');
+      renderLukioTarinat();
       paivitaLukioTarinaTila();
     });
 
@@ -3064,6 +3096,7 @@
         tarkistaAmisYhteenveto();
       } catch(e){}
       paivitaLukioTarinaTila();
+      renderLukioTarinat();
     })();
     </script>
     <script src="../js/osio-data-8lk-amispolku.js"></script>

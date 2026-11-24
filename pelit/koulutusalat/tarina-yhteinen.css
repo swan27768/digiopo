@@ -1818,3 +1818,21 @@ html body #passages .passage .jl-kentta input { width: 100% !important; min-widt
 /* Kohtaussivut: rivinvaihdot lähdekoodista tekevät turhia <br>-välejä. Piilotetaan ne, jotta sivu on tiiviimpi. */
 #passages .passage:has(> #valinnat) > br,
 #passages .passage #valinnat > br { display: none; }
+
+/* Tehtävätyyppi "jako": valinnat rajatulla budjetilla */
+.jk-luvut { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+#passages .passage .jk-ryhmat-otsikko { margin: 0.6rem 0 0.3rem !important; font-size: 0.75rem !important; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teksti-pehmea); }
+.jk-ryhmat { display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; }
+#passages .passage .jk-ryhma { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem !important; padding: 0.2rem 0.6rem; border-radius: 999px; border: 1.5px dashed rgba(var(--teksti-pehmea-rgb),.45); color: var(--teksti-pehmea); }
+#passages .passage .jk-ryhma.ok { border-style: solid; border-color: var(--a1); color: var(--teksti-vaalea); font-weight: 700; }
+.jk-ryhma i, .jk-auttaa i { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 3px; }
+#passages .passage .jk-hinta { font-weight: 800; font-size: 0.9rem !important; color: var(--a1); }
+#passages .passage .jk-auttaa { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; font-size: 0.76rem !important; color: var(--teksti-pehmea); }
+.jk-auttaa span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.jk-valitse { margin-top: auto; padding: 0.55rem 0.8rem; border-radius: 10px; border: 2px solid var(--a1); background: rgba(var(--a1-rgb),.12); color: var(--teksti-vaalea); font: inherit; font-weight: 800; font-size: 0.88rem; cursor: pointer; }
+.jk-valitse[aria-pressed="true"] { background: var(--a1); color: var(--nappi-teksti); }
+.jk-valitse:hover:not(:disabled) { background: rgba(var(--a1-rgb),.35); }
+.jk-valitse[aria-pressed="true"]:hover { background: var(--a2); }
+.jk-valitse:disabled { opacity: .35; cursor: not-allowed; }
+.jk-valitse:focus-visible { outline: 3px solid var(--korostus); outline-offset: 2px; }
+.jk-tuote { display: flex; flex-direction: column; gap: 0.45rem; }

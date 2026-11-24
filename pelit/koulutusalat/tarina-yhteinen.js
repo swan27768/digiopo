@@ -773,6 +773,164 @@
       };
     }
 
+    /* --- Tehtävätyyppi "jako": oppilas valitsee toimenpiteet rajatulla budjetilla (esim. kunnan päätös) ---
+       kutsuKortit = toimenpiteet: { nimi, ikoni, hinta, kuvaus, auttaa: [ryhmäavaimia], varoitus? (näytetään, jos ei valittu) }
+       TH.budjetti, TH.minValittuja, TH.minKaytto, TH.ryhmat {avain: {nimi, vari}}, TH.ostoOhje,
+       TH.kysymykset [ { kysymys ({top} = kallein valittu), ammattilainen, tutkinto, placeholder } ] */
+    if (TH.tyyppi === "jako") {
+      var JBUD = TH.budjetti || 50000, JRYH = TH.ryhmat || {};
+      var jeur = function (x) { return Math.round(x).toLocaleString("fi-FI") + " €"; };
+      var jValitut = function (tila) { if (!Array.isArray(tila.valitut)) tila.valitut = []; return tila.valitut; };
+      var laskeJ = function (tila) {
+        var v = jValitut(tila), kaytetty = 0, autetut = {}, top = null;
+        KORTIT.forEach(function (t) {
+          if (v.indexOf(t.nimi) < 0) return;
+          kaytetty += t.hinta;
+          (t.auttaa || []).forEach(function (r) { autetut[r] = (autetut[r] || 0) + 1; });
+          if (!top || t.hinta > top.hinta) top = t;
+        });
+        return { kaytetty: kaytetty, jaljella: JBUD - kaytetty, maara: v.length, autetut: autetut, top: top };
+      };
+      var palauteJ = function (tila, a) {
+        var r = [], v = jValitut(tila);
+        Object.keys(JRYH).forEach(function (k) {
+          if (a.autetut[k]) r.push("✓ " + (JRYH[k].ok || ("Valintasi auttavat ryhmää: " + JRYH[k].nimi.toLowerCase() + ".")));
+          else r.push("Vinkki: " + (JRYH[k].ei || ("Ryhmälle " + JRYH[k].nimi.toLowerCase() + " ei tullut nyt mitään.")));
+        });
+        KORTIT.forEach(function (t) { if (t.varoitus && v.indexOf(t.nimi) < 0) r.push("Huomio: " + t.varoitus); });
+        if (a.jaljella > JBUD * 0.15) r.push("Rahaa jäi käyttämättä " + jeur(a.jaljella) + ". Olisiko sille ollut käyttöä?");
+        return r;
+      };
+      var ryhmaChipit = function (a) {
+        return '<div class="jk-ryhmat">' + Object.keys(JRYH).map(function (k) {
+          var ok = !!a.autetut[k];
+          return '<span class="jk-ryhma' + (ok ? " ok" : "") + '"><i style="background:' + JRYH[k].vari + '"></i>' + (ok ? "✓ " : "– ") + suojaa(JRYH[k].nimi) + '</span>';
+        }).join("") + '</div>';
+      };
+      var jYhteenveto = function (a) {
+        return '<div class="bj-luvut jk-luvut">' +
+          '<div><span>Budjetti</span><strong>' + jeur(JBUD) + '</strong></div>' +
+          '<div><span>Käytetty</span><strong>' + jeur(a.kaytetty) + '</strong></div>' +
+          '<div class="' + (a.jaljella < 0 ? "ei" : "") + '"><span>Jäljellä</span><strong>' + jeur(a.jaljella) + '</strong></div></div>' +
+          '<p class="jk-ryhmat-otsikko">' + suojaa(TH.ryhmatOtsikko || "Keitä valintasi auttavat?") + '</p>' + ryhmaChipit(a);
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        if (tila.valmis) { play("Kutsu: tulos"); return; }
+        if (tila.vaihe === "perustelu") return piirraJPerustelut(alue, tila);
+        var v = jValitut(tila);
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa1 || "Osa 1/2 · Valinnat") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.tilanneOtsikko || "Tehtävä") + '</p><p class="kutsu-teksti">' + suojaa(TH.ostoOhje) + '</p></div>' +
+          '<div class="bj-yhteenveto bj-sticky" aria-live="polite"></div>' +
+          '<div class="bj-tuotteet">' + KORTIT.map(function (t, j) {
+            return '<div class="bj-tuote jk-tuote" data-i="' + j + '">' +
+              '<div class="bj-yla"><span class="bj-ikoni" aria-hidden="true">' + suojaa(t.ikoni || "") + '</span><div><p class="bj-nimi">' + suojaa(t.nimi) + '</p>' +
+              '<p class="jk-hinta">' + jeur(t.hinta) + '</p></div></div>' +
+              '<p class="bj-kuvaus">' + suojaa(t.kuvaus || "") + '</p>' +
+              '<p class="jk-auttaa">' + (t.auttaa || []).map(function (r) { return '<span><i style="background:' + ((JRYH[r] || {}).vari || "#999") + '"></i>' + suojaa((JRYH[r] || {}).nimi || r) + '</span>'; }).join("") + '</p>' +
+              '<button type="button" class="jk-valitse" aria-pressed="false"></button></div>';
+          }).join("") + '</div>' +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisOstot || "Lukitse valinnat") + '</button></div>';
+        var yv = alue.querySelector(".bj-yhteenveto"), vihje = alue.querySelector("#kutsu-vihje"), nappi = alue.querySelector(".kutsu-tarkista");
+        function paivita() {
+          var a = laskeJ(tila);
+          yv.innerHTML = jYhteenveto(a);
+          Array.prototype.forEach.call(alue.querySelectorAll(".jk-tuote"), function (el) {
+            var t = KORTIT[+el.getAttribute("data-i")], on = v.indexOf(t.nimi) >= 0, b = el.querySelector(".jk-valitse");
+            el.classList.toggle("valittu", on);
+            b.setAttribute("aria-pressed", String(on));
+            b.textContent = on ? "✓ Valittu – poista" : "Valitse";
+            b.setAttribute("aria-label", (on ? "Poista valinta: " : "Valitse: ") + t.nimi);
+            b.disabled = !on && t.hinta > a.jaljella;
+          });
+          var minV = TH.minValittuja || 3, minK = TH.minKaytto || JBUD * 0.7;
+          var ok = a.maara >= minV && a.kaytetty >= minK;
+          nappi.disabled = !ok;
+          vihje.textContent = ok ? "Hyvä! Voit vielä muuttaa valintoja tai lukita ne." :
+            (a.maara < minV ? "Valitse vähintään " + minV + " toimenpidettä (nyt " + a.maara + "). " : "") +
+            (a.kaytetty < minK ? "Käytä budjetista vähintään " + jeur(minK) + "." : "");
+        }
+        Array.prototype.forEach.call(alue.querySelectorAll(".jk-tuote"), function (el) {
+          var t = KORTIT[+el.getAttribute("data-i")];
+          el.querySelector(".jk-valitse").addEventListener("click", function () {
+            var i = v.indexOf(t.nimi);
+            if (i >= 0) v.splice(i, 1); else if (t.hinta <= laskeJ(tila).jaljella) v.push(t.nimi);
+            kutsuTallenna(); paivita();
+          });
+        });
+        nappi.addEventListener("click", function () {
+          if (nappi.disabled) return;
+          tila.vaihe = "perustelu"; kutsuTallenna();
+          window.kutsuPiirra();
+          var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView();
+          var e1 = document.querySelector(".bj-perustelu textarea"); if (e1) e1.focus({ preventScroll: true });
+        });
+        paivita();
+      };
+
+      var jKysymys = function (k, a) { return k.kysymys.replace("{top}", a.top ? a.top.nimi.toLowerCase() : "valintaasi"); };
+      var piirraJPerustelut = function (alue, tila) {
+        var a = laskeJ(tila), kys = TH.kysymykset || [];
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/2 · Perustelut") + '</p>' +
+          '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Valinnat lukittu") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa vielä kysymyksiin. Kirjoita jokaiseen yksi tai kaksi lausetta.") + '</p></div>' +
+          '<div class="bj-yhteenveto">' + jYhteenveto(a) + '</div>' +
+          kys.map(function (k, j) {
+            return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="bj-p' + j + '">' + (j + 1) + '. ' + suojaa(jKysymys(k, a)) + '</label>' +
+              '<textarea id="bj-p' + j + '" maxlength="400" placeholder="' + suojaa(k.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[j] || "") + '</textarea>' +
+              '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p></div>';
+          }).join("") +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava bj-takaisin">' + suojaa(TH.takaisinOstoihin || "Muuta valintoja") + '</button>' +
+          '<button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.valmisNappi || "Katso tulos") + '</button></div>';
+        var tekstit = Array.prototype.slice.call(alue.querySelectorAll(".bj-perustelu textarea"));
+        var nappi = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function p() {
+          tila.perustelut = tekstit.map(function (t) { return t.value.trim(); }); kutsuTallenna();
+          var puuttuu = tila.perustelut.filter(function (x) { return x.length < 10; }).length;
+          nappi.disabled = puuttuu > 0;
+          vihje.textContent = puuttuu ? "Vastaa vielä " + puuttuu + " kysymykseen." : "Valmista! Paina " + (TH.valmisNappi || "Katso tulos") + ".";
+        }
+        tekstit.forEach(function (t) { t.addEventListener("input", p); });
+        alue.querySelector(".bj-takaisin").addEventListener("click", function () { tila.vaihe = "valinta"; kutsuTallenna(); window.kutsuPiirra(); });
+        nappi.addEventListener("click", function () { if (nappi.disabled) return; tila.valmis = true; kutsuTallenna(); play("Kutsu: tulos"); });
+        p();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), a = laskeJ(tila), v = jValitut(tila);
+        var rivit = KORTIT.filter(function (t) { return v.indexOf(t.nimi) >= 0; }).map(function (t) {
+          return '<tr><td>' + suojaa((t.ikoni ? t.ikoni + " " : "") + t.nimi) + '</td><td>' + jeur(t.hinta) + '</td></tr>';
+        }).join("");
+        var h = '<div class="tuotekortti bj-tilaus"><p class="tk-yla">' + suojaa(TH.korttiYla || "PÄÄTÖSESITYS") + '</p>' +
+          '<p class="tk-tuotenimi">' + suojaa(TH.kauppaNimi || "Oma esitykseni") + '</p>' +
+          '<table class="bj-taulu"><thead><tr><th>Toimenpide</th><th>Hinta</th></tr></thead><tbody>' + rivit + '</tbody></table>' +
+          '<dl class="tk-tiedot"><dt>Käytetty</dt><dd>' + jeur(a.kaytetty) + ' / ' + jeur(JBUD) + '</dd><dt>Jäljellä</dt><dd>' + jeur(a.jaljella) + '</dd></dl>' +
+          '<ul class="kehitys-sopivuus">' + palauteJ(tila, a).map(function (r) { return '<li>' + suojaa(r) + '</li>'; }).join("") + '</ul></div>';
+        h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi ja ammattilaiset</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, j) {
+          return '<li><strong>' + suojaa(jKysymys(k, a)) + '</strong><span class="kl-perustelu">' + suojaa((tila.perustelut || [])[j] || "") + '</span>' +
+            '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + ' – ' + suojaa(k.tutkinto) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var a = laskeJ(tila), v = jValitut(tila);
+        var t = "\n" + TH.nimi.toUpperCase() + "\n\nVALINNAT\n";
+        KORTIT.forEach(function (k) { if (v.indexOf(k.nimi) >= 0) t += "- " + k.nimi + ": " + jeur(k.hinta) + "\n"; });
+        t += "\nKäytetty: " + jeur(a.kaytetty) + " / " + jeur(JBUD) + "\nJäljellä: " + jeur(a.jaljella) + "\n";
+        palauteJ(tila, a).forEach(function (r) { t += r + "\n"; });
+        t += "\nPERUSTELUT\n";
+        (TH.kysymykset || []).forEach(function (k, j) { t += (j + 1) + ". " + jKysymys(k, a) + "\n   " + ((tila.perustelut || [])[j] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
+        return t;
+      };
+    }
+
     /* --- Tehtävätyyppi "kartta": oppilas ottaa rajallisen määrän näytteitä kartalta ja päättelee lähteen ---
        kutsuKortit = näytepisteet: { nimi, x, y (0–100), kuvaus, arvot: { avain: luku }, havainto }
        TH.naytteet (montako saa ottaa), TH.minNaytteet, TH.mittarit [ { avain, nimi, yksikko, hyva(arvo)→bool-raja: {min|max} } ],
