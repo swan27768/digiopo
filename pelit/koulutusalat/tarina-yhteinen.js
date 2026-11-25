@@ -776,10 +776,11 @@
     /* --- Tehtävätyyppi "jako": oppilas valitsee toimenpiteet rajatulla budjetilla (esim. kunnan päätös) ---
        kutsuKortit = toimenpiteet: { nimi, ikoni, hinta, kuvaus, auttaa: [ryhmäavaimia], varoitus? (näytetään, jos ei valittu) }
        TH.budjetti, TH.minValittuja, TH.minKaytto, TH.ryhmat {avain: {nimi, vari}}, TH.ostoOhje,
+       valinnaiset: TH.yksikko (oletus €), TH.budjettiNimi, TH.jaljellaTeksti, TH.kohteetSana, TH.minKayttoTeksti, TH.kohdeOtsikko, TH.hintaOtsikko,
        TH.kysymykset [ { kysymys ({top} = kallein valittu), ammattilainen, tutkinto, placeholder } ] */
     if (TH.tyyppi === "jako") {
       var JBUD = TH.budjetti || 50000, JRYH = TH.ryhmat || {};
-      var jeur = function (x) { return Math.round(x).toLocaleString("fi-FI") + " €"; };
+      var jeur = function (x) { return Math.round(x).toLocaleString("fi-FI") + " " + (TH.yksikko || "€"); };
       var jValitut = function (tila) { if (!Array.isArray(tila.valitut)) tila.valitut = []; return tila.valitut; };
       var laskeJ = function (tila) {
         var v = jValitut(tila), kaytetty = 0, autetut = {}, top = null;
@@ -798,7 +799,7 @@
           else r.push("Vinkki: " + (JRYH[k].ei || ("Ryhmälle " + JRYH[k].nimi.toLowerCase() + " ei tullut nyt mitään.")));
         });
         KORTIT.forEach(function (t) { if (t.varoitus && v.indexOf(t.nimi) < 0) r.push("Huomio: " + t.varoitus); });
-        if (a.jaljella > JBUD * 0.15) r.push("Rahaa jäi käyttämättä " + jeur(a.jaljella) + ". Olisiko sille ollut käyttöä?");
+        if (a.jaljella > JBUD * 0.15) r.push((TH.jaljellaTeksti || "Rahaa jäi käyttämättä") + " " + jeur(a.jaljella) + ". Olisiko sille ollut käyttöä?");
         return r;
       };
       var ryhmaChipit = function (a) {
@@ -809,7 +810,7 @@
       };
       var jYhteenveto = function (a) {
         return '<div class="bj-luvut jk-luvut">' +
-          '<div><span>Budjetti</span><strong>' + jeur(JBUD) + '</strong></div>' +
+          '<div><span>' + suojaa(TH.budjettiNimi || "Budjetti") + '</span><strong>' + jeur(JBUD) + '</strong></div>' +
           '<div><span>Käytetty</span><strong>' + jeur(a.kaytetty) + '</strong></div>' +
           '<div class="' + (a.jaljella < 0 ? "ei" : "") + '"><span>Jäljellä</span><strong>' + jeur(a.jaljella) + '</strong></div></div>' +
           '<p class="jk-ryhmat-otsikko">' + suojaa(TH.ryhmatOtsikko || "Keitä valintasi auttavat?") + '</p>' + ryhmaChipit(a);
@@ -852,8 +853,8 @@
           var ok = a.maara >= minV && a.kaytetty >= minK;
           nappi.disabled = !ok;
           vihje.textContent = ok ? "Hyvä! Voit vielä muuttaa valintoja tai lukita ne." :
-            (a.maara < minV ? "Valitse vähintään " + minV + " toimenpidettä (nyt " + a.maara + "). " : "") +
-            (a.kaytetty < minK ? "Käytä budjetista vähintään " + jeur(minK) + "." : "");
+            (a.maara < minV ? "Valitse vähintään " + minV + " " + (TH.kohteetSana || "toimenpidettä") + " (nyt " + a.maara + "). " : "") +
+            (a.kaytetty < minK ? (TH.minKayttoTeksti || "Käytä budjetista vähintään") + " " + jeur(minK) + "." : "");
         }
         Array.prototype.forEach.call(alue.querySelectorAll(".jk-tuote"), function (el) {
           var t = KORTIT[+el.getAttribute("data-i")];
@@ -909,7 +910,7 @@
         }).join("");
         var h = '<div class="tuotekortti bj-tilaus"><p class="tk-yla">' + suojaa(TH.korttiYla || "PÄÄTÖSESITYS") + '</p>' +
           '<p class="tk-tuotenimi">' + suojaa(TH.kauppaNimi || "Oma esitykseni") + '</p>' +
-          '<table class="bj-taulu"><thead><tr><th>Toimenpide</th><th>Hinta</th></tr></thead><tbody>' + rivit + '</tbody></table>' +
+          '<table class="bj-taulu"><thead><tr><th>' + suojaa(TH.kohdeOtsikko || "Toimenpide") + '</th><th>' + suojaa(TH.hintaOtsikko || "Hinta") + '</th></tr></thead><tbody>' + rivit + '</tbody></table>' +
           '<dl class="tk-tiedot"><dt>Käytetty</dt><dd>' + jeur(a.kaytetty) + ' / ' + jeur(JBUD) + '</dd><dt>Jäljellä</dt><dd>' + jeur(a.jaljella) + '</dd></dl>' +
           '<ul class="kehitys-sopivuus">' + palauteJ(tila, a).map(function (r) { return '<li>' + suojaa(r) + '</li>'; }).join("") + '</ul></div>';
         h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi ja ammattilaiset</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (k, j) {
