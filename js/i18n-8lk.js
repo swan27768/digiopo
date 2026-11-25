@@ -706,73 +706,22 @@
       var lukioReset = lukioPanel.querySelector('.tj-kiinnostukset button:not([data-ala])');
       if (lukioReset && tj.lukio_fil_reset) lukioReset.textContent = tj.lukio_fil_reset;
 
-      /* ── Lukiopolku Vaihe 2: erikoislukio-kuvaus + Päivä lukiolaisena ── */
+      /* ── Lukiopolku Vaihe 2: erikoislukio-kuvaus ── */
       var lukioOsiot = lukioPanel.querySelectorAll('.tj-osio-otsikko');
-      /* LukioPanel otsikot järjestyksessä: [0]=V1, [1]=V2 erikoislukiot, [2]=V2 päivä, [3]=V3, [4]=V4 suunnitelma */
+      /* LukioPanel otsikot järjestyksessä: [0]=V1, [1]=V2 erikoislukiot, [2]=V3, [3]=V4 alan tarina */
       /* Erikoislukio-kuvaus (p ennen erikoislukio-grid) */
       var erikoislukioGrid = lukioPanel.querySelector('#erikoislukio-grid');
       if (erikoislukioGrid && tj.lv2_erikoislukio_kuvaus) {
         var ekPrev = erikoislukioGrid.previousElementSibling;
         if (ekPrev && ekPrev.classList.contains('tj-kuvaus')) ekPrev.innerHTML = tj.lv2_erikoislukio_kuvaus;
       }
-      /* Päivä lukiolaisena -otsikko (kolmas .tj-osio-otsikko) */
-      if (lukioOsiot[2] && tj.lv2_paiva_heading) {
-        var lv2pSpan = lukioOsiot[2].querySelector('.tj-osio-vaihe');
-        lukioOsiot[2].textContent = tj.lv2_paiva_heading;
-        if (lv2pSpan) lukioOsiot[2].insertBefore(lv2pSpan, lukioOsiot[2].firstChild);
-      }
-
-      /* Tarina-tabit (Emre, Yuki, Aino) */
-      var lukioTabit = lukioPanel.querySelectorAll('.tj-tarinat-valit .tj-tarina-nappi');
-      /* Tabit sisältävät SVG-avatarin + tekstiä — pitää korvata vain tekstisolmu */
-      function setTabTeksti(btn, teksti) {
-        if (!btn || !teksti) return;
-        var svg = btn.querySelector('svg');
-        btn.textContent = ' ' + teksti;
-        if (svg) btn.insertBefore(svg, btn.firstChild);
-      }
-      if (lukioTabit[0]) setTabTeksti(lukioTabit[0], tj.lv2_tab_emre);
-      if (lukioTabit[1]) setTabTeksti(lukioTabit[1], tj.lv2_tab_yuki);
-      if (lukioTabit[2]) setTabTeksti(lukioTabit[2], tj.lv2_tab_aino);
-
-      /* Tarinat: helper */
-      function kaannaLukioTarina(panelId, tagi, header, sub, t1h, t1p, t2h, t2p, t3h, t3p, t4h, t4p) {
-        var panel = document.getElementById(panelId);
-        if (!panel) return;
-        var tagiEl = panel.querySelector('.tj-tarina-tagi');
-        if (tagiEl && tagi) tagiEl.textContent = tagi;
-        var h4 = panel.querySelector('.th-teksti h4');
-        if (h4 && header) h4.textContent = header;
-        var subP = panel.querySelector('.th-teksti p');
-        if (subP && sub) subP.textContent = sub;
-        var rivit = panel.querySelectorAll('.tj-aika-rivi');
-        var data = [[t1h,t1p],[t2h,t2p],[t3h,t3p],[t4h,t4p]];
-        for (var ri = 0; ri < rivit.length && ri < data.length; ri++) {
-          var h6 = rivit[ri].querySelector('h6'); var rp = rivit[ri].querySelector('p');
-          if (h6 && data[ri][0]) h6.textContent = data[ri][0];
-          if (rp && data[ri][1]) rp.textContent = data[ri][1];
-        }
-      }
-      kaannaLukioTarina('lukio-yleislukio',
-        tj.lv2_emre_tagi, tj.lv2_emre_header, tj.lv2_emre_sub,
-        tj.lv2_emre_t1_h, tj.lv2_emre_t1_p, tj.lv2_emre_t2_h, tj.lv2_emre_t2_p,
-        tj.lv2_emre_t3_h, tj.lv2_emre_t3_p, tj.lv2_emre_t4_h, tj.lv2_emre_t4_p);
-      kaannaLukioTarina('lukio-ib',
-        tj.lv2_yuki_tagi, tj.lv2_yuki_header, tj.lv2_yuki_sub,
-        tj.lv2_yuki_t1_h, tj.lv2_yuki_t1_p, tj.lv2_yuki_t2_h, tj.lv2_yuki_t2_p,
-        tj.lv2_yuki_t3_h, tj.lv2_yuki_t3_p, tj.lv2_yuki_t4_h, tj.lv2_yuki_t4_p);
-      kaannaLukioTarina('lukio-urheilu',
-        tj.lv2_aino_tagi, tj.lv2_aino_header, tj.lv2_aino_sub,
-        tj.lv2_aino_t1_h, tj.lv2_aino_t1_p, tj.lv2_aino_t2_h, tj.lv2_aino_t2_p,
-        tj.lv2_aino_t3_h, tj.lv2_aino_t3_p, tj.lv2_aino_t4_h, tj.lv2_aino_t4_p);
-
       /* ── Lukiopolku Vaihe 3: Lukion jälkeen ── */
-      if (lukioOsiot[3] && tj.lv3_heading) {
-        var lv3span = lukioOsiot[3].querySelector('.tj-osio-vaihe');
-        lukioOsiot[3].textContent = tj.lv3_heading;
-        if (lv3span) lukioOsiot[3].insertBefore(lv3span, lukioOsiot[3].firstChild);
+      if (lukioOsiot[2] && tj.lv3_heading) {
+        var lv3span = lukioOsiot[2].querySelector('.tj-osio-vaihe');
+        lukioOsiot[2].textContent = tj.lv3_heading;
+        if (lv3span) lukioOsiot[2].insertBefore(lv3span, lukioOsiot[2].firstChild);
       }
-      var lv3kuvEl = lukioOsiot[3] ? lukioOsiot[3].nextElementSibling : null;
+      var lv3kuvEl = lukioOsiot[2] ? lukioOsiot[2].nextElementSibling : null;
       if (lv3kuvEl && lv3kuvEl.classList.contains('tj-kuvaus') && tj.lv3_kuvaus) {
         lv3kuvEl.innerHTML = tj.lv3_kuvaus;
       }
