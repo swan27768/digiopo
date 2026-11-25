@@ -210,7 +210,7 @@ KUTSU_KORTIT = [
    "Turvallinen": "Salasana on helppo muistaa, mutta myös helppo arvata.",
    "Riski": "Salasana on lyhyt, ja siinä on vain sana ja vuosiluku. Pitkä lause on parempi, esimerkiksi Kolme-kettua-hyppii-kuussa! Koodari voi tehdä palveluun säännön, joka estää liian heikot salasanat."}},
  {"tilanne": "Puhelimen sovelluskauppa ilmoittaa päivityksestä.",
-  "nakyma": '<div class="tk-puhelin"><p class="tk-ilmo">Sovelluskauppa · Päivitykset</p><p><strong>Kettu kiertoradalla</strong> · Pikselipaja<br>Versio 1.0.1: korjattu virhe, jossa peli kaatui tauolla.</p></div>',
+  "nakyma": '<div class="tk-puhelin"><p class="tk-ilmo">Sovelluskauppa · Päivitykset</p><p><strong>Bussiopas</strong> · Seutuliikenne<br>Versio 2.4.1: korjattu virhe, jossa aikataulut eivät päivittyneet.</p></div>',
   "oikea": "Turvallinen", "ammattilainen": "Ohjelmistotestaaja", "tutkinto": TVT + " (ohjelmistokehittäjä)",
   "vaihtoehdot": {
    "Turvallinen": "Päivitys tulee virallisesta sovelluskaupasta ja oikealta tekijältä. Päivitykset korjaavat vikoja ja tietoturva-aukkoja, joten ne kannattaa asentaa. Testaaja on tarkistanut päivityksen ennen julkaisua.",
