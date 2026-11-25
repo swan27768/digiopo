@@ -3518,16 +3518,76 @@ const MAAILMAT = {
     const pkyltti = taso(4.6, 0.8, tekstiTekstuuri(["PÄIVYSTYS"], "#ffffff", "#c8102e", 1100, 190)); pkyltti.position.set(-21, 4.0, -5.82); scene.add(pkyltti);
     const katos = laatikko(12, 0.25, 9, M(0xcfd8da, { metalness: 0.3 })); katos.position.set(-21.5, 4.7, -1.5); scene.add(katos);
     [[-27, 2.8], [-16.2, 2.8]].forEach(([x, z]) => { const t = sylinteri(0.14, 0.14, 4.7, M(0xb0bcc0, { metalness: 0.5 }), 10); t.position.set(x, 2.35, z); scene.add(t); });
+    /* Ambulanssi: suomalainen keltainen korkeakattoinen pakettiauto, punakeltainen ruutukuvio */
     const amb = new THREE.Group();
-    const ak = laatikko(2.3, 2.2, 4.0, M(0xf4f6f6)); ak.position.set(0, 1.45, 0.3); amb.add(ak);
-    const ah = laatikko(2.2, 1.4, 1.5, M(0xf4f6f6)); ah.position.set(0, 1.05, 3.0); amb.add(ah);
-    const tuuli = laatikko(2.0, 0.6, 0.05, M(0x22343c, { metalness: 0.6, roughness: 0.2 })); tuuli.position.set(0, 1.5, 3.76); tuuli.rotation.x = -0.35; amb.add(tuuli);
-    [-1.16, 1.16].forEach((x) => { const r = laatikko(0.03, 0.35, 5.4, M(0x1e9e5a)); r.position.set(x, 1.1, 0.9); amb.add(r); const r2 = laatikko(0.03, 0.18, 5.4, M(0xffd23f)); r2.position.set(x, 1.38, 0.9); amb.add(r2); });
-    [[-1, -0.9], [1, -0.9], [-1, 2.8], [1, 2.8]].forEach(([x, z]) => { const r = sylinteri(0.42, 0.42, 0.3, M(0x1b1f22), 16); r.rotation.z = Math.PI / 2; r.position.set(x, 0.42, z); amb.add(r); });
+    const KEL = "#f5e20c", PUN = "#e3170a", ORA = "#ff7a00", SIN = "#1d3fbf";
+    function tahti(x, cx, cy, r) {
+      x.save(); x.translate(cx, cy); x.fillStyle = SIN;
+      for (let i = 0; i < 3; i++) { x.save(); x.rotate(i * Math.PI / 3); x.fillRect(-r * 0.22, -r, r * 0.44, r * 2); x.restore(); }
+      x.strokeStyle = "#ffffff"; x.lineWidth = r * 0.08; x.beginPath(); x.moveTo(0, -r * 0.7); x.lineTo(0, r * 0.7); x.stroke();
+      x.beginPath(); x.moveTo(-r * 0.15, -r * 0.45); x.quadraticCurveTo(r * 0.25, -r * 0.25, -r * 0.15, 0); x.quadraticCurveTo(-r * 0.45, r * 0.25, r * 0.15, r * 0.45); x.stroke(); x.restore();
+    }
+    function ruudut(x, y0, h, w, alku) {
+      x.fillStyle = ORA; x.fillRect(0, y0 - h * 0.28, w, h * 0.16);
+      x.fillStyle = PUN; const s = h * 0.9;
+      for (let i = alku || 0, n = 0; i < w; i += s * 1.25, n++) { x.save(); x.translate(i, y0); x.transform(1, 0, -0.35, 1, 0, 0); x.fillRect(0, 0, s, h * 0.62); x.restore(); }
+      x.fillStyle = ORA; x.fillRect(0, y0 + h * 0.8, w, h * 0.16);
+    }
+    /* Kylki (1024 x 512): vasen reuna = auton etupää */
+    const kylkiTx = kuvaTx((x, w, h) => {
+      x.fillStyle = KEL; x.fillRect(0, 0, w, h);
+      x.fillStyle = "#1b2430"; x.beginPath(); x.moveTo(40, 70); x.lineTo(205, 70); x.lineTo(205, 215); x.lineTo(15, 215); x.closePath(); x.fill();
+      x.fillRect(235, 75, 210, 125);
+      x.fillStyle = PUN; for (let i = 0; i < 5; i++) { x.save(); x.translate(330 + i * 22, 75); x.transform(1, 0, -0.5, 1, 0, 0); x.fillRect(0, 0, 11, 125); x.restore(); }
+      x.fillStyle = "#11161d"; x.fillRect(215, 60, 6, 400); x.fillRect(470, 60, 6, 400);
+      x.fillRect(110, 245, 40, 10); x.fillRect(300, 245, 40, 10);
+      tahti(x, 610, 140, 62);
+      x.fillStyle = SIN; x.font = "bold 74px Arial, sans-serif"; x.fillText("112", 690, 140);
+      x.font = "bold 46px Arial, sans-serif"; x.fillText("AMBULANSSI", 690, 195);
+      x.fillStyle = PUN; x.fillRect(880, 15, 40, 90); x.fillRect(940, 15, 40, 90);
+      ruudut(x, 300, 110, w, 20);
+    }, 1024, 512);
+    const kylkiTx2 = kylkiTx.clone(); kylkiTx2.wrapS = THREE.RepeatWrapping; kylkiTx2.repeat.x = -1; kylkiTx2.needsUpdate = true;
+    const takaTx = kuvaTx((x, w, h) => {
+      x.fillStyle = KEL; x.fillRect(0, 0, w, h);
+      x.fillStyle = "#1b2430"; x.fillRect(40, 50, 190, 150); x.fillRect(282, 50, 190, 150);
+      x.fillStyle = "#11161d"; x.fillRect(253, 30, 6, 470);
+      x.fillStyle = PUN; for (let i = 0; i < 8; i++) for (let j = 0; j < 3; j++) if ((i + j) % 2 === 0) x.fillRect(i * 64, 300 + j * 64, 64, 64);
+      tahti(x, 256, 250, 34);
+    }, 512, 512);
+    const keulaTx = kuvaTx((x, w, h) => {
+      x.fillStyle = KEL; x.fillRect(0, 0, w, h);
+      x.fillStyle = "#2a2f36"; x.fillRect(150, 40, 212, 110);
+      x.fillStyle = "#d9dde2"; for (let i = 0; i < 5; i++) x.fillRect(158, 50 + i * 20, 196, 6);
+      x.fillStyle = "#eef3ff"; x.fillRect(20, 50, 110, 45); x.fillRect(382, 50, 110, 45);
+      x.fillStyle = "#3a63ff"; x.fillRect(175, 165, 40, 16); x.fillRect(297, 165, 40, 16);
+      x.fillStyle = "#ffffff"; x.fillRect(176, 205, 160, 40); x.fillStyle = SIN; x.fillRect(176, 205, 22, 40);
+      x.fillStyle = ORA; for (let i = 0; i < 6; i++) x.fillRect(10 + i * 85, 262, 55, 26);
+    }, 512, 300);
+    const konepeltiTx = kuvaTx((x, w, h) => { x.fillStyle = KEL; x.fillRect(0, 0, w, h); x.fillStyle = PUN;
+      [0, 1].forEach((i) => { x.save(); x.translate(80 + i * 70, 0); x.transform(1, 0, -0.6, 1, 0, 0); x.fillRect(0, 0, 38, h); x.restore(); }); }, 256, 256);
+    const keltM = M(0xf5e20c, { roughness: 0.45, metalness: 0.1, emissive: 0x3a3300 });
+    const L = 4.4, K = 2.6, Lev = 2.1;
+    const kori = new THREE.Mesh(new THREE.BoxGeometry(Lev, K, L), [
+      M(0xffffff, { map: kylkiTx, roughness: 0.45, emissive: 0x332d00, emissiveMap: kylkiTx }), M(0xffffff, { map: kylkiTx2, roughness: 0.45, emissive: 0x332d00, emissiveMap: kylkiTx2 }),
+      keltM, keltM, keltM, M(0xffffff, { map: takaTx, roughness: 0.45, emissive: 0x332d00, emissiveMap: takaTx })]);
+    kori.position.set(0, 0.45 + K / 2, 0); amb.add(kori);
+    const keula = new THREE.Mesh(new THREE.BoxGeometry(Lev - 0.04, 0.95, 0.9), [keltM, keltM, M(0xffffff, { map: konepeltiTx }), keltM, M(0xffffff, { map: keulaTx }), keltM]);
+    keula.position.set(0, 0.45 + 0.475, L / 2 + 0.45); amb.add(keula);
+    const tuulilasi = laatikko(Lev - 0.12, 1.25, 0.05, M(0x1b2430, { metalness: 0.6, roughness: 0.15 }));
+    tuulilasi.position.set(0, 1.95, L / 2 + 0.35); tuulilasi.rotation.x = -0.55; amb.add(tuulilasi);
+    const lippa = new THREE.Mesh(new THREE.PlaneGeometry(Lev - 0.1, 0.32), new THREE.MeshBasicMaterial({ map: tekstiTekstuuri(["AMBULANSSI"], "#f5e20c", "#e3170a", 700, 110) }));
+    lippa.position.set(0, 2.9, L / 2 + 0.02); amb.add(lippa);
+    [-1, 1].forEach((s) => { const p = laatikko(0.08, 0.25, 0.18, M(0x111111)); p.position.set(s * (Lev / 2 + 0.06), 2.0, L / 2 - 0.1); amb.add(p); });
+    [[-0.95, -1.4], [0.95, -1.4], [-0.95, 2.6], [0.95, 2.6]].forEach(([x, z]) => {
+      const r = sylinteri(0.42, 0.42, 0.28, M(0x15181b), 18); r.rotation.z = Math.PI / 2; r.position.set(x, 0.42, z); amb.add(r);
+      const v = sylinteri(0.25, 0.25, 0.3, M(0xb9c0c8, { metalness: 0.8, roughness: 0.3 }), 10); v.rotation.z = Math.PI / 2; v.position.set(x, 0.42, z); amb.add(v); });
     const vilkut = [];
-    [-0.7, 0.7].forEach((x, i) => { const v = laatikko(0.35, 0.16, 0.25, hehku(0x2d7dff, 1.6)); v.position.set(x, 2.62, 1.8 - 0 * i); amb.add(v); vilkut.push(v); });
-    const tO = laatikko(2.2, 2.0, 0.05, M(0xf4f6f6)); tO.position.set(0, 1.45, -1.72); amb.add(tO);
-    amb.position.set(-25.5, 0, 3.4); scene.add(amb);
+    const palkki = laatikko(Lev - 0.2, 0.16, 0.5, M(0x22304a)); palkki.position.set(0, 0.45 + K + 0.08, L / 2 - 0.35); amb.add(palkki);
+    [-0.5, 0.5].forEach((x) => { const v = laatikko(0.85, 0.12, 0.42, hehku(0x2d6bff, 1.6)); v.position.set(x, 0.45 + K + 0.12, L / 2 - 0.35); amb.add(v); vilkut.push(v); });
+    [-1, 1].forEach((s) => { const v = laatikko(0.08, 0.08, L - 1.2, hehku(0x2d6bff, 1.6)); v.position.set(s * (Lev / 2 - 0.05), 0.45 + K + 0.04, -0.3); amb.add(v); vilkut.push(v); });
+    [-0.7, 0.7].forEach((x) => { const v = laatikko(0.3, 0.12, 0.08, hehku(0x2d6bff, 1.6)); v.position.set(x, 0.45 + K - 0.15, -L / 2 - 0.03); amb.add(v); vilkut.push(v); });
+    amb.position.set(-25.5, 0, 3.0); scene.add(amb);
     const paarit = new THREE.Group();
     const pr = laatikko(0.7, 0.1, 2.0, M(0xffb703)); pr.position.y = 0.85; paarit.add(pr);
     const pj = laatikko(0.5, 0.8, 1.6, M(0x8a979c, { metalness: 0.5 })); pj.position.y = 0.4; pj.scale.set(1, 1, 1); paarit.add(pj);
