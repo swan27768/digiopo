@@ -3470,11 +3470,6 @@ h3 { color: #3b1080; }
   .fakta-iso { margin: 4px 0 6px; font-size: 2.4rem; }
 }
 
-/* Neljän kortin ruudukko (esim. 8. lk: reitit peruskoulun jälkeen) */
-.fakta-ruudukko--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 1000px) { .fakta-ruudukko--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 720px)  { .fakta-ruudukko--4 { grid-template-columns: 1fr; } }
-
 @media print { .fakta-kortti { box-shadow: none; } }
 
 /* Sanaversio: pitkät sanat mahtuvat kortin leveyteen */
@@ -3483,6 +3478,11 @@ h3 { color: #3b1080; }
 
 /* Faktakortit luokka-asteen värillä (ei omia värejä) */
 .fakta-kortti { --c: var(--osio-accent, #7c3aed) !important; }
+
+/* Neljän kortin ruudukko (esim. 8. lk: reitit peruskoulun jälkeen) */
+.fakta-ruudukko--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1000px) { .fakta-ruudukko--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px)  { .fakta-ruudukko--4 { grid-template-columns: 1fr; } }
 }
 
 /* korttityypit.css */
@@ -6121,6 +6121,37 @@ body::before {
       background: radial-gradient(circle at 35% 30%, #ffd24a, #c79a1a 70%);
       box-shadow: 0 3px 5px rgba(0,0,0,0.35);
     }
+  
+
+    /* Erityisammattioppilaitokset tukiväitteen palautteen alla (avaa/sulje) */
+    .amis-erityis-paneeli { border-top: 1.5px solid #d97706; border-radius: 10px; margin: 10px 0 4px; }
+    .amis-v3-tehtava .amis-erityis-paneeli { border-color: #e7e5e4; }
+    .amis-erityis-otsikko { font-size: 14px; font-weight: 800; color: #1c1917; margin: 0 0 6px; }
+    .amis-erityis-sulje-rivi { margin: 12px 0 0; text-align: right; }
+
+    /* Lukiopolku Vaihe 4: alan tarina – kuvakortit (kuvat: images/koulutusalat/lukio-kortti-<id>.webp) */
+    #lukio-tarinat { display:grid; grid-template-columns:repeat(auto-fill, minmax(min(270px, 100%), 1fr)); gap:16px; margin:12px 0 14px; }
+    .lukio-tarina-kortti { --vari:#1e3a8a; position:relative; isolation:isolate; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; min-height:250px; padding:14px 16px 16px; border-radius:18px; background:var(--vari); color:#fff; box-shadow:0 10px 26px -12px rgba(15,23,42,.55); transition:transform .25s ease, box-shadow .25s ease; }
+    .lukio-tarina-kortti:hover { transform:translateY(-3px); box-shadow:0 18px 34px -14px rgba(15,23,42,.6); }
+    .lukio-tarina-kuva { position:absolute; inset:0; z-index:-2; background:center / cover no-repeat; transition:transform .6s ease; }
+    .lukio-tarina-kortti:hover .lukio-tarina-kuva { transform:scale(1.06); }
+    .lukio-tarina-kortti::after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 30%, color-mix(in srgb, var(--vari) 55%, transparent) 55%, color-mix(in srgb, var(--vari) 92%, #000) 100%); }
+    .lukio-tarina-ylarivi { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+    .lukio-tarina-ala { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.88); color:#111827; font-size:12px; font-weight:700; backdrop-filter:blur(4px); }
+    .lukio-tarina-sopii { display:inline-block; padding:4px 10px; border-radius:999px; background:#fde047; color:#713f12; font-size:12px; font-weight:800; box-shadow:0 0 0 3px rgba(253,224,71,.35); }
+    .lukio-tarina-tehty { margin-left:auto; display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#10b981; color:#fff; font-weight:900; box-shadow:0 0 0 3px rgba(255,255,255,.7); }
+    .lukio-tarina-kortti-nimi { margin:0 0 4px !important; font-size:21px !important; line-height:1.15; font-weight:800; color:#fff !important; text-shadow:0 2px 10px rgba(0,0,0,.45); }
+    .lukio-tarina-teaser { margin:0 0 12px !important; font-size:13.5px !important; line-height:1.45; color:rgba(255,255,255,.92) !important; text-shadow:0 1px 6px rgba(0,0,0,.4); }
+    .lukio-tarina-alarivi { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    .lukio-tarina-kesto { font-size:12.5px; font-weight:700; color:rgba(255,255,255,.9); }
+    .lukio-tarina-kortti .lukio-tarina-nappi { margin:0; padding:9px 16px; border:0; border-radius:999px; background:#fff; color:var(--vari); font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 6px 16px -6px rgba(0,0,0,.5); transition:transform .15s ease; }
+    .lukio-tarina-kortti .lukio-tarina-nappi:hover { transform:scale(1.05); }
+    .lukio-tarina-kortti .lukio-tarina-nappi:focus-visible { outline:3px solid #fde047; outline-offset:3px; }
+    .lukio-tarina-kortti.sopii { box-shadow:0 0 0 3px #facc15, 0 14px 30px -12px rgba(15,23,42,.6); }
+    .lukio-tarina-kortti.auki { box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--vari); }
+    #lukio-tarina-sisalto { margin:6px 0 4px; }
+    @media (max-width:600px) { .lukio-tarina-kortti { min-height:220px; } .lukio-tarina-kortti-nimi { font-size:19px !important; } }
+    @media (prefers-reduced-motion:reduce) { .lukio-tarina-kortti, .lukio-tarina-kuva { transition:none; } .lukio-tarina-kortti:hover, .lukio-tarina-kortti:hover .lukio-tarina-kuva { transform:none; } }
 }
 
 /* paivakirja.css */
@@ -6335,196 +6366,3 @@ input:focus-visible,
   outline: 3px solid var(--tag-vahvuudet);
   outline-offset: 2px;
 }
-
-    /* ══ Amispolku Vaihe 3: Totta vai tarua? + Oma amispolku (js/osio-data-8lk-amispolku.js) ══
-       Ilme: neutraali pohja, värit merkitykselle (vihreä = oikein, punainen = väärin),
-       meripihka korostukseen (osa-otsikot, valinnat, polkukortti). */
-    .amis-v3-tehtava { background:#fff; border:1.5px solid #e7e5e4; border-radius:16px; padding:18px 18px 12px; box-shadow:0 2px 10px rgba(28,25,23,.05); }
-    .amis-v3-tehtava [hidden] { display:none !important; }
-    .amis-v3-kieli { margin:0 0 12px; padding:8px 12px; background:#fef9c3; border:1px solid #fde047; border-radius:8px; font-size:13px; color:#713f12; }
-    .amis-v3-ohje-teksti { font-size:14px; color:#44403c; line-height:1.55; margin:0 0 14px; }
-
-    /* Osa-otsikot */
-    .amis-v3-tehtava .amis-v2-osa-otsikko { margin:0 0 12px; padding:12px 16px; background:linear-gradient(90deg,#fef3c7 0%,#fffbeb 100%); border-left:6px solid #d97706; border-radius:10px; gap:12px; flex-wrap:wrap; }
-    .amis-v3-osa-otsikko { flex:1; display:flex; align-items:center; gap:10px; margin:0; font-size:20px; font-weight:800; line-height:1.3; color:#78350f; }
-    .amis-v3-osa-nro { flex-shrink:0; background:#b45309; color:#fff; font-size:12.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
-    .amis-tt-laskuri { font-size:12.5px; font-weight:700; color:#78350f; background:#fff; border:1px solid #fcd34d; border-radius:20px; padding:3px 11px; white-space:nowrap; }
-
-    /* Väitekortit */
-    .amis-tt-lista { list-style:none; margin:0; padding:0; display:grid; gap:12px; }
-    .amis-tt-kortti { background:#fff; border:1.5px solid #e7e5e4; border-left-width:5px; border-radius:12px; padding:14px 16px; transition:border-color .2s, box-shadow .2s; }
-    .amis-tt-kortti:not(.vastattu) { border-left-color:#d6d3d1; box-shadow:0 1px 4px rgba(28,25,23,.06); }
-    .amis-tt-kortti.vastattu { background:#fafaf9; }
-    .amis-tt-kortti.tulos-ok  { border-left-color:#10b981; }
-    .amis-tt-kortti.tulos-ei  { border-left-color:#f97316; }
-    .amis-tt-vaite { display:flex; align-items:flex-start; gap:10px; margin:0 0 12px; font-size:15.5px; font-weight:700; color:#1c1917; line-height:1.45; }
-    .amis-tt-nro { flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:#1c1917; color:#fff; font-size:12.5px; font-weight:800; margin-right:2px; }
-
-    /* Napit */
-    .amis-tt-napit, .amis-polku-napit { display:flex; flex-wrap:wrap; gap:8px; }
-    .amis-tt-nappi, .amis-polku-nappi { font-family:inherit; font-size:14px; font-weight:700; padding:9px 20px; min-height:44px; border-radius:10px; border:1.5px solid #d6d3d1; background:#fff; color:#292524; cursor:pointer; transition:background .15s, border-color .15s, transform .1s; }
-    .amis-tt-nappi:hover:not([aria-disabled="true"]), .amis-polku-nappi:hover:not(.valittu) { border-color:#d97706; background:#fffbeb; }
-    .amis-tt-nappi:active:not([aria-disabled="true"]), .amis-polku-nappi:active { transform:scale(.97); }
-    .amis-tt-nappi:focus-visible, .amis-polku-nappi:focus-visible, .amis-tt-erityis:focus-visible, .amis-v3-lataa:focus-visible, .amis-v3-tyhjenna:focus-visible, .amis-polku-selvita:focus-visible { outline:3px solid #2563eb; outline-offset:2px; }
-    .amis-tt-nappi[aria-disabled="true"] { cursor:default; opacity:.45; }
-    .amis-tt-nappi.oikea { opacity:1; border-color:#059669; background:#fff; color:#047857; border-style:dashed; }  /* oikea vastaus, jota ei valittu */
-    .amis-tt-nappi.oikea.valittu { border-style:solid; background:#059669; color:#fff; }                             /* oma valinta, oikein */
-    .amis-tt-nappi.valittu:not(.oikea) { opacity:1; border-color:#ea580c; background:#fff7ed; color:#9a3412; text-decoration:line-through; }
-
-    /* Palaute */
-    .amis-tt-palaute { margin-top:12px; padding:11px 14px; border-radius:10px; font-size:14px; color:#292524; line-height:1.55; }
-    .tulos-ok .amis-tt-palaute { background:#ecfdf5; }
-    .tulos-ei .amis-tt-palaute { background:#fff7ed; }
-    .amis-tt-palaute p { margin:0 0 6px; } .amis-tt-palaute p:last-child { margin:0; }
-    .amis-tt-palaute a { color:#b45309; font-weight:700; }
-    .amis-tt-otsake { font-weight:800; } .amis-tt-otsake.ok { color:#047857; } .amis-tt-otsake.ei { color:#c2410c; }
-    .amis-tt-erityis { font-family:inherit; font-size:13px; font-weight:700; color:#1c1917; background:#fff; border:1.5px solid #d6d3d1; border-radius:8px; padding:7px 12px; cursor:pointer; }
-    .amis-tt-erityis:hover { border-color:#d97706; }
-
-    /* Tulos */
-    .amis-tt-tulos { margin:16px 0 4px; padding:14px 16px; background:#ecfdf5; border:1.5px solid #6ee7b7; border-radius:12px; font-size:14.5px; color:#065f46; line-height:1.55; }
-    .amis-tt-tulos strong { font-size:17px; }
-
-    /* Erityisammattioppilaitokset Vaihe 3:n sisällä: neutraalit kortit */
-    .amis-v3-tehtava .amis-sivupolku { margin:14px 0 4px; }
-    .amis-v3-tehtava .amis-sivupolku-toggle { background:#fafaf9; border-color:#e7e5e4; }
-    .amis-v3-tehtava .amis-sivupolku-sisalto { background:#fafaf9; }
-    /* Erityisammattioppilaitokset tukiväitteen palautteen alla (avaa/sulje) */
-    .amis-erityis-paneeli { border-top: 1.5px solid #d97706; border-radius: 10px; margin: 10px 0 4px; }
-    .amis-v3-tehtava .amis-erityis-paneeli { border-color: #e7e5e4; }
-    .amis-erityis-otsikko { font-size: 14px; font-weight: 800; color: #1c1917; margin: 0 0 6px; }
-    .amis-erityis-sulje-rivi { margin: 12px 0 0; text-align: right; }
-
-    .amis-v3-tehtava .erityis-kortti { background:#fff; border:1.5px solid #e7e5e4; border-top:4px solid #a8a29e; }
-    .amis-v3-tehtava .erityis-kortti h5 { color:#1c1917; }
-    .amis-v3-tehtava .erityis-kortti p { color:#57534e; }
-    .amis-v3-tehtava .erityis-kortti a { color:#b45309; }
-
-    /* Osa 2: oma polku */
-    .amis-polku { margin-top:26px; padding-top:22px; border-top:1.5px solid #e7e5e4; }
-    .amis-polku-kys { border:1.5px solid #e7e5e4; background:#fff; border-radius:12px; padding:12px 16px 14px; margin:0 0 12px; }
-    .amis-polku-kys legend { display:flex; align-items:center; gap:8px; font-size:15.5px; font-weight:700; color:#1c1917; padding:0 6px; }
-    .amis-polku-nappi { font-weight:600; font-size:14px; }
-    .amis-polku-nappi.valittu { background:#d97706; border-color:#d97706; color:#fff; box-shadow:0 2px 8px rgba(217,119,6,.3); }
-    .amis-polku-selitys { margin:12px 0 0; padding:9px 12px; background:#f5f5f4; border-radius:8px; font-size:13.5px; color:#44403c; line-height:1.55; }
-    .amis-polku-selvita-label { display:block; margin:10px 0 6px; font-size:14px; font-weight:700; color:#292524; }
-    .amis-polku-selvita { width:100%; box-sizing:border-box; font-family:inherit; font-size:14px; padding:10px 12px; border:1.5px solid #d6d3d1; border-radius:10px; background:#fff; resize:vertical; }
-    .amis-polku-selvita:focus { border-color:#d97706; }
-    #amis-polku-nimi { margin-bottom:8px; }
-    .amis-polku-puuttuu { font-size:13px; color:#78716c; margin:10px 0 0; }
-
-    /* Polkukortti = palkinto: ainoa iso lämmin väripinta */
-    .amis-polku-kortti { margin:16px 0 4px; padding:18px 20px; border-radius:16px; background:linear-gradient(135deg,#fbbf24 0%,#d97706 100%); color:#fff; box-shadow:0 10px 24px rgba(217,119,6,.28); }
-    .amis-polku-kortti-tag { margin:0 0 12px; font-size:12.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#fff; opacity:.9; }
-    .amis-polku-kortti dl { margin:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
-    .amis-polku-kortti dl > div { background:rgba(255,255,255,.95); border-radius:10px; padding:9px 12px; }
-    .amis-polku-kortti dt { font-size:11px; font-weight:800; color:#b45309; text-transform:uppercase; letter-spacing:.04em; }
-    .amis-polku-kortti dd { margin:3px 0 0; font-size:14.5px; font-weight:700; color:#1c1917; overflow-wrap:anywhere; }
-
-    .amis-v3-toiminnot { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-    .amis-v3-toiminnot .amis-kuittaa { margin-top:0; min-height:44px; }
-    .amis-v3-toiminnot .amis-kuittaa.kuitattu:disabled { opacity:1; cursor:default; }
-    .amis-v3-lataa { font-family:inherit; font-size:14px; font-weight:700; padding:10px 18px; min-height:44px; border-radius:10px; border:none; background:#1c1917; color:#fff; cursor:pointer; }
-    .amis-v3-lataa:hover { background:#44403c; }
-    .amis-v3-lataa-ohje { font-size:13px; color:#57534e; margin:8px 0 0; }
-    .amis-v3-tyhjenna-rivi { margin:16px 0 0; text-align:right; }
-    .amis-v3-tyhjenna { font-family:inherit; font-size:12px; color:#78716c; background:none; border:none; text-decoration:underline; cursor:pointer; padding:4px; }
-    @media (max-width:520px) {
-      .amis-v3-tehtava { padding:14px 12px 10px; }
-      .amis-v3-osa-otsikko { font-size:17px; }
-      .amis-tt-nappi { flex:1 1 0; }
-      .amis-polku-nappi { flex:1 1 100%; text-align:left; }
-    }
-
-    /* ══ Lukiopolku: rauhallisempi ilme ══
-       Neutraalit kortit, sininen korostus. AMK = vihreä ja yliopisto = violetti vain merkeissä ja reunaviivoissa. */
-    #tutkija-lukio .tj-tavoite { background:#fff; border:1.5px solid #e2e8f0; border-left:5px solid #2563eb; }
-    #tutkija-lukio .tj-tavoite h5 { color:#1e3a8a; }
-    #tutkija-lukio .tj-tavoite li { color:#334155; }
-
-    /* Painotukset */
-    #tutkija-lukio .linja-kortti { background:#fff; border:1.5px solid #e2e8f0; border-top:4px solid #3b82f6; border-radius:12px; padding:13px 14px; box-shadow:0 1px 3px rgba(15,23,42,.05); }
-    #tutkija-lukio .linja-kortti h5 { color:#0f172a; font-size:13.5px; }
-    #tutkija-lukio .linja-kortti p  { color:#475569; }
-
-    /* Erikoislukiot: kaikki näkyvissä, sopivat korostetaan */
-    .erikoislukio-huomio { margin:4px 0 8px; padding:9px 12px; background:#f1f5f9; border-radius:8px; font-size:13px; color:#334155; line-height:1.5; }
-    #tutkija-lukio .erikoislukio-kortti { position:relative; background:#fff; border:1.5px solid #e2e8f0; border-radius:12px; padding:13px 14px; transition:border-color .2s, box-shadow .2s; }
-    #tutkija-lukio .erikoislukio-kortti h5 { color:#0f172a; font-size:13.5px; }
-    #tutkija-lukio .erikoislukio-kortti p  { color:#475569; }
-    #tutkija-lukio .erikoislukio-kortti.sopii { border:2px solid #2563eb; background:#eff6ff; box-shadow:0 4px 12px rgba(37,99,235,.15); }
-    .el-sopii-merkki { display:inline-block; margin:0 0 6px; padding:2px 9px; border-radius:20px; background:#2563eb; color:#fff; font-size:10.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
-    .el-sopii-merkki[hidden] { display:none; }
-
-    /* Päivä lukiolaisena */
-    #tutkija-lukio .tj-tarina { background:#fff; border-color:#e2e8f0; }
-
-    /* Kolme vuotta lukiossa: sinisen sävyinä (eteneminen = sävy tummuu) */
-    #tutkija-lukio .lv-vuosi { background:#fff; border:1.5px solid #e2e8f0; border-top-width:5px; }
-    #tutkija-lukio .lv-vuosi-1 { border-top-color:#93c5fd; }
-    #tutkija-lukio .lv-vuosi-2 { border-top-color:#3b82f6; }
-    #tutkija-lukio .lv-vuosi-3 { border-top-color:#1e3a8a; }
-    #tutkija-lukio .lv-vuosi .lv-vuosi-label { color:#1d4ed8; }
-    #tutkija-lukio .lv-vuosi-1 .lv-vuosi-paatos { background:#60a5fa; }
-    #tutkija-lukio .lv-vuosi-2 .lv-vuosi-paatos { background:#2563eb; }
-    #tutkija-lukio .lv-vuosi-3 .lv-vuosi-paatos { background:#1e3a8a; }
-    #tutkija-lukio .lv-yo-palkki { background:#1e3a8a; }
-
-    /* AMK vs yliopisto vs ammattikoulu -infokortit */
-    #tutkija-lukio .kk-info-kortti { background:#fff !important; border:1.5px solid #e2e8f0 !important; border-top:5px solid #94a3b8 !important; border-radius:12px; }
-    #tutkija-lukio .kk-info-kortti.amk  { border-top-color:#16a34a !important; }
-    #tutkija-lukio .kk-info-kortti.yo   { border-top-color:#7c3aed !important; }
-    #tutkija-lukio .kk-info-kortti.amis { border-top-color:#d97706 !important; }
-    #tutkija-lukio .kk-info-kortti p { color:#475569 !important; }
-
-    /* Korkeakoulukortit */
-    #tutkija-lukio .kk-kortti { background:#fff; border:1.5px solid #e2e8f0; border-left:4px solid #94a3b8; border-radius:10px; }
-    #tutkija-lukio .kk-kortti.amk       { border-left-color:#16a34a; }
-    #tutkija-lukio .kk-kortti.yliopisto { border-left-color:#7c3aed; }
-    #tutkija-lukio .kk-kortti.molemmat  { border-left-color:#0284c7; }
-    #tutkija-lukio .kk-kortti h5 { color:#0f172a !important; }
-    #tutkija-lukio .kk-kortti p  { color:#475569 !important; }
-    #tutkija-lukio .kk-kortti .kk-esimerkki { color:#64748b !important; opacity:1; }
-    #tutkija-lukio .kk-kortti.piilotettu { display:none; }
-    .kk-nayta-kaikki { display:block; margin:0 auto 14px; font-family:inherit; font-size:13.5px; font-weight:700; color:#1d4ed8; background:#fff; border:1.5px solid #bfdbfe; border-radius:10px; padding:9px 18px; min-height:44px; cursor:pointer; }
-    .kk-nayta-kaikki:hover { background:#eff6ff; }
-    .kk-nayta-kaikki:focus-visible { outline:3px solid #2563eb; outline-offset:2px; }
-    .kk-nayta-kaikki[hidden] { display:none; }
-
-    /* Oma lukiosuunnitelma */
-    #tutkija-lukio .lukio-suunnitelma { background:#fff; border:1.5px solid #e2e8f0; border-left:6px solid #2563eb; box-shadow:0 2px 10px rgba(15,23,42,.05); }
-
-    /* ══ Lukiopolku Vaihe 4: Oma lukiosuunnitelma (js/osio-data-8lk-lukiopolku.js) ══
-       Käyttää Amispolun polkutehtävän rakennetta (.amis-polku-*), korostusväri sininen. */
-    #tutkija-lukio .lukio-suunnitelma h4 { font-size:20px; display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-    .lv4-intro { font-size:14px; color:#334155; line-height:1.55; margin:0 0 14px; }
-    .lukio-v4.amis-v3-tehtava { border:none; box-shadow:none; padding:0; background:transparent; }
-    .lukio-v4 .amis-polku-kys { border-color:#e2e8f0; }
-    .lukio-v4 .amis-polku-nappi:hover:not(.valittu) { border-color:#2563eb; background:#eff6ff; }
-    .lukio-v4 .amis-polku-nappi.valittu { background:#2563eb; border-color:#2563eb; color:#fff; box-shadow:0 2px 8px rgba(37,99,235,.3); }
-    .lukio-v4 .amis-polku-selvita:focus { border-color:#2563eb; }
-    .lukio-v4 .lv4-chip { font-size:13px; padding:7px 13px; min-height:40px; }
-    .lukio-v4 .lv4-chip.sopii:not(.valittu) { border-color:#93c5fd; }
-    .lv4-sopii { color:#f59e0b; font-size:13px; margin-left:2px; }
-    .lukio-v4 .valittu .lv4-sopii { color:#fde68a; }
-    .lv4-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-    .lv4-selite { font-size:12.5px; color:#64748b; margin:2px 0 6px; }
-    .lv4-ryhma { font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#64748b; margin:10px 0 6px; }
-    .lv4-eos { margin-top:10px; }
-    .lukio-v4 .amis-tt-laskuri { border-color:#bfdbfe; color:#1e40af; margin-left:6px; }
-    .lukio-v4 .amis-polku-selitys a { color:#1d4ed8; }
-    .lukio-v4 .amis-polku-kortti { background:linear-gradient(135deg,#60a5fa 0%,#1d4ed8 100%); box-shadow:0 10px 24px rgba(37,99,235,.28); }
-    .lukio-v4 .amis-polku-kortti dt { color:#1d4ed8; }
-    .lukio-v4 .amis-v3-lataa { background:#1e3a8a; }
-    .lukio-v4 .amis-v3-lataa:hover { background:#1d4ed8; }
-    @media (max-width:520px) { .lukio-v4 .lv4-chip { flex:0 1 auto; } }
-
-    /* Lukiopolku Vaihe 4: alan tarina */
-    .lukio-tarina-kortti { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:14px 16px; margin:8px 0 10px; border:1.5px solid #bfdbfe; border-radius:12px; background:#eff6ff; }
-    .lukio-tarina-kortti-nimi { margin:0; font-size:14px; color:#1e3a8a; }
-    .lukio-tarina-kortti .lukio-tarina-nappi { margin:0; }
-    #lukio-tarina-sisalto { margin:6px 0 4px; }
-
-    .lukio-tarina-kortti.sopii { border-color:#2563eb; background:#dbeafe; }
-    .lukio-tarina-sopii { display:inline-block; margin-right:8px; padding:2px 9px; border-radius:999px; background:#1d4ed8; color:#fff; font-size:11.5px; font-weight:700; vertical-align:1px; }
-    .lukio-tarina-tehty { color:#047857; font-weight:800; }

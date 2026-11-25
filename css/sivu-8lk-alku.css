@@ -1022,12 +1022,26 @@
     .amis-erityis-otsikko { font-size: 14px; font-weight: 800; color: #1c1917; margin: 0 0 6px; }
     .amis-erityis-sulje-rivi { margin: 12px 0 0; text-align: right; }
 
-    /* Lukiopolku Vaihe 4: alan tarina */
-    .lukio-tarina-kortti { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:14px 16px; margin:8px 0 10px; border:1.5px solid #bfdbfe; border-radius:12px; background:#eff6ff; }
-    .lukio-tarina-kortti-nimi { margin:0; font-size:14px; color:#1e3a8a; }
-    .lukio-tarina-kortti .lukio-tarina-nappi { margin:0; }
+    /* Lukiopolku Vaihe 4: alan tarina – kuvakortit (kuvat: images/koulutusalat/lukio-kortti-<id>.webp) */
+    #lukio-tarinat { display:grid; grid-template-columns:repeat(auto-fill, minmax(min(270px, 100%), 1fr)); gap:16px; margin:12px 0 14px; }
+    .lukio-tarina-kortti { --vari:#1e3a8a; position:relative; isolation:isolate; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; min-height:250px; padding:14px 16px 16px; border-radius:18px; background:var(--vari); color:#fff; box-shadow:0 10px 26px -12px rgba(15,23,42,.55); transition:transform .25s ease, box-shadow .25s ease; }
+    .lukio-tarina-kortti:hover { transform:translateY(-3px); box-shadow:0 18px 34px -14px rgba(15,23,42,.6); }
+    .lukio-tarina-kuva { position:absolute; inset:0; z-index:-2; background:center / cover no-repeat; transition:transform .6s ease; }
+    .lukio-tarina-kortti:hover .lukio-tarina-kuva { transform:scale(1.06); }
+    .lukio-tarina-kortti::after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 30%, color-mix(in srgb, var(--vari) 55%, transparent) 55%, color-mix(in srgb, var(--vari) 92%, #000) 100%); }
+    .lukio-tarina-ylarivi { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+    .lukio-tarina-ala { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.88); color:#111827; font-size:12px; font-weight:700; backdrop-filter:blur(4px); }
+    .lukio-tarina-sopii { display:inline-block; padding:4px 10px; border-radius:999px; background:#fde047; color:#713f12; font-size:12px; font-weight:800; box-shadow:0 0 0 3px rgba(253,224,71,.35); }
+    .lukio-tarina-tehty { margin-left:auto; display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#10b981; color:#fff; font-weight:900; box-shadow:0 0 0 3px rgba(255,255,255,.7); }
+    .lukio-tarina-kortti-nimi { margin:0 0 4px !important; font-size:21px !important; line-height:1.15; font-weight:800; color:#fff !important; text-shadow:0 2px 10px rgba(0,0,0,.45); }
+    .lukio-tarina-teaser { margin:0 0 12px !important; font-size:13.5px !important; line-height:1.45; color:rgba(255,255,255,.92) !important; text-shadow:0 1px 6px rgba(0,0,0,.4); }
+    .lukio-tarina-alarivi { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    .lukio-tarina-kesto { font-size:12.5px; font-weight:700; color:rgba(255,255,255,.9); }
+    .lukio-tarina-kortti .lukio-tarina-nappi { margin:0; padding:9px 16px; border:0; border-radius:999px; background:#fff; color:var(--vari); font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 6px 16px -6px rgba(0,0,0,.5); transition:transform .15s ease; }
+    .lukio-tarina-kortti .lukio-tarina-nappi:hover { transform:scale(1.05); }
+    .lukio-tarina-kortti .lukio-tarina-nappi:focus-visible { outline:3px solid #fde047; outline-offset:3px; }
+    .lukio-tarina-kortti.sopii { box-shadow:0 0 0 3px #facc15, 0 14px 30px -12px rgba(15,23,42,.6); }
+    .lukio-tarina-kortti.auki { box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--vari); }
     #lukio-tarina-sisalto { margin:6px 0 4px; }
-
-    .lukio-tarina-kortti.sopii { border-color:#2563eb; background:#dbeafe; }
-    .lukio-tarina-sopii { display:inline-block; margin-right:8px; padding:2px 9px; border-radius:999px; background:#1d4ed8; color:#fff; font-size:11.5px; font-weight:700; vertical-align:1px; }
-    .lukio-tarina-tehty { color:#047857; font-weight:800; }
+    @media (max-width:600px) { .lukio-tarina-kortti { min-height:220px; } .lukio-tarina-kortti-nimi { font-size:19px !important; } }
+    @media (prefers-reduced-motion:reduce) { .lukio-tarina-kortti, .lukio-tarina-kuva { transition:none; } .lukio-tarina-kortti:hover, .lukio-tarina-kortti:hover .lukio-tarina-kuva { transform:none; } }

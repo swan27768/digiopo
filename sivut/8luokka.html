@@ -2920,10 +2920,14 @@
     /* ── Lukiopolku Vaihe 4: alan tarinat ──
        Uusi tarina: lisää rivi tähän. k = Vaihe 1:n aineet, joihin tarina sopii. */
     const LUKIO_TARINAT = [
-      { id: 'paivystys', nimi: 'Päivystyksen ilta', ala: 'terveysala', tiedosto: '../pelit/koulutusalat/lukio-paivystys.html', k: ['matikka'] },
-      { id: 'kunta',     nimi: 'Kunnan iso päätös', ala: 'yhteiskunta', tiedosto: '../pelit/koulutusalat/lukio-kunta.html',     k: ['yhteiskunta', 'viestinta'] },
-      { id: 'kaupunki',  nimi: 'Kaupunki uusiksi',  ala: 'tekniikka ja ympäristö', tiedosto: '../pelit/koulutusalat/lukio-kaupunki.html', k: ['matikka'] },
-      { id: 'konferenssi', nimi: 'Kansainvälinen konferenssi', ala: 'kielet ja kansainvälisyys', tiedosto: '../pelit/koulutusalat/lukio-konferenssi.html', k: ['kielet', 'englanti'] }
+      { id: 'paivystys', nimi: 'Päivystyksen ilta', ala: 'terveysala', tiedosto: '../pelit/koulutusalat/lukio-paivystys.html', k: ['matikka'],
+        ikoni: '🚑', vari: '#9f1239', kuvaus: 'Seuraa sairaalan iltavuoroa ensihoitajan, lääkärin ja muiden ammattilaisten rinnalla.' },
+      { id: 'kunta',     nimi: 'Kunnan iso päätös', ala: 'yhteiskunta', tiedosto: '../pelit/koulutusalat/lukio-kunta.html',     k: ['yhteiskunta', 'viestinta'],
+        ikoni: '🏛️', vari: '#4338ca', kuvaus: 'Nuorisotila Paja on vaarassa. Illalla valtuusto äänestää – ja sinä saat puheenvuoron.' },
+      { id: 'kaupunki',  nimi: 'Kaupunki uusiksi',  ala: 'tekniikka ja ympäristö', tiedosto: '../pelit/koulutusalat/lukio-kaupunki.html', k: ['matikka'],
+        ikoni: '🏗️', vari: '#0369a1', kuvaus: 'Vanhan tehtaan alueelle nousee uusi kortteli. Auta tekemään siitä viihtyisä ja energiaviisas.' },
+      { id: 'konferenssi', nimi: 'Kansainvälinen konferenssi', ala: 'kielet ja kansainvälisyys', tiedosto: '../pelit/koulutusalat/lukio-konferenssi.html', k: ['kielet', 'englanti'],
+        ikoni: '🌍', vari: '#047857', kuvaus: 'Nuoria kymmenestä maasta samassa hotellissa. Saatko heidät sopimaan yhteisestä julkilausumasta?' }
     ];
     let lukioTarinaAuki = '';
     function lukioTarinatValmiit() {
@@ -2944,13 +2948,22 @@
       el.innerHTML = lista.map(t => {
         const auki = lukioTarinaAuki === t.id;
         const ala = (tj.lukio_tarina_ala && tj.lukio_tarina_ala[t.id]) || t.ala;
-        return '<div class="lukio-tarina-kortti' + (sopii(t) ? ' sopii' : '') + '" role="listitem">' +
-          '<p class="lukio-tarina-kortti-nimi">' +
-            (sopii(t) ? '<span class="lukio-tarina-sopii">' + esc8(tj.el_sopii || 'Sopii valintoihisi') + '</span>' : '') +
-            '<strong>' + esc8(t.nimi) + '</strong> · ' + esc8(ala) + ' · ' + esc8(tj.lukio_tarina_kesto || 'noin 40 min') +
-            (valmiit.indexOf(t.id) >= 0 ? ' <span class="lukio-tarina-tehty">✓</span>' : '') + '</p>' +
-          '<button type="button" class="kk-nayta-kaikki lukio-tarina-nappi" data-tarina="' + t.id + '" aria-expanded="' + auki + '" aria-controls="lukio-tarina-sisalto">' +
-            esc8(auki ? (tj.sulje_tarina || 'Sulje tarina') : (tj.lukio_tarina_nappi || 'Aloita tarina')) + '</button></div>';
+        const kuvaus = (tj.lukio_tarina_kuvaus && tj.lukio_tarina_kuvaus[t.id]) || t.kuvaus || '';
+        const tehty = valmiit.indexOf(t.id) >= 0;
+        return '<div class="lukio-tarina-kortti' + (sopii(t) ? ' sopii' : '') + (auki ? ' auki' : '') + '" role="listitem" style="--vari:' + t.vari + '">' +
+          '<span class="lukio-tarina-kuva" aria-hidden="true" style="background-image:url(\'../images/koulutusalat/lukio-kortti-' + t.id + '.webp\')"></span>' +
+          '<div class="lukio-tarina-ylarivi">' +
+            '<span class="lukio-tarina-ala"><span aria-hidden="true">' + t.ikoni + '</span> ' + esc8(ala) + '</span>' +
+            (sopii(t) ? '<span class="lukio-tarina-sopii">★ ' + esc8(tj.el_sopii || 'Sopii valintoihisi') + '</span>' : '') +
+            (tehty ? '<span class="lukio-tarina-tehty" title="Tehty">✓<span class="sr-only"> tehty</span></span>' : '') +
+          '</div>' +
+          '<div class="lukio-tarina-ala-osa">' +
+            '<h5 class="lukio-tarina-kortti-nimi">' + esc8(t.nimi) + '</h5>' +
+            (kuvaus ? '<p class="lukio-tarina-teaser">' + esc8(kuvaus) + '</p>' : '') +
+            '<div class="lukio-tarina-alarivi"><span class="lukio-tarina-kesto"><i class="fa-solid fa-clock" aria-hidden="true"></i> ' + esc8(tj.lukio_tarina_kesto || 'noin 40 min') + '</span>' +
+            '<button type="button" class="lukio-tarina-nappi" data-tarina="' + t.id + '" aria-expanded="' + auki + '" aria-controls="lukio-tarina-sisalto">' +
+              esc8(auki ? (tj.sulje_tarina || 'Sulje tarina') : (tj.lukio_tarina_nappi || 'Aloita tarina')) + (auki ? '' : ' <span aria-hidden="true">→</span>') + '</button></div>' +
+          '</div></div>';
       }).join('');
       el.querySelectorAll('.lukio-tarina-nappi').forEach(b => b.addEventListener('click', () => avaaLukioTarina(b.dataset.tarina)));
     }
