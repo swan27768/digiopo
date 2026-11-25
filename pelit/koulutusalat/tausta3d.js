@@ -3433,6 +3433,251 @@ const MAAILMAT = {
     return { kohtaukset, oletus: "toimisto", asetaTila, paivita };
   },
 
+  /* ------------------------------------------------------------------------
+     Lukiopolku – "Päivystyksen ilta": sairaalan kerros leikkauskuvana.
+     Huoneet vasemmalta oikealle: ambulanssihalli (x -21), laboratorio (-9),
+     röntgen (0), tutkimushuone (9), lääkehuone (18), osasto (27).
+     Tila { ilta: 0…1 } hämärtää ikkunat ja sytyttää valot vuoron edetessä.
+     ------------------------------------------------------------------------ */
+  sairaala(scene) {
+    const V = { tausta: 0xdfeeee, lattia: 0xc9d6d3, seina: 0xf3f7f6, mint: 0x7fc8b8, iho: 0xe5bc98, iho2: 0xa8754f, hoito: 0x5b8fd0, valk: 0xf7f9fa };
+    scene.background = new THREE.Color(V.tausta);
+    scene.fog = new THREE.Fog(V.tausta, 40, 110);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0xa9bdb8, 1.35); scene.add(hemi);
+    const aur = new THREE.DirectionalLight(0xffe2c0, 1.1); aur.position.set(-18, 22, 16); scene.add(aur);
+
+    const M = (c, o) => mat(c, Object.assign({ metalness: 0, roughness: 0.8 }, o || {}));
+    function kuvaTx(piirra, w, h) { const c = document.createElement("canvas"); c.width = w || 256; c.height = h || 160; const x = c.getContext("2d"); piirra(x, c.width, c.height); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+    function taso(w, h, tx) { return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tx })); }
+
+    /* Hahmot: haalari/takki värillä, valkoinen takki = lääkäri, bioanalyytikko, farmaseutti */
+    const hahmot = [];
+    function hahmo(vari, x, z, ry, o) {
+      o = o || {}; const g = new THREE.Group();
+      const kr = sylinteri(0.25, 0.31, 0.95, M(vari), 12); kr.position.y = 1.05; g.add(kr);
+      if (o.takki) { const t = sylinteri(0.29, 0.38, 1.05, M(V.valk), 12); t.position.y = 0.98; g.add(t); }
+      const j = sylinteri(0.19, 0.17, 0.6, M(o.housut || vari), 8); j.position.y = 0.3; g.add(j);
+      const p = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 10), M(o.iho || V.iho)); p.position.y = 1.74; g.add(p);
+      const hi = new THREE.Mesh(new THREE.SphereGeometry(0.21, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(o.hius || 0x4a3426)); hi.position.y = 1.78; g.add(hi);
+      if (o.heijastin) { const r = laatikko(0.64, 0.07, 0.1, hehku(0xd8ff5a, 0.7)); r.position.set(0, 1.2, 0.27); g.add(r); }
+      g.userData.paa = p; g.userData.hi = hi; g.userData.v = Math.random() * 6;
+      g.position.set(x, 0, z); g.rotation.y = ry || 0; (o.ryhma || scene).add(g); hahmot.push(g); return g;
+    }
+    /* Makaava potilas peiton alla */
+    function makaava(x, y, z, ry, peitto, o) {
+      o = o || {}; const g = new THREE.Group();
+      const kr = laatikko(0.62, 0.26, 1.55, M(peitto)); kr.position.set(0, 0.13, 0.25); g.add(kr);
+      const ty = laatikko(0.55, 0.12, 0.38, M(0xffffff)); ty.position.set(0, 0.08, -0.72); g.add(ty);
+      const p = new THREE.Mesh(new THREE.SphereGeometry(0.19, 14, 10), M(o.iho || V.iho)); p.position.set(0, 0.28, -0.66); g.add(p);
+      const hi = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(o.hius || 0xd9d9d9)); hi.rotation.x = -Math.PI / 2; hi.position.set(0, 0.28, -0.7); g.add(hi);
+      g.position.set(x, y, z); g.rotation.y = ry || 0; scene.add(g); return g;
+    }
+    function sanky(x, z, ry, korkeus) {
+      const g = new THREE.Group(); const h = korkeus || 0.75;
+      const runko = laatikko(1.0, 0.16, 2.2, M(0xd7dde0, { metalness: 0.4, roughness: 0.4 })); runko.position.y = h - 0.1; g.add(runko);
+      const patja = laatikko(0.92, 0.14, 2.05, M(0xeef3f5)); patja.position.y = h + 0.05; g.add(patja);
+      const paaty = laatikko(1.02, 0.55, 0.06, M(0x9fb5bd, { metalness: 0.3 })); paaty.position.set(0, h + 0.2, -1.1); g.add(paaty);
+      [[-0.42, -0.95], [0.42, -0.95], [-0.42, 0.95], [0.42, 0.95]].forEach(([a, b]) => { const j = sylinteri(0.035, 0.035, h - 0.1, M(0x8a979c, { metalness: 0.6 }), 6); j.position.set(a, (h - 0.1) / 2, b); g.add(j); });
+      g.position.set(x, 0, z); g.rotation.y = ry || 0; scene.add(g); return g;
+    }
+    function poyta(x, z, w, d, vari, ry) {
+      const g = new THREE.Group();
+      const p = laatikko(w, 0.07, d, M(vari || 0xeceff0)); p.position.y = 0.92; g.add(p);
+      const k = laatikko(w - 0.06, 0.86, d - 0.08, M(0xd5dcde)); k.position.y = 0.45; g.add(k);
+      g.position.set(x, 0, z); g.rotation.y = ry || 0; scene.add(g); return g;
+    }
+
+    /* Kerroksen pohja ja seinät */
+    const lattia = laatikko(70, 0.2, 13, M(V.lattia)); lattia.position.set(3, -0.1, -0.5); scene.add(lattia);
+    const raita = laatikko(70, 0.01, 0.5, M(V.mint)); raita.position.set(3, 0.005, 3.6); scene.add(raita);
+    const piha = new THREE.Mesh(new THREE.PlaneGeometry(260, 200), M(0x9fb8a2, { roughness: 1 })); piha.rotation.x = -Math.PI / 2; piha.position.y = -0.25; scene.add(piha);
+    const tie = new THREE.Mesh(new THREE.PlaneGeometry(9, 80), M(0x5f6a70)); tie.rotation.x = -Math.PI / 2; tie.position.set(-30, -0.22, 20); scene.add(tie);
+    const seinaM = M(V.seina, { roughness: 1 });
+    const takaseina = laatikko(58, 3.4, 0.3, seinaM); takaseina.position.set(8, 1.7, -6); scene.add(takaseina);
+    const sokkeli = laatikko(58, 0.25, 0.05, M(V.mint)); sokkeli.position.set(8, 0.13, -5.83); scene.add(sokkeli);
+    [-16, -4.5, 4.5, 13.5, 22.5, 31.5].forEach((x) => { const s = laatikko(0.25, 3.4, 8.5, seinaM); s.position.set(x, 1.7, -1.75); scene.add(s);
+      const r = laatikko(0.27, 0.25, 8.5, M(V.mint)); r.position.set(x, 0.13, -1.75); scene.add(r); });
+    /* Ikkunat takaseinässä: iltataivas */
+    const taivasTx = kuvaTx((x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#ffffff"); g.addColorStop(1, "#d0d0d0"); x.fillStyle = g; x.fillRect(0, 0, w, h);
+      x.fillStyle = "rgba(60,70,80,.55)"; for (let i = 0; i < 9; i++) { const bw = 18 + (i * 37) % 30, bh = 30 + (i * 53) % 70; x.fillRect(i * 30, h - bh, bw, bh); } }, 256, 160);
+    const ikkunaMat = new THREE.MeshBasicMaterial({ map: taivasTx, color: 0xffd6a8 });
+    const ikkunat = [];
+    [-9, 0, 9, 18, 27].forEach((x) => { const k = laatikko(2.6, 1.5, 0.08, M(0xb8c4c8, { metalness: 0.5 })); k.position.set(x + 1.4, 2.1, -5.82); scene.add(k);
+      const ik = taso(2.4, 1.3, taivasTx); ik.material = ikkunaMat; ik.position.set(x + 1.4, 2.1, -5.77); scene.add(ik); ikkunat.push(ik); });
+    /* Kattovalot (riippuvat paneelit) */
+    const valoMat = hehku(0xfff6e6, 0.6); const kattoValot = [];
+    [-21, -9, 0, 9, 18, 27].forEach((x) => { const v = laatikko(1.8, 0.06, 0.5, valoMat); v.position.set(x, 3.35, -1.5); scene.add(v);
+      const l = new THREE.PointLight(0xfff1dc, 0, 9, 1.5); l.position.set(x, 3.0, -1.2); scene.add(l); kattoValot.push(l); });
+    /* Huoneiden nimikyltit seinässä */
+    function kyltti(teksti, x, vari) { const k = taso(2.6, 0.42, tekstiTekstuuri([teksti], "#ffffff", vari || "#2f7f73", 900, 145)); k.position.set(x, 3.0, -5.82); scene.add(k); }
+    kyltti("LABORATORIO", -9 - 1.6); kyltti("RÖNTGEN", -1.6, "#3b6fb0"); kyltti("TUTKIMUSHUONE 3", 9 - 1.6); kyltti("LÄÄKEHUONE", 18 - 1.6, "#7a5aa6"); kyltti("OSASTO 5B", 27 - 1.6);
+
+    /* ---- 1. Ambulanssihalli ---- */
+    const halli = laatikko(11, 4.6, 0.3, M(0xe5ecec)); halli.position.set(-21.5, 2.3, -6); scene.add(halli);
+    const ovi = laatikko(4.4, 3.4, 0.1, M(0x9eb7bf, { metalness: 0.4, transparent: true, opacity: 0.55 })); ovi.position.set(-21, 1.7, -5.8); scene.add(ovi);
+    const pkyltti = taso(4.6, 0.8, tekstiTekstuuri(["PÄIVYSTYS"], "#ffffff", "#c8102e", 1100, 190)); pkyltti.position.set(-21, 4.0, -5.82); scene.add(pkyltti);
+    const katos = laatikko(12, 0.25, 9, M(0xcfd8da, { metalness: 0.3 })); katos.position.set(-21.5, 4.7, -1.5); scene.add(katos);
+    [[-27, 2.8], [-16.2, 2.8]].forEach(([x, z]) => { const t = sylinteri(0.14, 0.14, 4.7, M(0xb0bcc0, { metalness: 0.5 }), 10); t.position.set(x, 2.35, z); scene.add(t); });
+    const amb = new THREE.Group();
+    const ak = laatikko(2.3, 2.2, 4.0, M(0xf4f6f6)); ak.position.set(0, 1.45, 0.3); amb.add(ak);
+    const ah = laatikko(2.2, 1.4, 1.5, M(0xf4f6f6)); ah.position.set(0, 1.05, 3.0); amb.add(ah);
+    const tuuli = laatikko(2.0, 0.6, 0.05, M(0x22343c, { metalness: 0.6, roughness: 0.2 })); tuuli.position.set(0, 1.5, 3.76); tuuli.rotation.x = -0.35; amb.add(tuuli);
+    [-1.16, 1.16].forEach((x) => { const r = laatikko(0.03, 0.35, 5.4, M(0x1e9e5a)); r.position.set(x, 1.1, 0.9); amb.add(r); const r2 = laatikko(0.03, 0.18, 5.4, M(0xffd23f)); r2.position.set(x, 1.38, 0.9); amb.add(r2); });
+    [[-1, -0.9], [1, -0.9], [-1, 2.8], [1, 2.8]].forEach(([x, z]) => { const r = sylinteri(0.42, 0.42, 0.3, M(0x1b1f22), 16); r.rotation.z = Math.PI / 2; r.position.set(x, 0.42, z); amb.add(r); });
+    const vilkut = [];
+    [-0.7, 0.7].forEach((x, i) => { const v = laatikko(0.35, 0.16, 0.25, hehku(0x2d7dff, 1.6)); v.position.set(x, 2.62, 1.8 - 0 * i); amb.add(v); vilkut.push(v); });
+    const tO = laatikko(2.2, 2.0, 0.05, M(0xf4f6f6)); tO.position.set(0, 1.45, -1.72); amb.add(tO);
+    amb.position.set(-25.5, 0, 3.4); scene.add(amb);
+    const paarit = new THREE.Group();
+    const pr = laatikko(0.7, 0.1, 2.0, M(0xffb703)); pr.position.y = 0.85; paarit.add(pr);
+    const pj = laatikko(0.5, 0.8, 1.6, M(0x8a979c, { metalness: 0.5 })); pj.position.y = 0.4; pj.scale.set(1, 1, 1); paarit.add(pj);
+    paarit.position.set(-20.4, 0, 0.6); paarit.rotation.y = 0.25; scene.add(paarit);
+    makaava(-20.4, 0.9, 0.6, 0.25, 0xe07a5f);
+    const samir = hahmo(0x2f6b3a, -19.4, 1.6, -2.2, { heijastin: true, iho: V.iho2, hius: 0x1d1d1d });
+    hahmo(0x2f6b3a, -21.6, 2.1, 2.6, { heijastin: true, hius: 0x6b4423 });
+    hahmo(V.hoito, -18.4, -1.6, 2.7, { hius: 0x8a5a2b });
+    hahmo(V.hoito, -17.4, -0.6, 2.3, { hius: 0x2b2b2b });
+    const ambValo = new THREE.PointLight(0x2d7dff, 0, 10, 1.6); ambValo.position.set(-23, 3, 2.5); scene.add(ambValo);
+
+    /* ---- 2. Laboratorio ---- */
+    poyta(-9.8, -4.9, 6.5, 1.1);
+    const analysaattori = laatikko(1.6, 1.2, 0.9, M(0xe9eef0, { metalness: 0.2 })); analysaattori.position.set(-11.6, 1.56, -4.9); scene.add(analysaattori);
+    const an = taso(0.7, 0.4, kayraTekstuuri("#5ce1a8", 1)); an.position.set(-11.9, 1.75, -4.44); scene.add(an);
+    const anValo = laatikko(0.1, 0.1, 0.02, hehku(0x51cf66, 1.6)); anValo.position.set(-11.0, 1.9, -4.44); scene.add(anValo);
+    const linko = new THREE.Group(); const lk = sylinteri(0.35, 0.38, 0.35, M(0xdfe5e7, { metalness: 0.3 }), 20); linko.add(lk);
+    const roottori = new THREE.Group(); for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const p = sylinteri(0.035, 0.035, 0.16, M([0xc92a2a, 0x7048e8, 0xf08c00][i % 3]), 6); p.position.set(Math.cos(a) * 0.2, 0.22, Math.sin(a) * 0.2); roottori.add(p); }
+    linko.add(roottori); linko.position.set(-9.7, 1.13, -4.8); scene.add(linko);
+    /* Putkiteline: kaksi "Virtasta" – yksi korkki punainen, toinen violetti */
+    const teline = laatikko(0.9, 0.08, 0.3, M(0xffffff)); teline.position.set(-8.4, 1.0, -4.5); scene.add(teline);
+    const putket = [];
+    for (let i = 0; i < 7; i++) { const p = sylinteri(0.035, 0.035, 0.32, M(0xeef6ff, { transparent: true, opacity: 0.85 }), 8); p.position.set(-8.75 + i * 0.12, 1.15, -4.5); scene.add(p);
+      const k = sylinteri(0.04, 0.04, 0.06, M([0xc92a2a, 0x7048e8, 0x2b8a3e, 0xf08c00][i % 4]), 8); k.position.set(-8.75 + i * 0.12, 1.33, -4.5); scene.add(k); putket.push(k); }
+    const mikro = new THREE.Group(); const mj = laatikko(0.3, 0.06, 0.35, M(0x2b2d42)); mikro.add(mj);
+    const mv = laatikko(0.06, 0.5, 0.06, M(0x2b2d42)); mv.position.set(0, 0.25, -0.12); mikro.add(mv);
+    const mo = sylinteri(0.05, 0.05, 0.3, M(0xdfe5e7, { metalness: 0.5 }), 10); mo.rotation.x = 0.5; mo.position.set(0, 0.45, -0.02); mikro.add(mo);
+    mikro.position.set(-7.3, 0.98, -4.7); scene.add(mikro);
+    poyta(-12.6, -0.8, 1.1, 2.6, 0xeceff0, 0);
+    const naytto = laatikko(0.06, 0.5, 0.8, M(0x1a1a1a)); naytto.position.set(-12.9, 1.4, -0.8); scene.add(naytto);
+    const nr = taso(0.74, 0.44, tekstiTekstuuri(["VIRTANEN E. ✓", "VIRTANEN L. ?"], "#d3f9d8", "#12352c", 512, 300)); nr.rotation.y = Math.PI / 2; nr.position.set(-12.86, 1.4, -0.8); scene.add(nr);
+    const mei = hahmo(0x4f8fbf, -9.0, -3.7, Math.PI, { takki: true, hius: 0x111111 });
+
+    /* ---- 3. Röntgen ---- */
+    const rPoyta = new THREE.Group(); const rp = laatikko(0.9, 0.12, 2.4, M(0xe9eef0)); rp.position.y = 0.85; rPoyta.add(rp);
+    const rj = laatikko(0.5, 0.8, 1.2, M(0xbfc9cd, { metalness: 0.3 })); rj.position.y = 0.4; rPoyta.add(rj);
+    rPoyta.position.set(0.2, 0, -2.4); rPoyta.rotation.y = Math.PI / 2; scene.add(rPoyta);
+    makaava(0.2, 0.92, -2.4, Math.PI / 2, 0x9ec5e8);
+    const tyyny = laatikko(0.5, 0.18, 0.4, M(0xfff1c1)); tyyny.position.set(0.9, 1.05, -2.25); scene.add(tyyny);
+    const kisko2 = laatikko(4.2, 0.12, 0.2, M(0xbfc9cd, { metalness: 0.5 })); kisko2.position.set(0.2, 3.25, -2.4); scene.add(kisko2);
+    const putki = new THREE.Group(); const pv = sylinteri(0.06, 0.06, 1.2, M(0xbfc9cd, { metalness: 0.5 }), 8); pv.position.y = -0.6; putki.add(pv);
+    const pk = laatikko(0.55, 0.4, 0.55, M(0xf4f6f6)); pk.position.y = -1.35; putki.add(pk);
+    const kollimaattori = laatikko(0.32, 0.12, 0.32, hehku(0xfff3a3, 0.4)); kollimaattori.position.y = -1.6; putki.add(kollimaattori);
+    putki.position.set(0.5, 3.2, -2.4); scene.add(putki);
+    const valokeila = new THREE.Mesh(new THREE.ConeGeometry(0.45, 0.6, 4, 1, true), new THREE.MeshBasicMaterial({ color: 0xfff3a3, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false }));
+    valokeila.position.set(0.5, 1.32, -2.4); valokeila.rotation.y = Math.PI / 4; scene.add(valokeila);
+    const katselu = laatikko(1.7, 1.2, 0.06, M(0x2b2d42)); katselu.position.set(-2.4, 1.9, -5.8); scene.add(katselu);
+    const lonkka = taso(1.55, 1.05, kuvaTx((x, w, h) => { x.fillStyle = "#0b1220"; x.fillRect(0, 0, w, h); x.fillStyle = "rgba(220,235,255,.85)";
+      x.beginPath(); x.ellipse(w * 0.5, h * 0.32, 70, 34, 0, 0, 6.3); x.fill();
+      [[0.3, 1], [0.7, -1]].forEach(([cx, s]) => { x.beginPath(); x.arc(w * cx, h * 0.55, 20, 0, 6.3); x.fill(); x.save(); x.translate(w * cx, h * 0.55); x.rotate(s * 0.25); x.fillRect(-11, 10, 22, 70); x.restore(); });
+      x.fillStyle = "#0b1220"; x.beginPath(); x.ellipse(w * 0.5, h * 0.36, 26, 14, 0, 0, 6.3); x.fill(); }, 256, 176));
+    lonkka.position.set(-2.4, 1.9, -5.76); scene.add(lonkka);
+    const lyijy = laatikko(1.1, 1.9, 0.08, M(0x4c6a7c)); lyijy.position.set(3.7, 0.95, -4.2); lyijy.rotation.y = -0.4; scene.add(lyijy);
+    const joel = hahmo(0x3b6fb0, 1.6, -1.0, -2.6, { hius: 0xa0522d });
+    const tytar = hahmo(0x9c6644, 3.6, 1.6, -2.3, { hius: 0xb08d57 });
+
+    /* ---- 4. Tutkimushuone ---- */
+    sanky(8.0, -3.4, 0, 0.78);
+    const leo = hahmo(0x2f9e8f, 8.0, -2.4, 0.2, { hius: 0x3d2b1f }); leo.position.y = 0.3; leo.scale.setScalar(0.92);
+    const isa = hahmo(0x6c757d, 6.0, -1.2, 1.2, { hius: 0x3d2b1f });
+    const anna = hahmo(0x9b5de5, 10.2, -1.6, -2.0, { takki: true, hius: 0xc68642 });
+    const verhoKisko = laatikko(0.05, 0.05, 4, M(0xbfc9cd)); verhoKisko.position.set(10.8, 3.1, -3.0); scene.add(verhoKisko);
+    const verho = laatikko(0.04, 2.5, 1.6, M(0x7fc8b8, { side: THREE.DoubleSide })); verho.position.set(10.8, 1.8, -4.3); scene.add(verho);
+    const monitori = laatikko(0.7, 0.5, 0.08, M(0x1a1a1a)); monitori.position.set(6.6, 2.0, -5.7); scene.add(monitori);
+    const ekgTx = kayraTekstuuri("#51cf66", 3); ekgTx.wrapS = THREE.RepeatWrapping;
+    const ekg = taso(0.64, 0.44, ekgTx); ekg.position.set(6.6, 2.0, -5.65); scene.add(ekg);
+    const tuoli = laatikko(0.55, 0.5, 0.55, M(0x3f7f86)); tuoli.position.set(5.8, 0.25, -1.4); scene.add(tuoli);
+
+    /* ---- 5. Lääkehuone ---- */
+    const hyllyt = new THREE.Group();
+    for (let r = 0; r < 4; r++) { const h = laatikko(4.6, 0.05, 0.5, M(0xf0f0f0)); h.position.set(0, 0.9 + r * 0.55, 0); hyllyt.add(h);
+      for (let i = 0; i < 14; i++) { const v = [0xff6b6b, 0x4dabf7, 0xffd43b, 0x69db7c, 0xffffff, 0xb197fc][(i * 7 + r * 3) % 6]; const b = laatikko(0.22 + (i % 3) * 0.05, 0.3, 0.3, M(v)); b.position.set(-2.1 + i * 0.31, 1.08 + r * 0.55, 0); hyllyt.add(b); } }
+    hyllyt.position.set(15.9, -0.2, -5.5); scene.add(hyllyt);
+    poyta(18, -1.6, 3.4, 1.0);
+    const lnaytto = laatikko(0.9, 0.55, 0.05, M(0x1a1a1a)); lnaytto.position.set(17.2, 1.4, -1.85); scene.add(lnaytto);
+    const lista = taso(0.84, 0.5, kuvaTx((x, w, h) => { x.fillStyle = "#f8f9fa"; x.fillRect(0, 0, w, h); x.fillStyle = "#212529"; x.font = "bold 20px sans-serif"; x.fillText("Elli K. · lääkelista", 12, 28);
+      x.font = "17px sans-serif"; ["Verenohennus", "Verenpaine", "D-vitamiini", "Kipulääke ?"].forEach((t, i) => { x.fillStyle = i === 3 ? "#c92a2a" : "#495057"; x.fillText("• " + t, 16, 62 + i * 26); });
+      x.fillStyle = "#ffe066"; x.fillRect(w - 46, 112, 30, 30); x.fillStyle = "#212529"; x.font = "bold 24px sans-serif"; x.fillText("!", w - 35, 136); }, 256, 160));
+    lista.position.set(17.2, 1.4, -1.82); scene.add(lista);
+    const dosetti = laatikko(0.5, 0.06, 0.25, M(0x74c0fc)); dosetti.position.set(18.6, 0.99, -1.4); scene.add(dosetti);
+    const pillerit = []; for (let i = 0; i < 4; i++) { const p = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), M([0xffffff, 0xffa94d][i % 2])); p.position.set(18.42 + i * 0.12, 1.04, -1.4); scene.add(p); pillerit.push(p); }
+    const oskari = hahmo(0x7a5aa6, 17.6, -0.6, Math.PI, { takki: true, hius: 0xe0c070 });
+
+    /* ---- 6. Osasto ---- */
+    sanky(26.2, -3.6, 0, 0.72);
+    const elli = makaava(26.2, 0.8, -3.6, 0, 0xf4a6b5);
+    const istuva = new THREE.Group(); const ik2 = sylinteri(0.25, 0.3, 0.8, M(0xf4a6b5), 12); ik2.position.y = 0.4; istuva.add(ik2);
+    const ip = new THREE.Mesh(new THREE.SphereGeometry(0.19, 14, 10), M(V.iho)); ip.position.y = 1.0; istuva.add(ip);
+    const ih = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(0xd9d9d9)); ih.position.y = 1.04; istuva.add(ih);
+    istuva.position.set(26.75, 0.82, -3.2); istuva.rotation.y = Math.PI / 2; istuva.visible = false; scene.add(istuva);
+    const rollaattori = new THREE.Group();
+    [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]].forEach(([a, b]) => { const j = sylinteri(0.02, 0.02, 0.85, M(0xc92a2a, { metalness: 0.4 }), 6); j.position.set(a, 0.45, b); rollaattori.add(j);
+      const r = sylinteri(0.08, 0.08, 0.04, M(0x222222), 10); r.rotation.z = Math.PI / 2; r.position.set(a, 0.08, b); rollaattori.add(r); });
+    const ko = laatikko(0.55, 0.04, 0.4, M(0x333333)); ko.position.y = 0.55; rollaattori.add(ko);
+    rollaattori.position.set(27.6, 0, -2.0); scene.add(rollaattori);
+    const tippa = new THREE.Group(); const tt = sylinteri(0.02, 0.02, 2.0, M(0xbfc9cd, { metalness: 0.6 }), 6); tt.position.y = 1.0; tippa.add(tt);
+    const pussi = laatikko(0.22, 0.32, 0.06, M(0xe7f5ff, { transparent: true, opacity: 0.8 })); pussi.position.set(0.12, 1.85, 0); tippa.add(pussi);
+    tippa.position.set(25.1, 0, -4.4); scene.add(tippa);
+    const yolamppu = new THREE.PointLight(0xffc078, 0, 6, 1.6); yolamppu.position.set(25.2, 1.4, -4.8); scene.add(yolamppu);
+    const ylv = laatikko(0.3, 0.2, 0.15, hehku(0xffc078, 0.2)); ylv.position.set(25.2, 1.4, -5.75); scene.add(ylv);
+    const iida = hahmo(0x2a9d8f, 27.8, -3.1, -1.4, { hius: 0x8a5a2b, housut: 0x1d3557 });
+    hahmo(V.hoito, 30.6, -2.2, -1.2, { hius: 0x111111 });
+
+    /* Käytävällä liikkuvat hoitajat */
+    const kulkijat = [hahmo(V.hoito, -6, 2.6, Math.PI / 2, { hius: 0x6b4423 }), hahmo(0x2a9d8f, 14, 3.0, -Math.PI / 2, { hius: 0x2b2b2b })];
+    kulkijat.forEach((k, i) => { k.userData.x0 = k.position.x; k.userData.s = i ? -1 : 1; });
+
+    const tila = { ilta: 0, vilkut: false, nousu: false };
+    const paivaTausta = new THREE.Color(V.tausta), iltaTausta = new THREE.Color(0x26324a);
+    const ikkPaiva = new THREE.Color(0xffd6a8), ikkIlta = new THREE.Color(0x3a4a78);
+    function asetaTila(t) {
+      tila.ilta = t.ilta || 0; tila.vilkut = !!t.vilkut; tila.nousu = !!t.nousu;
+      const i = tila.ilta;
+      scene.background.copy(paivaTausta).lerp(iltaTausta, i * 0.75); scene.fog.color.copy(scene.background);
+      ikkunaMat.color.copy(ikkPaiva).lerp(ikkIlta, i);
+      hemi.intensity = 1.35 - i * 0.45; aur.intensity = 1.1 - i * 0.8; aur.color.set(i > 0.5 ? 0xb8c4ff : 0xffe2c0);
+      valoMat.emissiveIntensity = 0.6 + i * 1.2; kattoValot.forEach((l) => { l.intensity = i * 6; });
+      yolamppu.intensity = i > 0.7 ? 5 : 0; ylv.material.emissiveIntensity = i > 0.7 ? 1.6 : 0.2;
+      elli.visible = !tila.nousu; istuva.visible = tila.nousu; iida.position.x = tila.nousu ? 27.4 : 27.8;
+      ambValo.intensity = 0;
+    }
+    function paivita(dt, t) {
+      const vilk = tila.vilkut && Math.floor(t * 4) % 2 === 0;
+      vilkut.forEach((v, i) => { v.material.emissiveIntensity = tila.vilkut ? ((Math.floor(t * 4) + i) % 2 ? 2.2 : 0.2) : 0.3; });
+      ambValo.intensity = vilk ? 6 : 0;
+      roottori.rotation.y = t * 9;
+      anValo.material.emissiveIntensity = Math.floor(t * 1.5) % 2 ? 1.8 : 0.3;
+      putket[1].position.y = 1.33 + Math.max(0, Math.sin(t * 1.4)) * 0.05;
+      putki.position.x = 0.5 + Math.sin(t * 0.5) * 0.08; valokeila.position.x = putki.position.x; kollimaattori.material.emissiveIntensity = 0.3 + (Math.sin(t * 2) + 1) * 0.3;
+      ekgTx.offset.x = (t * 0.15) % 1;
+      pillerit.forEach((p, i) => { p.position.y = 1.04 + Math.max(0, Math.sin(t * 2 + i)) * 0.03; });
+      pussi.position.y = 1.85 + Math.sin(t * 0.8) * 0.01;
+      kulkijat.forEach((k, i) => { const s = Math.sin(t * 0.25 + i * 2); k.position.x = k.userData.x0 + s * 4; k.rotation.y = Math.cos(t * 0.25 + i * 2) > 0 ? Math.PI / 2 : -Math.PI / 2; });
+      hahmot.forEach((h) => { h.userData.paa.position.y = 1.74 + Math.sin(t * 1.5 + h.userData.v) * 0.015; h.userData.hi.position.y = h.userData.paa.position.y + 0.04; });
+    }
+    const kohtaukset = {
+      kansi:       { kamera: [-9, 11, 21],     kohde: [-1, 0.5, -2],     tila: { ilta: 0, vilkut: true } },
+      ilta:        { kamera: [-11, 4.5, 15],   kohde: [-21, 1.5, -2],    tila: { ilta: 0 } },
+      ambulanssi:  { kamera: [-17.2, 2.8, 8.5], kohde: [-21.5, 1.2, -1], tila: { ilta: 0.1, vilkut: true } },
+      laboratorio: { kamera: [-7.2, 2.5, 3.2], kohde: [-10.2, 1.1, -4],  tila: { ilta: 0.3 } },
+      rontgen:     { kamera: [2.6, 2.8, 3.6],  kohde: [-0.4, 1.3, -3],  tila: { ilta: 0.45 } },
+      tutkimus:    { kamera: [10.8, 2.6, 3.4], kohde: [7.6, 1.2, -3],   tila: { ilta: 0.6 } },
+      laakehuone:  { kamera: [20.2, 2.5, 2.8], kohde: [17.2, 1.4, -3.6], tila: { ilta: 0.75 } },
+      osasto:      { kamera: [29.4, 2.5, 3.2], kohde: [26, 1.0, -3.4],  tila: { ilta: 0.9 } },
+      osastoNousu: { kamera: [29.4, 2.5, 3.2], kohde: [26, 1.0, -3.4],  tila: { ilta: 0.9, nousu: true } },
+      loppu:       { kamera: [3, 13, 24],      kohde: [3, 0.5, -2],     tila: { ilta: 1, nousu: true } }
+    };
+    return { kohtaukset, oletus: "ilta", asetaTila, paivita };
+  },
+
   hoitola(scene) {
     const V = { seina: 0xf3e3df, salvia: 0xb7c9b0, roosa: 0xe9b7b0, kerma: 0xfaf4ee, puu: 0xc49a74, kulta: 0xd4b06a };
     scene.background = new THREE.Color(0xf6ebe6);
