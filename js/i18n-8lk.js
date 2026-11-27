@@ -694,12 +694,12 @@
 
       /* Suodatinnapit */
       var lFilMap = {
-        kielet: tj.lukio_fil_kielet, matikka: tj.lukio_fil_matikka,
+        kielet: tj.lukio_fil_kielet, matikka: tj.lukio_fil_matikka, terveys: tj.lukio_fil_terveys,
         yhteiskunta: tj.lukio_fil_yhteiskunta, taide: tj.lukio_fil_taide,
         liikunta: tj.lukio_fil_liikunta, viestinta: tj.lukio_fil_viestinta,
         englanti: tj.lukio_fil_englanti
       };
-      lukioPanel.querySelectorAll('.tj-kiinnostukset .tj-nappi[data-ala]').forEach(function(btn) {
+      lukioPanel.querySelectorAll('.tj-nappi[data-ala]').forEach(function(btn) {
         var ala = btn.dataset.ala;
         if (lFilMap[ala]) btn.textContent = lFilMap[ala];
       });

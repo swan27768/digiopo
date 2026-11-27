@@ -884,17 +884,23 @@
               <div class="tj-kiinnostukset" role="group" aria-label="Valitse kiinnostavat ainealueet">
                 <button type="button" class="tj-nappi" data-ala="kielet"      onclick="toggleLukioFil(this)" aria-pressed="false">Kielet</button>
                 <button type="button" class="tj-nappi" data-ala="matikka"     onclick="toggleLukioFil(this)" aria-pressed="false">Matematiikka ja luonnontieteet</button>
+                <button type="button" class="tj-nappi" data-ala="terveys"     onclick="toggleLukioFil(this)" aria-pressed="false">Terveys ja ihminen</button>
                 <button type="button" class="tj-nappi" data-ala="yhteiskunta" onclick="toggleLukioFil(this)" aria-pressed="false">Yhteiskunta ja historia</button>
                 <button type="button" class="tj-nappi" data-ala="taide"       onclick="toggleLukioFil(this)" aria-pressed="false">Taide ja musiikki</button>
                 <button type="button" class="tj-nappi" data-ala="liikunta"    onclick="toggleLukioFil(this)" aria-pressed="false">Liikunta</button>
                 <button type="button" class="tj-nappi" data-ala="viestinta"   onclick="toggleLukioFil(this)" aria-pressed="false">Viestintä ja media</button>
-                <button type="button" class="tj-nappi" data-ala="englanti"    onclick="toggleLukioFil(this)" aria-pressed="false">Kansainvälinen IB-tutkinto</button>
                 <button type="button" onclick="nollaaLukioFil()" aria-label="Nollaa suodattimet" style="padding:5px 14px;border-radius:20px;border:1.5px solid #3b82f6;background:#dbeafe;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:#1d4ed8;">Nollaa <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
               </div>
 
+              <!-- IB on oma lisävalintansa: se ei rajaa painotuksia eikä korkeakouluja pois, vaan korostaa IB-lukion ja kansainväliset vaihtoehdot -->
+              <div class="lukio-ib-valinta">
+                <button type="button" class="tj-nappi lukio-ib-nappi" data-ala="englanti" onclick="toggleLukioFil(this)" aria-pressed="false" aria-describedby="lukio-ib-vihje">Haluaisin opiskella englanniksi – myös ulkomailla (IB-tutkinto)</button>
+                <span class="lukio-ib-vihje" id="lukio-ib-vihje">Tämä valinta ei rajaa muita vaihtoehtoja pois.</span>
+              </div>
               <p class="tj-tulos-otsikko" id="lukio-tulos-otsikko" aria-live="polite">Kaikki painotukset</p>
               <p class="tj-ei-tuloksia" id="lukio-ei-tuloksia" role="status">Ei tuloksia.</p>
               <div class="linja-grid" id="lukio-linjat" role="list"></div>
+              <p class="erikoislukio-huomio" id="lukio-vain-yleinen" role="status" hidden></p>
               <p style="font-size:11px;color:#6b7280;margin:6px 0 0;">Lähde: <a class="is8-001" href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener">opintopolku.fi/lukiokoulutus</a></p>
 
               <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 2">Vaihe 2</span>Erikoislukiot</h4>
@@ -2448,8 +2454,8 @@
     ];
 
     const TJ_LINJAT = [
-      { id:"yleinen", nimi:"Ei erityistä painotusta", k:["kielet","matikka","yhteiskunta","taide","liikunta","viestinta","englanti"], ikoni:"📖", kuvaus:"Valitset opintojaksot vapaasti oman kiinnostuksesi mukaan. Ei pakollista painotusta." },
-      { id:"matlu", nimi:"Matemaattis-luonnontieteellinen painotus", k:["matikka"],                  ikoni:"🔢", kuvaus:"Syvempi matematiikka, fysiikka ja kemia. Hyvä pohja tekniikan ja lääketieteen opinnoille." },
+      { id:"yleinen", nimi:"Ei erityistä painotusta", k:["kielet","matikka","terveys","yhteiskunta","taide","liikunta","viestinta","englanti"], ikoni:"📖", kuvaus:"Valitset opintojaksot vapaasti oman kiinnostuksesi mukaan. Ei pakollista painotusta." },
+      { id:"matlu", nimi:"Matemaattis-luonnontieteellinen painotus", k:["matikka","terveys"],                  ikoni:"🔢", kuvaus:"Syvempi matematiikka, fysiikka ja kemia. Hyvä pohja tekniikan ja lääketieteen opinnoille." },
       { id:"teatteri", nimi:"Teatteripainotus", k:["taide","viestinta"],        ikoni:"🎭", kuvaus:"Näytteleminen, ohjaaminen, lavastaminen. Esityksiä ja produktion läpi koko lukuvuoden." },
       { id:"media", nimi:"Media- ja viestintäpainotus", k:["viestinta"],                ikoni:"📱", kuvaus:"Teet videoita, juttuja ja somesisältöä. Opit kertomaan tarinoita tekniikan avulla." },
       { id:"yhteiskunta", nimi:"Yhteiskunnallinen painotus", k:["yhteiskunta"],              ikoni:"🌍", kuvaus:"Politiikka, talous, filosofia, globaalit kysymykset. Hyvä pohja oikeustieteelle tai yhteiskuntatieteille." },
@@ -2457,7 +2463,7 @@
     ];
 
     const TJ_ERIKOISLUKIOT = [
-      { nimi:"IB-lukio",                  ikoni:"🌐", kuvaus:"Kansainvälinen tutkinto — tutkinto suoritetaan englanniksi. Hyväksytään yliopistoihin maailmanlaajuisesti.", f:[], req:["englanti"] },
+      { nimi:"IB-lukio",                  ikoni:"🌐", kuvaus:"Kansainvälinen tutkinto, joka suoritetaan englanniksi. IB-tutkinnolla voit hakea mille alalle tahansa – ulkomaille tai englanninkielisiin koulutuksiin myös Suomessa.", f:[], req:["englanti"] },
       { nimi:"Kielilukio",                ikoni:"🗣️", kuvaus:"Erikoistunut kieliin ja kansainvälisyyteen. Laaja kielitarjonta, kielikylpyjä ja kansainvälisiä yhteistyöprojekteja.", f:["kielet"] },
       { nimi:"Urheilulukio",              ikoni:"⚽", kuvaus:"Lukio + urheilu yhdistettynä. Harjoittelu on osa lukujärjestystä. Sopii kilpaurheilijalle. <br><span style=\"font-size:11px;color:#6b7280;\"><a href=\"https://www.olympiakomitea.fi/huippu-urheilu/urheilijat/urheiluakatemia/\" target=\"_blank\" rel=\"noopener\" style=\"color:#2563eb;\">Suomen Olympiakomitea – urheiluakatemia</a></span>", f:["liikunta"] },
       { nimi:"Musiikkilukio",             ikoni:"🎵", kuvaus:"Intensiivinen musiikkiohjelma ja lukio-opinnot. Suomessa on lukioita, joilla on musiikin erityinen koulutustehtävä.", f:["taide"] },
@@ -2595,13 +2601,16 @@
       try { localStorage.removeItem('dg8-lukio-valitut'); } catch(e){}
       paivitaLukio();
     }
+    /* IB ("englanti") on lisävalinta: se ei rajaa painotuksia eikä korkeakouluja pois */
+    function lukioAiheet() { return [...lukioValitut].filter(a => a !== 'englanti'); }
     function paivitaLukio() {
       renderLukio();
       const linjat = document.querySelectorAll('#lukio-linjat .linja-kortti');
+      const aiheet = lukioAiheet();
       let n = 0;
       linjat.forEach(k => {
         const alat = JSON.parse(k.dataset.k);
-        const ok = lukioValitut.size === 0 || alat.some(a => lukioValitut.has(a));
+        const ok = aiheet.length === 0 || alat.some(a => aiheet.includes(a));
         k.style.display = ok ? '' : 'none';
         if (ok) n++;
       });
@@ -2631,9 +2640,17 @@
         elHuom.textContent = tjLp.el_ei_sopivia || 'Valitsemiisi aineisiin ei ole omaa erikoislukiota. Yleislukiossa voit painottaa niitä itse. Tässä kaikki erikoislukiot:';
       }
       document.getElementById('lukio-tulos-otsikko').textContent =
-        lukioValitut.size === 0
+        aiheet.length === 0
           ? `${tjLp.kaikki_linjat || 'Kaikki painotukset'} (${TJ_LINJAT.length})`
-          : `${n} ${tjLp.linjoja_loytyy || 'painotusta löytyi'}`;
+          : `${n} ${n === 1 ? (tjLp.linja_loytyi_1 || 'painotus löytyi') : (tjLp.linjoja_loytyy || 'painotusta löytyi')}`;
+      /* Vain "Ei erityistä painotusta" jäi näkyviin, mutta valintoihin sopii erikoislukio → ohjataan sinne */
+      const vainYl = document.getElementById('lukio-vain-yleinen');
+      if (vainYl) {
+        vainYl.hidden = !(aiheet.length > 0 && n === 1 && elSopivia > 0);
+        vainYl.textContent = tjLp.lukio_vain_yleinen || 'Valitsemillesi aineille ei ole omaa painotusta, mutta niitä voi opiskella paljon missä tahansa lukiossa. Katso myös erikoislukiot alta.';
+      }
+      const ibVihje = document.getElementById('lukio-ib-vihje');
+      if (ibVihje && tjLp.lukio_ib_vihje) ibVihje.textContent = tjLp.lukio_ib_vihje;
       document.getElementById('lukio-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
       paivitaKK();
       if (typeof renderLukioTarinat === 'function') renderLukioTarinat();
@@ -2651,17 +2668,17 @@
       { nimi:"Tieto- ja viestintätekniikka", ty:"amk",   k:["matikka","viestinta"],  kuvaus:"Ohjelmistokehitys, kyberturvallisuus, verkot. Käytännönläheinen IT-koulutus.", ex:"Metropolia, TAMK, OAMK" },
       { nimi:"Insinööri (tekniikka)",     ty:"amk",       k:["matikka"],              kuvaus:"Kone-, sähkö-, rakennus- tai automaatiotekniikka. Tekijän koulutus.", ex:"Metropolia, TAMK, Savonia" },
       { nimi:"Diplomi-insinööri (DI)",     ty:"yliopisto", k:["matikka"],              kuvaus:"Kone-, sähkö-, energia-, tieto- tai rakennustekniikka yliopistossa. Paljon matikkaa ja fysiikkaa. Kesto noin 5 vuotta.", ex:"Aalto, Tampere, LUT, OY" },
-      { nimi:"Lääketiede",               ty:"yliopisto", k:["matikka"],              kuvaus:"Pitkä tie (6 v) mutta arvostettu ammatti. Vaatii korkeat yo-pisteet.", ex:"HY, TY, OY, Tampere" },
-      { nimi:"Sairaanhoitaja",            ty:"amk",       k:["matikka","yhteiskunta"], kuvaus:"Hoidat potilaita sairaalassa, terveysasemalla tai kotihoidossa. Töitä on paljon. Kesto noin 3,5 vuotta.", ex:"Metropolia, TAMK, Savonia, OAMK" },
+      { nimi:"Lääketiede",               ty:"yliopisto", k:["matikka","terveys"],              kuvaus:"Pitkä tie (6 v) mutta arvostettu ammatti. Vaatii korkeat yo-pisteet.", ex:"HY, TY, OY, Tampere" },
+      { nimi:"Sairaanhoitaja",            ty:"amk",       k:["terveys","yhteiskunta"], kuvaus:"Hoidat potilaita sairaalassa, terveysasemalla tai kotihoidossa. Töitä on paljon. Kesto noin 3,5 vuotta.", ex:"Metropolia, TAMK, Savonia, OAMK" },
       { nimi:"Matematiikka / Fysiikka",  ty:"yliopisto", k:["matikka"],              kuvaus:"Tutkit, miten maailma toimii. Voit päätyä tutkijaksi, opettajaksi tai data-analyytikoksi. Töitä löytyy monelta alalta.", ex:"HY, Aalto, JY" },
       // yhteiskunta
       { nimi:"Oikeustiede",              ty:"yliopisto", k:["yhteiskunta"],          kuvaus:"Lakimies, tuomari, asianajaja. Sisäänpääsy on kilpailtu.", ex:"HY, TY, UEF, Tampere" },
       { nimi:"Yhteiskuntatieteet",        ty:"yliopisto", k:["yhteiskunta"],          kuvaus:"Sosiologia, politiikka, taloustiede. Ymmärrät, miten yhteiskunta toimii.", ex:"HY, TY, JY" },
-      { nimi:"Psykologia",               ty:"yliopisto", k:["yhteiskunta"],          kuvaus:"Tutkit ihmisen mieltä, tunteita ja käyttäytymistä. Psykologiksi valmistut maisterina. Sisäänpääsy on kilpailtu.", ex:"HY, JY, TY, Tampere, UEF" },
+      { nimi:"Psykologia",               ty:"yliopisto", k:["yhteiskunta","terveys"],          kuvaus:"Tutkit ihmisen mieltä, tunteita ja käyttäytymistä. Psykologiksi valmistut maisterina. Sisäänpääsy on kilpailtu.", ex:"HY, JY, TY, Tampere, UEF" },
       { nimi:"Opettaja",                 ty:"yliopisto", k:["kielet","matikka","yhteiskunta","taide","liikunta"], kuvaus:"Luokanopettaja opettaa alakoulussa. Aineenopettaja opettaa omaa ainettaan yläkoulussa tai lukiossa. Valmistut maisteriksi.", ex:"HY, JY, OY, TY, UEF" },
       { nimi:"Kauppatieteet (KTM)",       ty:"yliopisto", k:["yhteiskunta","kielet"], kuvaus:"Johtaminen, rahoitus, markkinointi akateemisella tasolla.", ex:"Aalto, Hanken, TY, LUT" },
       { nimi:"Liiketalous (tradenomi)",   ty:"amk",       k:["yhteiskunta","kielet"], kuvaus:"Taloushallinto, markkinointi, yrittäjyys. Nopea reitti työelämään.", ex:"HAAGA-HELIA, Metropolia" },
-      { nimi:"Sosionomi",                ty:"amk",       k:["yhteiskunta"],          kuvaus:"Sosiaaliohjaus, lastensuojelu, nuorisotyö. Ihmisten auttaminen ammattina.", ex:"Metropolia, DIAK, LAMK" },
+      { nimi:"Sosionomi",                ty:"amk",       k:["yhteiskunta","terveys"],          kuvaus:"Sosiaaliohjaus, lastensuojelu, nuorisotyö. Ihmisten auttaminen ammattina.", ex:"Metropolia, DIAK, LAMK" },
       // taide
       { nimi:"Kuvataide",                ty:"yliopisto", k:["taide"],               kuvaus:"Taiteen kandidaatti tai maisteri. Taideyliopistoon pääsee portfoliolla.", ex:"Kuvataideakatemia" },
       { nimi:"Musiikki",                 ty:"molemmat",  k:["taide"],               kuvaus:"Soitin, laulu, sävellys tai musiikkipedagogiikka. Pääsykoe ja audition.", ex:"Sibelius-Akatemia, AMK:t" },
@@ -2670,15 +2687,15 @@
       { nimi:"Arkkitehtuuri",            ty:"yliopisto", k:["taide","matikka"],     kuvaus:"Rakennusten ja ympäristöjen suunnittelu. Yhdistää taiteen ja tekniikan.", ex:"Aalto, OY, Tampere" },
       // liikunta
       { nimi:"Liikunnanohjaaja",         ty:"amk",       k:["liikunta"],            kuvaus:"Personal trainer, liikuntaneuvoja, ryhmäliikunnan ohjaaja. Käytännönläheinen.", ex:"JAMK, Metropolia, SAMK" },
-      { nimi:"Liikuntatiede",            ty:"yliopisto", k:["liikunta"],            kuvaus:"Liikunnan ja terveyden tutkimus, valmennus, liikuntafysiologia.", ex:"JY, UEF" },
-      { nimi:"Fysioterapeutti",          ty:"amk",       k:["liikunta"],            kuvaus:"Kuntoutus, kiputerapia, liikuntaneuvonta. Kasvava ja työllistävä ala.", ex:"Metropolia, TAMK, Savonia" },
+      { nimi:"Liikuntatiede",            ty:"yliopisto", k:["liikunta","terveys"],            kuvaus:"Liikunnan ja terveyden tutkimus, valmennus, liikuntafysiologia.", ex:"JY, UEF" },
+      { nimi:"Fysioterapeutti",          ty:"amk",       k:["liikunta","terveys"],            kuvaus:"Kuntoutus, kiputerapia, liikuntaneuvonta. Kasvava ja työllistävä ala.", ex:"Metropolia, TAMK, Savonia" },
       // viestintä
       { nimi:"Journalismi",              ty:"molemmat",  k:["viestinta","yhteiskunta"], kuvaus:"Toimittaja, sisällöntuottaja, some-asiantuntija. Mediamaailma muuttuu nopeasti.", ex:"TAMK, Aalto, JY" },
       { nimi:"Viestintä",               ty:"molemmat",  k:["viestinta"],           kuvaus:"Markkinointi, PR, sisäinen viestintä. Taitava viestijä menestyy kaikilla aloilla.", ex:"HY, HAAGA-HELIA, Metropolia" },
       { nimi:"Mediatuottaminen",         ty:"amk",       k:["viestinta","taide"],   kuvaus:"Video, podcast, digitaalinen media. Luova työ ja tekniset taidot yhdessä.", ex:"Metropolia, LAB, SeAMK" },
       // englanti / IB
-      { nimi:"Yliopisto ulkomailla (IB-väylä)", ty:"yliopisto", k:["englanti"],        kuvaus:"IB-tutkinto hyväksytään yliopistoihin ympäri maailman. UK, Alankomaat, Saksa, Pohjoismaat — haku suoraan IB-pisteillä.", ex:"UK, Alankomaat, Pohjoismaat" },
-      { nimi:"Kansainväliset ohjelmat Suomessa", ty:"yliopisto", k:["englanti","kielet"], kuvaus:"Aalto, HY, Tampere ja muut suomalaiset yliopistot tarjoavat englanninkielisiä kandidaatti- ja maisteriohjelmia — sopii IB-tutkinnolla.", ex:"Aalto, HY, Tampere" },
+      { nimi:"Yliopisto ulkomailla (IB-väylä)", ty:"yliopisto", k:["englanti"],        kuvaus:"IB-tutkinto hyväksytään yliopistoihin ympäri maailman. UK, Alankomaat, Saksa, Pohjoismaat — haku suoraan IB-pisteillä. Voit hakea mille alalle tahansa.", ex:"UK, Alankomaat, Pohjoismaat" },
+      { nimi:"Kansainväliset ohjelmat Suomessa", ty:"yliopisto", k:["englanti"], kuvaus:"Monissa suomalaisissa yliopistoissa voi opiskella englanniksi eri aloja, esimerkiksi tekniikkaa, kauppatieteitä ja luonnontieteitä. IB-tutkinnolla voit hakea niihin.", ex:"Aalto, HY, Tampere" },
     ];
 
     let kkRend = false;
@@ -2711,27 +2728,34 @@
       renderKK();
       const kortit = document.querySelectorAll('#kk-kortit .kk-kortti');
       const KK_ALKU = 8;   // ilman suodatusta näytetään ensin näin monta
-      const rajaa = lukioValitut.size === 0 && !kkKaikkiAuki;
-      let n = 0;
+      const aiheet = lukioAiheet(), ib = lukioValitut.has('englanti');
+      const rajaa = aiheet.length === 0 && !kkKaikkiAuki;
+      let n = 0, muut = 0;
       kortit.forEach(k => {
         const alat = JSON.parse(k.dataset.k);
-        const ok = lukioValitut.size === 0 || alat.some(a => lukioValitut.has(a));
-        k.classList.toggle('piilotettu', !ok || (rajaa && n >= KK_ALKU));
+        /* IB valittu → kansainväliset vaihtoehdot näkyvät aina, korostettuina ja ensimmäisinä */
+        const nosta = ib && alat.includes('englanti');
+        const ok = aiheet.length === 0 || alat.some(a => aiheet.includes(a)) || nosta;
+        let piilo = !ok;
+        if (ok && !nosta) { if (rajaa && muut >= KK_ALKU) piilo = true; muut++; }
+        k.classList.toggle('piilotettu', piilo);
+        k.classList.toggle('ib-korostus', nosta);
+        k.style.order = nosta ? '-1' : '';
         if (ok) n++;
       });
       const tjKK = window.DIGIOPO_T && window.DIGIOPO_T.g8 && window.DIGIOPO_T.g8.tutkija || {};
       const kkNappi = document.getElementById('kk-nayta-kaikki');
       if (kkNappi) {
-        kkNappi.hidden = !(lukioValitut.size === 0 && n > KK_ALKU);
+        kkNappi.hidden = !(aiheet.length === 0 && muut > KK_ALKU);
         kkNappi.setAttribute('aria-expanded', String(kkKaikkiAuki));
         kkNappi.textContent = kkKaikkiAuki
           ? (tjKK.kk_nayta_vahemman || 'Näytä vähemmän')
           : (tjKK.kk_nayta_kaikki || 'Näytä kaikki') + ' (' + n + ')';
       }
       document.getElementById('kk-tulos-otsikko').textContent =
-        lukioValitut.size === 0
+        aiheet.length === 0
           ? `${tjKK.kaikki_vaihtoehdot || 'Kaikki vaihtoehdot'} (${KK_DATA.length})`
-          : `${n} ${tjKK.koulutusta_loytyy || 'koulutusta löytyi'}`;
+          : `${n} ${n === 1 ? (tjKK.koulutus_loytyi_1 || 'koulutus löytyi') : (tjKK.koulutusta_loytyy || 'koulutusta löytyi')}`;
       document.getElementById('kk-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
     }
 
@@ -2855,7 +2879,7 @@
     /* ── Lukiopolku Vaihe 4: alan tarinat ──
        Uusi tarina: lisää rivi tähän. k = Vaihe 1:n aineet, joihin tarina sopii. */
     const LUKIO_TARINAT = [
-      { id: 'paivystys', nimi: 'Päivystyksen ilta', ala: 'terveysala', tiedosto: '../pelit/koulutusalat/lukio-paivystys.html', k: ['matikka'],
+      { id: 'paivystys', nimi: 'Päivystyksen ilta', ala: 'terveysala', tiedosto: '../pelit/koulutusalat/lukio-paivystys.html', k: ['matikka', 'terveys'],
         ikoni: '🚑', vari: '#9f1239', kuvaus: 'Seuraa sairaalan iltavuoroa ensihoitajan, lääkärin ja muiden ammattilaisten rinnalla.' },
       { id: 'kunta',     nimi: 'Kunnan iso päätös', ala: 'yhteiskunta', tiedosto: '../pelit/koulutusalat/lukio-kunta.html',     k: ['yhteiskunta', 'viestinta'],
         ikoni: '🏛️', vari: '#4338ca', kuvaus: 'Nuorisotila Paja on vaarassa. Illalla valtuusto äänestää – ja sinä saat puheenvuoron.' },
@@ -2867,7 +2891,7 @@
         ikoni: '📰', vari: '#be123c', kuvaus: 'Yöllä riehui myrsky. Auta toimitusta kertomaan, mitä tapahtui – nopeasti, mutta oikein.' },
       { id: 'ensiilta', nimi: 'Ensi-illan viikko', ala: 'taide, musiikki ja elokuva', tiedosto: '../pelit/koulutusalat/lukio-ensiilta.html', k: ['taide'],
         ikoni: '🎭', vari: '#a21caf', kuvaus: 'Lauantaina on musikaalin ensi-ilta. Auta ohjaajaa, säveltäjää ja muita tekijöitä saamaan esitys valmiiksi.' },
-      { id: 'seura', nimi: 'Seuran kausi', ala: 'liikunta ja urheilu', tiedosto: '../pelit/koulutusalat/lukio-seura.html', k: ['liikunta'],
+      { id: 'seura', nimi: 'Seuran kausi', ala: 'liikunta ja urheilu', tiedosto: '../pelit/koulutusalat/lukio-seura.html', k: ['liikunta', 'terveys'],
         ikoni: '🏑', vari: '#15803d', kuvaus: 'Salibandyjoukkue tähtää kevään finaaliin. Auta valmentajaa, fysioterapeuttia ja muita seuran ammattilaisia läpi kauden.' },
       { id: 'sovellus', nimi: 'Sovelluksen julkaisu', ala: 'IT ja ohjelmointi', tiedosto: '../pelit/koulutusalat/lukio-sovellus.html', k: ['matikka'],
         ikoni: '💻', vari: '#0e7490', kuvaus: 'Nuorten harrastussovellus julkaistaan maanantaina. Auta koodaria, testaajaa ja muita IT-alan ammattilaisia saamaan se valmiiksi.' },

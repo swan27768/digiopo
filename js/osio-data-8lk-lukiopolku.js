@@ -110,7 +110,7 @@
     if (typeof TJ_LINJAT !== 'undefined') TJ_LINJAT.forEach(function (l, i) {
       lista.push({ id: 'l-' + (l.id || i), ryhma: 'p', nimi: (t.l_nimi || [])[i] || l.nimi, kuvaus: (t.l_kuvaus || [])[i] || l.kuvaus,
         /* "Ei erityistä painotusta" sopii kaikkeen, joten sitä ei merkitä erikseen */
-        sopii: valitut.size > 0 && l.k.length < 7 && l.k.some(function (a) { return valitut.has(a); }) });
+        sopii: valitut.size > 0 && l.id !== 'yleinen' && l.k.some(function (a) { return valitut.has(a); }) });
     });
     if (typeof TJ_ERIKOISLUKIOT !== 'undefined') TJ_ERIKOISLUKIOT.forEach(function (e, i) {
       var ehdot = (e.f || []).concat(e.req || []);
