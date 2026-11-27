@@ -710,11 +710,8 @@
       var lukioOsiot = lukioPanel.querySelectorAll('.tj-osio-otsikko');
       /* LukioPanel otsikot järjestyksessä: [0]=V1, [1]=V2 erikoislukiot, [2]=V3, [3]=V4 alan tarina */
       /* Erikoislukio-kuvaus (p ennen erikoislukio-grid) */
-      var erikoislukioGrid = lukioPanel.querySelector('#erikoislukio-grid');
-      if (erikoislukioGrid && tj.lv2_erikoislukio_kuvaus) {
-        var ekPrev = erikoislukioGrid.previousElementSibling;
-        if (ekPrev && ekPrev.classList.contains('tj-kuvaus')) ekPrev.innerHTML = tj.lv2_erikoislukio_kuvaus;
-      }
+      var lv2Kuvaus = document.getElementById('lv2-kuvaus');
+      if (lv2Kuvaus && tj.lv2_erikoislukio_kuvaus) lv2Kuvaus.innerHTML = tj.lv2_erikoislukio_kuvaus;
       /* ── Lukiopolku Vaihe 3: Lukion jälkeen ── */
       if (lukioOsiot[2] && tj.lv3_heading) {
         var lv3span = lukioOsiot[2].querySelector('.tj-osio-vaihe');

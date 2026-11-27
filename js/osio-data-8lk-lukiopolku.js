@@ -86,6 +86,8 @@
         var VANHAT = { l0: 'l-yleinen', l1: 'e1', l2: 'l-matlu', l3: 'e3', l4: 'e4', l5: 'e2',
           l6: 'l-teatteri', l7: 'l-media', l8: 'l-yhteiskunta', l9: 'l-yrittajyys' };
         if (VANHAT[t.painotus]) { t.painotus = VANHAT[t.painotus]; localStorage.setItem(AVAIN, JSON.stringify(t)); }
+        /* Steinerlukio (e5) ei ole enää erikoislukiovaihtoehto: valinta tyhjennetään */
+        if (t.painotus === 'e5') { t.painotus = ''; localStorage.setItem(AVAIN, JSON.stringify(t)); }
         return t;
       }
       /* Siirto vanhasta ohjatusta suunnitelmasta: jatkosuunta ja vapaat tekstit talteen */
@@ -114,7 +116,7 @@
     });
     if (typeof TJ_ERIKOISLUKIOT !== 'undefined') TJ_ERIKOISLUKIOT.forEach(function (e, i) {
       var ehdot = (e.f || []).concat(e.req || []);
-      lista.push({ id: 'e' + i, ryhma: 'e', nimi: e.nimi, kuvaus: (t.e_kuvaus || [])[i] || e.kuvaus,
+      lista.push({ id: e.id || ('e' + i), ryhma: 'e', nimi: (t.e_nimi || [])[i] || e.nimi, kuvaus: (t.e_kuvaus || [])[i] || e.kuvaus,
         sopii: valitut.size > 0 && ehdot.some(function (a) { return valitut.has(a); }) });
     });
     return lista;
