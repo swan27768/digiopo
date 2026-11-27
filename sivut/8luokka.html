@@ -843,13 +843,30 @@
             <div id="tutkija-lukio" class="tutkija-paneeli" role="tabpanel" aria-labelledby="tab-lukio" style="display:none">
               <p class="tj-kuvaus">Lukiossa opiskelet laajasti eri aineita ja haet yliopistoon tai ammattikorkeakouluun. Ylioppilaskirjoitukset ovat opiskelun päätepiste.</p>
 
-              <!-- ── LUKIOPOLKU VUOSIKAAVIO ── -->
-              <div class="lv-vuosikaavio">
-                <p class="lv-vuosikaavio-otsikko">Kolme vuotta lukiossa – yhteensä vähintään 150 opintopistettä</p>
+              <!-- ── LUKIO-OPINNOT: kansio, joka aukeaa karuselliksi (vuodet yksi kerrallaan). Logiikka: initLvKansio() ── -->
+              <div class="lv-kansio" id="lv-kansio">
+                <button type="button" class="lv-kansi" aria-expanded="false" aria-controls="lv-kansio-sisalto">
+                  <svg class="lv-kansi-kuva" viewBox="0 0 160 104" aria-hidden="true" focusable="false"><circle cx="132" cy="26" r="26" fill="#dbeafe"/><circle cx="26" cy="84" r="17" fill="#e0ecff"/><path d="M26 84C54 84 50 54 78 54S108 26 132 26" fill="none" stroke="#93c5fd" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 9"/><g transform="translate(10 68)"><circle cx="16" cy="16" r="16" fill="#60a5fa"/><g transform="translate(4 4)"><path d="M4 5.5c2.5-1 5-1 8 1 3-2 5.5-2 8-1v13c-2.5-1-5-1-8 1-3-2-5.5-2-8-1z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6.5v13" stroke="#fff" stroke-width="1.8"/></g></g><g transform="translate(62 38)"><circle cx="16" cy="16" r="16" fill="#2563eb"/><g transform="translate(4 4)"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z" fill="#fff"/></g></g><g transform="translate(112 6)"><circle cx="20" cy="20" r="20" fill="#1e3a8a"/><g transform="translate(5.6 5) scale(1.2)"><path d="M4 13.5c0-4.7 3.6-8 8-8s8 3.3 8 8z" fill="#fff"/><path d="M3 13.5h18l-1.6 3.4H4.6z" fill="#0f172a"/><circle cx="12" cy="10.8" r="1.4" fill="#f59e0b"/></g></g><path d="M151 54l1.8 3.6 3.6 1.8-3.6 1.8-1.8 3.6-1.8-3.6-3.6-1.8 3.6-1.8z" fill="#f59e0b"/><path d="M104 10l1.2 2.4 2.4 1.2-2.4 1.2-1.2 2.4-1.2-2.4-2.4-1.2 2.4-1.2z" fill="#93c5fd"/></svg>
+                  <span class="lv-kansi-teksti">
+                    <span class="lv-kansi-tag">Lukio-opinnot</span>
+                    <span class="lv-kansi-otsikko">Kolme vuotta, kolme askelta</span>
+                    <span class="lv-kansi-ala">Näin lukio etenee: vähintään 150 opintopistettä ja lopuksi ylioppilastutkinto. Avaa ja selaa vuodet läpi.</span>
+                  </span>
+                  <span class="lv-kansi-avaa"><span class="lv-kansi-avaa-teksti">Avaa</span> <span class="lv-nuoli" aria-hidden="true">▾</span></span>
+                </button>
+                <div class="lv-kansio-sisalto" id="lv-kansio-sisalto" hidden>
+                  <div class="lv-karuselli" role="region" aria-roledescription="karuselli" aria-label="Lukion kolme vuotta">
+                    <div class="lv-karuselli-askeleet">
+                      <button type="button" class="lv-askel">1. vuosi</button>
+                      <button type="button" class="lv-askel">2. vuosi</button>
+                      <button type="button" class="lv-askel">3. vuosi</button>
+                    </div>
                 <div class="lv-vuodet">
-                  <div class="lv-vuosi lv-vuosi-1">
+                  <div class="lv-vuosi lv-vuosi-1" role="group" aria-roledescription="dia" aria-label="1. vuosi, 1/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M4 5.5c2.5-1 5-1 8 1 3-2 5.5-2 8-1v13c-2.5-1-5-1-8 1-3-2-5.5-2-8-1z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6.5v13" stroke="#fff" stroke-width="1.8"/></svg></span><div>
                     <p class="lv-vuosi-label">1. vuosi</p>
                     <p class="lv-vuosi-kuvaus">Aloitat ja löydät suuntasi</p>
+                    </div></div>
                     <ul class="lv-vuosi-lista">
                       <li>Valitset kiinnostavia opintoja ja mahdollisen painotuksen</li>
                       <li>Pakolliset opinnot kaikille</li>
@@ -858,9 +875,11 @@
                     </ul>
                     <span class="lv-vuosi-paatos">Opinnot käynnissä</span>
                   </div>
-                  <div class="lv-vuosi lv-vuosi-2">
+                  <div class="lv-vuosi lv-vuosi-2" role="group" aria-roledescription="dia" aria-label="2. vuosi, 2/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z" fill="#fff"/></svg></span><div>
                     <p class="lv-vuosi-label">2. vuosi</p>
                     <p class="lv-vuosi-kuvaus">Syventät ja suunnittelet</p>
+                    </div></div>
                     <ul class="lv-vuosi-lista">
                       <li>Syventäviä opintoja omasta kiinnostuksesta</li>
                       <li>Ylioppilaskirjoitusten suunnittelu alkaa</li>
@@ -869,9 +888,11 @@
                     </ul>
                     <span class="lv-vuosi-paatos">Suunta selkenee</span>
                   </div>
-                  <div class="lv-vuosi lv-vuosi-3">
+                  <div class="lv-vuosi lv-vuosi-3" role="group" aria-roledescription="dia" aria-label="3. vuosi, 3/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M4 13.5c0-4.7 3.6-8 8-8s8 3.3 8 8z" fill="#fff"/><path d="M3 13.5h18l-1.6 3.4H4.6z" fill="#0f172a"/><circle cx="12" cy="10.8" r="1.4" fill="#f59e0b"/></svg></span><div>
                     <p class="lv-vuosi-label">3. vuosi</p>
                     <p class="lv-vuosi-kuvaus">Yo-kirjoitukset ja jatko</p>
+                    </div></div>
                     <ul class="lv-vuosi-lista">
                       <li>Ylioppilaskirjoitukset — vähintään 5 koetta</li>
                       <li>Haku AMK:iin tai yliopistoon</li>
@@ -881,11 +902,17 @@
                     <span class="lv-vuosi-paatos">Ylioppilastutkinto</span>
                   </div>
                 </div>
-                <div class="lv-yo-palkki">
-                  <span class="lv-yo-teksti">Lukion lopussa: ylioppilastutkinto → haku AMK:iin tai yliopistoon</span>
+                    <div class="lv-karuselli-napit">
+                      <button type="button" class="lv-edellinen"><span aria-hidden="true">←</span> Edellinen</button>
+                      <span class="lv-karuselli-tila" aria-live="polite"></span>
+                      <button type="button" class="lv-seuraava">Seuraava <span aria-hidden="true">→</span></button>
+                    </div>
+                  </div>
+                  <div class="lv-yo-palkki">
+                    <span class="lv-yo-teksti">Lukion lopussa: ylioppilastutkinto → haku AMK:iin tai yliopistoon</span>
+                  </div>
                 </div>
               </div>
-
 
               <!-- Tavoitteet -->
               <div class="tj-tavoite" role="region" aria-label="Tehtävän tavoitteet">
@@ -2657,6 +2684,50 @@
         esc8(t.linkki || d.linkki) + ' <span aria-hidden="true">→</span></a>';
       el.hidden = !lukioValitut.has('englanti');   /* vain IB-valinnan tehneille */
     }
+
+    /* ── Lukio-opinnot-kansio: kansi avaa karusellin, vuodet yksi kerrallaan ── */
+    function initLvKansio() {
+      const k = document.getElementById('lv-kansio');
+      if (!k || k.dataset.ok) return;
+      k.dataset.ok = '1';
+      const kansi = k.querySelector('.lv-kansi'), sis = document.getElementById('lv-kansio-sisalto');
+      const diat = [...k.querySelectorAll('.lv-vuosi')], askeleet = [...k.querySelectorAll('.lv-askel')];
+      const ed = k.querySelector('.lv-edellinen'), se = k.querySelector('.lv-seuraava'), tila = k.querySelector('.lv-karuselli-tila');
+      let i = 0;
+      function nayta(n, fokus) {
+        i = Math.max(0, Math.min(diat.length - 1, n));
+        diat.forEach((d, j) => { d.hidden = j !== i; });
+        askeleet.forEach((a, j) => { if (j === i) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
+        ed.disabled = i === 0; se.disabled = i === diat.length - 1;
+        tila.textContent = (i + 1) + ' / ' + diat.length;
+        if (fokus) diat[i].focus({ preventScroll: true });
+      }
+      diat.forEach(d => { d.tabIndex = -1; });
+      kansi.addEventListener('click', () => {
+        const auki = kansi.getAttribute('aria-expanded') !== 'true';
+        kansi.setAttribute('aria-expanded', String(auki));
+        sis.hidden = !auki; k.classList.toggle('auki', auki);
+        kansi.querySelector('.lv-kansi-avaa-teksti').textContent = auki ? 'Sulje' : 'Avaa';
+      });
+      ed.addEventListener('click', () => nayta(i - 1));
+      se.addEventListener('click', () => nayta(i + 1));
+      askeleet.forEach((a, j) => a.addEventListener('click', () => nayta(j)));
+      sis.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') { nayta(i + 1, true); e.preventDefault(); }
+        else if (e.key === 'ArrowLeft') { nayta(i - 1, true); e.preventDefault(); }
+      });
+      /* Pyyhkäisy puhelimella */
+      let x0 = null, y0 = null;
+      const alue = k.querySelector('.lv-vuodet');
+      alue.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      alue.addEventListener('touchend', e => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) nayta(i + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+      nayta(0);
+    }
+    initLvKansio();
 
     /* ── Steinerlukion yleistieto (Vaihe 2). Lähde: rudolfsteinerkoulu.fi/lukio ── */
     const STEINER_INFO = {

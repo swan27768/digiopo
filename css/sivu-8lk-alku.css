@@ -800,6 +800,54 @@
     .lv-yo-palkki { background:linear-gradient(90deg,#1d4ed8,#6d28d9,#065f46); border-radius:8px; padding:9px 14px; margin:10px 0 0; display:flex; align-items:center; gap:10px; }
     .lv-yo-teksti { font-size:12px; font-weight:700; color:white; flex:1; }
     @media(max-width:520px){ .lv-vuodet { grid-template-columns:1fr; } }
+    /* Lukio-opinnot-kansio + karuselli */
+    .lv-kansio { margin:16px 0 20px; border:1.5px solid #dbeafe; border-radius:14px; background:linear-gradient(135deg,#eff6ff 0%,#fff 65%); overflow:hidden; }
+    .lv-kansi { display:flex; align-items:center; gap:16px; width:100%; padding:14px 18px; background:none; border:0; cursor:pointer; text-align:left; font:inherit; color:inherit; }
+    .lv-kansi:hover { background:rgba(219,234,254,.45); }
+    .lv-kansi:focus-visible { outline:3px solid #2563eb; outline-offset:-3px; border-radius:14px; }
+    .lv-kansi-kuva { flex:0 0 150px; width:150px; height:auto; }
+    .lv-kansi-teksti { flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
+    .lv-kansi-tag { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:#2563eb; }
+    .lv-kansi-otsikko { font-size:19px; font-weight:800; color:#1e3a8a; line-height:1.25; }
+    .lv-kansi-ala { font-size:13.5px; color:#475569; line-height:1.45; }
+    .lv-kansi-avaa { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:#2563eb; color:#fff; font-size:13px; font-weight:700; }
+    .lv-nuoli { display:inline-block; transition:transform .2s; }
+    .lv-kansio.auki .lv-nuoli { transform:rotate(180deg); }
+    .lv-kansio-sisalto { padding:4px 18px 18px; border-top:1px solid #dbeafe; background:#fff; }
+    .lv-karuselli-askeleet { display:flex; gap:6px; margin:14px 0 12px; }
+    .lv-askel { flex:1; padding:8px; border-radius:10px; border:1.5px solid #dbeafe; background:#fff; font:inherit; font-size:13px; font-weight:700; color:#475569; cursor:pointer; }
+    .lv-askel:hover { border-color:#93c5fd; }
+    .lv-askel[aria-current="step"] { background:#1e3a8a; border-color:#1e3a8a; color:#fff; }
+    #tutkija-lukio .lv-kansio .lv-vuodet { display:block; }
+    .lv-kansio .lv-vuosi[hidden] { display:none; }
+    .lv-kansio .lv-vuosi { padding:16px 18px; animation:lvDia .25s ease; }
+    .lv-kansio .lv-vuosi:focus { outline:none; }
+    @keyframes lvDia { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:none; } }
+    @media (prefers-reduced-motion: reduce) { .lv-kansio .lv-vuosi { animation:none; } .lv-nuoli { transition:none; } }
+    .lv-vuosi-yla { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+    .lv-vuosi-ikoni { flex:0 0 42px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; }
+    .lv-vuosi-1 .lv-vuosi-ikoni { background:#60a5fa; }
+    .lv-vuosi-2 .lv-vuosi-ikoni { background:#2563eb; }
+    .lv-vuosi-3 .lv-vuosi-ikoni { background:#1e3a8a; }
+    .lv-kansio .lv-vuosi-label { font-size:11.5px; margin:0 0 2px; }
+    .lv-kansio .lv-vuosi-kuvaus { font-size:17px; margin:0; }
+    .lv-kansio .lv-vuosi-lista li { font-size:14px; padding:7px 0 7px 16px; }
+    .lv-kansio .lv-vuosi-paatos { font-size:12px; padding:4px 10px; margin-top:10px; }
+    .lv-karuselli-napit { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
+    .lv-karuselli-napit button { white-space:nowrap; padding:8px 14px; border-radius:20px; border:1.5px solid #2563eb; background:#fff; color:#1d4ed8; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+    .lv-karuselli-napit button:hover:not(:disabled) { background:#eff6ff; }
+    .lv-karuselli-napit button:disabled { opacity:.35; cursor:default; }
+    .lv-karuselli-tila { white-space:nowrap; font-size:13px; font-weight:700; color:#64748b; }
+    .lv-kansio .lv-yo-palkki { margin-top:14px; }
+    @media (max-width:560px) {
+      .lv-kansi { flex-wrap:wrap; gap:10px; padding:14px; }
+      .lv-kansi-kuva { flex:0 0 120px; width:120px; }
+      .lv-kansi-avaa { margin-left:auto; }
+      .lv-kansi-teksti { flex:1 1 100%; order:3; }
+      .lv-askel { font-size:12px; padding:7px 4px; }
+      .lv-kansio-sisalto { padding:4px 12px 14px; }
+      .lv-karuselli-napit button { padding:8px 11px; font-size:12.5px; }
+    }
 
     /* ── Wizard ── */
     .ls-wizard { background:#f8fafc; border:2px solid #e2e8f0; border-radius:16px; padding:20px 18px; }
