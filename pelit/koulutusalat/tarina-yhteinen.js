@@ -2539,6 +2539,10 @@
           else if (r.tyyppi === "uudet") { var u = L.filter(function (k) { return (k.tagit || []).indexOf("uusi") !== -1; }).length; ok = L.length > 0 && u >= (r.min || 0) && u <= r.max; }
           else if (r.tyyppi === "vaihtelu") { ok = L.length > 2; for (var i = 2; i < L.length; i++) if (ryhma(L[i].energia) === ryhma(L[i - 1].energia) && ryhma(L[i].energia) === ryhma(L[i - 2].energia)) ok = false; }
           else if (r.tyyppi === "mukana") ok = L.some(function (k) { return (k.tagit || []).indexOf(r.tagi) !== -1; });
+          else if (r.tyyppi === "ensin") ok = L.length > 0 && (L[0].tagit || []).indexOf(r.tagi) !== -1;
+          else if (r.tyyppi === "tagiMax") ok = L.length > 0 && L.filter(function (k) { return (k.tagit || []).indexOf(r.tagi) !== -1; }).length <= r.max;
+          else if (r.tyyppi === "juoni") { var paikat = (r.tagit || []).map(function (g) { for (var q = 0; q < L.length; q++) if ((L[q].tagit || []).indexOf(g) !== -1) return q; return -1; });
+            ok = paikat.every(function (x, q) { return x !== -1 && (q === 0 || x > paikat[q - 1]); }); }
           return { r: r, ok: ok };
         });
       };
@@ -2560,24 +2564,24 @@
             var mukana = lista.indexOf(i) !== -1;
             return '<li class="' + (mukana ? "mukana" : "") + '"><span class="sl-energia e' + k.energia + '" aria-label="Energia ' + k.energia + '/5">' + k.energia + '</span><span class="sl-nimi">' + suojaa(k.nimi) +
               ((k.tagit || []).map(function (t) { return '<span class="sl-tagi t-' + t + '">' + suojaa((TH.tagiNimet || {})[t] || t) + '</span>'; }).join("")) + '<span class="sl-kuvaus">' + suojaa(k.kuvaus || "") + '</span></span>' +
-              '<span class="sl-kesto">' + suojaa(k.kesto) + '</span><button type="button" class="sl-lisaa" data-i="' + i + '"' + (mukana || lukittu ? " disabled" : "") + ' aria-label="Lisää ' + suojaa(k.nimi) + ' setlistaan">' + (mukana ? "✓" : "+") + '</button></li>';
+              '<span class="sl-kesto">' + suojaa(k.kesto) + '</span><button type="button" class="sl-lisaa" data-i="' + i + '"' + (mukana || lukittu ? " disabled" : "") + ' aria-label="Lisää ' + suojaa(k.nimi) + ' ' + suojaa(TH.listaanSana || "setlistaan") + '">' + (mukana ? "✓" : "+") + '</button></li>';
           }).join("") + '</ul></div>' +
           '<div class="sl-oikea"><div class="sl-paperi"><p class="sl-paperi-otsikko">' + suojaa(TH.setlistaOtsikko || "SETLISTA") + '</p>' +
           (lista.length ? '<ol class="sl-lista">' + lista.map(function (i, j) { var k = KP[i];
             return '<li><span class="sl-nro">' + (j + 1) + '.</span><span class="sl-nimi">' + suojaa(k.nimi) + '</span><span class="sl-kesto">' + suojaa(k.kesto) + '</span>' +
               (lukittu ? '' : '<span class="sl-napit"><button type="button" class="sl-nuoli" data-j="' + j + '" data-s="-1" aria-label="Siirrä ' + suojaa(k.nimi) + ' ylöspäin"' + (j ? "" : " disabled") + '>↑</button><button type="button" class="sl-nuoli" data-j="' + j + '" data-s="1" aria-label="Siirrä ' + suojaa(k.nimi) + ' alaspäin"' + (j < lista.length - 1 ? "" : " disabled") + '>↓</button><button type="button" class="sl-poista" data-j="' + j + '" aria-label="Poista ' + suojaa(k.nimi) + '">✕</button></span>') + '</li>'; }).join("") + '</ol>'
-            : '<p class="sl-tyhja">Lisää kappaleita listasta painamalla +.</p>') +
+            : '<p class="sl-tyhja">' + suojaa(TH.tyhjaLista || "Lisää kappaleita listasta painamalla +.") + '</p>') +
           '<p class="sl-yht">Kesto yhteensä: <strong>' + mmss(yht) + '</strong> <span>(tavoite ' + suojaa(TH.tavoiteTeksti || "") + ')</span></p></div>' +
           '<p class="vk-saannot-otsikko">' + suojaa(TH.kayraOtsikko || "Energiakäyrä") + '</p><div class="sl-kayra" role="img" aria-label="Energiakäyrä: ' + lista.map(function (i) { return KP[i].energia; }).join(", ") + '">' +
-          (lista.length ? lista.map(function (i, j) { var e = KP[i].energia; return '<span class="sl-pylvas e' + e + '" style="height:' + (e * 20) + '%" title="' + (j + 1) + '. ' + suojaa(KP[i].nimi) + '"></span>'; }).join("") : '<span class="sl-tyhja">Käyrä piirtyy, kun lisäät kappaleita.</span>') + '</div>' +
+          (lista.length ? lista.map(function (i, j) { var e = KP[i].energia; return '<span class="sl-pylvas e' + e + '" style="height:' + (e * 20) + '%" title="' + (j + 1) + '. ' + suojaa(KP[i].nimi) + '"></span>'; }).join("") : '<span class="sl-tyhja">' + suojaa(TH.tyhjaKayra || "Käyrä piirtyy, kun lisäät kappaleita.") + '</span>') + '</div>' +
           '<p class="vk-saannot-otsikko">' + suojaa(TH.saannotOtsikko || "Muistilista") + '</p><ul class="vk-saannot">' + tulos.map(function (x) {
             return '<li class="' + (x.ok ? "ok" : (lukittu ? "ei" : "")) + '"><span class="vk-merkki" aria-hidden="true">' + (x.ok ? "✓" : (lukittu ? "✗" : "○")) + '</span><span><strong>' + suojaa(x.r.nimi) + '</strong>' + (lukittu ? '<span class="vk-selitys">' + suojaa(x.r.selitys) + '</span>' : '') + '</span></li>';
           }).join("") + '</ul></div></div>';
         if (lukittu) {
-          h += '<p class="sj-pisteet">Setlistan pisteet: <strong>' + p + '/' + SA.length + '</strong></p>' +
+          h += '<p class="sj-pisteet">' + suojaa(TH.pisteetNimi || "Setlistan pisteet") + ': <strong>' + p + '/' + SA.length + '</strong></p>' +
             '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sl-muokkaa">' + suojaa(TH.takaisinNappi || "Muokkaa") + '</button><button type="button" class="kutsu-tarkista sl-jatka">' + suojaa(TH.jatkaNappi || "Jatka") + '</button></div>';
         } else {
-          h += '<p class="kutsu-vihje" aria-live="polite">' + (lista.length < 3 ? "Lisää vielä kappaleita." : "Kun lista on valmis, tarkista se.") + '</p>' +
+          h += '<p class="kutsu-vihje" aria-live="polite">' + (lista.length < 3 ? (TH.lisaaVihje || "Lisää vielä kappaleita.") : (TH.valmisVihje || "Kun lista on valmis, tarkista se.")) + '</p>' +
             '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava sl-tyhjenna"' + (lista.length ? "" : " disabled") + '>' + suojaa(TH.tyhjennaNappi || "Tyhjennä") + '</button><button type="button" class="kutsu-tarkista sl-tarkista"' + (lista.length >= 3 ? "" : " disabled") + '>' + suojaa(TH.tarkistaNappi || "Tarkista") + '</button></div>';
         }
         alue.innerHTML = h;
@@ -2602,7 +2606,7 @@
         alue.innerHTML =
           '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Perustelut") + '</p>' +
           '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.perusteluOtsikko || "Perustelut") + '</p><p class="kutsu-teksti">' + suojaa(TH.perusteluOhje || "Vastaa kysymyksiin.") + '</p></div>' +
-          '<p class="sj-pisteet">Setlistan pisteet: <strong>' + p + '/' + SA.length + '</strong></p>' +
+          '<p class="sj-pisteet">' + suojaa(TH.pisteetNimi || "Setlistan pisteet") + ': <strong>' + p + '/' + SA.length + '</strong></p>' +
           kys.map(function (q, i) {
             return '<div class="bj-perustelu"><label class="kutsu-miksi-label" for="sl-p' + i + '">' + (i + 1) + '. ' + suojaa(q.kysymys) + '</label>' +
               '<textarea id="sl-p' + i + '" maxlength="400" placeholder="' + suojaa(q.placeholder || "Kirjoita tähän…") + '">' + suojaa((tila.perustelut || [])[i] || "") + '</textarea>' +
@@ -2645,7 +2649,7 @@
       tehtavaTeksti = function (tila) {
         slTila(tila);
         var tulos = tarkista(tila.lista), p = tulos.filter(function (x) { return x.ok; }).length, yht = tila.lista.reduce(function (s, i) { return s + kesto(KP[i]); }, 0);
-        var t = "\n" + TH.nimi.toUpperCase() + " – " + p + "/" + SA.length + " sääntöä täyttyy\n\nSETLISTA (" + mmss(yht) + ")\n";
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + p + "/" + SA.length + " sääntöä täyttyy\n\n" + (TH.listaNimi || "SETLISTA") + " (" + mmss(yht) + ")\n";
         tila.lista.forEach(function (i, j) { t += (j + 1) + ". " + KP[i].nimi + " (" + KP[i].kesto + ", energia " + KP[i].energia + "/5)\n"; });
         t += "\nMUISTILISTA\n"; tulos.forEach(function (x) { t += (x.ok ? "✓ " : "✗ ") + x.r.nimi + "\n"; });
         t += "\nPERUSTELUT\n";
