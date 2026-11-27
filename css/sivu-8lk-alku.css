@@ -800,52 +800,88 @@
     .lv-yo-palkki { background:linear-gradient(90deg,#1d4ed8,#6d28d9,#065f46); border-radius:8px; padding:9px 14px; margin:10px 0 0; display:flex; align-items:center; gap:10px; }
     .lv-yo-teksti { font-size:12px; font-weight:700; color:white; flex:1; }
     @media(max-width:520px){ .lv-vuodet { grid-template-columns:1fr; } }
-    /* Lukio-opinnot-kansio + karuselli */
-    .lv-kansio { margin:16px 0 20px; border:1.5px solid #dbeafe; border-radius:14px; background:linear-gradient(135deg,#eff6ff 0%,#fff 65%); overflow:hidden; }
-    .lv-kansi { display:flex; align-items:center; gap:16px; width:100%; padding:14px 18px; background:none; border:0; cursor:pointer; text-align:left; font:inherit; color:inherit; }
-    .lv-kansi:hover { background:rgba(219,234,254,.45); }
-    .lv-kansi:focus-visible { outline:3px solid #2563eb; outline-offset:-3px; border-radius:14px; }
-    .lv-kansi-kuva { flex:0 0 150px; width:150px; height:auto; }
-    .lv-kansi-teksti { flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
-    .lv-kansi-tag { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:#2563eb; }
-    .lv-kansi-otsikko { font-size:19px; font-weight:800; color:#1e3a8a; line-height:1.25; }
+    /* Lukio-opinnot-kansio + karuselli. Vuosivärit: 1 taivaansininen, 2 violetti, 3 tummansininen + kulta */
+    .lv-kansio { --nyt:#0ea5e9; margin:16px 0 22px; border-radius:16px; overflow:hidden; position:relative;
+      background:
+        radial-gradient(circle at 96% 8%, rgba(245,158,11,.22) 0 70px, transparent 71px),
+        radial-gradient(circle at 4% 100%, rgba(14,165,233,.20) 0 90px, transparent 91px),
+        linear-gradient(120deg,#e0f2fe 0%,#ede9fe 55%,#fef3c7 100%);
+      box-shadow:0 10px 26px -14px rgba(76,29,149,.45); }
+    .lv-kansio[data-vuosi="2"] { --nyt:#8b5cf6; }
+    .lv-kansio[data-vuosi="3"] { --nyt:#1e3a8a; }
+    .lv-kansi { display:flex; align-items:center; gap:18px; width:100%; padding:16px 20px; background:none; border:0; cursor:pointer; text-align:left; font:inherit; color:inherit; }
+    .lv-kansi:hover .lv-kansi-avaa { transform:translateY(-1px); box-shadow:0 6px 14px -6px rgba(76,29,149,.6); }
+    .lv-kansi:focus-visible { outline:3px solid #7c3aed; outline-offset:-3px; border-radius:16px; }
+    .lv-kansi-kuva { flex:0 0 170px; width:170px; height:auto; }
+    .lv-kansi-teksti { flex:1; display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-width:0; }
+    .lv-kansi-tag { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:#6d28d9; background:#fff; padding:3px 10px; border-radius:999px; }
+    .lv-kansi-otsikko { font-size:22px; font-weight:800; color:#1e1b4b; line-height:1.2; }
     .lv-kansi-ala { font-size:13.5px; color:#475569; line-height:1.45; }
-    .lv-kansi-avaa { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:#2563eb; color:#fff; font-size:13px; font-weight:700; }
+    .lv-kansi-faktat { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+    .lv-fakta { font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; background:#fff; border:1.5px solid; }
+    .lv-fakta-1 { color:#075985; border-color:#7dd3fc; }
+    .lv-fakta-2 { color:#5b21b6; border-color:#c4b5fd; }
+    .lv-fakta-3 { color:#92400e; border-color:#fcd34d; }
+    .lv-kansi-avaa { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:999px; background:linear-gradient(120deg,#7c3aed,#1e3a8a); color:#fff; font-size:13.5px; font-weight:700; transition:transform .15s, box-shadow .15s; }
     .lv-nuoli { display:inline-block; transition:transform .2s; }
     .lv-kansio.auki .lv-nuoli { transform:rotate(180deg); }
-    .lv-kansio-sisalto { padding:4px 18px 18px; border-top:1px solid #dbeafe; background:#fff; }
-    .lv-karuselli-askeleet { display:flex; gap:6px; margin:14px 0 12px; }
-    .lv-askel { flex:1; padding:8px; border-radius:10px; border:1.5px solid #dbeafe; background:#fff; font:inherit; font-size:13px; font-weight:700; color:#475569; cursor:pointer; }
-    .lv-askel:hover { border-color:#93c5fd; }
-    .lv-askel[aria-current="step"] { background:#1e3a8a; border-color:#1e3a8a; color:#fff; }
+    .lv-kansio-sisalto { padding:6px 20px 20px; background:#fff; border-top:3px solid transparent; border-image:linear-gradient(90deg,#0ea5e9,#8b5cf6,#f59e0b) 1; }
+    /* Vaiheet: numeropallot ja värittyvä viiva */
+    .lv-karuselli-askeleet { position:relative; display:flex; margin:18px 0 16px; }
+    .lv-askel-viiva { position:absolute; left:16.67%; right:16.67%; top:19px; height:5px; background:#e2e8f0; border-radius:3px; }
+    .lv-askel-taytto { display:block; height:100%; width:calc(var(--edistys, 0) * 100%); background:linear-gradient(90deg,#0ea5e9,#8b5cf6,#1e3a8a); border-radius:3px; transition:width .35s ease; }
+    .lv-askel { flex:1; position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:12px; padding:0; background:none; border:0; font:inherit; font-size:13px; font-weight:700; color:#64748b; cursor:pointer; }
+    .lv-askel-1 { --v:#0ea5e9; } .lv-askel-2 { --v:#8b5cf6; } .lv-askel-3 { --v:#1e3a8a; }
+    .lv-askel-nro { width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:#fff; border:3px solid #cbd5e1; color:#64748b; font-size:16px; font-weight:800; transition:all .2s; }
+    .lv-askel:hover .lv-askel-nro { border-color:var(--v); }
+    .lv-askel.tehty .lv-askel-nro { background:var(--v); border-color:var(--v); color:#fff; }
+    .lv-askel[aria-current="step"] { color:var(--v); }
+    .lv-askel[aria-current="step"] .lv-askel-nro { transform:scale(1.15); box-shadow:0 0 0 5px #fff, 0 0 0 8px var(--v); }
+    .lv-askel:focus-visible { outline:none; }
+    .lv-askel:focus-visible .lv-askel-nro { box-shadow:0 0 0 3px #fff, 0 0 0 6px #7c3aed; }
+    /* Vuosikortit */
     #tutkija-lukio .lv-kansio .lv-vuodet { display:block; }
     .lv-kansio .lv-vuosi[hidden] { display:none; }
-    .lv-kansio .lv-vuosi { padding:16px 18px; animation:lvDia .25s ease; }
+    #tutkija-lukio .lv-kansio .lv-vuosi-1 { --v:#0ea5e9; --v1:#0284c7; --v2:#38bdf8; --vv:#e0f2fe; }
+    #tutkija-lukio .lv-kansio .lv-vuosi-2 { --v:#8b5cf6; --v1:#6d28d9; --v2:#a78bfa; --vv:#ede9fe; }
+    #tutkija-lukio .lv-kansio .lv-vuosi-3 { --v:#1e3a8a; --v1:#1e3a8a; --v2:#4f46e5; --vv:#dbeafe; }
+    #tutkija-lukio .lv-kansio .lv-vuosi { position:relative; padding:0 0 16px; background:linear-gradient(180deg,#fff 60%,var(--vv) 100%); border:2px solid var(--vv); border-radius:16px; overflow:hidden; animation:lvDia .25s ease; }
     .lv-kansio .lv-vuosi:focus { outline:none; }
     @keyframes lvDia { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:none; } }
-    @media (prefers-reduced-motion: reduce) { .lv-kansio .lv-vuosi { animation:none; } .lv-nuoli { transition:none; } }
-    .lv-vuosi-yla { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
-    .lv-vuosi-ikoni { flex:0 0 42px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; }
-    .lv-vuosi-1 .lv-vuosi-ikoni { background:#60a5fa; }
-    .lv-vuosi-2 .lv-vuosi-ikoni { background:#2563eb; }
-    .lv-vuosi-3 .lv-vuosi-ikoni { background:#1e3a8a; }
-    .lv-kansio .lv-vuosi-label { font-size:11.5px; margin:0 0 2px; }
-    .lv-kansio .lv-vuosi-kuvaus { font-size:17px; margin:0; }
-    .lv-kansio .lv-vuosi-lista li { font-size:14px; padding:7px 0 7px 16px; }
-    .lv-kansio .lv-vuosi-paatos { font-size:12px; padding:4px 10px; margin-top:10px; }
-    .lv-karuselli-napit { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
-    .lv-karuselli-napit button { white-space:nowrap; padding:8px 14px; border-radius:20px; border:1.5px solid #2563eb; background:#fff; color:#1d4ed8; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
-    .lv-karuselli-napit button:hover:not(:disabled) { background:#eff6ff; }
-    .lv-karuselli-napit button:disabled { opacity:.35; cursor:default; }
-    .lv-karuselli-tila { white-space:nowrap; font-size:13px; font-weight:700; color:#64748b; }
-    .lv-kansio .lv-yo-palkki { margin-top:14px; }
+    @media (prefers-reduced-motion: reduce) { #tutkija-lukio .lv-kansio .lv-vuosi { animation:none; } .lv-nuoli, .lv-askel-taytto, .lv-askel-nro { transition:none; } }
+    .lv-kansio .lv-vuosi-yla { position:relative; display:flex; align-items:center; gap:14px; padding:18px 20px; margin:0 0 8px; background:linear-gradient(120deg,var(--v1),var(--v2)); overflow:hidden; }
+    .lv-vuosi-iso { position:absolute; right:14px; top:-22px; font-size:120px; font-weight:900; line-height:1; color:rgba(255,255,255,.18); pointer-events:none; }
+    .lv-kansio .lv-vuosi-ikoni { flex:0 0 48px; width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.55); }
+    .lv-kansio .lv-vuosi-ikoni svg { width:26px; height:26px; }
+    #tutkija-lukio .lv-kansio .lv-vuosi .lv-vuosi-label { font-size:11.5px; color:rgba(255,255,255,.85); margin:0 0 2px; }
+    .lv-kansio .lv-vuosi-kuvaus { font-size:19px; color:#fff; margin:0; }
+    .lv-kansio .lv-vuosi-lista { margin:0 20px; }
+    .lv-kansio .lv-vuosi-lista li { font-size:14.5px; color:#1e293b; padding:8px 0 8px 26px; border-bottom:1px dashed rgba(15,23,42,.1); }
+    .lv-kansio .lv-vuosi-lista li::before { content:""; left:4px; top:13px; width:11px; height:11px; border-radius:50%; background:var(--v); box-shadow:0 0 0 3px var(--vv); }
+    #tutkija-lukio .lv-kansio .lv-vuosi .lv-vuosi-paatos { margin:12px 0 0 20px; padding:5px 12px; border-radius:999px; font-size:12.5px; background:var(--v); color:#fff; }
+    #tutkija-lukio .lv-kansio .lv-vuosi-3 .lv-vuosi-paatos { background:#f59e0b; color:#422006; }
+    /* Selausnapit seuraavat nykyisen vuoden väriä */
+    .lv-karuselli-napit { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; }
+    .lv-karuselli-napit button { white-space:nowrap; padding:9px 16px; border-radius:999px; border:2px solid var(--nyt); background:#fff; color:var(--nyt); font:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:background .15s, color .15s, border-color .2s; }
+    .lv-karuselli-napit .lv-seuraava { background:var(--nyt); color:#fff; }
+    .lv-karuselli-napit button:hover:not(:disabled) { filter:brightness(1.08); }
+    .lv-karuselli-napit button:disabled { opacity:.3; cursor:default; }
+    .lv-karuselli-tila { white-space:nowrap; font-size:13px; font-weight:800; color:var(--nyt); }
+    #tutkija-lukio .lv-kansio .lv-yo-palkki { margin-top:16px; padding:12px 16px; border-radius:12px; background:linear-gradient(90deg,#0ea5e9,#8b5cf6,#1e3a8a); }
+    .lv-yo-ikoni { flex:0 0 34px; width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.2); }
+    .lv-kansio .lv-yo-teksti { font-size:13.5px; }
     @media (max-width:560px) {
       .lv-kansi { flex-wrap:wrap; gap:10px; padding:14px; }
-      .lv-kansi-kuva { flex:0 0 120px; width:120px; }
+      .lv-kansi-kuva { flex:0 0 130px; width:130px; }
       .lv-kansi-avaa { margin-left:auto; }
       .lv-kansi-teksti { flex:1 1 100%; order:3; }
-      .lv-askel { font-size:12px; padding:7px 4px; }
+      .lv-kansi-otsikko { font-size:20px; }
       .lv-kansio-sisalto { padding:4px 12px 14px; }
+      .lv-askel { font-size:12px; }
+      .lv-kansio .lv-vuosi-yla { padding:14px 16px; }
+      .lv-vuosi-iso { font-size:96px; }
+      .lv-kansio .lv-vuosi-lista { margin:0 14px; }
+      #tutkija-lukio .lv-kansio .lv-vuosi .lv-vuosi-paatos { margin-left:14px; }
       .lv-karuselli-napit button { padding:8px 11px; font-size:12.5px; }
     }
 
