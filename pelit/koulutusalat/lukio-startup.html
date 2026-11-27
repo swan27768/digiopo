@@ -196,164 +196,231 @@ TarinaYhteinen.alusta(setup, {
   }
  },
  "tehtava": {
-  "tyyppi": "jako",
-  "nimi": "Yrityksen budjetti",
-  "budjetti": 20000,
-  "minValittuja": 3,
-  "minKaytto": 16000,
-  "kohteetSana": "kohdetta",
-  "kohdeOtsikko": "Kohde",
-  "tilanneOtsikko": "Sinä teet ensi vuoden budjetin",
-  "ostoOhje": "Kierron ensimmäinen vuosi on takana, ja tilillä on 20 000 euroa. Emma ja Oskari pyytävät sinua ehdottamaan, mihin rahat käytetään ensi vuonna. Kaikkeen raha ei riitä. Valitse vähintään kolme kohdetta ja katso, keitä valintasi auttavat. Voit muuttaa valintoja niin monta kertaa kuin haluat.",
-  "osa1": "Osa 1/2 · Valinnat",
+  "tyyppi": "kannattavuus",
+  "nimi": "Kannattavuuslaskuri",
+  "osa1": "Kuukausi",
   "osa2": "Osa 2/2 · Perustelut",
-  "valmisOstot": "Lukitse valinnat",
-  "takaisinOstoihin": "Muuta valintoja",
-  "valmisNappi": "Katso budjetti",
-  "perusteluOtsikko": "Valinnat on lukittu!",
+  "tavoitteetOtsikko": "Kuukauden tavoitteet",
+  "asiakkaatNimi": "Tilauksia kuukaudessa",
+  "tulotNimi": "Myynti",
+  "kulutNimi": "Kulut",
+  "voittoNimi": "Voitto",
+  "tappioNimi": "Tappio",
+  "voittoalue": "Voittoalue",
+  "erittelyNimi": "Mistä kulut tulevat?",
+  "kiinteatNimi": "Vuokra, verkkokauppa-alusta ja lainan lyhennys",
+  "raakaNimi": "Tuote, postikulut ja maksupalvelu",
+  "palkatNimi": "Amirin palkka",
+  "palkatKaava": "{tunnit} h/vk × {kerroin} vk × {tuntipalkka}/h",
+  "mainosNimi": "Somemainonta",
+  "ennusteTeksti": "Ennuste:",
+  "xAkseli": "tilauksia kuukaudessa",
+  "rajaTeksti": "Kannattavuusraja",
+  "rajaYksikko": "tilausta kuukaudessa",
+  "rajaYli": "Ennuste ylittää rajan, joten Kierto tekee voittoa.",
+  "rajaAli": "Ennuste jää rajan alle, joten Kierto tekee tappiota.",
+  "rajaEi": "Hinta on niin pieni, ettei se kata edes tuotteen ja postin kuluja.",
+  "yhteenvetoRivi": "Keskihinta {hinta} · Amir {tunnit} h/vk · mainonta {mainonta} · {asiakkaat} tilausta",
+  "tarkistaNappi": "Lukitse kuukauden suunnitelma",
+  "palautaNappi": "Palauta alkuarvot",
+  "muokkaaNappi": "Muuta valintoja",
+  "seuraavaNappi": "Seuraava kuukausi",
+  "jatkaNappi": "Jatka perusteluihin",
+  "takaisinNappi": "Takaisin laskuriin",
+  "valmisNappi": "Katso tulos",
+  "perusteluOtsikko": "Kolme kuukautta on laskettu!",
   "perusteluOhje": "Vastaa vielä kolmeen kysymykseen. Kirjoita jokaiseen yksi tai kaksi lausetta.",
   "ammattilainenTeksti": "Tätä työtä tekee",
-  "korttiYla": "BUDJETTIESITYS · KIERTO OY",
-  "kauppaNimi": "Ensi vuoden budjetti",
-  "ryhmatOtsikko": "Keitä valintasi auttavat?",
-  "ryhmat": {
-   "asiakkaat": {
-    "nimi": "Asiakkaat",
-    "vari": "#60a5fa",
-    "ok": "Valintasi tekevät ostamisesta asiakkaille helpompaa.",
-    "ei": "Asiakkaat eivät nyt saaneet mitään uutta."
-   },
-   "kasvu": {
-    "nimi": "Yrityksen kasvu",
-    "vari": "#f59e0b",
-    "ok": "Valintasi auttavat yritystä kasvamaan.",
-    "ei": "Kasvuun ei nyt panostettu. Myynti voi jäädä ennalleen."
-   },
-   "tyo": {
-    "nimi": "Työntekijät ja yrittäjät",
-    "vari": "#c084fc",
-    "ok": "Valintasi auttavat yrittäjiä ja työntekijää jaksamaan.",
-    "ei": "Yrittäjät ja työntekijä jäivät nyt ilman apua. Väsymys voi kasvaa."
-   },
-   "ymparisto": {
-    "nimi": "Ympäristö",
-    "vari": "#34d399",
-    "ok": "Valintasi tukevat yrityksen ympäristötavoitetta.",
-    "ei": "Ympäristötavoite jäi nyt vähälle, vaikka se on Kierron idea."
-   }
+  "korttiYla": "KANNATTAVUUSLASKELMA · KIERTO OY",
+  "palaute": [
+   "Loistavaa! Kierto tekee voittoa ja pitää lupauksensa asiakkaille. Ekonomi olisi ylpeä.",
+   "Hyvä! Melkein kaikki tavoitteet täyttyivät. Katso selityksistä, mitä voisit vielä säätää.",
+   "Hyvä alku! Lue tavoitteiden selitykset ja kokeile uudelleen. Pienikin hinnan muutos voi kääntää tappion voitoksi."
+  ],
+  "malli": {
+   "perushinta": 45,
+   "perustunnit": 15,
+   "kilpailuJousto": 0.12,
+   "mainosMax": 0.35,
+   "mainosPuoli": 300,
+   "kiinteat": 1400,
+   "raakaaine": 27,
+   "tuntipalkka": 14,
+   "tuntiKerroin": 4.3
   },
+  "saatimet": [
+   {
+    "avain": "hinta",
+    "nimi": "Keskihinta tilausta kohden",
+    "min": 30,
+    "max": 70,
+    "askel": 1,
+    "oletus": 45,
+    "muoto": "euro2",
+    "yksikko": "",
+    "vihje": "Jokaisesta tilauksesta menee 27 € tuotteeseen, postiin ja maksupalveluun. Loput on katetta. Kalliimpi hinta antaa enemmän katetta, mutta tilauksia tulee vähemmän."
+   },
+   {
+    "avain": "tunnit",
+    "nimi": "Amirin työtunnit viikossa",
+    "min": 5,
+    "max": 30,
+    "askel": 5,
+    "oletus": 15,
+    "muoto": "tunnit",
+    "yksikko": "h",
+    "vihje": "Kun Amir ehtii kuvata ja pakata enemmän, kaupassa on enemmän tuotteita ja paketit lähtevät nopeammin. Jokainen tunti maksaa kuitenkin palkkaa."
+   },
+   {
+    "avain": "mainonta",
+    "nimi": "Somemainonta kuukaudessa",
+    "min": 0,
+    "max": 1000,
+    "askel": 50,
+    "oletus": 200,
+    "muoto": "euro",
+    "yksikko": "",
+    "vihje": "Mainos tuo uusia asiakkaita, mutta jokainen lisäeuro tuo vähemmän kuin edellinen."
+   }
+  ],
+  "viikot": [
+   {
+    "nimi": "Syyskuu: kausi alkaa",
+    "ikoni": "🏒",
+    "perusasiakkaat": 230,
+    "k": 0.045,
+    "tuntiEksp": 0.45,
+    "kuvaus": "Junioreiden harjoituskausi alkaa, ja vanhemmat etsivät mailoja ja luistimia. Tilauksia tulee paljon. Nyt kannattaa tehdä voittoa talven varalle ja lokakuun lainaa varten.",
+    "saannot": [
+     {
+      "tyyppi": "tulosVah",
+      "arvo": 0,
+      "nimi": "Kierto ei tee tappiota",
+      "selitys": "Myynnin pitää olla suurempi kuin kulujen. Muuten yrityksen rahat loppuvat."
+     },
+     {
+      "tyyppi": "tulosVah",
+      "arvo": 3000,
+      "nimi": "Voittoa tulee vähintään 3 000 €",
+      "selitys": "Syksy on vuoden paras myyntiaika. Voitolla selvitään hiljaisista kuukausista. Kokeile, mitä lisätunnit ja mainonta tuovat, kun tilauksia on paljon."
+     },
+     {
+      "tyyppi": "tunnitMin",
+      "arvo": 20,
+      "nimi": "Amir tekee vähintään 20 tuntia viikossa",
+      "selitys": "Kiireessä paketit pitää lähettää nopeasti. Jos kukaan ei ehdi pakata, asiakkaat odottavat ja peruvat tilauksia."
+     },
+     {
+      "tyyppi": "hintaMax",
+      "arvo": 49,
+      "nimi": "Keskihinta on enintään 49 €",
+      "selitys": "Kierron idea on, että urheilu ei olisi kallista. Liian kallis hinta rikkoo lupauksen asiakkaille."
+     }
+    ]
+   },
+   {
+    "nimi": "Tammikuu: hiljainen kuukausi",
+    "ikoni": "❄️",
+    "perusasiakkaat": 90,
+    "k": 0.05,
+    "tuntiEksp": 0.2,
+    "kuvaus": "Joulu on ohi, ja harva ostaa nyt urheiluvarusteita. Vuokra ja verkkokaupan maksut pitää silti maksaa. Voittoa on vaikea tehdä, mutta tappion voi pitää pienenä.",
+    "saannot": [
+     {
+      "tyyppi": "tulosVah",
+      "arvo": -500,
+      "nimi": "Tappio on enintään 500 €",
+      "selitys": "Kiinteät kulut pysyvät, vaikka myynti hiljenee. Säästä niissä kuluissa, joista voit itse päättää: työtunneissa ja mainonnassa."
+     },
+     {
+      "tyyppi": "tunnitMin",
+      "arvo": 10,
+      "nimi": "Amir tekee vähintään 10 tuntia viikossa",
+      "selitys": "Amirin työsopimukseen on kirjattu vähintään 10 tuntia viikossa. Sopimusta ei voi muuttaa yksin, vaikka myynti hiljenee."
+     },
+     {
+      "tyyppi": "hintaMax",
+      "arvo": 50,
+      "nimi": "Keskihinta on enintään 50 €",
+      "selitys": "Hintojen nostaminen hiljaisena aikana ei auta. Silloin myynti putoaa entisestään."
+     }
+    ]
+   },
+   {
+    "nimi": "Maaliskuu: kilpailija laskee hinnat",
+    "ikoni": "🏷️",
+    "perusasiakkaat": 170,
+    "k": 0.04,
+    "tuntiEksp": 0.4,
+    "kilpailijanHinta": 42,
+    "kuvaus": "Uusi kilpailija myy käytettyjä varusteita keskimäärin 42 eurolla. Jos Kierto on kalliimpi, moni asiakas vaihtaa. Löydätkö hinnan, jolla Kierto tekee silti voittoa?",
+    "saannot": [
+     {
+      "tyyppi": "tulosVah",
+      "arvo": 800,
+      "nimi": "Voittoa tulee vähintään 800 €",
+      "selitys": "Hinnan pitää kilpailla, mutta jokaisesta tilauksesta pitää jäädä katetta. Kate on hinta miinus tuotteen, postin ja maksupalvelun kulut."
+     },
+     {
+      "tyyppi": "hintaMin",
+      "arvo": 35,
+      "nimi": "Keskihinta on vähintään 35 €",
+      "selitys": "Hintasodassa on helppo myydä liian halvalla. Alle 35 eurolla katetta jää niin vähän, että pienikin vastoinkäyminen tuo tappion."
+     },
+     {
+      "tyyppi": "mainontaMin",
+      "arvo": 200,
+      "nimi": "Mainontaa vähintään 200 €",
+      "selitys": "Kun kilpailu kiristyy, asiakkaiden pitää muistaa Kierto. Ilman mainontaa uusi kilpailija vie näkyvyyden."
+     }
+    ]
+   }
+  ],
   "kysymykset": [
    {
-    "kysymys": "Miksi käytit eniten rahaa tähän: {top}?",
+    "kysymys": "Mikä kuukausi oli vaikein? Mitä muutit, ja miksi?",
     "ammattilainen": "Ekonomi",
-    "tutkinto": "Kauppatieteiden maisteri, yliopisto",
-    "placeholder": "Käytin siihen eniten, koska…"
+    "tutkinto": "Kauppatieteiden maisteri, yliopisto, 5 vuotta",
+    "placeholder": "Vaikein oli…, koska… Muutin…"
    },
    {
-    "kysymys": "Mikä jäi nyt tekemättä? Mitä riskejä siitä voi seurata?",
-    "ammattilainen": "Rahoitusasiantuntija",
-    "tutkinto": "Kauppatieteiden maisteri tai tradenomi (AMK)",
-    "placeholder": "Tekemättä jäi…"
-   },
-   {
-    "kysymys": "Kirjoita lyhyt viesti asiakkaille: mitä Kierrossa muuttuu ensi vuonna?",
+    "kysymys": "Kilpailija laski hintoja. Miten reagoit, ja mitä se teki Kierron voitolle?",
     "ammattilainen": "Markkinoinnin asiantuntija",
-    "tutkinto": "Tradenomi (AMK) tai kauppatieteiden maisteri",
-    "placeholder": "Ensi vuonna Kierrossa…"
+    "tutkinto": "Tradenomi (AMK) tai kauppatieteiden maisteri, yliopisto",
+    "placeholder": "Laskin / en laskenut hintaa, koska…"
+   },
+   {
+    "kysymys": "Mitä kannattavuusraja tarkoittaa? Selitä omin sanoin Kierron esimerkillä.",
+    "ammattilainen": "Kirjanpitäjä",
+    "tutkinto": "Tradenomi (AMK), ammattikorkeakoulu, 3,5 vuotta",
+    "placeholder": "Kannattavuusraja on…"
+   }
+  ],
+  "ammattilaisetOtsikko": "Näitä töitä tekevät",
+  "ammattilaiset": [
+   {
+    "nimi": "Ekonomi",
+    "tehtava": "laskee, millä hinnoilla ja kuluilla yritys tekee voittoa",
+    "tutkinto": "Kauppatieteiden maisteri, yliopisto, 5 vuotta"
+   },
+   {
+    "nimi": "Kirjanpitäjä",
+    "tehtava": "seuraa joka kuukausi, mistä raha tulee ja mihin se menee",
+    "tutkinto": "Tradenomi (AMK), ammattikorkeakoulu, 3,5 vuotta"
+   },
+   {
+    "nimi": "Markkinoinnin asiantuntija",
+    "tehtava": "päättää, miten ja kenelle mainostetaan",
+    "tutkinto": "Tradenomi (AMK) tai kauppatieteiden maisteri, yliopisto"
+   },
+   {
+    "nimi": "Rahoitusasiantuntija",
+    "tehtava": "arvioi, riittävätkö rahat ja kannattaako lainaa ottaa",
+    "tutkinto": "Kauppatieteiden maisteri, yliopisto, tai tradenomi (AMK)"
    }
   ]
  },
- "kutsuKortit": [
-  {
-   "nimi": "Varaston täydennys",
-   "ikoni": "📦",
-   "hinta": 6000,
-   "kuvaus": "Ostetaan lisää käytettyjä varusteita myyntiin ennen talvikautta.",
-   "auttaa": [
-    "asiakkaat",
-    "kasvu"
-   ],
-   "varoitus": "Ilman lisää varastoa myytävää ei riitä talvikauteen."
-  },
-  {
-   "nimi": "Verkkokaupan uudistus",
-   "ikoni": "🛒",
-   "hinta": 5000,
-   "kuvaus": "Kauppa toimii paremmin puhelimella, ja haku löytää oikean koon.",
-   "auttaa": [
-    "asiakkaat",
-    "kasvu"
-   ]
-  },
-  {
-   "nimi": "Osa-aikainen työntekijä",
-   "ikoni": "👥",
-   "hinta": 8000,
-   "kuvaus": "Uusi työntekijä pakkaa tilaukset ja vastaa asiakkaille.",
-   "auttaa": [
-    "tyo",
-    "asiakkaat"
-   ]
-  },
-  {
-   "nimi": "Työterveyshuolto",
-   "ikoni": "🩺",
-   "hinta": 1500,
-   "kuvaus": "Työntekijä pääsee työterveyslääkärille ja -hoitajalle.",
-   "auttaa": [
-    "tyo"
-   ],
-   "varoitus": "Kun yrityksellä on työntekijä, työnantajan on lain mukaan järjestettävä työterveyshuolto."
-  },
-  {
-   "nimi": "Kirjanpitäjän palvelu",
-   "ikoni": "🧾",
-   "hinta": 2400,
-   "kuvaus": "Ammattilainen hoitaa kirjanpidon ja verot. Yrittäjille jää enemmän aikaa.",
-   "auttaa": [
-    "tyo"
-   ],
-   "varoitus": "Ilman kirjanpitäjää yrittäjien aika menee papereihin, ja virheet voivat tulla kalliiksi."
-  },
-  {
-   "nimi": "Somekampanja",
-   "ikoni": "📣",
-   "hinta": 3000,
-   "kuvaus": "Kampanja tuo kauppaan uusia nuoria asiakkaita.",
-   "auttaa": [
-    "kasvu"
-   ]
-  },
-  {
-   "nimi": "Korjauspaja",
-   "ikoni": "🔧",
-   "hinta": 4000,
-   "kuvaus": "Rikkinäiset varusteet korjataan myyntikuntoon eikä niitä heitetä pois.",
-   "auttaa": [
-    "ymparisto",
-    "kasvu"
-   ]
-  },
-  {
-   "nimi": "Ilmaiset palautukset",
-   "ikoni": "🔄",
-   "hinta": 2000,
-   "kuvaus": "Asiakas voi palauttaa väärän koon maksutta.",
-   "auttaa": [
-    "asiakkaat"
-   ]
-  },
-  {
-   "nimi": "Sähköpyörä lähitoimituksiin",
-   "ikoni": "🚲",
-   "hinta": 2500,
-   "kuvaus": "Kaupungin sisällä paketit viedään sähköpyörällä.",
-   "auttaa": [
-    "ymparisto",
-    "asiakkaat"
-   ]
-  }
- ]
+ "kutsuKortit": []
 });
 </script><tw-tag name="cover" color="blue"></tw-tag><tw-passagedata pid="1" name="StoryInit" tags="" position="220,100" size="100,100">&lt;&lt;run Config.saves.maxAutoSaves = 0;&gt;&gt;
 /* Startupin ensimmäinen vuosi – alkuarvot */
@@ -484,16 +551,16 @@ $(&#x27;body&#x27;).addClass(&#x27;hide-navbar&#x27;);
 &lt;div id=&quot;ammattikortti&quot;&gt;&lt;&lt;print setup.korttiHTML()&gt;&gt;&lt;/div&gt;
 &lt;div class=&quot;intro-nappi action-row&quot;&gt;
 &lt;a class=&quot;macro-link btn-secondary&quot; href=&quot;javascript:void(0)&quot; onclick=&quot;lataaAmmattikortti()&quot;&gt;Lataa kortti kuvana&lt;/a&gt;
-&lt;&lt;link &quot;Seuraava tehtävä: Yrityksen budjetti&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;link &quot;Seuraava tehtävä: Kannattavuuslaskuri&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: ohje&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
 </tw-passagedata><tw-passagedata pid="15" name="Kutsu: ohje" tags="scene-brief" position="1900,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div class=&quot;kutsu-ohje&quot;&gt;
 &lt;p class=&quot;alku-tag&quot;&gt;Tehtävä · noin 25 min&lt;/p&gt;
-&lt;h2 class=&quot;alku-otsikko&quot;&gt;Yrityksen budjetti&lt;/h2&gt;
-&lt;p&gt;Kierron ensimmäinen vuosi on takana. Nyt sinä ehdotat, mihin yritys käyttää rahansa ensi vuonna.&lt;/p&gt;
-&lt;p&gt;Käytössä on &lt;strong&gt;20 000 euroa&lt;/strong&gt;, ja vaihtoehtoja on yhdeksän. Teet kaksi asiaa:&lt;/p&gt;
-&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Valitse vähintään kolme kohdetta. Katso, keitä valintasi auttavat.&lt;/li&gt;&lt;li&gt;Vastaa kolmeen kysymykseen ja perustele valintasi.&lt;/li&gt;&lt;/ol&gt;
-&lt;p&gt;Kaikkeen raha ei riitä. Voit muuttaa valintoja, kunnes lukitset ne. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
+&lt;h2 class=&quot;alku-otsikko&quot;&gt;Kannattavuuslaskuri&lt;/h2&gt;
+&lt;p&gt;Kierron toinen vuosi alkaa. Nyt sinä olet ekonomi. Kannattavuuslaskurilla näet, miten hinta, työtunnit ja mainonta vaikuttavat siihen, tekeekö Kierto voittoa.&lt;/p&gt;
+&lt;p&gt;Saat &lt;strong&gt;kolme kuukautta&lt;/strong&gt;: vilkkaan syyskuun, hiljaisen tammikuun ja maaliskuun, jolloin kilpailija laskee hintojaan. Teet kaksi asiaa:&lt;/p&gt;
+&lt;ol class=&quot;kutsu-askeleet&quot;&gt;&lt;li&gt;Säädä joka kuukaudelle keskihinta, Amirin työtunnit ja mainonta. Yritä saavuttaa kuukauden tavoitteet.&lt;/li&gt;&lt;li&gt;Vastaa kolmeen kysymykseen omin sanoin.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;Luvut ja kaavio muuttuvat heti, kun liikutat säätimiä. Kun lukitset suunnitelman, näet, mitkä tavoitteet täyttyivät. Voit muuttaa valintoja ja yrittää uudelleen. Lopuksi lataat vastauksesi ja palautat ne Classroomiin.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;&lt;&lt;link &quot;Aloita&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="16" name="Kutsu" tags="scene-brief" position="2020,100" size="100,100">&lt;&lt;nobr&gt;&gt;
@@ -501,7 +568,7 @@ $(&#x27;body&#x27;).addClass(&#x27;hide-navbar&#x27;);
 &lt;&lt;script&gt;&gt;setTimeout(function () { if (window.kutsuPiirra) kutsuPiirra(); }, 0);&lt;&lt;/script&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
 </tw-passagedata><tw-passagedata pid="17" name="Kutsu: tulos" tags="scene-loppu" position="2140,100" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;h2&gt;Budjettiesityksesi&lt;/h2&gt;
+&lt;h2&gt;Kierron kolme kuukautta&lt;/h2&gt;
 &lt;div id=&quot;kutsu-yhteenveto&quot;&gt;&lt;&lt;print setup.kutsuYhteenveto()&gt;&gt;&lt;/div&gt;
 &lt;p class=&quot;pieni&quot; style=&quot;text-align:center&quot;&gt;Lataa vastauksesi ja palauta tiedosto Classroomiin.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi action-row&quot;&gt;
@@ -510,7 +577,7 @@ $(&#x27;body&#x27;).addClass(&#x27;hide-navbar&#x27;);
 &lt;/div&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="18" name="Loppu" tags="scene-loppu" position="2260,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;h2&gt;Valmis!&lt;/h2&gt;
-&lt;p&gt;Seurasit Kierron ensimmäistä vuotta ja teit yritykselle budjetin. Samalla tutustuit kuuteen talousalan ammattiin.&lt;/p&gt;
+&lt;p&gt;Seurasit Kierron ensimmäistä vuotta ja laskit, millä hinnoilla yritys tekee voittoa. Samalla tutustuit kuuteen talousalan ammattiin.&lt;/p&gt;
 &lt;p&gt;Muistitko ladata vastauksesi ja palauttaa ne Classroomiin? Jos et, &lt;&lt;link &quot;palaa tuloksiin&quot;&gt;&gt;&lt;&lt;goto &quot;Kutsu: tulos&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;.&lt;/p&gt;
 &lt;div class=&quot;intro-nappi&quot;&gt;
 &lt;&lt;link &quot;Näin pääset alalle&quot;&gt;&gt;&lt;&lt;goto &quot;Näin pääset alalle&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;

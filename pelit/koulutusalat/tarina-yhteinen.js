@@ -3088,7 +3088,7 @@
         var kys = Math.exp(-vk.k * (h - MK.perushinta));
         if (vk.kilpailijanHinta && h > vk.kilpailijanHinta) kys *= Math.exp(-MK.kilpailuJousto * (h - vk.kilpailijanHinta));
         var as = Math.round(vk.perusasiakkaat * kys * Math.pow(t / MK.perustunnit, vk.tuntiEksp) * (1 + MK.mainosMax * (1 - Math.exp(-m / MK.mainosPuoli))));
-        var kiint = MK.kiinteat, raaka = as * MK.raakaaine, palkat = t * 7 * MK.tuntipalkka;
+        var kiint = MK.kiinteat, raaka = as * MK.raakaaine, palkat = t * (MK.tuntiKerroin || 7) * MK.tuntipalkka;
         var tulot = as * h, kulut = kiint + raaka + palkat + m;
         var kiinteatYht = kiint + palkat + m, kate = h - MK.raakaaine;
         return { asiakkaat: as, tulot: tulot, kiint: kiint, raaka: raaka, palkat: palkat, mainos: m, kulut: kulut, tulos: tulot - kulut, raja: kate > 0 ? Math.ceil(kiinteatYht / kate) : null, kiinteatYht: kiinteatYht };
@@ -3104,6 +3104,9 @@
       var pisteetK = function (tila) { var p = 0, m = 0; VK.forEach(function (vk, i) { m += (vk.saannot || []).length; var t = (tila.v || [])[i]; if (t && t.tarkistettu) p += tarkistaK(vk, t.a).filter(function (x) { return x.ok; }).length; }); return { p: p, m: m }; };
       var palauteK = function (p, m) { return p >= m ? TH.palaute[0] : p >= m - 3 ? TH.palaute[1] : TH.palaute[2]; };
       var ylosK = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
+      var luku = function (x) { return String(x).replace(".", ","); };
+      var palkkaKaava = function (t) { return TH.palkatKaava ? TH.palkatKaava.replace("{tunnit}", t).replace("{kerroin}", luku(MK.tuntiKerroin || 7)).replace("{tuntipalkka}", euro(MK.tuntipalkka)) : t + " h × 7 pv × " + euro(MK.tuntipalkka); };
+      var yhtRivi = function (a, r) { return TH.yhteenvetoRivi ? TH.yhteenvetoRivi.replace("{hinta}", euro2(a.hinta)).replace("{tunnit}", a.tunnit).replace("{mainonta}", euro(a.mainonta)).replace("{asiakkaat}", r.asiakkaat) : "Hinta " + euro2(a.hinta) + " · auki " + a.tunnit + " h/pv · mainonta " + euro(a.mainonta) + " · " + r.asiakkaat + " asiakasta"; };
       var arvoTeksti = function (s, x) { return s.muoto === "euro2" ? euro2(x) : s.muoto === "euro" ? euro(x) : x + " " + (s.yksikko || ""); };
 
       var kaavio = function (r, hinta) {
@@ -3153,7 +3156,7 @@
             '<details class="kv-erittely"><summary>' + suojaa(TH.erittelyNimi || "Mistä kulut tulevat?") + '</summary><ul>' +
             '<li>' + suojaa(TH.kiinteatNimi || "Vuokra, sähkö ja laina") + ': <strong>' + euro(r.kiint) + '</strong></li>' +
             '<li>' + suojaa(TH.raakaNimi || "Raaka-aineet") + ' (' + euro2(MK.raakaaine) + ' / asiakas): <strong>' + euro(r.raaka) + '</strong></li>' +
-            '<li>' + suojaa(TH.palkatNimi || "Palkat") + ' (' + vt.a.tunnit + ' h × 7 pv × ' + euro(MK.tuntipalkka) + '): <strong>' + euro(r.palkat) + '</strong></li>' +
+            '<li>' + suojaa(TH.palkatNimi || "Palkat") + ' (' + palkkaKaava(vt.a.tunnit) + '): <strong>' + euro(r.palkat) + '</strong></li>' +
             '<li>' + suojaa(TH.mainosNimi || "Mainonta") + ': <strong>' + euro(r.mainos) + '</strong></li></ul></details>' +
             kaavio(r, vt.a.hinta) +
             '<p class="kv-raja-teksti">' + (r.raja ? suojaa(TH.rajaTeksti || "Kannattavuusraja") + ': <strong>' + r.raja + ' ' + suojaa(TH.rajaYksikko || "asiakasta viikossa") + '</strong>. ' + suojaa(r.asiakkaat >= r.raja ? (TH.rajaYli || "Ennuste ylittää rajan, joten kahvila tekee voittoa.") : (TH.rajaAli || "Ennuste jää rajan alle, joten kahvila tekee tappiota.")) : suojaa(TH.rajaEi || "Hinta ei edes kata raaka-aineita.")) + '</p>';
@@ -3221,7 +3224,7 @@
             var t = (tila.v || [])[i]; if (!t) return '<li><strong>' + suojaa(vk.nimi) + '</strong> – ei tehty</li>';
             var r = laskeKv(vk, t.a), ok = tarkistaK(vk, t.a);
             return '<li><strong>' + suojaa((vk.ikoni || "") + " " + vk.nimi) + '</strong> · ' + suojaa(r.tulos >= 0 ? "voitto " : "tappio ") + euro(r.tulos) +
-              '<span class="hp-r-rivi">' + suojaa("Hinta " + euro2(t.a.hinta) + " · auki " + t.a.tunnit + " h/pv · mainonta " + euro(t.a.mainonta) + " · " + r.asiakkaat + " asiakasta") + '</span>' +
+              '<span class="hp-r-rivi">' + suojaa(yhtRivi(t.a, r)) + '</span>' +
               '<span class="hp-r-rivi">' + suojaa(ok.map(function (x) { return (x.ok ? "✓ " : "✗ ") + x.r.nimi; }).join(" · ")) + '</span></li>';
           }).join("") + '</ol></div>';
         h += '<h3 class="kehitys-perustelut-otsikko">Perustelusi</h3><ol class="kutsu-lista">' + (TH.kysymykset || []).map(function (q, i) {
@@ -3240,8 +3243,8 @@
           var v = (tila.v || [])[i]; t += "\n" + vk.nimi.toUpperCase() + "\n";
           if (!v) { t += "  Ei tehty\n"; return; }
           var r = laskeKv(vk, v.a);
-          t += "  Hinta " + euro2(v.a.hinta) + ", auki " + v.a.tunnit + " h/pv, mainonta " + euro(v.a.mainonta) + "\n";
-          t += "  Asiakkaita " + r.asiakkaat + ", tulot " + euro(r.tulot) + ", kulut " + euro(r.kulut) + ", tulos " + euro(r.tulos) + "\n";
+          t += "  " + yhtRivi(v.a, r) + "\n";
+          t += "  " + (TH.asiakkaatNimi || "Asiakkaita") + " " + r.asiakkaat + ", tulot " + euro(r.tulot) + ", kulut " + euro(r.kulut) + ", tulos " + euro(r.tulos) + "\n";
           tarkistaK(vk, v.a).forEach(function (x) { t += "  " + (x.ok ? "✓ " : "✗ ") + x.r.nimi + "\n"; });
         });
         t += "\nPERUSTELUT\n";
