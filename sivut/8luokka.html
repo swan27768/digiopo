@@ -907,8 +907,8 @@
               <p class="tj-kuvaus">Jotkut lukiot ovat erikoistuneet tiettyyn alaan. Niihin haetaan usein pääsykokeen kautta — lisätietoa <a href="https://opintopolku.fi/konfo/fi/sivu/lukiokoulutus" target="_blank" rel="noopener" style="color:#2563eb;">opintopolku.fi</a>:stä.</p>
               <p class="erikoislukio-huomio" id="erikoislukio-huomio" role="status" hidden></p>
               <div class="erikoislukio-grid" id="erikoislukio-grid" role="list"></div>
-              <!-- IB-tutkinnon infokortti: sisältö IB_INFO / DIGIOPO_T.g8.tutkija.ib_info, lähde opintopolku.fi -->
-              <aside class="lukio-ib-info" id="lukio-ib-info" aria-labelledby="lukio-ib-info-otsikko"></aside>
+              <!-- IB-tutkinnon infokortti: näkyy vain, kun Vaihe 1:n IB-valinta on päällä. Sisältö IB_INFO / DIGIOPO_T.g8.tutkija.ib_info, lähde opintopolku.fi -->
+              <aside class="lukio-ib-info" id="lukio-ib-info" aria-labelledby="lukio-ib-info-otsikko" hidden></aside>
 
               <!-- ── LUKIOPOLKU VUOSIKAAVIO ── -->
               <div class="lv-vuosikaavio">
@@ -2628,7 +2628,7 @@
         '<dl>' + kohdat.map(k => '<div><dt>' + esc8(k[0]) + '</dt><dd>' + esc8(k[1]) + '</dd></div>').join('') + '</dl>' +
         '<a href="https://opintopolku.fi/konfo/fi/koulutus/1.2.246.562.13.00000000000000001028" target="_blank" rel="noopener">' +
         esc8(t.linkki || d.linkki) + ' <span aria-hidden="true">→</span></a>';
-      el.classList.toggle('korostus', lukioValitut.has('englanti'));
+      el.hidden = !lukioValitut.has('englanti');   /* vain IB-valinnan tehneille */
     }
 
     /* IB ("englanti") on lisävalinta: se ei rajaa painotuksia eikä korkeakouluja pois */
