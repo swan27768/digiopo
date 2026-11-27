@@ -1836,3 +1836,62 @@ html body #passages .passage .jl-kentta input { width: 100% !important; min-widt
 .jk-valitse:disabled { opacity: .35; cursor: not-allowed; }
 .jk-valitse:focus-visible { outline: 3px solid var(--korostus); outline-offset: 2px; }
 .jk-tuote { display: flex; flex-direction: column; gap: 0.45rem; }
+
+/* ============================================================
+   TEHTÄVÄTYYPPI "faktantarkistus" (esim. Lukiopolku: Uutispäivä)
+   Väite näytetään somepostauksena, viestinä, tiedotteena tai kuvana.
+   ============================================================ */
+.ft-kortti { text-align: left; }
+.ft-nakyma { margin: 0.6rem 0 0.9rem; padding: 0.85rem 1rem; border-radius: 14px; background: #ffffff; color: #0f172a; box-shadow: 0 6px 18px rgba(0,0,0,.25); max-width: 520px; }
+#passages .passage .ft-nakyma p { color: #0f172a !important; }
+.ft-nakyma-yla { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.45rem; }
+.ft-avatar { flex: none; width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff !important; margin: 0 !important;
+  background: linear-gradient(135deg, var(--a2), var(--a1)); }
+.ft-nimi { flex: 1; font-weight: 800; font-size: 0.95rem !important; line-height: 1.2 !important; margin: 0 !important; color: #0f172a !important; }
+.ft-tunnus { display: block; font-weight: 500; color: #64748b !important; font-size: 0.8rem !important; margin: 0 !important; }
+.ft-aika { color: #64748b !important; font-size: 0.8rem !important; margin: 0 !important; white-space: nowrap; }
+.ft-vahvistettu { display: inline-grid; place-items: center; width: 1.05rem; height: 1.05rem; border-radius: 50%; background: #1d9bf0; color: #fff !important; font-size: 0.7rem !important; vertical-align: 1px; margin: 0 !important; }
+#passages .passage .ft-teksti { margin: 0 !important; font-size: 1rem !important; line-height: 1.5 !important; }
+#passages .passage .ft-tilastot { margin: 0.5rem 0 0 !important; color: #64748b !important; font-size: 0.82rem !important; }
+/* Viesti: chat-kupla */
+.ft-viesti { background: #e7ffdb; border-radius: 4px 16px 16px 16px; }
+/* Tiedote: virallinen paperi */
+.ft-tiedote { border-top: 6px solid #1e3a8a; border-radius: 6px; font-family: Georgia, "Times New Roman", serif; }
+#passages .passage .ft-tiedote-yla { margin: 0 0 0.4rem !important; font: 800 0.75rem/1.3 "Segoe UI", Arial, sans-serif !important; letter-spacing: 0.12em; text-transform: uppercase; color: #1e3a8a !important; }
+/* Kuva: paikkamerkki ja kuvateksti */
+.ft-kuva { height: 7.5rem; border-radius: 10px; margin: 0.2rem 0 0.5rem; display: grid; place-items: center; font-size: 2.4rem;
+  background: repeating-linear-gradient(135deg, #cbd5e1 0 12px, #e2e8f0 12px 24px); }
+.ft-kuva span { margin: 0 !important; }
+#passages .passage .ft-kuvateksti { margin: 0 0 0.4rem; font-size: 0.82rem !important; color: #475569 !important; font-style: italic; }
+/* Väite */
+#passages .passage .ft-vaite { margin: 0 !important; font-size: 1.12rem !important; font-weight: 700; line-height: 1.45 !important; }
+.ft-vaite-tag { display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px; background: var(--korostus); color: #1f1300 !important; font-size: 0.72rem !important; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; vertical-align: 2px; margin: 0 0.3rem 0 0 !important; }
+/* Askeleet */
+.ft-askel { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+label.ft-askel { justify-content: flex-start; margin-top: 0.4rem; }
+.ft-nro { flex: none; display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--a1); color: var(--nappi-teksti) !important; font-size: 0.85rem !important; font-weight: 800; margin: 0 !important; }
+.ft-valinnat { display: grid; gap: 0.55rem; margin-bottom: 1rem; }
+.ft-arvio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ft-lahde { grid-template-columns: 1fr; }
+.ft-vaihtoehto { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.ft-lahde .ft-vaihtoehto { justify-content: flex-start; text-align: left; font-weight: 600; }
+.ft-vaihtoehto span { margin: 0 !important; }
+.ft-ikoni { font-size: 1.2rem; line-height: 1; }
+/* Palaute ja leimat */
+.ft-leima { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; font-weight: 800; font-size: 0.9rem !important; margin: 0 !important; white-space: nowrap; }
+.ft-leima-totta { background: rgba(81,207,102,.22); color: #8ce99a !important; border: 1px solid rgba(81,207,102,.6); }
+.ft-leima-tarua { background: rgba(255,107,107,.18); color: #ffa8a8 !important; border: 1px solid rgba(255,107,107,.6); }
+.ft-leima-auki { background: rgba(var(--korostus-rgb),.18); color: var(--korostus) !important; border: 1px solid rgba(var(--korostus-rgb),.6); }
+#passages .passage .ft-lahde-otsikko { margin-top: 0.8rem !important; padding-top: 0.6rem; border-top: 1px dashed rgba(var(--teksti-pehmea-rgb),.35); }
+/* Yhteenveto */
+#passages .passage .ft-osapisteet { text-align: center; color: var(--teksti-pehmea); font-size: 0.95rem !important; margin-top: -0.4rem !important; }
+.ft-muistilista { margin: 1rem 0 1.2rem; padding: 0.9rem 1.1rem; border-radius: 14px; border: 2px solid var(--korostus); background: rgba(var(--korostus-rgb),.1); }
+#passages .passage .ft-muistilista-otsikko { margin: 0 0 0.4rem !important; font-weight: 800; color: var(--korostus); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.85rem !important; }
+#passages .passage .ft-muistilista ol { margin: 0 !important; }
+.ft-lista .kl-rivi { display: block; font-size: 0.92rem !important; margin: 0.2rem 0 0 !important; }
+.ft-lista .ft-leima { margin-right: 0.3rem !important; font-size: 0.8rem !important; }
+.ft-lista .kl-ammattilainen { display: block; font-size: 0.88rem !important; color: var(--teksti-pehmea); margin: 0.2rem 0 0 !important; }
+@media (max-width: 520px) {
+  .ft-arvio { grid-template-columns: 1fr; }
+  .ft-arvio .ft-vaihtoehto { justify-content: flex-start; }
+}

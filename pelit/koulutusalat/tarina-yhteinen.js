@@ -3406,6 +3406,178 @@
       };
     }
 
+    /* --- Tehtävätyyppi "faktantarkistus": oppilas arvioi väitteen ja valitsee, mistä tarkistaa sen ---
+       kutsuKortit = väitteet: {
+         otsikko, nakyma: { tyyppi: "some"|"viesti"|"tiedote"|"kuva", nimi, tunnus?, aika?, vahvistettu?, teksti, kuvateksti?, tilastot? },
+         vaite, oikea: "totta"|"tarua"|"auki", selitys,
+         lahteet: [ { teksti, paras: true|false, palaute } ], ammattilainen, tutkinto }
+       Pisteet: oikea arvio 1 + paras lähde 1 per väite. Lisäksi yksi perustelulause per väite. */
+    if (TH.tyyppi === "faktantarkistus") {
+      var FT_ARVIOT = TH.arviot || [
+        { avain: "totta", nimi: "Totta", ikoni: "✅" },
+        { avain: "tarua", nimi: "Tarua", ikoni: "❌" },
+        { avain: "auki", nimi: "Ei vielä varmaa", ikoni: "⏳" }
+      ];
+      var ftArvio = function (a) { return FT_ARVIOT.filter(function (x) { return x.avain === a; })[0] || { nimi: a, ikoni: "" }; };
+      var ftPisteet = function (tila) { return tila.vastaukset.reduce(function (s, x) { return s + (x.arvioOk ? 1 : 0) + (x.lahdeOk ? 1 : 0); }, 0); };
+      var ftNakyma = function (n) {
+        if (!n) return "";
+        var t = n.tyyppi || "some";
+        var alku = (n.nimi || "?").trim().charAt(0).toUpperCase();
+        var h = '<figure class="ft-nakyma ft-' + suojaa(t) + '">';
+        if (t === "tiedote") {
+          h += '<p class="ft-tiedote-yla">' + suojaa(n.nimi) + (n.aika ? ' · ' + suojaa(n.aika) : '') + '</p>';
+        } else {
+          h += '<div class="ft-nakyma-yla"><span class="ft-avatar" aria-hidden="true">' + suojaa(alku) + '</span><span class="ft-nimi">' + suojaa(n.nimi) +
+            (n.vahvistettu ? ' <span class="ft-vahvistettu" title="Virallinen tili">✓<span class="sr-only"> virallinen tili</span></span>' : '') +
+            (n.tunnus ? '<span class="ft-tunnus">' + suojaa(n.tunnus) + '</span>' : '') + '</span>' +
+            (n.aika ? '<span class="ft-aika">' + suojaa(n.aika) + '</span>' : '') + '</div>';
+        }
+        if (t === "kuva") h += '<div class="ft-kuva" aria-hidden="true"><span>📷</span></div>' + (n.kuvateksti ? '<figcaption class="ft-kuvateksti">' + suojaa(n.kuvateksti) + '</figcaption>' : '');
+        h += '<p class="ft-teksti">' + suojaa(n.teksti) + '</p>';
+        if (n.tilastot) h += '<p class="ft-tilastot">' + suojaa(n.tilastot) + '</p>';
+        return h + '</figure>';
+      };
+      var ftRadiot = function (nimi, otsikkoId, lista) {
+        return '<div class="ft-valinnat ft-' + nimi + '" role="radiogroup" aria-labelledby="' + otsikkoId + '">' + lista.map(function (o, j) {
+          return '<button type="button" class="kutsu-vaihtoehto ft-vaihtoehto" role="radio" aria-checked="false" tabindex="' + (j === 0 ? 0 : -1) + '" data-arvo="' + suojaa(o.arvo) + '">' +
+            (o.ikoni ? '<span class="ft-ikoni" aria-hidden="true">' + o.ikoni + '</span>' : '') + '<span>' + suojaa(o.teksti) + '</span></button>';
+        }).join("") + '</div>';
+      };
+      var ftRyhma = function (napit, kun) {
+        var valittu = null;
+        function valitse(b) {
+          valittu = b.getAttribute("data-arvo");
+          napit.forEach(function (x) { var on = x === b; x.setAttribute("aria-checked", on ? "true" : "false"); x.tabIndex = on ? 0 : -1; });
+          kun();
+        }
+        napit.forEach(function (b, j) {
+          b.addEventListener("click", function () { valitse(b); });
+          b.addEventListener("keydown", function (e) {
+            var s = (e.key === "ArrowRight" || e.key === "ArrowDown") ? 1 : (e.key === "ArrowLeft" || e.key === "ArrowUp") ? -1 : 0;
+            if (!s) return;
+            e.preventDefault();
+            var seur = napit[(j + s + napit.length) % napit.length]; seur.focus(); valitse(seur);
+          });
+        });
+        return function () { return valittu; };
+      };
+
+      window.kutsuPiirra = function () {
+        var alue = document.getElementById("kutsu-alue");
+        if (!alue) return;
+        var tila = kutsuTila();
+        var i = tila.vastaukset.length;
+        if (i >= KORTIT.length) { play("Kutsu: tulos"); return; }
+        var k = KORTIT[i];
+        var lahteet = (k.lahteet || []).map(function (l, j) { return { arvo: String(j), teksti: l.teksti }; });
+        if (TH.sekoita !== false) for (var r = lahteet.length - 1; r > 0; r--) { var q = Math.floor(Math.random() * (r + 1)); var tmp = lahteet[r]; lahteet[r] = lahteet[q]; lahteet[q] = tmp; }
+        var pallot = KORTIT.map(function (_, j) { return '<span class="' + (j < i ? "tehty" : j === i ? "nyt" : "") + '"></span>'; }).join("");
+        alue.innerHTML =
+          '<p class="kohtaus-nro">' + suojaa(TH.korttiSana || "Väite") + ' ' + (i + 1) + '/' + KORTIT.length + '</p>' +
+          '<div class="kutsu-edistyminen" aria-hidden="true">' + pallot + '</div>' +
+          '<div class="kutsu-kortti ft-kortti">' +
+            '<p class="kutsu-tilanne">' + suojaa(k.otsikko || TH.tilanneOtsikko || "Tieto") + '</p>' + ftNakyma(k.nakyma) +
+            '<p class="ft-vaite"><span class="ft-vaite-tag">' + suojaa(TH.vaiteSana || "Väite") + '</span> ' + suojaa(k.vaite) + '</p>' +
+          '</div>' +
+          '<p class="kutsu-kysymys ft-askel" id="ft-k1"><span class="ft-nro" aria-hidden="true">1</span> ' + suojaa(TH.kysymys1 || "Onko väite totta?") + '</p>' +
+          ftRadiot("arvio", "ft-k1", FT_ARVIOT.map(function (a) { return { arvo: a.avain, teksti: a.nimi, ikoni: a.ikoni }; })) +
+          '<p class="kutsu-kysymys ft-askel" id="ft-k2"><span class="ft-nro" aria-hidden="true">2</span> ' + suojaa(TH.kysymys2 || "Mistä tarkistaisit asian varmimmin?") + '</p>' +
+          ftRadiot("lahde", "ft-k2", lahteet) +
+          '<label class="kutsu-miksi-label ft-askel" for="kutsu-miksi"><span class="ft-nro" aria-hidden="true">3</span> ' + suojaa(TH.miksiLabel || "Perustele yhdellä lauseella.") + '</label>' +
+          '<textarea id="kutsu-miksi" maxlength="300" placeholder="' + suojaa(TH.placeholder || "") + '"></textarea>' +
+          '<p class="kutsu-vihje" id="kutsu-vihje" aria-live="polite"></p>' +
+          '<div class="kutsu-napit"><button type="button" class="kutsu-tarkista" disabled>' + suojaa(TH.tarkistaNappi || "Tarkista") + '</button></div>' +
+          '<div class="kutsu-palaute" aria-live="polite"></div>';
+
+        var arvioNapit = Array.prototype.slice.call(alue.querySelectorAll(".ft-arvio .ft-vaihtoehto"));
+        var lahdeNapit = Array.prototype.slice.call(alue.querySelectorAll(".ft-lahde .ft-vaihtoehto"));
+        var miksi = alue.querySelector("#kutsu-miksi"), tarkista = alue.querySelector(".kutsu-tarkista"), vihje = alue.querySelector("#kutsu-vihje");
+        function paivita() {
+          var a = arvio(), l = lahde(), p = miksi.value.trim().length;
+          tarkista.disabled = !(a && l && p >= 10);
+          vihje.textContent = !a ? (TH.vihjeArvio || "Valitse ensin, onko väite totta.") : !l ? (TH.vihjeLahde || "Valitse, mistä tarkistaisit asian.") :
+            (p < 10 ? (TH.vihjePerustelu || "Kirjoita vielä lyhyt perustelu.") : "Hyvä! Paina Tarkista.");
+        }
+        var arvio = ftRyhma(arvioNapit, paivita), lahde = ftRyhma(lahdeNapit, paivita);
+        miksi.addEventListener("input", paivita);
+
+        tarkista.addEventListener("click", function () {
+          if (tarkista.disabled) return;
+          var a = arvio(), li = parseInt(lahde(), 10), L = k.lahteet[li] || {};
+          var paras = k.lahteet.filter(function (x) { return x.paras; })[0] || {};
+          var v = { arvio: a, lahde: L.teksti || "", perustelu: miksi.value.trim(), arvioOk: a === k.oikea, lahdeOk: !!L.paras };
+          tila.vastaukset.push(v); kutsuTallenna();
+          arvioNapit.forEach(function (b) { b.disabled = true; var x = b.getAttribute("data-arvo"); if (x === k.oikea) b.classList.add("oikea"); else if (x === a) b.classList.add("vaara"); });
+          lahdeNapit.forEach(function (b) { b.disabled = true; var x = k.lahteet[parseInt(b.getAttribute("data-arvo"), 10)] || {}; if (x.paras) b.classList.add("oikea"); else if (b.getAttribute("data-arvo") === String(li)) b.classList.add("vaara"); });
+          miksi.disabled = true; tarkista.parentNode.style.display = "none"; vihje.textContent = "";
+          var viimeinen = tila.vastaukset.length >= KORTIT.length;
+          var oa = ftArvio(k.oikea);
+          var h = '<div class="palaute ft-palaute">' +
+            '<p class="kutsu-tulos-otsikko">' + (v.arvioOk ? '<strong class="ok">Oikein!</strong> ' : '<strong class="ei">Ei aivan.</strong> ') +
+              'Väite on: <span class="ft-leima ft-leima-' + suojaa(k.oikea) + '">' + oa.ikoni + ' ' + suojaa(oa.nimi) + '</span></p>' +
+            '<p>' + suojaa(k.selitys) + '</p>' +
+            '<p class="ft-lahde-otsikko">' + (v.lahdeOk ? '<strong class="ok">Hyvä lähde!</strong>' : '<strong class="ei">Parempi lähde:</strong> ' + suojaa(paras.teksti || "")) + '</p>' +
+            '<p>' + suojaa(L.palaute || "") + '</p>' +
+            (!v.lahdeOk && paras.palaute ? '<p>' + suojaa(paras.palaute) + '</p>' : '') +
+            (k.ammattilainen ? '<p class="kutsu-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': <strong>' + suojaa(k.ammattilainen) + '</strong></p>' : '') +
+            (k.tutkinto ? '<p class="kutsu-tutkinto">Koulutus: ' + suojaa(k.tutkinto) + '</p>' : '') + '</div>' +
+            '<div class="kutsu-napit" style="margin-top:1rem"><button type="button" class="kutsu-seuraava">' + (viimeinen ? "Katso tulokset" : suojaa(TH.seuraava || "Seuraava väite")) + '</button></div>';
+          var pal = alue.querySelector(".kutsu-palaute");
+          pal.innerHTML = h;
+          var seuraava = pal.querySelector(".kutsu-seuraava");
+          seuraava.addEventListener("click", function () {
+            if (viimeinen) play("Kutsu: tulos");
+            else {
+              window.kutsuPiirra();
+              var ylos = document.getElementById("passages"); if (ylos && ylos.scrollIntoView) ylos.scrollIntoView();
+              var e1 = document.querySelector(".ft-arvio .ft-vaihtoehto"); if (e1) e1.focus({ preventScroll: true });
+            }
+          });
+          seuraava.focus({ preventScroll: true });
+          if (pal.scrollIntoView) pal.scrollIntoView({ block: "nearest" });
+        });
+        paivita();
+      };
+
+      setup.kutsuYhteenveto = function () {
+        var tila = kutsuTila(), p = ftPisteet(tila), max = KORTIT.length * 2;
+        var arvioOk = tila.vastaukset.filter(function (x) { return x.arvioOk; }).length;
+        var lahdeOk = tila.vastaukset.filter(function (x) { return x.lahdeOk; }).length;
+        var pal = TH.palaute || ["Erinomaista!", "Hyvä!", "Nyt tiedät, miten tietoa tarkistetaan."];
+        var h = '<p class="kutsu-pisteet">Sait <strong>' + p + '/' + max + '</strong> pistettä.</p>' +
+          '<p class="ft-osapisteet">Arviot oikein ' + arvioOk + '/' + KORTIT.length + ' · Paras lähde ' + lahdeOk + '/' + KORTIT.length + '</p>' +
+          '<p style="text-align:center">' + suojaa(p >= max - 3 ? pal[0] : p >= max / 2 ? pal[1] : pal[2]) + '</p>';
+        if (TH.muistilista && TH.muistilista.length) {
+          h += '<div class="ft-muistilista"><p class="ft-muistilista-otsikko">' + suojaa(TH.muistilistaOtsikko || "Muista tarkistaessa") + '</p><ol>' +
+            TH.muistilista.map(function (m) { return '<li>' + suojaa(m) + '</li>'; }).join("") + '</ol></div>';
+        }
+        h += '<ol class="kutsu-lista ft-lista">' + KORTIT.map(function (k, j) {
+          var v = tila.vastaukset[j]; if (!v) return "";
+          var oa = ftArvio(k.oikea), va = ftArvio(v.arvio);
+          return '<li><span class="ft-leima ft-leima-' + suojaa(k.oikea) + '">' + oa.ikoni + ' ' + suojaa(oa.nimi) + '</span> ' + suojaa(k.vaite) +
+            '<span class="kl-rivi"><span class="' + (v.arvioOk ? "ok" : "ei") + '">' + (v.arvioOk ? "✓" : "✗") + '</span> Arviosi: ' + suojaa(va.nimi) + '</span>' +
+            '<span class="kl-rivi"><span class="' + (v.lahdeOk ? "ok" : "ei") + '">' + (v.lahdeOk ? "✓" : "✗") + '</span> Lähteesi: ' + suojaa(v.lahde) + '</span>' +
+            (k.ammattilainen ? '<span class="kl-ammattilainen">' + suojaa(TH.ammattilainenTeksti) + ': ' + suojaa(k.ammattilainen) + '</span>' : '') +
+            '<span class="kl-perustelu">Perustelusi: ' + suojaa(v.perustelu) + '</span></li>';
+        }).join("") + '</ol>';
+        return h;
+      };
+
+      tehtavaTeksti = function (tila) {
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + ftPisteet(tila) + "/" + (KORTIT.length * 2) + " pistettä\n\n";
+        KORTIT.forEach(function (k, j) {
+          var v = tila.vastaukset[j]; if (!v) return;
+          var paras = k.lahteet.filter(function (x) { return x.paras; })[0] || {};
+          t += (j + 1) + ". " + k.vaite + "\n" +
+            "   Arvioni: " + ftArvio(v.arvio).nimi + (v.arvioOk ? " (oikein)" : " (oikea: " + ftArvio(k.oikea).nimi + ")") + "\n" +
+            "   Tarkistaisin: " + v.lahde + (v.lahdeOk ? " (paras lähde)" : " (parempi: " + (paras.teksti || "-") + ")") + "\n" +
+            "   Perusteluni: " + v.perustelu + "\n" + (k.ammattilainen ? "   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n" : "") + "\n";
+        });
+        return t;
+      };
+    }
+
     window.lataaVastaukset = function () {
       var v = V(), tila = kutsuTila(), k = laske();
       var t = D.alaNimi.toUpperCase() + " – " + D.tarinaNimi.toUpperCase() + "\n" + (v.korttiNimi ? "Nimi: " + v.korttiNimi + "\n" : "") + "\n";
