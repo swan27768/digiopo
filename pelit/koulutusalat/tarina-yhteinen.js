@@ -1927,6 +1927,7 @@
           naapurit(r, c).forEach(function (q) { var j = idx(q[0], q[1]); if (!nahty[j] && p[j] === a) { nahty[j] = 1; jono.push(j); } }); }
         return Object.keys(nahty).length === solut.length;
       };
+      var vierekkain = function (p, a, b) { return p.some(function (x, i) { if (x !== a) return false; var r = Math.floor(i / GW), c = i % GW; return naapurit(r, c).some(function (q) { return p[idx(q[0], q[1])] === b; }); }); };
       var vesiNaapuri = function (p, a) { return naapurit(VESI[0], VESI[1]).some(function (q) { return p[idx(q[0], q[1])] === a; }); };
       var saannotP = function (tila) {
         var p = pj(tila), m = pinta(p), vapaat = 0;
@@ -1939,6 +1940,9 @@
           else if (s.tyyppi === "ovi") ok = p[idx(OVI[0], OVI[1])] === s.tila;
           else if (s.tyyppi === "yhtenainen") ok = TILAT.every(function (t) { return m[t.avain] > 0 && yhtenainen(p, t.avain); });
           else if (s.tyyppi === "taysi") ok = vapaat === 0;
+          else if (s.tyyppi === "max") ok = m[s.tila] > 0 && m[s.tila] <= s.max;
+          else if (s.tyyppi === "vieressa") ok = vierekkain(p, s.tila, s.toinen);
+          else if (s.tyyppi === "eiVieressa") ok = m[s.tila] > 0 && m[s.toinen] > 0 && !vierekkain(p, s.tila, s.toinen);
           return { s: s, ok: ok };
         });
       };
@@ -1947,12 +1951,12 @@
       var ylosP = function () { var y = document.getElementById("passages"); if (y && y.scrollIntoView) y.scrollIntoView(); };
 
       var ruudukko = function (tila, muokattava) {
-        var p = pj(tila), h = '<div class="pp-alue"><div class="pp-ruudukko' + (muokattava ? "" : " pp-pieni") + '" style="grid-template-columns:repeat(' + GW + ',1fr)" role="grid" aria-label="Mökin pohjapiirros, ' + GW + ' × ' + GH + ' metriä">';
+        var p = pj(tila), h = '<div class="pp-alue"><div class="pp-ruudukko' + (muokattava ? "" : " pp-pieni") + '" style="grid-template-columns:repeat(' + GW + ',1fr)" role="grid" aria-label="' + suojaa(TH.ruudukkoNimi || ("Mökin pohjapiirros, " + GW + " × " + GH + " metriä")) + '">';
         for (var r = 0; r < GH; r++) {
           h += '<div class="pp-rivi" role="row" style="display:contents">';
           for (var c = 0; c < GW; c++) {
             var i = idx(r, c), a = p[i], t = tilaA(a);
-            if (onVesi(r, c)) { h += '<span class="pp-solu pp-vesi" role="gridcell" title="Vesipiste"><span aria-hidden="true">💧</span><span class="sr-only">Vesipiste</span></span>'; continue; }
+            if (onVesi(r, c)) { h += '<span class="pp-solu pp-vesi" role="gridcell" title="' + suojaa(TH.vesiNimi || "Vesipiste") + '"><span aria-hidden="true">' + suojaa(TH.vesiIkoni || "💧") + '</span><span class="sr-only">' + suojaa(TH.vesiNimi || "Vesipiste") + '</span></span>'; continue; }
             var reunat = "";
             if (a) naapurit(r, c).forEach(function () {});
             var lbl = "Rivi " + (r + 1) + ", sarake " + (c + 1) + ": " + (t ? t.nimi : "tyhjä");
@@ -1966,14 +1970,14 @@
           h += '</div>';
         }
         h += '</div><div class="pp-ovimerkki" style="grid-template-columns:repeat(' + GW + ',1fr)" aria-hidden="true">';
-        for (var c2 = 0; c2 < GW; c2++) h += '<span>' + (c2 === OVI[1] ? '🚪 ovi' : '') + '</span>';
+        for (var c2 = 0; c2 < GW; c2++) h += '<span>' + (c2 === OVI[1] ? suojaa(TH.oviTeksti || '🚪 ovi') : '') + '</span>';
         return h + '</div></div>';
       };
       var pintaLista = function (tila) {
         var m = pinta(pj(tila)), yht = 0;
         var h = '<ul class="pp-pinnat">' + TILAT.map(function (t) { yht += m[t.avain];
-          return '<li><span class="pp-nappula" style="background:' + t.vari + '" aria-hidden="true">' + suojaa(t.lyhenne) + '</span>' + suojaa(t.nimi) + ' <strong>' + m[t.avain] + ' m²</strong></li>'; }).join("") + '</ul>';
-        return h + '<p class="pp-yht">Yhteensä <strong>' + yht + ' m²</strong> / ' + (GW * GH - 1) + ' m²</p>';
+          return '<li><span class="pp-nappula" style="background:' + t.vari + '" aria-hidden="true">' + suojaa(t.lyhenne) + '</span>' + suojaa(t.nimi) + ' <strong>' + m[t.avain] + ' ' + suojaa(TH.yksikko || 'm²') + '</strong></li>'; }).join("") + '</ul>';
+        return h + '<p class="pp-yht">Yhteensä <strong>' + yht + ' ' + suojaa(TH.yksikko || 'm²') + '</strong> / ' + (GW * GH - 1) + ' ' + suojaa(TH.yksikko || 'm²') + '</p>';
       };
       var saantoListaP = function (tila, selitykset) {
         return '<ul class="vk-saannot">' + saannotP(tila).map(function (r) {
@@ -2090,10 +2094,10 @@
       };
 
       tehtavaTeksti = function (tila) {
-        var p = pj(tila), m = pinta(p), t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetP(tila) + "/" + saannotP(tila).length + " pistettä\n\nPOHJAPIIRROS (1 ruutu = 1 m², ~ = vesipiste)\n";
+        var p = pj(tila), m = pinta(p), t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetP(tila) + "/" + saannotP(tila).length + " pistettä\n\n" + (TH.tekstiOtsikko || "POHJAPIIRROS (1 ruutu = 1 m², ~ = vesipiste)") + "\n";
         for (var r = 0; r < GH; r++) { var rivi = ""; for (var c = 0; c < GW; c++) { var x = tilaA(p[idx(r, c)]); rivi += onVesi(r, c) ? "~ " : (x ? x.lyhenne : ".") + " "; } t += rivi + "\n"; }
-        t += " ".repeat(OVI[1] * 2) + "^ ulko-ovi\n\nPINTA-ALAT\n";
-        TILAT.forEach(function (x) { t += x.nimi + " (" + x.lyhenne + "): " + m[x.avain] + " m²\n"; });
+        t += " ".repeat(OVI[1] * 2) + "^ " + (TH.tekstiOvi || "ulko-ovi") + "\n\n" + (TH.tekstiPinnat || "PINTA-ALAT") + "\n";
+        TILAT.forEach(function (x) { t += x.nimi + " (" + x.lyhenne + "): " + m[x.avain] + " " + (TH.yksikko || "m²") + "\n"; });
         t += "\nMUISTILISTA\n"; saannotP(tila).forEach(function (r) { t += (r.ok ? "✓ " : "✗ ") + r.s.nimi + "\n"; });
         t += "\nPERUSTELUT\n";
         (TH.kysymykset || []).forEach(function (k, i) { t += (i + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
