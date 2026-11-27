@@ -1761,8 +1761,8 @@
                 '<span class="jr-napit"><button type="button" class="jr-nuoli" data-i="' + i + '" data-s="-1" aria-label="Siirrä ylös: ' + suojaa(h.vaiheet[v].nimi) + '"' + (i === 0 ? " disabled" : "") + '>▲</button>' +
                 '<button type="button" class="jr-nuoli" data-i="' + i + '" data-s="1" aria-label="Siirrä alas: ' + suojaa(h.vaiheet[v].nimi) + '"' + (i === n - 1 ? " disabled" : "") + '>▼</button></span></li>';
             }).join("") + '</ol>' +
-            (tila.tarkistettu ? '<p class="sj-pisteet">Oikealla paikalla: <strong>' + p + '/' + n + '</strong>' + (p === n ? " – Täydellinen järjestys!" : " – Siirrä punaisia vaiheita ja tarkista uudelleen.") + '</p>' : '') +
-            '<p class="kutsu-vihje" aria-live="polite">' + (tila.tarkistettu ? "Voit vielä korjata järjestystä tai jatkaa kotihoito-ohjeisiin." : "Siirrä vaiheita nuolilla. Kun järjestys on mielestäsi oikein, tarkista se.") + '</p>' +
+            (tila.tarkistettu ? '<p class="sj-pisteet">Oikealla paikalla: <strong>' + p + '/' + n + '</strong>' + (p === n ? " – Täydellinen järjestys!" : " – " + (TH.vihjeVaarin || "Siirrä punaisia vaiheita ja tarkista uudelleen.")) + '</p>' : '') +
+            '<p class="kutsu-vihje" aria-live="polite">' + (tila.tarkistettu ? (TH.vihjeTarkistettu || "Voit vielä korjata järjestystä tai jatkaa kotihoito-ohjeisiin.") : (TH.vihjeAlussa || "Siirrä vaiheita nuolilla. Kun järjestys on mielestäsi oikein, tarkista se.")) + '</p>' +
             '<div class="kutsu-napit bj-napit"><button type="button" class="kutsu-seuraava jr-vaihda">' + suojaa(TH.vaihdaNappi || "Vaihda hoitoa") + '</button>' +
             '<button type="button" class="kutsu-tarkista jr-tarkista">' + suojaa(TH.tarkistaNappi || "Tarkista järjestys") + '</button>' +
             (tila.tarkistettu ? '<button type="button" class="kutsu-seuraava jr-jatka">' + suojaa(TH.jatkaNappi || "Jatka kotihoito-ohjeisiin") + '</button>' : '') + '</div>';
@@ -1812,7 +1812,7 @@
           alue.innerHTML =
             '<p class="kohtaus-nro">' + suojaa(TH.osa2 || "Osa 2/3 · Kotihoito-ohjeet") + '</p>' +
             '<div class="kutsu-kortti"><p class="kutsu-tilanne">' + suojaa(TH.ohjeetOtsikko || "Kotihoito-ohjeet") + '</p><p class="kutsu-teksti">' + suojaa((TH.ohjeetOhje || "Valitse asiakkaalle {n} hyvää kotihoito-ohjetta.").replace("{n}", tarvitaan)) + '</p></div>' +
-            '<div class="jr-ohjeet" role="group" aria-label="Kotihoito-ohjeet">' + h.ohjeet.map(function (o, i) {
+            '<div class="jr-ohjeet" role="group" aria-label="' + suojaa(TH.ohjeetOtsikko || "Kotihoito-ohjeet") + '">' + h.ohjeet.map(function (o, i) {
               var on = valitut.indexOf(i) !== -1, tulos = t && on ? (o.oikein ? " ok" : " ei") : (t && o.oikein ? " puuttui" : "");
               return '<button type="button" class="jr-ohje' + (on ? " valittu" : "") + tulos + '" aria-pressed="' + on + '" data-i="' + i + '">' +
                 '<span class="jr-ruutu" aria-hidden="true">' + (on ? "✓" : "") + '</span><span class="jr-ohje-teksti">' + suojaa(o.teksti) +
@@ -1879,7 +1879,7 @@
             return '<li class="jr-vaihe ' + (v === i ? "ok" : "ei") + '"><span class="jr-nro" aria-hidden="true">' + (i + 1) + '</span><span class="jr-teksti"><strong>' + suojaa(h.vaiheet[v].nimi) + '</strong>' +
               (v !== i ? '<span class="jr-selitys">Oikea paikka: ' + (v + 1) + '.</span>' : '') + '</span></li>';
           }).join("") + '</ol>' +
-          '<p class="jr-alaotsikko">Kotihoito-ohjeet</p><ul class="vk-saannot">' + (tila.ohjeet || []).map(function (i) {
+          '<p class="jr-alaotsikko">' + suojaa(TH.ohjeetOtsikko || "Kotihoito-ohjeet") + '</p><ul class="vk-saannot">' + (tila.ohjeet || []).map(function (i) {
             var o = h.ohjeet[i];
             return '<li class="' + (o.oikein ? "ok" : "ei") + '"><span class="vk-merkki" aria-hidden="true">' + (o.oikein ? "✓" : "✗") + '</span><span><strong>' + suojaa(o.teksti) + '</strong><span class="vk-selitys">' + suojaa(o.selitys) + '</span></span></li>';
           }).join("") + '</ul></div>';
@@ -1896,9 +1896,9 @@
       tehtavaTeksti = function (tila) {
         var h = hoito(tila);
         if (!h) return "\n" + TH.nimi.toUpperCase() + "\nTehtävä jäi kesken.\n";
-        var t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetJ2(tila) + "/" + maxJ(h) + " pistettä\nHoito: " + h.nimi + "\n\nJÄRJESTYKSESI\n";
+        var t = "\n" + TH.nimi.toUpperCase() + " – " + pisteetJ2(tila) + "/" + maxJ(h) + " pistettä\n" + (TH.hoitoSana || "Hoito") + ": " + h.nimi + "\n\nJÄRJESTYKSESI\n";
         (tila.jarjestys || []).forEach(function (v, i) { t += (i + 1) + ". " + h.vaiheet[v].nimi + (v === i ? " ✓" : " ✗ (oikea paikka " + (v + 1) + ")") + "\n"; });
-        t += "\nKOTIHOITO-OHJEET\n";
+        t += "\n" + (TH.ohjeetOtsikko || "Kotihoito-ohjeet").toUpperCase() + "\n";
         (tila.ohjeet || []).forEach(function (i) { t += (h.ohjeet[i].oikein ? "✓ " : "✗ ") + h.ohjeet[i].teksti + "\n"; });
         t += "\nPERUSTELUT\n";
         (TH.kysymykset || []).forEach(function (k, i) { t += (i + 1) + ". " + k.kysymys + "\n   " + ((tila.perustelut || [])[i] || "-") + "\n   " + TH.ammattilainenTeksti + ": " + k.ammattilainen + "\n\n"; });
