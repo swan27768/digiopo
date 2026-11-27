@@ -1403,3 +1403,167 @@
       #tutkija-lukio .lukio-v4 .amis-polku-kys legend { font-size:15.5px !important; }
     }
     @media (prefers-reduced-motion:reduce) { #tutkija-lukio .lukio-v4 .amis-polku-nappi { transition:none; } #tutkija-lukio .lukio-v4 .amis-polku-nappi:hover { transform:none; } }
+
+    /* ══ Amispolku Vaihe 3: Totta vai tarua? + Oma amispolku – uusi ilme (27.11.2026) ══
+       Rakenne tulee js/osio-data-8lk-amispolku.js:stä; tämä on pelkkää CSS:ää. Väri: Amispolun meripihka.
+       - Osa-otsikot bannereina, väitekortit isoilla Totta/Tarua-napeilla
+       - Oma amispolku: edistymispalkki, askelkortit (✓ kun vastattu), kuvakkeelliset ruudut
+       - Valmis polku näytetään "Amispassina" */
+    #tutkija-amis .amis-v3-tehtava {
+      --am-1:#f59e0b; --am-2:#d97706; --am-3:#b45309; --am-tumma:#78350f; --am-vaalea:#fffbeb; --am-ok:#10b981;
+      border:none !important; border-radius:22px !important; background:#fffdf7 !important; padding:16px 16px 12px !important;
+      box-shadow:0 1px 2px rgba(28,25,23,.06), 0 12px 32px -12px rgba(180,83,9,.3) !important;
+    }
+    /* Osa-otsikot bannereina */
+    #tutkija-amis .amis-v3-tehtava .amis-v2-osa-otsikko {
+      position:relative; overflow:hidden; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+      margin:0 0 14px; padding:20px 96px 20px 20px; border:none; border-radius:16px;
+      background:
+        radial-gradient(circle at calc(100% - 46px) 50%, rgba(255,255,255,.2) 0 46px, transparent 47px),
+        linear-gradient(90deg, #92400e 0%, #d97706 55%, #f59e0b 100%) !important;
+    }
+    #tutkija-amis .amis-v3-tehtava .amis-v2-osa-otsikko::after {
+      position:absolute; right:24px; top:50%; transform:translateY(-50%) rotate(-8deg); font-size:46px; line-height:1;
+      filter:drop-shadow(0 4px 8px rgba(0,0,0,.25));
+    }
+    #tutkija-amis .amis-v3-tehtava > .amis-v2-osa-otsikko::after { content:"🕵️"; }
+    #tutkija-amis .amis-polku .amis-v2-osa-otsikko::after { content:"🧭"; }
+    #tutkija-amis .amis-v3-osa-otsikko { color:#fff !important; font-size:22px !important; }
+    #tutkija-amis .amis-v3-osa-nro { background:rgba(255,255,255,.2) !important; border:1px solid rgba(255,255,255,.45); color:#fff !important; }
+    #tutkija-amis .amis-v2-osa-otsikko .amis-tt-laskuri { background:#fff; border:none; color:var(--am-tumma); box-shadow:0 2px 6px rgba(0,0,0,.15); }
+    #tutkija-amis .amis-v3-ohje-teksti { font-size:15px !important; color:#44403c; }
+
+    /* ── Osa 1: väitekortit ── */
+    #tutkija-amis .amis-tt-lista { gap:14px; counter-reset:none; }
+    #tutkija-amis .amis-tt-kortti {
+      position:relative; border:1.5px solid #f5e6c8 !important; border-left-width:1.5px !important; border-radius:16px !important;
+      background:#fff !important; padding:16px 18px !important; box-shadow:0 2px 8px -2px rgba(180,83,9,.12) !important;
+    }
+    #tutkija-amis .amis-tt-kortti::before {
+      content:""; position:absolute; left:-1.5px; top:14px; bottom:14px; width:6px; border-radius:0 6px 6px 0; background:#fcd34d;
+    }
+    #tutkija-amis .amis-tt-kortti.tulos-ok::before { background:var(--am-ok); }
+    #tutkija-amis .amis-tt-kortti.tulos-ei::before { background:#f97316; }
+    #tutkija-amis .amis-tt-kortti.tulos-ok { background:linear-gradient(180deg,#f0fdf4 0,#fff 70px) !important; border-color:#bbf7d0 !important; }
+    #tutkija-amis .amis-tt-kortti.tulos-ei { background:linear-gradient(180deg,#fff7ed 0,#fff 70px) !important; border-color:#fed7aa !important; }
+    #tutkija-amis .amis-tt-vaite { font-size:17px !important; line-height:1.4; }
+    #tutkija-amis .amis-tt-vaite::before { content:"“"; font-family:Georgia, serif; font-size:40px; line-height:.8; color:#fcd34d; margin-right:-4px; }
+    #tutkija-amis .amis-tt-nro { background:var(--am-3) !important; width:28px !important; height:28px !important; }
+    #tutkija-amis .amis-tt-napit { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    #tutkija-amis .amis-tt-nappi {
+      display:flex; align-items:center; justify-content:center; gap:8px; min-height:52px; border-radius:14px !important;
+      font-size:16px !important; font-weight:800 !important; border:2px solid #e7e5e4 !important; background:#fff;
+      transition:transform .12s, border-color .15s, background-color .15s, box-shadow .15s;
+    }
+    #tutkija-amis .amis-tt-nappi[data-arvo="totta"]::before { content:"👍"; font-size:20px; }
+    #tutkija-amis .amis-tt-nappi[data-arvo="tarua"]::before { content:"👎"; font-size:20px; }
+    #tutkija-amis .amis-tt-nappi[data-arvo="totta"]:hover:not([aria-disabled="true"]) { border-color:#34d399 !important; background:#ecfdf5 !important; transform:translateY(-1px); }
+    #tutkija-amis .amis-tt-nappi[data-arvo="tarua"]:hover:not([aria-disabled="true"]) { border-color:#fb923c !important; background:#fff7ed !important; transform:translateY(-1px); }
+    #tutkija-amis .amis-tt-nappi.oikea.valittu { background:linear-gradient(135deg,#10b981,#059669) !important; border-color:#059669 !important; color:#fff !important; box-shadow:0 6px 14px -4px rgba(5,150,105,.5); }
+    #tutkija-amis .amis-tt-nappi.oikea:not(.valittu) { border-style:dashed !important; border-color:#059669 !important; color:#047857 !important; opacity:1 !important; }
+    #tutkija-amis .amis-tt-nappi.valittu:not(.oikea) { background:#fff7ed !important; border-color:#ea580c !important; color:#9a3412 !important; }
+    #tutkija-amis .amis-tt-palaute { border-radius:12px !important; font-size:14.5px !important; }
+    #tutkija-amis .amis-tt-tulos {
+      text-align:center; border:none !important; border-radius:16px !important; padding:18px !important; color:#fff !important;
+      background:linear-gradient(135deg,#10b981,#047857) !important; box-shadow:0 10px 24px -10px rgba(4,120,87,.6);
+    }
+    #tutkija-amis .amis-tt-tulos::before { content:"🏆"; display:block; font-size:36px; margin-bottom:4px; }
+    #tutkija-amis .amis-tt-tulos strong { color:#fff; }
+
+    /* ── Osa 2: oma amispolku ── */
+    #tutkija-amis .amis-polku { position:relative; border-top:none !important; margin-top:22px !important; padding-top:0 !important; }
+    #amis-polku-kysymykset { position:relative; padding-top:44px; --p1:#f5e6c8; --p2:#f5e6c8; --p3:#f5e6c8; }
+    #amis-polku-kysymykset:has(> fieldset:nth-of-type(1) .valittu) { --p1:#10b981; }
+    #amis-polku-kysymykset:has(> fieldset:nth-of-type(2) .valittu) { --p2:#10b981; }
+    #amis-polku-kysymykset:has(> fieldset:nth-of-type(3) .valittu) { --p3:#10b981; }
+    #amis-polku-kysymykset::before {
+      content:""; position:absolute; left:0; right:0; top:6px; height:10px; border-radius:99px;
+      background:linear-gradient(90deg, var(--p1) 0 32.5%, transparent 32.5% 33.75%, var(--p2) 33.75% 66.25%, transparent 66.25% 67.5%, var(--p3) 67.5% 100%);
+    }
+    #amis-polku-kysymykset::after {
+      content:"Oppiminen · Tutkinto · Valmistumisen jälkeen"; position:absolute; left:0; right:0; top:20px; text-align:center;
+      font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#a8a29e;
+    }
+    #tutkija-amis .amis-polku-kys {
+      position:relative; border:1.5px solid #f5e6c8 !important; border-radius:16px !important; background:#fff !important;
+      padding:14px 16px 16px !important; margin:0 0 16px !important; transition:border-color .2s, background-color .2s, box-shadow .2s;
+    }
+    #tutkija-amis .amis-polku-kys:has(.valittu) { border-color:#a7f3d0 !important; background:linear-gradient(180deg,#f0fdf4 0,#fff 60px) !important; }
+    #tutkija-amis .amis-polku-kys:focus-within { box-shadow:0 0 0 4px rgba(217,119,6,.14); }
+    #tutkija-amis .amis-polku-kys legend { font-size:17px !important; font-weight:800 !important; }
+    #tutkija-amis .amis-polku-kys .amis-tt-nro { width:32px !important; height:32px !important; font-size:15px !important; background:var(--am-2) !important; box-shadow:0 3px 8px rgba(217,119,6,.35); }
+    #tutkija-amis .amis-polku-kys:has(.valittu) .amis-tt-nro { background:var(--am-ok) !important; font-size:0 !important; box-shadow:0 3px 8px rgba(16,185,129,.35); }
+    #tutkija-amis .amis-polku-kys:has(.valittu) .amis-tt-nro::after { content:"✓"; font-size:17px; }
+    /* Vaihtoehdot ruutuina kuvakkeineen */
+    #tutkija-amis .amis-polku-kys .amis-polku-napit { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
+    #tutkija-amis .amis-polku-nappi {
+      position:relative; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center !important;
+      min-height:110px; padding:14px 10px !important; border-radius:16px !important; border:1.5px solid #e7e5e4 !important; background:#fff !important;
+      color:#292524 !important; font-size:14.5px !important; font-weight:700 !important; line-height:1.3;
+      box-shadow:0 1px 2px rgba(28,25,23,.05); transition:transform .12s, border-color .15s, background-color .15s, box-shadow .15s;
+    }
+    #tutkija-amis .amis-polku-nappi::before { font-size:32px; line-height:1; }
+    #tutkija-amis .amis-polku-nappi:hover:not(.valittu) { border-color:#fbbf24 !important; background:#fffbeb !important; transform:translateY(-2px); }
+    #tutkija-amis .amis-polku-nappi.valittu {
+      background:linear-gradient(135deg,#f59e0b,#d97706) !important; border-color:#b45309 !important; color:#fff !important;
+      box-shadow:0 8px 18px -6px rgba(217,119,6,.6) !important;
+    }
+    #tutkija-amis .amis-polku-nappi.valittu::after { content:"✓"; position:absolute; top:8px; right:11px; font-weight:900; }
+    #tutkija-amis [data-kys="oppiminen"][data-vaihto="oppilaitos"]::before { content:"🏫"; }
+    #tutkija-amis [data-kys="oppiminen"][data-vaihto="oppisopimus"]::before { content:"💶"; }
+    #tutkija-amis [data-kys="yo"][data-vaihto="kaksois"]::before { content:"🎓"; }
+    #tutkija-amis [data-kys="yo"][data-vaihto="ammatti"]::before { content:"🔧"; }
+    #tutkija-amis [data-kys="jatko"][data-vaihto="toihin"]::before { content:"💼"; }
+    #tutkija-amis [data-kys="jatko"][data-vaihto="opiskelu"]::before { content:"📚"; }
+    #tutkija-amis .amis-polku-nappi[data-vaihto="eos"]::before { content:"🤔"; }
+    #tutkija-amis .amis-polku-selitys { background:var(--am-vaalea) !important; border-left:4px solid var(--am-2); border-radius:10px !important; color:#78350f !important; }
+
+    /* Vapaat tekstit */
+    #tutkija-amis .amis-polku-selvita-label { margin-top:18px !important; }
+    #tutkija-amis #amis-polku-nimi-label::before { content:"🙂 "; }
+    #tutkija-amis #amis-polku-selvita-label::before { content:"🔍 "; }
+    #tutkija-amis textarea.amis-polku-selvita { background:#fffef5 !important; border-color:#fde68a !important; border-radius:12px !important; min-height:68px; }
+    #tutkija-amis .amis-polku-selvita:focus { border-color:var(--am-2) !important; box-shadow:0 0 0 4px rgba(217,119,6,.14); outline:none; }
+    #tutkija-amis .amis-polku-puuttuu { text-align:center; padding:10px; border:1.5px dashed #e7d3a8; border-radius:12px; color:#78716c !important; }
+
+    /* Valmis polku: Amispassi */
+    #tutkija-amis .amis-polku-kortti {
+      position:relative; overflow:hidden; padding:22px 22px 20px !important; border-radius:20px !important;
+      background:
+        radial-gradient(circle at 100% 0, rgba(255,255,255,.28) 0 80px, transparent 81px),
+        linear-gradient(135deg,#92400e 0%,#d97706 55%,#f59e0b 100%) !important;
+      box-shadow:0 18px 36px -14px rgba(180,83,9,.65) !important;
+    }
+    #tutkija-amis .amis-polku-kortti::after {
+      content:"AMIS\A PASSI"; white-space:pre; position:absolute; right:18px; top:14px; padding:8px 12px; text-align:center;
+      border:3px solid rgba(255,255,255,.75); border-radius:12px; color:rgba(255,255,255,.9);
+      font-size:11px; font-weight:900; letter-spacing:.2em; line-height:1.3; transform:rotate(8deg);
+    }
+    #tutkija-amis .amis-polku-kortti-tag { font-size:20px !important; letter-spacing:.02em !important; text-transform:none !important; opacity:1 !important; margin-bottom:16px !important; }
+    #tutkija-amis .amis-polku-kortti-tag::before { content:"🧭 "; }
+    #tutkija-amis .amis-polku-kortti dl > div { border-radius:14px !important; padding:11px 14px !important; }
+    #tutkija-amis .amis-v3-toiminnot { justify-content:center; }
+    #tutkija-amis .amis-v3-toiminnot .amis-kuittaa:not(.kuitattu) {
+      border-radius:999px; padding:12px 26px; border:none; font-size:15.5px; font-weight:800; color:#fff;
+      background:linear-gradient(135deg,#10b981,#059669); box-shadow:0 8px 18px -6px rgba(5,150,105,.6); cursor:pointer;
+    }
+    #tutkija-amis .amis-v3-toiminnot .amis-kuittaa:not(.kuitattu):hover { filter:brightness(1.06); transform:translateY(-1px); }
+    #tutkija-amis .amis-v3-toiminnot .amis-kuittaa.kuitattu { border-radius:999px; padding:12px 22px; background:#ecfdf5; color:#047857; border:1.5px solid #6ee7b7; font-weight:800; }
+    #tutkija-amis .amis-v3-lataa { border-radius:999px !important; background:#78350f !important; padding-left:22px !important; padding-right:22px !important; }
+    #tutkija-amis .amis-v3-lataa:hover { background:#92400e !important; }
+
+    @media (max-width:560px) {
+      #tutkija-amis .amis-v3-tehtava { padding:12px 10px 10px !important; }
+      #tutkija-amis .amis-v3-tehtava .amis-v2-osa-otsikko { padding:16px 70px 16px 14px; }
+      #tutkija-amis .amis-v3-tehtava .amis-v2-osa-otsikko::after { font-size:34px; right:14px; }
+      #tutkija-amis .amis-v3-osa-otsikko { font-size:18px !important; }
+      #tutkija-amis .amis-polku-kys { padding:12px 10px 14px !important; }
+      #tutkija-amis .amis-polku-kys .amis-polku-napit { grid-template-columns:1fr; }
+      #tutkija-amis .amis-polku-nappi { flex-direction:row !important; justify-content:flex-start; min-height:58px; text-align:left !important; padding:10px 34px 10px 14px !important; }
+      #tutkija-amis .amis-polku-nappi::before { font-size:26px; }
+      #amis-polku-kysymykset::after { font-size:9px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      #tutkija-amis .amis-tt-nappi, #tutkija-amis .amis-polku-nappi { transition:none; }
+      #tutkija-amis .amis-tt-nappi:hover, #tutkija-amis .amis-polku-nappi:hover { transform:none !important; }
+    }
