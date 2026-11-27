@@ -67,6 +67,27 @@
       asetaTausta("");
     });
 
+    /* --- Sulje tarina: upottava sivu (8. lk Lukiopolku, Vaihe 4) avaa tarinan osoitteella ?suljettava=1.
+           Silloin tarinan loppuun tulee iso Sulje tarina -painike, joka pyytää sivua sulkemaan tarinan. --- */
+    var SULJETTAVA = /[?&]suljettava=1/.test(location.search) && window.parent && window.parent !== window;
+    var SULJE_SIVUT = D.suljeSivut || ["Loppu", "Näin pääset alalle"];
+    $(document).on(":passagedisplay", function (ev) {
+      if (!SULJETTAVA) return;
+      var nimi = ev && ev.passage && ev.passage.name;
+      if (SULJE_SIVUT.indexOf(nimi) === -1) return;
+      var sivu = document.querySelector("#passages .passage");
+      if (!sivu || sivu.querySelector(".tarina-sulje")) return;
+      var rivi = document.createElement("div");
+      rivi.className = "tarina-sulje-rivi";
+      rivi.innerHTML = '<button type="button" class="tarina-sulje"><span aria-hidden="true">✕</span> ' + suojaa(D.suljeTeksti || "Sulje tarina") + '</button>' +
+        '<p class="tarina-sulje-ohje">' + suojaa(D.suljeOhje || "Palaat tehtäväsivulle. Voit avata tarinan myöhemmin uudelleen.") + '</p>';
+      var eka = sivu.querySelector(".intro-nappi");
+      if (eka && eka.parentNode) eka.parentNode.insertBefore(rivi, eka.nextSibling); else sivu.appendChild(rivi);
+      rivi.querySelector(".tarina-sulje").addEventListener("click", function () {
+        try { window.parent.postMessage({ type: "koulutusala-tarina-sulje", tiedosto: location.pathname.split("/").pop() }, location.origin); } catch (e) {}
+      });
+    });
+
     /* --- Valmis-ilmoitus: kertoo upottavalle sivulle (8. lk Amispolku, Vaihe 2),
            että oppilas on tehnyt jatkotehtävän loppuun ja päässyt tuloksiin. --- */
     $(document).on(":passagedisplay", function (ev) {

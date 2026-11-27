@@ -2921,7 +2921,7 @@
       } else {
         sis.innerHTML = '<iframe class="amis-v3-iframe" allowfullscreen></iframe>';
         const f = sis.querySelector('iframe');
-        f.src = t.tiedosto; f.dataset.tarina = t.id;
+        f.src = t.tiedosto + '?suljettava=1'; f.dataset.tarina = t.id;
         f.title = t.nimi + ' — ' + (tjT().alan_tarina || 'alan tarina');
         sis.hidden = false; lukioTarinaAuki = id;
         try { sis.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
@@ -2937,6 +2937,17 @@
       el.hidden = valmiit.length === 0;
       el.textContent = valmiit.length ? (tjT().amis_v3_tehty || '✓ Alan tehtävä tehty:') + ' ' + valmiit.map(lukioTarinaNimi).join(', ') : '';
     }
+    /* Tarinan oma Sulje tarina -painike (tarina-yhteinen.js) pyytää sulkemaan tarinan */
+    window.addEventListener('message', function (e) {
+      if (e.origin !== location.origin) return;
+      if (!e.data || e.data.type !== 'koulutusala-tarina-sulje') return;
+      const lk = document.querySelector('#lukio-tarina-sisalto iframe');
+      if (!lk || lk.contentWindow !== e.source || !lk.dataset.tarina) return;
+      const id = lk.dataset.tarina;
+      if (lukioTarinaAuki === id) avaaLukioTarina(id);
+      const b = document.querySelector('#lukio-tarinat .lukio-tarina-nappi[data-tarina="' + id + '"]');
+      if (b) { try { b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {} b.focus({ preventScroll: true }); }
+    });
     window.addEventListener('message', function (e) {
       if (e.origin !== location.origin) return;
       if (!e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
