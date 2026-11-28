@@ -660,6 +660,84 @@
             <!-- ── AMIS-PANEELI ── -->
             <div id="tutkija-amis" class="tutkija-paneeli" role="tabpanel" aria-labelledby="tab-amis">
               <p class="tj-kuvaus">Ammatillisessa koulutuksessa opit tekemällä. Valitse kiinnostava aihe ja katso, mitä tutkintoja on tarjolla.</p>
+              <!-- ── AMISOPINNOT: kansio, joka aukeaa karuselliksi (vuodet yksi kerrallaan). Sama logiikka kuin lukiolla: initLvKansio() ── -->
+              <div class="lv-kansio lv-kansio--amis" id="amis-kansio">
+                <button type="button" class="lv-kansi" aria-expanded="false" aria-controls="amis-kansio-sisalto">
+                  <svg class="lv-kansi-kuva" viewBox="0 0 170 112" aria-hidden="true" focusable="false"><defs><linearGradient id="amisPolkuGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#d97706"/><stop offset=".5" stop-color="#ea580c"/><stop offset="1" stop-color="#059669"/></linearGradient></defs><circle cx="140" cy="30" r="30" fill="#fff" opacity=".7"/><circle cx="26" cy="88" r="20" fill="#fff" opacity=".6"/><circle cx="80" cy="58" r="20" fill="#fff" opacity=".5"/><path d="M26 88C54 88 52 58 80 58S112 30 140 30" fill="none" stroke="url(#amisPolkuGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 10"/><g transform="translate(9 71)"><circle cx="17" cy="17" r="17" fill="#d97706"/><g transform="translate(5 5)"><path d="M14.7 5.3a4.2 4.2 0 0 0-5.3 5.4L4 16.1 6.9 19l5.4-5.4a4.2 4.2 0 0 0 5.4-5.3l-2.5 2.5-2.6-.5-.5-2.6z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></g></g><g transform="translate(63 41)"><circle cx="17" cy="17" r="17" fill="#ea580c"/><g transform="translate(5 5)"><rect x="4" y="8" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M9 8V6h6v2M4 13h16" fill="none" stroke="#fff" stroke-width="1.8"/></g></g><g transform="translate(117 7)"><circle cx="23" cy="23" r="25" fill="#fde68a"/><circle cx="23" cy="23" r="21" fill="#065f46"/><g transform="translate(8 7) scale(1.25)"><path d="M8.6 13.4 7 20l5-2.2 5 2.2-1.6-6.6" fill="#f59e0b"/><circle cx="12" cy="9.5" r="5.5" fill="#fff"/><path d="m9.6 9.5 1.7 1.7 3.2-3.3" fill="none" stroke="#065f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g></g><path d="M160 62l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#059669"/><path d="M108 12l1.4 2.8 2.8 1.4-2.8 1.4-1.4 2.8-1.4-2.8-2.8-1.4 2.8-1.4z" fill="#ea580c"/><path d="M48 46l1.2 2.4 2.4 1.2-2.4 1.2-1.2 2.4-1.2-2.4-2.4-1.2 2.4-1.2z" fill="#d97706"/></svg>
+                  <span class="lv-kansi-teksti">
+                    <span class="lv-kansi-tag">Amisopinnot</span>
+                    <span class="lv-kansi-otsikko">Amiksen vuodet</span>
+                    <span class="lv-kansi-ala">Mitä amiksessa tapahtuu vuosi vuodelta? Avaa ja selaa vuodet läpi.</span>
+                    <span class="lv-kansi-faktat">
+                      <span class="lv-fakta lv-fakta-1">180 osaamispistettä</span>
+                      <span class="lv-fakta lv-fakta-2">Kesto yleensä 2–3 vuotta</span>
+                      <span class="lv-fakta lv-fakta-3">Tutkinto: ammatillinen perustutkinto</span>
+                    </span>
+                  </span>
+                  <span class="lv-kansi-avaa"><span class="lv-kansi-avaa-teksti">Avaa</span> <span class="lv-nuoli" aria-hidden="true">▾</span></span>
+                </button>
+                <div class="lv-kansio-sisalto" id="amis-kansio-sisalto" hidden>
+                  <p class="lv-kansio-huom">Jokainen etenee omaan tahtiinsa. Tässä on tavallinen kolmen vuoden polku.</p>
+                  <div class="lv-karuselli" role="region" aria-roledescription="karuselli" aria-label="Amiksen vuodet">
+                    <div class="lv-karuselli-askeleet">
+                      <span class="lv-askel-viiva" aria-hidden="true"><span class="lv-askel-taytto"></span></span>
+                      <button type="button" class="lv-askel lv-askel-1"><span class="lv-askel-nro" aria-hidden="true">1</span><span class="lv-askel-nimi">1. vuosi</span></button>
+                      <button type="button" class="lv-askel lv-askel-2"><span class="lv-askel-nro" aria-hidden="true">2</span><span class="lv-askel-nimi">2. vuosi</span></button>
+                      <button type="button" class="lv-askel lv-askel-3"><span class="lv-askel-nro" aria-hidden="true">3</span><span class="lv-askel-nimi">3. vuosi</span></button>
+                    </div>
+                <div class="lv-vuodet">
+                  <div class="lv-vuosi lv-vuosi-1" role="group" aria-roledescription="dia" aria-label="1. vuosi, 1/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-iso" aria-hidden="true">1</span><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M14.7 5.3a4.2 4.2 0 0 0-5.3 5.4L4 16.1 6.9 19l5.4-5.4a4.2 4.2 0 0 0 5.4-5.3l-2.5 2.5-2.6-.5-.5-2.6z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></span><div>
+                    <p class="lv-vuosi-label">1. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Opit alan perusteet</p>
+                    </div></div>
+                    <ul class="lv-vuosi-lista">
+                      <li>Teet opon tai opettajan kanssa oman suunnitelman (HOKS). Siihen kirjataan, mitä opiskelet ja missä järjestyksessä.</li>
+                      <li>Opettelet alan perustyöt, työvälineet ja työturvallisuuden.</li>
+                      <li>Opiskelet yhteisiä aineita eli YTO-aineita: äidinkieltä, ruotsia, englantia, matikkaa sekä yhteiskunta- ja työelämätaitoja.</li>
+                      <li>Jos valitsit kaksoistutkinnon, aloitat lukio-opinnot amiksen rinnalla.</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">Opinnot käynnissä</span>
+                  </div>
+                  <div class="lv-vuosi lv-vuosi-2" role="group" aria-roledescription="dia" aria-label="2. vuosi, 2/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-iso" aria-hidden="true">2</span><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><rect x="4" y="8" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M9 8V6h6v2M4 13h16" fill="none" stroke="#fff" stroke-width="1.8"/></svg></span><div>
+                    <p class="lv-vuosi-label">2. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Erikoistut ja opit työpaikalla</p>
+                    </div></div>
+                    <ul class="lv-vuosi-lista">
+                      <li>Valitset, mihin alan tehtäviin erikoistut. Esimerkiksi kokki voi syventyä ravintolatyöhön tai suurkeittiöön.</li>
+                      <li>Olet pidempiä jaksoja työpaikalla. Koulutussopimuksella opit ilman palkkaa, oppisopimuksella saat palkkaa.</li>
+                      <li>Näytät osaamisesi näytöissä: teet oikeita työtehtäviä, ja ne arvioidaan.</li>
+                      <li>Kaksoistutkinnossa lukio-opinnot jatkuvat ja yo-kirjoitukset lähestyvät.</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">Taidot kasvavat</span>
+                  </div>
+                  <div class="lv-vuosi lv-vuosi-3" role="group" aria-roledescription="dia" aria-label="3. vuosi, 3/3">
+                    <div class="lv-vuosi-yla"><span class="lv-vuosi-iso" aria-hidden="true">3</span><span class="lv-vuosi-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M8.6 13.4 7 20l5-2.2 5 2.2-1.6-6.6" fill="#fde68a"/><circle cx="12" cy="9.5" r="5.5" fill="#fff"/><path d="m9.6 9.5 1.7 1.7 3.2-3.3" fill="none" stroke="#065f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div>
+                    <p class="lv-vuosi-label">3. vuosi</p>
+                    <p class="lv-vuosi-kuvaus">Valmistut ja katsot eteenpäin</p>
+                    </div></div>
+                    <ul class="lv-vuosi-lista">
+                      <li>Teet viimeiset näytöt ja tutkinnon osat.</li>
+                      <li>Kaksoistutkinnossa kirjoitat ylioppilaaksi: vähintään viisi koetta. Opiskelu voi jatkua neljännelle vuodelle.</li>
+                      <li>Haet töihin tai jatko-opintoihin, esimerkiksi ammattikorkeakouluun.</li>
+                      <li>Valmistut, kun koko tutkinnon osaaminen on näytetty. Se voi tapahtua myös kesken lukuvuotta.</li>
+                    </ul>
+                    <span class="lv-vuosi-paatos">Ammatillinen perustutkinto</span>
+                  </div>
+                </div>
+                    <div class="lv-karuselli-napit">
+                      <button type="button" class="lv-edellinen"><span aria-hidden="true">←</span> Edellinen</button>
+                      <span class="lv-karuselli-tila" aria-live="polite"></span>
+                      <button type="button" class="lv-seuraava">Seuraava <span aria-hidden="true">→</span></button>
+                    </div>
+                  </div>
+                  <div class="lv-yo-palkki">
+                    <span class="lv-yo-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M8.6 13.4 7 20l5-2.2 5 2.2-1.6-6.6" fill="#fde68a"/><circle cx="12" cy="9.5" r="5.5" fill="#fff"/><path d="m9.6 9.5 1.7 1.7 3.2-3.3" fill="none" stroke="#065f46" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lv-yo-teksti">Amiksen lopussa: ammatillinen perustutkinto → töihin, jatko-opintoihin tai lisää osaamista ammattitutkinnolla</span>
+                  </div>
+                </div>
+              </div>
+
 
               <!-- Tavoitteet -->
               <div class="tj-tavoite" role="region" aria-label="Tehtävän tavoitteet">
@@ -2451,7 +2529,7 @@
       { nimi:"Lähihoitaja",         ala:"Sote-ala",             k:["ihmiset"],           lyhyt:"Hoidat ihmisiä — vanhuksia, lapsia, sairaita.",              am:"lähihoitaja, perustason ensihoitaja", pt:"Sosiaali- ja terveysalan perustutkinto",           v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", ik:"⚕️",  imgKey:"sote",         p:"../pelit/koulutusalat/sote.html",           op:"https://opintopolku.fi/konfo/fi/haku?keyword=l%C3%A4hihoitaja&koulutustyyppi=amm" },
       { nimi:"Lastenohjaaja",       ala:"Kasvatus",             k:["ihmiset","kasvatus"],           lyhyt:"Ohjaat lapsia päiväkodeissa ja iltapäivätoiminnassa.",        am:"lastenohjaaja, nuoriso- ja yhteisöohjaaja, kommunikaation ja viittomakielen ohjaaja", pt:"Kasvatus- ja ohjausalan perustutkinto", v:"#f97316",tv:"#fff7ed",tt:"#9a3412", ik:"👶",  imgKey:"sote",         p:"../pelit/koulutusalat/kasvatus-ala.html",           op:"https://opintopolku.fi/konfo/fi/haku?keyword=lastenohjaaja&koulutustyyppi=amm" },
       { nimi:"Sähköasentaja",       ala:"Tekniikka",            k:["tekniikka"],         lyhyt:"Asennat sähkölaitteita rakennuksiin ja teollisuuteen.",       am:"sähköasentaja, automaatioasentaja, sähköverkkoasentaja", pt:"Sähkö- ja automaatioalan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", ik:"⚡",  imgKey:"tekniikka",    p:"../pelit/koulutusalat/tekniikka-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=s%C3%A4hk%C3%B6asentaja&koulutustyyppi=amm" },
-      { nimi:"Autonasentaja",       ala:"Tekniikka",            k:["auto","tekniikka"],         lyhyt:"Huollat ja korjaat autoja ja muita ajoneuvoja.",              am:"automekaanikko, autokorimekaanikko, automaalari, automyyjä", pt:"Ajoneuvoalan perustutkinto",            v:"#6366f1",tv:"#eef2ff",tt:"#3730a3", ik:"🚗",  imgKey:"tekniikka",    p:"../pelit/koulutusalat/tekniikka-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=autonasentaja&koulutustyyppi=amm" },
+      { nimi:"Automekaanikko",      ala:"Tekniikka",            k:["auto","tekniikka"],         lyhyt:"Huollat ja korjaat autoja ja muita ajoneuvoja.",              am:"automekaanikko, autokorimekaanikko, automaalari, automyyjä", pt:"Ajoneuvoalan perustutkinto",            v:"#6366f1",tv:"#eef2ff",tt:"#3730a3", ik:"🚗",  imgKey:"tekniikka",    p:"../pelit/koulutusalat/tekniikka-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=automekaanikko&koulutustyyppi=amm" },
       { nimi:"Talonrakentaja",      ala:"Rakentaminen",         k:["rakentaminen"],         lyhyt:"Rakennat taloja perustuksista kattoon.",                     am:"talonrakentaja, maarakentaja, maarakennuskoneenkuljettaja, kivirakentaja", pt:"Rakennusalan perustutkinto",             v:"#84cc16",tv:"#f7fee7",tt:"#365314", ik:"🏗️", imgKey:"tekniikka",    p:"../pelit/koulutusalat/rakennus-ala.html", op:"https://opintopolku.fi/konfo/fi/haku?keyword=talonrakentaja&koulutustyyppi=amm" },
       { nimi:"Metsätalous",         ala:"Luonnonvara-ala",      k:["luonto"],            lyhyt:"Hoidat metsää kestävästi — metsurityöstä koneenkuljetukseen.",am:"metsuri, metsäkoneenkuljettaja, metsäkoneasentaja, puutavara-autonkuljettaja", pt:"Metsäalan perustutkinto",  v:"#22c55e",tv:"#f0fdf4",tt:"#14532d", ik:"🌲",  imgKey:"luonto",       p:"../pelit/koulutusalat/luonto-ala.html",    op:"https://opintopolku.fi/konfo/fi/haku?keyword=mets%C3%A4talous&koulutustyyppi=amm" },
       { nimi:"Eläintenhoitaja",     ala:"Luonnonvara-ala",      k:["elaimet","luonto"],            lyhyt:"Hoidat eläimiä tallissa, klinikalla tai eläintarhassa.",     am:"eläintenhoitaja, tuotantoeläinten hoitaja, seura- ja harraste-eläinten hoitaja", pt:"Maatalousalan perustutkinto",v:"#16a34a",tv:"#dcfce7",tt:"#14532d", ik:"🐾",  imgKey:"luonto",       p:"../pelit/koulutusalat/luonto-ala.html",    op:"https://opintopolku.fi/konfo/fi/haku?keyword=el%C3%A4intenhoitaja&koulutustyyppi=amm" },
@@ -2488,7 +2566,7 @@
       { nimi:"Välinehuoltaja",      ala:"Välinehuoltoala",      k:["ihmiset"],           lyhyt:"Huollat ja steriloit hoitovälineitä sairaalassa.",           am:"välinehuoltaja", pt:"Välinehuoltoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
       { nimi:"Kampaaja",            ala:"Hius- ja kauneudenhoito", k:["kauneus"],lyhyt:"Leikkaat ja muotoilet hiuksia sekä hoidat ihoa.",            am:"kampaaja, parturi, kosmetologi, kosmetiikkaneuvoja", pt:"Hius- ja kauneudenhoitoalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote", p:"../pelit/koulutusalat/kauneus-ala.html"},
       { nimi:"Kuorma-autonkuljettaja", ala:"Logistiikka",       k:["auto"],         lyhyt:"Kuljetat tavaraa ja ihmisiä sekä hoidat varastoa.",          am:"kuorma-autonkuljettaja, linja-autonkuljettaja, yhdistelmäajoneuvonkuljettaja, palvelulogistiikkatyöntekijä", pt:"Logistiikan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/liikenne-ala.html" },
-      { nimi:"Matkailun asiakaspalvelija", ala:"Matkailuala",   k:["matkailu","ihmiset"],  lyhyt:"Palvelet matkailijoita ja järjestät elämyksiä.",             am:"matkailun asiakaspalvelija", pt:"Matkailualan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote" },
+      { nimi:"Matkailun asiakaspalvelija", ala:"Matkailuala",   k:["matkailu","ihmiset"],  lyhyt:"Palvelet matkailijoita ja järjestät elämyksiä.",             am:"matkailun asiakaspalvelija", pt:"Matkailualan perustutkinto", v:"#0284c7",tv:"#f0f9ff",tt:"#075985", imgKey:"palvelu", p:"../pelit/koulutusalat/palvelu-ala.html" },
       { nimi:"Matruusi",            ala:"Merenkulkuala",        k:["auto","tekniikka","meri"],         lyhyt:"Työskentelet laivan kannella tai konehuoneessa.",            am:"matruusi, konemies, vahtiperämies, vahtikonemestari, laivasähköasentaja", pt:"Merenkulkualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/merenkulku-ala.html" },
       { nimi:"Kiinteistönhoitaja",  ala:"Puhtaus- ja kiinteistöpalveluala", k:["rakentaminen","ihmiset"], lyhyt:"Huollat kiinteistöjä ja hoidat siisteyttä.",     am:"kiinteistönhoitaja, toimitilahuoltaja, kodinhuoltaja", pt:"Puhtaus- ja kiinteistöpalvelualan perustutkinto", v:"#eab308",tv:"#fefce8",tt:"#713f12", imgKey:"tekniikka", p:"../pelit/koulutusalat/rakennus-ala.html"},
       { nimi:"Turvallisuusvalvoja", ala:"Turvallisuusala",      k:["turvallisuus","ihmiset"],lyhyt:"Vartioit ja huolehdit ihmisten turvallisuudesta.",          am:"turvallisuusvalvoja", pt:"Turvallisuusalan perustutkinto", v:"#ef4444",tv:"#fef2f2",tt:"#991b1b", imgKey:"sote", p:"../pelit/koulutusalat/turvallisuus-ala.html" },
@@ -2533,7 +2611,7 @@
         const ala   = tAla[i]   || t.ala;
         const lyhyt = tLyhyt[i] || t.lyhyt;
         const lueLisaa = tj.lue_lisaa || 'Lue lisää ▾';
-        const kesto    = tj.kesto_3v  || 'Kesto: 3 vuotta';
+        const kesto    = tj.kesto_3v  || 'Kesto: yleensä 2–3 vuotta';
         const haeOp    = tj.hae_opintopolku || 'Katso tutkinto opintopolku.fi:ssä →';
         const el = document.createElement('article');
         el.className = 'tj-kortti'; el.setAttribute('role','listitem');
@@ -2691,11 +2769,11 @@
     }
 
     /* ── Lukio-opinnot-kansio: kansi avaa karusellin, vuodet yksi kerrallaan ── */
-    function initLvKansio() {
-      const k = document.getElementById('lv-kansio');
+    /* Toimii jokaiselle .lv-kansio-elementille (Lukiopolku #lv-kansio ja Amispolku #amis-kansio) */
+    function initLvKansio(k) {
       if (!k || k.dataset.ok) return;
       k.dataset.ok = '1';
-      const kansi = k.querySelector('.lv-kansi'), sis = document.getElementById('lv-kansio-sisalto');
+      const kansi = k.querySelector('.lv-kansi'), sis = k.querySelector('.lv-kansio-sisalto');
       const diat = [...k.querySelectorAll('.lv-vuosi')], askeleet = [...k.querySelectorAll('.lv-askel')];
       const ed = k.querySelector('.lv-edellinen'), se = k.querySelector('.lv-seuraava'), tila = k.querySelector('.lv-karuselli-tila');
       let i = 0;
@@ -2734,7 +2812,7 @@
       }, { passive: true });
       nayta(0);
     }
-    initLvKansio();
+    document.querySelectorAll('.lv-kansio').forEach(k => initLvKansio(k));
 
     /* ── Steinerlukion yleistieto (Vaihe 2). Lähde: rudolfsteinerkoulu.fi/lukio ── */
     const STEINER_INFO = {
@@ -2928,7 +3006,7 @@
       kauppa:   '../pelit/koulutusalat/kauppa-ala.html',
       data:     '../pelit/koulutusalat/it-ala.html',
       ruoka:    '../pelit/koulutusalat/elintarvike-ala.html',
-      liikunta: '../pelit/koulutusalat/palvelu-ala.html',
+      palvelu:  '../pelit/koulutusalat/palvelu-ala.html',
       urheilu:  '../pelit/koulutusalat/urheilu-ala.html',
       kauneus:  '../pelit/koulutusalat/kauneus-ala.html',
       rakennus: '../pelit/koulutusalat/rakennus-ala.html',
@@ -2945,7 +3023,7 @@
     const AMIS_V3_NIMET = {
       ihmiset:'Sote-ala', tekniikka:'Tekniikka', luonto:'Luonto ja ympäristö',
       taide:'Festarit: media ja tapahtumat', kauppa:'Muotimessut: kauppa ja myynti',
-      data:'IT ja tietotekniikka', ruoka:'Elintarvikeala', liikunta:'Palveluala',
+      data:'IT ja tietotekniikka', ruoka:'Elintarvikeala', palvelu:'Palveluala',
       urheilu:'Urheilu, tanssi ja sirkus',
       kauneus:'Kauneus ja hyvinvointi',
       rakennus:'Rakentaminen ja talot',
@@ -2966,13 +3044,13 @@
       ihmiset:'ihmiset', elaimet:'elaimet', luonto:'luonto', ruoka:'ruoka',
       auto:'liikenne', rakentaminen:'rakennus', tekniikka:'tekniikka',
       pelit:'data', tietokone:'data', media:['taide','muotoilu','kasityo'], taide:['taide','muotoilu','kasityo'], musiikki:'musiikki',
-      kauppa:['kauppa','yrittajyys'], matkailu:'liikunta', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:['taide','muotoilu','kasityo'], kasvatus:'kasvatus', meri:'merenkulku'
+      kauppa:['kauppa','yrittajyys'], matkailu:'palvelu', liikunta:'urheilu', kauneus:'kauneus', turvallisuus:'turvallisuus', kasityo:['taide','muotoilu','kasityo'], kasvatus:'kasvatus', meri:'merenkulku'
     };
 
     function renderAmisV3(valittuAla) {
       const sisalto = document.getElementById('amis-v3-sisalto');
       if (!sisalto) return;
-      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','merenkulku','data','ruoka','luonto','elaimet','taide','muotoilu','kasityo','musiikki','kauppa','yrittajyys','liikunta','urheilu','kauneus','turvallisuus'];
+      const jarjestys = ['ihmiset','kasvatus','tekniikka','rakennus','liikenne','merenkulku','data','ruoka','luonto','elaimet','taide','muotoilu','kasityo','musiikki','kauppa','yrittajyys','palvelu','urheilu','kauneus','turvallisuus'];
       const kat = [];
       amisValitut.forEach(k => { [].concat(PELI_ALA[k] || []).forEach(g => { if (kat.indexOf(g) === -1) kat.push(g); }); });
       const valitut = jarjestys.filter(p => kat.indexOf(p) !== -1);
@@ -3024,6 +3102,14 @@
     /* ── Vaihe 2: kuittaus & reveal ── */
     /* Vaihe 2: tarinat ilmoittavat postMessagella, kun jatkotehtävä on tehty
        (tarina-yhteinen.js, "Kutsu: tulos"). Valmiit alat muistetaan localStorageen. */
+    /* Kertaluonteinen siirto: palvelualan tarinan avain oli ennen 'liikunta' (nyt 'palvelu'). */
+    try {
+      const vv = JSON.parse(localStorage.getItem('dg8-amis-tarina-valmis') || '[]');
+      if (Array.isArray(vv) && vv.indexOf('liikunta') !== -1) {
+        const uusi = vv.map(a => a === 'liikunta' ? 'palvelu' : a).filter((a, i, l) => l.indexOf(a) === i);
+        localStorage.setItem('dg8-amis-tarina-valmis', JSON.stringify(uusi));
+      }
+    } catch (e) {}
     function amisTarinatValmiit() {
       try { const v = JSON.parse(localStorage.getItem('dg8-amis-tarina-valmis') || '[]'); return Array.isArray(v) ? v : []; }
       catch (e) { return []; }
