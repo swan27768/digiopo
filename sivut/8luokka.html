@@ -636,9 +636,13 @@
           <!-- ══ TUTKINTOTUTKIJA + LUKIOTUTKIJA ══
                Tehtävä: "Oma reitti löytyy tutkimalla"
                Oppilas tutkii joko Amispolkua tai Lukiopolkua (tai molempia).
-               – Amispolku:  3 vaihetta + yhteenveto, palautus Classroomiin
-               – Lukiopolku: 4 vaihetta + oma lukiosuunnitelma, palautus Classroomiin
-               Tila tallennetaan localStorage:oon (avaimet: dg8-amis-*, dg8-lukio-*)
+               – Amispolku:  3 vaihetta (1 kiinnostukset, 2 alan tarina, 3 totta vai tarua + oma amispolku) + yhteenveto
+               – Lukiopolku: 5 vaihetta (1 aineet, 2 erikoislukiot, 3 jatko-opinnot, 4 alan tarina,
+                 5 totta vai tarua + oma lukiosuunnitelma) + yhteenveto
+               Molemmissa samat säännöt: oma polku/suunnitelma aukeaa, kun kaikkiin väitteisiin on vastattu,
+               ja yhteenveto aukeaa, kun polku on tallennettu JA alan tarina tehty. Palautus Classroomiin (PDF).
+               Tila: localStorage (dg8-amis-*, dg8-lukio-*); totta vai tarua -arvaukset sessionStorage
+               (dg8-amis-tt, dg8-lukio-tt), jotka tyhjenevät, kun välilehti suljetaan.
                Maskotti laukeaa kun tutkija-alue tulee näkyviin (aihe-osio-havainnointi)
           ══ -->
           <div class="tutkija-alue aihe-osio" id="tutkija-alue" data-tp-ikkuna data-tp-otsikko="Oma reitti löytyy tutkimalla" style="display:none;">
@@ -670,7 +674,7 @@
                     <span class="lv-kansi-ala">Mitä amiksessa tapahtuu vuosi vuodelta? Avaa ja selaa vuodet läpi.</span>
                     <span class="lv-kansi-faktat">
                       <span class="lv-fakta lv-fakta-1">180 osaamispistettä</span>
-                      <span class="lv-fakta lv-fakta-2">Kesto yleensä 2–3 vuotta</span>
+                      <span class="lv-fakta lv-fakta-2">Kesto yleensä 3 vuotta, oman suunnitelman mukaan</span>
                       <span class="lv-fakta lv-fakta-3">Tutkinto: ammatillinen perustutkinto</span>
                     </span>
                   </span>
@@ -843,22 +847,22 @@
                     </div>
                     <div class="erityis-kortti" role="listitem">
                       <h5>Ammattiopisto Live</h5>
-                      <p>Pääkaupunkiseutu. Pääkaupunkiseudun suurin ammatillinen erityisoppilaitos, noin 1 900 opiskelijaa vuosittain.</p>
+                      <p>Pääkaupunkiseutu. Pääkaupunkiseudun suurin ammatillinen erityisoppilaitos.</p>
                       <a href="https://www.livesaatio.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Liven verkkosivut (avautuu uuteen välilehteen)">www.livesaatio.fi →</a>
                     </div>
                     <div class="erityis-kortti" role="listitem">
                       <h5>Ammattiopisto Luovi</h5>
-                      <p>Valtakunnallinen, yli 30 paikkakuntaa. 18 eri ammatillista perustutkintoa sekä TUVA ja TELMA (valmentavat koulutukset).</p>
+                      <p>Valtakunnallinen, toimipisteitä eri puolilla Suomea. 18 eri ammatillista perustutkintoa sekä TUVA ja TELMA (valmentavat koulutukset).</p>
                       <a href="https://www.luovi.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Luovin verkkosivut (avautuu uuteen välilehteen)">www.luovi.fi →</a>
                     </div>
                     <div class="erityis-kortti" role="listitem">
                       <h5>Ammattiopisto Spesia</h5>
-                      <p>Jyväskylä, Järvenpää, Pieksämäki ja Turku — yhteensä 12 paikkakunnalla, yli 1 500 opiskelijaa.</p>
+                      <p>Toimipisteitä eri puolilla Suomea, esimerkiksi Jyväskylässä, Järvenpäässä, Pieksämäellä ja Turussa.</p>
                       <a href="https://www.spesia.fi" target="_blank" rel="noopener" aria-label="Ammattiopisto Spesian verkkosivut (avautuu uuteen välilehteen)">www.spesia.fi →</a>
                     </div>
                     <div class="erityis-kortti" role="listitem">
                       <h5>Kiipulan ammattiopisto</h5>
-                      <p>Janakkala, Hämeenlinna, Lahti, Nokia — 10 paikkakuntaa. Yksilöllinen koulutus ja tuettu asuminen.</p>
+                      <p>Toimipisteitä esimerkiksi Janakkalassa, Hämeenlinnassa, Lahdessa ja Nokialla. Yksilöllinen koulutus ja tuettu asuminen.</p>
                       <a href="https://www.kiipula.fi/ammattiopisto" target="_blank" rel="noopener" aria-label="Kiipulan ammattiopiston verkkosivut (avautuu uuteen välilehteen)">www.kiipula.fi →</a>
                     </div>
                     <div class="erityis-kortti" role="listitem">
@@ -895,6 +899,18 @@
                 </section>
 
                 <p class="amis-v3-tyhjenna-rivi"><button type="button" class="amis-v3-tyhjenna" id="amis-v3-tyhjenna">Tyhjennä vastaukset</button></p>
+              </div>
+
+              <!-- Linkki Lukiopolun jatko-opintokortteihin (Vaihe 3: AMK, yliopisto). Vastine Lukiopolun "Tutki myös Amispolkua" -napille. -->
+              <div class="amis-jatko-linkki" style="margin:18px 0;padding:14px 18px;background:#eff6ff;border:1.5px solid #93c5fd;border-radius:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:220px;">
+                  <p style="margin:0 0 4px;font-size:15px;font-weight:800;color:#1e3a8a;">Mihin amiksesta voi jatkaa?</p>
+                  <p style="margin:0;font-size:13.5px;color:#1e40af;line-height:1.5;">Amistutkinnolla voit hakea ammattikorkeakouluun ja yliopistoon. Katso, millaisia ne ovat ja mitä niissä voi opiskella.</p>
+                </div>
+                <button type="button" onclick="avaaLukioJatko()"
+                  style="flex-shrink:0;display:inline-flex;align-items:center;gap:7px;background:#2563eb;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;">
+                  Katso jatko-opinnot <span aria-hidden="true">→</span>
+                </button>
               </div>
 
               <!-- Muistutus: Vaihe 3 tallennettu, mutta Vaihe 2:n tehtävä vielä kesken -->
@@ -952,7 +968,7 @@
                     <p class="lv-vuosi-kuvaus">Aloitat ja löydät suuntasi</p>
                     </div></div>
                     <ul class="lv-vuosi-lista">
-                      <li>Valitset opintoja, jotka kiinnostavat sinua, ja ehkä myös painotuksen</li>
+                      <li>Valitset opintoja, jotka kiinnostavat sinua. Painotus on yleensä valittu jo yhteishaussa, kun hait tiettyyn linjaan.</li>
                       <li>Teet pakollisia opintoja, jotka ovat samat kaikille</li>
                       <li>Opiskelu on erilaista kuin yläkoulussa: suunnittelet itse enemmän</li>
                       <li>Voit kokeilla myös uusia aineita</li>
@@ -1071,13 +1087,13 @@
               </details>
 
               <!-- ── KORKEAKOULUTUTKIJA ── -->
-              <h4 class="tj-osio-otsikko"><span class="tj-osio-vaihe lv" aria-label="Vaihe 3">Vaihe 3</span>Lukion jälkeen — mihin voi hakea?</h4>
+              <h4 class="tj-osio-otsikko" id="lukio-v3-otsikko" tabindex="-1"><span class="tj-osio-vaihe lv" aria-label="Vaihe 3">Vaihe 3</span>Lukion jälkeen — mihin voi hakea?</h4>
               <p class="tj-kuvaus">Lukion jälkeen voit hakea ammattikorkeakouluun (AMK) tai yliopistoon. Vaihe 1:n valintasi näyttävät tässäkin sinulle sopivat vaihtoehdot.</p>
 
               <div class="kk-amk-vs-yo" role="list">
                 <div class="kk-info-kortti amk" role="listitem">
                   <h5>AMK — ammattikorkeakoulu</h5>
-                  <p>Opit tekemällä ja harjoittelet oikeilla työpaikoilla. Kesto 3,5–4,5 vuotta. Pääset sisään yo-todistuksella tai pääsykokeella. Tutkinto: <strong>AMK-tutkinto</strong>.</p>
+                  <p>Opit tekemällä ja harjoittelet oikeilla työpaikoilla. Kesto 3,5–4,5 vuotta. Pääset sisään ylioppilastutkinnolla, amistutkinnolla, pääsykokeella tai väyläopintojen kautta (opiskelet ensin AMK:n avoimia opintoja). Tutkinto: <strong>AMK-tutkinto</strong>.</p>
                 </div>
                 <div class="kk-info-kortti yo" role="listitem">
                   <h5>Yliopisto</h5>
@@ -1118,7 +1134,8 @@
                 <h4><span class="tj-osio-vaihe lv" aria-label="Vaihe 5">Vaihe 5</span>Totta vai tarua &amp; oma lukiosuunnitelma</h4>
                 <p class="lv4-intro">Mitä sinä luulet lukiosta? Arvaa ensin, sitten näet, miten asia oikeasti on. Lopuksi teet oman lukiosuunnitelman valitsemalla. Valinnat eivät sido sinua mihinkään – mieltä saa muuttaa. Lataa suunnitelma PDF:nä ja palauta se opolle Classroomiin.</p>
 
-                <!-- Osa 1: Totta vai tarua? Sisältö ja logiikka: js/osio-data-8lk-lukio-tt.js. Ei lukitse Osaa 2. -->
+                <!-- Osa 1: Totta vai tarua? Sisältö ja logiikka: js/osio-data-8lk-lukio-tt.js.
+                     Sama sääntö kuin Amispolussa: Osa 2 aukeaa, kun kaikkiin väitteisiin on vastattu (tai suunnitelma on jo aloitettu/tallennettu). -->
                 <div class="amis-v3-tehtava lukio-tt" id="lukio-tt-tehtava">
                   <p id="lukio-tt-kieli" class="amis-v3-kieli" role="note" hidden></p>
                   <div class="amis-v2-osa-otsikko">
@@ -1130,11 +1147,11 @@
                   <p class="amis-tt-tulos" id="lukio-tt-tulos" role="status" hidden></p>
                 </div>
 
-                <div class="amis-v2-osa-otsikko lukio-osa2">
+                <div class="amis-v2-osa-otsikko lukio-osa2" id="lukio-osa2" hidden>
                   <h5 class="amis-v3-osa-otsikko" id="lukio-osa2-otsikko"><span class="amis-v3-osa-nro">Osa 2</span> Tee oma lukiosuunnitelma</h5>
                 </div>
 
-                <div class="amis-v3-tehtava lukio-v4" id="lukio-v4-tehtava">
+                <div class="amis-v3-tehtava lukio-v4" id="lukio-v4-tehtava" hidden>
                   <p id="lv4-kieli" class="amis-v3-kieli" role="note" hidden></p>
                   <div id="lv4-kysymykset"></div>
                   <label class="amis-polku-selvita-label" id="lv4-haave-label" for="lv4-haave">Mitä haaveilet opiskelevasi tai tekeväsi lukion jälkeen? (vapaaehtoinen)</label>
@@ -1154,7 +1171,12 @@
                 </div>
               </div>
 
-              <!-- Yhteenveto (näkyy vasta tallennuksen jälkeen) -->
+              <!-- Muistutus: suunnitelma tallennettu, mutta Vaihe 4:n alan tarina vielä kesken (sama kuin Amispolussa) -->
+              <p id="lukio-yhteenveto-puuttuu" role="status" hidden style="margin:16px 0;padding:12px 16px;background:#eff6ff;border:1.5px dashed #93c5fd;border-radius:12px;font-size:13.5px;color:#1e3a8a;line-height:1.55;">
+                <strong>Vielä yksi juttu:</strong> tee Vaihe 4:n alan tarina loppuun asti. Yhteenveto aukeaa, kun pääset tarinan tuloksiin.
+              </p>
+
+              <!-- Yhteenveto (näkyy, kun suunnitelma on tallennettu JA vähintään yksi Vaihe 4:n tarina on tehty) -->
               <div class="tj-yhteenveto lv" id="lukio-yhteenveto" role="region" aria-label="Yhteenveto" hidden>
                 <h5>Hyvä työ!</h5>
                 <p>Olet tutustunut lukion painotuksiin, erikoislukioihin ja siihen, mihin lukiosta voi jatkaa. Lisäksi teit oman suunnitelmasi.</p>
@@ -2627,7 +2649,7 @@
         const ala   = tAla[i]   || t.ala;
         const lyhyt = tLyhyt[i] || t.lyhyt;
         const lueLisaa = tj.lue_lisaa || 'Lue lisää ▾';
-        const kesto    = tj.kesto_3v  || 'Kesto: yleensä 2–3 vuotta';
+        const kesto    = tj.kesto_3v  || 'Kesto: yleensä 3 vuotta, oman suunnitelman mukaan';
         const haeOp    = tj.hae_opintopolku || 'Katso tutkinto opintopolku.fi:ssä →';
         const el = document.createElement('article');
         el.className = 'tj-kortti'; el.setAttribute('role','listitem');
@@ -3021,7 +3043,7 @@
       document.getElementById('kk-ei-tuloksia').style.display = n === 0 ? 'block' : 'none';
     }
 
-    /* ── Vaihe 3: Alan pelitarina (iframe) ── */
+    /* ── Amispolku Vaihe 2: Alan pelitarina (iframe) ── */
     const AMIS_V3_TIEDOSTOT = {
       ihmiset:  '../pelit/koulutusalat/sote.html',
       tekniikka:'../pelit/koulutusalat/tekniikka-ala.html',
@@ -3113,6 +3135,17 @@
     }
 
     /* ── Tab-vaihto ── */
+    /* Amispolku → Lukiopolun Vaihe 3 (jatko-opintokortit): vaihdetaan välilehti, vieritetään ja siirretään fokus otsikkoon */
+    function avaaLukioJatko() {
+      const tab = document.getElementById('tab-lukio');
+      if (!tab) return;
+      vaihdaTutkija('lukio', tab);
+      const kohde = document.getElementById('lukio-v3-otsikko');
+      if (!kohde) return;
+      kohde.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => { try { kohde.focus({ preventScroll: true }); } catch (e) { kohde.focus(); } }, 400);
+    }
+
     function vaihdaTutkija(polku, nappi) {
       ['amis','lukio'].forEach(p => {
         document.getElementById('tutkija-'+p).style.display = p === polku ? 'block' : 'none';

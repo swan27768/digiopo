@@ -569,9 +569,13 @@
 
       }
 
-      /* ── Vaihe 4: Amispolku → jatko-opinnot ── */
+      /* ── Amispolku: jatko-opinnot (amis_v4_*) – EI KÄYTÖSSÄ ──
+         Amispolulla oli ennen Vaihe 4 "jatko-opinnot". Se on poistettu: Amispolussa on nyt 3 vaihetta,
+         ja jatko-opinnot näytetään Lukiopolun Vaiheessa 3 (linkki "Katso jatko-opinnot", avaaLukioJatko()).
+         Alla oleva koodi ei löydä elementtejä (ei 4. otsikkoa, .kk-amk-vs-yo-, .kk-grid- eikä
+         .kk-opintopolku-nappi-elementtejä #tutkija-amis-paneelissa), joten se ei tee mitään.
+         Käännösavaimet amis_v4_* on jätetty talteen, jos vaihe palautetaan. */
       var v4osiot = amisPanel.querySelectorAll('.tj-osio-otsikko');
-      /* v4osiot[3] = Vaihe 4 heading (0=V1, 1=V2, 2=V3, 3=V4) */
       if (v4osiot[3] && tj.amis_v4_heading) {
         var v4span = v4osiot[3].querySelector('.tj-osio-vaihe');
         v4osiot[3].textContent = tj.amis_v4_heading;
@@ -642,9 +646,11 @@
         if (ayPs[2] && tj.yhteenveto_p3_html) ayPs[2].innerHTML = tj.yhteenveto_p3_html;
       }
 
-      /* ── Erityisammattioppilaitokset ── */
+      /* ── Erityisammattioppilaitokset ──
+         Paneeli on nykyään Vaihe 3:n tukiväitteen alla (#erityis-sisalto, otsikko h5#amis-erityis-otsikko).
+         Otsikko ei ole enää .tj-osio-otsikko, joten alla oleva otsikkohaku ei löydä sitä eikä käännä sitä
+         (erityis_heading jää käyttämättä). Kuvauksen käännös (erityis_kuvaus) toimii yhä. */
       var erityisOtsikko = amisPanel.querySelector('.tj-osio-otsikko:last-of-type');
-      /* Find by text content since there's no id */
       amisPanel.querySelectorAll('.tj-osio-otsikko').forEach(function(el) {
         if (el.textContent.indexOf('Erityisammattioppilaitokset') !== -1 && tj.erityis_heading) {
           var lisatietoSpan = el.querySelector('span');
@@ -708,7 +714,8 @@
 
       /* ── Lukiopolku Vaihe 2: erikoislukio-kuvaus ── */
       var lukioOsiot = lukioPanel.querySelectorAll('.tj-osio-otsikko');
-      /* LukioPanel otsikot järjestyksessä: [0]=V1, [1]=V2 erikoislukiot, [2]=V3, [3]=V4 alan tarina */
+      /* LukioPanel .tj-osio-otsikko-otsikot järjestyksessä: [0]=V1, [1]=V2 erikoislukiot, [2]=V3 jatko-opinnot, [3]=V4 alan tarina.
+         Vaihe 5:n otsikko (.lukio-suunnitelma h4) ei kuulu tähän listaan. */
       /* Erikoislukio-kuvaus (p ennen erikoislukio-grid) */
       var lv2Kuvaus = document.getElementById('lv2-kuvaus');
       if (lv2Kuvaus && tj.lv2_erikoislukio_kuvaus) lv2Kuvaus.innerHTML = tj.lv2_erikoislukio_kuvaus;

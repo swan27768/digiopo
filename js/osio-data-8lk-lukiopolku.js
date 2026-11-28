@@ -1,4 +1,4 @@
-/* ══ 8. lk · Oma reitti löytyy tutkimalla · Lukiopolku Vaihe 4: Oma lukiosuunnitelma ══
+/* ══ 8. lk · Oma reitti löytyy tutkimalla · Lukiopolku Vaihe 5, Osa 2: Oma lukiosuunnitelma ══
    Oppilas valitsee painotuksen (tai erikoislukion), 1–3 kiinnostavaa ainetta ja jatkosuunnan,
    kirjoittaa halutessaan haaveen ja selvitettävän asian → suunnitelmakortti → PDF Classroomiin.
    Painotukset tulevat sivun TJ_LINJAT- ja TJ_ERIKOISLUKIOT-taulukoista; Vaihe 1:n valintoihin
@@ -209,7 +209,11 @@
     if (vn) { vn.hidden = !ok; vn.disabled = valmis; vn.textContent = valmis ? d.ui.tallennettu : d.ui.valmis; vn.classList.toggle('kuitattu', valmis); }
     var l = $('lv4-lataa'); if (l) { l.hidden = !(ok && valmis); l.textContent = d.ui.lataa; }
     var lo = $('lv4-lataa-ohje'); if (lo && !lo.dataset.virhe) { lo.hidden = !(ok && valmis); lo.textContent = d.ui.lataa_ohje; }
-    var yv = $('lukio-yhteenveto'); if (yv) yv.hidden = !(ok && valmis);
+    /* Yhteenveto vaatii myös Vaihe 4:n alan tarinan (sama sääntö kuin Amispolussa) */
+    var tarinaOk = false;
+    try { tarinaOk = typeof lukioTarinatValmiit === 'function' && lukioTarinatValmiit().length > 0; } catch (e) {}
+    var yv = $('lukio-yhteenveto'); if (yv) yv.hidden = !(ok && valmis && tarinaOk);
+    var yp = $('lukio-yhteenveto-puuttuu'); if (yp) yp.hidden = !(ok && valmis && !tarinaOk);
   }
 
   function piirraTekstit(d) {
@@ -395,6 +399,11 @@
   /* Osa 1:n vastaus → pisteet suunnitelmakorttiin */
   document.addEventListener('digiopo:lukio-tt', function () { piirraKortti(D()); });
   window.addEventListener('load', function () { piirraKortti(D()); });
+  /* Vaihe 4:n tarina valmis → yhteenvedon tila uusiksi (sivu tallentaa tiedon ensin, siksi viive) */
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin || !e.data || e.data.type !== 'koulutusala-tarina-valmis') return;
+    setTimeout(function () { piirraKortti(D()); }, 0);
+  });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', piirra);
   else piirra();

@@ -1,6 +1,8 @@
 /* ══ 8. lk · Oma reitti löytyy tutkimalla · Lukiopolku Vaihe 5, Osa 1: Totta vai tarua? ══
    Sama idea kuin Amispolussa (js/osio-data-8lk-amispolku.js): oppilas arvaa ensin, sitten näkee selityksen.
-   Ei lukitse suunnitelmaa (Osa 2), vaan pisteet näkyvät suunnitelmakortissa ja PDF:ssä, kun kaikkiin on vastattu.
+   Lukitsee suunnitelman (Osa 2) kuten Amispolussa: se aukeaa, kun kaikkiin väitteisiin on vastattu,
+   tai jos suunnitelma on jo aloitettu tai tallennettu (localStorage dg8-lukio-v4 / dg8-lukio-v4-valmis).
+   Pisteet näkyvät suunnitelmakortissa ja PDF:ssä.
    Tila: sessionStorage dg8-lukio-tt – tyhjenee, kun välilehti/selain suljetaan. Rajapinta suunnitelmalle: window.lukioTT.{pisteet, vastaukset, tyhjenna}.
    Käännökset: valinnainen ylikirjoitus DIGIOPO_T.g8.tutkija.lukio_tt (sama rakenne kuin FI). */
 (function () {
@@ -122,6 +124,20 @@
         tulos.innerHTML = '<strong>' + esc(f(d.ui.tulos, { k: p.k, m: p.m })) + '</strong> ' + esc(kom) + '<br>' + esc(d.ui.seuraavaksi) + ' <span aria-hidden="true">↓</span>';
       }
     }
+    paivitaOsa2(p.n === p.m);
+  }
+
+  /* Osa 2 näkyviin samalla säännöllä kuin Amispolussa */
+  function suunnitelmaAloitettu() {
+    try {
+      if (localStorage.getItem('dg8-lukio-v4-valmis') === '1') return true;
+      var v = JSON.parse(localStorage.getItem('dg8-lukio-v4') || 'null');
+      return !!(v && (v.painotus || (v.aineet && v.aineet.length) || v.jatko || v.haave || v.selvita));
+    } catch (e) { return false; }
+  }
+  function paivitaOsa2(kaikki) {
+    var auki = kaikki || suunnitelmaAloitettu();
+    ['lukio-osa2', 'lukio-v4-tehtava'].forEach(function (id) { var el = $(id); if (el) el.hidden = !auki; });
   }
 
   function ilmoita() { try { document.dispatchEvent(new CustomEvent('digiopo:lukio-tt')); } catch (e) {} }
