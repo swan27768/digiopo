@@ -8,6 +8,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="ope-ohje.css">
+<style>
+/* Aikataulu: osion suunnitelma ja omien lisäysten korostus */
+.plan-otsikko{font-size:1rem;font-weight:600;margin:1.2rem 0 .6rem}
+.plan{list-style:none;counter-reset:plan;margin:0;padding:0;display:grid;gap:8px}
+.plan li{counter-increment:plan;position:relative;border:1px solid var(--line);border-radius:11px;background:var(--paper);padding:11px 14px 11px 52px}
+.plan li::before{content:counter(plan);position:absolute;left:13px;top:11px;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:.88rem;display:flex;align-items:center;justify-content:center}
+.plan-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:.2rem}
+.plan-t{font-weight:600;color:var(--ink)}
+.plan-mode{font-size:.75rem;color:var(--ink-faint);border:1px solid var(--line);border-radius:999px;padding:.1em .6em;margin-left:auto}
+.plan p{font-size:.88rem;color:var(--ink-soft);margin:0}
+.lisays{margin-top:1.1rem;border:2px solid var(--accent);border-left-width:7px;border-radius:12px;background:var(--accent-soft);padding:14px 18px}
+.lisays-otsikko{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent-ink);margin:0 0 .35rem}
+.lisays p:last-child{margin:0;font-size:.98rem;color:var(--accent-ink);line-height:1.6}
+@media print{.plan li,.lisays{break-inside:avoid}}
+</style>
 </head>
 <body>
 <main class="sheet">
@@ -35,30 +50,44 @@
   <section class="blk">
     <p class="lab">Aikataulu</p>
     <h2>Varaa osioon yhteensä 5–7 oppituntia</h2>
-    <p>Tämä on 8. luokan tärkein ja pisin osio. Oppilas rakentaa siinä kuvan peruskoulun jälkeisistä vaihtoehdoista, ja sen varaan hän tekee valintansa 9. luokan yhteishaussa. Siksi osiolle kannattaa antaa aikaa. Alla on suuntaa antava jako, jota voit muokata ryhmäsi mukaan.</p>
-    <div class="split">
-      <div class="mini">
-        <span class="tag">Oppitunti 1</span>
-        <h3>Koulutusalat ja tasa-arvo</h3>
-        <p>Tehtävät 1–2 ja lyhyt esittely Amispolusta ja Lukiopolusta.</p>
-      </div>
-      <div class="mini">
-        <span class="tag">Oppitunnit 2–4</span>
-        <h3>Amispolku tai Lukiopolku</h3>
-        <p>Tehtävä 3, 2–3 oppituntia. Alan tarina ja jatkotehtävä vievät yhden oppitunnin. Jos oppilas tutkii molemmat polut, hän tarvitsee enemmän aikaa.</p>
-      </div>
-      <div class="mini">
-        <span class="tag">Oppitunti 5</span>
-        <h3>AmmattiSet ja purku</h3>
-        <p>Tehtävä 4. Pelin jälkeen jää aikaa purkaa polkujen tutkimista ja ohjauskysymyksiä yhdessä.</p>
-      </div>
-      <div class="mini">
-        <span class="tag">Oppitunnit 6–7</span>
-        <h3>Maailma tarvitsee sinua</h3>
-        <p>Tehtävä 5, 1–2 oppituntia ryhmätyöhön ja ratkaisujen esittelyyn.</p>
-      </div>
-    </div>
-    <div class="hint"><strong>Omat lisäykset:</strong> voit halutessasi täydentää osiota omilla materiaaleillasi, vierailla oppilaitoksissa (esimerkiksi lähialueen ammattiopistossa tai lukiossa) tai kutsua vieraita oppitunnille, esimerkiksi entisiä oppilaita, opiskelijoita tai alan ammattilaisia. Ne sopivat hyvin polkujen tutkimisen rinnalle, ja oppilaat saavat kuulla kokemuksia suoraan opiskelijoilta ja tekijöiltä.</div>
+    <p>Oma reitti löytyy tutkimalla -osion Amis- tai Lukiopolun tehtävissä oppilas rakentaa kuvan peruskoulun jälkeisistä vaihtoehdoista, ja sen varaan hän tekee valintansa 9. luokan yhteishaussa. Siksi osiolle kannattaa antaa aikaa. Alla on suuntaa antava jako, jota voit muokata ryhmäsi mukaan.</p>
+
+    <h3 class="plan-otsikko">Osion suunnitelma</h3>
+    <ol class="plan">
+      <li>
+        <div class="plan-head"><span class="plan-t">Aloitus: koulutusalat ja tasa-arvo</span><span class="plan-mode">Koko luokka · pareittain</span></div>
+        <p>Oppilaat tutustuvat koulutusjärjestelmään ja koulutusaloihin. Parit tekevät tasa-arvotehtävän: arvaa ja tarkista.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">Polkujen esittely</span><span class="plan-mode">Koko luokka</span></div>
+        <p>Esittele Amispolku ja Lukiopolku. Jokainen oppilas valitsee, kummasta polusta hän aloittaa. Molempia saa tutkia.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">Polun tutkiminen</span><span class="plan-mode">Yksin</span></div>
+        <p><strong>Amispolku:</strong> Vaihe 1, kiinnostukset, ammatit ja tutkinnot. <strong>Lukiopolku:</strong> Vaiheet 1–3, aineet, painotukset, erikoislukiot ja jatko-opinnot.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">Alan tarina ja jatkotehtävä</span><span class="plan-mode">Yksin</span></div>
+        <p><strong>Amispolku:</strong> Vaihe 2. <strong>Lukiopolku:</strong> Vaihe 4. Oppilas pelaa tarinan, tekee jatkotehtävän ja palauttaa vastaukset Classroomiin.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">Totta vai tarua ja oma suunnitelma</span><span class="plan-mode">Yksin</span></div>
+        <p><strong>Amispolku:</strong> Vaihe 3. <strong>Lukiopolku:</strong> Vaihe 5. Oma polku tai lukiosuunnitelma aukeaa, kun kaikkiin väitteisiin on vastattu. Oppilas palauttaa PDF:n Classroomiin. Yhteenveto aukeaa, kun suunnitelma on tallennettu ja alan tarina tehty.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">AmmattiSet ja purku</span><span class="plan-mode">Yksin · koko luokka</span></div>
+        <p>Oppilaat pelaavat AmmattiSetiä. Sen jälkeen puratte yhdessä polkujen tutkimista ohjauskysymysten avulla.</p>
+      </li>
+      <li>
+        <div class="plan-head"><span class="plan-t">Maailma tarvitsee sinua</span><span class="plan-mode">Ryhmä 3–5</span></div>
+        <p>Ryhmät kokoavat unelmatyöryhmän, ratkaisevat ongelman ja esittelevät ratkaisunsa.</p>
+      </li>
+    </ol>
+
+    <aside class="lisays" aria-labelledby="lisays-otsikko">
+      <p class="lisays-otsikko" id="lisays-otsikko">Tuo osioon omaa sisältöä</p>
+      <p>Voit halutessasi täydentää osiota omilla materiaaleillasi, vierailla oppilaitoksissa (esimerkiksi lähialueen ammattiopistossa tai lukiossa) tai kutsua vieraita oppitunnille, esimerkiksi entisiä oppilaita, opiskelijoita tai alan ammattilaisia. Ne sopivat hyvin polkujen tutkimisen rinnalle, ja oppilaat saavat kuulla kokemuksia suoraan opiskelijoilta ja tekijöiltä.</p>
+    </aside>
   </section>
 
   <section class="blk">
@@ -151,7 +180,7 @@
       </div>
 
     </div>
-    <div class="hint">Koko osioon kuluu yhteensä 5–7 oppituntia (ks. Aikataulu). Tehtävät voi jakaa usealle oppitunnille tai poimia vain osan. Alan tarina ja jatkotehtävä vievät yhden oppitunnin (noin 15 + 25 min). AmmattiSet on nopea ja itsenäinen; Maailma tarvitsee sinua vaatii enemmän aikaa ja ryhmätyötä — kestot päätät itse.</div>
+    <div class="hint">Katso osion suunnitelma kohdasta Aikataulu. Tehtävät voi jakaa usealle oppitunnille tai poimia vain osan. Alan tarina ja jatkotehtävä vievät yhden oppitunnin (noin 15 + 25 min). AmmattiSet on nopea ja itsenäinen; Maailma tarvitsee sinua vaatii enemmän aikaa ja ryhmätyötä — kestot päätät itse.</div>
   </section>
 
   <section class="blk">
