@@ -600,6 +600,7 @@
     [data-img="ruoka"]     .tj-kortti-varipalkki { background-image: url('../images/elintarvikeala.webp'); }
     [data-img="ammatit"]      .tj-kortti-varipalkki { background-image: url('../images/ammatit.webp'); }
     [data-img="liikunta-ala"] .tj-kortti-varipalkki { background-image: url('../images/liikunta-ala.webp'); }
+    [data-img="palvelu"]      .tj-kortti-varipalkki { background-image: url('../images/palveluala.webp'); }
     .tj-kortti-sisalto { padding: 10px 12px; }
     .tj-kortti-ala { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; display: inline-block; margin-bottom: 6px; }
     .tj-kortti-nimi { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 3px; }
@@ -1285,6 +1286,39 @@
     #tutkija-lukio .lv-vuosi-3 .lv-vuosi-paatos { background:#1e3a8a; }
     #tutkija-lukio .lv-yo-palkki { background:#1e3a8a; }
 
+    /* Amisopinnot-kansio (sama rakenne kuin lukion). Vuosivärit: 1 meripihka, 2 oranssi, 3 vihreä */
+    .lv-kansio--amis { --nyt:#b45309;
+      background:
+        radial-gradient(circle at 96% 8%, rgba(5,150,105,.18) 0 70px, transparent 71px),
+        radial-gradient(circle at 4% 100%, rgba(217,119,6,.22) 0 90px, transparent 91px),
+        linear-gradient(120deg,#fef3c7 0%,#ffedd5 55%,#d1fae5 100%);
+      box-shadow:0 10px 26px -14px rgba(180,83,9,.45); }
+    .lv-kansio--amis[data-vuosi="2"] { --nyt:#c2410c; }
+    .lv-kansio--amis[data-vuosi="3"] { --nyt:#047857; }
+    .lv-kansio--amis .lv-kansi:hover .lv-kansi-avaa { box-shadow:0 6px 14px -6px rgba(154,52,18,.6); }
+    .lv-kansio--amis .lv-kansi:focus-visible { outline-color:#c2410c; }
+    .lv-kansio--amis .lv-kansi-tag { color:#b45309; }
+    .lv-kansio--amis .lv-kansi-otsikko { color:#431407; }
+    .lv-kansio--amis .lv-fakta-1 { color:#92400e; border-color:#fcd34d; }
+    .lv-kansio--amis .lv-fakta-2 { color:#9a3412; border-color:#fdba74; }
+    .lv-kansio--amis .lv-fakta-3 { color:#065f46; border-color:#6ee7b7; }
+    .lv-kansio--amis .lv-kansi-avaa { background:linear-gradient(120deg,#d97706,#c2410c); }
+    .lv-kansio--amis .lv-kansio-sisalto { border-image:linear-gradient(90deg,#d97706,#ea580c,#059669) 1; }
+    .lv-kansio-huom { margin:14px 0 0; font-size:13px; color:#78350f; }
+    .lv-kansio--amis .lv-askel-1 { --v:#d97706; } .lv-kansio--amis .lv-askel-2 { --v:#ea580c; } .lv-kansio--amis .lv-askel-3 { --v:#059669; }
+    .lv-kansio--amis .lv-askel-taytto { background:linear-gradient(90deg,#d97706,#ea580c,#059669); }
+    .lv-kansio--amis .lv-askel:focus-visible .lv-askel-nro { box-shadow:0 0 0 3px #fff, 0 0 0 6px #c2410c; }
+    #tutkija-amis .lv-kansio .lv-vuodet { display:block; }
+    #tutkija-amis .lv-kansio .lv-vuosi-1 { --v:#d97706; --v1:#b45309; --v2:#d97706; --vv:#fef3c7; }
+    #tutkija-amis .lv-kansio .lv-vuosi-2 { --v:#ea580c; --v1:#c2410c; --v2:#ea580c; --vv:#ffedd5; }
+    #tutkija-amis .lv-kansio .lv-vuosi-3 { --v:#059669; --v1:#065f46; --v2:#059669; --vv:#d1fae5; }
+    #tutkija-amis .lv-kansio .lv-vuosi { position:relative; padding:0 0 16px; background:linear-gradient(180deg,#fff 60%,var(--vv) 100%); border:2px solid var(--vv); border-radius:16px; overflow:hidden; animation:lvDia .25s ease; }
+    #tutkija-amis .lv-kansio .lv-vuosi .lv-vuosi-label { font-size:11.5px; color:rgba(255,255,255,.9); margin:0 0 2px; }
+    #tutkija-amis .lv-kansio .lv-vuosi .lv-vuosi-paatos { margin:12px 0 0 20px; padding:5px 12px; border-radius:999px; font-size:12.5px; background:var(--v1); color:#fff; }
+    #tutkija-amis .lv-kansio .lv-yo-palkki { margin-top:16px; padding:12px 16px; border-radius:12px; background:linear-gradient(90deg,#b45309,#c2410c,#065f46); }
+    @media (prefers-reduced-motion: reduce) { #tutkija-amis .lv-kansio .lv-vuosi { animation:none; } }
+    @media (max-width:560px) { #tutkija-amis .lv-kansio .lv-vuosi .lv-vuosi-paatos { margin-left:14px; } }
+
     /* AMK vs yliopisto vs ammattikoulu -infokortit */
     #tutkija-lukio .kk-info-kortti { background:#fff !important; border:1.5px solid #e2e8f0 !important; border-top:5px solid #94a3b8 !important; border-radius:12px; }
     #tutkija-lukio .kk-info-kortti.amk  { border-top-color:#16a34a !important; }
@@ -1674,3 +1708,15 @@
       #tutkija-amis .amis-tt-nappi, #tutkija-amis .amis-polku-nappi { transition:none; }
       #tutkija-amis .amis-tt-nappi:hover, #tutkija-amis .amis-polku-nappi:hover { transform:none !important; }
     }
+
+    /* ══ Lukiopolku Vaihe 5, Osa 1: Totta vai tarua? (js/osio-data-8lk-lukio-tt.js) ══
+       Samat amis-tt-* -luokat kuin Amispolussa, korostusväri sininen. */
+    #tutkija-lukio .lukio-tt { margin:0 0 22px; }
+    #tutkija-lukio .lukio-tt .amis-v2-osa-otsikko,
+    #tutkija-lukio .lukio-osa2.amis-v2-osa-otsikko { background:linear-gradient(90deg,#dbeafe 0%,#eff6ff 100%); border-left:6px solid #2563eb; border-radius:10px; padding:12px 16px; gap:12px; flex-wrap:wrap; }
+    #tutkija-lukio .lukio-osa2.amis-v2-osa-otsikko { margin:0 0 12px; }
+    #tutkija-lukio .lukio-tt .amis-v3-osa-otsikko, #tutkija-lukio .lukio-osa2 .amis-v3-osa-otsikko { color:#1e3a8a; }
+    #tutkija-lukio .lukio-tt .amis-v3-osa-nro, #tutkija-lukio .lukio-osa2 .amis-v3-osa-nro { background:#1d4ed8; }
+    #tutkija-lukio .lukio-tt .amis-tt-laskuri { color:#1e40af; border-color:#bfdbfe; }
+    #tutkija-lukio .lukio-tt .amis-tt-nappi:hover:not([aria-disabled="true"]) { border-color:#2563eb; background:#eff6ff; }
+    #tutkija-lukio .lukio-tt .amis-tt-palaute a { color:#1d4ed8; }

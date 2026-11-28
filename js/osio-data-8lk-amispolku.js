@@ -1,7 +1,8 @@
 /* ══ 8. lk · Oma reitti löytyy tutkimalla · Amispolku Vaihe 3 ══
    Osa 1 "Totta vai tarua?": oppilas arvaa ensin, sitten näkee selityksen.
    Osa 2 "Rakenna oma amispolkusi": kolme valintaa → oma kortti palautukseen.
-   Tila: localStorage dg8-amis-v3 (vastaukset) ja dg8-amis-v3-valmis ("1" kun tallennettu).
+   Tila: localStorage dg8-amis-v3 (polku, nimi, selvitä) ja dg8-amis-v3-valmis ("1" kun tallennettu).
+   Totta vai tarua -arvaukset ovat sessionStoragessa (dg8-amis-tt): ne tyhjenevät, kun välilehti suljetaan.
    Yhteenveto (8luokka.html: tarkistaAmisYhteenveto) aukeaa, kun tämä ja Vaihe 2 ovat valmiit.
    Käännökset: valinnainen ylikirjoitus DIGIOPO_T.g8.tutkija.v3 (sama rakenne kuin FI). */
 (function () {
@@ -108,11 +109,27 @@
   }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
   function f(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
-  function lue() {
-    try { var v = JSON.parse(localStorage.getItem(AVAIN) || 'null'); if (v && typeof v === 'object') return { tt: v.tt || {}, polku: v.polku || {}, selvita: v.selvita || '', nimi: v.nimi || '' }; } catch (e) {}
-    return { tt: {}, polku: {}, selvita: '', nimi: '' };
+  var TT_AVAIN = 'dg8-amis-tt';   /* sessionStorage: tyhjenee, kun välilehti/selain suljetaan */
+  function lueTT() {
+    try { var v = JSON.parse(sessionStorage.getItem(TT_AVAIN) || 'null'); if (v && typeof v === 'object') return v; } catch (e) {}
+    return {};
   }
-  function tallenna() { try { localStorage.setItem(AVAIN, JSON.stringify(tila)); } catch (e) {} }
+  function lue() {
+    var t = { tt: lueTT(), polku: {}, selvita: '', nimi: '' };
+    try {
+      var v = JSON.parse(localStorage.getItem(AVAIN) || 'null');
+      if (v && typeof v === 'object') {
+        t.polku = v.polku || {}; t.selvita = v.selvita || ''; t.nimi = v.nimi || '';
+        /* Vanha tallennus piti arvaukset localStoragessa: poistetaan ne sieltä */
+        if (v.tt) { delete v.tt; localStorage.setItem(AVAIN, JSON.stringify(v)); }
+      }
+    } catch (e) {}
+    return t;
+  }
+  function tallenna() {
+    try { sessionStorage.setItem(TT_AVAIN, JSON.stringify(tila.tt || {})); } catch (e) {}
+    try { localStorage.setItem(AVAIN, JSON.stringify({ polku: tila.polku, selvita: tila.selvita, nimi: tila.nimi })); } catch (e) {}
+  }
   function onValmis() { try { return localStorage.getItem(VALMIS) === '1'; } catch (e) { return false; } }
   function $(id) { return document.getElementById(id); }
 
@@ -183,7 +200,7 @@
         tulos.innerHTML = '<strong>' + esc(f(d.ui.tulos, { k: p.k, m: p.m })) + '</strong> ' + esc(kom) + '<br>' + esc(d.ui.seuraavaksi) + ' <span aria-hidden="true">↓</span>';
       }
     }
-    if (polku) polku.hidden = !kaikki;
+    if (polku) polku.hidden = !(kaikki || onValmis() || Object.keys(tila.polku || {}).length > 0);
   }
 
   /* ── Osa 2: oma polku ── */
@@ -211,7 +228,7 @@
     var p = pisteet(d);
     var rivit = [[d.ui.k_ala, alaTeksti(d)]];
     d.kysymykset.forEach(function (q) { var v = valinta(q, tila.polku[q.id]); rivit.push([q.kortti, v ? v.kortti : '–']); });
-    rivit.push([d.ui.k_tt, p.k + '/' + p.m]);
+    if (p.n === p.m) rivit.push([d.ui.k_tt, p.k + '/' + p.m]);
     if ((tila.selvita || '').trim()) rivit.push([d.ui.k_selvita, tila.selvita.trim()]);
     return rivit;
   }
@@ -296,9 +313,13 @@
     if ((tila.nimi || '').trim()) t.push(d.ui.pdf_nimi + ': ' + tila.nimi.trim());
     t.push(d.ui.pdf_pvm + ': ' + pvm(), '');
     rivit.forEach(function (r) { t.push(r[0] + ':', r[1], ''); });
-    t.push(d.ui.pdf_tt, '');
-    d.vaitteet.forEach(function (v, i) { t.push((i + 1) + '. ' + v.vaite, '   ' + d.ui.pdf_vastasin + ': ' + vastausTeksti(d, v)); });
-    t.push('', d.ui.pdf_loppu);
+    var pt = pisteet(d);
+    if (pt.n === pt.m) {
+      t.push(d.ui.pdf_tt, '');
+      d.vaitteet.forEach(function (v, i) { t.push((i + 1) + '. ' + v.vaite, '   ' + d.ui.pdf_vastasin + ': ' + vastausTeksti(d, v)); });
+      t.push('');
+    }
+    t.push(d.ui.pdf_loppu);
     var blob = new Blob([t.join('\n')], { type: 'text/plain;charset=utf-8' });
     var url = URL.createObjectURL(blob), a = document.createElement('a');
     a.href = url; a.download = tiedostonimi('txt');
@@ -360,6 +381,7 @@
 
     /* Totta vai tarua -vastaukset */
     var p = pisteet(d);
+    if (p.n === p.m) {
     uusiSivuJos(40);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(146, 64, 14);
     doc.text(d.ui.pdf_tt + ' (' + p.k + '/' + p.m + ')', M, y); y += 20;
@@ -376,6 +398,7 @@
       if (ok) doc.setTextColor(6, 95, 70); else doc.setTextColor(154, 52, 18);
       doc.text(vas, M + 14, y); y += vas.length * 14 + 10;
     });
+    }
 
     /* Alatunniste joka sivulle */
     var sivuja = doc.getNumberOfPages();
@@ -459,7 +482,7 @@
       if (!window.confirm(d.ui.tyhjenna_varmista)) return;
       tila = { tt: {}, polku: {}, selvita: '', nimi: '' };
       var erP = $('erityis-sisalto'); if (erP) erP.hidden = true;
-      try { localStorage.removeItem(AVAIN); localStorage.removeItem(VALMIS); } catch (err) {}
+      try { localStorage.removeItem(AVAIN); localStorage.removeItem(VALMIS); sessionStorage.removeItem(TT_AVAIN); } catch (err) {}
       piirra();
     }
   });

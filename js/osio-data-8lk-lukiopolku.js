@@ -19,6 +19,7 @@
       q_aineet: 'Mitkä aineet kiinnostavat? Valitse 1–3.',
       aineet_laskuri: '{n}/3 valittu',
       aineet_max: 'Voit valita kolme ainetta. Poista ensin yksi, jos haluat vaihtaa.',
+      matikka_vihje: 'Pitkä vai lyhyt matikka? Pitkästä matematiikasta saa yleensä enemmän pisteitä, kun haet korkeakouluun todistuksella. Lyhyelläkin matikalla voi hakea moniin opintoihin.',
       q_jatko: 'Mitä haluaisit tehdä lukion jälkeen?',
       haave: 'Mitä haaveilet opiskelevasi tai tekeväsi lukion jälkeen? (vapaaehtoinen)',
       haave_esim: 'Esim. haluaisin opiskella lääkäriksi tai perustaa oman yrityksen.',
@@ -28,12 +29,13 @@
       puuttuu: 'Valitse vielä painotus, vähintään yksi aine ja suunta lukion jälkeen.',
       kortti_otsikko: 'Oma lukiosuunnitelmani',
       k_painotus: 'Painotus', k_aineet: 'Kiinnostavat aineet', k_jatko: 'Lukion jälkeen',
-      k_haave: 'Haaveeni', k_selvita: 'Haluan vielä selvittää',
+      k_haave: 'Haaveeni', k_selvita: 'Haluan vielä selvittää', k_tt: 'Totta vai tarua',
+      pdf_tt: 'Totta vai tarua – vastaukseni', pdf_vastasin: 'Vastasin', pdf_oikein: 'oikein', pdf_vaarin: 'oikea vastaus',
       valmis: 'Valmis – tallenna suunnitelmani', tallennettu: '✓ Tallennettu!',
       lataa: 'Lataa suunnitelma PDF:nä',
       lataa_ohje: 'Tallenna PDF omalle koneellesi ja palauta se opolle Classroomiin.',
       lataa_virhe: 'PDF:n teko ei onnistunut, joten suunnitelma latautui tekstitiedostona. Palauta se Classroomiin.',
-      tyhjenna: 'Tyhjennä vastaukset', tyhjenna_varmista: 'Haluatko varmasti tyhjentää lukiosuunnitelman?',
+      tyhjenna: 'Tyhjennä vastaukset', tyhjenna_varmista: 'Haluatko varmasti tyhjentää Vaihe 5:n vastaukset (totta vai tarua ja suunnitelma)?',
       eos: 'En tiedä vielä',
       pdf_ala: 'DigiOpo · 8. luokka · Oma reitti löytyy tutkimalla',
       pdf_pvm: 'Päivämäärä', pdf_nimi: 'Nimi', pdf_otsikko: 'Suunnitelmani',
@@ -44,9 +46,9 @@
       'Psykologia', 'Filosofia', 'Terveystieto', 'Kuvataide', 'Musiikki', 'Liikunta'],
     jatko: [
       { id: 'amk', teksti: 'Ammattikorkeakoulu (AMK)', kortti: 'Ammattikorkeakoulu (AMK)',
-        selitys: 'AMK:ssa opiskelu on käytännönläheistä. Valmistut yleensä 3,5–4,5 vuodessa.' },
+        selitys: 'AMK:ssa opit tekemällä ja harjoittelet työpaikoilla. Valmistut yleensä 3,5–4,5 vuodessa.' },
       { id: 'yliopisto', teksti: 'Yliopisto', kortti: 'Yliopisto',
-        selitys: 'Yliopistossa opiskelu on tieteellistä. Kandidaatti (3 v) ja maisteri (2 v) vievät yhteensä yleensä 5 vuotta.' },
+        selitys: 'Yliopistossa opit tutkimaan asioita. Ensin olet kandidaatti (3 v), sitten maisteri (2 v), eli yhteensä yleensä 5 vuotta.' },
       { id: 'molemmat', teksti: 'Molemmat kiinnostavat', kortti: 'AMK tai yliopisto',
         selitys: 'Hyvä! Voit hakea molempiin samassa korkeakoulujen yhteishaussa.' },
       { id: 'eos', teksti: 'En tiedä vielä', kortti: 'Vielä auki',
@@ -158,7 +160,8 @@
       ' <span class="amis-tt-laskuri lv4-laskuri" aria-live="polite">' + esc(d.ui.aineet_laskuri.replace('{n}', tila.aineet.length)) + '</span></legend>' +
       '<div class="amis-polku-napit">' + d.aineet.map(function (a) {
         return nappi('lv4-chip', 'data-lv4="aine" data-arvo="' + esc(a) + '"', tila.aineet.indexOf(a) !== -1, a);
-      }).join('') + '</div><p class="amis-polku-selitys lv4-max" role="status" hidden></p></fieldset>';
+      }).join('') + '</div><p class="lv4-selite lv4-matikka">' + esc(d.ui.matikka_vihje) + '</p>' +
+      '<p class="amis-polku-selitys lv4-max" role="status" hidden></p></fieldset>';
 
     /* 3. Jatko */
     var valJ = jatko(d, tila.jatko);
@@ -180,8 +183,18 @@
     ];
     if ((tila.haave || '').trim()) r.push([d.ui.k_haave, tila.haave.trim()]);
     if ((tila.selvita || '').trim()) r.push([d.ui.k_selvita, tila.selvita.trim()]);
+    var tt = ttPisteet(); if (tt && tt.n === tt.m) r.push([d.ui.k_tt, tt.k + '/' + tt.m]);
     return r;
   }
+
+  /* Osa 1 (js/osio-data-8lk-lukio-tt.js): pisteet ja vastaukset, jos moduuli on ladattu */
+  function ttPisteet() { try { return window.lukioTT ? window.lukioTT.pisteet() : null; } catch (e) { return null; } }
+  function ttVastaukset() {
+    var tt = ttPisteet();
+    if (!tt || tt.n !== tt.m) return [];
+    try { return window.lukioTT.vastaukset(); } catch (e) { return []; }
+  }
+  function ttRivi(d, v) { return v.vastasin + (v.oikein ? ' – ' + d.ui.pdf_oikein : ' (' + d.ui.pdf_vaarin + ': ' + v.oikea.toLowerCase() + ')'); }
 
   function piirraKortti(d) {
     var ok = valmisKaikki(), valmis = onValmis();
@@ -266,10 +279,34 @@
       doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(30, 58, 138);
       doc.text(p.nimi, M, y); y += 16;
       doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(71, 85, 105);
-      doc.text(doc.splitTextToSize(teksti(p.kuvaus) + (p.ryhma === 'e' ? ' ' + d.ui.erikois_huom : ''), maxW), M, y);
+      var kuv = doc.splitTextToSize(teksti(p.kuvaus) + (p.ryhma === 'e' ? ' ' + d.ui.erikois_huom : ''), maxW);
+      doc.text(kuv, M, y); y += kuv.length * 14 + 22;
     }
-    doc.setDrawColor(191, 219, 254); doc.setLineWidth(1); doc.line(M, H - 44, W - M, H - 44);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 58, 138); doc.text(d.ui.pdf_loppu, M, H - 28);
+    var vast = ttVastaukset();
+    if (vast.length) {
+      var uusiSivuJos = function (h) { if (y + h > H - 60) { doc.addPage(); y = 50; } };
+      var tt = ttPisteet();
+      uusiSivuJos(40);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(30, 58, 138);
+      doc.text(d.ui.pdf_tt + ' (' + tt.k + '/' + tt.m + ')', M, y); y += 20;
+      vast.forEach(function (v, i) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
+        var va = doc.splitTextToSize((i + 1) + '. ' + v.vaite, maxW);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+        var vs = doc.splitTextToSize(d.ui.pdf_vastasin + ': ' + ttRivi(d, v), maxW - 14);
+        uusiSivuJos(va.length * 14 + vs.length * 14 + 12);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(15, 23, 42);
+        doc.text(va, M, y); y += va.length * 14;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
+        if (v.oikein) doc.setTextColor(6, 95, 70); else doc.setTextColor(154, 52, 18);
+        doc.text(vs, M + 14, y); y += vs.length * 14 + 10;
+      });
+    }
+    for (var sv = 1; sv <= doc.getNumberOfPages(); sv++) {
+      doc.setPage(sv);
+      doc.setDrawColor(191, 219, 254); doc.setLineWidth(1); doc.line(M, H - 44, W - M, H - 44);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 58, 138); doc.text(d.ui.pdf_loppu, M, H - 28);
+    }
     doc.save(tiedostonimi('pdf'));
   }
   function lataaTxt(d) {
@@ -277,6 +314,12 @@
     if ((tila.nimi || '').trim()) t.push(d.ui.pdf_nimi + ': ' + tila.nimi.trim());
     t.push(d.ui.pdf_pvm + ': ' + pvm(), '');
     korttiRivit(d).forEach(function (r) { t.push(r[0] + ':', r[1], ''); });
+    var vast = ttVastaukset();
+    if (vast.length) {
+      t.push(d.ui.pdf_tt, '');
+      vast.forEach(function (v, i) { t.push((i + 1) + '. ' + v.vaite, '   ' + d.ui.pdf_vastasin + ': ' + ttRivi(d, v)); });
+      t.push('');
+    }
     t.push(d.ui.pdf_loppu);
     var url = URL.createObjectURL(new Blob([t.join('\n')], { type: 'text/plain;charset=utf-8' }));
     var a = document.createElement('a'); a.href = url; a.download = tiedostonimi('txt');
@@ -325,6 +368,7 @@
       if (!window.confirm(d.ui.tyhjenna_varmista)) return;
       tila = tyhjaTila();
       try { localStorage.removeItem(AVAIN); localStorage.removeItem(VALMIS); } catch (err) {}
+      if (window.lukioTT) window.lukioTT.tyhjenna();
       var lo = $('lv4-lataa-ohje'); if (lo) delete lo.dataset.virhe;
       piirra();
     }
@@ -348,6 +392,9 @@
     window.paivitaLukio.__lv4 = true;
   }
   document.addEventListener('digiopo:langchange', function () { setTimeout(piirra, 0); });
+  /* Osa 1:n vastaus → pisteet suunnitelmakorttiin */
+  document.addEventListener('digiopo:lukio-tt', function () { piirraKortti(D()); });
+  window.addEventListener('load', function () { piirraKortti(D()); });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', piirra);
   else piirra();
